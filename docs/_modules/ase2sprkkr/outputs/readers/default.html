@@ -91,18 +91,18 @@
              
   <h1>Source code for ase2sprkkr.outputs.readers.default</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">KkrProcess</span>
-<span class="kn">from</span> <span class="nn">...common.process_output_reader</span> <span class="kn">import</span> <span class="n">ProcessOutputReader</span>
+<span class="kn">from</span> <span class="nn">..sprkkr_output_reader</span> <span class="kn">import</span> <span class="n">SprKkrOutputReader</span>
 
 
 <div class="viewcode-block" id="DefaultResult"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultResult.html#ase2sprkkr.outputs.readers.arpes.DefaultResult">[docs]</a><span class="k">class</span> <span class="nc">DefaultResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
       <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="DefaultOutputReader"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.arpes.DefaultOutputReader">[docs]</a><span class="k">class</span> <span class="nc">DefaultOutputReader</span><span class="p">(</span><span class="n">ProcessOutputReader</span><span class="p">):</span>
+<div class="viewcode-block" id="DefaultOutputReader"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.arpes.DefaultOutputReader">[docs]</a><span class="k">class</span> <span class="nc">DefaultOutputReader</span><span class="p">(</span><span class="n">SprKkrOutputReader</span><span class="p">):</span>
 
-<div class="viewcode-block" id="DefaultOutputReader.read_output"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.arpes.DefaultOutputReader.read_output">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">):</span>
-
-      <span class="c1"># just read the whole output</span>
+<div class="viewcode-block" id="DefaultOutputReader.read_output"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.arpes.DefaultOutputReader.read_output">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+      <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_commons</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+      <span class="c1"># just consume the whole rest of output</span>
       <span class="k">while</span> <span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">():</span>
         <span class="k">pass</span></div></div>
 

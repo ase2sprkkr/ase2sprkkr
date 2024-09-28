@@ -105,28 +105,81 @@
 
 <span class="kn">from</span> <span class="nn">...common.tools</span> <span class="kn">import</span> <span class="n">main</span>  <span class="c1"># NOQA</span>
 
-<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show user configuration.&#39;</span>
+<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show the (current) user configuration.&#39;</span>
 <span class="n">description</span><span class="o">=</span><span class="s1">&#39;On the most modern unix/linux systems, it is in the file ~/.config/ase2sprkkr/__init__.py&#39;</span>
 
 
 <div class="viewcode-block" id="parser"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.parser.html#ase2sprkkr.tools.commands.config.parser">[docs]</a><span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Just print the path to the file.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--edit&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Edit the file using the editor in the $EDITOR environment variable.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span></div>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--info&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show the description of the configuration options.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--show&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Print the configuration.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--edit&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Edit the file using the editor in the $EDITOR environment variable.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--default&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Put the default values into the file, if it not exists&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-D&#39;</span><span class="p">,</span> <span class="s1">&#39;--show-default&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show the default values&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="default_content"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.default_content.html#ase2sprkkr.tools.commands.config.default_content">[docs]</a><span class="k">def</span> <span class="nf">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;# ASE2SRPKKR configuration file</span>
+<span class="s2"># -------------------------------</span>
+
+<span class="s2"># Please, DO NOT comment the following line.</span>
+<span class="s2">from ase2sprkkr.config import config</span>
+
+<span class="s2"># This file is pure python and it is executed when ase2sprkkr is imported.</span>
+<span class="s2"># Place it into the following path:</span>
+<span class="s2"># </span><span class="si">{</span><span class="n">file</span><span class="si">}</span>
+
+<span class="s2"># This string is appended to the runned executables</span>
+<span class="s2"># config.executables.suffix = &#39;&#39;</span>
+
+<span class="s2"># Do you want to run the executables from a specific directory?</span>
+<span class="s2"># config.executables.dir = &#39;&#39;</span>
+
+<span class="s2"># Uncomment, if you don&#39;t want to run empty-spheres finding by default</span>
+<span class="s2"># config.runing.empty_spheres = False</span>
+
+<span class="s2"># Set to False if MPI should not be used. Or set to the number of processor,</span>
+<span class="s2"># or just command line to run mpi programm, e.g.: [ &#39;/usr/bin/mpiexec&#39;, &#39;-n&#39;, &#39;4&#39; ]</span>
+<span class="s2"># config.running.mpi = []</span>
+
+<span class="s2"># You can change the verbosity of the output by setting the following to False or True</span>
+<span class="s2"># config.runing.print_output = &#39;info&#39;</span>
+
+<span class="s2"># Authentication token to Nomad. You can set it using ase2sprkkr nomad -a -u &lt;username&gt;</span>
+<span class="s2"># config.nomad.token = None</span>
+<span class="s2">&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.run.html#ase2sprkkr.tools.commands.config.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">os</span>
-    <span class="kn">from</span> <span class="nn">...ase.register</span> <span class="kn">import</span> <span class="n">user_preferences_file</span>
+    <span class="kn">from</span> <span class="nn">...config</span> <span class="kn">import</span> <span class="n">user_preferences_file</span><span class="p">,</span> <span class="n">config</span>
     <span class="kn">import</span> <span class="nn">subprocess</span>
     <span class="n">file</span> <span class="o">=</span> <span class="n">user_preferences_file</span><span class="p">()</span>
+
+    <span class="n">run</span><span class="o">=</span><span class="kc">True</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">default</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">edit</span><span class="p">:</span>
+        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">show_default</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">info</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">description</span><span class="p">(</span><span class="n">verbose</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">))</span>
+        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">show</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">edit</span><span class="p">:</span>
         <span class="k">if</span> <span class="s1">&#39;EDITOR&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please set the EDITOR environment variable.&quot;</span><span class="p">)</span>
             <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;EDITOR&#39;</span><span class="p">],</span> <span class="n">file</span><span class="p">])</span>
-    <span class="k">else</span><span class="p">:</span>
+        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
+    <span class="k">if</span> <span class="n">run</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
              <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# Content of the ASE2SPRKKR user configuration file&quot;</span><span class="p">)</span>
              <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#--------------------------------------------------&quot;</span><span class="p">)</span>

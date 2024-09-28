@@ -93,12 +93,12 @@
 <span></span><span class="sd">&quot;&quot;&quot; The classes for storing one configuration value. &quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">..common.grammar_types</span> <span class="kn">import</span> <span class="n">mixed</span><span class="p">,</span> <span class="n">GrammarType</span>
 <span class="kn">from</span> <span class="nn">.configuration</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">as_integer</span>
 <span class="kn">from</span> <span class="nn">.decorators</span> <span class="kn">import</span> <span class="n">warnings_from_here</span>
+<span class="kn">from</span> <span class="nn">.warnings</span> <span class="kn">import</span> <span class="n">DataValidityError</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 
 <div class="viewcode-block" id="DangerousValue"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.DangerousValue.html#ase2sprkkr.potentials.potential_definitions.DangerousValue">[docs]</a><span class="k">class</span> <span class="nc">DangerousValue</span><span class="p">:</span>
@@ -125,8 +125,10 @@
 
       <span class="k">if</span> <span class="n">validate</span><span class="p">:</span>
           <span class="k">if</span> <span class="n">value_type</span><span class="p">:</span>
-              <span class="n">value</span> <span class="o">=</span> <span class="n">value_type</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-              <span class="n">value_type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+              <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+                  <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">DataValidityError</span><span class="p">)</span>
+                  <span class="n">value</span> <span class="o">=</span> <span class="n">value_type</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                  <span class="n">value_type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
           <span class="k">else</span><span class="p">:</span>
               <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
@@ -153,14 +155,14 @@
 <span class="sd">      is set. &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">output_definition</span><span class="o">.</span><span class="n">_save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">always</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseOption._find_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.potentials.potential_definitions.BaseOption._find_value">[docs]</a>  <span class="k">def</span> <span class="nf">_find_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">has_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="p">):</span>
-         <span class="k">return</span> <span class="bp">self</span></div>
+<div class="viewcode-block" id="BaseOption._find_members"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.potentials.potential_definitions.BaseOption._find_members">[docs]</a>  <span class="k">def</span> <span class="nf">_find_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">has_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="p">)</span> <span class="ow">and</span> <span class="n">option</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+         <span class="k">yield</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="BaseOption.get_path"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.potentials.potential_definitions.BaseOption.get_path">[docs]</a>  <span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="BaseOption.as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.potentials.potential_definitions.BaseOption.as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_changed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="n">generated</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseOption._as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.potentials.potential_definitions.BaseOption._as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get</span><span class="p">):</span>
       <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="BaseOption.clear"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.potentials.potential_definitions.BaseOption.clear">[docs]</a>  <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_check_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">call_hooks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -169,7 +171,7 @@
 
 <div class="viewcode-block" id="Dummy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Dummy.html#ase2sprkkr.potentials.potential_definitions.Dummy">[docs]</a><span class="k">class</span> <span class="nc">Dummy</span><span class="p">(</span><span class="n">BaseOption</span><span class="p">):</span>
 
-<div class="viewcode-block" id="Dummy.validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Dummy.html#ase2sprkkr.potentials.potential_definitions.Dummy.validate">[docs]</a>  <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Dummy._validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Dummy.html#ase2sprkkr.potentials.potential_definitions.Dummy._validate">[docs]</a>  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
       <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Dummy.has_any_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Dummy.html#ase2sprkkr.potentials.potential_definitions.Dummy.has_any_value">[docs]</a>  <span class="k">def</span> <span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -177,6 +179,14 @@
 
   <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;DUMMY </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&gt;&#39;</span></div>
+
+
+<div class="viewcode-block" id="DummyStub"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.DummyStub.html#ase2sprkkr.potentials.potential_definitions.DummyStub">[docs]</a><span class="k">class</span> <span class="nc">DummyStub</span><span class="p">(</span><span class="n">Dummy</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DummyStub._as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.DummyStub.html#ase2sprkkr.potentials.potential_definitions.DummyStub._as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get</span><span class="p">):</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">allowed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">):</span>
+          <span class="k">return</span> <span class="kc">None</span>
+      <span class="k">return</span> <span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">item</span><span class="p">])</span></div></div>
 
 
 <div class="viewcode-block" id="Option"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.potentials.potential_definitions.Option">[docs]</a><span class="k">class</span> <span class="nc">Option</span><span class="p">(</span><span class="n">BaseOption</span><span class="p">):</span>
@@ -200,6 +210,7 @@
 <span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE()</span>
 <span class="sd">  &#39;1J&#39;</span>
 <span class="sd">  &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="Option.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.potentials.potential_definitions.Option.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;&quot;</span>
 <span class="sd">      Parameters</span>
@@ -218,32 +229,43 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">enrich</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span></div>
 
-  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_values</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Option._value_or_default"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.potentials.potential_definitions.Option._value_or_default">[docs]</a>  <span class="k">def</span> <span class="nf">_value_or_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_generated</span><span class="p">:</span>
+          <span class="k">return</span> <span class="n">d</span><span class="o">.</span><span class="n">getter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">)</span>
+      <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_result&#39;</span><span class="p">):</span>
+          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+      <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_dict</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="k">return</span> <span class="p">{</span> <span class="s1">&#39;def&#39;</span> <span class="p">:</span> <span class="n">value</span> <span class="p">}</span>
+      <span class="k">return</span> <span class="n">value</span></div>
+
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_values</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Return the value of the option.</span>
 
 <span class="sd">      Parameters</span>
 <span class="sd">      ----------</span>
-<span class="sd">      all_values: For numbered_array (see :class:`ConfigurationDefinition.is_numbered_array &lt;ConfigurationDefinition&gt;`,</span>
-<span class="sd">      pass True as this argument to obtain array of all values. If False (the default) is given,</span>
-<span class="sd">      only the &#39;wildcard&#39; value (i.e. the one without array index, which is used for the all values</span>
-<span class="sd">      not explicitly specified) is returned.</span>
+<span class="sd">      all_values: Control the behavior for the dict_like repeated values</span>
+<span class="sd">      (see `is_repeated` attribute of :class:`ConfigurationDefinition`).</span>
+<span class="sd">      Pass True as this argument to obtain dictionary</span>
+<span class="sd">      of all values. If False (the default) is given, only the &#39;wildcard&#39; value</span>
+<span class="sd">      (i.e. the one without array index, which is used for the all values not explicitly specified)</span>
+<span class="sd">      is returned.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
-      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_generated</span><span class="p">:</span>
-         <span class="k">return</span> <span class="n">d</span><span class="o">.</span><span class="n">getter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">)</span>
-
-      <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">)</span>
-      <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-          <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_numbered_array</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">all_values</span><span class="p">:</span>
-              <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;def&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span><span class="p">)</span>
-          <span class="k">return</span> <span class="n">value</span>
-      <span class="n">dv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span>
-      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_numbered_array</span> <span class="ow">and</span> <span class="n">all_values</span> <span class="ow">and</span> <span class="n">dv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-          <span class="k">return</span> <span class="p">{</span> <span class="s1">&#39;def&#39;</span> <span class="p">:</span> <span class="n">dv</span> <span class="p">}</span>
-      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">init_by_default</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pack_value</span><span class="p">(</span> <span class="n">dv</span> <span class="p">)</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span>
+      <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_or_default</span><span class="p">()</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">is_generated</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">init_by_default</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pack_value</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">DangerousValue</span><span class="p">)</span> <span class="ow">and</span> <span class="n">unpack</span><span class="p">:</span>
+          <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">()</span>
+      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_dict</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">all_values</span><span class="p">:</span>
+           <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;def&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">unpack</span><span class="p">:</span>
+           <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">value</span>
 
 <div class="viewcode-block" id="Option.is_dangerous"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.potentials.potential_definitions.Option.is_dangerous">[docs]</a>  <span class="k">def</span> <span class="nf">is_dangerous</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Return, whether the option is set to a dangerous value, i.e. a value</span>
@@ -292,8 +314,9 @@
 
 <span class="sd">      error:</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_generated</span><span class="p">:</span>
-          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">setter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_generated</span><span class="p">:</span>
+          <span class="k">return</span> <span class="n">d</span><span class="o">.</span><span class="n">setter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
       <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
           <span class="k">try</span><span class="p">:</span>
@@ -302,7 +325,7 @@
               <span class="k">if</span> <span class="ow">not</span> <span class="n">error</span><span class="o">==</span><span class="s1">&#39;ignore&#39;</span><span class="p">:</span>
                   <span class="k">raise</span>
               <span class="k">return</span>
-      <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_numbered_array</span><span class="p">:</span>
+      <span class="k">elif</span> <span class="n">d</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_dict</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="n">do_not_check_required</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">call_hooks</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
            <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -319,6 +342,8 @@
          <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
              <span class="k">if</span> <span class="ow">not</span> <span class="n">error</span><span class="o">==</span><span class="s1">&#39;ignore&#39;</span><span class="p">:</span>
                   <span class="k">raise</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">error</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">_validate_section</span><span class="p">()</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_post_set</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Option._post_set"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.potentials.potential_definitions.Option._post_set">[docs]</a>  <span class="k">def</span> <span class="nf">_post_set</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -332,20 +357,19 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">_hook</span> <span class="o">=</span> <span class="n">hook</span></div>
 
 <div class="viewcode-block" id="Option._check_array_access"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.potentials.potential_definitions.Option._check_array_access">[docs]</a>  <span class="k">def</span> <span class="nf">_check_array_access</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Check, whether the option is numbered array and thus it can be accessed as array using [] &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_numbered_array</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">array_access</span><span class="p">:</span>
-          <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;It is not allowed to access {self._get_path()} as array&#39;</span><span class="p">)</span></div>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Check, whether the option is array type (or repeated) and thus it can be accessed as array using [] &quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">check_array_acces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
   <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Set an item of a numbered array. If the Option is not a numbered array, throw an Exception. &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_generated</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">setter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_generated</span><span class="p">:</span>
+          <span class="n">d</span><span class="o">.</span><span class="n">setter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
           <span class="k">return</span>
 
-      <span class="bp">self</span><span class="o">.</span><span class="n">_check_array_access</span><span class="p">()</span>
-
-      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_numbered_array</span><span class="p">:</span>
-          <span class="bp">self</span><span class="p">()[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">value</span>
+      <span class="n">d</span><span class="o">.</span><span class="n">check_array_access</span><span class="p">()</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_dict</span><span class="p">:</span>
+          <span class="bp">self</span><span class="p">()[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">convert_and_validate</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">item</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">why</span><span class="o">=</span><span class="s1">&#39;set&#39;</span><span class="p">)</span>
       <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
@@ -372,7 +396,7 @@
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Set a single item of a numbered array. For internal use - so no sanity checks &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="p">{}</span>
-      <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;def&#39;</span><span class="p">:</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_numbered</span><span class="o">.</span><span class="n">has_default</span> <span class="ow">and</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;def&#39;</span><span class="p">):</span>
          <span class="k">try</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">as_integer</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
          <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -393,10 +417,11 @@
 
   <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Get an item of a numbered array. If the Option is not a numbered array, throw an Exception. &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_generated</span><span class="p">:</span>
-          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">getter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_check_array_access</span><span class="p">()</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_numbered_array</span><span class="p">:</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_generated</span><span class="p">:</span>
+          <span class="k">return</span> <span class="n">d</span><span class="o">.</span><span class="n">getter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+      <span class="n">d</span><span class="o">.</span><span class="n">check_array_access</span><span class="p">()</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_dict</span><span class="p">:</span>
           <span class="k">return</span> <span class="bp">self</span><span class="p">()[</span><span class="n">name</span><span class="p">]</span>
 
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
@@ -435,7 +460,7 @@
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Unpack potentionally dangerous values. &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">DangerousValue</span><span class="p">):</span>
          <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">()</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_numbered_array</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_dict</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
          <span class="n">value</span> <span class="o">=</span> <span class="p">{</span> <span class="n">i</span><span class="p">:</span> <span class="n">v</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">DangerousValue</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
       <span class="k">return</span> <span class="n">value</span></div>
 
@@ -449,8 +474,9 @@
       <span class="k">return</span> <span class="n">value</span></div>
 
   <span class="k">def</span> <span class="nf">__hasitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_check_array_access</span><span class="p">()</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_numbered_array</span><span class="p">:</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+      <span class="n">d</span><span class="o">.</span><span class="n">check_array_access</span><span class="p">()</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_dict</span><span class="p">:</span>
           <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">()</span>
 
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -530,10 +556,10 @@
           <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span>
 
       <span class="k">if</span> <span class="ow">not</span> <span class="n">always</span><span class="p">:</span>
-          <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">condition</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">allowed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">):</span>
              <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span>
-          <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">write_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">write_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span>
 
       <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">has_value</span><span class="p">:</span>
          <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">True</span>
@@ -549,48 +575,45 @@
           <span class="k">return</span> <span class="n">value</span><span class="p">,</span> <span class="kc">False</span>
       <span class="k">return</span> <span class="n">value</span><span class="p">,</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="Option.validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.potentials.potential_definitions.Option.validate">[docs]</a>  <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Option._validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.potentials.potential_definitions.Option._validate">[docs]</a>  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
       <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
-      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_generated</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_dangerous</span><span class="p">():</span>
-         <span class="k">return</span>
+      <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">is_validated</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_validated</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">d</span><span class="o">.</span><span class="n">is_generated</span><span class="p">)</span> <span class="ow">or</span> \
+         <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">has_value</span><span class="p">:</span>
+            <span class="k">return</span>
 
-      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">has_value</span><span class="p">:</span>
-
-        <span class="k">def</span> <span class="nf">vali</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-          <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-             <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">is_optional</span><span class="p">:</span>
-                 <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_root_container</span><span class="p">()</span>
-                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Value </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span><span class="si">}</span><span class="s1"> is None and it is not an optional value. Therefore, I cannot save the </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-          <span class="k">else</span><span class="p">:</span>
-             <span class="n">d</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">why</span> <span class="o">==</span> <span class="s1">&#39;set&#39;</span><span class="p">:</span>
-           <span class="n">vali</span><span class="p">(</span><span class="bp">self</span><span class="p">())</span>
+      <span class="k">def</span> <span class="nf">vali</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">DangerousValue</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+           <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">is_optional</span><span class="p">:</span>
+               <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_root_container</span><span class="p">()</span>
+               <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">required</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">required</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">required</span><span class="p">)</span>
+               <span class="n">DataValidityError</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Value </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span><span class="si">}</span><span class="s1"> is None and it is not an optional value. Therefore, I cannot save the </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+               <span class="k">return</span>
         <span class="k">else</span><span class="p">:</span>
-           <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
-           <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_numbered_array</span><span class="p">:</span>
-              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                  <span class="n">vali</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+           <span class="n">d</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="p">)</span>
+
+      <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">unpack</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">all_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_dict</span><span class="p">:</span>
+           <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+               <span class="n">vali</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+           <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">DangerousValue</span><span class="p">):</span>
+               <span class="k">return</span>
            <span class="k">else</span><span class="p">:</span>
-              <span class="n">vali</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+               <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                   <span class="n">vali</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+           <span class="n">vali</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span>
 
-<div class="viewcode-block" id="Option.as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.potentials.potential_definitions.Option.as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_changed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="n">generated</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
-      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_generated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">generated</span><span class="p">:</span>
-           <span class="k">return</span> <span class="kc">None</span>
-      <span class="k">if</span> <span class="n">only_changed</span> <span class="ow">and</span> <span class="p">(</span><span class="n">only_changed</span><span class="o">!=</span><span class="s1">&#39;basic&#39;</span> <span class="ow">or</span> <span class="n">d</span><span class="o">.</span><span class="n">is_always_added</span><span class="p">):</span>
-           <span class="n">v</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_and_changed</span><span class="p">()</span>
-           <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">None</span>
-      <span class="k">else</span><span class="p">:</span>
-           <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">all_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-      <span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
-           <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">copy_value</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">all_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">v</span></div>
+<div class="viewcode-block" id="Option._as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.potentials.potential_definitions.Option._as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get</span><span class="p">):</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">allowed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">):</span>
+          <span class="k">return</span> <span class="kc">None</span>
+      <span class="k">return</span> <span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Option.value_and_changed"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.potentials.potential_definitions.Option.value_and_changed">[docs]</a>  <span class="k">def</span> <span class="nf">value_and_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Return value and whether the value was changed</span>
@@ -603,13 +626,14 @@
 <span class="sd">          changed:bool</span>
 <span class="sd">            Whether the value is the same as the default value or not</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_generated</span><span class="p">:</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_generated</span><span class="p">:</span>
           <span class="k">return</span> <span class="bp">self</span><span class="p">(),</span> <span class="kc">False</span>
 
       <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">)</span>
       <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
          <span class="k">return</span> <span class="n">value</span><span class="p">,</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_it_the_default_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_numbered_array</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_numbered</span><span class="o">.</span><span class="n">has_default</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
          <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;def&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span><span class="p">},</span> <span class="kc">False</span>
       <span class="k">else</span><span class="p">:</span>
          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span><span class="p">,</span> <span class="kc">False</span></div>
@@ -618,12 +642,12 @@
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Return, whether the given value is the default value. For</span>
 <span class="sd">      numbered array, only the wildcard value can be set and this value</span>
 <span class="sd">      have to be the same as the default. &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_generated</span><span class="p">:</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_generated</span><span class="p">:</span>
           <span class="k">return</span> <span class="kc">True</span>
 
       <span class="n">default</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span>
-      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
-      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_numbered_array</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_numbered</span><span class="o">.</span><span class="n">has_default</span><span class="p">:</span>
           <span class="k">return</span> <span class="s1">&#39;def&#39;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> \
                   <span class="n">d</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s1">&#39;def&#39;</span><span class="p">],</span> <span class="n">default</span><span class="p">)</span>
       <span class="k">else</span><span class="p">:</span>

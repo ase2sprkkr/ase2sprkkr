@@ -5,4 +5,4 @@ Full name: **ase2sprkkr.input\_parameters.definitions.arpes.input\_parameters**
 
 .. currentmodule:: ase2sprkkr.input_parameters.definitions.arpes
 
-.. autodata:: input_parameters
+.. autofunction:: input_parameters

@@ -1,0 +1,36 @@
+InheritingValueModifier
+=======================
+
+
+.. currentmodule:: ase2sprkkr.common.value_definitions
+
+.. autoclass:: InheritingValueModifier
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.value_definitions.InheritingValueModifier
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

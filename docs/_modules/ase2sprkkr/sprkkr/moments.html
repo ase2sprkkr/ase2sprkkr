@@ -90,7 +90,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.sprkkr.moments</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="Moments"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.moments.Moments.html#ase2sprkkr.sprkkr.moments.Moments">[docs]</a><span></span><span class="k">class</span> <span class="nc">Moments</span><span class="p">:</span>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+
+<div class="viewcode-block" id="Moments"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.moments.Moments.html#ase2sprkkr.sprkkr.moments.Moments">[docs]</a><span class="k">class</span> <span class="nc">Moments</span><span class="p">:</span>
 
 <div class="viewcode-block" id="Moments.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.moments.Moments.html#ase2sprkkr.sprkkr.moments.Moments.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qel</span><span class="p">,</span> <span class="n">nos</span><span class="p">,</span> <span class="n">smt</span><span class="p">,</span> <span class="n">omt</span><span class="p">,</span> <span class="n">hff</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">qel</span> <span class="o">=</span> <span class="n">qel</span>
@@ -100,7 +102,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">hff</span> <span class="o">=</span> <span class="n">hff</span></div>
 
 <div class="viewcode-block" id="Moments.as_tuple"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.moments.Moments.html#ase2sprkkr.sprkkr.moments.Moments.as_tuple">[docs]</a>    <span class="k">def</span> <span class="nf">as_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span> <span class="n">nos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span> <span class="n">smt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span> <span class="n">omt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span> <span class="n">hff</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span> <span class="n">nos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span> <span class="n">smt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span> <span class="n">omt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span> <span class="n">hff</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Moments.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.moments.Moments.html#ase2sprkkr.sprkkr.moments.Moments.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

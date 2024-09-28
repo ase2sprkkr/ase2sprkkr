@@ -1,0 +1,36 @@
+ExternalEntry
+=============
+
+
+.. currentmodule:: ase2sprkkr.bindings.nomad.nomad
+
+.. autoclass:: ExternalEntry
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.bindings.nomad.nomad.ExternalEntry
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

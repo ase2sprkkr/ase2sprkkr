@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="test" href="ase2sprkkr.outputs.test.html" />
+    <link rel="next" title="sprkkr_output_reader" href="ase2sprkkr.outputs.sprkkr_output_reader.html" />
     <link rel="prev" title="ScfProcess" href="ase2sprkkr.outputs.readers.scf.ScfProcess.html" /> 
 </head>
 
@@ -66,32 +66,35 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.config.html">config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.task_result.html">task_result</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.arpes.html">arpes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.bsf.html">bsf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.default.html">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.dos.html">dos</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.html">scf</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.html">sprkkr_output_reader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.task_result.html">task_result</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.test.html">test</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -128,7 +131,7 @@
 <h1>ScfResult<a class="headerlink" href="#scfresult" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.scf.ScfResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.readers.scf.</span></span><span class="sig-name descname"><span class="pre">ScfResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/scf.html#ScfResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.scf.ScfResult" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.readers.scf.</span></span><span class="sig-name descname"><span class="pre">ScfResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/scf.html#ScfResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.scf.ScfResult" title="Permalink to this definition"></a></dt>
 <dd><p>Objects of this class holds the results of computed SCF class</p>
 <p class="rubric">Class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-a9506521d1bf8a1606019216c03bad0f30c0c1ef.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.scf.ScfResult" usemap="#inheritancebf113f7051" class="inheritance graphviz" /></div>
@@ -141,13 +144,14 @@
 <p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.scf.ScfResult.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.outputs.readers.scf.ScfResult.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.outputs.readers.scf.ScfResult.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.scf.ScfResult.iterations">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">iterations</span></span><a class="headerlink" href="#ase2sprkkr.outputs.readers.scf.ScfResult.iterations" title="Permalink to this definition"></a></dt>
-<dd><p>Array of the results of iterations</p>
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.scf.ScfResult.calculator">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculator</span></span><a class="headerlink" href="#ase2sprkkr.outputs.readers.scf.ScfResult.calculator" title="Permalink to this definition"></a></dt>
+<dd><p>The calculator that has the new (output) potential assigned - i.e. that
+can be used for further calculations with the (hopefully) converged wavefunctions etc.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -157,21 +161,13 @@
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.scf.ScfResult.potential">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">potential</span></span><a class="headerlink" href="#ase2sprkkr.outputs.readers.scf.ScfResult.potential" title="Permalink to this definition"></a></dt>
-<dd><p>The new (output) potential - that contains the converged charge density etc.</p>
-</dd></dl>
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.scf.ScfResult.start_potential_filename">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_potential_filename</span></span><a class="headerlink" href="#ase2sprkkr.outputs.readers.scf.ScfResult.start_potential_filename" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.scf.ScfResult.calculator">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculator</span></span><a class="headerlink" href="#ase2sprkkr.outputs.readers.scf.ScfResult.calculator" title="Permalink to this definition"></a></dt>
-<dd><p>The calculator that has the new (output) potential assigned - i.e. that
-can be used for further calculations with the (hopefully) converged wavefunctions etc.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.scf.ScfResult.new_task">
-<span class="sig-name descname"><span class="pre">new_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/scf.html#ScfResult.new_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.scf.ScfResult.new_task" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.scf.ScfResult.start_potential">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_potential</span></span><a class="headerlink" href="#ase2sprkkr.outputs.readers.scf.ScfResult.start_potential" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -243,7 +239,7 @@ otherwise.</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.outputs.readers.scf.ScfProcess.html" class="btn btn-neutral float-left" title="ScfProcess" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.outputs.test.html" class="btn btn-neutral float-right" title="test" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.outputs.sprkkr_output_reader.html" class="btn btn-neutral float-right" title="sprkkr_output_reader" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

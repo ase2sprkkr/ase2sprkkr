@@ -123,10 +123,23 @@ using package managers: either pip</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>ase2sprkkr<span class="w"> </span>ase2sprkkr
 </pre></div>
 </div>
+<p>I reccomend to install beta version: there can be some bugs, but mostly it has
+more bugs repaired than introduced, moreover, you can enjoy new properties. The
+beta versions are available only through <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span>ase2sprkkr
+</pre></div>
+</div>
+<p>To use bleading edge sources (the newest features, but you risk to encounter bugs),
+you can install the packages from github:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/ase2sprkkr/ase2sprkkr.git@develop
+</pre></div>
+</div>
 <section id="further-notes">
 <h3>Further notes<a class="headerlink" href="#further-notes" title="Permalink to this heading"></a></h3>
 <p>In some systems, the <code class="docutils literal notranslate"><span class="pre">pip</span></code> utility for <code class="docutils literal notranslate"><span class="pre">python3</span></code> is called <code class="docutils literal notranslate"><span class="pre">pip3</span></code>.
-If it is not installed, you can install it using the linux distribution package
+It may be possible, that <code class="docutils literal notranslate"><span class="pre">pip</span></code> is installed, but it is not in <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.
+In such case, the pip utility can be runned using <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span></code> or <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip3</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">pip</span></code> is not installed, you can install it using the linux distribution package
 manager, e.g. in Debian/Ubuntu</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt<span class="w"> </span>install<span class="w"> </span>pip3
 </pre></div>
@@ -135,7 +148,6 @@ manager, e.g. in Debian/Ubuntu</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>zypper<span class="w"> </span>install<span class="w"> </span>pip
 </pre></div>
 </div>
-<p>in OpenSUSE</p>
 <p>For the conda installation instructions, see the Anaconda documentation
 <a class="reference external" href="https://docs.anaconda.com/anaconda/install/linux/">https://docs.anaconda.com/anaconda/install/linux/</a> however, for the users
 unexperienced with conda, the (simpler) pip way is recommended.</p>
@@ -149,9 +161,9 @@ package sources.</p>
 <section id="requirements">
 <h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h3>
 <ul class="simple">
-<li><p>Python &gt;= 3.7</p></li>
+<li><p>Python &gt;= 3.8</p></li>
 <li><p>SPR-KKR (not checked by the installer)</p></li>
-<li><p>Python packages: see the the setup.cfg</p></li>
+<li><p>Python packages: see the the pypoject.toml file</p></li>
 <li><p>Git (to obtain the sources)</p></li>
 </ul>
 </section>
@@ -162,18 +174,18 @@ git<span class="w"> </span>checkout<span class="w"> </span>release
 </pre></div>
 </div>
 <p>The first line fetches the code of the package. The second one checks
-out the recommended production version of the code.</p>
+out the stable (production) version of the code.</p>
 <p>If you want to obtain the current version of the (earlier-downloaded)
 code, run</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>fetch
 git<span class="w"> </span>checkout<span class="w"> </span>release
 </pre></div>
 </div>
-<p>Alternatively, you can checkout <code class="docutils literal notranslate"><span class="pre">master</span></code> or <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch</p>
+<p>Alternatively, you can checkout <code class="docutils literal notranslate"><span class="pre">master</span></code> branch</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>master
 </pre></div>
 </div>
-<p>to obtain a newer (not thorougly tested yet) version or</p>
+<p>to obtain a newer (not thorougly tested yet) version or <code class="docutils literal notranslate"><span class="pre">develop`</span></code></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>develop
 </pre></div>
 </div>
@@ -182,24 +194,28 @@ and report the bugs).</p>
 </section>
 <section id="using-the-package-without-installing-the-pip-conda-packages">
 <h3>Using the package (without installing the pip/conda packages)<a class="headerlink" href="#using-the-package-without-installing-the-pip-conda-packages" title="Permalink to this heading"></a></h3>
-<p>You can either just add the src directory to your PYTHONPATH, or you can
-build and install the package, as it is described below.</p>
-</section>
-<section id="installation-of-the-package-from-the-sources">
-<h3>Installation of the package from the sources<a class="headerlink" href="#installation-of-the-package-from-the-sources" title="Permalink to this heading"></a></h3>
-<p>To install the package, the simplest way is to use pip</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>.
+<p>You can install the package from the obtained sources using</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>.
 </pre></div>
 </div>
-<p>Maybe, you will have to replace <code class="docutils literal notranslate"><span class="pre">python3</span></code> with <code class="docutils literal notranslate"><span class="pre">python</span></code>.
-For an editable install, please run</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>setup.py<span class="w"> </span>develop<span class="w"> </span>--user
+<p>Or, if you want to develop ase2sprkkr, it is better idea to
+do an <cite>editable</cite> installation, where the package will see
+the changes made.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--no-build-isolation<span class="w"> </span>--editable<span class="w"> </span>.
 </pre></div>
 </div>
-<p>and ignore some deprecation warning. Editable install is aimed for developers:
-in this type of install, only link to the current directory will be added to
-your local <code class="docutils literal notranslate"><span class="pre">site-packages</span></code>, which allows you to use the changesyou make to
-the source code.</p>
+<p>You can add <code class="docutils literal notranslate"><span class="pre">--no-deps</span></code> switch for a faster rebuild.</p>
+<p>The limitation of the editable install is, that it won’t see
+newly created files automatically: you need run the command above
+again to make it notice it.</p>
+<p>If the build process fail, try to remove <code class="docutils literal notranslate"><span class="pre">build</span></code> directory created
+y the previous build (if it exists). Mostly it happens, if the
+<code class="docutils literal notranslate"><span class="pre">--no-build-isolation</span></code> switch is ommited. On one system I encouter
+the problem, that pip failed to install <code class="docutils literal notranslate"><span class="pre">ninja</span></code>, than installation
+of ninja using system package manager helped:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ninja
+</pre></div>
+</div>
 </section>
 </section>
 <section id="documentation-of-the-package">

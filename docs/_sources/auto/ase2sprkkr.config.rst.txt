@@ -5,30 +5,52 @@ Full name: **ase2sprkkr.config**
 
 
 
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.config.ConfigFileDefinition  ase2sprkkr.config.Configuration  ase2sprkkr.config.Section 
+      :parts: 1
+
+|
+
+
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.config
 
    
    
-   .. rubric:: Module Attributes
+   
+
+
+   
+   
+   .. rubric:: Functions
 
    .. autosummary::
       :toctree:
       :template: custom-base-template.rst
    
-      calculator_parameters
-      sprkkr_executable_suffix
+      _get_suffix
+      find_default_mpi_runner
+      get_default_mpi_runner
+      load_user_preferences
+      mpi_runner
+      user_preferences_file
    
    
 
 
    
    
-   
+   .. rubric:: Classes
 
-
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
    
+      ConfigFileDefinition
+      Configuration
+      Section
    
    
 

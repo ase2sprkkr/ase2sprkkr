@@ -1,0 +1,7 @@
+<map id="inheritance437eacd0fe" name="inheritance437eacd0fe">
+<area shape="rect" id="node1" href="#ase2sprkkr.config.Configuration" target="_top" title="config.Configuration" alt="" coords="863,3,957,19"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="617,3,844,19"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="3,3,126,19"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="145,3,373,19"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="391,3,599,19"/>
+</map>

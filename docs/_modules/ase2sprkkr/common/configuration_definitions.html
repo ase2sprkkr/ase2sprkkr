@@ -104,14 +104,31 @@
 
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">backward_compatibility</span>  <span class="c1"># NOQA</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">nonmember</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">.warnings</span> <span class="kn">import</span> <span class="n">DataValidityWarning</span>
-<span class="kn">from</span> <span class="nn">.options</span> <span class="kn">import</span> <span class="n">Dummy</span>
+<span class="kn">from</span> <span class="nn">.options</span> <span class="kn">import</span> <span class="n">Dummy</span><span class="p">,</span> <span class="n">DummyStub</span>
 <span class="kn">from</span> <span class="nn">.decorators</span> <span class="kn">import</span> <span class="n">cached_class_property</span>
 <span class="kn">from</span> <span class="nn">.grammar</span> <span class="kn">import</span> <span class="n">generate_grammar</span>
 <span class="kn">from</span> <span class="nn">.grammar_types.basic</span> <span class="kn">import</span> <span class="n">Separator</span>
+<span class="kn">from</span> <span class="nn">.parsing_results</span> <span class="kn">import</span> <span class="n">Key</span><span class="p">,</span> <span class="n">ArrayKey</span><span class="p">,</span> <span class="n">DictKey</span><span class="p">,</span> <span class="n">RepeatedKey</span><span class="p">,</span> <span class="n">DefDictKey</span><span class="p">,</span> <span class="n">IgnoredKey</span>
+
+
+<div class="viewcode-block" id="NotAllowed"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.NotAllowed.html#ase2sprkkr.potentials.potential_definitions.NotAllowed">[docs]</a><span class="k">class</span> <span class="nc">NotAllowed</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Object of this class can be returned as a result of a :func:ConfigurationDefinition.condition &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="NotAllowed.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.NotAllowed.html#ase2sprkkr.potentials.potential_definitions.NotAllowed.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span>
+
+    <span class="k">def</span> <span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; When returned, the value is NOT ALLOWED&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="BaseDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition">[docs]</a><span class="k">class</span> <span class="nc">BaseDefinition</span><span class="p">:</span>
@@ -135,7 +152,110 @@
 <span class="sd">      - the condition() is invoked, when the elements of the container is listed</span>
 <span class="sd">        to hide the inactive members</span>
 <span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">validate_section</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; Can be redefined for validating whole section &quot;&quot;&quot;</span>
 
+<div class="viewcode-block" id="BaseDefinition.Repeated"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.Repeated">[docs]</a>  <span class="k">class</span> <span class="nc">Repeated</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseDefinition.Repeated.Type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.Repeated.Type">[docs]</a>      <span class="nd">@nonmember</span>
+      <span class="k">class</span> <span class="nc">Type</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">          </span><span class="sd">&quot;&quot;&quot; Type of repetition. &quot;&quot;&quot;</span>
+          <span class="n">NO</span> <span class="o">=</span> <span class="kc">None</span>
+          <span class="c1"># No repetition allowed</span>
+          <span class="n">ARRAY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+          <span class="c1"># The item can be repeated, the result is an (dense) array of values</span>
+          <span class="n">LIST</span> <span class="o">=</span> <span class="nb">list</span>
+          <span class="c1"># The item can be repeated, the result is an (dense) array of values</span>
+          <span class="n">DICT</span> <span class="o">=</span> <span class="nb">dict</span>
+          <span class="c1"># The item can be repeated, the result is a (sparse) dict of values</span>
+
+          <span class="k">def</span> <span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+              <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div>
+
+<div class="viewcode-block" id="BaseDefinition.Repeated.Numbering"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.Repeated.Numbering">[docs]</a>      <span class="nd">@nonmember</span>
+      <span class="k">class</span> <span class="nc">Numbering</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">          </span><span class="sd">&quot;&quot;&quot; Is the output numbered or not? &quot;&quot;&quot;</span>
+          <span class="n">NO</span> <span class="o">=</span> <span class="mi">0</span>
+          <span class="c1"># No numbering, just repeating (if allowed)</span>
+          <span class="n">YES</span> <span class="o">=</span> <span class="mi">1</span>
+          <span class="c1"># Yes, number</span>
+          <span class="n">WITH_DEFAULT</span> <span class="o">=</span> <span class="mi">2</span>
+          <span class="c1"># Numbered output, default value without number</span>
+
+          <span class="k">def</span> <span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+              <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+          <span class="nd">@property</span>
+          <span class="k">def</span> <span class="nf">has_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+              <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">2</span></div>
+
+      <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span><span class="n">Type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">Key</span><span class="p">,</span> <span class="nb">callable</span><span class="p">]</span><span class="o">=</span><span class="n">Key</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span>
+                   <span class="n">is_numbered</span><span class="p">:</span><span class="n">Numbering</span><span class="o">=</span><span class="n">Numbering</span><span class="o">.</span><span class="n">NO</span><span class="p">,</span>
+                   <span class="n">has_header</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">          </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">          Params</span>
+<span class="sd">          ------</span>
+<span class="sd">          type</span>
+<span class="sd">            Type of the repetition (and the resulting storage)</span>
+
+<span class="sd">          key_type</span>
+<span class="sd">            If grammar emits a special type for keys (name of the option), pass it here.</span>
+<span class="sd">            Such special keys takes care of aggregating the values into the propper storage (dict, list,...)</span>
+
+<span class="sd">          is_numbered</span>
+<span class="sd">            Whether the repeated occurences are numbered or not and how. Numbered</span>
+<span class="sd">            means, that there can be values in the form</span>
+<span class="sd">            NAME1=... NAME2=.... etc...</span>
+<span class="sd">          &quot;&quot;&quot;</span>
+
+          <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">key_type</span> <span class="o">=</span> <span class="n">key_type</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">is_numbered</span> <span class="o">=</span> <span class="n">is_numbered</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">has_header</span> <span class="o">=</span> <span class="kc">True</span>
+
+      <span class="k">def</span> <span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">NO</span>
+
+<div class="viewcode-block" id="BaseDefinition.Repeated.create"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.Repeated.create">[docs]</a>      <span class="nd">@classmethod</span>
+      <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">grammar_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+              <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">NO</span>
+          <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+              <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">grammar_type</span><span class="p">,</span> <span class="s1">&#39;is_numpy_array&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">grammar_type</span><span class="o">.</span><span class="n">is_numpy_array</span><span class="p">:</span>
+                  <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ARRAY</span>
+              <span class="k">else</span><span class="p">:</span>
+                  <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">REPEATED</span>
+          <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+              <span class="k">return</span> <span class="bp">cls</span><span class="p">[</span><span class="n">val</span><span class="p">]</span>
+          <span class="k">return</span> <span class="n">val</span></div>
+
+      <span class="nd">@property</span>
+      <span class="k">def</span> <span class="nf">is_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">ARRAY</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">LIST</span><span class="p">)</span>
+
+      <span class="nd">@property</span>
+      <span class="k">def</span> <span class="nf">is_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">DICT</span>
+
+      <span class="n">NO</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">NO</span><span class="p">)</span>
+      <span class="c1"># No repetition at all</span>
+      <span class="n">IGNORED</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">NO</span><span class="p">,</span> <span class="n">IgnoredKey</span><span class="p">)</span>
+      <span class="c1"># The value is completely ignored</span>
+      <span class="n">REPEATED</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">LIST</span><span class="p">,</span> <span class="n">RepeatedKey</span><span class="p">)</span>
+      <span class="c1"># Values can be repeated, the result is array of values</span>
+      <span class="n">ARRAY</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">ARRAY</span><span class="p">,</span> <span class="n">RepeatedKey</span><span class="p">)</span>
+      <span class="c1"># Values can be repeated, the result is array of values</span>
+      <span class="n">REPEATED_SECTION</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">ARRAY</span><span class="p">,</span> <span class="n">Key</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">Numbering</span><span class="o">.</span><span class="n">NO</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+      <span class="c1"># Repeated sections has no header, and their repetition solves themselves</span>
+      <span class="n">NUMBERED</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">ARRAY</span><span class="p">,</span> <span class="n">ArrayKey</span><span class="p">,</span> <span class="n">Numbering</span><span class="o">.</span><span class="n">YES</span><span class="p">)</span>
+      <span class="c1"># Values are given in form &quot;{NAME}{INDEX}&quot;, the result is array of values</span>
+      <span class="n">DICT</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">DICT</span><span class="p">,</span> <span class="n">DictKey</span><span class="p">,</span> <span class="n">Numbering</span><span class="o">.</span><span class="n">YES</span><span class="p">)</span>
+      <span class="c1"># Values are given in form &quot;{NAME}{INDEX}&quot;, the result is dict of values</span>
+      <span class="n">DEFAULTDICT</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">DICT</span><span class="p">,</span> <span class="n">DefDictKey</span><span class="p">,</span> <span class="n">Numbering</span><span class="o">.</span><span class="n">WITH_DEFAULT</span><span class="p">)</span></div>
+      <span class="c1"># Same as NUMBERED_DICT, with non-numbered item possible, serving as default value</span>
+
+<span class="c1">#</span>
+<span class="c1">#</span>
 <div class="viewcode-block" id="BaseDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">name_lcase</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -145,8 +265,18 @@
        <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="n">condition</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="kc">None</span></div>
 
+  <span class="n">is_repeated</span> <span class="o">=</span> <span class="n">Repeated</span><span class="o">.</span><span class="n">NO</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; By default, the configuration items are not repeated &quot;&quot;&quot;</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">real_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
 <div class="viewcode-block" id="BaseDefinition.has_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.has_name">[docs]</a>  <span class="k">def</span> <span class="nf">has_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
        <span class="k">return</span> <span class="n">name</span> <span class="o">==</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_lcase</span> <span class="k">if</span> <span class="n">lower_case</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseDefinition.allowed"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.allowed">[docs]</a>  <span class="k">def</span> <span class="nf">allowed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseDefinition.add_grammar_hook"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.add_grammar_hook">[docs]</a>  <span class="k">def</span> <span class="nf">add_grammar_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hook</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; Added hooks process the grammar of the option/container.</span>
@@ -201,7 +331,12 @@
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_hooks_to_grammar</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseDefinition._add_hooks_to_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition._add_hooks_to_grammar">[docs]</a>  <span class="k">def</span> <span class="nf">_add_hooks_to_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grammar</span><span class="p">):</span>
-<span class="w">       </span><span class="sd">&quot;&quot;&quot; Add registered grammar hooks to a grammar &quot;&quot;&quot;</span>
+<span class="w">       </span><span class="sd">&quot;&quot;&quot; Add registered grammar hooks to a grammar.</span>
+
+<span class="sd">       Developer note: the hooks are added even by grammar types, so it</span>
+<span class="sd">       can not accept definition as argument, if you need it, use the closure</span>
+<span class="sd">       of the hook to &quot;pass&quot; the argument.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar_hooks</span><span class="p">:</span>
            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar_hooks</span><span class="p">:</span>
                <span class="n">grammar</span><span class="o">=</span><span class="n">i</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span>
@@ -253,8 +388,7 @@
   <span class="n">can_be_repeated</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; If True, the item can be repeated in the parsed file. The results will</span>
 <span class="sd">  appear multiple times in the resulting dictionary after the parse.</span>
-<span class="sd">  This behavior have currently the same value as is_numbered_array property = True.</span>
-<span class="sd">  This function is to be redefined in descendants</span>
+<span class="sd">  This attribute/property function is to be redefined in descendants.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">is_independent_on_the_predecessor</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -304,11 +438,14 @@
 <span class="sd">   the attribute can be redefined in instantiated objects and/or descendant classes to change</span>
 <span class="sd">   the behavior.</span>
 <span class="sd">   &quot;&quot;&quot;</span>
+   <span class="n">info_in_data_description</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="RealItemDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.__init__">[docs]</a>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alternative_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">write_alternative_name</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">name_regex</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">write_condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">result_class</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">warning_condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="p">):</span>
@@ -343,6 +480,9 @@
 <span class="sd">          If False, there the name of the variable is not printed in the</span>
 <span class="sd">          configuration file. The variable is recognized by its position.</span>
 <span class="sd">          If None, the default class value is used</span>
+
+<span class="sd">        name_format: str or None</span>
+<span class="sd">          The way how the name is written</span>
 
 <span class="sd">        info: str</span>
 <span class="sd">          A short help message for the value/section. It will be the perex for description.</span>
@@ -379,6 +519,7 @@
            <span class="bp">self</span><span class="o">.</span><span class="n">alternative_names_lcase</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">alternative_names</span> <span class="p">]</span>
        <span class="k">else</span><span class="p">:</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">alternative_names_lcase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alternative_names</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">name_regex</span> <span class="o">=</span> <span class="n">name_regex</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; Alternative names of the option/section. The option/section can</span>
 <span class="sd">       be &quot;denoted&quot; in the configuration file by either by its name or any</span>
 <span class="sd">       of the alternative names.</span>
@@ -396,7 +537,18 @@
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; A longer help text describing the content for the users. &quot;&quot;&quot;</span>
        <span class="k">if</span> <span class="n">result_class</span><span class="p">:</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">result_class</span> <span class="o">=</span> <span class="n">result_class</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">warning_condition</span> <span class="o">=</span> <span class="kc">None</span></div>
+       <span class="bp">self</span><span class="o">.</span><span class="n">warning_condition</span> <span class="o">=</span> <span class="kc">None</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">name_format</span> <span class="o">=</span> <span class="n">name_format</span></div>
+
+   <span class="nd">@property</span>
+   <span class="k">def</span> <span class="nf">formated_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">written_name</span><span class="p">:</span>
+         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">written_name</span>
+      <span class="k">else</span><span class="p">:</span>
+         <span class="n">name</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alternative_names</span><span class="p">))</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_alternative_name</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_format</span><span class="p">:</span>
+         <span class="k">return</span> <span class="s2">&quot;{:</span><span class="si">{}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_format</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">name</span>
 
 <div class="viewcode-block" id="RealItemDefinition.has_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.has_name">[docs]</a>   <span class="k">def</span> <span class="nf">has_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
        <span class="k">if</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">has_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="p">):</span>
@@ -479,42 +631,46 @@
           <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">prefix</span><span class="p">))</span>
        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RealItemDefinition._grammar_of_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition._grammar_of_name">[docs]</a>   <span class="k">def</span> <span class="nf">_grammar_of_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_numbered_array</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="RealItemDefinition._grammar_of_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition._grammar_of_name">[docs]</a>   <span class="k">def</span> <span class="nf">_grammar_of_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return grammar for the name (and possible alternative names etc.)</span>
-
-<span class="sd">          Parameters</span>
-<span class="sd">          ----------</span>
-
-<span class="sd">          is_numbered_array</span>
-<span class="sd">             If True, the resulting grammar is in the form</span>
-<span class="sd">             NAME[index]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_in_grammar</span><span class="p">:</span>
-            <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_names_in_grammar</span><span class="p">()</span>
-            <span class="n">keyword</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessLiteral</span> <span class="k">if</span> <span class="n">is_numbered_array</span> <span class="k">else</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_not_skip_whitespaces_before_name</span><span class="p">:</span>
-               <span class="n">names</span> <span class="o">=</span> <span class="p">[</span> <span class="n">keyword</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">leaveWhitespace</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span> <span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_regex</span><span class="p">:</span>
+                <span class="n">reg</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name_regex</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_not_skip_whitespaces_before_name</span><span class="p">:</span>
+                   <span class="n">reg</span><span class="o">.</span><span class="n">leaveWhitespace</span><span class="p">()</span>
+                <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name_regex</span><span class="p">)]</span>
             <span class="k">else</span><span class="p">:</span>
-               <span class="n">names</span> <span class="o">=</span> <span class="p">[</span> <span class="n">keyword</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span> <span class="p">]</span>
+                <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_names_in_grammar</span><span class="p">()</span>
+                <span class="n">keyword</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessLiteral</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_numbered</span> <span class="k">else</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_not_skip_whitespaces_before_name</span><span class="p">:</span>
+                   <span class="n">names</span> <span class="o">=</span> <span class="p">[</span> <span class="n">keyword</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">leaveWhitespace</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span> <span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                   <span class="n">names</span> <span class="o">=</span> <span class="p">[</span> <span class="n">keyword</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span> <span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_not_skip_whitespaces_before_name</span><span class="p">:</span>
                     <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="o">.</span><span class="n">leaveWhitespace</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">name</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">is_numbered_array</span><span class="p">:</span>
-               <span class="n">name</span> <span class="o">+=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">nums</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;def&#39;</span><span class="p">)</span>
-               <span class="n">name</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;def&#39;</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;def&#39;</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_numbered</span><span class="p">:</span>
+                    <span class="n">idx</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">nums</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_numbered</span><span class="o">.</span><span class="n">has_default</span><span class="p">:</span>
+                      <span class="n">name</span> <span class="o">+=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;def&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                      <span class="n">name</span> <span class="o">+=</span> <span class="n">idx</span>
+                    <span class="n">name</span><span class="o">+=</span> <span class="n">pp</span><span class="o">.</span><span class="n">WordEnd</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">alphanums</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+            <span class="n">name</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">key_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">asList</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">name</span></div>
 
 <div class="viewcode-block" id="RealItemDefinition._tuple_with_my_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition._tuple_with_my_name">[docs]</a>   <span class="k">def</span> <span class="nf">_tuple_with_my_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span>
                            <span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">has_value</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                           <span class="n">is_numbered_array</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                            <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Create the grammar returning tuple (self.name, &lt;result of the expr&gt;)</span>
 
@@ -527,12 +683,9 @@
 <span class="sd">            has_value</span>
 <span class="sd">              If False, do not add the parsed value to the results.</span>
 <span class="sd">              This can be used e.g. for separators (see :class:`ase2sprkkr.common.grammar_types.Separator`) etc.</span>
-<span class="sd">            is_numbered_array</span>
-<span class="sd">              If True, the resulting grammar is in the form</span>
-<span class="sd">              NAME[index]=....</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_in_grammar</span> <span class="k">if</span> <span class="n">name_in_grammar</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">name_in_grammar</span><span class="p">:</span>
-           <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grammar_of_name</span><span class="p">(</span><span class="n">is_numbered_array</span><span class="p">)</span>
+           <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grammar_of_name</span><span class="p">()</span>
            <span class="k">if</span> <span class="n">delimiter</span><span class="p">:</span>
               <span class="n">name</span> <span class="o">+=</span> <span class="n">delimiter</span>
            <span class="n">out</span> <span class="o">=</span> <span class="n">name</span> <span class="o">-</span> <span class="n">expr</span>
@@ -554,6 +707,7 @@
 <span class="sd">     the flow of the parsing &quot;&quot;&quot;</span>
      <span class="n">is_hidden</span> <span class="o">=</span> <span class="kc">True</span>
      <span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
+     <span class="n">item_type</span> <span class="o">=</span> <span class="s1">&#39;control item&#39;</span>
 
 <div class="viewcode-block" id="VirtualDefinition.create_object"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.potentials.potential_definitions.VirtualDefinition.create_object">[docs]</a>     <span class="k">def</span> <span class="nf">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
          <span class="k">return</span> <span class="n">Dummy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span></div>
@@ -582,20 +736,27 @@
 <span class="sd">    e.g. in another branch of Switch &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Stub.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.potentials.potential_definitions.Stub.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;STUB FOR </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;STUB_FOR_</span><span class="si">{</span><span class="n">name</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">item</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">=</span><span class="n">item</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="o">=</span><span class="kc">None</span></div>
 
+<div class="viewcode-block" id="Stub.create_object"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.potentials.potential_definitions.Stub.create_object">[docs]</a>    <span class="k">def</span> <span class="nf">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+         <span class="k">return</span> <span class="n">DummyStub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Stub._save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.potentials.potential_definitions.Stub._save_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
          <span class="n">item</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">_container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">]</span>
-         <span class="k">if</span> <span class="ow">not</span> <span class="n">always</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+         <span class="k">if</span> <span class="ow">not</span> <span class="n">always</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">_container</span><span class="p">):</span>
              <span class="k">return</span> <span class="kc">False</span>
          <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">_save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="n">name_in_grammar</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="n">delimiter</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Stub._create_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.potentials.potential_definitions.Stub._create_grammar">[docs]</a>    <span class="k">def</span> <span class="nf">_create_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
          <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">]</span>
          <span class="n">out</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">_grammar</span><span class="p">(</span><span class="n">allow_dangerous</span><span class="p">)</span>
-         <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Forward</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">out</span></div></div>
+         <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Forward</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">out</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">real_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span></div>
 
 
 <div class="viewcode-block" id="Ignored"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Ignored.html#ase2sprkkr.potentials.potential_definitions.Ignored">[docs]</a><span class="k">class</span> <span class="nc">Ignored</span><span class="p">:</span>
@@ -695,9 +856,21 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="n">members</span></div>
 
 
-<div class="viewcode-block" id="switch"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.switch.html#ase2sprkkr.potentials.potential_definitions.switch">[docs]</a><span class="k">def</span> <span class="nf">switch</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">switch</span> <span class="o">=</span> <span class="n">Switch</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+<div class="viewcode-block" id="switch"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.switch.html#ase2sprkkr.potentials.potential_definitions.switch">[docs]</a><span class="k">def</span> <span class="nf">switch</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">switch</span> <span class="o">=</span> <span class="n">Switch</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">switch</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">switch</span><span class="o">.</span><span class="n">all_values</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="if_defined"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.if_defined.html#ase2sprkkr.potentials.potential_definitions.if_defined">[docs]</a><span class="k">def</span> <span class="nf">if_defined</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">not_values</span><span class="o">=</span><span class="p">[],</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;IF_</span><span class="si">{item}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">switch</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">{</span> <span class="kc">None</span><span class="p">:</span> <span class="n">not_values</span><span class="p">,</span> <span class="kc">True</span><span class="p">:</span> <span class="n">values</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="if_not_defined"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.if_not_defined.html#ase2sprkkr.potentials.potential_definitions.if_not_defined">[docs]</a><span class="k">def</span> <span class="nf">if_not_defined</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">not_values</span><span class="o">=</span><span class="p">[],</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;IF_</span><span class="si">{item}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">if_defined</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">not_values</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Switch"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch">[docs]</a><span class="k">class</span> <span class="nc">Switch</span><span class="p">(</span><span class="n">ControlDefinition</span><span class="p">):</span>
@@ -707,8 +880,9 @@
 
    <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
        <span class="n">empty</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span>
+       <span class="n">empty</span><span class="o">.</span><span class="n">__xx</span> <span class="o">=</span> <span class="mi">1</span>
 
-<div class="viewcode-block" id="Switch.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.__init__">[docs]</a>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Switch.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.__init__">[docs]</a>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">       Parameters</span>
 <span class="sd">       ----------</span>
@@ -738,8 +912,9 @@
 <span class="sd">          Not needed to be supplied, it can be autogenerated.</span>
 <span class="sd">       &quot;&quot;&quot;</span>
 
-       <span class="bp">self</span><span class="o">.</span><span class="n">item</span> <span class="o">=</span> <span class="n">item</span>
        <span class="n">used</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">item</span> <span class="o">=</span> <span class="n">item</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="n">condition</span>
 
        <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
            <span class="k">nonlocal</span> <span class="n">used</span>
@@ -750,7 +925,6 @@
                <span class="k">return</span> <span class="n">n</span>
 
        <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-           <span class="k">nonlocal</span> <span class="n">used</span>
            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="k">return</span> <span class="p">{</span> <span class="n">i</span><span class="p">:</span> <span class="n">create</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
            <span class="k">else</span><span class="p">:</span>
@@ -760,55 +934,68 @@
        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span> <span class="p">:</span> <span class="n">convert</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="k">else</span> <span class="p">{</span> <span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="kc">None</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">copied</span> <span class="o">=</span> <span class="kc">False</span>
-       <span class="k">if</span> <span class="n">template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-          <span class="n">template</span><span class="o">=</span><span class="s1">&#39;_SWITCH_</span><span class="si">{item}</span><span class="s1">&#39;</span>
+
+       <span class="k">if</span> <span class="n">template</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+           <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;_SWITCH_</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1">&#39;</span>
        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">template</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Switch.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.copy">[docs]</a>   <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-   <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
-       <span class="k">return</span> <span class="n">option</span><span class="o">.</span><span class="n">_definition</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">]()]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+   <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+       <span class="k">return</span> <span class="n">definition</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items_for</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">switch_value</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Switch.items_for"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.items_for">[docs]</a>   <span class="k">def</span> <span class="nf">items_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">value</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Switch.all_values"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.all_values">[docs]</a>   <span class="k">def</span> <span class="nf">all_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="k">return</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Switch.item_hook"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.item_hook">[docs]</a>   <span class="k">def</span> <span class="nf">item_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grammar</span><span class="p">):</span>
-       <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">force_order</span><span class="p">:</span>
-          <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Switch for custom-order containers have not yet been implemented&quot;</span><span class="p">)</span>
-
-       <span class="k">def</span> <span class="nf">item_value</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-           <span class="n">ok</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">{})</span>
-           <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ok</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-               <span class="n">tpl</span> <span class="o">=</span> <span class="n">grammar</span><span class="o">.</span><span class="n">_prepared</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-               <span class="k">if</span> <span class="n">tpl</span><span class="p">:</span>
-                  <span class="n">tpl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">tpl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                  <span class="n">tpl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF True THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">tpl</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
-               <span class="k">elif</span> <span class="n">i</span><span class="o">.</span><span class="n">output_definition</span><span class="o">.</span><span class="n">has_grammar</span><span class="p">():</span>
-                  <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;In Switch, the item </span><span class="si">{</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> for case </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> was not prepared&quot;</span><span class="p">)</span>
-
-           <span class="c1"># no.setParseAction(lambda x: breakpoint() or x)</span>
-           <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_values</span><span class="p">())</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">ok</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
-               <span class="n">tpl</span> <span class="o">=</span> <span class="n">grammar</span><span class="o">.</span><span class="n">_prepared</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-               <span class="k">if</span> <span class="n">tpl</span><span class="p">:</span>
-                  <span class="n">tpl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF False THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">tpl</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
-                  <span class="n">tpl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty</span>
-               <span class="k">elif</span> <span class="n">i</span><span class="o">.</span><span class="n">output_definition</span><span class="o">.</span><span class="n">has_grammar</span><span class="p">():</span>
-                  <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;In Switch, the item </span><span class="si">{</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> for case </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> was not prepared&quot;</span><span class="p">)</span>
-       <span class="n">grammar</span><span class="o">.</span><span class="n">_prepared</span> <span class="o">=</span> <span class="p">{}</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span> <span class="o">=</span> <span class="n">grammar</span>
-       <span class="k">return</span> <span class="n">grammar</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">item_value</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="n">x</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="Switch.prepare_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.prepare_grammar">[docs]</a>   <span class="k">def</span> <span class="nf">prepare_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">grammar</span><span class="p">):</span>
+<span class="w">       </span><span class="sd">&quot;&quot;&quot; Childs will have either the original grammar, or empty - set by _choose method.</span>
+<span class="sd">       So replace the grammar by the forward.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+       <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">force_order</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">grammar</span>
        <span class="n">f</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Forward</span><span class="p">()</span>
-       <span class="c1"># old pyparsing compatibility</span>
-       <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;set_name&#39;</span><span class="p">):</span>
-           <span class="n">f</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="si">}</span><span class="s2"> THEN </span><span class="si">{</span><span class="n">grammar</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="o">.</span><span class="n">_prepared</span><span class="p">[</span><span class="n">definition</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+       <span class="k">if</span> <span class="n">definition</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">{}):</span>
+           <span class="n">f</span> <span class="o">&lt;&lt;=</span> <span class="n">grammar</span>
+           <span class="n">f</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF* ndef THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
+       <span class="k">else</span><span class="p">:</span>
+           <span class="n">f</span> <span class="o">&lt;&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty</span>
+           <span class="n">f</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF* False THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">_grammars</span><span class="p">[</span><span class="n">definition</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
        <span class="k">return</span> <span class="n">f</span></div>
 
+<div class="viewcode-block" id="Switch.item_hook"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.item_hook">[docs]</a>   <span class="k">def</span> <span class="nf">item_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grammar</span><span class="p">):</span>
+       <span class="n">grammars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grammars</span> <span class="o">=</span> <span class="p">{}</span>
+
+       <span class="k">def</span> <span class="nf">choose</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+           <span class="n">ok</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">{})</span>
+           <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ok</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+               <span class="n">tpl</span> <span class="o">=</span> <span class="n">grammars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+               <span class="k">if</span> <span class="n">tpl</span><span class="p">:</span>
+                  <span class="n">f</span> <span class="o">=</span> <span class="n">tpl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                  <span class="n">f</span> <span class="o">&lt;&lt;=</span> <span class="n">tpl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                  <span class="n">f</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF True THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">tpl</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
+               <span class="k">elif</span> <span class="n">i</span><span class="o">.</span><span class="n">output_definition</span><span class="o">.</span><span class="n">has_grammar</span><span class="p">():</span>
+                  <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;In Switch, the item </span><span class="si">{</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> for case </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> was not prepared&quot;</span><span class="p">)</span>
+
+           <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_values</span><span class="p">())</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">ok</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+               <span class="n">tpl</span> <span class="o">=</span> <span class="n">grammars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+               <span class="k">if</span> <span class="n">tpl</span><span class="p">:</span>
+                  <span class="n">f</span> <span class="o">=</span> <span class="n">tpl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                  <span class="n">f</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF False THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">tpl</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
+                  <span class="n">f</span> <span class="o">&lt;&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty</span>
+               <span class="k">elif</span> <span class="n">i</span><span class="o">.</span><span class="n">output_definition</span><span class="o">.</span><span class="n">has_grammar</span><span class="p">():</span>
+                  <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;In Switch, the item </span><span class="si">{</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> for case </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> was not prepared&quot;</span><span class="p">)</span>
+
+       <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">force_order</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">grammar</span>
+       <span class="k">return</span> <span class="n">grammar</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">choose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="n">x</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Switch.remove_from_container"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.remove_from_container">[docs]</a>   <span class="k">def</span> <span class="nf">remove_from_container</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">:</span>
+     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">:</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">remove_grammar_hook</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">item_hook</span><span class="p">)</span>
            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -818,17 +1005,23 @@
        <span class="bp">self</span><span class="o">.</span><span class="n">remove_from_container</span><span class="p">()</span>
        <span class="k">if</span> <span class="n">container</span><span class="p">:</span>
            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">copied</span><span class="p">:</span>
-              <span class="bp">self</span><span class="o">.</span><span class="n">copied</span> <span class="o">=</span> <span class="kc">False</span>
-              <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:{</span> <span class="n">n</span> <span class="p">:</span> <span class="n">container</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">v</span> <span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="p">}</span>
-
+               <span class="bp">self</span><span class="o">.</span><span class="n">copied</span> <span class="o">=</span> <span class="kc">False</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:{</span> <span class="n">n</span> <span class="p">:</span> <span class="n">container</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">v</span> <span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="p">}</span>
            <span class="n">container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">add_grammar_hook</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">item_hook</span><span class="p">)</span>
            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                    <span class="n">j</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="bp">self</span>
+               <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                   <span class="n">j</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="bp">self</span>
        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">added_to_container</span><span class="p">(</span><span class="n">container</span><span class="p">)</span></div>
 
    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">remove_from_container</span><span class="p">()</span></div>
+       <span class="bp">self</span><span class="o">.</span><span class="n">remove_from_container</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Switch.switch_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.switch_value">[docs]</a>   <span class="k">def</span> <span class="nf">switch_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="n">container</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">))</span></div>
+
+   <span class="nd">@property</span>
+   <span class="k">def</span> <span class="nf">condition_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span></div>
 
 
 <div class="viewcode-block" id="SeparatorDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.potentials.potential_definitions.SeparatorDefinition">[docs]</a><span class="k">class</span> <span class="nc">SeparatorDefinition</span><span class="p">(</span><span class="n">VirtualDefinition</span><span class="p">):</span>

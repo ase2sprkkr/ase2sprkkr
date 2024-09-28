@@ -740,9 +740,9 @@
 <span class="c1">### cache -- simplified access to the infinity cache</span>
 <span class="c1">################################################################################</span>
 
-<div class="viewcode-block" id="cache"><a class="viewcode-back" href="../auto/ase2sprkkr.common.decorators.cache.html#ase2sprkkr.common.decorators.cache">[docs]</a><span class="k">def</span> <span class="nf">cache</span><span class="p">(</span><span class="n">user_function</span><span class="p">,</span> <span class="o">/</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">cache</span><span class="p">(</span><span class="n">user_function</span><span class="p">,</span> <span class="o">/</span><span class="p">):</span>
     <span class="s1">&#39;Simple lightweight unbounded cache.  Sometimes called &quot;memoize&quot;.&#39;</span>
-    <span class="k">return</span> <span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)(</span><span class="n">user_function</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)(</span><span class="n">user_function</span><span class="p">)</span>
 
 
 <span class="c1">################################################################################</span>

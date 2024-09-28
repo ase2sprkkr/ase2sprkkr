@@ -1,42 +1,7 @@
-spheres
-=======
-
-Full name: **ase2sprkkr.bindings.xband.spheres**
-
-
-
-.. rubric:: Description
+ase2sprkkr.bindings.xband.spheres module
+========================================
 
 .. automodule:: ase2sprkkr.bindings.xband.spheres
-
-   
-   
-   
-
-
-   
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-      :toctree:
-      :template: custom-base-template.rst
-   
-      empty_spheres
-   
-   
-
-
-   
-   
-   
-
-
-   
-   
-   
-
-
-  
-  
-  
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -97,10 +97,20 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">datetime</span>
 
+<span class="n">numpy_types</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nb">int</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span>
+  <span class="nb">float</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+  <span class="nb">complex</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="sd">&quot;&quot;&quot; Map to numpy types &quot;&quot;&quot;</span>
+
 <span class="n">types_alternatives</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="nb">int</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,),</span>
+  <span class="nb">int</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
+  <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">),</span>
   <span class="nb">float</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,),</span>
+  <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">:</span> <span class="p">(</span><span class="nb">float</span><span class="p">,),</span>
   <span class="nb">complex</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">,),</span>
+  <span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">:</span> <span class="p">(</span><span class="nb">complex</span><span class="p">,),</span>
   <span class="nb">bool</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">,),</span>
   <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">,</span> <span class="p">),</span>
 <span class="p">}</span>
@@ -109,9 +119,12 @@
 <span class="n">normalize_type_map</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="sd">&quot;&quot;&quot; Mapping of alternative types to the &#39;canonical ones&#39;. &quot;&quot;&quot;</span>
 
-<span class="c1">#fill the map</span>
+<span class="c1"># fill the map</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">types_alternatives</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">normalize_type_map</span><span class="p">:</span>
+    <span class="n">normalize_type_map</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
   <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">types_alternatives</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">normalize_type_map</span><span class="p">:</span>
       <span class="n">normalize_type_map</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
 <span class="k">del</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span>
 
@@ -120,6 +133,7 @@
 <span class="p">}</span>
 <span class="sd">&quot;&quot;&quot; All types, that are allowed for a given type. I.e., the content of types_alternatives and the primary</span>
 <span class="sd">type itself &quot;&quot;&quot;</span>
+
 
 <div class="viewcode-block" id="normalize_type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.alternative_types.normalize_type.html#ase2sprkkr.common.alternative_types.normalize_type">[docs]</a><span class="k">def</span> <span class="nf">normalize_type</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Return the &#39;canonical type&#39; for a given type.</span>

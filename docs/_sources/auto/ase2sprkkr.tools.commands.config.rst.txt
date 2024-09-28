@@ -22,6 +22,7 @@ Full name: **ase2sprkkr.tools.commands.config**
       :toctree:
       :template: custom-base-template.rst
    
+      default_content
       parser
       run
    

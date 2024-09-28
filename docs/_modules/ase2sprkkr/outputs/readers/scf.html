@@ -92,7 +92,6 @@
   <h1>Source code for ase2sprkkr.outputs.readers.scf</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Rydberg</span>
 
 <span class="kn">from</span> <span class="nn">..output_definitions</span> <span class="kn">import</span> <span class="n">OutputSectionDefinition</span> <span class="k">as</span> <span class="n">Section</span><span class="p">,</span> \
@@ -101,13 +100,14 @@
                                  <span class="n">OutputNonameValueDefinition</span> <span class="k">as</span> <span class="n">VN</span>
 <span class="kn">from</span> <span class="nn">...common.grammar_types</span> <span class="kn">import</span> <span class="n">Table</span><span class="p">,</span> <span class="n">integer</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">Real</span><span class="p">,</span> <span class="n">RealWithUnits</span><span class="p">,</span><span class="n">String</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Array</span>
 <span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">TaskResult</span>
-<span class="kn">from</span> <span class="nn">...common.process_output_reader</span> <span class="kn">import</span> <span class="n">ProcessOutputReader</span>
+<span class="kn">from</span> <span class="nn">...common.process_output_reader</span> <span class="kn">import</span> <span class="n">readline</span><span class="p">,</span> <span class="n">readline_until</span>
+<span class="kn">from</span> <span class="nn">..sprkkr_output_reader</span> <span class="kn">import</span> <span class="n">SprKkrOutputReader</span>
 <span class="kn">from</span> <span class="nn">...common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
-<span class="kn">from</span> <span class="nn">...potentials.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
 <span class="kn">from</span> <span class="nn">...sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
 <span class="kn">from</span> <span class="nn">...common.formats</span> <span class="kn">import</span> <span class="n">fortran_format</span>
 <span class="kn">from</span> <span class="nn">...common.grammar</span> <span class="kn">import</span> <span class="n">replace_whitechars</span>
 <span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">KkrProcess</span>
+<span class="kn">from</span> <span class="nn">...potentials.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
 
 
 <div class="viewcode-block" id="RealOrStars"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars">[docs]</a><span class="k">class</span> <span class="nc">RealOrStars</span><span class="p">(</span><span class="n">Real</span><span class="p">):</span>
@@ -118,27 +118,6 @@
 <div class="viewcode-block" id="ScfResult"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult">[docs]</a><span class="k">class</span> <span class="nc">ScfResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Objects of this class holds the results of computed SCF class &quot;&quot;&quot;</span>
 
-  <span class="nd">@property</span>
-  <span class="k">def</span> <span class="nf">iterations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Array of the results of iterations &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
-
-  <span class="nd">@cached_property</span>
-  <span class="k">def</span> <span class="nf">potential_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; New (output) potential file name &quot;&quot;&quot;</span>
-      <span class="n">potfil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span><span class="p">()</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="n">potfil</span><span class="p">:</span>
-         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set CONTROL.POTFIL of the input_parameters to read the potential&quot;</span><span class="p">)</span>
-      <span class="n">fname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;_new&#39;</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
-         <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">fname</span>
-
-  <span class="nd">@cached_property</span>
-  <span class="k">def</span> <span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; The new (output) potential - that contains the converged charge density etc. &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
-
   <span class="nd">@cached_property</span>
   <span class="k">def</span> <span class="nf">calculator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; The calculator that has the new (output) potential assigned - i.e. that</span>
@@ -148,12 +127,18 @@
       <span class="k">else</span><span class="p">:</span>
          <span class="n">SPRKKR</span><span class="p">(</span><span class="n">potential</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ScfResult.new_task"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult.new_task">[docs]</a>  <span class="k">def</span> <span class="nf">new_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
-      <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculator</span><span class="o">.</span><span class="n">copy_with_potential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
-      <span class="n">out</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">task</span>
-      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">task</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;jxc&#39;</span><span class="p">:</span>
-          <span class="n">out</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;EMIN&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_iteration</span><span class="o">.</span><span class="n">energy</span><span class="o">.</span><span class="n">EMIN</span><span class="p">())</span>
-      <span class="k">return</span> <span class="n">out</span></div>
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">potential_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">fname</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">potential_filename</span> <span class="o">+</span> <span class="s1">&#39;_new&#39;</span>
+      <span class="k">return</span> <span class="n">fname</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">start_potential_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">potential_filename</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">start_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -296,35 +281,20 @@
 <span class="p">])</span>
 
 
-<div class="viewcode-block" id="ScfOutputReader"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader">[docs]</a><span class="k">class</span> <span class="nc">ScfOutputReader</span><span class="p">(</span><span class="n">ProcessOutputReader</span><span class="p">):</span>
+<div class="viewcode-block" id="ScfOutputReader"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader">[docs]</a><span class="k">class</span> <span class="nc">ScfOutputReader</span><span class="p">(</span><span class="n">SprKkrOutputReader</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  This class reads and parses the output of the SCF task of the SPR-KKR.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ScfOutputReader.read_output"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">):</span>
+<div class="viewcode-block" id="ScfOutputReader.read_output"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_commons</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s1">&#39;converged&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s1">&#39;potential&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_new&#39;</span>
         <span class="n">iterations</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">async</span> <span class="k">def</span> <span class="nf">readline</span><span class="p">():</span>
-          <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-          <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
-             <span class="k">raise</span> <span class="ne">EOFError</span><span class="p">()</span>
-          <span class="k">return</span> <span class="n">line</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
-
-        <span class="k">async</span> <span class="k">def</span> <span class="nf">readlinecond</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">canend</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-          <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
-               <span class="k">if</span> <span class="n">canend</span><span class="p">:</span>
-                  <span class="k">return</span> <span class="s1">&#39;&#39;</span>
-               <span class="k">raise</span> <span class="ne">EOFError</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">cond</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
-              <span class="k">return</span> <span class="n">line</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
-
         <span class="k">try</span><span class="p">:</span>
           <span class="n">first</span> <span class="o">=</span> <span class="kc">True</span>
           <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readlinecond</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;EMIN   = &#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readline_until</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;EMIN   = &#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
                 <span class="k">break</span>
 
@@ -336,7 +306,7 @@
             <span class="k">if</span> <span class="sa">b</span><span class="s1">&#39;ECTOP&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
                 <span class="n">out</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">][</span><span class="s1">&#39;ECTOP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
 
-            <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readlinecond</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;SPRKKR-run for: &#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readline_until</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;SPRKKR-run for: &#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
             <span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">first</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">==</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span>
                <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
@@ -344,26 +314,26 @@
             <span class="n">run</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;SPRKKR-run for:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;system_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">run</span>
 
-            <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readlinecond</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39; E=&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readline_until</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39; E=&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
             <span class="n">atoms</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
               <span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="k">await</span> <span class="n">atomic_types_definition</span><span class="o">.</span><span class="n">parse_from_stream</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span>
                 <span class="n">up_to</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> -------------------------------------------------------------------------------&#39;</span><span class="p">,</span>
                 <span class="n">start</span><span class="o">=</span><span class="n">line</span>
               <span class="p">))</span>
-              <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readlinecond</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">line</span><span class="o">!=</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+              <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readline_until</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">line</span><span class="o">!=</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
               <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;E=&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
                 <span class="k">break</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;atomic_types&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atoms</span>
 
-            <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readlinecond</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39; ERR&#39;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="sa">b</span><span class="s1">&#39;EF&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readline_until</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39; ERR&#39;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="sa">b</span><span class="s1">&#39;EF&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
             <span class="n">items</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;iteration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">][</span><span class="s1">&#39;EF&#39;</span><span class="p">]</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;spin&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">10</span><span class="p">]),</span>
                              <span class="s1">&#39;orbital&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">11</span><span class="p">])</span> <span class="p">}</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="n">readline</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="n">readline</span><span class="p">(</span><span class="n">stdout</span><span class="p">))</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">][</span><span class="s1">&#39;ETOT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">Rydberg</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;converged&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;converged&#39;</span>
 
@@ -382,7 +352,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: The computation does not converged!!!&quot;</span><span class="p">)</span>
 
-          <span class="k">return</span> <span class="n">iterations</span>
+          <span class="n">result</span><span class="o">.</span><span class="n">iterations</span> <span class="o">=</span> <span class="n">iterations</span>
 
         <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
           <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;The output ends unexpectedly&#39;</span><span class="p">)</span></div></div>

@@ -127,8 +127,12 @@
           <span class="bp">self</span><span class="o">.</span><span class="n">VMTZ</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sprkkr_vmtz&#39;</span><span class="p">]</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">SCFSTATUS</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;START&#39;</span><span class="p">:</span>
           <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
-              <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">potential</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                  <span class="k">break</span>
+              <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">atomic_types</span><span class="p">():</span>
+                  <span class="k">if</span> <span class="ow">not</span> <span class="n">j</span><span class="o">.</span><span class="n">has_converged_data</span><span class="p">():</span>
+                      <span class="k">break</span>
+              <span class="k">else</span><span class="p">:</span>
+                  <span class="k">continue</span>
+              <span class="k">break</span>
           <span class="k">else</span><span class="p">:</span>
               <span class="bp">self</span><span class="o">.</span><span class="n">SCFSTATUS</span> <span class="o">=</span> <span class="s1">&#39;CONVERGED&#39;</span></div></div>
 

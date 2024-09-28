@@ -14,11 +14,31 @@ or conda
 
    conda install -c ase2sprkkr ase2sprkkr
 
+I reccomend to install beta version: there can be some bugs, but mostly it has
+more bugs repaired than introduced, moreover, you can enjoy new properties. The
+beta versions are available only through ``pip``:
+
+.. code:: bash
+
+   pip install --pre ase2sprkkr
+
+To use bleading edge sources (the newest features, but you risk to encounter bugs),
+you can install the packages from github:
+
+.. code:: bash
+
+   pip install git+https://github.com/ase2sprkkr/ase2sprkkr.git@develop
+
+
+
 Further notes
 --------------
 
 In some systems, the ``pip`` utility for ``python3`` is called ``pip3``.
-If it is not installed, you can install it using the linux distribution package
+It may be possible, that ``pip`` is installed, but it is not in ``PATH``.
+In such case, the pip utility can be runned using ``python -m pip`` or ``python3 -m pip3``.
+
+If ``pip`` is not installed, you can install it using the linux distribution package
 manager, e.g. in Debian/Ubuntu
 
 .. code:: bash
@@ -30,8 +50,6 @@ or
 .. code:: bash
 
    zypper install pip
-
-in OpenSUSE
 
 For the conda installation instructions, see the Anaconda documentation
 https://docs.anaconda.com/anaconda/install/linux/ however, for the users
@@ -47,9 +65,9 @@ package sources.
 Requirements
 ------------
 
--  Python >= 3.7
+-  Python >= 3.8
 -  SPR-KKR (not checked by the installer)
--  Python packages: see the the setup.cfg
+-  Python packages: see the the pypoject.toml file
 -  Git (to obtain the sources)
 
 Obtaining the package using GIT
@@ -61,7 +79,7 @@ Obtaining the package using GIT
    git checkout release
 
 The first line fetches the code of the package. The second one checks
-out the recommended production version of the code.
+out the stable (production) version of the code.
 
 If you want to obtain the current version of the (earlier-downloaded)
 code, run
@@ -71,13 +89,13 @@ code, run
    git fetch
    git checkout release
 
-Alternatively, you can checkout ``master`` or ``develop`` branch
+Alternatively, you can checkout ``master`` branch
 
 .. code:: bash
 
    git checkout master
 
-to obtain a newer (not thorougly tested yet) version or
+to obtain a newer (not thorougly tested yet) version or ``develop```
 
 .. code:: bash
 
@@ -89,30 +107,35 @@ and report the bugs).
 Using the package (without installing the pip/conda packages)
 -------------------------------------------------------------
 
-You can either just add the src directory to your PYTHONPATH, or you can
-build and install the package, as it is described below.
-
-Installation of the package from the sources
---------------------------------------------
-
-To install the package, the simplest way is to use pip
+You can install the package from the obtained sources using
 
 .. code:: bash
 
-   python3 -m pip install .
+  pip install .
 
-Maybe, you will have to replace ``python3`` with ``python``.
-For an editable install, please run
+Or, if you want to develop ase2sprkkr, it is better idea to
+do an `editable` installation, where the package will see
+the changes made.
 
 .. code:: bash
 
-   python3 setup.py develop --user
+   pip install --no-build-isolation --editable .
 
-and ignore some deprecation warning. Editable install is aimed for developers:
-in this type of install, only link to the current directory will be added to
-your local ``site-packages``, which allows you to use the changesyou make to
-the source code.
+You can add ``--no-deps`` switch for a faster rebuild.
 
+The limitation of the editable install is, that it won't see
+newly created files automatically: you need run the command above
+again to make it notice it.
+
+If the build process fail, try to remove ``build`` directory created
+y the previous build (if it exists). Mostly it happens, if the
+``--no-build-isolation`` switch is ommited. On one system I encouter
+the problem, that pip failed to install ``ninja``, than installation
+of ninja using system package manager helped:
+
+.. code:: bash
+
+   sudo apt install ninja
 
 Documentation of the package
 ============================

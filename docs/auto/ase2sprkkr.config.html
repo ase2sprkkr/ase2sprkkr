@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="calculator_parameters" href="ase2sprkkr.config.calculator_parameters.html" />
-    <link rel="prev" title="version" href="ase2sprkkr.version.html" /> 
+    <link rel="next" title="_get_suffix" href="ase2sprkkr.config._get_suffix.html" />
+    <link rel="prev" title="IndentDumper" href="ase2sprkkr.common.yaml.IndentDumper.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -66,25 +66,32 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">config</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.config.calculator_parameters.html">calculator_parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.config.sprkkr_executable_suffix.html">sprkkr_executable_suffix</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.config._get_suffix.html">_get_suffix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.config.find_default_mpi_runner.html">find_default_mpi_runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.config.get_default_mpi_runner.html">get_default_mpi_runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.config.load_user_preferences.html">load_user_preferences</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.config.mpi_runner.html">mpi_runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.config.user_preferences_file.html">user_preferences_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.config.ConfigFileDefinition.html">ConfigFileDefinition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.config.Configuration.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.config.Section.html">Section</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -117,21 +124,68 @@
   <section id="config">
 <h1>config<a class="headerlink" href="#config" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.config</strong></p>
+<p class="rubric">Module class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-7ddc6d52ac86d8ab4acdcc0a89ce97f3966013fb.png" alt="Inheritance diagram of ase2sprkkr.config.ConfigFileDefinition, ase2sprkkr.config.Configuration, ase2sprkkr.config.Section" usemap="#inheritance58ba9a68a8" class="inheritance graphviz" /></div>
+<map id="inheritance58ba9a68a8" name="inheritance58ba9a68a8">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="5,94,190,117"/>
+<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="216,71,372,94"/>
+<area shape="rect" id="node2" href="ase2sprkkr.config.Configuration.html#ase2sprkkr.config.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="652,94,751,117"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="44,27,151,50"/>
+<area shape="rect" id="node9" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="229,27,360,50"/>
+<area shape="rect" id="node4" href="ase2sprkkr.config.ConfigFileDefinition.html#ase2sprkkr.config.ConfigFileDefinition" target="_top" title="ConfigFileDefinition" alt="" coords="820,5,955,28"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="609,5,793,28"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="399,71,583,94"/>
+<area shape="rect" id="node8" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="424,27,558,50"/>
+<area shape="rect" id="node11" href="ase2sprkkr.common.container_definitions.SectionDefinition.html#ase2sprkkr.common.container_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="641,50,762,73"/>
+<area shape="rect" id="node10" href="ase2sprkkr.config.Section.html#ase2sprkkr.config.Section" target="_top" title="Section" alt="" coords="855,50,920,73"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p class="rubric">Description</p>
 <span class="target" id="module-ase2sprkkr.config"></span><p>This module contains configuration, that could be changed, preferrably
 by .config/ase2sprkkr/__init__.py file</p>
-<p class="rubric">Module Attributes</p>
+<p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.config.calculator_parameters.html#ase2sprkkr.config.calculator_parameters" title="ase2sprkkr.config.calculator_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculator_parameters</span></code></a></p></td>
-<td><p>This suffix is appended (if not stated otherwise) the SPRKKR executable names.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.config._get_suffix.html#ase2sprkkr.config._get_suffix" title="ase2sprkkr.config._get_suffix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_suffix</span></code></a>(*_)</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.config.sprkkr_executable_suffix.html#ase2sprkkr.config.sprkkr_executable_suffix" title="ase2sprkkr.config.sprkkr_executable_suffix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sprkkr_executable_suffix</span></code></a></p></td>
-<td><p>The executable to run MPI, given as list (with possible arguments).</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.config.find_default_mpi_runner.html#ase2sprkkr.config.find_default_mpi_runner" title="ase2sprkkr.config.find_default_mpi_runner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_default_mpi_runner</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.config.get_default_mpi_runner.html#ase2sprkkr.config.get_default_mpi_runner" title="ase2sprkkr.config.get_default_mpi_runner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_default_mpi_runner</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.config.load_user_preferences.html#ase2sprkkr.config.load_user_preferences" title="ase2sprkkr.config.load_user_preferences"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_user_preferences</span></code></a>()</p></td>
+<td><p>Load user defined preferences from <code class="docutils literal notranslate"><span class="pre">$HOME/.config/ase2sprkkr/__init__.py</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.config.mpi_runner.html#ase2sprkkr.config.mpi_runner" title="ase2sprkkr.config.mpi_runner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mpi_runner</span></code></a>(mpi)</p></td>
+<td><p>Return a shell command to execute a mpi task.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.config.user_preferences_file.html#ase2sprkkr.config.user_preferences_file" title="ase2sprkkr.config.user_preferences_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">user_preferences_file</span></code></a>()</p></td>
+<td><p>Return filename with user preferences</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.config.ConfigFileDefinition.html#ase2sprkkr.config.ConfigFileDefinition" title="ase2sprkkr.config.ConfigFileDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConfigFileDefinition</span></code></a>(name[, members])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.config.Configuration.html#ase2sprkkr.config.Configuration" title="ase2sprkkr.config.Configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Configuration</span></code></a>(definition[, container])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.config.Section.html#ase2sprkkr.config.Section" title="ase2sprkkr.config.Section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Section</span></code></a>(name[, members, alternative_names, ...])</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -141,8 +195,8 @@ by .config/ase2sprkkr/__init__.py file</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.version.html" class="btn btn-neutral float-left" title="version" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.config.calculator_parameters.html" class="btn btn-neutral float-right" title="calculator_parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.yaml.IndentDumper.html" class="btn btn-neutral float-left" title="IndentDumper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.config._get_suffix.html" class="btn btn-neutral float-right" title="_get_suffix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

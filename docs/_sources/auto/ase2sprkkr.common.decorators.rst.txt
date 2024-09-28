@@ -25,7 +25,6 @@ Full name: **ase2sprkkr.common.decorators**
       :toctree:
       :template: custom-base-template.rst
    
-      cache
       std_cached_property
    
    

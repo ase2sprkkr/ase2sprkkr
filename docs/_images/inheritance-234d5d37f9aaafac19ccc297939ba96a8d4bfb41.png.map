@@ -1,0 +1,7 @@
+<map id="inheritance8af6a9bdda" name="inheritance8af6a9bdda">
+<area shape="rect" id="node1" href="#ase2sprkkr.config.ConfigFileDefinition" target="_top" title="config.ConfigFileDefinition" alt="" coords="837,3,957,19"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="605,3,819,19"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="3,3,179,19"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="197,3,389,19"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="407,3,587,19"/>
+</map>

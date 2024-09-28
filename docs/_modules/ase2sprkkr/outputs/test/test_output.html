@@ -91,7 +91,7 @@
              
   <h1>Source code for ase2sprkkr.outputs.test.test_output</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">..readers.scf</span> <span class="kn">import</span> <span class="n">ScfOutputReader</span><span class="p">,</span> <span class="n">atomic_types_definition</span>
+<span class="kn">from</span> <span class="nn">..readers.scf</span> <span class="kn">import</span> <span class="n">ScfOutputReader</span><span class="p">,</span> <span class="n">ScfResult</span><span class="p">,</span> <span class="n">atomic_types_definition</span>
 
 <span class="k">if</span> <span class="n">__package__</span><span class="p">:</span>
    <span class="kn">from</span> <span class="nn">.init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
@@ -119,11 +119,17 @@
               <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span>
               <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">,</span> <span class="s1">&#39;scf.out&#39;</span>
       <span class="p">)</span>
-      <span class="k">for</span> <span class="n">reader</span> <span class="ow">in</span> <span class="n">ScfOutputReader</span><span class="p">,</span><span class="n">ScfOutputReader</span><span class="p">():</span>
-          <span class="n">out</span><span class="o">=</span><span class="n">reader</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-          <span class="k">assert</span> <span class="n">out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;energy&#39;</span><span class="p">][</span><span class="s1">&#39;EMIN&#39;</span><span class="p">](),</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;atomic_types&#39;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">)</span></div></div>
+
+      <span class="c1"># read_from_file is both method and class_method</span>
+      <span class="k">for</span> <span class="n">reader</span> <span class="ow">in</span> <span class="n">ScfOutputReader</span><span class="p">,</span> <span class="n">ScfOutputReader</span><span class="p">():</span>
+
+          <span class="n">out</span> <span class="o">=</span> <span class="n">ScfResult</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+          <span class="n">reader</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">read_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">out</span><span class="p">])</span>
+
+          <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;energy&#39;</span><span class="p">][</span><span class="s1">&#39;EMIN&#39;</span><span class="p">](),</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;atomic_types&#39;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">)</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">converged</span><span class="p">(),</span> <span class="kc">False</span><span class="p">)</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">converged</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

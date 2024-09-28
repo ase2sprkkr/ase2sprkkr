@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.options**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.options.BaseOption  ase2sprkkr.common.options.CustomOption  ase2sprkkr.common.options.DangerousValue  ase2sprkkr.common.options.Dummy  ase2sprkkr.common.options.Option 
+.. inheritance-diagram::  ase2sprkkr.common.options.BaseOption  ase2sprkkr.common.options.CustomOption  ase2sprkkr.common.options.DangerousValue  ase2sprkkr.common.options.Dummy  ase2sprkkr.common.options.DummyStub  ase2sprkkr.common.options.Option 
       :parts: 1
 
 |
@@ -39,6 +39,7 @@ Full name: **ase2sprkkr.common.options**
       CustomOption
       DangerousValue
       Dummy
+      DummyStub
       Option
    
    

@@ -24,6 +24,15 @@ Full name: **ase2sprkkr.common.process\_output\_reader**
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      readline
+      readline_until
+   
    
 
 

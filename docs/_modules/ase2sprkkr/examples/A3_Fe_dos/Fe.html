@@ -101,7 +101,7 @@
 
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;Fe&#39;</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FIST STEP: SELF CONSISTENT CALCULATIONS====&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FIRST STEP: SELF CONSISTENT CALCULATIONS====&quot;</span><span class="p">)</span>
     <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span><span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NL</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">MIX</span><span class="o">=</span><span class="mf">0.20</span>
@@ -112,15 +112,15 @@
 
     <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;error&#39;</span><span class="p">]())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SECOND STEP: CALCULATION OF DOS============&quot;</span><span class="p">)</span>
     <span class="c1"># Lets now calculate DOS</span>
     <span class="c1"># First we need to change task (there are several input data tabulated for</span>
     <span class="c1"># various tasks to help user.</span>
 
     <span class="n">calculator</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">calculator</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;bsf&#39;</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;bsfek&#39;</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">EMAX</span><span class="o">=</span><span class="mf">0.2</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;DOS&#39;</span>
@@ -133,10 +133,11 @@
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NL</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
     <span class="c1"># Pass a newly converged potential to the DOS calculation</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">dos</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span></div>
 
     <span class="c1"># For the processing of the results of the DOS task use xband</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">run_xband</span><span class="p">()</span></div>
+    <span class="c1"># calculator.run_xband()</span>
 
 
 <span class="c1"># Just run the script only when directly called from command line</span>

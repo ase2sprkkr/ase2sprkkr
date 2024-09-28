@@ -38,9 +38,9 @@ Full name: **ase2sprkkr.input\_parameters**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.input_parameters.input_parameters_definitions
-     ase2sprkkr.input_parameters.input_parameters
      ase2sprkkr.input_parameters.definitions
+     ase2sprkkr.input_parameters.input_parameters
+     ase2sprkkr.input_parameters.input_parameters_definitions
      ase2sprkkr.input_parameters.test
   
   

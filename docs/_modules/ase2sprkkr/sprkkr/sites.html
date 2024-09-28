@@ -93,9 +93,7 @@
 <span></span><span class="sd">&quot;&quot;&quot; The site class define the properties of an atom. &quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">.radial_meshes</span> <span class="kn">import</span> <span class="n">Mesh</span>
-<span class="kn">from</span> <span class="nn">.radial</span> <span class="kn">import</span> <span class="n">RadialPotential</span><span class="p">,</span> <span class="n">RadialCharge</span>
 <span class="kn">from</span> <span class="nn">.reference_systems</span> <span class="kn">import</span> <span class="n">ReferenceSystem</span>
-<span class="kn">from</span> <span class="nn">.moments</span> <span class="kn">import</span> <span class="n">Moments</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
 <span class="kn">import</span> <span class="nn">copy</span>
@@ -135,11 +133,7 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">reference_system</span> <span class="o">=</span> <span class="n">reference_system</span> <span class="ow">or</span> <span class="n">ReferenceSystem</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span> <span class="o">=</span> <span class="n">mesh</span> <span class="ow">or</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="kc">None</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_charge</span> <span class="o">=</span> <span class="kc">None</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_moments</span> <span class="o">=</span> <span class="kc">None</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span> <span class="o">=</span> <span class="n">Occupation</span><span class="o">.</span><span class="n">to_occupation</span><span class="p">(</span><span class="n">occupation</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">_site</span> <span class="o">=</span> <span class="bp">self</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span> <span class="o">=</span> <span class="n">Occupation</span><span class="o">.</span><span class="n">to_occupation</span><span class="p">(</span><span class="n">occupation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">sites</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SiteType.register"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.register">[docs]</a>  <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site</span><span class="p">):</span>
@@ -160,9 +154,7 @@
           <span class="n">i</span><span class="o">.</span><span class="n">break_symmetry</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SiteType._clear_data"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType._clear_data">[docs]</a>  <span class="k">def</span> <span class="nf">_clear_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="kc">None</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_charge</span> <span class="o">=</span> <span class="kc">None</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_moments</span> <span class="o">=</span> <span class="kc">None</span></div>
+      <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">_clear_data</span><span class="p">()</span></div>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -170,62 +162,53 @@
 
   <span class="nd">@mesh</span><span class="o">.</span><span class="n">setter</span>
   <span class="k">def</span> <span class="nf">mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">remesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SiteType.remesh"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.remesh">[docs]</a>  <span class="k">def</span> <span class="nf">remesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="nb">map</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+      <span class="k">if</span> <span class="nb">map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="nb">map</span> <span class="o">=</span> <span class="p">{}</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span> <span class="o">=</span> <span class="n">mesh</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="o">.</span><span class="n">for_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_charge</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_charge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_charge</span><span class="o">.</span><span class="n">for_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">remesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="nb">map</span><span class="p">)</span>
+      <span class="k">return</span> <span class="nb">map</span></div>
+
+<div class="viewcode-block" id="SiteType._just_one_type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType._just_one_type">[docs]</a>  <span class="k">def</span> <span class="nf">_just_one_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+          <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The site has multiple occupation, please use &#39;site_type.atomic_type(symbol/nb).desired_property&#39;&quot;</span><span class="p">)</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atomic_type</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; The radial potential data of the site &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; The radial potential data of the site, if it has one atomic type &quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_just_one_type</span><span class="p">()</span><span class="o">.</span><span class="n">potential</span>
 
   <span class="nd">@potential</span><span class="o">.</span><span class="n">setter</span>
   <span class="k">def</span> <span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-      <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="kc">None</span>
-          <span class="k">return</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">RadialPotential</span><span class="p">):</span>
-          <span class="n">value</span> <span class="o">=</span> <span class="n">RadialPotential</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_atomic_number</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="n">value</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">mesh</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_just_one_type</span><span class="p">()</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">value</span>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">charge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; The radial charge data of the site &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_charge</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; The radial charge data of the site, if it has one atomic type &quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_just_one_type</span><span class="p">()</span><span class="o">.</span><span class="n">charge</span>
 
   <span class="nd">@charge</span><span class="o">.</span><span class="n">setter</span>
   <span class="k">def</span> <span class="nf">charge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-      <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_charge</span> <span class="o">=</span> <span class="kc">None</span>
-          <span class="k">return</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">RadialCharge</span><span class="p">):</span>
-          <span class="n">value</span> <span class="o">=</span> <span class="n">RadialCharge</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_charge</span> <span class="o">=</span> <span class="n">value</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">mesh</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_just_one_type</span><span class="p">()</span><span class="o">.</span><span class="n">charge</span> <span class="o">=</span> <span class="n">value</span>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">moments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; The moments data of the site &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_moments</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; The moments data of the site, if it has one atomic type &quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_just_one_type</span><span class="p">()</span><span class="o">.</span><span class="n">moments</span>
 
   <span class="nd">@moments</span><span class="o">.</span><span class="n">setter</span>
   <span class="k">def</span> <span class="nf">moments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Moments</span><span class="p">):</span>
-          <span class="n">value</span> <span class="o">=</span> <span class="n">Moments</span><span class="p">(</span><span class="o">*</span><span class="n">value</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_moments</span> <span class="o">=</span> <span class="n">value</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_just_one_type</span><span class="p">()</span><span class="o">.</span><span class="n">moments</span> <span class="o">=</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="SiteType.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="SiteType.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy_mesh</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Create a copy of the site. &quot;&quot;&quot;</span>
-      <span class="n">site_type</span> <span class="o">=</span> <span class="n">SiteType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
-                           <span class="bp">self</span><span class="o">.</span><span class="n">reference_system</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+      <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">copy_mesh</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span>
+      <span class="n">site_type</span> <span class="o">=</span> <span class="n">SiteType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="p">,</span>  <span class="c1"># occupation will be copied</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">reference_system</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">mesh</span><span class="p">)</span>
       <span class="n">site_type</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">_site_type</span> <span class="o">=</span> <span class="n">site_type</span>
-      <span class="k">if</span> <span class="n">site_type</span><span class="o">.</span><span class="n">potential</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-          <span class="n">site_type</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">site_type</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-      <span class="k">if</span> <span class="n">site_type</span><span class="o">.</span><span class="n">charge</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-          <span class="n">site_type</span><span class="o">.</span><span class="n">charge</span> <span class="o">=</span> <span class="n">site_type</span><span class="o">.</span><span class="n">charge</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
       <span class="k">if</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
           <span class="n">site_type</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
       <span class="k">return</span> <span class="n">site_type</span></div>
@@ -275,8 +258,7 @@
 <span class="sd">      Currently, it resets the mesh.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">default</span><span class="p">()</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="kc">None</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">charge</span> <span class="o">=</span> <span class="kc">None</span></div>
+      <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">_clear_data</span><span class="p">()</span></div>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">primary_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -301,8 +283,6 @@
       <span class="n">an</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">()</span>
       <span class="n">pan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">primary_atomic_number</span>
       <span class="n">an</span><span class="p">[</span> <span class="n">index</span> <span class="p">]</span> <span class="o">=</span> <span class="n">pan</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">pan</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">set_atomic_numbers</span><span class="p">(</span><span class="n">an</span><span class="p">)</span>
       <span class="n">occ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;occupancy&#39;</span><span class="p">,</span> <span class="p">{})</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">index</span><span class="p">:</span>
@@ -319,6 +299,10 @@
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Is the site vacuum pseudoatom? &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="p">))</span><span class="o">.</span><span class="n">is_vacuum</span><span class="p">()</span></div>
 
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">atomic_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">atomic_type</span>
+
   <span class="nd">@cached_property</span>
   <span class="k">def</span> <span class="nf">atomic_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
@@ -333,7 +317,7 @@
 
       <span class="k">class</span> <span class="nc">AtomicTypesLookup</span><span class="p">:</span>
           <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="n">_self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-              <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">atomic_type</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+              <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">atomic_type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
           <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="n">_self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
               <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">replace_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -404,6 +388,9 @@
   <span class="k">def</span> <span class="nf">mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
 
+<div class="viewcode-block" id="Site.remesh"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.remesh">[docs]</a>  <span class="k">def</span> <span class="nf">remesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="nb">map</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">remesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="nb">map</span><span class="p">)</span></div>
+
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">potential</span>
@@ -443,10 +430,6 @@
   <span class="nd">@reference_system</span><span class="o">.</span><span class="n">setter</span>
   <span class="k">def</span> <span class="nf">reference_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_system</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">reference_system</span> <span class="o">=</span> <span class="n">reference_system</span>
-
-  <span class="nd">@property</span>
-  <span class="k">def</span> <span class="nf">atomic_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">atomic_types</span>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">primary_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -491,7 +474,15 @@
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">_clear_data</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Site.reset"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.reset">[docs]</a>  <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div></div>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">atomic_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_type</span><span class="o">.</span><span class="n">atomic_type</span>
+
+  <span class="nd">@cached_property</span>
+  <span class="k">def</span> <span class="nf">atomic_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_type</span><span class="o">.</span><span class="n">atomic_types</span></div>
 
 
 <span class="kn">from</span> <span class="nn">.occupations</span> <span class="kn">import</span> <span class="n">Occupation</span>  <span class="c1"># NOQA: E402</span>

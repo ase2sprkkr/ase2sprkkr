@@ -160,6 +160,20 @@
         <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">i</span>
     <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="config_property"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.config_property.html#ase2sprkkr.common.misc.config_property">[docs]</a><span class="k">def</span> <span class="nf">config_property</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+    <span class="n">uname</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">first_non_none</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uname</span><span class="p">),</span> <span class="n">option</span><span class="p">())</span>
+
+    <span class="nd">@getter</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uname</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">setter</span></div>
 </pre></div>
 
            </div>

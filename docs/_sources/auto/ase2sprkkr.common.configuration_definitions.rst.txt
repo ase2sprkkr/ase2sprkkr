@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.configuration\_definitions**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.configuration_definitions.BaseDefinition  ase2sprkkr.common.configuration_definitions.ControlDefinition  ase2sprkkr.common.configuration_definitions.Gather  ase2sprkkr.common.configuration_definitions.Ignored  ase2sprkkr.common.configuration_definitions.RealItemDefinition  ase2sprkkr.common.configuration_definitions.SeparatorDefinition  ase2sprkkr.common.configuration_definitions.Stub  ase2sprkkr.common.configuration_definitions.Switch  ase2sprkkr.common.configuration_definitions.VirtualDefinition 
+.. inheritance-diagram::  ase2sprkkr.common.configuration_definitions.BaseDefinition  ase2sprkkr.common.configuration_definitions.ControlDefinition  ase2sprkkr.common.configuration_definitions.Gather  ase2sprkkr.common.configuration_definitions.Ignored  ase2sprkkr.common.configuration_definitions.NotAllowed  ase2sprkkr.common.configuration_definitions.RealItemDefinition  ase2sprkkr.common.configuration_definitions.SeparatorDefinition  ase2sprkkr.common.configuration_definitions.Stub  ase2sprkkr.common.configuration_definitions.Switch  ase2sprkkr.common.configuration_definitions.VirtualDefinition 
       :parts: 1
 
 |
@@ -31,6 +31,8 @@ Full name: **ase2sprkkr.common.configuration\_definitions**
       :template: custom-base-template.rst
    
       gather
+      if_defined
+      if_not_defined
       switch
    
    
@@ -48,6 +50,7 @@ Full name: **ase2sprkkr.common.configuration\_definitions**
       ControlDefinition
       Gather
       Ignored
+      NotAllowed
       RealItemDefinition
       SeparatorDefinition
       Stub

@@ -121,8 +121,8 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">config</span> <span class="k">as</span> <span class="n">config</span>
-<span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">first_non_none</span>
+<span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">config_property</span><span class="p">,</span> <span class="n">first_non_none</span>
+<span class="kn">from</span> <span class="nn">..config</span> <span class="kn">import</span> <span class="n">config</span>
 
 
 <div class="viewcode-block" id="SPRKKR"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR">[docs]</a><span class="k">class</span> <span class="nc">SPRKKR</span><span class="p">(</span><span class="n">Calculator</span><span class="p">):</span>
@@ -142,11 +142,12 @@
 <div class="viewcode-block" id="SPRKKR.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
                  <span class="n">input_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">potential_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">input_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">mpi</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">input_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">executable_suffix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">empty_spheres</span> <span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">executable_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">executable_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
@@ -179,11 +180,13 @@
 <span class="sd">          Write the output of runned executables to stdout (in addition to the output file)?</span>
 <span class="sd">          (Default value for the calculator)</span>
 <span class="sd">          If print_output = &#39;info&#39;, only a few info lines per iteration will be printed.</span>
+<span class="sd">          None means use the value from config.config.calculator_parameters.print_output.</span>
 
 <span class="sd">        mpi: Union[list,string,int,bool]</span>
 <span class="sd">          Runner for mpi to run a mpi calculation. True and int means autodetect: use True</span>
 <span class="sd">          for a cluster where mpi is able to autodetect the number of the processes, otherwise</span>
-<span class="sd">          use integer to specify the number of processes.</span>
+<span class="sd">          use integer to specify the number of processes. None means use the value from</span>
+<span class="sd">          config.config.calculator_parameters.mpi.</span>
 <span class="sd">          E.g. mpi = [ &#39;mpirun&#39;, &#39;-np&#39;, &#39;4&#39; ], mpi = 4</span>
 
 <span class="sd">        input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None</span>
@@ -210,13 +213,21 @@
 <span class="sd">        executable_suffix: str or bool or None</span>
 <span class="sd">          String to be added to the runned executable. In some environments, the version</span>
 <span class="sd">          and the hostname is added to the name of sprkkr executables.</span>
-<span class="sd">          True: use config.sprkkr_executable_suffix, by default initialized</span>
+<span class="sd">          True: use config.config.executable.suffix, by default initialized</span>
 <span class="sd">                by SPRKKR_EXECUTABLE_SUFFIX environment variable</span>
 <span class="sd">          False: do not append anything (the same as &#39;&#39;)</span>
 
+<span class="sd">        executable_dir</span>
+<span class="sd">          If the SPRKKR exacutables are not in path, or you want to control which</span>
+<span class="sd">          executables will be runned, please supply this parameter.</span>
+<span class="sd">          None means use the default from config.config.executable.dir (if exists).</span>
+<span class="sd">          False means use only the executable in PATH.</span>
+
 <span class="sd">        empty_spheres</span>
 <span class="sd">          Whether to add empty spheres to the structure or not.</span>
-<span class="sd">          Default &#39;auto&#39; means add if no empty sphere is present.</span>
+<span class="sd">          &#39;auto&#39; means add if no empty sphere is present.</span>
+<span class="sd">          None means use the configuration value from</span>
+<span class="sd">          config.config.calculator_parameters.empty_spheres.</span>
 <span class="sd">          Dict means True, and the dict is passed as kwargs to the</span>
 <span class="sd">          ``ase.bindings.empty_spheres.add_empty_spheres`` method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -237,9 +248,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">potential</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">executable_suffix</span> <span class="o">=</span> <span class="n">executable_suffix</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; The default postfix for the names of executables. False means no postfix, True means</span>
-<span class="sd">        to use ``SKRKKR_EXECUTABLE_POSTFIX`` environmental variable. &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">restart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">directory</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
@@ -248,7 +256,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">potential</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span> <span class="o">=</span> <span class="n">first_non_none</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">calculator_parameters</span><span class="p">[</span><span class="s1">&#39;mpi&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Default value for mpi parameter of calculate - it determine the way whether and how</span>
 <span class="sd">        the mpi is employed. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span> <span class="o">=</span> <span class="n">input_file</span>
@@ -262,17 +269,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">input_parameters</span>
         <span class="k">if</span> <span class="n">options</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">unknown</span> <span class="o">=</span> <span class="s1">&#39;find&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">=</span> <span class="n">first_non_none</span><span class="p">(</span><span class="n">print_output</span><span class="p">,</span>
-                                           <span class="n">config</span><span class="o">.</span><span class="n">calculator_parameters</span><span class="p">[</span><span class="s1">&#39;print_output&#39;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">empty_spheres</span> <span class="o">=</span> <span class="n">first_non_none</span><span class="p">(</span><span class="n">empty_spheres</span><span class="p">,</span>
-                                            <span class="n">config</span><span class="o">.</span><span class="n">calculator_parameters</span><span class="p">[</span><span class="s1">&#39;empty_spheres&#39;</span><span class="p">],</span>
-                                            <span class="s1">&#39;auto&#39;</span><span class="p">)</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; The default parameter for the print_output arguments of</span>
-<span class="sd">        :meth:ase2sprkkr.sprkkr.calculator.SPRKKR.calculate` method - whether ouptut of the</span>
-<span class="sd">        runned SPR-KKR should be written to the standard ouput (in addition to the output file). &quot;&quot;&quot;</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">=</span> <span class="n">print_output</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">empty_spheres</span> <span class="o">=</span> <span class="n">empty_spheres</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executable_suffix</span> <span class="o">=</span> <span class="n">executable_suffix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executable_dir</span> <span class="o">=</span> <span class="n">executable_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span> <span class="o">=</span> <span class="n">mpi</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">=</span> <span class="mi">0</span></div>
         <span class="c1"># For %c template in file names</span>
+
+    <span class="n">print_output</span> <span class="o">=</span> <span class="n">config_property</span><span class="p">(</span><span class="s1">&#39;print_output&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">running</span><span class="o">.</span><span class="n">print_output</span><span class="p">)</span>
+    <span class="n">mpi</span> <span class="o">=</span> <span class="n">config_property</span><span class="p">(</span><span class="s1">&#39;mpi&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">running</span><span class="o">.</span><span class="n">mpi</span><span class="p">)</span>
+    <span class="n">empty_spheres</span> <span class="o">=</span> <span class="n">config_property</span><span class="p">(</span><span class="s1">&#39;empty_spheres&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">running</span><span class="o">.</span><span class="n">empty_spheres</span><span class="p">)</span>
+    <span class="n">executable_dir</span> <span class="o">=</span> <span class="n">config_property</span><span class="p">(</span><span class="s1">&#39;executable_dir&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">executables</span><span class="o">.</span><span class="n">dir</span><span class="p">)</span>
+    <span class="n">executable_suffix</span> <span class="o">=</span> <span class="n">config_property</span><span class="p">(</span><span class="s1">&#39;exectable_suffix&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">executables</span><span class="o">.</span><span class="n">suffix</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">input_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -455,9 +464,9 @@
 <div class="viewcode-block" id="SPRKKR.save_input"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.save_input">[docs]</a>    <span class="k">def</span> <span class="nf">save_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">directory</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">Directory</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">create_subdirs</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">empty_spheres</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                   <span class="n">mpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                  <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">return_files</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -628,7 +637,7 @@
                 <span class="n">input_parameters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span>
             <span class="k">if</span> <span class="n">input_parameters</span><span class="p">:</span>
                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_parameters</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                  <span class="k">if</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">is_it_a_input_parameters_name</span><span class="p">(</span><span class="n">input_parameters</span><span class="p">):</span>
+                  <span class="k">if</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">is_it_an_input_parameters_name</span><span class="p">(</span><span class="n">input_parameters</span><span class="p">):</span>
                      <span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">create_input_parameters</span><span class="p">(</span><span class="n">input_parameters</span><span class="p">)</span>
                   <span class="k">else</span><span class="p">:</span>
                      <span class="n">ip</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">input_parameters</span><span class="p">)</span>
@@ -664,7 +673,7 @@
                        <span class="k">if</span> <span class="n">site</span><span class="o">.</span><span class="n">is_vacuum</span><span class="p">():</span>
                            <span class="n">empty_spheres</span> <span class="o">=</span> <span class="kc">False</span>
                            <span class="k">break</span>
-            <span class="k">if</span> <span class="n">empty_spheres</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">empty_spheres</span> <span class="ow">and</span> <span class="n">atoms</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">empty_spheres</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">abc</span><span class="o">.</span><span class="n">Mapping</span><span class="p">):</span>
                     <span class="n">empty_spheres</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="n">add_empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">empty_spheres</span><span class="p">)</span>
@@ -681,7 +690,7 @@
         <span class="k">def</span> <span class="nf">open_input_file</span><span class="p">():</span>
             <span class="n">ifile</span> <span class="o">=</span> <span class="n">input_file</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span>
             <span class="k">if</span> <span class="n">ifile</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">ifile</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%l%</span><span class="s1">_</span><span class="si">%a</span><span class="s1">_%t.inp&#39;</span>
+                <span class="n">ifile</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%l%</span><span class="s1">_</span><span class="si">%a</span><span class="s1">_%T.inp&#39;</span>
 
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span>
                                          <span class="n">templator</span><span class="p">,</span>
@@ -711,7 +720,7 @@
         <span class="k">def</span> <span class="nf">open_output_file</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot; Get and open the output file &quot;&quot;&quot;</span>
             <span class="n">ofile</span> <span class="o">=</span> <span class="n">output_file</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span>
-            <span class="n">ofile</span> <span class="o">=</span> <span class="n">from_input_name</span><span class="p">(</span><span class="n">ofile</span><span class="p">,</span> <span class="s1">&#39;.out&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%a</span><span class="s1">_%t.out&#39;</span><span class="p">)</span>
+            <span class="n">ofile</span> <span class="o">=</span> <span class="n">from_input_name</span><span class="p">(</span><span class="n">ofile</span><span class="p">,</span> <span class="s1">&#39;.out&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%a</span><span class="s1">_%T.out&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_file</span><span class="p">(</span><span class="n">ofile</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">templator</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;wb&#39;</span><span class="p">,</span>
                                               <span class="n">allow_temporary</span><span class="o">=</span><span class="n">return_files</span><span class="p">,</span>
                                               <span class="n">create_subdirs</span><span class="o">=</span><span class="n">create_subdirs</span><span class="p">)</span>
@@ -779,10 +788,12 @@
 <div class="viewcode-block" id="SPRKKR.run"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">directory</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">Directory</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">create_subdirs</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">empty_spheres</span> <span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                   <span class="n">mpi</span> <span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                  <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                  <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">executable_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gdb</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                  <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">executable_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">executable_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">gdb</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Do the calculation, return various results.</span>
 
@@ -796,6 +807,10 @@
 
 <span class="sd">        executable_suffix: str or bool or None</span>
 <span class="sd">            If not None, it overrides the executable_postifx, that have been specified when the</span>
+<span class="sd">            calculator have been created.</span>
+
+<span class="sd">        executable_dir: str or bool or None</span>
+<span class="sd">            If not None, it overrides the executable_dir, that have been specified when the</span>
 <span class="sd">            calculator have been created.</span>
 
 <span class="sd">        mpi: bool or None</span>
@@ -826,13 +841,31 @@
                               <span class="n">return_files</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                               <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">)</span>
 
+          <span class="n">executable_suffix</span> <span class="o">=</span> <span class="n">first_non_none</span><span class="p">(</span><span class="n">executable_suffix</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">executable_suffix</span><span class="p">)</span>
+          <span class="n">executable_dir</span> <span class="o">=</span> <span class="n">first_non_none</span><span class="p">(</span><span class="n">executable_dir</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">executable_dir</span><span class="p">)</span>
+          <span class="n">print_output</span> <span class="o">=</span> <span class="n">first_non_none</span><span class="p">(</span><span class="n">print_output</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span><span class="p">)</span>
+          <span class="n">mpi</span> <span class="o">=</span> <span class="n">first_non_none</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span><span class="p">)</span>
+          <span class="n">empty_spheres</span> <span class="o">=</span> <span class="n">first_non_none</span><span class="p">(</span><span class="n">empty_spheres</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty_spheres</span><span class="p">)</span>
+
           <span class="k">with</span> <span class="n">directory</span><span class="o">.</span><span class="n">chdir</span><span class="p">():</span>
-            <span class="k">return</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
                                 <span class="n">directory</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span>
                                 <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">,</span>
                                 <span class="n">executable_suffix</span><span class="o">=</span><span class="n">executable_suffix</span><span class="p">,</span>
+                                <span class="n">executable_dir</span><span class="o">=</span><span class="n">executable_dir</span><span class="p">,</span>
                                 <span class="n">mpi</span><span class="o">=</span><span class="n">mpi</span><span class="p">,</span> <span class="n">gdb</span><span class="o">=</span><span class="n">gdb</span>
-                               <span class="p">)</span></div>
+                               <span class="p">)</span>
+          <span class="k">if</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">TASK</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;SCF&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">potential</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">atoms</span><span class="p">:</span>
+              <span class="k">try</span><span class="p">:</span>
+                  <span class="n">pot</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">potential</span>
+              <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                  <span class="n">pot</span> <span class="o">=</span> <span class="kc">None</span>
+              <span class="k">if</span> <span class="n">pot</span><span class="p">:</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">pot</span>
+          <span class="k">return</span> <span class="n">out</span></div>
 
 <div class="viewcode-block" id="SPRKKR.value_or_default"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.value_or_default">[docs]</a>    <span class="k">def</span> <span class="nf">value_or_default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Return the default value of the parameter, if the given value is None&quot;&quot;&quot;</span>
@@ -847,7 +880,9 @@
                   <span class="n">empty_spheres</span> <span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                   <span class="n">mpi</span> <span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                  <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">executable_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gdb</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                  <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">executable_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">executable_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">gdb</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        ASE-interface method for the calculation.  This method runs the appropriate task(s)</span>
 <span class="sd">        for the requested properties (currently always the SCF one) and updates the</span>
@@ -892,10 +927,12 @@
                   <span class="n">atoms</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span>
                   <span class="n">input_file</span><span class="p">,</span> <span class="n">potential_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
                   <span class="n">directory</span><span class="p">,</span> <span class="n">create_subdirs</span><span class="p">,</span>
+                  <span class="n">options</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span>
                   <span class="n">empty_spheres</span><span class="p">,</span>
                   <span class="n">mpi</span><span class="p">,</span>
-                  <span class="n">options</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span>
-                  <span class="n">print_output</span><span class="p">,</span> <span class="n">executable_suffix</span><span class="p">,</span> <span class="n">gdb</span>
+                  <span class="n">print_output</span><span class="p">,</span>
+                  <span class="n">executable_suffix</span><span class="p">,</span> <span class="n">executable_dir</span><span class="p">,</span>
+                  <span class="n">gdb</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="s1">&#39;energy&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
@@ -968,6 +1005,7 @@
     <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span>
           <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M&#39;</span><span class="p">),</span>
           <span class="s2">&quot;%t&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">(),</span>
+          <span class="s2">&quot;%T&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
           <span class="s2">&quot;</span><span class="si">%a</span><span class="s2">&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbols</span><span class="p">(),</span>
           <span class="s2">&quot;%l&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculator</span><span class="o">.</span><span class="n">label</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
           <span class="s2">&quot;</span><span class="si">%c</span><span class="s2">&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculator</span><span class="o">.</span><span class="n">_advance_counter</span><span class="p">()</span>

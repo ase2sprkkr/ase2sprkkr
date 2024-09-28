@@ -104,7 +104,6 @@
 
   <span class="nd">@cached_property</span>
   <span class="k">def</span> <span class="nf">interpolator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
       <span class="k">def</span> <span class="nf">inter</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
           <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span><span class="o">.</span><span class="n">interpolator</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
       <span class="n">ndim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="o">.</span><span class="n">ndim</span>
@@ -134,6 +133,9 @@
   <span class="nd">@mesh</span><span class="o">.</span><span class="n">setter</span>
   <span class="k">def</span> <span class="nf">mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
       <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span><span class="p">:</span>
+          <span class="k">return</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span><span class="o">=</span><span class="n">mesh</span>
           <span class="k">return</span>
       <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">coors</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span><span class="o">=</span><span class="n">mesh</span>

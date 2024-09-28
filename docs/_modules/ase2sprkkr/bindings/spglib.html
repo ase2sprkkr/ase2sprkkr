@@ -104,6 +104,23 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
+<div class="viewcode-block" id="spglib_dataset"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.spglib_dataset.html#ase2sprkkr.bindings.spglib.spglib_dataset">[docs]</a><span class="k">def</span> <span class="nf">spglib_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Backward compatibility &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dataset</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> \
+       <span class="nb">hasattr</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="s1">&#39;equivalent_atoms&#39;</span><span class="p">):</span>
+         <span class="k">return</span> <span class="n">dataset</span>
+
+    <span class="k">class</span> <span class="nc">Convertor</span><span class="p">:</span>
+
+         <span class="k">def</span> <span class="nf">__hasattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+             <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">dataset</span>
+
+         <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+             <span class="k">return</span> <span class="n">dataset</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">Convertor</span><span class="p">()</span></div>
+
+
 <div class="viewcode-block" id="SpacegroupInfo"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo">[docs]</a><span class="k">class</span> <span class="nc">SpacegroupInfo</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Class, that carry information about spacegroup and symmetry of a structure &quot;&quot;&quot;</span>
 
@@ -168,7 +185,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_equivalent_sites</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span><span class="p">:</span>
-              <span class="k">return</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span><span class="p">[</span><span class="s1">&#39;equivalent_atoms&#39;</span><span class="p">])</span>
+              <span class="k">return</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span><span class="o">.</span><span class="n">equivalent_atoms</span><span class="p">)</span>
            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span><span class="p">:</span>
               <span class="bp">self</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="n">allow_change</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
            <span class="k">else</span><span class="p">:</span>
@@ -238,11 +255,12 @@
                              <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">mapping</span><span class="p">),</span>
                              <span class="n">symprec</span> <span class="o">=</span> <span class="n">precision</span><span class="p">,</span>
                              <span class="n">angle_tolerance</span> <span class="o">=</span> <span class="n">angular_precision</span><span class="p">)</span>
+           <span class="n">sg_dataset</span> <span class="o">=</span> <span class="n">spglib_dataset</span><span class="p">(</span><span class="n">sg_dataset</span><span class="p">)</span>
        <span class="k">if</span> <span class="n">sg_dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
           <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)))</span>
 
-       <span class="n">spacegroup</span> <span class="o">=</span> <span class="n">Spacegroup</span><span class="p">(</span><span class="n">sg_dataset</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">])</span>
-       <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">sg_dataset</span><span class="p">[</span><span class="s1">&#39;equivalent_atoms&#39;</span><span class="p">])</span>
+       <span class="n">spacegroup</span> <span class="o">=</span> <span class="n">Spacegroup</span><span class="p">(</span><span class="n">sg_dataset</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+       <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">sg_dataset</span><span class="o">.</span><span class="n">equivalent_atoms</span><span class="p">)</span>
        <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">start_from</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
        <span class="k">return</span> <span class="n">spacegroup</span><span class="p">,</span> <span class="n">sg_dataset</span><span class="p">,</span> <span class="n">equivalent_sites</span></div>
 

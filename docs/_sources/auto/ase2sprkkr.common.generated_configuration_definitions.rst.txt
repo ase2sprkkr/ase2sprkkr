@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.generated\_configuration\_definitions**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition  ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition  ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition 
+.. inheritance-diagram::  ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition  ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition  ase2sprkkr.common.generated_configuration_definitions.Length  ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition 
       :parts: 1
 
 |
@@ -37,6 +37,7 @@ Full name: **ase2sprkkr.common.generated\_configuration\_definitions**
    
       BaseGeneratedValueDefinition
       GeneratedValueDefinition
+      Length
       NumpyViewDefinition
    
    

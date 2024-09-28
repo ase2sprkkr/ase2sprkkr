@@ -39,13 +39,14 @@ Full name: **ase2sprkkr.input\_parameters.definitions**
      :recursive:
   
      ase2sprkkr.input_parameters.definitions.arpes
-     ase2sprkkr.input_parameters.definitions.sections
-     ase2sprkkr.input_parameters.definitions.scf
+     ase2sprkkr.input_parameters.definitions.bsfek
+     ase2sprkkr.input_parameters.definitions.bsfkk
+     ase2sprkkr.input_parameters.definitions.dos
      ase2sprkkr.input_parameters.definitions.gilbert
      ase2sprkkr.input_parameters.definitions.jxc
      ase2sprkkr.input_parameters.definitions.phagen
-     ase2sprkkr.input_parameters.definitions.dos
-     ase2sprkkr.input_parameters.definitions.bsf
+     ase2sprkkr.input_parameters.definitions.scf
+     ase2sprkkr.input_parameters.definitions.sections
      ase2sprkkr.input_parameters.definitions.marpes
   
   

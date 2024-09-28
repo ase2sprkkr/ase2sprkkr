@@ -1,0 +1,67 @@
+parsing\_results
+================
+
+Full name: **ase2sprkkr.common.parsing\_results**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.parsing_results.ArrayKey  ase2sprkkr.common.parsing_results.DefDictKey  ase2sprkkr.common.parsing_results.DictKey  ase2sprkkr.common.parsing_results.IgnoredKey  ase2sprkkr.common.parsing_results.Key  ase2sprkkr.common.parsing_results.RepeatedKey  ase2sprkkr.common.parsing_results.Result  ase2sprkkr.common.parsing_results.SubKey  ase2sprkkr.common.parsing_results.ValidateKey  ase2sprkkr.common.parsing_results.Values 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.parsing_results
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      dict_from_parsed
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ArrayKey
+      DefDictKey
+      DictKey
+      IgnoredKey
+      Key
+      RepeatedKey
+      Result
+      SubKey
+      ValidateKey
+      Values
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

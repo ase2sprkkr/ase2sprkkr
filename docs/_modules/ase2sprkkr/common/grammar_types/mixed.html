@@ -221,6 +221,15 @@
   <span class="n">is_the_same_value</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">compare_numpy_values</span><span class="p">)</span>
 
 
+<span class="k">class</span> <span class="nc">CustomMixed</span><span class="p">(</span><span class="n">BaseMixed</span><span class="p">):</span>
+
+  <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">BaseMixed</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">string_type</span><span class="o">=</span><span class="n">LineString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">types</span> <span class="o">=</span> <span class="n">types</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">string_type</span> <span class="o">=</span> <span class="n">string_type</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
 <span class="n">mixed</span> <span class="o">=</span> <span class="n">Mixed</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Mixed</span><span class="p">()</span>   <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for variant (mixed) in input files &quot;&quot;&quot;</span>
 <span class="n">pot_mixed</span> <span class="o">=</span> <span class="n">PotMixed</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">PotMixed</span><span class="p">()</span>    <span class="c1"># NOQA: E741</span>

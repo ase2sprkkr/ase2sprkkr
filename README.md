@@ -34,24 +34,30 @@ or conda
 conda install -c ase2sprkkr ase2sprkkr
 ```
 
-I reccomend to install the beta version: there can be some bugs, but mostly it has
-more bugs repaired than introduced, moreover, you can enjoy new properties.
+I reccomend to install beta version: there can be some bugs, but mostly
+it has more bugs repaired than introduced, moreover, you can enjoy new
+properties. The beta versions are available only through `pip`:
 
 ``` bash
 pip install --pre ase2sprkkr
 ```
 
-For using bleading edge sources, you can install the packages from github:
-```base
+To use bleading edge sources (the newest features, but you risk to
+encounter bugs), you can install the packages from github:
+
+``` bash
 pip install git+https://github.com/ase2sprkkr/ase2sprkkr.git@develop
 ```
 
-
 ### Further notes
 
-In some systems, the `pip` utility for `python3` is called `pip3`. If it
-is not installed, you can install it using the linux distribution
-package manager, e.g. in Debian/Ubuntu
+In some systems, the `pip` utility for `python3` is called `pip3`. It
+may be possible, that `pip` is installed, but it is not in `PATH`. In
+such case, the pip utility can be runned using `python -m pip` or
+`python3 -m pip3`.
+
+If `pip` is not installed, you can install it using the linux
+distribution package manager, e.g. in Debian/Ubuntu
 
 ``` bash
 apt install pip3
@@ -62,8 +68,6 @@ or
 ``` bash
 zypper install pip
 ```
-
-in OpenSUSE
 
 For the conda installation instructions, see the Anaconda documentation
 <https://docs.anaconda.com/anaconda/install/linux/> however, for the
@@ -77,9 +81,9 @@ package sources.
 
 ### Requirements
 
--   Python \>= 3.7
+-   Python \>= 3.8
 -   SPR-KKR (not checked by the installer)
--   Python packages: see the the setup.cfg
+-   Python packages: see the the pypoject.toml file
 -   Git (to obtain the sources)
 
 ### Obtaining the package using GIT
@@ -90,7 +94,7 @@ git checkout release
 ```
 
 The first line fetches the code of the package. The second one checks
-out (choose) the stable (production) version of the code.
+out the stable (production) version of the code.
 
 If you want to obtain the current version of the (earlier-downloaded)
 code, run
@@ -100,13 +104,13 @@ git fetch
 git checkout release
 ```
 
-Alternatively, you can checkout ``master`` to obtain last beta version
+Alternatively, you can checkout `master` branch
 
 ``` bash
 git checkout master
 ```
 
-or ``develop``
+to obtain a newer (not thorougly tested yet) version or `develop`\`
 
 ``` bash
 git checkout develop
@@ -117,38 +121,35 @@ report the bugs).
 
 ### Using the package (without installing the pip/conda packages)
 
-Install ninja and meson:
+You can install the package from the obtained sources using
+
 ``` bash
-pip install meson-python meson ninja
+pip install .
 ```
 
-Do an editable install
+Or, if you want to develop ase2sprkkr, it is better idea to do an
+[editable]{.title-ref} installation, where the package will see the
+changes made.
 
 ``` bash
 pip install --no-build-isolation --editable .
 ```
-You can add ``--no-deps`` switch for a faster rebuild.
 
+You can add `--no-deps` switch for a faster rebuild.
 
-### Installation of the package from the sources
+The limitation of the editable install is, that it won\'t see newly
+created files automatically: you need run the command above again to
+make it notice it.
 
-To install the package, the simplest way is to use pip
+If the build process fail, try to remove `build` directory created y the
+previous build (if it exists). Mostly it happens, if the
+`--no-build-isolation` switch is ommited. On one system I encouter the
+problem, that pip failed to install `ninja`, than installation of ninja
+using system package manager helped:
 
 ``` bash
-python3 -m pip install .
+sudo apt install ninja
 ```
-
-Maybe, you will have to replace `python3` with `python`. For an editable
-install, please run
-
-``` bash
-python3 setup.py develop --user
-```
-
-and ignore some deprecation warning. Editable install is aimed for
-developers: in this type of install, only link to the current directory
-will be added to your local `site-packages`, which allows you to use the
-changesyou make to the source code.
 
 ## Documentation of the package
 

@@ -1,0 +1,50 @@
+nomad
+=====
+
+Full name: **ase2sprkkr.tools.commands.nomad**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.tools.commands.nomad
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      authenticate
+      gather_files
+      get_token
+      parser
+      retrieve_token
+      run
+      token
+      upload
+      zipp
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -17,6 +17,7 @@ Full name: **ase2sprkkr.common.alternative\_types**
       :toctree:
       :template: custom-base-template.rst
    
+      numpy_types
       types_alternatives
       normalize_type_map
       allowed_types

@@ -5,4 +5,4 @@ Full name: **ase2sprkkr.input\_parameters.definitions.scf.input\_parameters**
 
 .. currentmodule:: ase2sprkkr.input_parameters.definitions.scf
 
-.. autodata:: input_parameters
+.. autofunction:: input_parameters

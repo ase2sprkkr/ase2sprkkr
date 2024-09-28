@@ -101,11 +101,6 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
 
-<span class="kn">from</span> <span class="nn">...potentials.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>          <span class="c1"># NOQA</span>
-<span class="kn">from</span> <span class="nn">...sprkkr.structure</span> <span class="kn">import</span> <span class="n">structure_file_to_atoms</span> <span class="c1"># NOQA</span>
-<span class="kn">from</span> <span class="nn">...ase.visualise</span> <span class="kn">import</span> <span class="n">view</span>                       <span class="c1"># NOQA</span>
-
-
 <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Visualise potential (and possibly in_struct.inp) files.&#39;</span>
 <span class="n">description</span><span class="o">=</span><span class="s1">&#39;You can either use ase visualisation tools or export it to cif file&#39;</span>
 
@@ -123,6 +118,9 @@
 
 
 <div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.show_structure.run.html#ase2sprkkr.tools.commands.show_structure.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+  <span class="kn">from</span> <span class="nn">...potentials.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>          <span class="c1"># NOQA</span>
+  <span class="kn">from</span> <span class="nn">...sprkkr.structure</span> <span class="kn">import</span> <span class="n">structure_file_to_atoms</span> <span class="c1"># NOQA</span>
+  <span class="kn">from</span> <span class="nn">...ase.visualise</span> <span class="kn">import</span> <span class="n">view</span>                       <span class="c1"># NOQA</span>
   <span class="n">ciffile</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">out</span>
   <span class="n">cifpotfile</span><span class="o">=</span><span class="n">ciffile</span> <span class="o">+</span> <span class="s1">&#39;_pot&#39;</span>
   <span class="n">outformat</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">format</span>

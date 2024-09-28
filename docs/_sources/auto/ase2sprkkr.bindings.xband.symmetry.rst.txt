@@ -1,43 +1,7 @@
-symmetry
-========
-
-Full name: **ase2sprkkr.bindings.xband.symmetry**
-
-
-
-.. rubric:: Description
+ase2sprkkr.bindings.xband.symmetry module
+=========================================
 
 .. automodule:: ase2sprkkr.bindings.xband.symmetry
-
-   
-   
-   
-
-
-   
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-      :toctree:
-      :template: custom-base-template.rst
-   
-      find_symmetry
-      find_symmetry_ex
-   
-   
-
-
-   
-   
-   
-
-
-   
-   
-   
-
-
-  
-  
-  
+   :members:
+   :undoc-members:
+   :show-inheritance:

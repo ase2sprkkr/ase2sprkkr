@@ -66,12 +66,14 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.config.html">config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">OutputNonameValueDefinition</a></li>
@@ -80,19 +82,18 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.html">OutputValueEqualDefinition</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.task_result.html">task_result</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.html">sprkkr_output_reader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.task_result.html">task_result</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.test.html">test</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -172,6 +173,8 @@ If required = None, it is set to True if both the conditions are met:</p>
 <li><p>the optional is not True and the option has not a default_value</p></li>
 </ul>
 </div></blockquote>
+<p>If required is str, it means the same as True, the string will be
+used as error message.</p>
 </p></li>
 <li><p><strong>init_by_default</strong> (<em>bool</em>) – If the value is not set, init it by default</p></li>
 <li><p><strong>result_is_visible</strong> (<em>bool</em>) – <p>If True, the result (see the result property of <code class="xref py py-class docutils literal notranslate"><span class="pre">Option</span></code>) assigned to the
@@ -190,11 +193,9 @@ see the <code class="docutils literal notranslate"><span class="pre">required</s
 <li><p><strong>is_expert</strong> (<em>Union</em><em>[</em><em>bool</em><em>,</em><em>mixed</em><em>]</em>) – Expert values are somewhat hidden (e.g. listed at end) from the user.
 Expert values are not exported to the result, if they are set to the
 default value.</p></li>
-<li><p><strong>is_numbered_array</strong> – Such values can contains (sparse) arrays. In the resulting ouput, the
-members of the array are in the form NAME1=…, NAME2=…, … The default
-value for missing number can appear in the form NAME=…</p></li>
-<li><p><strong>is_repeated</strong> – If True, the real type of the Value is array of values of the given type.
-The name-value pair is repeated for each value of the array.</p></li>
+<li><p><strong>is_repeated</strong> – Whether the value can apper more than once in the output. The result
+can be then (dense) array or (sparse) dict,
+see <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueDefinition.Repeated</span></code>.</p></li>
 <li><p><strong>is_always_added</strong> – If False, add the value, only if its value is not the default value.
 Default None means False for expert values, True for the others.</p></li>
 <li><p><strong>name_in_grammar</strong> (<em>bool</em><em> or </em><em>None</em>) – The value in the conf file is prefixed by &lt;name&gt;&lt;name_value_delimiter&gt;

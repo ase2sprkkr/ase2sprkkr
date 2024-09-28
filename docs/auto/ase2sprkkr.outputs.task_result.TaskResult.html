@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="readers" href="ase2sprkkr.outputs.readers.html" />
+    <link rel="next" title="test" href="ase2sprkkr.outputs.test.html" />
     <link rel="prev" title="KkrProcess" href="ase2sprkkr.outputs.task_result.KkrProcess.html" /> 
 </head>
 
@@ -66,31 +66,32 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.config.html">config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.html">sprkkr_output_reader</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.outputs.task_result.html">task_result</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.KkrProcess.html">KkrProcess</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">TaskResult</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.test.html">test</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -126,7 +127,7 @@
 <h1>TaskResult<a class="headerlink" href="#taskresult" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.TaskResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.task_result.</span></span><span class="sig-name descname"><span class="pre">TaskResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#TaskResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.task_result.</span></span><span class="sig-name descname"><span class="pre">TaskResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#TaskResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult" title="Permalink to this definition"></a></dt>
 <dd><p>A base class for a result of a runned task (kkrscf executable)</p>
 <p class="rubric">Class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-644b27e815a590a6425d81eccb72168e91cf6084.png" alt="Inheritance diagram of ase2sprkkr.outputs.task_result.TaskResult" usemap="#inheritanceccfe79a1e3" class="inheritance graphviz" /></div>
@@ -138,12 +139,70 @@
 <p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.TaskResult.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#TaskResult.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#TaskResult.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.TaskResult.path_to">
+<span class="sig-name descname"><span class="pre">path_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#TaskResult.path_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult.path_to" title="Permalink to this definition"></a></dt>
+<dd><p>return full path to a given file</p>
+<p>..doctest::
+&gt;&gt;&gt; t = TaskResult(None, None, ‘/example’)
+&gt;&gt;&gt; t.files[‘input’] = ‘input.txt’
+&gt;&gt;&gt; t.path_to(‘input’)
+‘/example/input.txt’</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.TaskResult.task_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">task_name</span></span><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult.task_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.TaskResult.input_parameters">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_parameters</span></span><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult.input_parameters" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.TaskResult.input_parameters_file">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_parameters_file</span></span><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult.input_parameters_file" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.TaskResult.potential_filename">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">potential_filename</span></span><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult.potential_filename" title="Permalink to this definition"></a></dt>
+<dd><p>New (output) potential file name</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.TaskResult.potential">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">potential</span></span><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult.potential" title="Permalink to this definition"></a></dt>
+<dd><p>The new (output) potential - that contains the converged charge density etc.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.TaskResult.new_task">
+<span class="sig-name descname"><span class="pre">new_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#TaskResult.new_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult.new_task" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.TaskResult.complete">
+<span class="sig-name descname"><span class="pre">complete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_code</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#TaskResult.complete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult.complete" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.TaskResult.atoms">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">atoms</span></span><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult.atoms" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.TaskResult._match_task_regex">
+<span class="sig-name descname"><span class="pre">_match_task_regex</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('</span> <span class="pre">TASK\\s+</span> <span class="pre">=</span> <span class="pre">([A-Z]+)\\s+\\n')</span></em><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult._match_task_regex" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.TaskResult.from_file">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#TaskResult.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.TaskResult.from_file" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -155,7 +214,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.outputs.task_result.KkrProcess.html" class="btn btn-neutral float-left" title="KkrProcess" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.outputs.readers.html" class="btn btn-neutral float-right" title="readers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.outputs.test.html" class="btn btn-neutral float-right" title="test" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.potentials.potential\_sections**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.potentials.potential_sections.ASEArraySection  ase2sprkkr.potentials.potential_sections.PotentialSection  ase2sprkkr.potentials.potential_sections.PotentialSectionTrait  ase2sprkkr.potentials.potential_sections.RepeatedPotentialSection  ase2sprkkr.potentials.potential_sections.UniqueListSection 
+.. inheritance-diagram::  ase2sprkkr.potentials.potential_sections.ASEArraySection  ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection  ase2sprkkr.potentials.potential_sections.PotentialSection  ase2sprkkr.potentials.potential_sections.PotentialSectionTrait  ase2sprkkr.potentials.potential_sections.RepeatedPotentialSection  ase2sprkkr.potentials.potential_sections.UniqueListSection 
       :parts: 1
 
 |
@@ -36,6 +36,7 @@ Full name: **ase2sprkkr.potentials.potential\_sections**
       :template: custom-class-template.rst
    
       ASEArraySection
+      AtomicTypePotentialSection
       PotentialSection
       PotentialSectionTrait
       RepeatedPotentialSection

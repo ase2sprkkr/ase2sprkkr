@@ -112,23 +112,23 @@
         <span class="n">trajectory</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">append_trajectory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">maxstep</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">master</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">alpha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;BFGS optimizer.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        atoms: :class:`~ase.Atoms`</span>
+<span class="sd">        Parameters:</span>
+
+<span class="sd">        atoms: Atoms object</span>
 <span class="sd">            The Atoms object to relax.</span>
 
-<span class="sd">        restart: str</span>
-<span class="sd">            JSON file used to store hessian matrix. If set, file with</span>
+<span class="sd">        restart: string</span>
+<span class="sd">            Pickle file used to store hessian matrix. If set, file with</span>
 <span class="sd">            such a name will be searched and hessian matrix stored will</span>
 <span class="sd">            be used, if the file exists.</span>
 
-<span class="sd">        trajectory: str</span>
-<span class="sd">            Trajectory file used to store optimisation path.</span>
+<span class="sd">        trajectory: string</span>
+<span class="sd">            Pickle file used to store trajectory of atomic movement.</span>
 
 <span class="sd">        logfile: file object or str</span>
 <span class="sd">            If *logfile* is a string, a file with that name will be opened.</span>
@@ -138,16 +138,15 @@
 <span class="sd">            Used to set the maximum distance an atom can move per</span>
 <span class="sd">            iteration (default value is 0.2 Å).</span>
 
+<span class="sd">        master: boolean</span>
+<span class="sd">            Defaults to None, which causes only rank 0 to save files.  If</span>
+<span class="sd">            set to true,  this rank will save files.</span>
+
 <span class="sd">        alpha: float</span>
 <span class="sd">            Initial guess for the Hessian (curvature of energy surface). A</span>
 <span class="sd">            conservative value of 70.0 is the default, but number of needed</span>
 <span class="sd">            steps to converge might be less if a lower value is used. However,</span>
 <span class="sd">            a lower value also means risk of instability.</span>
-
-<span class="sd">        kwargs : dict, optional</span>
-<span class="sd">            Extra arguments passed to</span>
-<span class="sd">            :class:`~ase.optimize.optimize.Optimizer`.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">maxstep</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;maxstep&#39;</span><span class="p">]</span>
@@ -163,8 +162,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span>
         <span class="n">Optimizer</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="n">restart</span><span class="p">,</span>
                            <span class="n">logfile</span><span class="o">=</span><span class="n">logfile</span><span class="p">,</span> <span class="n">trajectory</span><span class="o">=</span><span class="n">trajectory</span><span class="p">,</span>
-                           <span class="n">append_trajectory</span><span class="o">=</span><span class="n">append_trajectory</span><span class="p">,</span>
-                           <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                           <span class="n">master</span><span class="o">=</span><span class="n">master</span><span class="p">,</span> <span class="n">append_trajectory</span><span class="o">=</span><span class="n">append_trajectory</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># initial hessian</span>

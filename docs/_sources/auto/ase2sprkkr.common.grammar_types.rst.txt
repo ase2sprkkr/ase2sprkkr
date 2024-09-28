@@ -48,11 +48,11 @@ Full name: **ase2sprkkr.common.grammar\_types**
      :template: custom-module-template.rst
      :recursive:
   
+     ase2sprkkr.common.grammar_types.arrays
+     ase2sprkkr.common.grammar_types.basic
+     ase2sprkkr.common.grammar_types.data
+     ase2sprkkr.common.grammar_types.grammar_type
      ase2sprkkr.common.grammar_types.mixed
      ase2sprkkr.common.grammar_types.warnings
-     ase2sprkkr.common.grammar_types.basic
-     ase2sprkkr.common.grammar_types.grammar_type
-     ase2sprkkr.common.grammar_types.arrays
-     ase2sprkkr.common.grammar_types.data
   
   

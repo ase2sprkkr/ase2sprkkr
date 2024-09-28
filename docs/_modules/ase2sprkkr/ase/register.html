@@ -90,58 +90,40 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.ase.register</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">platformdirs</span>
-<span class="kn">import</span> <span class="nn">os</span>
-
-<span class="n">registered</span> <span class="o">=</span> <span class="kc">False</span>
-
-
-<div class="viewcode-block" id="user_preferences_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.register.user_preferences_file.html#ase2sprkkr.ase.register.user_preferences_file">[docs]</a><span class="k">def</span> <span class="nf">user_preferences_file</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Return filename with user preferences &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">platformdirs</span><span class="o">.</span><span class="n">user_config_dir</span><span class="p">(</span><span class="s1">&#39;ase2sprkkr&#39;</span><span class="p">,</span> <span class="s1">&#39;ase2sprkkr&#39;</span><span class="p">),</span> <span class="s1">&#39;__init__.py&#39;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="load_user_preferences"><a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.register.load_user_preferences.html#ase2sprkkr.ase.register.load_user_preferences">[docs]</a><span class="k">def</span> <span class="nf">load_user_preferences</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Load user defined preferences from</span>
-<span class="sd">        ``$HOME/.config/ase2sprkkr/__init__.py``</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">file</span> <span class="o">=</span> <span class="n">user_preferences_file</span><span class="p">()</span>
-
-    <span class="k">try</span><span class="p">:</span>
-       <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
-           <span class="kn">import</span> <span class="nn">types</span>
-           <span class="kn">import</span> <span class="nn">importlib.machinery</span>
-           <span class="n">loader</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">machinery</span><span class="o">.</span><span class="n">SourceFileLoader</span><span class="p">(</span><span class="s1">&#39;ase2sprkkr.personal&#39;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
-           <span class="n">mod</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">(</span><span class="n">loader</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-           <span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">warnings</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Can not import </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1"> file with the user preferences: </span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+<span></span><span class="n">registered</span> <span class="o">=</span> <span class="kc">False</span>
 
 
 <div class="viewcode-block" id="register"><a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.register.register.html#ase2sprkkr.ase.register.register">[docs]</a><span class="k">def</span> <span class="nf">register</span><span class="p">():</span>
     <span class="k">global</span> <span class="n">registered</span>
 
     <span class="k">if</span> <span class="n">registered</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span>
 
     <span class="c1"># fallback to the old way</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="kn">from</span> <span class="nn">ase.calculators.calculator</span> <span class="kn">import</span> <span class="n">register_calculator_class</span>
         <span class="kn">from</span> <span class="nn">..sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>  <span class="c1"># NOQA: E402</span>
-        <span class="n">register_calculator_class</span><span class="p">(</span><span class="s1">&#39;sprkkr&#39;</span><span class="p">,</span> <span class="n">SPRKKR</span><span class="p">)</span></div>
+        <span class="n">registered</span><span class="o">=</span><span class="kc">True</span></div>
+        <span class="c1">#register_calculator_class(&#39;sprkkr&#39;, SPRKKR)</span>
 
 
 <span class="k">try</span><span class="p">:</span>
 
-<div class="viewcode-block" id="ase_register"><a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.register.ase_register.html#ase2sprkkr.ase.register.ase_register">[docs]</a>    <span class="k">def</span> <span class="nf">ase_register</span><span class="p">(</span><span class="n">plugin</span><span class="p">):</span>
+<div class="viewcode-block" id="ase_register"><a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.register.ase_register.html#ase2sprkkr.ase.register.ase_register">[docs]</a>    <span class="k">def</span> <span class="nf">ase_register</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">global</span> <span class="n">registered</span>
         <span class="k">if</span> <span class="n">registered</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">registered</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">plugin</span><span class="p">:</span>
+            <span class="n">rc</span><span class="o">=</span><span class="n">plugin</span><span class="o">.</span><span class="n">register_calculator</span>
+            <span class="n">rio</span><span class="o">=</span><span class="n">plugin</span><span class="o">.</span><span class="n">register_io_format</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">ase.plugins.register</span> <span class="kn">import</span> \
+                <span class="n">register_io_format</span> <span class="k">as</span> <span class="n">fio</span><span class="p">,</span>   \
+                <span class="n">register_calculator</span> <span class="k">as</span> <span class="n">rc</span>
 
-        <span class="n">plugin</span><span class="o">.</span><span class="n">register_calculator</span><span class="p">(</span><span class="s1">&#39;ase2sprkkr.SPRKKR&#39;</span><span class="p">)</span>
-        <span class="n">plugin</span><span class="o">.</span><span class="n">register_io_format</span><span class="p">(</span><span class="s1">&#39;ase2sprkkr.ase.io&#39;</span><span class="p">,</span> <span class="s1">&#39;SPRKKR potential file&#39;</span><span class="p">,</span>
+        <span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ase2sprkkr.SPRKKR&#39;</span><span class="p">)</span>
+        <span class="n">rio</span><span class="p">(</span><span class="s1">&#39;ase2sprkkr.ase.io&#39;</span><span class="p">,</span> <span class="s1">&#39;SPRKKR potential file&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;1F&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sprkkr&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s1">&#39;pot&#39;</span><span class="p">)</span></div>
 
 
