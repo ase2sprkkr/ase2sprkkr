@@ -155,7 +155,7 @@ class Real(Number):
 
   nan = None
 
-  @add_to_signature(TypedGrammarType.__init__)
+  @add_to_signature(Number.__init__)
   def __init__(self, nan=None ,*args, **kwargs):
       self.nan = nan
       if nan is not None:
