@@ -100,7 +100,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 
-<div class="viewcode-block" id="SiteType"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType">[docs]</a><span class="k">class</span> <span class="nc">SiteType</span><span class="p">:</span>
+<div class="viewcode-block" id="SiteType"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.SiteType">[docs]</a><span class="k">class</span> <span class="nc">SiteType</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Definition of an atomic site.</span>
 <span class="sd">  (By symmetry) equivalent sites should share the same definition.</span>
@@ -109,7 +109,7 @@
 <span class="sd">  the same property.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SiteType.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">occupation</span><span class="p">,</span> <span class="n">reference_system</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SiteType.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.SiteType.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">occupation</span><span class="p">,</span> <span class="n">reference_system</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Parameters</span>
 <span class="sd">      ----------</span>
@@ -136,24 +136,24 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span> <span class="o">=</span> <span class="n">Occupation</span><span class="o">.</span><span class="n">to_occupation</span><span class="p">(</span><span class="n">occupation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">sites</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SiteType.register"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.register">[docs]</a>  <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site</span><span class="p">):</span>
+<div class="viewcode-block" id="SiteType.register"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.SiteType.register">[docs]</a>  <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">sites</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">site</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SiteType.unregister"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.unregister">[docs]</a>  <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site</span><span class="p">):</span>
+<div class="viewcode-block" id="SiteType.unregister"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.SiteType.unregister">[docs]</a>  <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">sites</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">site</span><span class="p">)</span></div>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">has_symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sites</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
 
-<div class="viewcode-block" id="SiteType.break_symmetry"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.break_symmetry">[docs]</a>  <span class="k">def</span> <span class="nf">break_symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SiteType.break_symmetry"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.SiteType.break_symmetry">[docs]</a>  <span class="k">def</span> <span class="nf">break_symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
           <span class="k">return</span>
       <span class="n">itr</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sites</span><span class="p">)</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itr</span><span class="p">:</span>
           <span class="n">i</span><span class="o">.</span><span class="n">break_symmetry</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SiteType._clear_data"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType._clear_data">[docs]</a>  <span class="k">def</span> <span class="nf">_clear_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SiteType._clear_data"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.SiteType._clear_data">[docs]</a>  <span class="k">def</span> <span class="nf">_clear_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">_clear_data</span><span class="p">()</span></div>
 
   <span class="nd">@property</span>
@@ -164,14 +164,14 @@
   <span class="k">def</span> <span class="nf">mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">remesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SiteType.remesh"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.remesh">[docs]</a>  <span class="k">def</span> <span class="nf">remesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="nb">map</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SiteType.remesh"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.SiteType.remesh">[docs]</a>  <span class="k">def</span> <span class="nf">remesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="nb">map</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="k">if</span> <span class="nb">map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
           <span class="nb">map</span> <span class="o">=</span> <span class="p">{}</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span> <span class="o">=</span> <span class="n">mesh</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">remesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="nb">map</span><span class="p">)</span>
       <span class="k">return</span> <span class="nb">map</span></div>
 
-<div class="viewcode-block" id="SiteType._just_one_type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType._just_one_type">[docs]</a>  <span class="k">def</span> <span class="nf">_just_one_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SiteType._just_one_type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.SiteType._just_one_type">[docs]</a>  <span class="k">def</span> <span class="nf">_just_one_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
           <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The site has multiple occupation, please use &#39;site_type.atomic_type(symbol/nb).desired_property&#39;&quot;</span><span class="p">)</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atomic_type</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
@@ -203,7 +203,7 @@
   <span class="k">def</span> <span class="nf">moments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_just_one_type</span><span class="p">()</span><span class="o">.</span><span class="n">moments</span> <span class="o">=</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="SiteType.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy_mesh</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="SiteType.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.SiteType.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy_mesh</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Create a copy of the site. &quot;&quot;&quot;</span>
       <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">copy_mesh</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span>
       <span class="n">site_type</span> <span class="o">=</span> <span class="n">SiteType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="p">,</span>  <span class="c1"># occupation will be copied</span>
@@ -251,7 +251,7 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span> <span class="o">=</span> <span class="n">Occupation</span><span class="o">.</span><span class="n">to_occupation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">update_atoms</span><span class="p">()</span>
 
-<div class="viewcode-block" id="SiteType.reset"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.reset">[docs]</a>  <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SiteType.reset"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.SiteType.reset">[docs]</a>  <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Set the properties of the site to the default.</span>
 
@@ -270,12 +270,12 @@
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Atomic symbol of the most important (most probable) chemical element present on the site. &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">primary_atomic_number</span>
 
-<div class="viewcode-block" id="SiteType.index"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.index">[docs]</a>  <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SiteType.index"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.SiteType.index">[docs]</a>  <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Return the the sites-array (of the owning atoms object) index for this site. &quot;&quot;&quot;</span>
       <span class="n">enum</span> <span class="o">=</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">site_type</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">)</span>
       <span class="k">return</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">enum</span> <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">self</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="SiteType.update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.update_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SiteType.update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.SiteType.update_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Update atomic numbers and occupation according to the sites data. &quot;&quot;&quot;</span>
       <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">()</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
@@ -295,7 +295,7 @@
   <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;SiteType:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="si">}</span><span class="s2">&quot;</span>
 
-<div class="viewcode-block" id="SiteType.is_vacuum"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType.is_vacuum">[docs]</a>  <span class="k">def</span> <span class="nf">is_vacuum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="SiteType.is_vacuum"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.SiteType.is_vacuum">[docs]</a>  <span class="k">def</span> <span class="nf">is_vacuum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Is the site vacuum pseudoatom? &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="p">))</span><span class="o">.</span><span class="n">is_vacuum</span><span class="p">()</span></div>
 
@@ -325,14 +325,14 @@
       <span class="k">return</span> <span class="n">AtomicTypesLookup</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="Site"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site">[docs]</a><span class="k">class</span> <span class="nc">Site</span><span class="p">:</span>
+<div class="viewcode-block" id="Site"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site">[docs]</a><span class="k">class</span> <span class="nc">Site</span><span class="p">:</span>
 
-<div class="viewcode-block" id="Site.create"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.create">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Site.create"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.create">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">occupation</span><span class="p">,</span> <span class="n">reference_system</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="n">site_type</span> <span class="o">=</span> <span class="n">SiteType</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">occupation</span><span class="p">,</span> <span class="n">reference_system</span><span class="p">,</span> <span class="n">mesh</span><span class="p">)</span>
       <span class="k">return</span> <span class="n">Site</span><span class="p">(</span><span class="n">site_type</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Site.copy_sites"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.copy_sites">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Site.copy_sites"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.copy_sites">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">copy_sites</span><span class="p">(</span><span class="n">sites</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
       <span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -351,7 +351,7 @@
               <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span>
           <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="Site.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_type</span><span class="p">):</span>
+<div class="viewcode-block" id="Site.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_type</span><span class="p">):</span>
       <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_type</span><span class="p">,</span> <span class="n">SiteType</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span> <span class="o">=</span> <span class="kc">None</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">site_type</span> <span class="o">=</span> <span class="n">site_type</span></div>
@@ -376,7 +376,7 @@
   <span class="k">def</span> <span class="nf">has_symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">has_symmetry</span>
 
-<div class="viewcode-block" id="Site.break_symmetry"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.break_symmetry">[docs]</a>  <span class="k">def</span> <span class="nf">break_symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Site.break_symmetry"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.break_symmetry">[docs]</a>  <span class="k">def</span> <span class="nf">break_symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_symmetry</span><span class="p">:</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">site_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_type</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
@@ -388,7 +388,7 @@
   <span class="k">def</span> <span class="nf">mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
 
-<div class="viewcode-block" id="Site.remesh"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.remesh">[docs]</a>  <span class="k">def</span> <span class="nf">remesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="nb">map</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Site.remesh"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.remesh">[docs]</a>  <span class="k">def</span> <span class="nf">remesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="nb">map</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">remesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="nb">map</span><span class="p">)</span></div>
 
   <span class="nd">@property</span>
@@ -455,7 +455,7 @@
   <span class="k">def</span> <span class="nf">atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">atoms</span>
 
-<div class="viewcode-block" id="Site.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="n">SiteType</span><span class="p">]]</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Site.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="n">SiteType</span><span class="p">]]</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Copy the site, optionally setting the new site_type (possibly to None) or</span>
 <span class="sd">      copy the exiting one.</span>
@@ -470,10 +470,10 @@
           <span class="n">out</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
       <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="Site._clear_data"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site._clear_data">[docs]</a>  <span class="k">def</span> <span class="nf">_clear_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Site._clear_data"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site._clear_data">[docs]</a>  <span class="k">def</span> <span class="nf">_clear_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">_clear_data</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Site.reset"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.reset">[docs]</a>  <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Site.reset"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.reset">[docs]</a>  <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
 
   <span class="nd">@property</span>

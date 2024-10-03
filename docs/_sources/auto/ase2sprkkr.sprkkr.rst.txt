@@ -38,22 +38,22 @@ Full name: **ase2sprkkr.sprkkr**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.sprkkr.atomic_types
-     ase2sprkkr.sprkkr.atoms_region
-     ase2sprkkr.sprkkr.build
-     ase2sprkkr.sprkkr.calculator
+     ase2sprkkr.sprkkr.reference_systems
+     ase2sprkkr.sprkkr.structure
+     ase2sprkkr.sprkkr.sprkkr_grammar_types
      ase2sprkkr.sprkkr.configuration
+     ase2sprkkr.sprkkr.sysfile
      ase2sprkkr.sprkkr.io_data
+     ase2sprkkr.sprkkr.sprkkr_atoms
+     ase2sprkkr.sprkkr.build
+     ase2sprkkr.sprkkr.atoms_region
+     ase2sprkkr.sprkkr.atomic_types
      ase2sprkkr.sprkkr.moments
      ase2sprkkr.sprkkr.occupations
      ase2sprkkr.sprkkr.radial
-     ase2sprkkr.sprkkr.radial_meshes
-     ase2sprkkr.sprkkr.reference_systems
      ase2sprkkr.sprkkr.sites
-     ase2sprkkr.sprkkr.sprkkr_atoms
-     ase2sprkkr.sprkkr.sprkkr_grammar_types
-     ase2sprkkr.sprkkr.structure
-     ase2sprkkr.sprkkr.sysfile
+     ase2sprkkr.sprkkr.radial_meshes
+     ase2sprkkr.sprkkr.calculator
      ase2sprkkr.sprkkr.test
   
   

@@ -38,7 +38,7 @@ Full name: **ase2sprkkr.physics**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.physics.lattice_data
      ase2sprkkr.physics.winger_seitz_radii
+     ase2sprkkr.physics.lattice_data
   
   

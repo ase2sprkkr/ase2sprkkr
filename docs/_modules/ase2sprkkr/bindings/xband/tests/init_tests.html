@@ -105,6 +105,11 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 
+<div class="viewcode-block" id="run_sprkkr"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.bindings.xband.tests.init_tests.run_sprkkr.html#ase2sprkkr.bindings.xband.tests.init_tests.run_sprkkr">[docs]</a><span class="k">def</span> <span class="nf">run_sprkkr</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; run this test only if SPRKKR executable can be runned &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="ow">not</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">run_sprkkr</span><span class="p">(),</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;The test require SPRKKR running&quot;</span><span class="p">)(</span><span class="n">fn</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="patch_package"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.bindings.xband.tests.init_tests.patch_package.html#ase2sprkkr.bindings.xband.tests.init_tests.patch_package">[docs]</a><span class="k">def</span> <span class="nf">patch_package</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Set the package name for the tests, to make the relative imports working.</span>
 
@@ -183,7 +188,8 @@
               <span class="k">pass</span>
       <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="TestCase.run_sprkkr"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.bindings.xband.tests.init_tests.TestCase.html#ase2sprkkr.bindings.xband.tests.init_tests.TestCase.run_sprkkr">[docs]</a>  <span class="k">def</span> <span class="nf">run_sprkkr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCase.run_sprkkr"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.bindings.xband.tests.init_tests.TestCase.html#ase2sprkkr.bindings.xband.tests.init_tests.TestCase.run_sprkkr">[docs]</a>  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">run_sprkkr</span><span class="p">():</span>
      <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DO_NOT_RUN_SPRKKR&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span></div>
 
 <div class="viewcode-block" id="TestCase.assertAsyncEqual"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.bindings.xband.tests.init_tests.TestCase.html#ase2sprkkr.bindings.xband.tests.init_tests.TestCase.assertAsyncEqual">[docs]</a>  <span class="k">def</span> <span class="nf">assertAsyncEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>

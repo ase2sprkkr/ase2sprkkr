@@ -183,17 +183,29 @@ the changes made.</p>
 </pre></div>
 </div>
 <p>You can add <code class="docutils literal notranslate"><span class="pre">--no-deps</span></code> switch for a faster rebuild.</p>
-<p>The limitation of the editable install is, that it won’t see
-newly created files automatically: you need run the command above
-again to make it notice it.</p>
-<p>If the build process fail, try to remove <code class="docutils literal notranslate"><span class="pre">build</span></code> directory created
-y the previous build (if it exists). Mostly it happens, if the
-<code class="docutils literal notranslate"><span class="pre">--no-build-isolation</span></code> switch is ommited. On one system I encouter
-the problem, that pip failed to install <code class="docutils literal notranslate"><span class="pre">ninja</span></code>, than installation
-of ninja using system package manager helped:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ninja
+<section id="the-known-issues-of-the-editable-build">
+<h3>The known issues of the editable build<a class="headerlink" href="#the-known-issues-of-the-editable-build" title="Permalink to this heading"></a></h3>
+<p>1. Unfortunatelly, pip is not able to install the build requirements.
+So if they are not installed, the previous command will fail.
+You can either install the dependencies manually,
+copying them out from pyproject.toml:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>meson-python<span class="w"> </span>cython<span class="w"> </span>numpy<span class="w"> </span>ninja
 </pre></div>
 </div>
+<p>or (which will be usefull if I add a build requirement and forgot
+to update this help) run the following snippet to install all the build-dependencies
+mentioned in pyproject.toml:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>tomllib
+pip<span class="w"> </span>install<span class="w"> </span>--no-build-isolation<span class="w"> </span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import tomllib; print(&#39; &#39;.join(tomllib.load(open(&#39;pyproject.toml&#39;,&#39;rb&#39;))[&#39;build-system&#39;][&#39;requires&#39;]))&quot;</span><span class="k">)</span>
+</pre></div>
+</div>
+<p>2. The limitation of the editable install is, that it won’t see
+newly created files automatically: you need run the command above
+again to make it notice it.</p>
+<p>3. If the build process fail, try to remove the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory created
+by the previous build (if it exists). Mostly, it happens if the
+<code class="docutils literal notranslate"><span class="pre">--no-build-isolation</span></code> switch is ommited.</p>
+</section>
 </section>
 </section>
 <section id="documentation-of-the-package">

@@ -1,5 +1,25 @@
 Changelog
 =========
+Version 3.2.0-beta
+------------------
+
+User interface
+~~~~~~~~~~~~~~
+* Better data validation, warnings on data validity
+* Bash ase2sprkkr commandline completing
+* Faster package loading, lazy loading of some modules/data definitions
+* Task BSF improved
+* Python 3.8, pyparsing 2.x and numpy < 1.23 support dropped
+* Nomad uploading proof of concept
+* Configuration file improved, help available
+
+For developers
+~~~~~~~~~~~~~~
+* Switch element improved to allow implementation of if_defined element
+* Repeated arrays
+* Length element
+* Profiling
+
 Version 3.1.0-beta
 ------------------
 * BSF task and result

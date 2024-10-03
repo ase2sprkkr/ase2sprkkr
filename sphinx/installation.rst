@@ -123,19 +123,36 @@ the changes made.
 
 You can add ``--no-deps`` switch for a faster rebuild.
 
-The limitation of the editable install is, that it won't see
-newly created files automatically: you need run the command above
-again to make it notice it.
 
-If the build process fail, try to remove ``build`` directory created
-y the previous build (if it exists). Mostly it happens, if the
-``--no-build-isolation`` switch is ommited. On one system I encouter
-the problem, that pip failed to install ``ninja``, than installation
-of ninja using system package manager helped:
+The known issues of the editable build
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Unfortunatelly, pip is not able to install the build requirements.
+So if they are not installed, the previous command will fail.
+You can either install the dependencies manually,
+copying them out from pyproject.toml:
 
 .. code:: bash
 
-   sudo apt install ninja
+   pip install meson-python cython numpy ninja
+
+or (which will be usefull if I add a build requirement and forgot
+to update this help) run the following snippet to install all the build-dependencies
+mentioned in pyproject.toml:
+
+.. code:: bash
+
+  pip install tomllib
+  pip install --no-build-isolation $(python -c "import tomllib; print(' '.join(tomllib.load(open('pyproject.toml','rb'))['build-system']['requires']))")
+
+
+2. The limitation of the editable install is, that it won't see
+newly created files automatically: you need run the command above
+again to make it notice it.
+
+3. If the build process fail, try to remove the ``build`` directory created
+by the previous build (if it exists). Mostly, it happens if the
+``--no-build-isolation`` switch is ommited.
 
 Documentation of the package
 ============================
