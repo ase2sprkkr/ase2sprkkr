@@ -2,9 +2,9 @@ import numpy as np
 from ase.build import bulk
 
 if __package__:
-   from .init_tests import TestCase, patch_package
+   from .init_tests import TestCase, patch_package, run_sprkkr
 else:
-   from init_tests import TestCase, patch_package
+   from init_tests import TestCase, patch_package, run_sprkkr
 __package__, __name__ = patch_package(__package__, __name__)
 
 if True:
@@ -131,9 +131,9 @@ class TestSites(TestCase):
       self.assertAlmostEqual(0.3 * 5. / 4., site.occupation[0])
       self.assertAlmostEqual(0.5 * 5. / 4., site.occupation[1])
 
+  @run_sprkkr
   def test_charge(self, temporary_dir):
       atoms = bulk('Li')
-      self._calc_args['print_output'] = True
       calc = SPRKKR(atoms=atoms, **self.calc_args())
       for i in atoms.sites:
          i.mesh.jrws = 30
@@ -151,6 +151,5 @@ class TestSites(TestCase):
       zero.atoms.sites[0].potential.vt*=2
       zero.atoms.sites[0].potential.bt*=2
       # calc.save_input(atoms=zero.atoms, directory='b', options={'NITER' : 2})
-      breakpoint()
       out3 = calc.calculate(atoms=zero.atoms, options={'NITER': 2})
       self.assertNotEqual(out.atoms.sites[0].potential.vt, out3.atoms.sites[0].potential.vt)
