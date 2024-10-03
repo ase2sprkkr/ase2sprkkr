@@ -127,7 +127,13 @@ class IntBool(BaseBool):
   _rev_grammar = _grammar.copy().setParseAction( lambda x: x[0] == '0' )
 
   @add_to_signature(TypedGrammarType.__init__)
-  def __init__(self, reversed=True, *args, **kwargs):
+  def __init__(self, reversed=False, *args, **kwargs):
+      """
+      Parameters
+      ----------
+      reversed
+       "reversed integer-boolean" returns 1 if it is False
+      """
       self.reversed = bool(reversed)
       super().__init__(*args, **kwargs)
 
@@ -146,6 +152,15 @@ class Real(Number):
     return '<float>'
 
   numpy_type = float
+
+  nan = None
+
+  @add_to_signature(TypedGrammarType.__init__)
+  def __init__(self, nan=None ,*args, **kwargs):
+      self.nan = nan
+      if nan is not None:
+          self._grammar = self._grammar | pp.Regex(nan).set_parse_action(lambda x: float('NaN'))
+      super().__init__(*args, **kwargs)
 
   def convert(self, value):
       if isinstance(value, (int, np.integer)):
