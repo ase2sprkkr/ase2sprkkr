@@ -732,9 +732,6 @@ class SPRKKR(Calculator):
         For the other parameters, see the save_input() method
         """
 
-        if print_output is None:
-           print_output = self.print_output
-
         if output_file is False:
            output_file = None
 
