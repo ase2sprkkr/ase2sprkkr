@@ -11,8 +11,14 @@ import importlib
 from pathlib import Path
 
 if not __package__:
-  __package__ = 'ase2sprkkr.tools'
-sys.path.append(str(Path(__file__).resolve().parents[2]))
+    path = str(Path(__file__).resolve().parents[1])
+    sys.path.append(path)
+    import os
+    spec = importlib.util.spec_from_file_location("ase2sprkkr", os.path.join(path, '__init__.py'))
+    ase2sprkkr = importlib.util.module_from_spec(spec)
+    sys.modules["ase2sprkkr"] = ase2sprkkr
+    spec.loader.exec_module(ase2sprkkr)
+    __package__ = 'ase2sprkkr.tools'
 
 import ase2sprkkr.tools.commands as commands # NOQA
 
