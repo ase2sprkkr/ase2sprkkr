@@ -229,7 +229,6 @@ class ScfOutputReader(SprKkrOutputReader):
                 up_to=b'\n -------------------------------------------------------------------------------',
                 start=line
               ))
-              breakpoint()
               line = await readline_until(stdout,lambda line: line!=b'\n')
               if not 'E=' in line:
                 break
