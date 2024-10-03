@@ -158,7 +158,7 @@ atomic_types_definition = Section('atoms', [
       'm_orb' : float,
       'B_val' : float,
       'B_val_desc': String(default_value = ''),
-      'B_core' : Real(default_value = float('NaN'))
+      'B_core' : Real(default_value = float('NaN'), nan=r'\*+')
     }, free_header=True, default_values=True)),
   V('E_band', RealWithUnits(units = {'[Ry]' : Rydberg }), is_optional=True),
   V('dipole moment', Sequence(int, Array(float, length=3)), is_optional=True)
@@ -229,6 +229,7 @@ class ScfOutputReader(SprKkrOutputReader):
                 up_to=b'\n -------------------------------------------------------------------------------',
                 start=line
               ))
+              breakpoint()
               line = await readline_until(stdout,lambda line: line!=b'\n')
               if not 'E=' in line:
                 break
