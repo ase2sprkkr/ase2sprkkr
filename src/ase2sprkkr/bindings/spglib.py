@@ -166,12 +166,15 @@ class SpacegroupInfo:
                          equivalent_sites.mapping),
                          symprec = precision,
                          angle_tolerance = angular_precision)
-       sg_dataset = spglib_dataset(sg_dataset)
+       if sg_dataset:
+           dataset = spglib_dataset(sg_dataset)
 
-       spacegroup = Spacegroup(sg_dataset.number)
-       equivalent_sites = equivalent_sites.merge(sg_dataset.equivalent_atoms)
-       equivalent_sites.normalize(start_from=0)
-       return spacegroup, sg_dataset, equivalent_sites
+           spacegroup = Spacegroup(dataset.number)
+           equivalent_sites = equivalent_sites.merge(dataset.equivalent_atoms)
+           equivalent_sites.normalize(start_from=0)
+           return spacegroup, dataset, equivalent_sites
+       else:
+           return None, None, UniqueValuesMapping(np.arange(len(atoms)))
 
     @staticmethod
     def from_atoms(atoms:Atoms,
