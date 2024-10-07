@@ -181,12 +181,14 @@ class ConfigurationContainer(BaseConfigurationContainer):
       Expose the interactive_members in the container attribute listing.
       Interactive_members are the non-hidden members identified by their sanitized names.
       """
-      def ok(member):
-          d = member._defintion
-          return not d.condtion or d.condition(self)
-      members = ( k.name for i,k in self._interactive_members.items() )
+      # def ok(member):
+      #    d = member._defintion
+      #    return not d.condtion or d.condition(self)
 
-      return itertools.chain( members, super().__dir__())
+      members = ( k.name for i,k in self._interactive_members.items() )
+      if self._definition.dir_common_attributes:
+          members = itertools.chain( members, super().__dir__())
+      return members
 
   def __contains__(self, name):
       """ The check for existence of a member with the given name."""
