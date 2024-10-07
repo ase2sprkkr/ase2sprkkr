@@ -71,10 +71,10 @@ def find_symmetry(atoms: ase.Atoms, align=False, verbose=False, subprocess=True,
        sg = atoms.spacegroup_info.number()
        msg = "Finding empty_spheres without providing " \
              "spacegroup is not currently supported."
-       if sg == 0:
+       if sg == 0 or sg is None:
            warnings.warn(msg)
-           return np.empty(0,2)
-       warnings.warn(msg + " Fallbacking to use spacegroup")
+           return np.empty((2,0), dtype=np.int32)
+       warnings.warn(msg + f" Fallbacking to use spacegroup: {sg}")
 
     cdef double to_bohr = 1. / Bohr
     cdef double alat = atoms.cell.get_bravais_lattice().a * to_bohr
