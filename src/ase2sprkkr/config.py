@@ -15,6 +15,7 @@ import platformdirs
 
 class Section(SectionDefinition):
     info_in_data_description = True
+    dir_common_attributes = False
 
 
 def _get_suffix(*_):
@@ -163,6 +164,7 @@ class Configuration(RootConfigurationContainer):
 
 class ConfigFileDefinition(ConfigurationRootDefinition):
 
+    dir_common_attributes = False
     result_class = Configuration
 
 
@@ -170,8 +172,16 @@ class ConfigFileDefinition(ConfigurationRootDefinition):
 definition = ConfigFileDefinition('config', [
 
   Section('running', [
-    V('empty_spheres', CustomMixed(Bool.I, Keyword('auto')), default_value='auto', info="Run empty spheres finding before calculation? Default value ``auto`` means only for SCF calculations not containing any vacuum atom."),
-    V('print_output', CustomMixed(Bool.I, Keyword('info')), default_value='info', info="Print output of SPRKKR calculation. Default value ``info`` prints only short info each iteration."),
+    V('empty_spheres', Keyword({
+      True : 'Always do empty spheres finding.',
+      False: 'Newer do empty spheres finding.',
+      'auto': 'Do empty spheres finding for unconverged potential not containing any vaccuum atom.'
+      }, transform=None), default_value='auto', info="Run empty spheres finding before calculation? Default value ``auto`` means only for SCF calculations not containing any vacuum atom."),
+    V('print_output', Keyword({
+      True: 'Print all output of SPRKKR executables to screen.',
+      False: 'Do not print any output of SPRKKR executables.',
+      'info': 'Print only brief information about iterations of SCF cycle.',
+    }, transform=None), default_value='info', info="Print output of SPRKKR calculation. Default value ``info`` prints only short info each iteration."),
     V('mpi', CustomMixed(Bool, Array(QString.I), Integer.I), is_optional=True, default_value=None,
              info='Use mpi for calculation? List of strings means yes, use the given strings as mpi runner and its params (e.g. [ "mpirun", "-n", "4" ]). Default None means try to autodetect. Integer number means use the standard runner with a given number of processes.'),
     V('mpi_warning', True, info='Warn, if no MPI is found.')
