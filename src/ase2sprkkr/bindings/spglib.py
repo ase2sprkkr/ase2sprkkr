@@ -157,15 +157,16 @@ class SpacegroupInfo:
        sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms(atoms)
        if atoms.symmetry:
            equivalent_sites = possibly_equivalent_sites(atoms, atomic_numbers, consider_old)
-           spositions = atoms.get_scaled_positions()
-           sg_dataset = spglib.get_symmetry_dataset((atoms.get_cell(),
-                             spositions,
-                             equivalent_sites.mapping),
-                             symprec = precision,
-                             angle_tolerance = angular_precision)
-           sg_dataset = spglib_dataset(sg_dataset)
-       if sg_dataset is None:
-          return None, None, UniqueValuesMapping(np.arange(len(atoms)))
+       else:
+           equivalent_sites = UniqueValuesMapping(np.arange(len(atoms)))
+
+       spositions = atoms.get_scaled_positions()
+       sg_dataset = spglib.get_symmetry_dataset((atoms.get_cell(),
+                         spositions,
+                         equivalent_sites.mapping),
+                         symprec = precision,
+                         angle_tolerance = angular_precision)
+       sg_dataset = spglib_dataset(sg_dataset)
 
        spacegroup = Spacegroup(sg_dataset.number)
        equivalent_sites = equivalent_sites.merge(sg_dataset.equivalent_atoms)
