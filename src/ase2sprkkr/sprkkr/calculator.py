@@ -29,6 +29,7 @@ import datetime
 from typing import Union, Any, Dict, Optional
 from pathlib import Path
 import re
+import warnings
 from ..common.misc import config_property, first_non_none
 from ..config import config
 
@@ -584,7 +585,10 @@ class SPRKKR(Calculator):
             if empty_spheres and atoms:
                 if not isinstance(empty_spheres, collections.abc.Mapping):
                     empty_spheres = {}
-                add_empty_spheres(atoms, **empty_spheres)
+                try:
+                    add_empty_spheres(atoms, **empty_spheres)
+                except Exception as e:
+                    warnings.warn(f"Failed to search empty-spheres. Error: {e}")
 
         def save_potential_file():
              pf = from_input_name(potential_file or self.potential_file, '.pot', '%a.pot')
