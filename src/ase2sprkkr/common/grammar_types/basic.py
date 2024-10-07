@@ -287,18 +287,24 @@ class Keyword(GrammarType):
   """
   A value, that can take values from the predefined set of strings.
   """
-
-  def __init__(self, *keywords, aliases=None, **kwargs):
+  def __init__(self, *keywords, aliases=None, transform='upper', **kwargs):
     self.aliases = aliases or {}
+    if transform == 'upper':
+        self.transform = lambda x: str(x).upper()
+    elif transform == 'lower':
+        self.transform = lambda x: str(x).lower()
+    else:
+        self.transform = lambda x:x
+
     if len(keywords)==1 and isinstance(keywords[0], dict):
        self.choices = keywords[0]
        keywords = self.choices.keys()
     else:
        self.choices = None
 
-    self.keywords = [ str(i).upper() for i in keywords ]
+    self.keywords = [ self.transform(i) for i in keywords ]
     with generate_grammar():
-      self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(i) for i in self.keywords)).setParseAction(lambda x: x[0].upper()) + optional_quote
+      self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(str(i)) for i in self.keywords)).setParseAction(lambda x: self.transform(x[0])) + optional_quote
 
     super().__init__(**kwargs)
 
@@ -308,13 +314,13 @@ class Keyword(GrammarType):
   def grammar_name(self):
       if len(self.keywords) == 1:
          return f'FixedValue({next(iter(self.keywords))})'
-      return 'AnyOf(' + ','.join((i for i in self.keywords )) + ')'
+      return 'AnyOf(' + ','.join((str(i) for i in self.keywords )) + ')'
 
   def __str__(self):
       return self.grammar_name()
 
   def convert(self, value):
-      out = str(value).upper()
+      out = self.transform(value)
       return self.aliases.get(out, out)
 
   def additional_description(self, prefix=''):
@@ -322,7 +328,7 @@ class Keyword(GrammarType):
       if not self.choices:
          return ad
       out = f'\n{prefix}Possible values:\n'
-      out += '\n'.join([f"{prefix}  {k:<10}{v}" for k,v in self.choices.items()])
+      out += '\n'.join([f"{prefix}  {str(k):<10}{v}" for k,v in self.choices.items()])
       if ad:
          out += f'\n\n{prefix}' + ad
       return out
