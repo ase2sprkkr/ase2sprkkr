@@ -60,6 +60,8 @@ class TauSection(Section):
                section.NKTAB3D.result = section.NKTAB3D._create_dangerous_value(None)
            else:
                section.NKTAB.result = section.NKTAB._create_dangerous_value(None)
+               if not section.KKRMODE():
+                   section.KKRMODE = 'TB-KKR'
 
 
 def _nktab_value(option):
@@ -96,11 +98,12 @@ regular mesh.
         "Specify cluster center using IQCNTR or ITCNTR and its size using NSHLCLU or CLURAD."
       ),
       V('NSHLCLU', int, is_expert=True, is_optional=True, info="Number of atomic shells around the central atom of a cluster"),
-      V('CLURAD', int, is_expert=True, is_optional=True, info="Radius of the cluster in multiples of ALAT."),
+      V('CLURAD', float, is_expert=True, is_optional=True, info="Radius of the cluster in multiples of ALAT."),
       V('IQCNTR', Site.I, is_expert=True, is_optional=True, info="The center of the cluster is set at the site position with number IQCNTR of the specified basis."),
       V('ITCNTR', AtomicType.I, is_expert=True, is_optional=True, info="The center of the cluster is set at one of the site positions that is occupied by the atomic type ITCNTR."),
       V('NLOUT', expert=3, info="The calculated τ -matrix is printed up to lmax=NLOUT."),
-      V('MOL', expert=False, info="Cluster type calculation but for a molecular system. The system is specified as for CLUSTER.")
+      V('MOL', expert=False, info="Cluster type calculation but for a molecular system. The system is specified as for CLUSTER."),
+      V('KKRMODE', Keyword("STANDARD-KKR", "TB-KKR", "LAYER-KKR"))
   ])
 """The definition of the TAU section of the task input file """
 
