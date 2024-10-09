@@ -170,7 +170,7 @@ def dict_from_parsed(values):
 
     if duplicates:
         duplicates = ", ".join((i.upper() for i in duplicates))
-        errors.append(pp.ParseException("There are duplicate items named {duplicates}"))
+        errors.append(pp.ParseException(f"There are duplicate items named {duplicates}"))
 
     if errors:
         if len(errors) == 1:
