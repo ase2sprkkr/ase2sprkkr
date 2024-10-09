@@ -22,12 +22,17 @@ class ChargeSectionDefinition(PotSectionDefinition):
       V = PotValueDefinition
       members = [
           V('TYPE', int),
-          V('DATA', NumpyArray(line_length=100, shape=(2,-1), ends_with=re.compile("\n(={79}|-{79})"),
-                               ends_with_str = "=" * 79, item_format='% .14E', indented=1),
+          V('DATA', NumpyArray(line_length=100, shape=(2,-1), ends_with=re.compile("\n?(={79}|-{79}|NFP)"),
+                               item_format='% .14E', indented=1),
                     name_in_grammar=False,
            ),
-          V('FULLPOT', RawData(ends_with=re.compile("\n?={79}"), ends_with_str="=" * 79, condition=lambda x: len(x)), required=False,
-            name_in_grammar=False, write_condition = lambda x: x() != ''),
+          V('FULLPOT', RawData(ends_with=re.compile("\n?(={79})"),
+                               condition = lambda x: x != ''
+                               ),
+                    required=False,
+                    name_in_grammar=False,
+                    write_condition = lambda x: x() != ''
+          ),
           SeparatorDefinition('=', length=79)
       ]
       super().__init__(name, members, has_hidden_members=True, is_repeated=True, is_optional=True)
