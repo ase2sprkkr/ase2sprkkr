@@ -937,8 +937,9 @@ class SeparatorDefinition(VirtualDefinition):
     def __repr__(self):
         return "<SEPARATOR>"
 
-    def __init__(self, separator_type=None, length=None):
+    def __init__(self, separator_type=None, length=None, write_condition=None):
         super().__init__(template='SEPARATOR')
+        self.write_condition = write_condition
         if separator_type is not None:
             if length is not None:
                 separator_type = Separator(char=separator_type,length=length)
@@ -948,6 +949,8 @@ class SeparatorDefinition(VirtualDefinition):
         return pp.Suppress(self.separator_type.grammar())
 
     def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=''):
+        if self.write_condition and not self.write_condition(value):
+            return False
         if not always:
             if self.condition and self.condition(value):
                     return False
