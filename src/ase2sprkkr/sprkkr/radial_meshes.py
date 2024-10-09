@@ -66,6 +66,22 @@ def _clearing_property(name):
     return out
 
 
+class FullpotMesh:
+  """ Data describing mesh for a full potential """
+
+  def __init__(self, jrns, jrcri, jrcut):
+      self.jrns = jrns
+      self.jrcri = jrcri
+      self.jrcut = jrcut
+
+  def to_tuple(self):
+      return self.jrns, self.jrcri, len(self.jrcut), self.jrcut
+
+  @classmethod
+  def from_tuple(cls, data):
+      return cls(data[0], data[1], data[3])
+
+
 class ExponentialMesh(Mesh):
   """
   Radial mesh definition for an atomic site.
@@ -96,6 +112,7 @@ class ExponentialMesh(Mesh):
       self._jrws = jrws
       self._rws = rws
       self._coors = None
+      self.fullpot = None
 
   r1 = _clearing_property('r1')
   dx = _clearing_property('dx')
@@ -131,3 +148,11 @@ class ExponentialMesh(Mesh):
 
   def copy(self):
       copy.copy(self)
+
+  def set_fullpot(self, data):
+      self.fullpot = FullpotMesh.from_tuple(data)
+
+  def fullpot_tuple(self):
+      if self.fullpot:
+          return self.fullpot.to_tuple()
+      return None

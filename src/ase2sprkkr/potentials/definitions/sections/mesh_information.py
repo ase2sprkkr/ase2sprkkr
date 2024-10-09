@@ -2,13 +2,43 @@ from ...potential_definitions import PotSectionDefinition, \
                                    PotValueDefinition
 from ...potential_sections import UniqueListSection
 
-from ....common.grammar_types import DefKeyword, Table
+from ....common.grammar_types import DefKeyword, Table, Array
 from ....sprkkr.radial_meshes import ExponentialMesh
+
+from ....sprkkr.io_data import ReadIoData, WriteIoData
+from ....sprkkr.sprkkr_atoms import SPRKKRAtoms
 
 
 class MeshInformationSection(UniqueListSection):
   _value_name = 'meshes'
   _value_class = ExponentialMesh
+
+  def _set_from_atoms(self, atoms:SPRKKRAtoms, write_io_data: WriteIoData):
+      ul = getattr(write_io_data, self._value_name)
+      self['DATA'].set([ i.to_tuple() for i in ul.iter_unique()])
+      fullpot = [ i.fullpot_tuple() for i in ul.iter_unique() ]
+
+      found = None
+      for i in fullpot:
+          if i is None:
+              if found is True:
+                  break
+              found = False
+          else:
+              if found is False:
+                  break
+              found = True
+      else:
+          if found:
+              self['FULLPOT'].set(fullpot)
+          return
+      raise Exception("FULLPOT mesh information missing for some meshes")
+
+  def _update_atoms(self, atoms:SPRKKRAtoms, read_io_data: ReadIoData):
+      super()._update_atoms(atoms, read_io_data)
+      if self.FULLPOT() is not None:
+          for mesh, full in zip(read_io_data[self._value_name], self['FULLPOT']()):
+              mesh.set_fullpot(full)
 
 
 class MeshInformationSectionDefinition(PotSectionDefinition):
@@ -21,6 +51,8 @@ class MeshInformationSectionDefinition(PotSectionDefinition):
                     numbering='IM', numbering_format='>5', format='>16',  # header_length=80
                           )
             ),
+          V('FULLPOT', Table({'JRNS1': int, 'JRCRI': int, 'NPAN': int, 'JRCUT': Array(int) }, numbering='IM', numbering_format='>5', format='>16'),
+            is_optional=True)
       ]
       super().__init__(name, members, has_hidden_members=True)
 
