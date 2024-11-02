@@ -143,7 +143,7 @@ class InputParameters(ConfigurationFile):
           if executable_dir:
              executable = os.path.join(executable, executable_dir)
 
-      process = self.result_reader(calculator)
+      process = self.result_reader(calculator, directory=directory)
       try:
 
         mpi = mpi_runner(mpi) if self._definition.mpi else None
