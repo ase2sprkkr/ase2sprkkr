@@ -68,6 +68,7 @@ def run():
       from ase2sprkkr.common.debug import add_debug_hook
       add_debug_hook()
   del args.debug
+  del args.profile
 
   if args.version:
       import ase2sprkkr.version
@@ -83,7 +84,7 @@ def run():
 
 
 if __name__ == "__main__":
-    if '-P' in sys.argv:
+    if '-P' in sys.argv or '--profile' in sys.argv:
         import cProfile
         import io
         import pstats
