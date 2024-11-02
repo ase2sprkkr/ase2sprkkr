@@ -88,13 +88,15 @@ def stack(atomses:Dict[str,Atoms], axis:int, *args, inherit_cell=True, **kwargs)
        inherit_cell = np.ones(3, dtype=bool)
        inherit_cell[axis]=False
 
-    for name, atoms in atomses.items():
-        if atoms is last:
-            upto = None
-        else:
-            upto = (cnt or 0) + len(atoms)
-        AtomsRegion.from_atoms(atoms, name, slice(cnt, upto), inherit_cell=inherit_cell, atoms=out)
-        cnt=upto
+    SPRKKRAtoms.promote_ase_atoms(out, update_info=False)
+    with out.spacegroup_info.block_updating(True):
+        for name, atoms in atomses.items():
+            if atoms is last:
+                upto = None
+            else:
+                upto = (cnt or 0) + len(atoms)
+            AtomsRegion.from_atoms(atoms, name, slice(cnt, upto), inherit_cell=inherit_cell, atoms=out)
+            cnt=upto
     return out
 
 

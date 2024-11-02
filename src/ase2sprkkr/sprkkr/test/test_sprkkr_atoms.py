@@ -1,5 +1,6 @@
 from ase import Atoms
 from ase.build import bulk
+import numpy as np
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -27,10 +28,17 @@ class TestSPRKKRAtoms(TestCase):
      self.assertNotEqual(id2, id(a.sites[2].site_type))
      assert id(b.sites[0]) != id(a.sites[2])
 
+     a = Atoms('NaCl')
+     a.set_positions([[0,0,0],[0,1,0]])
+     a.extend(b)
+     SPRKKRAtoms.promote_ase_atoms(a)
+     self.assertNotEqual(id2, id(a.sites[2].site_type))
+
  def test_atoms(self):
      a = Atoms('NaCl')
      a.set_positions([[0,0,0],[0,1,0]])
-     a.info['occupancy'] = { 1: {'Cl' : 0.4, 'I' : 0.6 } }
+     a.info['occupancy'] = { 0: {'Na' : 1.0}, 1: {'Cl' : 0.4, 'I' : 0.6 } }
+     a.arrays['spacegroup_kinds'] = np.asarray([0,1])
      self.assertEqual(str(a.symbols), 'NaCl')
      SPRKKRAtoms.promote_ase_atoms(a)
      self.assertEqual(len(a.sites), 2)
@@ -40,7 +48,7 @@ class TestSPRKKRAtoms(TestCase):
      self.assertEqual(str(a.symbols), 'NaI')
      self.assertEqual(a.sites[0].occupation.as_dict, {'Na' : 1})
      self.assertEqual(a.sites[1].occupation.as_dict, {'Cl' : 0.4, 'I': 0.6})
-     self.assertEqual(a.info['occupancy'][1], {'Cl' : 0.4, 'I': 0.6})
+     self.assertEqual(a.info['occupancy']["1"], {'Cl' : 0.4, 'I': 0.6})
      a.sites[1].site_type = a.sites[0].site_type
      a.compute_sites_symmetry()
      a.sites[1].occupation = 'Cl'
@@ -73,7 +81,7 @@ class TestSPRKKRAtoms(TestCase):
      atoms.symmetry = False
      self.assertTrue(atoms.sites[1].site_type == atoms.sites[3].site_type)
      assert atoms.sites[1] is not atoms.sites[3]
-     atoms.cancel_sites_symmetry()
+     atoms.breaks_sites_symmetry()
      self.assertFalse(atoms.sites[1].site_type == atoms.sites[3].site_type)
      assert atoms.sites[1] is not atoms.sites[3]
 
@@ -91,7 +99,7 @@ class TestSPRKKRAtoms(TestCase):
      atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
      SPRKKRAtoms.promote_ase_atoms(atoms)
      self.assertTrue(atoms.sites[1].site_type == atoms.sites[3].site_type)
-     atoms.cancel_sites_symmetry()
+     atoms.breaks_sites_symmetry()
      self.assertFalse(atoms.sites[1].site_type == atoms.sites[3].site_type)
 
      atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
@@ -101,6 +109,7 @@ class TestSPRKKRAtoms(TestCase):
          2: { 'Li' : 1 },
          3: { 'Cl' : 1 },
      }
+     atoms.arrays['spacegroup_kinds'] = np.array([0,1,0,1])
      SPRKKRAtoms.promote_ase_atoms(atoms)
      self.assertTrue(atoms.sites[1].site_type == atoms.sites[3].site_type)
 
@@ -111,6 +120,7 @@ class TestSPRKKRAtoms(TestCase):
          2: { 'Li' : 1 },
          3: { 'Cl' : 1 },
      }
+     atoms.arrays['spacegroup_kinds'] = np.array([0,1,0,2])
      SPRKKRAtoms.promote_ase_atoms(atoms)
      self.assertFalse(atoms.sites[1].site_type == atoms.sites[3].site_type)
      self.assertEqual({ 'Cl' : 0.5, 'I' :0.5 }, atoms.sites[1].occupation.as_dict)

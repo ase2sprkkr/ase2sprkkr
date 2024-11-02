@@ -4,11 +4,13 @@ import numpy as np
 import warnings
 cimport numpy as np
 
-from ...sprkkr.sprkkr_atoms import SPRKKRAtoms
 from ase.spacegroup.spacegroup import Spacegroup
-from ..spglib import SpacegroupInfo
-from ...common.subprocess import in_subprocess
 from ase.units import Bohr
+
+from ...sprkkr.sprkkr_atoms import SPRKKRAtoms
+from ...common.unique_values import UniqueValuesMapping
+from ...sprkkr.spacegroup_info import SpacegroupInfo
+from ...common.subprocess import in_subprocess
 
 cdef extern from "symmetry.h":
   cdef void find_symmetry_(int* n_operations, int* operations, int* ln, char* spacegroup, double* cell, double* angles, double* latvec,
@@ -34,7 +36,7 @@ def find_symmetry_ex(spacegroup,
     if isinstance(spacegroup, Spacegroup):
         spacegroup = spacegroup.no
     elif isinstance(spacegroup, SpacegroupInfo):
-        spacegroup = spacegroup.number()
+        spacegroup = spacegroup.spacegroup_number()
     spacegroup = str(spacegroup)
     cdef bytes sg = spacegroup.encode("utf8")
     cdef int ln = len(sg)
@@ -60,15 +62,16 @@ def find_symmetry(atoms: ase.Atoms, align=False, verbose=False, subprocess=True,
     in the numbering used in xband """
     SPRKKRAtoms.promote_ase_atoms(atoms)
     es = atoms.spacegroup_info.equivalent_sites
+    es = UniqueValuesMapping(es)
     types = es.normalized(dtype=np.int32)[0]
     uniq = es.unique_indexes()
 
     if use_spacegroup or True:
-       sg = atoms.spacegroup_info.number() or 0
+       sg = atoms.spacegroup_info.spacegroup_number() or 0
     else:
        sg = 0
     if sg == 0:
-       sg = atoms.spacegroup_info.number()
+       sg = atoms.spacegroup_info.spacegroup_number()
        msg = "Finding empty_spheres without providing " \
              "spacegroup is not currently supported."
        if sg == 0 or sg is None:

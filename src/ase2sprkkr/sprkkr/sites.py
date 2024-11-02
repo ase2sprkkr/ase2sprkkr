@@ -16,6 +16,23 @@ class SiteType:
   different positions (i.e. not by symmetry equal) should not share
   the same property.
   """
+  @staticmethod
+  def creator(atoms):
+      symbols = atoms.symbols
+      if 'spacegroup_kinds' in atoms.arrays and 'occupancy' in atoms.info:
+          kinds = atoms.arrays['spacegroup_kinds']
+          occ = atoms.info['occupancy']
+
+          def create(index):
+              symbol = symbols[index]
+              symbol = occ.get(kinds[index], symbol)
+              symbol = occ.get(str(kinds[index]), symbol)
+              return SiteType(atoms, symbol)
+      else:
+          def create(index):
+              return SiteType(atoms, symbols[index])
+
+      return create
 
   def __init__(self, atoms, occupation, reference_system=None, mesh=None):
       """
@@ -241,6 +258,15 @@ class Site:
       return Site(site_type)
 
   @staticmethod
+  def copy_if_needed(atoms, old_site, site_type):
+      if not old_site:
+          return Site(site_type)
+      if old_site.atoms is not atoms:
+          return old_site.copy(site_type)
+      old_site.site_type = site_type
+      return old_site
+
+  @staticmethod
   def copy_sites(sites, atoms=False):
       cache = {}
 
@@ -267,6 +293,11 @@ class Site:
   def __del__(self):
       if self._site_type:
           self._site_type.unregister(self)
+
+  def unregister(self):
+      if self._site_type:
+          self._site_type.unregister(self)
+          self._site_type = None
 
   @property
   def site_type(self):

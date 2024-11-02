@@ -5,7 +5,7 @@ from ...potential_sections import PotentialSection
 from ....common.grammar_types import Table, unsigned, Array, Sequence
 import numpy as np
 from ....sprkkr.sites import Site, Occupation
-from ....bindings.spglib import SpacegroupInfo
+from ....sprkkr.spacegroup_info import SpacegroupInfo
 
 
 class OccupationSection(PotentialSection):
@@ -34,8 +34,10 @@ class OccupationSection(PotentialSection):
   def _update_atoms(self, atoms, read_io_data):
       data = self['DATA']
       indexes = [ tuple(d) for d in data() ]
-      sg_info = SpacegroupInfo.from_atoms(atoms, indexes)
-      unique = sg_info.equivalent_sites.mapping
+      sg_info = SpacegroupInfo(atoms).recompute(init=True, atomic_kinds=indexes,
+                                                update_info=False)
+      unique = sg_info.dataset.equivalent_atoms if sg_info.dataset else \
+               np.arange(len(indexes))
 
       tags = {}
 
@@ -53,8 +55,8 @@ class OccupationSection(PotentialSection):
              return site
           else:
              return Site(tags[ind].site_type)
-
-      atoms.set_sites( np.array([ site(i,d) for i,d in enumerate(data()) ]), sg_info )
+      sites = np.array([ site(i,d) for i,d in enumerate(data()) ])
+      atoms.set_sites(sites, sg_info)
 
 
 class OccupationSectionDefinition(PotSectionDefinition):

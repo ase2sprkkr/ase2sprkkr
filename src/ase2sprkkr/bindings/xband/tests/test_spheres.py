@@ -32,7 +32,7 @@ class TestSpheres(TestCase):
       assert full.sites[0].site_type is full.sites[1].site_type
       cu = pot.atoms[:2]
       assert cu.sites[0].site_type is cu.sites[1].site_type
-      assert cu.spacegroup_info.number() == 227
+      assert cu.spacegroup_info.spacegroup_number() == 227
       cu.sites[0].break_symmetry()
       assert cu.sites[0].site_type is not cu.sites[1].site_type
       cu.compute_sites_symmetry(consider_old=False)

@@ -239,11 +239,18 @@ class Occupation:
 
   @property
   def as_dict(self):
+      return self.to_dict()
+
+  def to_dict(self, vacuum=False):
       occ = {}
       for at in self:
          if at.atomic_number == 0:
-            continue
-         occ[at.symbol] = occ.get(at.symbol, 0) + self[at]
+            if not vacuum:
+                continue
+            symbol = 'X'
+         else:
+            symbol = at.symbol
+         occ[symbol] = occ.get(symbol, 0.) + self[at]
       return occ
 
   @as_dict.setter

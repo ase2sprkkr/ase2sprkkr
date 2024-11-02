@@ -3,6 +3,7 @@ import os
 import re
 from pathlib import Path
 from ase import Atoms
+import numpy as np
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -28,6 +29,7 @@ class TestCalculator(TestCase):
  def test_2D(self, temporary_dir):
      a=Atoms(symbols="C", positions=[[0,0,0]], cell=[[1,0,0],[0,1,0], [0,0,1]], pbc=[1,1,1])
      b=semiinfinite_system(a, repeat=2)
+     assert np.max(b.arrays['spacegroup_kinds'])==5
      cal=SPRKKR(atoms=b, **self._calc_args)
      _fast_atoms(b)
      cal.input_parameters.set_from_atoms(b)
@@ -37,7 +39,9 @@ class TestCalculator(TestCase):
      if not self.run_sprkkr():
          return
      out=SPRKKR()
-     out=out.calculate(b, **self._calc_args(options={'EMIN': 8., 'NITER':2, 'NKTAB3D':2}))
+     out=out.calculate(b, **self._calc_args(options={'EMIN': 8., 'NITER':2, 'NKTAB3D':4}))# , directory='a', print_output=True))
+     out.input_parameters.set_from_atoms(b)
+     out.input_parameters.CONTROL.POTFIL='xxx'
      self.assertTrue(bool(re.search('NKTAB3D=', out.input_parameters.to_string())))
      self.assertFalse(bool(re.match('NKTAB=', out.input_parameters.to_string())))
 

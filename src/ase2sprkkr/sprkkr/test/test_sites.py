@@ -1,5 +1,7 @@
 import numpy as np
 from ase.build import bulk
+import ase.io
+import os
 
 if __package__:
    from .init_tests import TestCase, patch_package, run_sprkkr
@@ -153,3 +155,14 @@ class TestSites(TestCase):
       # calc.save_input(atoms=zero.atoms, directory='b', options={'NITER' : 2})
       out3 = calc.calculate(atoms=zero.atoms, options={'NITER': 2})
       self.assertNotEqual(out.atoms.sites[0].potential.vt, out3.atoms.sites[0].potential.vt)
+
+  def test_occupancy_and_spacegroup_kinds(self):
+      ciffile='test2.cif'
+      atoms = ase.io.read(os.path.join(
+            os.path.dirname(__file__),
+            ciffile
+      ))
+      SPRKKRAtoms.promote_ase_atoms(atoms)
+      assert str(atoms.symbols) == 'X2I2FeX11'
+      atoms.sites
+      assert str(atoms.symbols) == 'X2I2FeX11'

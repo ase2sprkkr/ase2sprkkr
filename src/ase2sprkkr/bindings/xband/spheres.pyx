@@ -3,8 +3,7 @@ import numpy as np
 cimport numpy as np
 from ase import Atoms
 from ...sprkkr.sprkkr_atoms import SPRKKRAtoms
-from ase.spacegroup.spacegroup import Spacegroup
-from ..spglib import SpacegroupInfo
+from ...common.unique_values import UniqueValuesMapping
 from .symmetry import find_symmetry
 from ..empty_spheres import EmptySpheresResult
 from ase.units import Bohr
@@ -58,6 +57,7 @@ def empty_spheres(
     cdef int n = len(atoms)
 
     es = atoms.spacegroup_info.equivalent_sites
+    es = UniqueValuesMapping(es)
     ui = es.unique_indexes()
     cdef int[:] mapping = es.normalized(dtype=np.int32)[0]
 
