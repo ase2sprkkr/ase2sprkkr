@@ -250,7 +250,6 @@ class InputParameters(ConfigurationFile):
               try:
                   ip = ip()
               except Exception as e:
-                  breakpoint()
                   raise RuntimeError(f"Can not load file {module.__name__} in {module.__file__} "
                                      f"due to the following error:\n {e}") from e
           cls._definitions[name] = ip
