@@ -118,6 +118,5 @@ class Potential(ConfigurationFile):
   def __str__(self):
       return "SPRKKR POTENTIAL"
 
-
 # At last - to avoid circular import problem
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms  # NOQA: E402
