@@ -22,6 +22,8 @@ class BaseGeneratedValueDefinition(RealItemDefinition):
   """ Generated value - the value is computed from other values """
   is_stored = False
   """ This property sets, that this Value/Option is generated. """
+  is_validated = False
+  """ By default, there is nothing to check on generated values """
 
   result_class = Option
   """ The generated Values creates :class:`Option` """

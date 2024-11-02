@@ -11,6 +11,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 if True:
     from ..input_parameters import InputParameters
+    from ...common.warnings import DataValidityError
 
 
 class TestDefinitions(TestCase):
@@ -40,16 +41,16 @@ class TestDefinitions(TestCase):
           ip.CONTROL.POTFIL = 'xxx'
           df= ip._definition
           try:
-              out = ip.to_string()
-          except ValueError:
+              out = ip.to_string(validate=True)
+          except DataValidityError:
               if i in 'BSFEK':
                   ip.TASK.KPATH = 1
-                  out = ip.to_string()
+                  out = ip.to_string(validate=True)
                   with pytest.raises(Exception):
                       ip.TASK.NKDIR = 2
                   ip.TASK.KPATH = None
                   ip.TASK.NKDIR = 2
-                  out = ip.to_string()
+                  out = ip.to_string(validate=True)
               else:
                   raise
           else:

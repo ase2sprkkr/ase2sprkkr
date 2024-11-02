@@ -77,7 +77,7 @@ class TestInputParameters(TestCase):
 
   def test_dangerous_value(self):
      with generate_grammar():
-       cv = cd.InputValueDefinition('aaa', int, required=True).grammar()
+       cv = cd.InputValueDefinition('aaa', int, is_required=True).grammar()
 
      assertParse = partial(self.assertParse, grammar=lambda: cv)
      assertNotValid = partial(self.assertNotValid, grammar=lambda: cv)
@@ -93,20 +93,46 @@ class TestInputParameters(TestCase):
      assertNotValid("aaa=1.0")
 
      with generate_grammar():
-       cv = cd.InputValueDefinition('aaa', int, required=True).grammar(allow_dangerous=True)
+       cv = cd.InputValueDefinition('aaa', int, is_required=True).grammar(allow_dangerous=True)
 
      assertParse("aaa=1", ('aaa', 1))
      assertParseDangerous("aaa=1.0", ('aaa', 1.0))
      assertParseDangerous("aaa=sss", ('aaa', 'sss'))
      assertParseDangerous("aaa={2,3}", ('aaa', np.array([2,3])))
 
-     vd=cd.InputValueDefinition('aaa', 2, required=True)
+     vd=cd.InputValueDefinition('aaa', 2, is_required=True)
      o=vd.create_object()
      o.set_dangerous("AAA")
      self.assertEqual(o.to_string(), '\taaa=AAA')
      o.set_dangerous(None)
      self.assertEqual(o.to_string(), '')
      #
+
+  def test_is_required(self):
+      ipd = cd.InputParametersDefinition.definition_from_dict({
+        'ENERGY' : [
+          V('E', 1),
+          V('F', int, None, is_required = lambda o: o._container.E()!=2)
+        ]
+      })
+
+      ip = ipd.create_object()
+      with pytest.raises(DataValidityError):
+          ip.validate()
+      e = ip.ENERGY
+      e.F = 2
+      ip.validate()
+      with pytest.raises(DataValidityError):
+          e.F = None
+      e.E = 2
+      ip.validate()
+      e.F = None
+      ip.validate()
+
+      assert ipd.read_from_string("ENERGY E=2").ENERGY.to_dict() == { 'E': 2 }
+      assert ipd.read_from_string("ENERGY E=1 F=2").ENERGY.to_dict() == { 'E': 1, 'F': 2 }
+      with pytest.warns(DataValidityError):
+          ipd.read_from_string("ENERGY E=1")
 
   def test_write_condition(self):
     input_parameters_def = cd.InputParametersDefinition.definition_from_dict({
@@ -358,7 +384,7 @@ XSITES NR=3 FLAG
           V('ENERGY', float, 0.0),
         ],
         'SITES' : [
-          V('NL', int)
+          V('NL', 1)
         ]
       })
     ips=input_parameters_def.create_object()
@@ -470,7 +496,7 @@ XSITES NR=3 FLAG
         V('Ime', float, 0.0),
       ],
       'SITES' : [
-        V('NL', int)
+        V('NL', 1)
       ]
     })
     with generate_grammar():

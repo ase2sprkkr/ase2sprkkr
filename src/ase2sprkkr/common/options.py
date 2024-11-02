@@ -206,8 +206,13 @@ class Option(BaseOption):
       """
       return self._definition.get_value(self)
 
-  @warnings_from_here(stacklevel=2)
   def set(self, value, *, unknown=None, error=None):
+      self._set(value, unknown=unknown, error=error)
+      if self._container and not error:
+          self._container._validate_section()
+
+  @warnings_from_here(stacklevel=2)
+  def _set(self, value, *, unknown=None, error=None):
       """
       Set the value of the option.
 
@@ -250,8 +255,6 @@ class Option(BaseOption):
          except ValueError:
              if not error=='ignore':
                   raise
-      if self._container and not error:
-          self._container._validate_section()
       self._post_set()
 
   def _post_set(self):
@@ -277,7 +280,7 @@ class Option(BaseOption):
 
       d.check_array_access()
       if not d.is_repeated.is_dict:
-          self()[name]=d.convert_and_validate(value, item=True)
+          self()[name]=d.convert_and_validate(self, value, item=True)
           self.validate(why='set')
       else:
         if isinstance(name, (list, tuple)):
@@ -378,7 +381,7 @@ class Option(BaseOption):
          """ The dangerous value is immutable, checked during its creation """
          pass
       else:
-         value = self._definition.convert_and_validate(value)
+         value = self._definition.convert_and_validate(self, value)
       return value
 
   def __hasitem__(self, name):
@@ -430,8 +433,8 @@ class Option(BaseOption):
       else:
           if not self._definition.type.has_value:
              return
-          if self._definition.default_value is None and not do_not_check_required and self._definition.required:
-             raise ValueError(f'Option {self._get_path()} must have a value')
+          if self._definition.default_value is None and not do_not_check_required and self.is_required:
+             raise DataValidityError(f'Option {self._get_path()} must have a value.')
           self._value = None
           self.clear_result()
       if call_hooks:
@@ -483,36 +486,37 @@ class Option(BaseOption):
           return value, False
       return value, True
 
+  @property
+  def is_required(self):
+      r = self._definition.is_required
+      if not r:
+          return False
+      if callable(r):
+          return r(self)
+      return r
+
   def _validate(self, why='save'):
       d = self._definition
       if (not d.is_validated if d.is_validated is not None else d.is_generated) or \
-         not d.type.has_value:
-            return
+           not d.type.has_value:
+             return
 
       def vali(value):
-        if isinstance(value, DangerousValue):
-            return
-        if value is None:
-           if not d.is_optional:
-               name = self._get_root_container()
-               if d.required and d.required is not True:
-                    raise ValueError(d.required)
-               DataValidityError.warn(f'Value {self._get_path()} is None and it is not an optional value. Therefore, I cannot save the {name}')
-               return
-        else:
-           d.validate(value, why)
+          if isinstance(value, DangerousValue):
+              return
+          d.validate(self, value, why)
 
       value = self(unpack=False, all_values=True)
       if d.is_repeated.is_dict:
-           if value is None:
-               vali(value)
-           elif isinstance(value, DangerousValue):
-               return
-           else:
-               for i in value.values():
-                   vali(i)
+          if value is None:
+              vali(value)
+          elif isinstance(value, DangerousValue):
+              return
+          else:
+              for i in value.values():
+                  vali(i)
       else:
-           vali(value)
+          vali(value)
 
   @property
   def name(self):

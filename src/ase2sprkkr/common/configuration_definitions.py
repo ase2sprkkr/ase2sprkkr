@@ -434,7 +434,6 @@ class RealItemDefinition(BaseDefinition):
        """
        self.is_expert = is_expert
        self.is_hidden = is_hidden
-       """ Is it required part of configuration (or can it be ommited)? """
        self.write_alternative_name = write_alternative_name
        self.write_condition = write_condition or (lambda x: True)
        self.name_in_grammar = self.__class__.name_in_grammar \

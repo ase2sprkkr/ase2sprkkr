@@ -160,8 +160,8 @@ atomic_types_definition = Section('atoms', [
       'B_val_desc': String(default_value = ''),
       'B_core' : Real(default_value = float('NaN'), nan=r'\*+')
     }, free_header=True, default_values=True)),
-  V('E_band', RealWithUnits(units = {'[Ry]' : Rydberg }), is_optional=True),
-  V('dipole moment', Sequence(int, Array(float, length=3)), is_optional=True)
+  V('E_band', RealWithUnits(units = {'[Ry]' : Rydberg }), is_required=False),
+  V('dipole moment', Sequence(int, Array(float, length=3)), is_required=False)
 ])
 
 
@@ -182,8 +182,8 @@ scf_section = Section('iteration', [
     V('EF', float, info='Fermi energy', alternative_names='fermi'),
     V('ETOT', float, info='Total energy', alternative_names='total'),
     V('EMIN', float, info='Bottom of energy contour for band states', alternative_names='band_states_min'),
-    V('ESCBOT', float, info='Lower limit for semi-core states', alternative_names='semi_core_min'),
-    V('ECTOP', float, info='Upper limit for core states', alternative_names='core_max')
+    V('ESCBOT', float, info='Lower limit for semi-core states', alternative_names='semi_core_min', is_required=False),
+    V('ECTOP', float, info='Upper limit for core states', alternative_names='core_max', is_required=False)
   ]),
   Section('atomic_types', atomic_types_definition.members(), is_repeated=True)
 ])

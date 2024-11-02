@@ -94,6 +94,9 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         return val.get()
 
     def set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
+        self._set(values, value, unknown=unknown, error=error, **kwargs)
+
+    def _set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
         """
         Set the value(s) of parameter(s). Usage:
 

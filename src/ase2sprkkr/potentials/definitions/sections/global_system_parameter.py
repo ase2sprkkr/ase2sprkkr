@@ -18,7 +18,7 @@ class GlobalSystemParameterDefinition(PotSectionDefinition):
         V('NT', int),
         V('NM', int),
         V('IREL', 3),
-        V('NSPIN', int, required = False, is_optional = True)
+        V('NSPIN', int, is_required = False, is_optional = True)
       ]
       super().__init__(name, members, has_hidden_members=True)
 

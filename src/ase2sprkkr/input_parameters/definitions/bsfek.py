@@ -44,9 +44,11 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
     5  Γ-D-H
 """, is_optional=True),
             *if_not_defined('KPATH', [
-                V('NKDIR', Length('KA', 'KE', default_values=[[0.,0.,0.],[1.,1.,1.,]]), info="Number of directions treated in k-spaces", required="Please, specify either TASK.KPATH or TASK.NKDIR"),
-                V('KA', SetOf(float, length=3), is_repeated='NUMBERED', info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR"),
-                V('KE', SetOf(float, length=3), is_repeated='NUMBERED', info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR"),
+                V('NKDIR', Length('KA', 'KE', default_values=[[0.,0.,0.],[1.,1.,1.,]]), info="Number of directions treated in k-spaces"),
+                V('KA', SetOf(float, length=3), is_repeated='NUMBERED', info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR",
+                is_required="Please, specify either TASK.KPATH or TASK.KA and TASK.KE"),
+                V('KE', SetOf(float, length=3), is_repeated='NUMBERED', info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR",
+                is_required="Please, specify either TASK.KPATH or TASK.KA and TASK.KE"),
             ])
           ]),
           ENERGY.copy([

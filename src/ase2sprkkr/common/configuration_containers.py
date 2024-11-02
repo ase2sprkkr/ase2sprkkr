@@ -49,7 +49,7 @@ class BaseConfigurationContainer(Configuration):
           has_any_value: bool
               True, if no value in the container is set, False otherwise
         """
-        for i in self.values():
+        for i in self._values():
           if i.has_any_value():
              return True
         return False
@@ -309,6 +309,11 @@ class ConfigurationContainer(BaseConfigurationContainer):
       return item.as_dict(only_changed=False)
 
   def set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
+      error = error or 'section'
+      self._set(values, value, unknown=unknown, error=error, **kwargs)
+      self.validate(why='warning')
+
+  def _set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
       """
       Set the value(s) of parameter(s). Usage:
 
@@ -341,8 +346,6 @@ class ConfigurationContainer(BaseConfigurationContainer):
          raise ValueError("If value argument of Container.set method is given,"
          " the values have to be string name of the value")
 
-      error = error or 'section'
-
       def set_value(name, value):
         if '.' in name:
             section, name = name.split('.', 1)
@@ -351,14 +354,14 @@ class ConfigurationContainer(BaseConfigurationContainer):
                    self.add(section)
                else:
                    raise KeyError(f"There is no section {section} in {self} to set{section}.{name} to {value}")
-            self._members[section].set({name:value}, unknown='fail' if unknown == 'find' else unknown, error=error)
+            self._members[section]._set({name:value}, unknown='fail' if unknown == 'find' else unknown, error=error)
             return
         option = self._members.get(name, None)
         if not option or not option._definition.accept_value(value):
            if unknown == 'find':
               option = self._find_member(name.lower(), True, True)
               if option:
-                 option.set(value, error=error or 'section')
+                 option._set(value, error=error)
                  return
            if unknown == 'ignore':
                return
@@ -367,7 +370,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
               return
            self.add(name, value)
         else:
-           option.set(value, unknown=unknown, error=error)
+           option._set(value, unknown=unknown, error=error)
 
       if values:
         try:
@@ -426,6 +429,10 @@ class ConfigurationContainer(BaseConfigurationContainer):
       """ Iterate over all members of the container """
       yield from self._members.values()
 
+  def _values(self):
+      """ Iterate over all members of the container """
+      yield from self._members.values()
+
   def _as_dict(self, get):
       """
       Return the content of the container as a dictionary.
@@ -438,7 +445,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
         the values
       """
       out = {}
-      for i in self:
+      for i in self._values():
           value = i._as_dict(get)
           if value is not None:
               out[i._definition.real_name] = value
@@ -468,7 +475,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
       if is_option is not True and \
          name == (self.name.lower() if lower else self.name):
             yield self
-      for i in self:
+      for i in self._values():
           if i._definition.is_hidden:
              continue
           yield from i._find_members(name, lower, is_option)
@@ -499,7 +506,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
                   self._lowercase_members[iname] = member
 
   def is_changed(self):
-      for i in self:
+      for i in self._values():
           if i.is_changed():
               return True
       return False
@@ -547,7 +554,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
       self._definition.validate(sa, why)
       if why == 'save' and not self._definition.is_optional and not self.has_any_value():
           raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
-      for o in self:
+      for o in self._values():
           d = o._definition
           if d.allowed(self):
               o._validate(why)
@@ -565,7 +572,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
       if section_adaptor is None:
           section_adaptor = SectionAdaptor(self)
 
-      for o in self:
+      for o in self._values():
           d = o._definition
           if d.allowed(section_adaptor) and d.validate_section:
                   d.validate_section(section_adaptor, why)
@@ -579,7 +586,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
         has_any_value: bool
             True, if no value in the container is set, False otherwise
       """
-      for i in self:
+      for i in self._values():
         if i.has_any_value():
            return True
       return False

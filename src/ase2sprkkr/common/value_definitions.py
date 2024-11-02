@@ -44,10 +44,10 @@ class ValueDefinition(RealItemDefinition):
   def __init__(self, name, type=None, default_value=None,
                default_value_from_container=None,
                written_name=None, alternative_names=None,
-               fixed_value=None, required=None, init_by_default=False,
+               fixed_value=None, init_by_default=False,
                result_is_visible=False, info=None, description=None,
-               is_stored=None, is_hidden=False, is_optional=None, is_expert=False,
-               is_repeated:Union[bool,str,RealItemDefinition.Repeated]=False,
+               is_stored=None, is_hidden=False, is_optional=None, is_required=None,
+               is_expert=False, is_repeated:Union[bool,str,RealItemDefinition.Repeated]=False,
                is_always_added:bool=None,
                name_in_grammar=None, name_format=None, expert=None,
                write_alternative_name:bool=False,
@@ -84,17 +84,6 @@ class ValueDefinition(RealItemDefinition):
       that can not be changed by an user.
       #TODO - currently, callback (as in default_value) is not supported
 
-    required: bool
-      Required option can not be set to None (however, a required one
-      can be still be optional, if it has a default values).
-      If required = None, it is set to True if both the conditions are met:
-
-       * the value is not expert
-       * the optional is not True and the option has not a default_value
-
-      If required is str, it means the same as True, the string will be
-      used as error message.
-
     init_by_default: bool
       If the value is not set, init it by default
 
@@ -115,6 +104,20 @@ class ValueDefinition(RealItemDefinition):
       If True, the value can be omited, if fixed order in the section is required
       None means True just if required is False (or it is determined to be False),
       see the ``required`` parameter.
+
+    is_required: bool or callable or str
+      Required option can not be set to None (however, a required one
+      can be still be optional, if it has a default values).
+      If required = None, it is set to True if both the conditions are met:
+
+       * the value is not expert
+       * the optional is not True and the option has not a default_value
+
+      If required is str, it means the same as True, the string will be
+      used as error message.
+
+      If it is callable, it is evaluated on demand, with the Option as the
+      argument of the function.
 
     is_hidden: bool
       The value is hidden from the user (no container.name access to the value).
@@ -169,7 +172,7 @@ class ValueDefinition(RealItemDefinition):
        else:
           default_value=expert
        is_expert = True
-       required = False
+       is_required = False
     elif type is None:
        raise TypeError("The data-type of the configuration value is required.")
 
@@ -215,12 +218,12 @@ class ValueDefinition(RealItemDefinition):
     if result_is_visible:
        self.default_value = lambda o: o._result if hasattr(o, '_result') else default_value
 
-    if required is None:
-       required = not is_expert and (not is_optional and default_value is None)
-    self.required = required
+    if is_required is None:
+       is_required = not is_expert and (not is_optional and default_value is None)
+    self.is_required = is_required
 
     if is_optional is None:
-       is_optional = required is False
+       is_optional = is_required is False
 
     super().__init__(
          name = name,
@@ -359,28 +362,31 @@ class ValueDefinition(RealItemDefinition):
           return self.grammar_type
       return self.type
 
-  def validate(self, value, why='set', item=False):
+  def validate(self, opt, value, why='set', item=False):
       try:
           if value is None:
-             if self.required:
-                if self.required is True:
-                    raise ValueError(f"The value is required for {self.name}, cannot set it to None")
+             req = opt.is_required
+             if req:
+                if req == 'save' and why != 'save':
+                    return True
+                if req is True:
+                    raise ValueError(f"The value is required for {opt._get_path()}, cannot set it to None")
                 else:
-                    raise ValueError(self.required)
+                    raise ValueError(req)
              return True
           if self.is_fixed and not np.array_equal(self.default_value, value):
-              ValueError(f'The value of {self.name} is required to be {self.default_value}, cannot set it to {value}')
+              ValueError(f'The value of {opt._get_path()} is required to be {self.default_value}, cannot set it to {value}')
           self.validate_type(item).validate(value, self.get_path, why=why)
           self.validate_warning(value)
       except ValueError as e:
           DataValidityError.warn(str(e))
 
-  def convert_and_validate(self, value, why='set', item=False):
+  def convert_and_validate(self, opt, value, why='set', item=False):
       with warnings.catch_warnings():
           warnings.simplefilter("error", DataValidityError)
           try:
               value = self.validate_type(item).convert(value)
-              self.validate(value, why, item)
+              self.validate(opt, value, why, item)
               return value
           except ValueError as v:
               DataValidityError.warn(str(v))

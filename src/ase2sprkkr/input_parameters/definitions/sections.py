@@ -24,10 +24,10 @@ def CONTROL(ADSI):
   """
 
   return Section('CONTROL',[
-      V('DATASET', str, 'case', required = True, result_is_visible=True,
+      V('DATASET', str, 'case', is_required = True, result_is_visible=True,
                                 info="The custom field for the description of the problem - the output files will have called 'DATASET.<ext>'."),
-      V('ADSI', DefKeyword(ADSI), required = True, info="Type of the computation."),
-      V('POTFIL', str, required=True, info="The potential file (see SPRKKR documentation for its format). It isn't necessary to set it, it will be set by the calculator."),
+      V('ADSI', DefKeyword(ADSI), is_required = True, info="Type of the computation."),
+      V('POTFIL', str, is_required='save', info="The potential file (see SPRKKR documentation for its format). It isn't necessary to set it, it will be set by the calculator."),
       V('KRWS', Integer(min=0, max=1), 1, info='If it is 0, RWS is taken from the potential file and scaled. If 1, RWS is calculated by scaling the muffin-tin radii by a common scaling factor. (This setting is forced in the case of FULLPOT.)'),
       V('KRMT', {
         '0' : 'RMT is taken from the potential file',
@@ -37,7 +37,7 @@ def CONTROL(ADSI):
         '4' : 'RMT from atomic Hartree potential (=> KRWS=1)',
         '5' : 'RMT from total atomic potential (=> KRWS=1)',
         '6' : 'take average of 3 and 4 (=> KRWS=1)',
-      }, default_value=None, info='It controls how the muffin-tin radii are calculated.',required=False),
+      }, default_value=None, info='It controls how the muffin-tin radii are calculated.',is_required=False),
       V('PRINT', Integer(min=0, max=5), default_value=0, info="Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output."),
       V('NONMAG', False, info="Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation. ")
   ])
@@ -81,7 +81,7 @@ The special point method (BZINT=POINTS) uses a regular k-point grid with NKTAB
 points. It is the standard method and gives a good compromise concerning accuracy
 and efficiency. For BZINT=POINTS the parameter NKTAB will be adjusted to allow a
 regular mesh.
-"""), required=True,
+"""), is_required=True,
                              info='The mode of BZ-integration used for calculation of the scattering '
                                   ' path operator τ'),
       V('NKTAB', 250, info='Number of points for the special points method', is_optional=True,
@@ -154,7 +154,7 @@ def xc(*args, **kwargs):
 SCF = Section('SCF', [
       V('NITER', 200, info='Maximal number of iterations of the SCF cycle'),
       V('MIX', 0.2, info='Mixing parameter'),
-      V('MIXOP', float, required=False),
+      V('MIXOP', float, is_required=False),
       xc('VXC', DefKeyword({
         'VWN' : 'Vosko, Wilk, Nusair',
         'MJW' : 'Janak, Williams, Moruzzigit g',
@@ -169,14 +169,14 @@ SCF = Section('SCF', [
           'BROYDEN2': 'Broyden’s second method',
           'TCHEBY': 'Tchebychev'
         }), info='Mixing algorithm'),
-      V('EFGUESS', float, required=False, info='Skip the Fermi energy search in the beginning.'),
+      V('EFGUESS', float, is_required=False, info='Skip the Fermi energy search in the beginning.'),
       V('TOL', 0.00001, info='Tolerance threshold for the mixing algorithm'),
       V('ISTBRY', 1, info='Start Broyden after ISTBRY iterations'),
       V('FULLPOT', False, info='Non-spherical callculation (full-potential) instead of ASA'),
       V('ITDEPT', 40, info='Iteration depth for Broyden algorithm (length of used history)'),
-      V('QION', SetOf(float), required=False, info='Guess for the ionic charges Qt for atomic types'),
-      V('QIONSCL', float, required=False, info='Guess for the ionic charges Qt for atomic types'),
-      V('MSPIN', SetOf(float), required=False, info='Guess for the magnetic moment μ_{spin,t} for atomic types'),
+      V('QION', SetOf(float), is_required=False, info='Guess for the ionic charges Qt for atomic types'),
+      V('QIONSCL', float, is_required=False, info='Guess for the ionic charges Qt for atomic types'),
+      V('MSPIN', SetOf(float), is_required=False, info='Guess for the magnetic moment μ_{spin,t} for atomic types'),
       V('USEVMATT', False, info='Set up the starting potential using the original Mattheiss'
                                  'construction for the potential V instead of the charge density')
   ])
@@ -229,20 +229,20 @@ MODE = Section('MODE', [
         'SREL' : "work in the scalar-relativistic mode",
         'SP-SREL' : "work in the spin-polarized scalar-relativistic mode"}, aliases= {'FREL' : None }
       ), None,
-                required=False, name_in_grammar=False,
+                is_required=False, name_in_grammar=False,
                 info='Using this option you can switch on the spin polarization and relativistic mode. If it''s not set (or set to ''FREL''), the ''full'' relativity mode is used.'),
     V('LLOYD', False, info='Use LLoyd formula for scattering operator. It can improve the accuracy of the Fermi energy.'),
-    V('MDIR', Array(float, length=3), [1.,0.,0.], required=False, info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.",
+    V('MDIR', Array(float, length=3), [1.,0.,0.], is_required=False, info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.",
                                       is_repeated='DEFAULTDICT', is_always_added=False ),
-    V('C', 1.0, info='Scale the speed of light for a given atom type.', is_repeated='DEFAULTDICT', required=False, is_always_added=False),
-    V('SOC', 1.0, info='Scale the strength of the spin-orbit coupling for atom type.', is_repeated='DEFAULTDICT', required=False, is_always_added=False),
+    V('C', 1.0, info='Scale the speed of light for a given atom type.', is_repeated='DEFAULTDICT', is_required=False, is_always_added=False),
+    V('SOC', 1.0, info='Scale the strength of the spin-orbit coupling for atom type.', is_repeated='DEFAULTDICT', is_required=False, is_always_added=False),
   ], is_expert=True, is_optional=True, info=
       """This section contains options that describe, how to consider relativity and/or spin. If the MODE is not specified otherwise the programs of the SPRKKR-package assume that a magnetic system should be treated in a fully relativistic way. By setting the parameter SP-SREL a slightly faster scalar relativistic calculation can be done instead for a magnetic system.""",
 )
 """MODE Section definition"""
 
 SPEC=Section('SPEC',[
-    V('FEGFINAL', flag, required=False)
+    V('FEGFINAL', flag, is_required=False)
   ], is_expert=True, is_optional=True, info='Sets the final state as a free electron gas final state. By default it is TRLEED final state which is time reverse low energy electron diffraction final state.'
 )
 

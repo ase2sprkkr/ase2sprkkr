@@ -31,8 +31,8 @@ class PotValueDefinition(ConfigurationValueDefinition):
   prefix = ''
   name_value_delimiter = '\t'
 
-  def __init__(self, *args, required=None, **kwargs):
-      super().__init__(*args, required=required, **kwargs)
+  def __init__(self, *args, is_required=None, **kwargs):
+      super().__init__(*args, is_required=is_required, **kwargs)
 
   type_of_dangerous = pot_mixed
 

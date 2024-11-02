@@ -165,6 +165,8 @@ class Configuration:
               )
 
   def validate(self, why='save'):
+      if why=='warning':
+          return self._validate(why)
       with warnings.catch_warnings():
           warnings.simplefilter("error", DataValidityError)
           self._validate(why)

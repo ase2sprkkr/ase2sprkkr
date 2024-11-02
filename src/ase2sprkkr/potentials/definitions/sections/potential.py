@@ -30,7 +30,7 @@ class PotentialSectionDefinition(PotSectionDefinition):
           V('FULLPOT', RawData(ends_with=re.compile("\n?(={79}|-{79})"),
                                condition = lambda x: x != ''
                                ),
-                    required=False,
+                    is_required=False,
                     name_in_grammar=False,
                     write_condition = lambda x: x() != ''
           ),
