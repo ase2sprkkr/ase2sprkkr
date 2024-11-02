@@ -9,7 +9,7 @@ input_parameters = lambda: InputParameters(
     'gilbert', [
       CONTROL('GILBERT'),
       TAU,
-      ENERGY.copy(remove = ['EMIN'],
+      ENERGY(emin = None, emax=None,
         defaults = { 'GRID' : 3, 'NE' : 1 }
       ),
       SITES.copy(defaults = {'NL' : 4 }),

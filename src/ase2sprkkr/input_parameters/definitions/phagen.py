@@ -10,7 +10,7 @@ input_parameters = lambda: InputParameters(
         CONTROL('PHAGEN'),
         TASK('PHAGEN'),
         TAU,
-        ENERGY,
+        ENERGY(),
         SCF,
       ],
       info = "PHAGEN",

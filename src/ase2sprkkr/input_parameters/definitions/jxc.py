@@ -13,7 +13,7 @@ def input_parameters():
               TAU,
               MODE,
               STRCONST,
-              ENERGY,
+              ENERGY(),
               TASK('JXC').copy([
                   V('CLURAD', 2.2, info=
         """The radius of a sphere restricting the cluster

@@ -11,17 +11,16 @@ input_parameters = lambda: InputParameters(
     'arpes', [
       CONTROL('ARPES'),
       TAU,
-      ENERGY.copy([
-          V('EMINEV', -8., info='Minimum of the energy window in eV with respect to the Fermi level'),
-          V('EMAXEV', 5., info='Maximum of the energy window in eV with respect to the Fermi level'),
-          V('EWORK_EV', 4.2, info='Inner potential of the bulk crystal in eV'),
-          V('IMV_INI_EV', 0.05, info='Imaginary part of the potential in eV (initial state)'),  # alternatively you can use VIL (in eV) or IMV_INI (in Ry)'),
-          V('IMV_FIN_EV', 2., info='Imaginary part of the potential in eV (final state)'),  # alternatively you can use VIH (in eV) or IMV_FIN (in Ry)'),
-        ],
-        remove = ['EMIN'],
-        defaults = { 'GRID' : 1, 'NE' : 300 }
+      ENERGY(
+          emin = (None, 'Minimum of the energy window in eV with respect to the Fermi level', -8.),
+          emax = (None, 'Maximum of the energy window in eV with respect to the Fermi level', 5.),
+          add = [
+            V('EWORK_EV', 4.2, info='Inner potential of the bulk crystal in eV'),
+            V('IMV_INI_EV', 0.05, info='Imaginary part of the potential in eV (initial state)'),  # alternatively you can use VIL (in eV) or IMV_INI (in Ry)'),
+            V('IMV_FIN_EV', 2., info='Imaginary part of the potential in eV (final state)'),  # alternatively you can use VIH (in eV) or IMV_FIN (in Ry)'),
+          ],
+          defaults = { 'GRID' : 1, 'NE' : 300 }
       ),
-
       SITES.copy(defaults = {'NL' : 4 }),
 
       Section('TASK', [
@@ -66,31 +65,31 @@ input_parameters = lambda: InputParameters(
         V('IFSP', Keyword({
             0: 'fixed',
             1: 'variable'
-           }), is_expert=True, required=False, info='Photon azimuth angle type'),
+           }), is_expert=True, is_required=False, info='Photon azimuth angle type'),
         V('THETA_FIX', float, is_expert=True, info='Light and electrons are at fixed polarization angle')
       ], info=''),
 
       Section('SPEC_EL', [
-        V('THETA', Range(float), info='Scattering angle',required=False),
-        V('PHI', Range(float), info='Scattering angle',required=False),
-        V('NT', int, info='Number of angular values for a rotation in polar coordinate.',required=False),
-        V('NP', int, info='Number of angular values for a rotation in azimuth coordinate.',required=False),
-        V('KA', Range(float), info='Scatering in momentum space ',required=False),
-        V('K1', Range(float), info='Translating vector of the scatering in momentum space ',required=False),
-        V('NK1', int, info='Number of momentum steps for the integration',required=False),
-        V('K2', Range(float), info='Translating vector 2 of the scatering in momentum space ',required=False),
-        V('NK2', int, info='Number of momentum steps 2 for the integration',required=False),
-        V('K3', Range(float), info='Translating vector 3 of the scatering in momentum space ',required=False),
-        V('NK3', int, info='Number of momentum steps 3 for the integration',required=False),
-        V('K4', Range(float), info='Translating vector 4 of the scatering in momentum space ',required=False),
-        V('NK4', int, info='Number of momentum steps 4 for the integration',required=False),
+        V('THETA', Range(float), info='Scattering angle',is_required=False),
+        V('PHI', Range(float), info='Scattering angle',is_required=False),
+        V('NT', int, info='Number of angular values for a rotation in polar coordinate.',is_required=False),
+        V('NP', int, info='Number of angular values for a rotation in azimuth coordinate.',is_required=False),
+        V('KA', Range(float), info='Scatering in momentum space ', is_required=False),
+        V('K1', Range(float), info='Translating vector of the scatering in momentum space ',is_required=False),
+        V('NK1', int, info='Number of momentum steps for the integration',is_required=False),
+        V('K2', Range(float), info='Translating vector 2 of the scatering in momentum space ',is_required=False),
+        V('NK2', int, info='Number of momentum steps 2 for the integration',is_required=False),
+        V('K3', Range(float), info='Translating vector 3 of the scatering in momentum space ',is_required=False),
+        V('NK3', int, info='Number of momentum steps 3 for the integration',is_required=False),
+        V('K4', Range(float), info='Translating vector 4 of the scatering in momentum space ',is_required=False),
+        V('NK4', int, info='Number of momentum steps 4 for the integration',is_required=False),
 
         V('POL_E', DefKeyword('PZ')),
-        V('SPOL', int, required=False),
-        V('PSPIN', SetOf(float, length=3), required=False),
-        V('BETA1', float, required=False, info='Begin of the rotation'),
-        V('BETA2', float, required=False, info='End of the rotation'),
-        V('ROTAXIS',SetOf(int, length=3),required=False, info='Axis of the rotation'),
+        V('SPOL', int, is_required=False),
+        V('PSPIN', SetOf(float, length=3), is_required=False),
+        V('BETA1', float, is_required=False, info='Begin of the rotation'),
+        V('BETA2', float, is_required=False, info='End of the rotation'),
+        V('ROTAXIS',SetOf(int, length=3),is_required=False, info='Axis of the rotation'),
         # expert
         V('TYP', Keyword({0: "i(e) diagram",
                           1: "rotation diagram -> phi scan",

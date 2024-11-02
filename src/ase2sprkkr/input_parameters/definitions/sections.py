@@ -107,13 +107,54 @@ regular mesh.
   ])
 """The definition of the TAU section of the task input file """
 
-ENERGY = Section('ENERGY',[
-      V('GRID', [5], required=True),
-      V('NE', [32], required=True, info='Number of points in energy-mesh'),
-      V('ImE', energy, 0.0),
-      V('EMIN', -0.2, info='The real part of the lowest E-value'),
-  ])
-"""The definition of the ENERGY section of the task input file """
+
+def ENERGY(
+        emin = (-0.2, "The real part of the lowest E-value", None),
+        emax = None,
+        add = [],
+        defaults = {}
+      ):
+    """The definition of the ENERGY section of the task input file """
+    vals = [
+        V('GRID', SetOf(int), defaults.get('GRID', [5]), is_required=True, info='Type of the grid for the energy-mesh',
+          description=
+  """ 0    only real energies -- Gauss integration mesh
+   1    only real energies -- equidistant path
+   2    rectangular complex path
+   3    straight complex path parallel to real axis
+   4    rectangular complex grid, return to real axis on log scale
+   5    arc in the complex plain
+   6    standard X-ray mesh from E_Fermi to 3.5 Ry
+   7    X-ray mesh
+   8    arc in the complex plane (logarithim)
+   9    arc in the complex plane (Akai's scheme)
+  10    ellipse in the complex plain
+  11    semi circle (5) plus straight line (3)"""
+          ),
+        V('NE', SetOf(int), defaults.get('NE', [32]), is_required=True, info='Number of points in energy-mesh'),
+        V('ImE', energy, defaults.get('ImE', 0.0)),
+    ]
+
+    if emin:
+        vals += [
+            V('EMIN', float, lambda o: None if o._container.EMINEV() is not None else emin[0], info=emin[1],
+                 is_optional=lambda o:o._container.EMINEV() is not None),
+            V('EMINEV', float, emin[2], info='EMIN, given in eV with respect to the Fermi level', is_optional=True),
+          ]
+    if emax == 'emin':
+        vals += [
+              V('EMAX', float, lambda o: o._container.EMIN(), info='The same value as EMIN', is_hidden=True,
+                   is_optional=lambda o: o._container.EMAXEV() is not None),
+              V('EMAXEV', float, lambda o: o._container.EMINEV(), info='The same value as EMAXEV', is_hidden=True, is_optional=True),
+        ]
+    elif emax:
+        vals += [
+              V('EMAX', float, lambda o: None if o._container.EMAXEV() is not None else emax[0], info=emax[1],
+                   is_optional=lambda o:o._container.EMAXEV() is not None),
+              V('EMAXEV', float, emax[2], info='EMAX in eV with respect to the Fermi level', is_optional=True),
+        ]
+    vals += add
+    return Section('ENERGY', vals)
 
 
 def xc(*args, **kwargs):

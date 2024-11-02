@@ -51,14 +51,14 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
                 is_required="Please, specify either TASK.KPATH or TASK.KA and TASK.KE"),
             ])
           ]),
-          ENERGY.copy([
-            V('EMAX', 1., info="highest E-value"),
-          ], defaults={
-            'EMIN': -0.2,
-            'GRID': 3,
-            'NE'  : 200,
-            'ImE' : 0.001,
-          }),
+          ENERGY(
+            emin = (-0.2, 'The lowest E-value', None),
+            emax = (-1., 'The highest E-value', None),
+            defaults={
+              'GRID': 3,
+              'NE'  : 200,
+              'ImE' : 0.001,
+            }),
           CONTROL('BLOCHSF'),
           TAU,
           MODE,

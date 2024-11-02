@@ -9,7 +9,7 @@ input_parameters = lambda: InputParameters(
         CONTROL('SCF'),
         TASK('SCF'),
         TAU,
-        ENERGY,
+        ENERGY(),
         SCF,
         SITES,
         STRCONST,

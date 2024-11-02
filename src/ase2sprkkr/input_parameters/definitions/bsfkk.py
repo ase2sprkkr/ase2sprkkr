@@ -9,21 +9,21 @@ input_parameters = lambda: InputParameters(
     'bsfkk', [
           CONTROL('BSF'),
           TAU,
-          TASK('BSF').copy([
+          TASK('BSF', add=[
             V('NK', 300, info="total number of k-points"),
             V('NK1', int, info="number of k-points along k1", is_optional=True),
             V('NK2', int, info="number of k-points along k2", is_optional=True),
             V('K1', SetOf(float, length=3), is_optional=True, info="ﬁrst k-vector to span a two-dimensional region in k-space."),
             V('K2', SetOf(float, length=3), is_optional=True, info="second k-vector to span a two-dimensional region in k-space"),
           ]),
-          ENERGY.copy([
-              V('EMAX', 1., info="highest E-value"),
-            ], defaults={
-              'EMIN': 0.7,   # TODO - fermi energy from computation
-              'ImE' : 0.001,
-              'GRID': 3,
-              'NE'  : 1
-          }),
+          ENERGY(
+              emin = (0.7, 'the energy to compute the BSF', None),
+              emax = 'emin',
+              defaults={
+                'ImE' : 0.001,
+                'GRID': 3,
+                'NE'  : 1
+              }),
           CONTROL('BLOCHSF'),
           TAU,
           MODE,
