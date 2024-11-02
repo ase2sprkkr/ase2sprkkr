@@ -5,9 +5,9 @@ routines, possible usable with plain ASE (with any calculator).
 
 import numpy as np
 import ase
-from ase.build import stack as _stack
-
 from typing import List, Union, Optional
+
+
 def aperiodic_times(atoms:ase.Atoms,
                     times:Union[int, float, List[Union[int,float]]],
                     axis:Optional[int]=None,
@@ -62,8 +62,8 @@ def aperiodic_times(atoms:ase.Atoms,
         inum = int(num)
         mlt = np.ones(3, dtype=int)
         mlt[i] = inum
-        natoms = atoms*mlt
-        fnum=num-inum
+        natoms = atoms * mlt
+        fnum=num - inum
         if fnum>0:
            pos=atoms.get_scaled_positions(False)
            if direction > 0:
@@ -75,11 +75,12 @@ def aperiodic_times(atoms:ase.Atoms,
                add.positions -= atoms.cell[i]
                add += natoms
                natoms = add
-               natoms.positions+= atoms.cell[i]*fnum
-        natoms.cell[i] = atoms.cell[i]*num
+               natoms.positions+= atoms.cell[i] * fnum
+        natoms.cell[i] = atoms.cell[i] * num
         natoms.pbc[i]=False
         atoms = natoms
     return atoms
+
 
 def stack(atomses:List[ase.Atoms],
           axis:int,
@@ -166,7 +167,7 @@ def stack(atomses:List[ase.Atoms],
 
     out = atoms0.copy()
 
-    #first, define a function to retrieve the shifts
+    # first, define a function to retrieve the shifts
     if at is None:
        valid_at = lambda n: False
     else:
@@ -178,11 +179,11 @@ def stack(atomses:List[ase.Atoms],
             return None
         a = at[i]
         if isinstance(a, (int, float)):
-           out = out.cell[axis]
-           out *= a / np.linalg.norm(out)
+           o = out.cell[axis]
+           o *= a / np.linalg.norm(out)
         else:
-           out = a
-        return out
+           o = a
+        return o
 
     def update_origin(i):
        nonlocal origin
@@ -194,7 +195,7 @@ def stack(atomses:List[ase.Atoms],
        else:
           origin=a
 
-    #set the initial origin and shift
+    # set the initial origin and shift
     at0 = get_at(0)
     if at0 is None:
        origin = np.array([0.,0.,0.])
@@ -203,8 +204,7 @@ def stack(atomses:List[ase.Atoms],
        origin = at0
     shift = out.cell[axis]
 
-
-    #resolve resulting pbc
+    # resolve resulting pbc
     cell_index = [ i for i in range(3) if i!=axis ]
     if check_strain == 'auto':
        check_strain = scale
@@ -218,7 +218,7 @@ def stack(atomses:List[ase.Atoms],
                  raise ValueError("The stacked atoms has incompatibile pbc. Check the check_pbc argument.")
     out.pbc[axis] = periodic
 
-    #and finally, stack the atoms
+    # and finally, stack the atoms
     a0cell = atoms0.cell.complete()
     for i,a in enumerate(remains, start=1):
        update_origin(i)
@@ -226,7 +226,7 @@ def stack(atomses:List[ase.Atoms],
        out.pbc *= a.pbc
        positions = out.positions[-len(a):]
 
-       #scaling of the incompatibile cells
+       # scaling of the incompatibile cells
        do_scale = []
        for c in cell_index:
           if (a.cell[c] != atoms0.cell[c]).any():
@@ -240,7 +240,7 @@ def stack(atomses:List[ase.Atoms],
           cell = a.cell.complete()
           ncell = cell.copy()
           for c in do_scale:
-              #copied from atoms.set_cell(scale_atoms=True)
+              # copied from atoms.set_cell(scale_atoms=True)
               ncell[c] = a0cell[c]
           m = np.linalg.solve(cell, ncell)
           positions[:] = np.dot(positions, m)
@@ -248,7 +248,7 @@ def stack(atomses:List[ase.Atoms],
        positions += origin
        shift=a.cell[axis]
 
-    #update the cell of the resulting atoms
+    # update the cell of the resulting atoms
     update_origin(len(atomses))
     out.cell[axis] = origin
     return out
