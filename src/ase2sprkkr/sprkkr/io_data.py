@@ -35,30 +35,31 @@ class WriteIoData(BaseIoData):
         self._has_converged_data = None
 
     @unique_mapping
-    def sites(self):
-        return self.atoms.sites
+    def site_types(self):
+        return [ i.site_type for i in self.atoms.sites ]
 
     @unique_mapping
     def types(self):
-        for s in self.sites.iter_unique():
+        for s in self.site_types.iter_unique():
             yield from s.occupation.atomic_types()
 
     @unique_mapping
     def reference_systems(self):
-        return (s.reference_system for s in self.sites.iter_unique())
+        return (s.reference_system for s in self.site_types.iter_unique())
 
     @unique_mapping
     def meshes(self):
-        return (s.mesh for s in self.sites.iter_unique())
+        return (s.mesh for s in self.site_types.iter_unique())
 
     def has_converged_data(self, potential):
 
         def compute():
             if potential.SCF_INFO.FULLPOT():
                 return False
-            for site, i in self.sites.unique_items():
-              if not site.charge or not site.potential or not site.moments:
-                  return False
+            for site_type, i in self.site_types.unique_items():
+                for atom in site_type.occupation.atomic_types():
+                    if not atom.charge or not atom.potential or not atom.moments:
+                        return False
 
             return True
 
