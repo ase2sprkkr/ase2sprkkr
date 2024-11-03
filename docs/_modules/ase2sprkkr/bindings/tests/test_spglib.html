@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.bindings.tests.test_spglib &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -91,7 +90,6 @@
              
   <h1>Source code for ase2sprkkr.bindings.tests.test_spglib</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="k">if</span> <span class="n">__package__</span><span class="p">:</span>
    <span class="kn">from</span> <span class="nn">.init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
@@ -99,58 +97,41 @@
    <span class="kn">from</span> <span class="nn">init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
 <span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span> <span class="o">=</span> <span class="n">patch_package</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">..spglib</span> <span class="kn">import</span> <span class="n">possibly_equivalent_sites</span><span class="p">,</span> <span class="n">SpacegroupInfo</span>  <span class="c1"># NOQA: E402</span>
-<span class="kn">from</span> <span class="nn">...sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>                  <span class="c1"># NOQA: E402</span>
+<span class="kn">from</span> <span class="nn">..spglib</span> <span class="kn">import</span> <span class="n">spglib_dataset</span>  <span class="c1"># NOQA: E402</span>
+<span class="kn">from</span> <span class="nn">...sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>  <span class="c1"># NOQA: E402</span>
+<span class="kn">from</span> <span class="nn">...common.unique_values</span> <span class="kn">import</span> <span class="n">UniqueValuesMapping</span>  <span class="c1"># NOQA: E402</span>
 
 
-<div class="viewcode-block" id="TestSpgilib"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.tests.test_spglib.TestSpgilib.html#ase2sprkkr.bindings.tests.test_spglib.TestSpgilib">[docs]</a><span class="k">class</span> <span class="nc">TestSpgilib</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestSpgilib">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.tests.test_spglib.TestSpgilib.html#ase2sprkkr.bindings.tests.test_spglib.TestSpgilib">[docs]</a>
+<span class="k">class</span> <span class="nc">TestSpgilib</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="TestSpgilib.test_possibly_equivalent_sites"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.tests.test_spglib.TestSpgilib.html#ase2sprkkr.bindings.tests.test_spglib.TestSpgilib.test_possibly_equivalent_sites">[docs]</a>  <span class="k">def</span> <span class="nf">test_possibly_equivalent_sites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestSpgilib.test_spglib_dataset">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.tests.test_spglib.TestSpgilib.html#ase2sprkkr.bindings.tests.test_spglib.TestSpgilib.test_spglib_dataset">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_spglib_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
        <span class="k">def</span> <span class="nf">ssert</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">out</span><span class="p">):</span>
-           <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">(</span><span class="n">mapping</span><span class="p">))</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">equivalent_atoms</span><span class="p">)</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">(</span><span class="n">mapping</span><span class="p">))</span>
 
        <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;NaCl&#39;</span><span class="p">,</span> <span class="s2">&quot;rocksalt&quot;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">5.64</span><span class="p">)</span>
-       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">))</span>
-       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">]))</span>
+       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">spglib_dataset</span><span class="p">(</span><span class="n">atoms</span><span class="p">))</span>
+       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">spglib_dataset</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">]))</span>
 
        <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;NaNa&#39;</span><span class="p">,</span> <span class="s2">&quot;rocksalt&quot;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">5.64</span><span class="p">)</span>
-       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">))</span>
-       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">]))</span>
+       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">spglib_dataset</span><span class="p">(</span><span class="n">atoms</span><span class="p">))</span>
+       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">spglib_dataset</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">]))</span>
 
        <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;NaCl&#39;</span><span class="p">,</span> <span class="s2">&quot;rocksalt&quot;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">5.64</span><span class="p">)</span>
        <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
        <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span>
-       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">))</span>
+       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">spglib_dataset</span><span class="p">(</span><span class="n">atoms</span><span class="p">))</span>
        <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Na&#39;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">}</span>
-       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">consider_old</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">spglib_dataset</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">consider_old</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
        <span class="c1"># repeat the test to be sure</span>
-       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">consider_old</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">consider_old</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span></div>
+       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">spglib_dataset</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">consider_old</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+       <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">spglib_dataset</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">consider_old</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span></div>
+</div>
 
-<div class="viewcode-block" id="TestSpgilib.test_spacegroup_info"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.tests.test_spglib.TestSpgilib.html#ase2sprkkr.bindings.tests.test_spglib.TestSpgilib.test_spacegroup_info">[docs]</a>  <span class="k">def</span> <span class="nf">test_spacegroup_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-      <span class="k">def</span> <span class="nf">ssert</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">out</span><span class="p">):</span>
-           <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">(</span><span class="n">mapping</span><span class="p">))</span>
-
-      <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;NaCl&#39;</span><span class="p">,</span> <span class="s2">&quot;rocksalt&quot;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">5.64</span><span class="p">)</span>
-      <span class="n">sgi</span> <span class="o">=</span> <span class="n">SpacegroupInfo</span><span class="o">.</span><span class="n">from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
-      <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">sgi</span><span class="o">.</span><span class="n">equivalent_sites</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">225</span><span class="p">,</span> <span class="n">sgi</span><span class="o">.</span><span class="n">spacegroup</span><span class="o">.</span><span class="n">no</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">225</span><span class="p">,</span> <span class="n">sgi</span><span class="o">.</span><span class="n">number</span><span class="p">())</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">225</span><span class="p">,</span> <span class="n">sgi</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
-
-      <span class="n">sgi</span> <span class="o">=</span> <span class="n">SpacegroupInfo</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">sgi</span><span class="o">.</span><span class="n">spacegroup</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">225</span><span class="p">,</span> <span class="n">sgi</span><span class="o">.</span><span class="n">spacegroup</span><span class="o">.</span><span class="n">no</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">225</span><span class="p">,</span> <span class="n">sgi</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
-      <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">sgi</span><span class="o">.</span><span class="n">equivalent_sites</span><span class="p">)</span>
-
-      <span class="n">atoms</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="p">(</span><span class="s1">&#39;ION&#39;</span><span class="p">)</span>
-      <span class="n">atoms</span><span class="o">.</span><span class="n">set_positions</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)))</span>
-      <span class="n">sgi</span> <span class="o">=</span> <span class="n">SpacegroupInfo</span><span class="o">.</span><span class="n">from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">sgi</span><span class="o">.</span><span class="n">spacegroup</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">sgi</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
-      <span class="n">ssert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">sgi</span><span class="o">.</span><span class="n">equivalent_sites</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

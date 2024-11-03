@@ -1,24 +1,23 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>dos &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -75,7 +74,6 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.html">definitions</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sections.html">sections</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.arpes.html">arpes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsfek.html">bsfek</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsfkk.html">bsfkk</a></li>
@@ -84,6 +82,7 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jxc.html">jxc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.phagen.html">phagen</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.scf.html">scf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sections.html">sections</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.marpes.html">marpes</a></li>
 </ul>
 </li>
@@ -131,10 +130,10 @@
            <div itemprop="articleBody">
              
   <section id="dos">
-<h1>dos<a class="headerlink" href="#dos" title="Permalink to this heading"></a></h1>
+<h1>dos<a class="headerlink" href="#dos" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.input_parameters.definitions.dos</strong></p>
 <p class="rubric">Description</p>
-<span class="target" id="module-ase2sprkkr.input_parameters.definitions.dos"></span><p>DOS task input parameters definition</p>
+<p id="module-ase2sprkkr.input_parameters.definitions.dos">DOS task input parameters definition</p>
 <p><strong>Description of the sections and parameters</strong></p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>DOS - The density of states computation
 
@@ -190,12 +189,13 @@ INPUT PARAMETERS dos contains:
         NKTAB3D : Integer  (optional)     Number of points for the special points method for 3D region of 2D problem
         NKMIN : Integer ≝ 300             Minimal number of k-points used for Weyl integration
         NKMAX : Integer ≝ 500             Maximal number of k-points used for Weyl integration
+        KKRMODE : AnyOf(STANDARD-KKR,TB-KKR,LAYER-KKR)  (optional)
 
         Expert options:
         --------------
             CLUSTER : Flag ≝ False  (optional, expert)  Do cluster type calculation.
             NSHLCLU : Integer  (optional, expert)  Number of atomic shells around the central atom of a cluster
-            CLURAD : Integer  (optional, expert)  Radius of the cluster in multiples of ALAT.
+            CLURAD : Real  (optional, expert)  Radius of the cluster in multiples of ALAT.
             IQCNTR : Site  (optional, expert)  The center of the cluster is set at the site position with number IQCNTR of the specified basis.
             ITCNTR : AtomicType  (optional, expert)  The center of the cluster is set at one of the site positions that is occupied by the atomic type ITCNTR.
             NLOUT : Integer ≝ 3  (optional, expert)  The calculated τ -matrix is printed up to lmax=NLOUT.
@@ -205,11 +205,13 @@ INPUT PARAMETERS dos contains:
 
         SECTION ENERGY contains:
     ----------------------------
-        GRID : Array(of Integer) ≝ [3]
+        GRID : Array(of Integer) ≝ [3]    Type of the grid for the energy-mesh
         NE : Array(of Integer) ≝ [300]    Number of points in energy-mesh
         ImE : Energy (&lt;Real&gt; [Ry|eV]) ≝ 0.01  (optional)
-        EMIN : Real ≝ -0.2                The real part of the lowest E-value
-        EMAX : Real ≝ 1.0
+        EMIN : Real  (optional)           The real part of the lowest E-value
+        EMINEV : Real  (optional)         EMIN, given in eV with respect to the Fermi level
+        EMAX : Real  (optional)           value of the highest energy
+        EMAXEV : Real  (optional)         EMAX in eV with respect to the Fermi level
 
 
 
@@ -226,10 +228,6 @@ INPUT PARAMETERS dos contains:
 </div>
 <p class="rubric">Module Attributes</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.input_parameters.html#ase2sprkkr.input_parameters.definitions.dos.input_parameters" title="ase2sprkkr.input_parameters.definitions.dos.input_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_parameters</span></code></a>()</p></td>
 <td><p>DOS - density of states input parameters definition</p></td>
@@ -238,10 +236,6 @@ INPUT PARAMETERS dos contains:
 </table>
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.input_parameters.html#ase2sprkkr.input_parameters.definitions.dos.input_parameters" title="ase2sprkkr.input_parameters.definitions.dos.input_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_parameters</span></code></a>()</p></td>
 <td><p>DOS - density of states input parameters definition</p></td>

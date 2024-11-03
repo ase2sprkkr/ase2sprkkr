@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.tools.commands.info &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -132,14 +131,19 @@
 <span class="n">possible_options</span> <span class="o">=</span> <span class="n">default_options</span>
 
 
-<div class="viewcode-block" id="parser"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.info.parser.html#ase2sprkkr.tools.commands.info.parser">[docs]</a><span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="parser">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.info.parser.html#ase2sprkkr.tools.commands.info.parser">[docs]</a>
+<span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--task&#39;</span><span class="p">,</span> <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show informations about the known tasks. You can limit the output to a given task/section/option by an optional agrument [TASK]&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--output-file&#39;</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show informations about the known output files. You can &#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">action</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">argparse</span><span class="p">,</span> <span class="s1">&#39;BooleanOptionalAction&#39;</span><span class="p">,</span> <span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Give a more verbose info. It is set automatically, if the output is limited.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.info.run.html#ase2sprkkr.tools.commands.info.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.info.run.html#ase2sprkkr.tools.commands.info.run">[docs]</a>
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ASE2SPRKKR</span><span class="se">\n</span><span class="s2">&quot;</span>
           <span class="s2">&quot;==========</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -247,6 +251,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">printed</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">default_options</span><span class="p">:</span>
             <span class="n">print_option</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

@@ -38,7 +38,7 @@ Full name: **ase2sprkkr.ase.test**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.ase.test.init_tests
-     ase2sprkkr.ase.test.test_build
+     init_tests
+     test_build
   
   

@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.potentials.definitions.sections.mesh_information &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
-        <script src="../../../../../_static/jquery.js"></script>
-        <script src="../../../../../_static/underscore.js"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -95,27 +94,77 @@
                                    <span class="n">PotValueDefinition</span>
 <span class="kn">from</span> <span class="nn">...potential_sections</span> <span class="kn">import</span> <span class="n">UniqueListSection</span>
 
-<span class="kn">from</span> <span class="nn">....common.grammar_types</span> <span class="kn">import</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Table</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">....common.grammar_types</span> <span class="kn">import</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">Table</span><span class="p">,</span> <span class="n">Array</span>
 <span class="kn">from</span> <span class="nn">....sprkkr.radial_meshes</span> <span class="kn">import</span> <span class="n">ExponentialMesh</span>
 
-<div class="viewcode-block" id="MeshInformationSection"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection.html#ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection">[docs]</a><span class="k">class</span> <span class="nc">MeshInformationSection</span><span class="p">(</span><span class="n">UniqueListSection</span><span class="p">):</span>
+<span class="kn">from</span> <span class="nn">....sprkkr.io_data</span> <span class="kn">import</span> <span class="n">ReadIoData</span><span class="p">,</span> <span class="n">WriteIoData</span>
+<span class="kn">from</span> <span class="nn">....sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+
+
+<div class="viewcode-block" id="MeshInformationSection">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection.html#ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection">[docs]</a>
+<span class="k">class</span> <span class="nc">MeshInformationSection</span><span class="p">(</span><span class="n">UniqueListSection</span><span class="p">):</span>
   <span class="n">_value_name</span> <span class="o">=</span> <span class="s1">&#39;meshes&#39;</span>
-  <span class="n">_value_class</span> <span class="o">=</span> <span class="n">ExponentialMesh</span></div>
+  <span class="n">_value_class</span> <span class="o">=</span> <span class="n">ExponentialMesh</span>
 
-<div class="viewcode-block" id="MeshInformationSectionDefinition"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">MeshInformationSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="MeshInformationSection._set_from_atoms">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection.html#ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection._set_from_atoms">[docs]</a>
+  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">:</span> <span class="n">WriteIoData</span><span class="p">):</span>
+      <span class="n">ul</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">write_io_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_name</span><span class="p">)</span>
+      <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;DATA&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">([</span> <span class="n">i</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ul</span><span class="o">.</span><span class="n">iter_unique</span><span class="p">()])</span>
+      <span class="n">fullpot</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span><span class="o">.</span><span class="n">fullpot_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ul</span><span class="o">.</span><span class="n">iter_unique</span><span class="p">()</span> <span class="p">]</span>
 
-<div class="viewcode-block" id="MeshInformationSectionDefinition.__init__"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSectionDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;MESH INFORMATION&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+      <span class="n">found</span> <span class="o">=</span> <span class="kc">None</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">fullpot</span><span class="p">:</span>
+          <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+              <span class="k">if</span> <span class="n">found</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                  <span class="k">break</span>
+              <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+          <span class="k">else</span><span class="p">:</span>
+              <span class="k">if</span> <span class="n">found</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                  <span class="k">break</span>
+              <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="k">if</span> <span class="n">found</span><span class="p">:</span>
+              <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;FULLPOT&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">fullpot</span><span class="p">)</span>
+          <span class="k">return</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;FULLPOT mesh information missing for some meshes&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MeshInformationSection._update_atoms">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection.html#ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection._update_atoms">[docs]</a>
+  <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">:</span> <span class="n">ReadIoData</span><span class="p">):</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_update_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">)</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">FULLPOT</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="k">for</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">full</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">read_io_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_value_name</span><span class="p">],</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;FULLPOT&#39;</span><span class="p">]()):</span>
+              <span class="n">mesh</span><span class="o">.</span><span class="n">set_fullpot</span><span class="p">(</span><span class="n">full</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MeshInformationSectionDefinition">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSectionDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">MeshInformationSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
+
+<div class="viewcode-block" id="MeshInformationSectionDefinition.__init__">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSectionDefinition.__init__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;MESH INFORMATION&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
       <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
           <span class="n">V</span><span class="p">(</span><span class="s1">&#39;MESH-TYPE&#39;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="s1">&#39;EXPONENTIAL&#39;</span><span class="p">)),</span>
           <span class="n">V</span><span class="p">(</span><span class="s1">&#39;DATA&#39;</span><span class="p">,</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;R(1)&#39;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s1">&#39;DX&#39;</span> <span class="p">:</span><span class="mf">2e-2</span><span class="p">,</span> <span class="s1">&#39;JRMT&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;RMT&#39;</span><span class="p">:</span> <span class="mf">0.</span><span class="p">,</span> <span class="s1">&#39;JRWS&#39;</span><span class="p">:</span> <span class="mi">721</span><span class="p">,</span> <span class="s1">&#39;RWS&#39;</span><span class="p">:</span> <span class="mf">0.</span><span class="p">},</span>
-                    <span class="n">numbering</span><span class="o">=</span><span class="s1">&#39;IM&#39;</span><span class="p">,</span> <span class="n">numbering_format</span><span class="o">=</span><span class="s1">&#39;&gt;5&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;&gt;16&#39;</span><span class="p">,</span> <span class="c1">#header_length=80</span>
+                    <span class="n">numbering</span><span class="o">=</span><span class="s1">&#39;IM&#39;</span><span class="p">,</span> <span class="n">numbering_format</span><span class="o">=</span><span class="s1">&#39;&gt;5&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;&gt;16&#39;</span><span class="p">,</span>  <span class="c1"># header_length=80</span>
                           <span class="p">)</span>
             <span class="p">),</span>
+          <span class="n">V</span><span class="p">(</span><span class="s1">&#39;FULLPOT&#39;</span><span class="p">,</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;JRNS1&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;JRCRI&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;NPAN&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;JRCUT&#39;</span><span class="p">:</span> <span class="n">Array</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="p">},</span> <span class="n">numbering</span><span class="o">=</span><span class="s1">&#39;IM&#39;</span><span class="p">,</span> <span class="n">numbering_format</span><span class="o">=</span><span class="s1">&#39;&gt;5&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;&gt;16&#39;</span><span class="p">),</span>
+            <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
       <span class="p">]</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="n">has_hidden_members</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
+
   <span class="n">result_class</span> <span class="o">=</span> <span class="n">MeshInformationSection</span></div>
+
+
 
 <span class="n">section</span> <span class="o">=</span> <span class="n">MeshInformationSectionDefinition</span>
 </pre></div>

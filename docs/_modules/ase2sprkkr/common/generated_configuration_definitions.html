@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.common.generated_configuration_definitions &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -106,7 +105,9 @@
 <span class="kn">from</span> <span class="nn">.section_adaptors</span> <span class="kn">import</span> <span class="n">MergeSectionDefinitionAdaptor</span>
 
 
-<div class="viewcode-block" id="BaseGeneratedValueDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition">[docs]</a><span class="k">class</span> <span class="nc">BaseGeneratedValueDefinition</span><span class="p">(</span><span class="n">RealItemDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseGeneratedValueDefinition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">BaseGeneratedValueDefinition</span><span class="p">(</span><span class="n">RealItemDefinition</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Base class for all generated values. It just set</span>
 <span class="sd">  that it is generated. &quot;&quot;&quot;</span>
 
@@ -114,6 +115,8 @@
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Generated value - the value is computed from other values &quot;&quot;&quot;</span>
   <span class="n">is_stored</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; This property sets, that this Value/Option is generated. &quot;&quot;&quot;</span>
+  <span class="n">is_validated</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; By default, there is nothing to check on generated values &quot;&quot;&quot;</span>
 
   <span class="n">result_class</span> <span class="o">=</span> <span class="n">Option</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; The generated Values creates :class:`Option` &quot;&quot;&quot;</span>
@@ -123,22 +126,31 @@
 
   <span class="n">item_type</span> <span class="o">=</span> <span class="s1">&#39;generated value&#39;</span>
 
-<div class="viewcode-block" id="BaseGeneratedValueDefinition.enrich"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition.enrich">[docs]</a>  <span class="k">def</span> <span class="nf">enrich</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseGeneratedValueDefinition.enrich">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition.enrich">[docs]</a>
+  <span class="k">def</span> <span class="nf">enrich</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; By default, generated values recieve no enhancement from</span>
 <span class="sd">      its definition &quot;&quot;&quot;</span>
       <span class="k">pass</span></div>
+
 
   <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (generated)&gt;&quot;</span></div>
 
 
-<div class="viewcode-block" id="GeneratedValueDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition">[docs]</a><span class="k">class</span> <span class="nc">GeneratedValueDefinition</span><span class="p">(</span><span class="n">BaseGeneratedValueDefinition</span><span class="p">):</span>
 
-<div class="viewcode-block" id="GeneratedValueDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition.__init__">[docs]</a>   <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">RealItemDefinition</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="GeneratedValueDefinition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">GeneratedValueDefinition</span><span class="p">(</span><span class="n">BaseGeneratedValueDefinition</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GeneratedValueDefinition.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition.__init__">[docs]</a>
+   <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">RealItemDefinition</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">getter</span><span class="p">,</span> <span class="n">setter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">getter</span> <span class="o">=</span> <span class="n">getter</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">_setter</span> <span class="o">=</span> <span class="n">setter</span></div>
+
 
    <span class="nd">@property</span>
    <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -147,7 +159,10 @@
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_setter</span></div>
 
 
-<div class="viewcode-block" id="Length"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length">[docs]</a><span class="k">class</span> <span class="nc">Length</span><span class="p">(</span><span class="n">InheritingValueModifier</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Length">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length">[docs]</a>
+<span class="k">class</span> <span class="nc">Length</span><span class="p">(</span><span class="n">InheritingValueModifier</span><span class="p">):</span>
 <span class="w">   </span><span class="sd">&quot;&quot;&quot; Sometimes, the length of some array should appear in the config file &quot;&quot;&quot;</span>
 
    <span class="n">is_generated</span> <span class="o">=</span> <span class="kc">True</span>
@@ -158,7 +173,9 @@
 
    <span class="n">_NO_DEFAULT</span><span class="o">=</span><span class="nb">object</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Length.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length.__init__">[docs]</a>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">of</span><span class="p">,</span> <span class="n">default_values</span><span class="o">=</span><span class="n">_NO_DEFAULT</span><span class="p">):</span>
+<div class="viewcode-block" id="Length.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length.__init__">[docs]</a>
+   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">of</span><span class="p">,</span> <span class="n">default_values</span><span class="o">=</span><span class="n">_NO_DEFAULT</span><span class="p">):</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">_length_of</span> <span class="o">=</span> <span class="n">of</span>
        <span class="k">if</span> <span class="n">default_values</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NO_DEFAULT</span><span class="p">:</span>
            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_values</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="ow">or</span> \
@@ -168,12 +185,18 @@
                 <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">default_values</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">of</span><span class="p">)</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">_default_values</span> <span class="o">=</span> <span class="n">default_values</span></div>
 
-<div class="viewcode-block" id="Length.modify_definition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length.modify_definition">[docs]</a>   <span class="k">def</span> <span class="nf">modify_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Length.modify_definition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length.modify_definition">[docs]</a>
+   <span class="k">def</span> <span class="nf">modify_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="p">):</span>
        <span class="n">what</span><span class="o">.</span><span class="n">_length_of</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length_of</span>
        <span class="n">what</span><span class="o">.</span><span class="n">_length_defaults</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_values</span>
        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">modify_definition</span><span class="p">(</span><span class="n">what</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Length.setter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length.setter">[docs]</a>   <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Length.setter">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length.setter">[docs]</a>
+   <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length_defaults</span> <span class="ow">is</span> <span class="n">Length</span><span class="o">.</span><span class="n">_NO_DEFAULT</span><span class="p">:</span>
            <span class="k">raise</span> <span class="n">DataValidityError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">()</span><span class="si">}</span><span class="s2"> is the length of </span><span class="si">{</span><span class="s1">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_length_of</span><span class="p">)</span><span class="si">}</span><span class="s2">: so it is generated automatically &quot;</span>
                  <span class="s2">&quot;and can not be set.&quot;</span><span class="p">)</span>
@@ -201,13 +224,19 @@
                <span class="n">item</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="s1">&#39;section&#39;</span><span class="p">)</span>
        <span class="n">container</span><span class="o">.</span><span class="n">validate_section</span><span class="p">(</span><span class="n">why</span><span class="o">=</span><span class="s1">&#39;warn&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Length.getter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length.getter">[docs]</a>   <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Length.getter">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length.getter">[docs]</a>
+   <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
        <span class="n">val</span> <span class="o">=</span> <span class="n">container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_length_of</span><span class="p">[</span><span class="mi">0</span><span class="p">]]()</span>
        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
            <span class="k">return</span> <span class="kc">None</span>
        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Length.validate_section"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length.validate_section">[docs]</a>   <span class="k">def</span> <span class="nf">validate_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Length.validate_section">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length.validate_section">[docs]</a>
+   <span class="k">def</span> <span class="nf">validate_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length_of</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">is_dangerous</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
                 <span class="k">continue</span>
@@ -220,7 +249,10 @@
             <span class="k">elif</span> <span class="n">length</span> <span class="o">!=</span> <span class="n">ln</span><span class="p">:</span>
                 <span class="n">DataValidityError</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Lengths of </span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> should not differ&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Length.validate_parse"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length.validate_parse">[docs]</a>   <span class="k">def</span> <span class="nf">validate_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">ln</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Length.validate_parse">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length.validate_parse">[docs]</a>
+   <span class="k">def</span> <span class="nf">validate_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">ln</span><span class="p">):</span>
        <span class="n">err</span> <span class="o">=</span> <span class="p">[]</span>
        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length_of</span><span class="p">:</span>
            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">!=</span> <span class="n">ln</span><span class="p">:</span>
@@ -228,7 +260,10 @@
        <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
            <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Length of </span><span class="si">{</span><span class="s1">&#39; and&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="si">}</span><span class="s2"> should be </span><span class="si">{</span><span class="n">ln</span><span class="si">}</span><span class="s2"> as stated in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Length._create_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length._create_grammar">[docs]</a>   <span class="k">def</span> <span class="nf">_create_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Length._create_grammar">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length._create_grammar">[docs]</a>
+   <span class="k">def</span> <span class="nf">_create_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; Add check for the length &quot;&quot;&quot;</span>
        <span class="n">out</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_create_grammar</span><span class="p">()</span>
 
@@ -236,10 +271,14 @@
           <span class="n">data</span> <span class="o">=</span> <span class="n">MergeSectionDefinitionAdaptor</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">)</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">validate_section</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="n">ln</span><span class="p">)</span>
 
-       <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span> <span class="n">ValidateKey</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">validate</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="p">))</span></div></div>
+       <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span> <span class="n">ValidateKey</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">validate</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="p">))</span></div>
+</div>
 
 
-<div class="viewcode-block" id="NumpyViewDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition">[docs]</a><span class="k">class</span> <span class="nc">NumpyViewDefinition</span><span class="p">(</span><span class="n">BaseGeneratedValueDefinition</span><span class="p">):</span>
+
+<div class="viewcode-block" id="NumpyViewDefinition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">NumpyViewDefinition</span><span class="p">(</span><span class="n">BaseGeneratedValueDefinition</span><span class="p">):</span>
 <span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">   Values described by this description are possibly reshaped views into a large</span>
 <span class="sd">   &quot;raw data array&quot;</span>
@@ -277,7 +316,9 @@
 <span class="sd">    PlotInfo object that defines how the results are plotted</span>
 <span class="sd">   &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="NumpyViewDefinition.data_description"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.data_description">[docs]</a>   <span class="k">def</span> <span class="nf">data_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="NumpyViewDefinition.data_description">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.data_description">[docs]</a>
+   <span class="k">def</span> <span class="nf">data_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
             <span class="n">shape</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">)&quot;</span>
         <span class="k">else</span><span class="p">:</span>
@@ -286,7 +327,10 @@
         <span class="n">out</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> : view of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="si">}{</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="NumpyViewDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.__init__">[docs]</a>   <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">RealItemDefinition</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NumpyViewDefinition.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.__init__">[docs]</a>
+   <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">RealItemDefinition</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span>
                 <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reorder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">transform_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -303,7 +347,10 @@
        <span class="k">else</span><span class="p">:</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">reorder</span><span class="o">=</span><span class="n">transpose</span></div>
 
-<div class="viewcode-block" id="NumpyViewDefinition.determine_shape"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.determine_shape">[docs]</a>   <span class="k">def</span> <span class="nf">determine_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+
+<div class="viewcode-block" id="NumpyViewDefinition.determine_shape">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.determine_shape">[docs]</a>
+   <span class="k">def</span> <span class="nf">determine_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; Return the shape of the resulting array, possibly computed using</span>
 <span class="sd">       properties of the other values in the container&quot;&quot;&quot;</span>
        <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
@@ -312,7 +359,10 @@
            <span class="k">return</span> <span class="n">i</span>
        <span class="k">return</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="NumpyViewDefinition.source"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.source">[docs]</a>   <span class="k">def</span> <span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+
+<div class="viewcode-block" id="NumpyViewDefinition.source">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.source">[docs]</a>
+   <span class="k">def</span> <span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="p">):</span>
           <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="p">(</span><span class="n">container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">](),</span> <span class="n">container</span><span class="p">)</span>
        <span class="k">else</span><span class="p">:</span>
@@ -323,7 +373,10 @@
           <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reorder</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reorder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
        <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="NumpyViewDefinition.getter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.getter">[docs]</a>   <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="NumpyViewDefinition.getter">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.getter">[docs]</a>
+   <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
        <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">(</span><span class="n">container</span><span class="p">)</span>
        <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
           <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_key</span><span class="p">:</span>
@@ -331,18 +384,29 @@
           <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
        <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="NumpyViewDefinition.setter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.setter">[docs]</a>   <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)):</span>
+
+<div class="viewcode-block" id="NumpyViewDefinition.setter">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.setter">[docs]</a>
+   <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)):</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_key</span><span class="p">:</span>
           <span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_key</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">(</span><span class="n">container</span><span class="p">)[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">value</span></div>
 
-<div class="viewcode-block" id="NumpyViewDefinition.enrich"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.enrich">[docs]</a>   <span class="k">def</span> <span class="nf">enrich</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+
+<div class="viewcode-block" id="NumpyViewDefinition.enrich">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.enrich">[docs]</a>
+   <span class="k">def</span> <span class="nf">enrich</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">:</span>
          <span class="n">option</span><span class="o">.</span><span class="n">plot</span> <span class="o">=</span> <span class="k">lambda</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
          <span class="n">option</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot; Plot the data.&quot;</span></div>
 
-<div class="viewcode-block" id="NumpyViewDefinition.copy_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.copy_value">[docs]</a>   <span class="k">def</span> <span class="nf">copy_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">all_values</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-       <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="NumpyViewDefinition.copy_value">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.copy_value">[docs]</a>
+   <span class="k">def</span> <span class="nf">copy_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">all_values</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+       <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
            </div>

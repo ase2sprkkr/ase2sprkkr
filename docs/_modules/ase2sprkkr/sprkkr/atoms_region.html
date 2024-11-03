@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.sprkkr.atoms_region &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -98,10 +97,12 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
-<span class="kn">from</span> <span class="nn">.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sprkkr_atoms</span>
 
 
-<div class="viewcode-block" id="AtomsRegion"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion">[docs]</a><span class="k">class</span> <span class="nc">AtomsRegion</span><span class="p">:</span>
+<div class="viewcode-block" id="AtomsRegion">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion">[docs]</a>
+<span class="k">class</span> <span class="nc">AtomsRegion</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; AtomsRegion define a region of Atoms object,</span>
 <span class="sd">  that can have its own cell and pbc.</span>
 
@@ -114,11 +115,13 @@
 <span class="sd">  has two semiinfinite 3D periodic regions and</span>
 <span class="sd">  a central 2D-symmetric region. &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AtomsRegion.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="nb">slice</span><span class="p">:</span><span class="nb">slice</span><span class="p">,</span>
+<div class="viewcode-block" id="AtomsRegion.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.__init__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="nb">slice</span><span class="p">:</span><span class="nb">slice</span><span class="p">,</span>
                <span class="n">cell</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">Cell</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
                <span class="n">pbc</span><span class="p">:</span><span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]]</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
                <span class="n">inherit_cell</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">]]</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-               <span class="n">atoms</span><span class="p">:</span><span class="n">Atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+               <span class="n">atoms</span><span class="p">:</span><span class="n">Atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Atoms region defines a spatial part of an Atoms object.</span>
 <span class="sd">      The cell can has zero vectors - such vectors are taken from the parent</span>
@@ -137,7 +140,7 @@
 
 <span class="sd">      inherit_cell</span>
 <span class="sd">         Inherit the cell and the pcb from the parent atoms for given axes.</span>
-<span class="sd">         Use of this argument is the same, as setting ``pcb`` to None and</span>
+<span class="sd">         Use of this argument is the same, as setting ``pbc`` to None and</span>
 <span class="sd">         ``cell`` to ``[0,0,0]`` for the given axes.</span>
 
 <span class="sd">      atoms</span>
@@ -158,13 +161,17 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">incomplete_cell</span> <span class="o">=</span> <span class="n">Cell</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">incomplete_pbc</span> <span class="o">=</span> <span class="n">pbc</span>
       <span class="k">if</span> <span class="n">atoms</span><span class="p">:</span>
-         <span class="bp">self</span><span class="o">.</span><span class="n">set_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span></div>
+         <span class="bp">self</span><span class="o">.</span><span class="n">set_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">add</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AtomsRegion.from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.from_atoms">[docs]</a>  <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="AtomsRegion.from_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.from_atoms">[docs]</a>
+  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">from_atoms</span><span class="p">(</span><span class="n">from_atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="nb">slice</span><span class="p">:</span><span class="nb">slice</span><span class="p">,</span> <span class="n">inherit_cell</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">Atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Creates a region from the property of the given atoms object. The pbc and cell</span>
 <span class="sd">      are taken from it. &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="n">AtomsRegion</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">slice</span><span class="p">,</span> <span class="n">from_atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span> <span class="n">from_atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">,</span> <span class="n">inherit_cell</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span></div>
+
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -179,6 +186,12 @@
               <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>     <span class="c1"># no nonzero</span>
                   <span class="n">v</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
       <span class="k">return</span> <span class="n">cell</span>
+
+<div class="viewcode-block" id="AtomsRegion.get_cell">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.get_cell">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span></div>
+
 
   <span class="nd">@cell</span><span class="o">.</span><span class="n">setter</span>
   <span class="k">def</span> <span class="nf">cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">):</span>
@@ -215,26 +228,35 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">_slice</span> <span class="o">=</span> <span class="nb">slice</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_clear_cache</span>
 
-<div class="viewcode-block" id="AtomsRegion._clear_cache"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion._clear_cache">[docs]</a>  <span class="k">def</span> <span class="nf">_clear_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AtomsRegion._clear_cache">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion._clear_cache">[docs]</a>
+  <span class="k">def</span> <span class="nf">_clear_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;ids&#39;</span><span class="p">,</span> <span class="s1">&#39;set_of_ids&#39;</span><span class="p">):</span>
           <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
               <span class="nb">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AtomsRegion.set_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.set_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">set_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AtomsRegion.set_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.set_atoms">[docs]</a>
+  <span class="k">def</span> <span class="nf">set_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Set the master atoms - of which the region is described &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="n">add</span><span class="p">:</span>
          <span class="c1"># atoms will call set_atoms again</span>
-         <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+         <span class="n">sprkkr_atoms</span><span class="o">.</span><span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
          <span class="n">atoms</span><span class="o">.</span><span class="n">add_region</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
       <span class="k">else</span><span class="p">:</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">_clear_cache</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="AtomsRegion.create_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.create_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">create_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AtomsRegion.create_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.create_atoms">[docs]</a>
+  <span class="k">def</span> <span class="nf">create_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Create an atoms object, that contains only the region &quot;&quot;&quot;</span>
       <span class="n">atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">]</span>
       <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span>
       <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pbc</span></div>
+
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">symbols</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -244,11 +266,14 @@
   <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AtomsRegion.shared_ids_with"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.shared_ids_with">[docs]</a>  <span class="k">def</span> <span class="nf">shared_ids_with</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
+<div class="viewcode-block" id="AtomsRegion.shared_ids_with">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.shared_ids_with">[docs]</a>
+  <span class="k">def</span> <span class="nf">shared_ids_with</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Return ids of the sites, that belongs to the both regions &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">!=</span> <span class="n">region</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
          <span class="k">return</span> <span class="kc">False</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_of_ids</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">set_of_ids</span><span class="p">)</span></div>
+
 
   <span class="nd">@cached_property</span>
   <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -264,12 +289,58 @@
   <span class="k">def</span> <span class="nf">positions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">]</span>
 
-<div class="viewcode-block" id="AtomsRegion.only_vacuum_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.only_vacuum_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">only_vacuum_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ids</span><span class="p">]:</span>
+<div class="viewcode-block" id="AtomsRegion.only_vacuum_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.only_vacuum_atoms">[docs]</a>
+  <span class="k">def</span> <span class="nf">only_vacuum_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">]:</span>
           <span class="k">for</span> <span class="n">at</span> <span class="ow">in</span> <span class="n">site</span><span class="o">.</span><span class="n">occupation</span><span class="p">:</span>
               <span class="k">if</span> <span class="ow">not</span> <span class="n">at</span><span class="o">.</span><span class="n">is_vacuum</span><span class="p">():</span>
                   <span class="k">return</span> <span class="kc">False</span>
-      <span class="k">return</span> <span class="kc">True</span></div></div>
+      <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="AtomsRegion.sites">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.sites">[docs]</a>
+  <span class="k">def</span> <span class="nf">sites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="AtomsRegion.get_array">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.get_array">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">copy</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_array</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">copy</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="AtomsRegion.are_sites_inited">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.are_sites_inited">[docs]</a>
+  <span class="k">def</span> <span class="nf">are_sites_inited</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="n">sprkkr_atoms</span><span class="o">.</span><span class="n">SPRKKRAtoms</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">are_sites_inited</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="AtomsRegion.get_atomic_numbers">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.get_atomic_numbers">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_atomic_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">()[</span><span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">]</span></div>
+
+
+  <span class="nd">@cached_property</span>
+  <span class="k">def</span> <span class="nf">arrays</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+      <span class="k">class</span> <span class="nc">Wrap</span><span class="p">:</span>
+          <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="n">slf</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+              <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">]</span>
+
+          <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="n">slf</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+              <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">arrays</span>
+
+      <span class="k">return</span> <span class="n">Wrap</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AtomsRegion.get_scaled_positions">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.html#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.get_scaled_positions">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_scaled_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">()[</span><span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">]</span></div>
+</div>
+
 </pre></div>
 
            </div>

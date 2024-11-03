@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.input_parameters.test.test_definitions &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -103,11 +102,16 @@
 
 <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">..input_parameters</span> <span class="kn">import</span> <span class="n">InputParameters</span>
+    <span class="kn">from</span> <span class="nn">...common.warnings</span> <span class="kn">import</span> <span class="n">DataValidityError</span>
 
 
-<div class="viewcode-block" id="TestDefinitions"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions">[docs]</a><span class="k">class</span> <span class="nc">TestDefinitions</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestDefinitions">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions">[docs]</a>
+<span class="k">class</span> <span class="nc">TestDefinitions</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="TestDefinitions.change_task"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.change_task">[docs]</a>  <span class="k">def</span> <span class="nf">change_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestDefinitions.change_task">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.change_task">[docs]</a>
+  <span class="k">def</span> <span class="nf">change_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">ip</span><span class="o">=</span><span class="n">InputParameters</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="s1">&#39;DOS&#39;</span><span class="p">)</span>
       <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">EMIN</span><span class="o">=</span><span class="mi">2</span>
       <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">EMAX</span><span class="o">=</span><span class="mi">5</span>
@@ -116,7 +120,10 @@
       <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">AttributeError</span><span class="p">):</span>
         <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">EMIN</span></div>
 
-<div class="viewcode-block" id="TestDefinitions.jxc"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.jxc">[docs]</a>  <span class="k">def</span> <span class="nf">jxc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestDefinitions.jxc">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.jxc">[docs]</a>
+  <span class="k">def</span> <span class="nf">jxc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">ip</span><span class="o">=</span><span class="n">InputParameters</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="s1">&#39;SCF&#39;</span><span class="p">)</span>
       <span class="n">ip</span><span class="o">.</span><span class="n">MODE</span><span class="o">.</span><span class="n">MODE</span> <span class="o">=</span> <span class="s1">&#39;nrel&#39;</span>
       <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">warns</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
@@ -126,22 +133,25 @@
       <span class="n">ip</span><span class="o">.</span><span class="n">MODE</span><span class="o">.</span><span class="n">MODE</span> <span class="o">=</span> <span class="s1">&#39;frel&#39;</span>
       <span class="n">ip</span><span class="o">.</span><span class="n">change_task</span><span class="p">(</span><span class="s1">&#39;scf&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TestDefinitions.test_defaults"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.test_defaults">[docs]</a>  <span class="k">def</span> <span class="nf">test_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestDefinitions.test_defaults">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.test_defaults">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">definitions</span><span class="p">:</span>
           <span class="n">ip</span><span class="o">=</span><span class="n">InputParameters</span><span class="o">.</span><span class="n">create_input_parameters</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
           <span class="n">ip</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span> <span class="o">=</span> <span class="s1">&#39;xxx&#39;</span>
           <span class="n">df</span><span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">_definition</span>
           <span class="k">try</span><span class="p">:</span>
-              <span class="n">out</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
-          <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+              <span class="n">out</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+          <span class="k">except</span> <span class="n">DataValidityError</span><span class="p">:</span>
               <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="s1">&#39;BSFEK&#39;</span><span class="p">:</span>
                   <span class="n">ip</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">KPATH</span> <span class="o">=</span> <span class="mi">1</span>
-                  <span class="n">out</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+                  <span class="n">out</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                   <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
                       <span class="n">ip</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">NKDIR</span> <span class="o">=</span> <span class="mi">2</span>
                   <span class="n">ip</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">KPATH</span> <span class="o">=</span> <span class="kc">None</span>
                   <span class="n">ip</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">NKDIR</span> <span class="o">=</span> <span class="mi">2</span>
-                  <span class="n">out</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+                  <span class="n">out</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
               <span class="k">else</span><span class="p">:</span>
                   <span class="k">raise</span>
           <span class="k">else</span><span class="p">:</span>
@@ -157,7 +167,10 @@
               <span class="n">ip2</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">ip</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
               <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ip</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">ip2</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="TestDefinitions.test_definitions"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.test_definitions">[docs]</a>  <span class="k">def</span> <span class="nf">test_definitions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestDefinitions.test_definitions">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.test_definitions">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_definitions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;../examples&#39;</span><span class="p">)</span>
 
       <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -200,7 +213,9 @@
           <span class="n">fp</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
           <span class="n">out</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
           <span class="k">assert</span> <span class="s1">&#39;TASKPHAGEN&#39;</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
-      <span class="n">td</span><span class="p">[</span><span class="s1">&#39;TASK&#39;</span><span class="p">][</span><span class="s1">&#39;TASK&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="s1">&#39;PHAGEN&#39;</span></div></div>
+      <span class="n">td</span><span class="p">[</span><span class="s1">&#39;TASK&#39;</span><span class="p">][</span><span class="s1">&#39;TASK&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="s1">&#39;PHAGEN&#39;</span></div>
+</div>
+
 </pre></div>
 
            </div>

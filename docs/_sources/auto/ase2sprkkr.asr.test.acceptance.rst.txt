@@ -38,8 +38,8 @@ Full name: **ase2sprkkr.asr.test.acceptance**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.asr.test.acceptance.test_borncharges
-     ase2sprkkr.asr.test.acceptance.test_piezoelectrictensor
-     ase2sprkkr.asr.test.acceptance.test_relax
+     test_borncharges
+     test_piezoelectrictensor
+     test_relax
   
   

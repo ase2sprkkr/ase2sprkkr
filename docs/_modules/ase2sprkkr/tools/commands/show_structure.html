@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.tools.commands.show_structure &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -105,49 +104,77 @@
 <span class="n">description</span><span class="o">=</span><span class="s1">&#39;You can either use ase visualisation tools or export it to cif file&#39;</span>
 
 
-<div class="viewcode-block" id="parser"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.show_structure.parser.html#ase2sprkkr.tools.commands.show_structure.parser">[docs]</a><span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="parser">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.show_structure.parser.html#ase2sprkkr.tools.commands.show_structure.parser">[docs]</a>
+<span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
   <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;potential_file&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SPRKKR potential file (.pot)&#39;</span><span class="p">)</span>
   <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span><span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;in_struct.inp file name (if not specified, only pot file will be ploted)&#39;</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span><span class="s1">&#39;--out&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output file name for structure (default structure.cif)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;structure.cif&#39;</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span><span class="s1">&#39;--format&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output file fomrmat for structure (see ase allowed formats, default cif)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;cif&#39;</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span><span class="s1">&#39;--ase&#39;</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;Use ase visualisation&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span><span class="s1">&#39;--output&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output file name for structure, by default use temp file and visualise it.&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-O&#39;</span><span class="p">,</span><span class="s1">&#39;--potential-output&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output file name for the potential. Default is a temp file, pass no argument to use &lt;output_file&gt;pot.&lt;ext&gt;&#39;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">)</span>
+
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span><span class="s1">&#39;--format&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output files format (see the allowed formats in ASE, default cif)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;cif&#39;</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span><span class="s1">&#39;--visualise&#39;</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;Visualise the struct (default, if no output file is given)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-A&#39;</span><span class="p">,</span><span class="s1">&#39;--visualise-potential&#39;</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;Visualise the potential&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
   <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span><span class="s1">&#39;--scale-radii&#39;</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;Ase visualisation atomic radius&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span><span class="s1">&#39;--vac&#39;</span><span class="p">,</span><span class="n">dest</span><span class="o">=</span><span class="s1">&#39;vacuum_height&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;Size of added vacuum in AA (default=10.0)&#39;</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span><span class="s1">&#39;--vac&#39;</span><span class="p">,</span><span class="n">dest</span><span class="o">=</span><span class="s1">&#39;vacuum_height&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;Visualisation-size of vacuum atoms in AA (default=10.0)&#39;</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
   <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">,</span><span class="s1">&#39;--nbulk&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;Repetition of bulk unit (default=2)&#39;</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.show_structure.run.html#ase2sprkkr.tools.commands.show_structure.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.show_structure.run.html#ase2sprkkr.tools.commands.show_structure.run">[docs]</a>
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
   <span class="kn">from</span> <span class="nn">...potentials.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>          <span class="c1"># NOQA</span>
   <span class="kn">from</span> <span class="nn">...sprkkr.structure</span> <span class="kn">import</span> <span class="n">structure_file_to_atoms</span> <span class="c1"># NOQA</span>
   <span class="kn">from</span> <span class="nn">...ase.visualise</span> <span class="kn">import</span> <span class="n">view</span>                       <span class="c1"># NOQA</span>
-  <span class="n">ciffile</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">out</span>
-  <span class="n">cifpotfile</span><span class="o">=</span><span class="n">ciffile</span> <span class="o">+</span> <span class="s1">&#39;_pot&#39;</span>
-  <span class="n">outformat</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">format</span>
-  <span class="n">ase_vis</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">ase</span>
-  <span class="n">structure_filename</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">input</span>
+  <span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">NamedTemporaryFile</span>
+  <span class="n">tmps</span> <span class="o">=</span> <span class="p">[]</span>
 
-  <span class="c1"># read the potential</span>
-  <span class="n">potential</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">potential_file</span><span class="p">)</span>
-  <span class="n">pot_atoms</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">atoms</span>
+  <span class="k">def</span> <span class="nf">temp</span><span class="p">():</span>
+      <span class="n">file</span> <span class="o">=</span> <span class="n">NamedTemporaryFile</span><span class="p">()</span>
+      <span class="n">tmps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">file</span><span class="o">.</span><span class="n">name</span>
 
-  <span class="k">def</span> <span class="nf">ase_view</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
-      <span class="n">view</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">scale_radii</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">scale_radii</span><span class="p">)</span>
+  <span class="k">try</span><span class="p">:</span>
+      <span class="n">ciffile</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="ow">or</span> <span class="n">temp</span><span class="p">()</span>
+      <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">potential_output</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+          <span class="n">cf</span> <span class="o">=</span> <span class="n">ciffile</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+          <span class="n">ciffpotfile</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">cf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_pot&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">cf</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+      <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">potential_output</span><span class="p">:</span>
+          <span class="n">ciffpotfile</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">potential_output</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="n">ciffpotfile</span> <span class="o">=</span> <span class="n">temp</span><span class="p">()</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">ciffile</span><span class="p">:</span>
+          <span class="n">ciffile</span> <span class="o">=</span> <span class="n">temp</span><span class="p">()</span>
 
-  <span class="k">if</span> <span class="p">(</span><span class="n">ase_vis</span><span class="p">):</span>
-      <span class="n">ase_view</span><span class="p">(</span><span class="n">pot_atoms</span><span class="p">)</span>
-  <span class="n">pot_atoms</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cifpotfile</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="n">outformat</span><span class="p">)</span>
+      <span class="n">outformat</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">format</span>
+      <span class="n">structure_filename</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">input</span>
 
-  <span class="c1"># From here on visualisation of in_structure.inp</span>
-  <span class="k">if</span> <span class="ow">not</span> <span class="n">structure_filename</span><span class="p">:</span>
-     <span class="n">exit</span><span class="p">()</span>
-  <span class="c1"># Extract data from structure file</span>
-  <span class="n">structure</span> <span class="o">=</span> <span class="n">structure_file_to_atoms</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span> <span class="n">n_bulk</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">nbulk</span><span class="p">,</span> <span class="n">vacuum_height</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">vacuum_height</span><span class="p">)</span>
-  <span class="c1"># Visualise the structure or write out to the file</span>
-  <span class="n">structure</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ciffile</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="n">outformat</span><span class="p">)</span>
+      <span class="c1"># read the potential</span>
+      <span class="n">potential</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">potential_file</span><span class="p">)</span>
+      <span class="n">pot_atoms</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">atoms</span>
 
-  <span class="k">if</span> <span class="p">(</span><span class="n">ase_vis</span><span class="p">):</span>
-      <span class="n">ase_view</span><span class="p">(</span><span class="n">structure</span><span class="p">)</span></div>
+      <span class="k">def</span> <span class="nf">ase_view</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+          <span class="n">view</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">scale_radii</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">scale_radii</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">visualise_potential</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmps</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">structure_filename</span><span class="p">):</span>
+          <span class="n">ase_view</span><span class="p">(</span><span class="n">pot_atoms</span><span class="p">)</span>
+      <span class="n">pot_atoms</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ciffpotfile</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="n">outformat</span><span class="p">)</span>
+
+      <span class="c1"># From here on visualisation of in_structure.inp</span>
+      <span class="k">if</span> <span class="n">structure_filename</span><span class="p">:</span>
+          <span class="c1"># Extract data from structure file</span>
+          <span class="n">structure</span> <span class="o">=</span> <span class="n">structure_file_to_atoms</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span> <span class="n">n_bulk</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">nbulk</span><span class="p">,</span> <span class="n">vacuum_height</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">vacuum_height</span><span class="p">)</span>
+          <span class="c1"># Visualise the structure or write out to the file</span>
+          <span class="n">structure</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ciffile</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="n">outformat</span><span class="p">)</span>
+
+          <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">visualise</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmps</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">visualise_potential</span><span class="p">):</span>
+              <span class="n">ase_view</span><span class="p">(</span><span class="n">structure</span><span class="p">)</span>
+  <span class="k">finally</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tmps</span><span class="p">:</span>
+          <span class="n">i</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>

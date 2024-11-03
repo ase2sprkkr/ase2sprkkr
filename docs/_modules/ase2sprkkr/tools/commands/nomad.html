@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.tools.commands.nomad &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -111,7 +110,9 @@
 <span class="s2">Or you can authenticate once using -a switch, then the token will be stored. &quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="parser"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.parser.html#ase2sprkkr.tools.commands.nomad.parser">[docs]</a><span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="parser">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.parser.html#ase2sprkkr.tools.commands.nomad.parser">[docs]</a>
+<span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
 
     <span class="n">nomad</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">nomad</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--nomad-url&#39;</span><span class="p">,</span> <span class="s1">&#39;-N&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Nomad URL.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NomadApi</span><span class="o">.</span><span class="n">default_api_url</span><span class="p">)</span>
@@ -146,11 +147,14 @@
     <span class="n">sub</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">zipp</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
+
 <span class="c1"># api object used in functions</span>
 <span class="n">api</span><span class="o">=</span><span class="kc">None</span>
 
 
-<div class="viewcode-block" id="authenticate"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.authenticate.html#ase2sprkkr.tools.commands.nomad.authenticate">[docs]</a><span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="authenticate">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.authenticate.html#ase2sprkkr.tools.commands.nomad.authenticate">[docs]</a>
+<span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase2sprkkr.config</span> <span class="kn">import</span> <span class="n">config</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">delete_credentials</span><span class="p">:</span>
         <span class="n">token</span><span class="o">=</span><span class="kc">None</span>
@@ -165,7 +169,10 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="retrieve_token"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.retrieve_token.html#ase2sprkkr.tools.commands.nomad.retrieve_token">[docs]</a><span class="k">def</span> <span class="nf">retrieve_token</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">expires</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="retrieve_token">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.retrieve_token.html#ase2sprkkr.tools.commands.nomad.retrieve_token">[docs]</a>
+<span class="k">def</span> <span class="nf">retrieve_token</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">expires</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">getpass</span>
     <span class="n">password</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">password</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
@@ -174,7 +181,10 @@
     <span class="k">return</span> <span class="n">token</span></div>
 
 
-<div class="viewcode-block" id="get_token"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.get_token.html#ase2sprkkr.tools.commands.nomad.get_token">[docs]</a><span class="k">def</span> <span class="nf">get_token</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_token">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.get_token.html#ase2sprkkr.tools.commands.nomad.get_token">[docs]</a>
+<span class="k">def</span> <span class="nf">get_token</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase2sprkkr.config</span> <span class="kn">import</span> <span class="n">config</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
         <span class="n">token</span><span class="o">=</span><span class="n">retrieve_token</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -186,12 +196,18 @@
     <span class="k">return</span> <span class="n">token</span></div>
 
 
-<div class="viewcode-block" id="token"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.token.html#ase2sprkkr.tools.commands.nomad.token">[docs]</a><span class="k">def</span> <span class="nf">token</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="token">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.token.html#ase2sprkkr.tools.commands.nomad.token">[docs]</a>
+<span class="k">def</span> <span class="nf">token</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase2sprkkr.config</span> <span class="kn">import</span> <span class="n">config</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">token</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="gather_files"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.gather_files.html#ase2sprkkr.tools.commands.nomad.gather_files">[docs]</a><span class="k">def</span> <span class="nf">gather_files</span><span class="p">(</span><span class="n">output_files</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="gather_files">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.gather_files.html#ase2sprkkr.tools.commands.nomad.gather_files">[docs]</a>
+<span class="k">def</span> <span class="nf">gather_files</span><span class="p">(</span><span class="n">output_files</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">...bindings.nomad.nomad</span> <span class="kn">import</span> <span class="n">NomadArchive</span>
     <span class="n">arch</span> <span class="o">=</span> <span class="n">NomadArchive</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">output_files</span><span class="p">:</span>
@@ -200,16 +216,25 @@
     <span class="k">return</span> <span class="n">arch</span></div>
 
 
-<div class="viewcode-block" id="upload"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.upload.html#ase2sprkkr.tools.commands.nomad.upload">[docs]</a><span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="upload">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.upload.html#ase2sprkkr.tools.commands.nomad.upload">[docs]</a>
+<span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="n">arch</span> <span class="o">=</span> <span class="n">gather_files</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output_files</span><span class="p">)</span>
     <span class="n">api</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">arch</span><span class="o">.</span><span class="n">file</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="zipp"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.zipp.html#ase2sprkkr.tools.commands.nomad.zipp">[docs]</a><span class="k">def</span> <span class="nf">zipp</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="zipp">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.zipp.html#ase2sprkkr.tools.commands.nomad.zipp">[docs]</a>
+<span class="k">def</span> <span class="nf">zipp</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="n">gather_files</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output_files</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">zip</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.run.html#ase2sprkkr.tools.commands.nomad.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.run.html#ase2sprkkr.tools.commands.nomad.run">[docs]</a>
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
 
     <span class="k">global</span> <span class="n">api</span>
 
@@ -218,6 +243,7 @@
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
             <span class="n">api</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">get_token</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="n">args</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

@@ -38,7 +38,7 @@ Full name: **ase2sprkkr.bindings.xband.tests**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.bindings.xband.tests.init_tests
-     ase2sprkkr.bindings.xband.tests.test_spheres
+     init_tests
+     test_spheres
   
   

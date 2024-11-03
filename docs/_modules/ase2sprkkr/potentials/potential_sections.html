@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.potentials.potential_sections &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -100,10 +99,14 @@
 <span class="kn">from</span> <span class="nn">..common.warnings</span> <span class="kn">import</span> <span class="n">DataValidityWarning</span>
 
 
-<div class="viewcode-block" id="PotentialSectionTrait"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSectionTrait.html#ase2sprkkr.potentials.potential_definitions.PotentialSectionTrait">[docs]</a><span class="k">class</span> <span class="nc">PotentialSectionTrait</span><span class="p">:</span>
+<div class="viewcode-block" id="PotentialSectionTrait">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSectionTrait.html#ase2sprkkr.potentials.potential_definitions.PotentialSectionTrait">[docs]</a>
+<span class="k">class</span> <span class="nc">PotentialSectionTrait</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; A trait class for a section in a potential &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PotentialSectionTrait._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSectionTrait.html#ase2sprkkr.potentials.potential_definitions.PotentialSectionTrait._set_from_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">:</span><span class="n">WriteIoData</span><span class="p">):</span>
+<div class="viewcode-block" id="PotentialSectionTrait._set_from_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSectionTrait.html#ase2sprkkr.potentials.potential_definitions.PotentialSectionTrait._set_from_atoms">[docs]</a>
+    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">:</span><span class="n">WriteIoData</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This function should be called before potential file writing to set the propper values to the section.</span>
 
 <span class="sd">        Parameters</span>
@@ -116,7 +119,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="PotentialSectionTrait._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSectionTrait.html#ase2sprkkr.potentials.potential_definitions.PotentialSectionTrait._update_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">:</span><span class="n">ReadIoData</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PotentialSectionTrait._update_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSectionTrait.html#ase2sprkkr.potentials.potential_definitions.PotentialSectionTrait._update_atoms">[docs]</a>
+    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">:</span><span class="n">ReadIoData</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function should be called after potential file reading to set the values of Atoms object to the ones from the readed file.</span>
 
@@ -135,7 +141,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="PotentialSectionTrait._depends_on"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSectionTrait.html#ase2sprkkr.potentials.potential_definitions.PotentialSectionTrait._depends_on">[docs]</a>    <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PotentialSectionTrait._depends_on">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSectionTrait.html#ase2sprkkr.potentials.potential_definitions.PotentialSectionTrait._depends_on">[docs]</a>
+    <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; The order of processing of sections during reading can be different than the order during a write. So, if the function should not be processed before given named sections, name then.</span>
 
 <span class="sd">        Return</span>
@@ -145,19 +154,32 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">depends_on</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="PotentialSectionTrait.reset"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSectionTrait.html#ase2sprkkr.potentials.potential_definitions.PotentialSectionTrait.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="PotentialSectionTrait.reset">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSectionTrait.html#ase2sprkkr.potentials.potential_definitions.PotentialSectionTrait.reset">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="PotentialSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_definitions.PotentialSection">[docs]</a><span class="k">class</span> <span class="nc">PotentialSection</span><span class="p">(</span><span class="n">PotentialSectionTrait</span><span class="p">,</span> <span class="n">ConfigurationSection</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PotentialSection">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_definitions.PotentialSection">[docs]</a>
+<span class="k">class</span> <span class="nc">PotentialSection</span><span class="p">(</span><span class="n">PotentialSectionTrait</span><span class="p">,</span> <span class="n">ConfigurationSection</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; A base class for all potential sections &quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="RepeatedPotentialSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.RepeatedPotentialSection.html#ase2sprkkr.potentials.potential_definitions.RepeatedPotentialSection">[docs]</a><span class="k">class</span> <span class="nc">RepeatedPotentialSection</span><span class="p">(</span><span class="n">PotentialSectionTrait</span><span class="p">,</span> <span class="n">RepeatedConfigurationSection</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RepeatedPotentialSection">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.RepeatedPotentialSection.html#ase2sprkkr.potentials.potential_definitions.RepeatedPotentialSection">[docs]</a>
+<span class="k">class</span> <span class="nc">RepeatedPotentialSection</span><span class="p">(</span><span class="n">PotentialSectionTrait</span><span class="p">,</span> <span class="n">RepeatedConfigurationSection</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; A base class for all repeated sections in potentials &quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="AtomicTypePotentialSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection">[docs]</a><span class="k">class</span> <span class="nc">AtomicTypePotentialSection</span><span class="p">(</span><span class="n">PotentialSectionTrait</span><span class="p">,</span> <span class="n">RepeatedConfigurationSection</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AtomicTypePotentialSection">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection">[docs]</a>
+<span class="k">class</span> <span class="nc">AtomicTypePotentialSection</span><span class="p">(</span><span class="n">PotentialSectionTrait</span><span class="p">,</span> <span class="n">RepeatedConfigurationSection</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; A section containing the data of atomic types &quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
@@ -165,17 +187,28 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Name of the in the section stored property used in the error string. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">property_name</span>
 
-<div class="viewcode-block" id="AtomicTypePotentialSection._has_data"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection._has_data">[docs]</a>    <span class="k">def</span> <span class="nf">_has_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">):</span>
+<div class="viewcode-block" id="AtomicTypePotentialSection._has_data">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection._has_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">_has_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">property_name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AtomicTypePotentialSection.read_data"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection.read_data">[docs]</a>    <span class="k">def</span> <span class="nf">read_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AtomicTypePotentialSection.read_data">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection.read_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">property_name</span><span class="p">,</span> <span class="n">section</span><span class="o">.</span><span class="n">DATA</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="AtomicTypePotentialSection.write_data"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection.write_data">[docs]</a>    <span class="k">def</span> <span class="nf">write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AtomicTypePotentialSection.write_data">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection.write_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="n">section</span><span class="o">.</span><span class="n">TYPE</span> <span class="o">=</span> <span class="n">index</span>
         <span class="n">section</span><span class="o">.</span><span class="n">DATA</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">property_name</span><span class="p">)</span><span class="o">.</span><span class="n">raw_value</span></div>
 
-<div class="viewcode-block" id="AtomicTypePotentialSection._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection._set_from_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AtomicTypePotentialSection._set_from_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection._set_from_atoms">[docs]</a>
+    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="n">converged</span> <span class="o">=</span> <span class="n">write_io_data</span><span class="o">.</span><span class="n">has_converged_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">)</span>
 
@@ -202,16 +235,26 @@
             <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AtomicTypePotentialSection._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection._update_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AtomicTypePotentialSection._update_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection._update_atoms">[docs]</a>
+    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">read_data</span><span class="p">(</span><span class="n">read_io_data</span><span class="p">[</span><span class="s1">&#39;types&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="AtomicTypePotentialSection._depends_on"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection._depends_on">[docs]</a>    <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;TYPES&#39;</span></div></div>
+
+<div class="viewcode-block" id="AtomicTypePotentialSection._depends_on">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection.html#ase2sprkkr.potentials.potential_definitions.AtomicTypePotentialSection._depends_on">[docs]</a>
+    <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;TYPES&#39;</span></div>
+</div>
 
 
-<div class="viewcode-block" id="UniqueListSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_definitions.UniqueListSection">[docs]</a><span class="k">class</span> <span class="nc">UniqueListSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
+
+<div class="viewcode-block" id="UniqueListSection">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_definitions.UniqueListSection">[docs]</a>
+<span class="k">class</span> <span class="nc">UniqueListSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; The section, whose data is list of something,</span>
 <span class="sd">        e.g. of meshes, reference systems etc. The properties</span>
 <span class="sd">        _value_name and _value_class has to be redefined in the descendants.</span>
@@ -231,7 +274,9 @@
     <span class="n">_value_class</span> <span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; The class, that should be created from the list of data &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="UniqueListSection._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_definitions.UniqueListSection._set_from_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">:</span> <span class="n">WriteIoData</span><span class="p">):</span>
+<div class="viewcode-block" id="UniqueListSection._set_from_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_definitions.UniqueListSection._set_from_atoms">[docs]</a>
+    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">:</span> <span class="n">WriteIoData</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the values of the section from the write_io_data.</span>
 
@@ -241,7 +286,10 @@
         <span class="n">ul</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">write_io_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;DATA&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">([</span> <span class="n">i</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ul</span><span class="o">.</span><span class="n">iter_unique</span><span class="p">()])</span></div>
 
-<div class="viewcode-block" id="UniqueListSection._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_definitions.UniqueListSection._update_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">:</span> <span class="n">ReadIoData</span><span class="p">):</span>
+
+<div class="viewcode-block" id="UniqueListSection._update_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_definitions.UniqueListSection._update_atoms">[docs]</a>
+    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">:</span> <span class="n">ReadIoData</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update a ReadIoData object accordingly the data in the section:</span>
 <span class="sd">        set its _value_name to list of self_value_class.from_tuple(&lt;data&gt;)</span>
@@ -250,20 +298,29 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">creator</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value_class</span><span class="p">,</span> <span class="s1">&#39;from_tuple&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_class</span><span class="p">)</span>
-        <span class="n">read_io_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_value_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">creator</span><span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;DATA&#39;</span><span class="p">]()]</span></div></div>
+        <span class="n">read_io_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_value_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">creator</span><span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;DATA&#39;</span><span class="p">]()]</span></div>
+</div>
 
 
-<div class="viewcode-block" id="ASEArraySection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection">[docs]</a><span class="k">class</span> <span class="nc">ASEArraySection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ASEArraySection">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection">[docs]</a>
+<span class="k">class</span> <span class="nc">ASEArraySection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; A section, that get and set the given ASE array (see ASE documentation of the</span>
 <span class="sd">        Atoms class), e.g. magnetization direction.</span>
 <span class="sd">        The name of the array is given by the section definition in the property array_name</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ASEArraySection.has_any_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection.has_any_value">[docs]</a>    <span class="k">def</span> <span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ASEArraySection.has_any_value">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection.has_any_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Are there data in the section?&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;DATA&#39;</span><span class="p">]()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="ASEArraySection._depends_on"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection._depends_on">[docs]</a>    <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ASEArraySection._depends_on">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection._depends_on">[docs]</a>
+    <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; These sections can be processed after that the Atoms object</span>
 <span class="sd">            is created.</span>
 
@@ -272,7 +329,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_depends_on</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;SITES&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="ASEArraySection._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection._set_from_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ASEArraySection._set_from_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection._set_from_atoms">[docs]</a>
+    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Just set the values in the section from the Atoms object.</span>
 <span class="sd">        If the array not exists and the value is mandatory, set it to zero.</span>
@@ -289,7 +349,10 @@
              <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">zero_data</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">))</span>
         <span class="n">data</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ASEArraySection._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection._update_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ASEArraySection._update_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection._update_atoms">[docs]</a>
+    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the array accordingly to the readed data</span>
 
@@ -297,7 +360,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;DATA&#39;</span><span class="p">]()</span>
-        <span class="n">atoms</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">array_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div></div>
+        <span class="n">atoms</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">array_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
            </div>

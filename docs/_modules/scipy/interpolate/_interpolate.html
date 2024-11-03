@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>scipy.interpolate._interpolate &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -93,18 +92,15 @@
 <span></span><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;interp1d&#39;</span><span class="p">,</span> <span class="s1">&#39;interp2d&#39;</span><span class="p">,</span> <span class="s1">&#39;lagrange&#39;</span><span class="p">,</span> <span class="s1">&#39;PPoly&#39;</span><span class="p">,</span> <span class="s1">&#39;BPoly&#39;</span><span class="p">,</span> <span class="s1">&#39;NdPPoly&#39;</span><span class="p">]</span>
 
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">prod</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">searchsorted</span><span class="p">,</span> <span class="n">atleast_1d</span><span class="p">,</span> <span class="n">atleast_2d</span><span class="p">,</span>
-                   <span class="n">ravel</span><span class="p">,</span> <span class="n">poly1d</span><span class="p">,</span> <span class="n">asarray</span><span class="p">,</span> <span class="n">intp</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span><span class="p">,</span> <span class="n">asarray</span><span class="p">,</span> <span class="n">intp</span><span class="p">,</span> <span class="n">poly1d</span><span class="p">,</span> <span class="n">searchsorted</span>
 
 <span class="kn">import</span> <span class="nn">scipy.special</span> <span class="k">as</span> <span class="nn">spec</span>
 <span class="kn">from</span> <span class="nn">scipy._lib._util</span> <span class="kn">import</span> <span class="n">copy_if_needed</span>
 <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">comb</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_fitpack_py</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">dfitpack</span>
 <span class="kn">from</span> <span class="nn">._polyint</span> <span class="kn">import</span> <span class="n">_Interpolator1D</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_ppoly</span>
 <span class="kn">from</span> <span class="nn">.interpnd</span> <span class="kn">import</span> <span class="n">_ndim_coords_from_arrays</span>
@@ -185,8 +181,8 @@
 <span class="c1"># !! found, get rid of it!</span>
 
 
-<span class="n">dep_mesg</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
-<span class="s2">`interp2d` is deprecated in SciPy 1.10 and will be removed in SciPy 1.14.0.</span>
+<span class="n">err_mesg</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">`interp2d` has been removed in SciPy 1.14.0.</span>
 
 <span class="s2">For legacy code, nearly bug-for-bug compatible replacements are</span>
 <span class="s2">`RectBivariateSpline` on regular grids, and `bisplrep`/`bisplev` for</span>
@@ -197,7 +193,7 @@
 <span class="s2">`CloughTocher2DInterpolator`.</span>
 
 <span class="s2">For more details see</span>
-<span class="s2">`https://scipy.github.io/devdocs/notebooks/interp_transition_guide.html`</span>
+<span class="s2">https://scipy.github.io/devdocs/tutorial/interpolate/interp_transition_guide.html</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="k">class</span> <span class="nc">interp2d</span><span class="p">:</span>
@@ -205,10 +201,9 @@
 <span class="sd">    interp2d(x, y, z, kind=&#39;linear&#39;, copy=True, bounds_error=False,</span>
 <span class="sd">             fill_value=None)</span>
 
-<span class="sd">    .. deprecated:: 1.10.0</span>
+<span class="sd">    .. versionremoved:: 1.14.0</span>
 
-<span class="sd">        `interp2d` is deprecated in SciPy 1.10 and will be removed in SciPy</span>
-<span class="sd">        1.14.0.</span>
+<span class="sd">        `interp2d` has been removed in SciPy 1.14.0.</span>
 
 <span class="sd">        For legacy code, nearly bug-for-bug compatible replacements are</span>
 <span class="sd">        `RectBivariateSpline` on regular grids, and `bisplrep`/`bisplev` for</span>
@@ -218,240 +213,11 @@
 <span class="sd">        For scattered data, prefer `LinearNDInterpolator` or</span>
 <span class="sd">        `CloughTocher2DInterpolator`.</span>
 
-<span class="sd">        For more details see</span>
-<span class="sd">        `https://scipy.github.io/devdocs/notebooks/interp_transition_guide.html</span>
-<span class="sd">        &lt;https://scipy.github.io/devdocs/notebooks/interp_transition_guide.html&gt;`_</span>
-
-
-<span class="sd">    Interpolate over a 2-D grid.</span>
-
-<span class="sd">    `x`, `y` and `z` are arrays of values used to approximate some function</span>
-<span class="sd">    f: ``z = f(x, y)`` which returns a scalar value `z`. This class returns a</span>
-<span class="sd">    function whose call method uses spline interpolation to find the value</span>
-<span class="sd">    of new points.</span>
-
-<span class="sd">    If `x` and `y` represent a regular grid, consider using</span>
-<span class="sd">    `RectBivariateSpline`.</span>
-
-<span class="sd">    If `z` is a vector value, consider using `interpn`.</span>
-
-<span class="sd">    Note that calling `interp2d` with NaNs present in input values, or with</span>
-<span class="sd">    decreasing values in `x` an `y` results in undefined behaviour.</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    __call__</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    x, y : array_like</span>
-<span class="sd">        Arrays defining the data point coordinates.</span>
-<span class="sd">        The data point coordinates need to be sorted by increasing order.</span>
-
-<span class="sd">        If the points lie on a regular grid, `x` can specify the column</span>
-<span class="sd">        coordinates and `y` the row coordinates, for example::</span>
-
-<span class="sd">          &gt;&gt;&gt; x = [0,1,2];  y = [0,3]; z = [[1,2,3], [4,5,6]]</span>
-
-<span class="sd">        Otherwise, `x` and `y` must specify the full coordinates for each</span>
-<span class="sd">        point, for example::</span>
-
-<span class="sd">          &gt;&gt;&gt; x = [0,1,2,0,1,2];  y = [0,0,0,3,3,3]; z = [1,4,2,5,3,6]</span>
-
-<span class="sd">        If `x` and `y` are multidimensional, they are flattened before use.</span>
-<span class="sd">    z : array_like</span>
-<span class="sd">        The values of the function to interpolate at the data points. If</span>
-<span class="sd">        `z` is a multidimensional array, it is flattened before use assuming</span>
-<span class="sd">        Fortran-ordering (order=&#39;F&#39;).  The length of a flattened `z` array</span>
-<span class="sd">        is either len(`x`)*len(`y`) if `x` and `y` specify the column and</span>
-<span class="sd">        row coordinates or ``len(z) == len(x) == len(y)`` if `x` and `y`</span>
-<span class="sd">        specify coordinates for each point.</span>
-<span class="sd">    kind : {&#39;linear&#39;, &#39;cubic&#39;, &#39;quintic&#39;}, optional</span>
-<span class="sd">        The kind of spline interpolation to use. Default is &#39;linear&#39;.</span>
-<span class="sd">    copy : bool, optional</span>
-<span class="sd">        If True, the class makes internal copies of x, y and z.</span>
-<span class="sd">        If False, references may be used. The default is to copy.</span>
-<span class="sd">    bounds_error : bool, optional</span>
-<span class="sd">        If True, when interpolated values are requested outside of the</span>
-<span class="sd">        domain of the input data (x,y), a ValueError is raised.</span>
-<span class="sd">        If False, then `fill_value` is used.</span>
-<span class="sd">    fill_value : number, optional</span>
-<span class="sd">        If provided, the value to use for points outside of the</span>
-<span class="sd">        interpolation domain. If omitted (None), values outside</span>
-<span class="sd">        the domain are extrapolated via nearest-neighbor extrapolation.</span>
-
-<span class="sd">    See Also</span>
-<span class="sd">    --------</span>
-<span class="sd">    RectBivariateSpline :</span>
-<span class="sd">        Much faster 2-D interpolation if your input data is on a grid</span>
-<span class="sd">    bisplrep, bisplev :</span>
-<span class="sd">        Spline interpolation based on FITPACK</span>
-<span class="sd">    BivariateSpline : a more recent wrapper of the FITPACK routines</span>
-<span class="sd">    interp1d : 1-D version of this function</span>
-<span class="sd">    RegularGridInterpolator : interpolation on a regular or rectilinear grid</span>
-<span class="sd">        in arbitrary dimensions.</span>
-<span class="sd">    interpn : Multidimensional interpolation on regular grids (wraps</span>
-<span class="sd">        `RegularGridInterpolator` and `RectBivariateSpline`).</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    The minimum number of data points required along the interpolation</span>
-<span class="sd">    axis is ``(k+1)**2``, with k=1 for linear, k=3 for cubic and k=5 for</span>
-<span class="sd">    quintic interpolation.</span>
-
-<span class="sd">    The interpolator is constructed by `bisplrep`, with a smoothing factor</span>
-<span class="sd">    of 0. If more control over smoothing is needed, `bisplrep` should be</span>
-<span class="sd">    used directly.</span>
-
-<span class="sd">    The coordinates of the data points to interpolate `xnew` and `ynew`</span>
-<span class="sd">    have to be sorted by ascending order.</span>
-<span class="sd">    `interp2d` is legacy and is not</span>
-<span class="sd">    recommended for use in new code. New code should use</span>
-<span class="sd">    `RegularGridInterpolator` instead.</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    Construct a 2-D grid and interpolate on it:</span>
-
-<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
-<span class="sd">    &gt;&gt;&gt; from scipy import interpolate</span>
-<span class="sd">    &gt;&gt;&gt; x = np.arange(-5.01, 5.01, 0.25)</span>
-<span class="sd">    &gt;&gt;&gt; y = np.arange(-5.01, 5.01, 0.25)</span>
-<span class="sd">    &gt;&gt;&gt; xx, yy = np.meshgrid(x, y)</span>
-<span class="sd">    &gt;&gt;&gt; z = np.sin(xx**2+yy**2)</span>
-<span class="sd">    &gt;&gt;&gt; f = interpolate.interp2d(x, y, z, kind=&#39;cubic&#39;)</span>
-
-<span class="sd">    Now use the obtained interpolation function and plot the result:</span>
-
-<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
-<span class="sd">    &gt;&gt;&gt; xnew = np.arange(-5.01, 5.01, 1e-2)</span>
-<span class="sd">    &gt;&gt;&gt; ynew = np.arange(-5.01, 5.01, 1e-2)</span>
-<span class="sd">    &gt;&gt;&gt; znew = f(xnew, ynew)</span>
-<span class="sd">    &gt;&gt;&gt; plt.plot(x, z[0, :], &#39;ro-&#39;, xnew, znew[0, :], &#39;b-&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">        For more details see :ref:`interp-transition-guide`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">fill_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">dep_mesg</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-        <span class="n">x</span> <span class="o">=</span> <span class="n">ravel</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">ravel</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">asarray</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-
-        <span class="n">rectangular_grid</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">rectangular_grid</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">z</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">z</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;When on a regular grid with x.size = m &quot;</span>
-                                     <span class="s2">&quot;and y.size = n, if z.ndim == 2, then z &quot;</span>
-                                     <span class="s2">&quot;must have shape (n, m)&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
-                <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-                <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
-                <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-                <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-                <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:]</span>
-            <span class="n">z</span> <span class="o">=</span> <span class="n">ravel</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">z</span> <span class="o">=</span> <span class="n">ravel</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;x and y must have equal lengths for non rectangular grid&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Invalid length for input z for non rectangular grid&quot;</span><span class="p">)</span>
-
-        <span class="n">interpolation_types</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;linear&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;cubic&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;quintic&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">kx</span> <span class="o">=</span> <span class="n">ky</span> <span class="o">=</span> <span class="n">interpolation_types</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Unsupported interpolation type </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">kind</span><span class="p">)</span><span class="si">}</span><span class="s2">, must be &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;either of </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">repr</span><span class="p">,</span><span class="w"> </span><span class="n">interpolation_types</span><span class="p">))</span><span class="si">}</span><span class="s2">.&quot;</span>
-            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">rectangular_grid</span><span class="p">:</span>
-            <span class="c1"># TODO: surfit is really not meant for interpolation!</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">tck</span> <span class="o">=</span> <span class="n">_fitpack_py</span><span class="o">.</span><span class="n">bisplrep</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">kx</span><span class="o">=</span><span class="n">kx</span><span class="p">,</span> <span class="n">ky</span><span class="o">=</span><span class="n">ky</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">nx</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">ty</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">ier</span> <span class="o">=</span> <span class="n">dfitpack</span><span class="o">.</span><span class="n">regrid_smth</span><span class="p">(</span>
-                <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="n">kx</span><span class="o">=</span><span class="n">kx</span><span class="p">,</span> <span class="n">ky</span><span class="o">=</span><span class="n">ky</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">tck</span> <span class="o">=</span> <span class="p">(</span><span class="n">tx</span><span class="p">[:</span><span class="n">nx</span><span class="p">],</span> <span class="n">ty</span><span class="p">[:</span><span class="n">ny</span><span class="p">],</span> <span class="n">c</span><span class="p">[:(</span><span class="n">nx</span> <span class="o">-</span> <span class="n">kx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ny</span> <span class="o">-</span> <span class="n">ky</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)],</span>
-                        <span class="n">kx</span><span class="p">,</span> <span class="n">ky</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">bounds_error</span> <span class="o">=</span> <span class="n">bounds_error</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fill_value</span> <span class="o">=</span> <span class="n">fill_value</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="n">copy</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">x_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">y_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">assume_sorted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Interpolate the function.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        x : 1-D array</span>
-<span class="sd">            x-coordinates of the mesh on which to interpolate.</span>
-<span class="sd">        y : 1-D array</span>
-<span class="sd">            y-coordinates of the mesh on which to interpolate.</span>
-<span class="sd">        dx : int &gt;= 0, &lt; kx</span>
-<span class="sd">            Order of partial derivatives in x.</span>
-<span class="sd">        dy : int &gt;= 0, &lt; ky</span>
-<span class="sd">            Order of partial derivatives in y.</span>
-<span class="sd">        assume_sorted : bool, optional</span>
-<span class="sd">            If False, values of `x` and `y` can be in any order and they are</span>
-<span class="sd">            sorted first.</span>
-<span class="sd">            If True, `x` and `y` have to be arrays of monotonically</span>
-<span class="sd">            increasing values.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        z : 2-D array with shape (len(y), len(x))</span>
-<span class="sd">            The interpolated values.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">dep_mesg</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-        <span class="n">x</span> <span class="o">=</span> <span class="n">atleast_1d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">atleast_1d</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x and y should both be 1-D arrays&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">assume_sorted</span><span class="p">:</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;mergesort&quot;</span><span class="p">)</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;mergesort&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds_error</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">fill_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">out_of_bounds_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_min</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_max</span><span class="p">)</span>
-            <span class="n">out_of_bounds_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_min</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_max</span><span class="p">)</span>
-
-            <span class="n">any_out_of_bounds_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">out_of_bounds_x</span><span class="p">)</span>
-            <span class="n">any_out_of_bounds_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">out_of_bounds_y</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds_error</span> <span class="ow">and</span> <span class="p">(</span><span class="n">any_out_of_bounds_x</span> <span class="ow">or</span> <span class="n">any_out_of_bounds_y</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Values out of range; x must be in </span><span class="si">{</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_min</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">x_max</span><span class="p">)</span><span class="si">!r}</span><span class="s2">, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;y in </span><span class="si">{</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_min</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">y_max</span><span class="p">)</span><span class="si">!r}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
-
-        <span class="n">z</span> <span class="o">=</span> <span class="n">_fitpack_py</span><span class="o">.</span><span class="n">bisplev</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tck</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">atleast_2d</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">transpose</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fill_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">any_out_of_bounds_x</span><span class="p">:</span>
-                <span class="n">z</span><span class="p">[:,</span> <span class="n">out_of_bounds_x</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fill_value</span>
-            <span class="k">if</span> <span class="n">any_out_of_bounds_y</span><span class="p">:</span>
-                <span class="n">z</span><span class="p">[</span><span class="n">out_of_bounds_y</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fill_value</span>
-
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">array</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">err_mesg</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_check_broadcast_up_to</span><span class="p">(</span><span class="n">arr_from</span><span class="p">,</span> <span class="n">shape_to</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -1007,8 +773,9 @@
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shapes of x </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> and c </span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> are incompatible&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Shapes of c </span><span class="si">{}</span><span class="s2"> and self.c </span><span class="si">{}</span><span class="s2"> are incompatible&quot;</span>
-                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Shapes of c </span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> and self.c </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> are incompatible&quot;</span>
+            <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span>
@@ -2061,8 +1828,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ya</span><span class="p">,</span> <span class="n">yb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ya</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">yb</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ya</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">yb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Shapes of ya </span><span class="si">{}</span><span class="s1"> and yb </span><span class="si">{}</span><span class="s1"> are incompatible&#39;</span>
-                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ya</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">yb</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Shapes of ya </span><span class="si">{</span><span class="n">ya</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> and yb </span><span class="si">{</span><span class="n">yb</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> are incompatible&quot;</span>
+            <span class="p">)</span>
 
         <span class="n">dta</span><span class="p">,</span> <span class="n">dtb</span> <span class="o">=</span> <span class="n">ya</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">yb</span><span class="o">.</span><span class="n">dtype</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">dta</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">complexfloating</span><span class="p">)</span> <span class="ow">or</span>

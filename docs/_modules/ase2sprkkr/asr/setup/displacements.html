@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.setup.displacements &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -96,7 +95,9 @@
 <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
 
 
-<div class="viewcode-block" id="get_displacement_folder"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.displacements.get_displacement_folder.html#ase2sprkkr.asr.setup.displacements.get_displacement_folder">[docs]</a><span class="k">def</span> <span class="nf">get_displacement_folder</span><span class="p">(</span><span class="n">atomic_index</span><span class="p">,</span>
+<div class="viewcode-block" id="get_displacement_folder">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.displacements.get_displacement_folder.html#ase2sprkkr.asr.setup.displacements.get_displacement_folder">[docs]</a>
+<span class="k">def</span> <span class="nf">get_displacement_folder</span><span class="p">(</span><span class="n">atomic_index</span><span class="p">,</span>
                             <span class="n">cartesian_index</span><span class="p">,</span>
                             <span class="n">displacement_sign</span><span class="p">,</span>
                             <span class="n">displacement</span><span class="p">):</span>
@@ -109,11 +110,17 @@
     <span class="k">return</span> <span class="n">folder</span></div>
 
 
-<div class="viewcode-block" id="create_displacements_folder"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.displacements.create_displacements_folder.html#ase2sprkkr.asr.setup.displacements.create_displacements_folder">[docs]</a><span class="k">def</span> <span class="nf">create_displacements_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
+
+<div class="viewcode-block" id="create_displacements_folder">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.displacements.create_displacements_folder.html#ase2sprkkr.asr.setup.displacements.create_displacements_folder">[docs]</a>
+<span class="k">def</span> <span class="nf">create_displacements_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
     <span class="n">folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_all_displacements"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.displacements.get_all_displacements.html#ase2sprkkr.asr.setup.displacements.get_all_displacements">[docs]</a><span class="k">def</span> <span class="nf">get_all_displacements</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_all_displacements">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.displacements.get_all_displacements.html#ase2sprkkr.asr.setup.displacements.get_all_displacements">[docs]</a>
+<span class="k">def</span> <span class="nf">get_all_displacements</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate ia, iv, sign for all displacements.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">ia</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)):</span>
         <span class="k">for</span> <span class="n">iv</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
@@ -121,12 +128,16 @@
                 <span class="k">yield</span> <span class="p">(</span><span class="n">ia</span><span class="p">,</span> <span class="n">iv</span><span class="p">,</span> <span class="n">sign</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="displace_atom"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.displacements.displace_atom.html#ase2sprkkr.asr.setup.displacements.displace_atom">[docs]</a><span class="k">def</span> <span class="nf">displace_atom</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">ia</span><span class="p">,</span> <span class="n">iv</span><span class="p">,</span> <span class="n">sign</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+
+<div class="viewcode-block" id="displace_atom">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.displacements.displace_atom.html#ase2sprkkr.asr.setup.displacements.displace_atom">[docs]</a>
+<span class="k">def</span> <span class="nf">displace_atom</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">ia</span><span class="p">,</span> <span class="n">iv</span><span class="p">,</span> <span class="n">sign</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
     <span class="n">new_atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">pos_av</span> <span class="o">=</span> <span class="n">new_atoms</span><span class="o">.</span><span class="n">get_positions</span><span class="p">()</span>
     <span class="n">pos_av</span><span class="p">[</span><span class="n">ia</span><span class="p">,</span> <span class="n">iv</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">delta</span>
     <span class="n">new_atoms</span><span class="o">.</span><span class="n">set_positions</span><span class="p">(</span><span class="n">pos_av</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">new_atoms</span></div>
+
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.setup.displacements&#39;</span><span class="p">)</span>

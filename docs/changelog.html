@@ -1,24 +1,23 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Changelog &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -51,7 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#version-3-2-0-beta">Version 3.2.0-beta</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-2-5-beta">Version 3.2.5-beta</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#user-interface">User interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#for-developers">For developers</a></li>
 </ul>
@@ -133,23 +132,27 @@
            <div itemprop="articleBody">
              
   <section id="changelog">
-<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this heading"></a></h1>
-<section id="version-3-2-0-beta">
-<h2>Version 3.2.0-beta<a class="headerlink" href="#version-3-2-0-beta" title="Permalink to this heading"></a></h2>
+<h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
+<section id="version-3-2-5-beta">
+<h2>Version 3.2.5-beta<a class="headerlink" href="#version-3-2-5-beta" title="Link to this heading"></a></h2>
 <section id="user-interface">
-<h3>User interface<a class="headerlink" href="#user-interface" title="Permalink to this heading"></a></h3>
+<h3>User interface<a class="headerlink" href="#user-interface" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Better data validation, warnings on data validity</p></li>
 <li><p>Bash ase2sprkkr commandline completing</p></li>
 <li><p>Faster package loading, lazy loading of some modules/data definitions</p></li>
 <li><p>Task BSF improved</p></li>
-<li><p>Python 3.8, pyparsing 2.x and numpy &lt; 1.23 support dropped</p></li>
+<li><p>Python 3.8, pyparsing 2.x, and numpy &lt; 1.23 support dropped</p></li>
 <li><p>Nomad uploading proof of concept</p></li>
 <li><p>Configuration file improved, help available</p></li>
+<li><p>Occupancy and symmetry handling fixed</p></li>
+<li><p>show_structure tools a bit improved (it uses temp files by default)</p></li>
+<li><p>Radial charge and potentials for multiple occupancy and FULLPOT</p></li>
+<li><p>EMIN/EMAX can be always specified as EMINEV/EMAXEV</p></li>
 </ul>
 </section>
 <section id="for-developers">
-<h3>For developers<a class="headerlink" href="#for-developers" title="Permalink to this heading"></a></h3>
+<h3>For developers<a class="headerlink" href="#for-developers" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Switch element improved to allow implementation of if_defined element</p></li>
 <li><p>Repeated arrays</p></li>
@@ -159,14 +162,14 @@
 </section>
 </section>
 <section id="version-3-1-0-beta">
-<h2>Version 3.1.0-beta<a class="headerlink" href="#version-3-1-0-beta" title="Permalink to this heading"></a></h2>
+<h2>Version 3.1.0-beta<a class="headerlink" href="#version-3-1-0-beta" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>BSF task and result</p></li>
 <li><p>Examples in package and documentation</p></li>
 </ul>
 </section>
 <section id="version-3-0-2-beta">
-<h2>Version 3.0.2-beta<a class="headerlink" href="#version-3-0-2-beta" title="Permalink to this heading"></a></h2>
+<h2>Version 3.0.2-beta<a class="headerlink" href="#version-3-0-2-beta" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Host Madelung potential and Charge moments parsing</p></li>
 <li><p>Sites ASE array</p></li>
@@ -176,9 +179,9 @@
 </ul>
 </section>
 <section id="version-3-0-0-beta">
-<h2>Version 3.0.0-beta<a class="headerlink" href="#version-3-0-0-beta" title="Permalink to this heading"></a></h2>
+<h2>Version 3.0.0-beta<a class="headerlink" href="#version-3-0-0-beta" title="Link to this heading"></a></h2>
 <section id="id1">
-<h3>User interface<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<h3>User interface<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Empty spheres finding has been added</p></li>
 <li><p>SiteType class added: sites are now always distinct, site_types can be shared between sites
@@ -200,7 +203,7 @@ due to symmetry</p></li>
 </ul>
 </section>
 <section id="tools">
-<h3>Tools<a class="headerlink" href="#tools" title="Permalink to this heading"></a></h3>
+<h3>Tools<a class="headerlink" href="#tools" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Tools (<code class="docutils literal notranslate"><span class="pre">a2s_...</span></code>) have been integrated into one ase2sprkkr tool</p></li>
 <li><p>Test tool introduced to test the ase2sprkkr installation</p></li>
@@ -209,7 +212,7 @@ due to symmetry</p></li>
 </ul>
 </section>
 <section id="internals">
-<h3>Internals<a class="headerlink" href="#internals" title="Permalink to this heading"></a></h3>
+<h3>Internals<a class="headerlink" href="#internals" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>NumpyArray grammar type improved</p></li>
 <li><p>Some fixies and code lininting</p></li>
@@ -220,7 +223,7 @@ due to symmetry</p></li>
 </ul>
 </section>
 <section id="refactoring">
-<h3>Refactoring<a class="headerlink" href="#refactoring" title="Permalink to this heading"></a></h3>
+<h3>Refactoring<a class="headerlink" href="#refactoring" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Output files moved to a separate directory</p></li>
 <li><p>Configuration definitions splitted to several files</p></li>
@@ -228,13 +231,13 @@ due to symmetry</p></li>
 </section>
 </section>
 <section id="version-2-2-1">
-<h2>Version 2.2.1<a class="headerlink" href="#version-2-2-1" title="Permalink to this heading"></a></h2>
+<h2>Version 2.2.1<a class="headerlink" href="#version-2-2-1" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Fix of ConfigurationContainer.set_values</p></li>
 </ul>
 </section>
 <section id="version-2-2-0-beta">
-<h2>Version 2.2.0-beta<a class="headerlink" href="#version-2-2-0-beta" title="Permalink to this heading"></a></h2>
+<h2>Version 2.2.0-beta<a class="headerlink" href="#version-2-2-0-beta" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>a2s_plot_output can handle DOS and BSF output files</p></li>
 <li><p>ARPES task fix</p></li>
@@ -245,7 +248,7 @@ due to symmetry</p></li>
 <li><p>Better help values for output files</p></li>
 </ul>
 <section id="id2">
-<h3>Internals<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<h3>Internals<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Generated type improvement</p></li>
 <li><p>Switch grammar element: format of a parsed file can depend on the previously parsed values</p></li>
@@ -256,9 +259,9 @@ due to symmetry</p></li>
 </section>
 </section>
 <section id="version-2-1-1">
-<h2>Version 2.1.1<a class="headerlink" href="#version-2-1-1" title="Permalink to this heading"></a></h2>
+<h2>Version 2.1.1<a class="headerlink" href="#version-2-1-1" title="Link to this heading"></a></h2>
 <section id="id3">
-<h3>User interface<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<h3>User interface<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>ARPES and SCF task definition improved</p></li>
 <li><p>ARPES SPC results can be parsed and plotted</p></li>
@@ -275,7 +278,7 @@ due to symmetry</p></li>
 </ul>
 </section>
 <section id="id4">
-<h3>Internals<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
+<h3>Internals<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>GrammmarTypes refactorized (splitted to more files)</p></li>
 <li><p>NumpyArray and RestOfTheFile grammar types for output files</p></li>
@@ -285,23 +288,23 @@ due to symmetry</p></li>
 </section>
 </section>
 <section id="version-2-0-4">
-<h2>Version 2.0.4<a class="headerlink" href="#version-2-0-4" title="Permalink to this heading"></a></h2>
+<h2>Version 2.0.4<a class="headerlink" href="#version-2-0-4" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Some fixies</p></li>
 <li><p>ASR repcipies available as ase2sprkkr.asr subpackage</p></li>
 </ul>
 </section>
 <section id="version-2-0-1">
-<h2>Version 2.0.1<a class="headerlink" href="#version-2-0-1" title="Permalink to this heading"></a></h2>
+<h2>Version 2.0.1<a class="headerlink" href="#version-2-0-1" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Fix of sys-file generation</p></li>
 <li><p>Hastily written ASE2SPRKKR slides included</p></li>
 </ul>
 </section>
 <section id="version-2-0-0-beta2">
-<h2>Version 2.0.0-beta2<a class="headerlink" href="#version-2-0-0-beta2" title="Permalink to this heading"></a></h2>
+<h2>Version 2.0.0-beta2<a class="headerlink" href="#version-2-0-0-beta2" title="Link to this heading"></a></h2>
 <section id="id5">
-<h3>User interface<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
+<h3>User interface<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>es_finder integration for empty spheres finding</p></li>
 <li><p>Support for 2D problems</p></li>
@@ -311,7 +314,7 @@ due to symmetry</p></li>
 </ul>
 </section>
 <section id="id6">
-<h3>Internals<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
+<h3>Internals<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Sections validation</p></li>
 <li><p>LatticeData class refactored</p></li>
@@ -320,9 +323,9 @@ due to symmetry</p></li>
 </section>
 </section>
 <section id="version-2-0-0-beta1">
-<h2>Version 2.0.0-beta1<a class="headerlink" href="#version-2-0-0-beta1" title="Permalink to this heading"></a></h2>
+<h2>Version 2.0.0-beta1<a class="headerlink" href="#version-2-0-0-beta1" title="Link to this heading"></a></h2>
 <section id="id7">
-<h3>User interface<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h3>
+<h3>User interface<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Runtime documentation available.</p></li>
 <li><p>Runtime documentation is added to the docstring and to the generated documentation.
@@ -332,7 +335,7 @@ due to symmetry</p></li>
 </ul>
 </section>
 <section id="architecture-changes">
-<h3>Architecture changes<a class="headerlink" href="#architecture-changes" title="Permalink to this heading"></a></h3>
+<h3>Architecture changes<a class="headerlink" href="#architecture-changes" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Allow the Keywords arguments to accept descirptions of the keywords.</p></li>
 <li><p>Complex GrammarType were added.</p></li>
@@ -349,7 +352,7 @@ values are outputed only if they differ from the defaults.</p></li>
 </section>
 </section>
 <section id="version-1-0-7">
-<h2>Version 1.0.7<a class="headerlink" href="#version-1-0-7" title="Permalink to this heading"></a></h2>
+<h2>Version 1.0.7<a class="headerlink" href="#version-1-0-7" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>a2s_visualise_in_struct script fixed</p></li>
 <li><p>a2s_visualise_in_struct accepts scale-radii argument to control the size of visualised atoms</p></li>
@@ -357,7 +360,7 @@ values are outputed only if they differ from the defaults.</p></li>
 </ul>
 </section>
 <section id="version-1-0-6">
-<h2>Version 1.0.6<a class="headerlink" href="#version-1-0-6" title="Permalink to this heading"></a></h2>
+<h2>Version 1.0.6<a class="headerlink" href="#version-1-0-6" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Sites data moved to ASE arrays to allow merging two Atoms structures</p></li>
 <li><p>Testing switched to pytest</p></li>

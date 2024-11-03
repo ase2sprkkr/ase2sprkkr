@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>re &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -216,6 +215,7 @@
 <span class="kn">import</span> <span class="nn">enum</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_compiler</span><span class="p">,</span> <span class="n">_parser</span>
 <span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">_sre</span>
 
 
 <span class="c1"># public symbols</span>
@@ -321,7 +321,8 @@
 <span class="k">def</span> <span class="nf">purge</span><span class="p">():</span>
     <span class="s2">&quot;Clear the regular expression caches&quot;</span>
     <span class="n">_cache</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-    <span class="n">_compile_repl</span><span class="o">.</span><span class="n">cache_clear</span><span class="p">()</span>
+    <span class="n">_cache2</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">_compile_template</span><span class="o">.</span><span class="n">cache_clear</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">template</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="s2">&quot;Compile a template pattern, returning a Pattern object, deprecated&quot;</span>
@@ -358,61 +359,70 @@
 <span class="c1"># --------------------------------------------------------------------</span>
 <span class="c1"># internals</span>
 
-<span class="n">_cache</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># ordered!</span>
-
+<span class="c1"># Use the fact that dict keeps the insertion order.</span>
+<span class="c1"># _cache2 uses the simple FIFO policy which has better latency.</span>
+<span class="c1"># _cache uses the LRU policy which has better hit rate.</span>
+<span class="n">_cache</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># LRU</span>
+<span class="n">_cache2</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># FIFO</span>
 <span class="n">_MAXCACHE</span> <span class="o">=</span> <span class="mi">512</span>
+<span class="n">_MAXCACHE2</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="k">assert</span> <span class="n">_MAXCACHE2</span> <span class="o">&lt;</span> <span class="n">_MAXCACHE</span>
+
 <span class="k">def</span> <span class="nf">_compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">flags</span><span class="p">):</span>
     <span class="c1"># internal: compile pattern</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flags</span><span class="p">,</span> <span class="n">RegexFlag</span><span class="p">):</span>
         <span class="n">flags</span> <span class="o">=</span> <span class="n">flags</span><span class="o">.</span><span class="n">value</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_cache</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">pattern</span><span class="p">),</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">flags</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">_cache2</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">pattern</span><span class="p">),</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">flags</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
         <span class="k">pass</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">flags</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;cannot process flags argument with a compiled pattern&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">pattern</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">_compiler</span><span class="o">.</span><span class="n">isstring</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;first argument must be string or compiled pattern&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">flags</span> <span class="o">&amp;</span> <span class="n">T</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">warnings</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The re.TEMPLATE/re.T flag is deprecated &quot;</span>
-                  <span class="s2">&quot;as it is an undocumented flag &quot;</span>
-                  <span class="s2">&quot;without an obvious purpose. &quot;</span>
-                  <span class="s2">&quot;Don&#39;t use it.&quot;</span><span class="p">,</span>
-                  <span class="ne">DeprecationWarning</span><span class="p">)</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">_compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="n">DEBUG</span><span class="p">):</span>
+
+    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">pattern</span><span class="p">),</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
+    <span class="c1"># Item in _cache should be moved to the end if found.</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">flags</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;cannot process flags argument with a compiled pattern&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">pattern</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_compiler</span><span class="o">.</span><span class="n">isstring</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;first argument must be string or compiled pattern&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">flags</span> <span class="o">&amp;</span> <span class="n">T</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">warnings</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The re.TEMPLATE/re.T flag is deprecated &quot;</span>
+                    <span class="s2">&quot;as it is an undocumented flag &quot;</span>
+                    <span class="s2">&quot;without an obvious purpose. &quot;</span>
+                    <span class="s2">&quot;Don&#39;t use it.&quot;</span><span class="p">,</span>
+                    <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">_compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">flags</span> <span class="o">&amp;</span> <span class="n">DEBUG</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">p</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">_cache</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">_MAXCACHE</span><span class="p">:</span>
-            <span class="c1"># Drop the oldest item</span>
+            <span class="c1"># Drop the least recently used item.</span>
+            <span class="c1"># next(iter(_cache)) is known to have linear amortized time,</span>
+            <span class="c1"># but it is used here to avoid a dependency from using OrderedDict.</span>
+            <span class="c1"># For the small _MAXCACHE value it doesn&#39;t make much of a difference.</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">del</span> <span class="n">_cache</span><span class="p">[</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">_cache</span><span class="p">))]</span>
             <span class="k">except</span> <span class="p">(</span><span class="ne">StopIteration</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
                 <span class="k">pass</span>
-        <span class="n">_cache</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">pattern</span><span class="p">),</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">flags</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
+    <span class="c1"># Append to the end.</span>
+    <span class="n">_cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">_cache2</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">_MAXCACHE2</span><span class="p">:</span>
+        <span class="c1"># Drop the oldest item.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">_cache2</span><span class="p">[</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">_cache2</span><span class="p">))]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">StopIteration</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
+            <span class="k">pass</span>
+    <span class="n">_cache2</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
     <span class="k">return</span> <span class="n">p</span>
 
 <span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">_MAXCACHE</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">_compile_repl</span><span class="p">(</span><span class="n">repl</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_compile_template</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">repl</span><span class="p">):</span>
     <span class="c1"># internal: compile replacement pattern</span>
-    <span class="k">return</span> <span class="n">_parser</span><span class="o">.</span><span class="n">parse_template</span><span class="p">(</span><span class="n">repl</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">_expand</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">match</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
-    <span class="c1"># internal: Match.expand implementation hook</span>
-    <span class="n">template</span> <span class="o">=</span> <span class="n">_parser</span><span class="o">.</span><span class="n">parse_template</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_parser</span><span class="o">.</span><span class="n">expand_template</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">match</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">_subx</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
-    <span class="c1"># internal: Pattern.sub/subn implementation helper</span>
-    <span class="n">template</span> <span class="o">=</span> <span class="n">_compile_repl</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">template</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">template</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="c1"># literal replacement</span>
-        <span class="k">return</span> <span class="n">template</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">_parser</span><span class="o">.</span><span class="n">expand_template</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">match</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">filter</span>
+    <span class="k">return</span> <span class="n">_sre</span><span class="o">.</span><span class="n">template</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">_parser</span><span class="o">.</span><span class="n">parse_template</span><span class="p">(</span><span class="n">repl</span><span class="p">,</span> <span class="n">pattern</span><span class="p">))</span>
 
 <span class="c1"># register myself for pickling</span>
 

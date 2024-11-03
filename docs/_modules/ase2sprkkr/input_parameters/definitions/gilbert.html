@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.input_parameters.definitions.gilbert &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -101,29 +100,29 @@
     <span class="s1">&#39;gilbert&#39;</span><span class="p">,</span> <span class="p">[</span>
       <span class="n">CONTROL</span><span class="p">(</span><span class="s1">&#39;GILBERT&#39;</span><span class="p">),</span>
       <span class="n">TAU</span><span class="p">,</span>
-      <span class="n">ENERGY</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">remove</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;EMIN&#39;</span><span class="p">],</span>
+      <span class="n">ENERGY</span><span class="p">(</span><span class="n">emin</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">emax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;GRID&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;NE&#39;</span> <span class="p">:</span> <span class="mi">1</span> <span class="p">}</span>
       <span class="p">),</span>
       <span class="n">SITES</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;NL&#39;</span> <span class="p">:</span> <span class="mi">4</span> <span class="p">}),</span>
 
       <span class="n">TASK</span><span class="p">(</span><span class="s1">&#39;Gilbert&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">([</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NTMP&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Number of temperature points used for α(T)&#39;</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NTMP&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Number of temperature points used for α(T)&#39;</span><span class="p">),</span>
         <span class="n">V</span><span class="p">(</span><span class="s1">&#39;SETFLUCT&#39;</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">({</span>
           <span class="s1">&#39;MLIN&#39;</span><span class="p">:</span> <span class="s1">&#39;Use linear temperature grid. Takes account only the electron scattering due to lattice vibrations.&#39;</span><span class="p">,</span>
           <span class="s1">&#39;M_T&#39;</span><span class="p">:</span> <span class="s1">&#39;If NFTET = 1 and NFPHI = 1 but NVIBRA is bigger than 1, &#39;</span>
                  <span class="s1">&#39;only lattice vibrations are taken into account. If NVIBRA = 1 but &#39;</span>
                  <span class="s1">&#39;NFTET is bigger than 1 and NFPHI is bigger than 1, only spin &#39;</span>
                  <span class="s1">&#39;fluctuations are taken into account.&#39;</span><span class="p">,</span>
-        <span class="p">}),</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Finite temperature calculation mode&#39;</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NVIBRA&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Number of directions for atomic displacements&#39;</span>
+        <span class="p">}),</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Finite temperature calculation mode&#39;</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NVIBRA&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Number of directions for atomic displacements&#39;</span>
                                               <span class="s1">&#39; representing thermal lattice vibrations&#39;</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;TMPMIN&#39;</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Lower limit of the temperature region (SETLFUNC=MLIN).&#39;</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;TMPMAX&#39;</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Upper limit of the temperature region (SETLFUNC=MLIN)&#39;</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;FLUCTFIL&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Data ﬁle which contains the information about &#39;</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;TMPMIN&#39;</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Lower limit of the temperature region (SETLFUNC=MLIN).&#39;</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;TMPMAX&#39;</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Upper limit of the temperature region (SETLFUNC=MLIN)&#39;</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;FLUCTFIL&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Data ﬁle which contains the information about &#39;</span>
                                                 <span class="s1">&#39;temperature dependent magnetizstion, taken from the &#39;</span>
                                                 <span class="s1">&#39;experiment or Monte Carlo simulations&#39;</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NFTET&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Number of grid points specifying θ angle (SETLFUNC=M_T)&#39;</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NFPHI&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Number of grid points specifying φ angle (SETLFUNC=M_T)&#39;</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NFTET&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Number of grid points specifying θ angle (SETLFUNC=M_T)&#39;</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NFPHI&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Number of grid points specifying φ angle (SETLFUNC=M_T)&#39;</span><span class="p">),</span>
       <span class="p">]),</span>
     <span class="p">],</span>
     <span class="n">executable</span> <span class="o">=</span> <span class="s1">&#39;kkrchi&#39;</span><span class="p">,</span>

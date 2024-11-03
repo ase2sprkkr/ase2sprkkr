@@ -1,24 +1,23 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>myBFGS &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -167,10 +166,10 @@
            <div itemprop="articleBody">
              
   <section id="mybfgs">
-<h1>myBFGS<a class="headerlink" href="#mybfgs" title="Permalink to this heading"></a></h1>
+<h1>myBFGS<a class="headerlink" href="#mybfgs" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.relax.myBFGS">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.relax.</span></span><span class="sig-name descname"><span class="pre">myBFGS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_trajectory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxstep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">master</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/relax.html#myBFGS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.relax.myBFGS" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.relax.</span></span><span class="sig-name descname"><span class="pre">myBFGS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_trajectory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxstep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">master</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/relax.html#myBFGS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.relax.myBFGS" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-e5a4ce6b52f50a95cd1c72ce53c3a2c021fd6232.png" alt="Inheritance diagram of ase2sprkkr.asr.relax.myBFGS" usemap="#inheritanceb0eb375366" class="inheritance graphviz" /></div>
 <map id="inheritanceb0eb375366" name="inheritanceb0eb375366">
@@ -180,22 +179,22 @@
 </div>
 <p class="rubric">Constructor</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>atoms</strong> (<em>Atoms</em>) – </p></li>
-<li><p><strong>restart</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – </p></li>
-<li><p><strong>logfile</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>IO</em><em>, </em><em>str</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>trajectory</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – </p></li>
-<li><p><strong>append_trajectory</strong> (<em>bool</em>) – </p></li>
-<li><p><strong>maxstep</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – </p></li>
-<li><p><strong>master</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – </p></li>
-<li><p><strong>alpha</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – </p></li>
+<li><p><strong>atoms</strong> (<em>Atoms</em>)</p></li>
+<li><p><strong>restart</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>logfile</strong> (<em>IO</em><em> | </em><em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>trajectory</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>append_trajectory</strong> (<em>bool</em>)</p></li>
+<li><p><strong>maxstep</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>master</strong> (<em>bool</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.relax.myBFGS.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_trajectory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxstep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">master</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.asr.relax.myBFGS.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_trajectory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxstep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">master</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.asr.relax.myBFGS.__init__" title="Link to this definition"></a></dt>
 <dd><p>BFGS optimizer.</p>
 <p>Parameters:</p>
 <dl class="simple">
@@ -223,16 +222,16 @@ a lower value also means risk of instability.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>atoms</strong> (<em>Atoms</em>) – </p></li>
-<li><p><strong>restart</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – </p></li>
-<li><p><strong>logfile</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>IO</em><em>, </em><em>str</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>trajectory</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – </p></li>
-<li><p><strong>append_trajectory</strong> (<em>bool</em>) – </p></li>
-<li><p><strong>maxstep</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – </p></li>
-<li><p><strong>master</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – </p></li>
-<li><p><strong>alpha</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – </p></li>
+<li><p><strong>atoms</strong> (<em>Atoms</em>)</p></li>
+<li><p><strong>restart</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>logfile</strong> (<em>IO</em><em> | </em><em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>trajectory</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>append_trajectory</strong> (<em>bool</em>)</p></li>
+<li><p><strong>maxstep</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>master</strong> (<em>bool</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -240,7 +239,7 @@ a lower value also means risk of instability.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.relax.myBFGS.log">
-<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forces</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/relax.html#myBFGS.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.relax.myBFGS.log" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forces</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/relax.html#myBFGS.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.relax.myBFGS.log" title="Link to this definition"></a></dt>
 <dd><p>a dummy function as placeholder for a real logger, e.g. in
 Optimizer</p>
 </dd></dl>

@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.visualise.plot &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -103,7 +102,9 @@
 <span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">add_to_signature</span>
 
 
-<div class="viewcode-block" id="normalize_rc_params"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.normalize_rc_params.html#ase2sprkkr.visualise.plot.normalize_rc_params">[docs]</a><span class="k">def</span> <span class="nf">normalize_rc_params</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+<div class="viewcode-block" id="normalize_rc_params">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.normalize_rc_params.html#ase2sprkkr.visualise.plot.normalize_rc_params">[docs]</a>
+<span class="k">def</span> <span class="nf">normalize_rc_params</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
     <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -115,6 +116,7 @@
     <span class="k">return</span> <span class="n">out</span></div>
 
 
+
 <span class="n">rc_params</span> <span class="o">=</span> <span class="n">normalize_rc_params</span><span class="p">({</span>
     <span class="s1">&#39;font&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;family&#39;</span> <span class="p">:</span><span class="s1">&#39;serif&#39;</span><span class="p">,</span>
              <span class="s1">&#39;serif&#39;</span>  <span class="p">:[</span><span class="s1">&#39;cms10&#39;</span><span class="p">],</span>
@@ -124,7 +126,9 @@
 <span class="p">})</span>
 
 
-<div class="viewcode-block" id="combine_colormaps"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.combine_colormaps.html#ase2sprkkr.visualise.plot.combine_colormaps">[docs]</a><span class="k">def</span> <span class="nf">combine_colormaps</span><span class="p">(</span><span class="n">cmap1</span><span class="p">,</span> <span class="n">cmap2</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">):</span>
+<div class="viewcode-block" id="combine_colormaps">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.combine_colormaps.html#ase2sprkkr.visualise.plot.combine_colormaps">[docs]</a>
+<span class="k">def</span> <span class="nf">combine_colormaps</span><span class="p">(</span><span class="n">cmap1</span><span class="p">,</span> <span class="n">cmap2</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">):</span>
 
     <span class="c1"># Get the selected colors from each colormap</span>
     <span class="n">colors1</span> <span class="o">=</span> <span class="n">cmap1</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">index1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n1</span><span class="p">))</span>
@@ -139,12 +143,18 @@
     <span class="k">return</span> <span class="n">combined_cmap</span></div>
 
 
-<div class="viewcode-block" id="combined_colormap"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.combined_colormap.html#ase2sprkkr.visualise.plot.combined_colormap">[docs]</a><span class="k">def</span> <span class="nf">combined_colormap</span><span class="p">(</span><span class="n">range1</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">range2</span><span class="o">=</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">n1</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">n2</span><span class="o">=</span><span class="mi">15000</span><span class="p">,</span> <span class="n">cmap1</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">bwr</span><span class="p">,</span> <span class="n">cmap2</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">jet</span><span class="p">):</span>
+
+<div class="viewcode-block" id="combined_colormap">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.combined_colormap.html#ase2sprkkr.visualise.plot.combined_colormap">[docs]</a>
+<span class="k">def</span> <span class="nf">combined_colormap</span><span class="p">(</span><span class="n">range1</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">range2</span><span class="o">=</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">n1</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">n2</span><span class="o">=</span><span class="mi">15000</span><span class="p">,</span> <span class="n">cmap1</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">bwr</span><span class="p">,</span> <span class="n">cmap2</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">jet</span><span class="p">):</span>
     <span class="c1"># Create the new colormap</span>
     <span class="k">return</span> <span class="n">combine_colormaps</span><span class="p">(</span><span class="n">cmap1</span><span class="p">,</span> <span class="n">cmap2</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">range1</span><span class="p">,</span> <span class="n">range2</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="create_rc_context"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.create_rc_context.html#ase2sprkkr.visualise.plot.create_rc_context">[docs]</a><span class="k">def</span> <span class="nf">create_rc_context</span><span class="p">(</span><span class="n">latex</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="create_rc_context">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.create_rc_context.html#ase2sprkkr.visualise.plot.create_rc_context">[docs]</a>
+<span class="k">def</span> <span class="nf">create_rc_context</span><span class="p">(</span><span class="n">latex</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create the context that sets defaults for plotting</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -155,7 +165,10 @@
     <span class="k">return</span> <span class="n">rc_context</span><span class="p">(</span><span class="n">params</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="single_plot"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.single_plot.html#ase2sprkkr.visualise.plot.single_plot">[docs]</a><span class="k">def</span> <span class="nf">single_plot</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span><span class="n">Callable</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">latex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<div class="viewcode-block" id="single_plot">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.single_plot.html#ase2sprkkr.visualise.plot.single_plot">[docs]</a>
+<span class="k">def</span> <span class="nf">single_plot</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span><span class="n">Callable</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">latex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates single plot according to the given function a either show it or save it.</span>
 
@@ -181,7 +194,10 @@
       <span class="n">finish_plot</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">dpi</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="finish_plot"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.finish_plot.html#ase2sprkkr.visualise.plot.finish_plot">[docs]</a><span class="k">def</span> <span class="nf">finish_plot</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">):</span>
+
+<div class="viewcode-block" id="finish_plot">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.finish_plot.html#ase2sprkkr.visualise.plot.finish_plot">[docs]</a>
+<span class="k">def</span> <span class="nf">finish_plot</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">):</span>
 <span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">     Show the plot and/or save it to the given file</span>
 <span class="sd">     &quot;&quot;&quot;</span>
@@ -193,7 +209,10 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="auto_range"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.auto_range.html#ase2sprkkr.visualise.plot.auto_range">[docs]</a><span class="k">def</span> <span class="nf">auto_range</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+
+<div class="viewcode-block" id="auto_range">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.auto_range.html#ase2sprkkr.visualise.plot.auto_range">[docs]</a>
+<span class="k">def</span> <span class="nf">auto_range</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fill the missing value in the given range by the data.</span>
 
@@ -212,7 +231,10 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="plotting_function"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.plotting_function.html#ase2sprkkr.visualise.plot.plotting_function">[docs]</a><span class="k">def</span> <span class="nf">plotting_function</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+
+<div class="viewcode-block" id="plotting_function">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.plotting_function.html#ase2sprkkr.visualise.plot.plotting_function">[docs]</a>
+<span class="k">def</span> <span class="nf">plotting_function</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Decorator, that &#39;completes&#39; the given function that just draw into a</span>
 <span class="sd">    matplolib axis.</span>
 <span class="sd">    The completed function will have a few more arguments. One of them is</span>
@@ -234,7 +256,10 @@
     <span class="k">return</span> <span class="n">plot_function</span></div>
 
 
-<div class="viewcode-block" id="set_up_common_plot"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.set_up_common_plot.html#ase2sprkkr.visualise.plot.set_up_common_plot">[docs]</a><span class="k">def</span> <span class="nf">set_up_common_plot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xticks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yticks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<div class="viewcode-block" id="set_up_common_plot">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.set_up_common_plot.html#ase2sprkkr.visualise.plot.set_up_common_plot">[docs]</a>
+<span class="k">def</span> <span class="nf">set_up_common_plot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xticks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yticks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
    <span class="n">loc</span> <span class="o">=</span> <span class="nb">locals</span><span class="p">()</span>
 <span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">   This functions just set the properties of an matplotlib axis, that are common across various plots.</span>
@@ -249,7 +274,10 @@
        <span class="nb">getattr</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="s1">&#39;set_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)(</span><span class="n">kwargs</span><span class="p">[</span><span class="n">name</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="colormesh"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.colormesh.html#ase2sprkkr.visualise.plot.colormesh">[docs]</a><span class="nd">@plotting_function</span>
+
+<div class="viewcode-block" id="colormesh">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.colormesh.html#ase2sprkkr.visualise.plot.colormesh">[docs]</a>
+<span class="nd">@plotting_function</span>
 <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">set_up_common_plot</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">colormesh</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">c</span><span class="p">,</span> <span class="n">xrange</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yrange</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_zero_line</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
@@ -291,10 +319,15 @@
      <span class="n">axis</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">colormap</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Multiplot"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.Multiplot.html#ase2sprkkr.visualise.plot.Multiplot">[docs]</a><span class="k">class</span> <span class="nc">Multiplot</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Multiplot">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.Multiplot.html#ase2sprkkr.visualise.plot.Multiplot">[docs]</a>
+<span class="k">class</span> <span class="nc">Multiplot</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; This class can be used for plotting more plots into one resulting image/window. &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Multiplot.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.Multiplot.html#ase2sprkkr.visualise.plot.Multiplot.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">latex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">updown_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Multiplot.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.Multiplot.html#ase2sprkkr.visualise.plot.Multiplot.__init__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">latex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">updown_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="n">layout</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="n">layout</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
       <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.12</span><span class="p">,</span><span class="n">right</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.17</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="mf">0.90</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">free_axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">updown_layout</span> <span class="k">else</span> <span class="s1">&#39;C&#39;</span><span class="p">)</span>
@@ -306,10 +339,14 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">specific_kwargs</span> <span class="o">=</span> <span class="p">{</span> <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">):</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">specific_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span></div>
 
-<div class="viewcode-block" id="Multiplot.get_new_axis"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.Multiplot.html#ase2sprkkr.visualise.plot.Multiplot.get_new_axis">[docs]</a>  <span class="k">def</span> <span class="nf">get_new_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Multiplot.get_new_axis">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.Multiplot.html#ase2sprkkr.visualise.plot.Multiplot.get_new_axis">[docs]</a>
+  <span class="k">def</span> <span class="nf">get_new_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">free_axes</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
       <span class="k">return</span> <span class="n">axis</span></div>
+
 
   <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_axis</span><span class="p">()</span>
@@ -317,7 +354,9 @@
           <span class="k">yield</span> <span class="n">axis</span>
           <span class="n">axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_axis</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Multiplot.plot"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.Multiplot.html#ase2sprkkr.visualise.plot.Multiplot.plot">[docs]</a>  <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">plot_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Multiplot.plot">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.Multiplot.html#ase2sprkkr.visualise.plot.Multiplot.plot">[docs]</a>
+  <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">plot_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="n">axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_axis</span><span class="p">()</span>
       <span class="n">kw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
       <span class="n">kw</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specific_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="p">{}))</span>
@@ -326,7 +365,10 @@
           <span class="n">plot_function</span> <span class="o">=</span> <span class="k">lambda</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">option</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
       <span class="n">plot_function</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Multiplot.finish"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.Multiplot.html#ase2sprkkr.visualise.plot.Multiplot.finish">[docs]</a>  <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Multiplot.finish">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.Multiplot.html#ase2sprkkr.visualise.plot.Multiplot.finish">[docs]</a>
+  <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Show the prepared plots or save them</span>
 
@@ -345,14 +387,19 @@
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">free_axes</span><span class="p">:</span>
           <span class="n">i</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-      <span class="n">finish_plot</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">dpi</span><span class="p">)</span></div></div>
+      <span class="n">finish_plot</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">dpi</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="change_default_kwargs"><a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.change_default_kwargs.html#ase2sprkkr.visualise.plot.change_default_kwargs">[docs]</a><span class="k">def</span> <span class="nf">change_default_kwargs</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<div class="viewcode-block" id="change_default_kwargs">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.visualise.plot.change_default_kwargs.html#ase2sprkkr.visualise.plot.change_default_kwargs">[docs]</a>
+<span class="k">def</span> <span class="nf">change_default_kwargs</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Return the same function, with default kwargs changed &quot;&quot;&quot;</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
+
 </pre></div>
 
            </div>

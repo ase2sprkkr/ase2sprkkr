@@ -38,13 +38,14 @@ Full name: **ase2sprkkr.sprkkr.test**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.sprkkr.test.init_tests
-     ase2sprkkr.sprkkr.test.test_build
-     ase2sprkkr.sprkkr.test.test_sprkkr_atoms
-     ase2sprkkr.sprkkr.test.test_sysfile
-     ase2sprkkr.sprkkr.test.test_occupation
-     ase2sprkkr.sprkkr.test.test_arpes
-     ase2sprkkr.sprkkr.test.test_calculator
-     ase2sprkkr.sprkkr.test.test_sites
+     init_tests
+     test_build
+     test_occupation
+     test_sysfile
+     test_arpes
+     test_spacegroup_info
+     test_sprkkr_atoms
+     test_calculator
+     test_sites
   
   

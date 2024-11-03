@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.phonons &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -104,7 +103,9 @@
 <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
 
 
-<div class="viewcode-block" id="creates"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.creates.html#ase2sprkkr.asr.phonons.creates">[docs]</a><span class="k">def</span> <span class="nf">creates</span><span class="p">():</span>
+<div class="viewcode-block" id="creates">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.creates.html#ase2sprkkr.asr.phonons.creates">[docs]</a>
+<span class="k">def</span> <span class="nf">creates</span><span class="p">():</span>
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
     <span class="n">natoms</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
     <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;phonon.eq.pckl&#39;</span><span class="p">]</span>
@@ -116,14 +117,20 @@
     <span class="k">return</span> <span class="n">filenames</span></div>
 
 
-<div class="viewcode-block" id="todict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.todict.html#ase2sprkkr.asr.phonons.todict">[docs]</a><span class="k">def</span> <span class="nf">todict</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+<div class="viewcode-block" id="todict">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.todict.html#ase2sprkkr.asr.phonons.todict">[docs]</a>
+<span class="k">def</span> <span class="nf">todict</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase.utils</span> <span class="kn">import</span> <span class="n">pickleload</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
         <span class="n">content</span> <span class="o">=</span> <span class="n">pickleload</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">content</span><span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="topckl"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.topckl.html#ase2sprkkr.asr.phonons.topckl">[docs]</a><span class="k">def</span> <span class="nf">topckl</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+
+<div class="viewcode-block" id="topckl">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.topckl.html#ase2sprkkr.asr.phonons.topckl">[docs]</a>
+<span class="k">def</span> <span class="nf">topckl</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase.utils</span> <span class="kn">import</span> <span class="n">opencew</span>
     <span class="kn">import</span> <span class="nn">pickle</span>
     <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
@@ -133,6 +140,7 @@
     <span class="k">if</span> <span class="n">world</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">fd</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.phonons&#39;</span><span class="p">,</span>
@@ -205,11 +213,16 @@
     <span class="k">return</span> <span class="n">data</span>
 
 
-<div class="viewcode-block" id="requires"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.requires.html#ase2sprkkr.asr.phonons.requires">[docs]</a><span class="k">def</span> <span class="nf">requires</span><span class="p">():</span>
+<div class="viewcode-block" id="requires">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.requires.html#ase2sprkkr.asr.phonons.requires">[docs]</a>
+<span class="k">def</span> <span class="nf">requires</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">creates</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;results-asr.phonons@calculate.json&#39;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="webpanel"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.webpanel.html#ase2sprkkr.asr.phonons.webpanel">[docs]</a><span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+
+<div class="viewcode-block" id="webpanel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.webpanel.html#ase2sprkkr.asr.phonons.webpanel">[docs]</a>
+<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">table</span><span class="p">,</span> <span class="n">fig</span>
     <span class="n">phonontable</span> <span class="o">=</span> <span class="n">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s1">&#39;Property&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;minhessianeig&#39;</span><span class="p">],</span> <span class="n">key_descriptions</span><span class="p">)</span>
 
@@ -235,7 +248,10 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">,</span> <span class="n">summary</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="Result"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.Result.html#ase2sprkkr.asr.phonons.Result">[docs]</a><span class="nd">@prepare_result</span>
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.Result.html#ase2sprkkr.asr.phonons.Result">[docs]</a>
+<span class="nd">@prepare_result</span>
 <span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">minhessianeig</span><span class="p">:</span> <span class="nb">float</span>
@@ -256,6 +272,7 @@
         <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;Interpolated phonon bandstructure path.&quot;</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
+
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.phonons&#39;</span><span class="p">,</span>
@@ -330,7 +347,9 @@
     <span class="k">return</span> <span class="n">results</span>
 
 
-<div class="viewcode-block" id="plot_phonons"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.plot_phonons.html#ase2sprkkr.asr.phonons.plot_phonons">[docs]</a><span class="k">def</span> <span class="nf">plot_phonons</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_phonons">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.plot_phonons.html#ase2sprkkr.asr.phonons.plot_phonons">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_phonons</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.phonons.json&#39;</span><span class="p">)</span>
@@ -357,7 +376,10 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="plot_bandstructure"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.plot_bandstructure.html#ase2sprkkr.asr.phonons.plot_bandstructure">[docs]</a><span class="k">def</span> <span class="nf">plot_bandstructure</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+
+<div class="viewcode-block" id="plot_bandstructure">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.plot_bandstructure.html#ase2sprkkr.asr.phonons.plot_bandstructure">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_bandstructure</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
     <span class="kn">from</span> <span class="nn">ase.spectrum.band_structure</span> <span class="kn">import</span> <span class="n">BandStructure</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.phonons.json&#39;</span><span class="p">)</span>
@@ -383,7 +405,10 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="mingocorrection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.mingocorrection.html#ase2sprkkr.asr.phonons.mingocorrection">[docs]</a><span class="k">def</span> <span class="nf">mingocorrection</span><span class="p">(</span><span class="n">Cin_NVV</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">supercell</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mingocorrection">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonons.mingocorrection.html#ase2sprkkr.asr.phonons.mingocorrection">[docs]</a>
+<span class="k">def</span> <span class="nf">mingocorrection</span><span class="p">(</span><span class="n">Cin_NVV</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">supercell</span><span class="p">):</span>
     <span class="n">na</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
     <span class="n">nc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">supercell</span><span class="p">)</span>
     <span class="n">dimension</span> <span class="o">=</span> <span class="n">nc</span> <span class="o">*</span> <span class="n">na</span> <span class="o">*</span> <span class="mi">3</span>
@@ -438,6 +463,7 @@
                                                              <span class="n">na</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span>
                                                              <span class="n">na</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Cout</span></div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

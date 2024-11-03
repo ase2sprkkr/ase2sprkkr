@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.tools.commands.config &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -109,7 +108,9 @@
 <span class="n">description</span><span class="o">=</span><span class="s1">&#39;On the most modern unix/linux systems, it is in the file ~/.config/ase2sprkkr/__init__.py&#39;</span>
 
 
-<div class="viewcode-block" id="parser"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.parser.html#ase2sprkkr.tools.commands.config.parser">[docs]</a><span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="parser">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.parser.html#ase2sprkkr.tools.commands.config.parser">[docs]</a>
+<span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Just print the path to the file.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--info&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show the description of the configuration options.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--show&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Print the configuration.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
@@ -118,7 +119,10 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-D&#39;</span><span class="p">,</span> <span class="s1">&#39;--show-default&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show the default values&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="default_content"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.default_content.html#ase2sprkkr.tools.commands.config.default_content">[docs]</a><span class="k">def</span> <span class="nf">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+
+<div class="viewcode-block" id="default_content">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.default_content.html#ase2sprkkr.tools.commands.config.default_content">[docs]</a>
+<span class="k">def</span> <span class="nf">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;# ASE2SRPKKR configuration file</span>
 <span class="s2"># -------------------------------</span>
 
@@ -150,7 +154,10 @@
 <span class="s2">&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.run.html#ase2sprkkr.tools.commands.config.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.run.html#ase2sprkkr.tools.commands.config.run">[docs]</a>
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">os</span>
     <span class="kn">from</span> <span class="nn">...config</span> <span class="kn">import</span> <span class="n">user_preferences_file</span><span class="p">,</span> <span class="n">config</span>
     <span class="kn">import</span> <span class="nn">subprocess</span>
@@ -188,6 +195,7 @@
                  <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
              <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# No custom user configuration found&quot;</span><span class="p">)</span></div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>

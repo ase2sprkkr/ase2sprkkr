@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.fermisurface &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -94,7 +93,9 @@
 <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
 
 
-<div class="viewcode-block" id="bz_vertices"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.bz_vertices.html#ase2sprkkr.asr.fermisurface.bz_vertices">[docs]</a><span class="k">def</span> <span class="nf">bz_vertices</span><span class="p">(</span><span class="n">cell</span><span class="p">):</span>
+<div class="viewcode-block" id="bz_vertices">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.bz_vertices.html#ase2sprkkr.asr.fermisurface.bz_vertices">[docs]</a>
+<span class="k">def</span> <span class="nf">bz_vertices</span><span class="p">(</span><span class="n">cell</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">Voronoi</span>
     <span class="n">icell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
@@ -110,7 +111,10 @@
     <span class="k">return</span> <span class="n">bz1</span></div>
 
 
-<div class="viewcode-block" id="find_contours"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.find_contours.html#ase2sprkkr.asr.fermisurface.find_contours">[docs]</a><span class="k">def</span> <span class="nf">find_contours</span><span class="p">(</span><span class="n">eigs_nk</span><span class="p">,</span> <span class="n">bzk_kv</span><span class="p">,</span> <span class="n">s_nk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="find_contours">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.find_contours.html#ase2sprkkr.asr.fermisurface.find_contours">[docs]</a>
+<span class="k">def</span> <span class="nf">find_contours</span><span class="p">(</span><span class="n">eigs_nk</span><span class="p">,</span> <span class="n">bzk_kv</span><span class="p">,</span> <span class="n">s_nk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">griddata</span>
     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -149,7 +153,10 @@
     <span class="k">return</span> <span class="n">contours</span></div>
 
 
-<div class="viewcode-block" id="webpanel"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.webpanel.html#ase2sprkkr.asr.fermisurface.webpanel">[docs]</a><span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+
+<div class="viewcode-block" id="webpanel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.webpanel.html#ase2sprkkr.asr.fermisurface.webpanel">[docs]</a>
+<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span>
 
     <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Fermi surface&#39;</span><span class="p">,</span>
@@ -161,7 +168,10 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="plot_fermi"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.plot_fermi.html#ase2sprkkr.asr.fermisurface.plot_fermi">[docs]</a><span class="k">def</span> <span class="nf">plot_fermi</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span>
+
+<div class="viewcode-block" id="plot_fermi">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.plot_fermi.html#ase2sprkkr.asr.fermisurface.plot_fermi">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_fermi</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span>
                <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">svbm</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">scbm</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">lwvbm</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
                <span class="n">sfs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scalecb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -176,7 +186,10 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="add_fermi"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.add_fermi.html#ase2sprkkr.asr.fermisurface.add_fermi">[docs]</a><span class="k">def</span> <span class="nf">add_fermi</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,):</span>
+
+<div class="viewcode-block" id="add_fermi">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.add_fermi.html#ase2sprkkr.asr.fermisurface.add_fermi">[docs]</a>
+<span class="k">def</span> <span class="nf">add_fermi</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,):</span>
     <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
     <span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -202,10 +215,14 @@
     <span class="k">return</span> <span class="n">cbaxes</span></div>
 
 
-<div class="viewcode-block" id="Result"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.Result.html#ase2sprkkr.asr.fermisurface.Result">[docs]</a><span class="nd">@prepare_result</span>
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.Result.html#ase2sprkkr.asr.fermisurface.Result">[docs]</a>
+<span class="nd">@prepare_result</span>
 <span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
+
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.fermisurface&#39;</span><span class="p">,</span>

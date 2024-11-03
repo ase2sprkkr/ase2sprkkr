@@ -38,13 +38,13 @@ Full name: **ase2sprkkr.examples**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.examples.A1_Fe_scf_simple
-     ase2sprkkr.examples.A2_Fe_scf_input_modifications
-     ase2sprkkr.examples.A3_Fe_dos
-     ase2sprkkr.examples.A4_CPA_Example
-     ase2sprkkr.examples.A5_Al_EOS
-     ase2sprkkr.examples.A6_Cu_MSSPEC
-     ase2sprkkr.examples.A7_SrTiO3_MSSPEC
-     ase2sprkkr.examples.A8_ARPES_and_plotting
+     A1_Fe_scf_simple
+     A2_Fe_scf_input_modifications
+     A3_Fe_dos
+     A4_CPA_Example
+     A5_Al_EOS
+     A6_Cu_MSSPEC
+     A7_SrTiO3_MSSPEC
+     A8_ARPES_and_plotting
   
   

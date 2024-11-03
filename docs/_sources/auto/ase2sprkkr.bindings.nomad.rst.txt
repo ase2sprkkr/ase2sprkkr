@@ -38,7 +38,7 @@ Full name: **ase2sprkkr.bindings.nomad**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.bindings.nomad.nomad
-     ase2sprkkr.bindings.nomad.nomad_api
+     nomad
+     nomad_api
   
   

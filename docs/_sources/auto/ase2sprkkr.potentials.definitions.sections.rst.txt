@@ -46,18 +46,18 @@ Full name: **ase2sprkkr.potentials.definitions.sections**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.potentials.definitions.sections.global_system_parameter
-     ase2sprkkr.potentials.definitions.sections.reference_system
-     ase2sprkkr.potentials.definitions.sections.mesh_information
-     ase2sprkkr.potentials.definitions.sections.types
-     ase2sprkkr.potentials.definitions.sections.charge_moments
-     ase2sprkkr.potentials.definitions.sections.sites
-     ase2sprkkr.potentials.definitions.sections.host_madelung_potential
-     ase2sprkkr.potentials.definitions.sections.lattice
-     ase2sprkkr.potentials.definitions.sections.charge
-     ase2sprkkr.potentials.definitions.sections.moments
-     ase2sprkkr.potentials.definitions.sections.occupation
-     ase2sprkkr.potentials.definitions.sections.potential
-     ase2sprkkr.potentials.definitions.sections.scf_info
+     reference_system
+     types
+     charge_moments
+     host_madelung_potential
+     lattice
+     moments
+     scf_info
+     sites
+     mesh_information
+     charge
+     potential
+     occupation
+     global_system_parameter
   
   

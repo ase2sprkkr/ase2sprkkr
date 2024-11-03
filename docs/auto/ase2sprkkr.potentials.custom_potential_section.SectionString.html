@@ -1,24 +1,23 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SectionString &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -74,8 +73,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.html">potential_definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potentials.html">potentials</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.html">custom_potential_section</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html">CustomPotentialSection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition.html">CustomPotentialSectionDefinition</a></li>
@@ -84,6 +81,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potential_sections.html">potential_sections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.html">potential_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potentials.html">potentials</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.definitions.html">definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.test.html">test</a></li>
 </ul>
@@ -127,10 +126,10 @@
            <div itemprop="articleBody">
              
   <section id="sectionstring">
-<h1>SectionString<a class="headerlink" href="#sectionstring" title="Permalink to this heading"></a></h1>
+<h1>SectionString<a class="headerlink" href="#sectionstring" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.SectionString">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.custom_potential_section.</span></span><span class="sig-name descname"><span class="pre">SectionString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/custom_potential_section.html#SectionString"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.custom_potential_section.</span></span><span class="sig-name descname"><span class="pre">SectionString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/custom_potential_section.html#SectionString"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString" title="Link to this definition"></a></dt>
 <dd><p>The grammar_type of a custom section - i.e. string, that
 ends with a section separator.</p>
 <p>This grammar_type as used as a value type for the custom section.</p>
@@ -144,36 +143,36 @@ ends with a section separator.</p>
 </div>
 <p class="rubric">Constructor</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>prefix</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – </p></li>
-<li><p><strong>postfix</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – </p></li>
-<li><p><strong>format</strong> (<em>str</em>) – </p></li>
-<li><p><strong>after_format</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – </p></li>
-<li><p><strong>default_value</strong> (<em>Any</em>) – </p></li>
-<li><p><strong>condition</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>bool</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>after_convert</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>prefix</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>postfix</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>format</strong> (<em>str</em>)</p></li>
+<li><p><strong>after_format</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>default_value</strong> (<em>Any</em>)</p></li>
+<li><p><strong>condition</strong> (<em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>bool</em><em> | </em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>after_convert</strong> (<em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.SectionString.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString.__init__" title="Link to this definition"></a></dt>
 <dd><p>Create the object.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>prefix</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The string, that will be printed before the value</p></li>
-<li><p><strong>postfix</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The string, that will be printed after the value</p></li>
+<li><p><strong>prefix</strong> (<em>str</em><em> | </em><em>None</em>) – The string, that will be printed before the value</p></li>
+<li><p><strong>postfix</strong> (<em>str</em><em> | </em><em>None</em>) – The string, that will be printed after the value</p></li>
 <li><p><strong>format</strong> (<em>str</em>) – The (python) format string, that will be used for outputing the value.
 The format is passed as format argument to <code class="docutils literal notranslate"><span class="pre">str.format</span></code> routine.</p></li>
-<li><p><strong>after_format</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – In some cases, the additional formating is required after converting to the string
+<li><p><strong>after_format</strong> (<em>str</em><em> | </em><em>None</em>) – In some cases, the additional formating is required after converting to the string
 and adding postfix/prefix.</p></li>
 <li><p><strong>default_value</strong> (<em>Any</em>) – The default value of the options of this type. <code class="docutils literal notranslate"><span class="pre">None</span></code> means no default value.</p></li>
-<li><p><strong>condition</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>bool</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – Function, that check the validity of the value. It should return <code class="docutils literal notranslate"><span class="pre">True</span></code> for a valid
+<li><p><strong>condition</strong> (<em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>bool</em><em> | </em><em>str</em><em>] </em><em>| </em><em>None</em>) – Function, that check the validity of the value. It should return <code class="docutils literal notranslate"><span class="pre">True</span></code> for a valid
 value, and <code class="docutils literal notranslate"><span class="pre">False</span></code> or string for invalid. The string is interpreted as an error message
 that explains the invalidity of the value.</p></li>
-<li><p><strong>after_convert</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – Function, that - if it is given - is applied to the (entered or parsed) value. The function
+<li><p><strong>after_convert</strong> (<em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Function, that - if it is given - is applied to the (entered or parsed) value. The function
 is applied on the result of the
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">convert</span></code> method</p></li>
 </ul>
@@ -183,17 +182,17 @@ is applied on the result of the
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.SectionString.delimiter_pattern">
-<span class="sig-name descname"><span class="pre">delimiter_pattern</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'(?:[</span> <span class="pre">\t\r]*(?:\n[</span> <span class="pre">\t\r]*)*)*\n[*][*][*][*][*][*][*][*][*][*][*]*(?:[</span> <span class="pre">\t\r]*(?:\n[</span> <span class="pre">\t\r]*))*\n'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString.delimiter_pattern" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">delimiter_pattern</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'(?:[</span> <span class="pre">\t\r]*(?:\n[</span> <span class="pre">\t\r]*)*)*\n[*][*][*][*][*][*][*][*][*][*][*]*(?:[</span> <span class="pre">\t\r]*(?:\n[</span> <span class="pre">\t\r]*))*\n'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString.delimiter_pattern" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.SectionString.grammar_of_delimiter">
-<span class="sig-name descname"><span class="pre">grammar_of_delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Suppress:(*******************************************************************************&lt;newline&gt;)</span></em><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString.grammar_of_delimiter" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">grammar_of_delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Suppress:(*******************************************************************************&lt;newline&gt;)</span></em><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString.grammar_of_delimiter" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – </p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> | </em><em>None</em>)</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>ParserElement</p>
 </dd>
 </dl>
@@ -201,12 +200,12 @@ is applied on the result of the
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.SectionString._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">EndOfSection</span></em><a class="reference internal" href="../_modules/ase2sprkkr/potentials/custom_potential_section.html#SectionString._grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString._grammar" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">EndOfSection</span></em><a class="reference internal" href="../_modules/ase2sprkkr/potentials/custom_potential_section.html#SectionString._grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString._grammar" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – </p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> | </em><em>None</em>)</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>ParserElement</p>
 </dd>
 </dl>
@@ -214,7 +213,7 @@ is applied on the result of the
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.SectionString.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/custom_potential_section.html#SectionString.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString.grammar_name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/custom_potential_section.html#SectionString.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString.grammar_name" title="Link to this definition"></a></dt>
 <dd><p>Human readable expression of the grammar. By default,
 this is what is set by grammar.setName, however, sometimes
 is desirable to set even shorter string</p>
@@ -222,13 +221,13 @@ is desirable to set even shorter string</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.SectionString.write">
-<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/custom_potential_section.html#SectionString.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString.write" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/custom_potential_section.html#SectionString.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString.write" title="Link to this definition"></a></dt>
 <dd><p>Output the value to the stream (in the propper format).</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.SectionString.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;SectionString&gt;</span></em><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString.I" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;SectionString&gt;</span></em><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.SectionString.I" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.potentials.test.test_potential &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -108,9 +107,13 @@
     <span class="kn">from</span> <span class="nn">...sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
 
 
-<div class="viewcode-block" id="TestPotential"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential">[docs]</a><span class="k">class</span> <span class="nc">TestPotential</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestPotential">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential">[docs]</a>
+<span class="k">class</span> <span class="nc">TestPotential</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="TestPotential.test_grammar"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_grammar">[docs]</a>  <span class="k">def</span> <span class="nf">test_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestPotential.test_grammar">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_grammar">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">g</span><span class="o">=</span><span class="n">Potential</span><span class="o">.</span><span class="n">potential_definition</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
@@ -123,7 +126,10 @@
               <span class="n">check</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;.exprs[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">)</span>
     <span class="n">check</span><span class="p">(</span><span class="n">g</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TestPotential.test_potential"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_potential">[docs]</a>  <span class="k">def</span> <span class="nf">test_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestPotential.test_potential">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_potential">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
     <span class="n">a</span> <span class="o">=</span> <span class="mf">5.64</span>
     <span class="n">nacl</span> <span class="o">=</span> <span class="n">crystal</span><span class="p">([</span><span class="s1">&#39;Na&#39;</span><span class="p">,</span> <span class="s1">&#39;Cl&#39;</span><span class="p">],</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)],</span> <span class="n">spacegroup</span><span class="o">=</span><span class="mi">225</span><span class="p">,</span>
                    <span class="n">cellpar</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span>
@@ -142,7 +148,10 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a2</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">a1</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">a2</span><span class="o">.</span><span class="n">symbols</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">a1</span><span class="o">.</span><span class="n">symbols</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="TestPotential.test_2D"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_2D">[docs]</a>  <span class="k">def</span> <span class="nf">test_2D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestPotential.test_2D">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_2D">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_2D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span><span class="s1">&#39;examples&#39;</span><span class="p">,</span><span class="s1">&#39;GeTe.pot&#39;</span><span class="p">)</span>
     <span class="n">p</span><span class="o">=</span><span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DO_NOT_RUN_SPRKKR&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
@@ -150,7 +159,10 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">SPRKKR</span><span class="p">()</span><span class="o">.</span><span class="n">save_input</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_args</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NITER&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span> <span class="n">TYPE</span><span class="o">=</span><span class="s1">&#39;save_input&#39;</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="TestPotential.test_potential_data"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_potential_data">[docs]</a>  <span class="k">def</span> <span class="nf">test_potential_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestPotential.test_potential_data">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_potential_data">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_potential_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span><span class="s1">&#39;examples&#39;</span><span class="p">,</span><span class="s1">&#39;FePt.new.pot&#39;</span><span class="p">)</span>
     <span class="n">p</span><span class="o">=</span><span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
@@ -169,7 +181,10 @@
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DO_NOT_RUN_SPRKKR&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
         <span class="n">SPRKKR</span><span class="p">()</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_args</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NITER&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;NKTAB&#39;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;NE&#39;</span><span class="p">:</span><span class="mi">5</span><span class="p">}))</span></div>
 
-<div class="viewcode-block" id="TestPotential.test_examples"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_examples">[docs]</a>  <span class="k">def</span> <span class="nf">test_examples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestPotential.test_examples">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_examples">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_examples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span><span class="s1">&#39;examples&#39;</span><span class="p">)</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -189,7 +204,10 @@
 
     <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TestPotential.test_sequence"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_sequence">[docs]</a>  <span class="k">def</span> <span class="nf">test_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestPotential.test_sequence">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_sequence">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">Potential</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">HEADER</span><span class="o">.</span><span class="n">FORMAT</span><span class="o">.</span><span class="n">VERSION</span><span class="p">)</span>
     <span class="n">p</span><span class="o">.</span><span class="n">HEADER</span><span class="o">.</span><span class="n">FORMAT</span><span class="o">.</span><span class="n">VERSION</span><span class="o">=</span><span class="mi">5</span>
@@ -199,7 +217,10 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">datetime</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">HEADER</span><span class="o">.</span><span class="n">FORMAT</span><span class="o">.</span><span class="n">DATE</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">datetime</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">HEADER</span><span class="o">.</span><span class="n">FORMAT</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TestPotential.test_reset"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_reset">[docs]</a>  <span class="k">def</span> <span class="nf">test_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestPotential.test_reset">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_potential.TestPotential.html#ase2sprkkr.potentials.test.test_potential.TestPotential.test_reset">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">pot</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;../examples/fp_new.pot&#39;</span><span class="p">))</span>
     <span class="n">pot</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">r1</span> <span class="o">=</span> <span class="mf">1.</span>
     <span class="n">pot</span><span class="o">.</span><span class="n">MESH_INFORMATION</span><span class="o">.</span><span class="n">DATA</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mf">2.</span>
@@ -217,7 +238,9 @@
     <span class="n">pot</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">reset_sprkkr_potential</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">pot</span><span class="o">.</span><span class="n">MESH_INFORMATION</span><span class="o">.</span><span class="n">DATA</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">pot</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">r1</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="n">pot</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">r1</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="mf">2.</span><span class="p">,</span> <span class="n">pot</span><span class="o">.</span><span class="n">MESH_INFORMATION</span><span class="o">.</span><span class="n">DATA</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span></div></div>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="mf">2.</span><span class="p">,</span> <span class="n">pot</span><span class="o">.</span><span class="n">MESH_INFORMATION</span><span class="o">.</span><span class="n">DATA</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span></div>
+</div>
+
 </pre></div>
 
            </div>

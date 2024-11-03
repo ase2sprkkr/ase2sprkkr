@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.sprkkr.test.test_sites &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -91,7 +90,10 @@
              
   <h1>Source code for ase2sprkkr.sprkkr.test.test_sites</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
 <span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
+<span class="kn">import</span> <span class="nn">ase.io</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="k">if</span> <span class="n">__package__</span><span class="p">:</span>
    <span class="kn">from</span> <span class="nn">.init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span><span class="p">,</span> <span class="n">run_sprkkr</span>
@@ -107,9 +109,13 @@
     <span class="kn">from</span> <span class="nn">..calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
 
 
-<div class="viewcode-block" id="TestSites"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sites.TestSites.html#ase2sprkkr.sprkkr.test.test_sites.TestSites">[docs]</a><span class="k">class</span> <span class="nc">TestSites</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestSites">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sites.TestSites.html#ase2sprkkr.sprkkr.test.test_sites.TestSites">[docs]</a>
+<span class="k">class</span> <span class="nc">TestSites</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="TestSites.test_adding"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sites.TestSites.html#ase2sprkkr.sprkkr.test.test_sites.TestSites.test_adding">[docs]</a>  <span class="k">def</span> <span class="nf">test_adding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestSites.test_adding">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sites.TestSites.html#ase2sprkkr.sprkkr.test.test_sites.TestSites.test_adding">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_adding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">atoms</span><span class="o">=</span><span class="n">SPRKKRAtoms</span><span class="p">(</span><span class="n">symbols</span><span class="o">=</span><span class="s1">&#39;NK&#39;</span><span class="p">,</span><span class="n">pbc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
       <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
       <span class="k">assert</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">site_type</span> <span class="o">!=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">site_type</span>
@@ -121,7 +127,10 @@
       <span class="k">assert</span> <span class="nb">id</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">id</span><span class="p">(</span><span class="n">half</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
       <span class="k">assert</span> <span class="nb">id</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">site_type</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">id</span><span class="p">(</span><span class="n">half</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">site_type</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TestSites.test_potential"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sites.TestSites.html#ase2sprkkr.sprkkr.test.test_sites.TestSites.test_potential">[docs]</a>  <span class="k">def</span> <span class="nf">test_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestSites.test_potential">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sites.TestSites.html#ase2sprkkr.sprkkr.test.test_sites.TestSites.test_potential">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">a</span><span class="o">=</span><span class="n">SPRKKRAtoms</span><span class="p">(</span><span class="s1">&#39;NaCl&#39;</span><span class="p">)</span>
       <span class="n">m1</span> <span class="o">=</span> <span class="n">ExponentialMesh</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.005</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
       <span class="n">m2</span> <span class="o">=</span> <span class="n">ExponentialMesh</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span><span class="mf">0.005</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -180,7 +189,10 @@
       <span class="n">s0</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="p">[</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">m1</span><span class="o">.</span><span class="n">coors</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">m1</span><span class="o">.</span><span class="n">coors</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">]</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">s0</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="mf">1.5</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">1</span> <span class="o">/</span> <span class="mf">1.5</span><span class="p">,</span><span class="mi">1</span> <span class="o">/</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="mi">2</span><span class="p">]))</span></div>
 
-<div class="viewcode-block" id="TestSites.test_vacuum"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sites.TestSites.html#ase2sprkkr.sprkkr.test.test_sites.TestSites.test_vacuum">[docs]</a>  <span class="k">def</span> <span class="nf">test_vacuum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestSites.test_vacuum">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sites.TestSites.html#ase2sprkkr.sprkkr.test.test_sites.TestSites.test_vacuum">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_vacuum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">a</span><span class="o">=</span><span class="n">SPRKKRAtoms</span><span class="p">(</span><span class="s1">&#39;NaCl&#39;</span><span class="p">)</span>
       <span class="n">site</span><span class="o">=</span><span class="n">SiteType</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">{</span> <span class="s1">&#39;Na&#39;</span> <span class="p">:</span> <span class="mf">1.0</span> <span class="p">})</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">is_vacuum</span><span class="p">())</span>
@@ -197,7 +209,10 @@
       <span class="n">a</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">atomic_types</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;Li&#39;</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">is_vacuum</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="TestSites.test_occupancy"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sites.TestSites.html#ase2sprkkr.sprkkr.test.test_sites.TestSites.test_occupancy">[docs]</a>  <span class="k">def</span> <span class="nf">test_occupancy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestSites.test_occupancy">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sites.TestSites.html#ase2sprkkr.sprkkr.test.test_sites.TestSites.test_occupancy">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_occupancy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">a</span><span class="o">=</span><span class="n">SPRKKRAtoms</span><span class="p">(</span><span class="s1">&#39;Na&#39;</span><span class="p">)</span>
       <span class="n">site</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
       <span class="n">site</span><span class="o">.</span><span class="n">occupation</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;Na&#39;</span> <span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span> <span class="s1">&#39;Cl&#39;</span> <span class="p">:</span> <span class="kc">None</span> <span class="p">}</span>
@@ -223,28 +238,51 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="mf">0.3</span> <span class="o">*</span> <span class="mf">5.</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="n">site</span><span class="o">.</span><span class="n">occupation</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="mf">5.</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">,</span> <span class="n">site</span><span class="o">.</span><span class="n">occupation</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="TestSites.test_charge"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sites.TestSites.html#ase2sprkkr.sprkkr.test.test_sites.TestSites.test_charge">[docs]</a>  <span class="nd">@run_sprkkr</span>
+
+<div class="viewcode-block" id="TestSites.test_charge">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sites.TestSites.html#ase2sprkkr.sprkkr.test.test_sites.TestSites.test_charge">[docs]</a>
+  <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skip</span>
+  <span class="nd">@run_sprkkr</span>
   <span class="k">def</span> <span class="nf">test_charge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
       <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;Li&#39;</span><span class="p">)</span>
       <span class="n">calc</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_args</span><span class="p">())</span>
+      <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">MIX</span><span class="o">=</span><span class="mf">1.0</span>
+
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
          <span class="n">i</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">jrws</span> <span class="o">=</span> <span class="mi">30</span>
          <span class="n">i</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">r1</span> <span class="o">=</span><span class="mf">1e-6</span>
-      <span class="n">zero</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NITER&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">})</span>  <span class="c1"># , directory=&#39;./a&#39;)</span>
-      <span class="n">zero</span><span class="o">.</span><span class="n">atoms</span>
-      <span class="n">out</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NITER&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">})</span>  <span class="c1"># , directory=&#39;./b&#39;)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="p">,</span> <span class="n">zero</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="p">)</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NITER&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">)</span>  <span class="c1"># , directory=&#39;./b&#39;)</span>
+      <span class="n">atoms2</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">atoms</span>
 
-      <span class="n">out2</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">zero</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NITER&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>  <span class="c1"># , directory=&#39;./b&#39;)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="p">,</span> <span class="n">out2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">bt</span><span class="p">,</span> <span class="n">out2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">bt</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">charge</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">out2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">charge</span><span class="o">.</span><span class="n">raw_value</span><span class="p">)</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NITER&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">)</span>  <span class="c1"># , directory=&#39;./a&#39;)</span>
+      <span class="n">atoms1</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">atoms</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">atoms2</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="p">,</span> <span class="n">atoms1</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="p">)</span>
+      <span class="n">out2</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms1</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NITER&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>  <span class="c1"># , directory=&#39;./d&#39;)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">atoms2</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="p">,</span> <span class="n">out2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">atoms2</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">bt</span><span class="p">,</span> <span class="n">out2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">bt</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">atoms2</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">charge</span><span class="o">.</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">out2</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">charge</span><span class="o">.</span><span class="n">raw_value</span><span class="p">)</span>
       <span class="c1"># calc.save_input(atoms=zero.atoms, directory=&#39;a&#39;, options={&#39;NITER&#39; : 2})</span>
-      <span class="n">zero</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="o">*=</span><span class="mi">2</span>
-      <span class="n">zero</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">bt</span><span class="o">*=</span><span class="mi">2</span>
+      <span class="n">atoms1</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="o">*=</span><span class="mi">2</span>
+      <span class="n">atoms1</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">bt</span><span class="o">*=</span><span class="mi">2</span>
       <span class="c1"># calc.save_input(atoms=zero.atoms, directory=&#39;b&#39;, options={&#39;NITER&#39; : 2})</span>
-      <span class="n">out3</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">zero</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NITER&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="p">,</span> <span class="n">out3</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="p">)</span></div></div>
+      <span class="n">out3</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms1</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NITER&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">atoms2</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="p">,</span> <span class="n">out3</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">vt</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestSites.test_occupancy_and_spacegroup_kinds">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sites.TestSites.html#ase2sprkkr.sprkkr.test.test_sites.TestSites.test_occupancy_and_spacegroup_kinds">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_occupancy_and_spacegroup_kinds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">ciffile</span><span class="o">=</span><span class="s1">&#39;test2.cif&#39;</span>
+      <span class="n">atoms</span> <span class="o">=</span> <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span>
+            <span class="n">ciffile</span>
+      <span class="p">))</span>
+      <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+      <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;X2I2FeX11&#39;</span>
+      <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span>
+      <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;X2I2FeX11&#39;</span></div>
+</div>
+
 </pre></div>
 
            </div>

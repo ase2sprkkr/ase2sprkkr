@@ -1,0 +1,60 @@
+spacegroup\_info
+================
+
+Full name: **ase2sprkkr.sprkkr.spacegroup\_info**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo  ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.spacegroup_info
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      site_type_copier
+      used_site_type_copier
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SpacegroupInfo
+      SpacegroupInfoBlock
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

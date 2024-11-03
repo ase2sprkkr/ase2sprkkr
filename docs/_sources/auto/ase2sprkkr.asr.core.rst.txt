@@ -38,12 +38,12 @@ Full name: **ase2sprkkr.asr.core**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.asr.core.cli
-     ase2sprkkr.asr.core.command
-     ase2sprkkr.asr.core.fix_old_files
-     ase2sprkkr.asr.core.material
-     ase2sprkkr.asr.core.results
-     ase2sprkkr.asr.core.types
-     ase2sprkkr.asr.core.utils
+     cli
+     command
+     fix_old_files
+     material
+     results
+     types
+     utils
   
   

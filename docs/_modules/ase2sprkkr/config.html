@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.config &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -105,20 +104,32 @@
 <span class="kn">import</span> <span class="nn">platformdirs</span>
 
 
-<div class="viewcode-block" id="Section"><a class="viewcode-back" href="../../auto/ase2sprkkr.config.Section.html#ase2sprkkr.config.Section">[docs]</a><span class="k">class</span> <span class="nc">Section</span><span class="p">(</span><span class="n">SectionDefinition</span><span class="p">):</span>
-    <span class="n">info_in_data_description</span> <span class="o">=</span> <span class="kc">True</span></div>
+<div class="viewcode-block" id="Section">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.config.Section.html#ase2sprkkr.config.Section">[docs]</a>
+<span class="k">class</span> <span class="nc">Section</span><span class="p">(</span><span class="n">SectionDefinition</span><span class="p">):</span>
+    <span class="n">info_in_data_description</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">dir_common_attributes</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="_get_suffix"><a class="viewcode-back" href="../../auto/ase2sprkkr.config._get_suffix.html#ase2sprkkr.config._get_suffix">[docs]</a><span class="k">def</span> <span class="nf">_get_suffix</span><span class="p">(</span><span class="o">*</span><span class="n">_</span><span class="p">):</span>
+
+<div class="viewcode-block" id="_get_suffix">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.config._get_suffix.html#ase2sprkkr.config._get_suffix">[docs]</a>
+<span class="k">def</span> <span class="nf">_get_suffix</span><span class="p">(</span><span class="o">*</span><span class="n">_</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SPRKKR_EXECUTABLE_SUFFIX&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="user_preferences_file"><a class="viewcode-back" href="../../auto/ase2sprkkr.config.user_preferences_file.html#ase2sprkkr.config.user_preferences_file">[docs]</a><span class="k">def</span> <span class="nf">user_preferences_file</span><span class="p">():</span>
+
+<div class="viewcode-block" id="user_preferences_file">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.config.user_preferences_file.html#ase2sprkkr.config.user_preferences_file">[docs]</a>
+<span class="k">def</span> <span class="nf">user_preferences_file</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Return filename with user preferences &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">platformdirs</span><span class="o">.</span><span class="n">user_config_dir</span><span class="p">(</span><span class="s1">&#39;ase2sprkkr&#39;</span><span class="p">,</span> <span class="s1">&#39;ase2sprkkr&#39;</span><span class="p">),</span> <span class="s1">&#39;__init__.py&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="load_user_preferences"><a class="viewcode-back" href="../../auto/ase2sprkkr.config.load_user_preferences.html#ase2sprkkr.config.load_user_preferences">[docs]</a><span class="k">def</span> <span class="nf">load_user_preferences</span><span class="p">():</span>
+
+<div class="viewcode-block" id="load_user_preferences">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.config.load_user_preferences.html#ase2sprkkr.config.load_user_preferences">[docs]</a>
+<span class="k">def</span> <span class="nf">load_user_preferences</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Load user defined preferences from</span>
 <span class="sd">        ``$HOME/.config/ase2sprkkr/__init__.py``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -136,7 +147,10 @@
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Can not import </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1"> file with the user preferences: </span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="find_default_mpi_runner"><a class="viewcode-back" href="../../auto/ase2sprkkr.config.find_default_mpi_runner.html#ase2sprkkr.config.find_default_mpi_runner">[docs]</a><span class="nd">@cache</span>
+
+<div class="viewcode-block" id="find_default_mpi_runner">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.config.find_default_mpi_runner.html#ase2sprkkr.config.find_default_mpi_runner">[docs]</a>
+<span class="nd">@cache</span>
 <span class="k">def</span> <span class="nf">find_default_mpi_runner</span><span class="p">():</span>
    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;mpirun&#39;</span><span class="p">,</span> <span class="s1">&#39;mpirun.opmpirun&#39;</span><span class="p">,</span> <span class="s1">&#39;mpirun.mpich&#39;</span> <span class="p">]:</span>
        <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
@@ -144,7 +158,10 @@
    <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="get_default_mpi_runner"><a class="viewcode-back" href="../../auto/ase2sprkkr.config.get_default_mpi_runner.html#ase2sprkkr.config.get_default_mpi_runner">[docs]</a><span class="nd">@cache</span>
+
+<div class="viewcode-block" id="get_default_mpi_runner">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.config.get_default_mpi_runner.html#ase2sprkkr.config.get_default_mpi_runner">[docs]</a>
+<span class="nd">@cache</span>
 <span class="k">def</span> <span class="nf">get_default_mpi_runner</span><span class="p">():</span>
 
    <span class="n">out</span> <span class="o">=</span> <span class="n">find_default_mpi_runner</span><span class="p">()</span>
@@ -154,7 +171,10 @@
        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No MPI runner found. Disabling MPI!!!&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="mpi_runner"><a class="viewcode-back" href="../../auto/ase2sprkkr.config.mpi_runner.html#ase2sprkkr.config.mpi_runner">[docs]</a><span class="k">def</span> <span class="nf">mpi_runner</span><span class="p">(</span><span class="n">mpi</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mpi_runner">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.config.mpi_runner.html#ase2sprkkr.config.mpi_runner">[docs]</a>
+<span class="k">def</span> <span class="nf">mpi_runner</span><span class="p">(</span><span class="n">mpi</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Return a shell command to execute a mpi task.</span>
 
 <span class="sd">    Parameters</span>
@@ -202,9 +222,14 @@
     <span class="k">return</span> <span class="n">mpi</span></div>
 
 
-<div class="viewcode-block" id="Configuration"><a class="viewcode-back" href="../../auto/ase2sprkkr.config.Configuration.html#ase2sprkkr.config.Configuration">[docs]</a><span class="k">class</span> <span class="nc">Configuration</span><span class="p">(</span><span class="n">RootConfigurationContainer</span><span class="p">):</span>
 
-<div class="viewcode-block" id="Configuration.set_permanent"><a class="viewcode-back" href="../../auto/ase2sprkkr.config.Configuration.html#ase2sprkkr.config.Configuration.set_permanent">[docs]</a>    <span class="k">def</span> <span class="nf">set_permanent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_regex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Configuration">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.config.Configuration.html#ase2sprkkr.config.Configuration">[docs]</a>
+<span class="k">class</span> <span class="nc">Configuration</span><span class="p">(</span><span class="n">RootConfigurationContainer</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Configuration.set_permanent">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.config.Configuration.html#ase2sprkkr.config.Configuration.set_permanent">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_permanent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_regex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">global</span> <span class="n">user_preference_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
@@ -250,20 +275,34 @@
                 <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# </span><span class="si">{</span><span class="n">doc</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span></div></div>
+            <span class="n">f</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span></div>
+</div>
 
 
-<div class="viewcode-block" id="ConfigFileDefinition"><a class="viewcode-back" href="../../auto/ase2sprkkr.config.ConfigFileDefinition.html#ase2sprkkr.config.ConfigFileDefinition">[docs]</a><span class="k">class</span> <span class="nc">ConfigFileDefinition</span><span class="p">(</span><span class="n">ConfigurationRootDefinition</span><span class="p">):</span>
 
+<div class="viewcode-block" id="ConfigFileDefinition">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.config.ConfigFileDefinition.html#ase2sprkkr.config.ConfigFileDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">ConfigFileDefinition</span><span class="p">(</span><span class="n">ConfigurationRootDefinition</span><span class="p">):</span>
+
+    <span class="n">dir_common_attributes</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">result_class</span> <span class="o">=</span> <span class="n">Configuration</span></div>
+
 
 
 <span class="sd">&quot;&quot;&quot; The definition of ASE2SPRKKR configuration &quot;&quot;&quot;</span>
 <span class="n">definition</span> <span class="o">=</span> <span class="n">ConfigFileDefinition</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="p">[</span>
 
   <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;running&#39;</span><span class="p">,</span> <span class="p">[</span>
-    <span class="n">V</span><span class="p">(</span><span class="s1">&#39;empty_spheres&#39;</span><span class="p">,</span> <span class="n">CustomMixed</span><span class="p">(</span><span class="n">Bool</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">(</span><span class="s1">&#39;auto&#39;</span><span class="p">)),</span> <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Run empty spheres finding before calculation? Default value ``auto`` means only for SCF calculations not containing any vacuum atom.&quot;</span><span class="p">),</span>
-    <span class="n">V</span><span class="p">(</span><span class="s1">&#39;print_output&#39;</span><span class="p">,</span> <span class="n">CustomMixed</span><span class="p">(</span><span class="n">Bool</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">(</span><span class="s1">&#39;info&#39;</span><span class="p">)),</span> <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Print output of SPRKKR calculation. Default value ``info`` prints only short info each iteration.&quot;</span><span class="p">),</span>
+    <span class="n">V</span><span class="p">(</span><span class="s1">&#39;empty_spheres&#39;</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">({</span>
+      <span class="kc">True</span> <span class="p">:</span> <span class="s1">&#39;Always do empty spheres finding.&#39;</span><span class="p">,</span>
+      <span class="kc">False</span><span class="p">:</span> <span class="s1">&#39;Newer do empty spheres finding.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;auto&#39;</span><span class="p">:</span> <span class="s1">&#39;Do empty spheres finding for unconverged potential not containing any vaccuum atom.&#39;</span>
+      <span class="p">},</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span> <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Run empty spheres finding before calculation? Default value ``auto`` means only for SCF calculations not containing any vacuum atom.&quot;</span><span class="p">),</span>
+    <span class="n">V</span><span class="p">(</span><span class="s1">&#39;print_output&#39;</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">({</span>
+      <span class="kc">True</span><span class="p">:</span> <span class="s1">&#39;Print all output of SPRKKR executables to screen.&#39;</span><span class="p">,</span>
+      <span class="kc">False</span><span class="p">:</span> <span class="s1">&#39;Do not print any output of SPRKKR executables.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="s1">&#39;Print only brief information about iterations of SCF cycle.&#39;</span><span class="p">,</span>
+    <span class="p">},</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span> <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Print output of SPRKKR calculation. Default value ``info`` prints only short info each iteration.&quot;</span><span class="p">),</span>
     <span class="n">V</span><span class="p">(</span><span class="s1">&#39;mpi&#39;</span><span class="p">,</span> <span class="n">CustomMixed</span><span class="p">(</span><span class="n">Bool</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="n">QString</span><span class="o">.</span><span class="n">I</span><span class="p">),</span> <span class="n">Integer</span><span class="o">.</span><span class="n">I</span><span class="p">),</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Use mpi for calculation? List of strings means yes, use the given strings as mpi runner and its params (e.g. [ &quot;mpirun&quot;, &quot;-n&quot;, &quot;4&quot; ]). Default None means try to autodetect. Integer number means use the standard runner with a given number of processes.&#39;</span><span class="p">),</span>
     <span class="n">V</span><span class="p">(</span><span class="s1">&#39;mpi_warning&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Warn, if no MPI is found.&#39;</span><span class="p">)</span>

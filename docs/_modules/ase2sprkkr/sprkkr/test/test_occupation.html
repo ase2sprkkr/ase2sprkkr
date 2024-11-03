@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.sprkkr.test.test_occupation &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -99,9 +98,13 @@
 <span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span> <span class="o">=</span> <span class="n">patch_package</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="test"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_occupation.test.html#ase2sprkkr.sprkkr.test.test_occupation.test">[docs]</a><span class="k">class</span> <span class="nc">test</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="test">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_occupation.test.html#ase2sprkkr.sprkkr.test.test_occupation.test">[docs]</a>
+<span class="k">class</span> <span class="nc">test</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="test.test"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_occupation.test.html#ase2sprkkr.sprkkr.test.test_occupation.test.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="test.test">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_occupation.test.html#ase2sprkkr.sprkkr.test.test_occupation.test.test">[docs]</a>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">io</span>
         <span class="kn">from</span> <span class="nn">ase2sprkkr.sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
         <span class="n">ciffile</span><span class="o">=</span><span class="s1">&#39;test.cif&#39;</span>
@@ -113,7 +116,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="p">[</span><span class="s1">&#39;Hf&#39;</span><span class="p">],</span> <span class="mf">0.7025</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="p">[</span><span class="s1">&#39;Ti&#39;</span><span class="p">],</span> <span class="mf">0.2975</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">],</span> <span class="mf">0.233</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">],</span> <span class="mf">0.233</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">],</span> <span class="mf">0.233</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
            </div>

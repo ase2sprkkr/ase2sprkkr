@@ -1,15 +1,15 @@
-SpacegroupInfo
-==============
+Test
+====
 
 
-.. currentmodule:: ase2sprkkr.bindings.spglib
+.. currentmodule:: ase2sprkkr.sprkkr.test.test_spacegroup_info
 
-.. autoclass:: SpacegroupInfo
+.. autoclass:: Test
    :members:
    :inherited-members:
 
    .. rubric:: Class hierarchy
-   .. inheritance-diagram:: ase2sprkkr.bindings.spglib.SpacegroupInfo
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.test.test_spacegroup_info.Test
       :parts: 2
 
    |

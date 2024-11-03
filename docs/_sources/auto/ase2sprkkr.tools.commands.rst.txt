@@ -38,13 +38,13 @@ Full name: **ase2sprkkr.tools.commands**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.tools.commands.examples
-     ase2sprkkr.tools.commands.config
-     ase2sprkkr.tools.commands.info
-     ase2sprkkr.tools.commands.run
-     ase2sprkkr.tools.commands.nomad
-     ase2sprkkr.tools.commands.plot
-     ase2sprkkr.tools.commands.show_structure
-     ase2sprkkr.tools.commands.test
+     config
+     examples
+     info
+     plot
+     run
+     nomad
+     test
+     show_structure
   
   

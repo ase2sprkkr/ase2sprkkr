@@ -38,10 +38,11 @@ Full name: **ase2sprkkr.potentials.test**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.potentials.test.init_tests
-     ase2sprkkr.potentials.test.test_structure
-     ase2sprkkr.potentials.test.test_custom_section
-     ase2sprkkr.potentials.test.test_2D
-     ase2sprkkr.potentials.test.test_potential
+     init_tests
+     test_custom_section
+     test_structure
+     test_potential
+     test_2D
+     test_occupancy
   
   

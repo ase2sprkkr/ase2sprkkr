@@ -1,28 +1,27 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>spglib &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="possibly_equivalent_sites" href="ase2sprkkr.bindings.spglib.possibly_equivalent_sites.html" />
+    <link rel="next" title="spglib_dataset" href="ase2sprkkr.bindings.spglib.spglib_dataset.html" />
     <link rel="prev" title="empty_spheres" href="ase2sprkkr.bindings.es_finder.empty_spheres.html" /> 
 </head>
 
@@ -71,9 +70,9 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.empty_spheres.html">empty_spheres</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.es_finder.html">es_finder</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">spglib</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.possibly_equivalent_sites.html">possibly_equivalent_sites</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.spglib_dataset.html">spglib_dataset</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.SpacegroupInfo.html">SpacegroupInfo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.spglib_dataset_wrapper.html">spglib_dataset_wrapper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.tag_sites.html">tag_sites</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.tests.html">tests</a></li>
@@ -125,41 +124,21 @@
            <div itemprop="articleBody">
              
   <section id="spglib">
-<h1>spglib<a class="headerlink" href="#spglib" title="Permalink to this heading"></a></h1>
+<h1>spglib<a class="headerlink" href="#spglib" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.bindings.spglib</strong></p>
-<p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-52b691b2d441460fad3b2880639e6bd8a9448f50.png" alt="Inheritance diagram of ase2sprkkr.bindings.spglib.SpacegroupInfo" usemap="#inheritancea85ca806f1" class="inheritance graphviz" /></div>
-<map id="inheritancea85ca806f1" name="inheritancea85ca806f1">
-<area shape="rect" id="node1" href="ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo" target="_top" title="Class, that carry information about spacegroup and symmetry of a structure" alt="" coords="5,5,128,31"/>
-</map><div class="line-block">
-<div class="line"><br /></div>
-</div>
 <p class="rubric">Description</p>
-<span class="target" id="module-ase2sprkkr.bindings.spglib"></span><p>Wrapper for spglib for computing symmetry of a primitive cell</p>
+<p id="module-ase2sprkkr.bindings.spglib">Wrapper for spglib for computing symmetry of a primitive cell</p>
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.possibly_equivalent_sites.html#ase2sprkkr.bindings.spglib.possibly_equivalent_sites" title="ase2sprkkr.bindings.spglib.possibly_equivalent_sites"><code class="xref py py-obj docutils literal notranslate"><span class="pre">possibly_equivalent_sites</span></code></a>(atoms[, ...])</p></td>
-<td><p>Return the object that describe equivalence classes of the atoms from the given Atoms object (i.e.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.spglib_dataset.html#ase2sprkkr.bindings.spglib.spglib_dataset" title="ase2sprkkr.bindings.spglib.spglib_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spglib_dataset</span></code></a>(atoms[, atomic_numbers, ...])</p></td>
+<td><p>Return the object that describe equivalence classes of the atoms from the given Atoms object (i.e. in one equivalence class will be the atoms with the same atomic number, occupation, etc.).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.spglib_dataset.html#ase2sprkkr.bindings.spglib.spglib_dataset" title="ase2sprkkr.bindings.spglib.spglib_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spglib_dataset</span></code></a>(dataset)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.spglib_dataset_wrapper.html#ase2sprkkr.bindings.spglib.spglib_dataset_wrapper" title="ase2sprkkr.bindings.spglib.spglib_dataset_wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spglib_dataset_wrapper</span></code></a>(dataset)</p></td>
 <td><p>Backward compatibility</p></td>
 </tr>
-</tbody>
-</table>
-<p class="rubric">Classes</p>
-<table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo" title="ase2sprkkr.bindings.spglib.SpacegroupInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpacegroupInfo</span></code></a>(atoms, spacegroup[, dataset, ...])</p></td>
-<td><p>Class, that carry information about spacegroup and symmetry of a structure</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.tag_sites.html#ase2sprkkr.bindings.spglib.tag_sites" title="ase2sprkkr.bindings.spglib.tag_sites"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tag_sites</span></code></a>(atoms, consider_old, return_mapping)</p></td>
+<td><p>Return array of class-equivalence-numbers of sites of a given Atoms object</p></td>
 </tr>
 </tbody>
 </table>
@@ -170,7 +149,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.bindings.es_finder.empty_spheres.html" class="btn btn-neutral float-left" title="empty_spheres" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.bindings.spglib.possibly_equivalent_sites.html" class="btn btn-neutral float-right" title="possibly_equivalent_sites" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.bindings.spglib.spglib_dataset.html" class="btn btn-neutral float-right" title="spglib_dataset" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

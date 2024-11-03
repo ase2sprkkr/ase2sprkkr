@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.input_parameters.definitions.bsfkk &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -101,21 +100,21 @@
     <span class="s1">&#39;bsfkk&#39;</span><span class="p">,</span> <span class="p">[</span>
           <span class="n">CONTROL</span><span class="p">(</span><span class="s1">&#39;BSF&#39;</span><span class="p">),</span>
           <span class="n">TAU</span><span class="p">,</span>
-          <span class="n">TASK</span><span class="p">(</span><span class="s1">&#39;BSF&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">([</span>
+          <span class="n">TASK</span><span class="p">(</span><span class="s1">&#39;BSF&#39;</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="p">[</span>
             <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NK&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;total number of k-points&quot;</span><span class="p">),</span>
             <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NK1&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;number of k-points along k1&quot;</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
             <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NK2&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;number of k-points along k2&quot;</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
             <span class="n">V</span><span class="p">(</span><span class="s1">&#39;K1&#39;</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;ﬁrst k-vector to span a two-dimensional region in k-space.&quot;</span><span class="p">),</span>
             <span class="n">V</span><span class="p">(</span><span class="s1">&#39;K2&#39;</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;second k-vector to span a two-dimensional region in k-space&quot;</span><span class="p">),</span>
           <span class="p">]),</span>
-          <span class="n">ENERGY</span><span class="o">.</span><span class="n">copy</span><span class="p">([</span>
-              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;EMAX&#39;</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;highest E-value&quot;</span><span class="p">),</span>
-            <span class="p">],</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span>
-              <span class="s1">&#39;EMIN&#39;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>   <span class="c1"># TODO - fermi energy from computation</span>
-              <span class="s1">&#39;ImE&#39;</span> <span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
-              <span class="s1">&#39;GRID&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-              <span class="s1">&#39;NE&#39;</span>  <span class="p">:</span> <span class="mi">1</span>
-          <span class="p">}),</span>
+          <span class="n">ENERGY</span><span class="p">(</span>
+              <span class="n">emin</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="s1">&#39;the energy to compute the BSF&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+              <span class="n">emax</span> <span class="o">=</span> <span class="s1">&#39;emin&#39;</span><span class="p">,</span>
+              <span class="n">defaults</span><span class="o">=</span><span class="p">{</span>
+                <span class="s1">&#39;ImE&#39;</span> <span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+                <span class="s1">&#39;GRID&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s1">&#39;NE&#39;</span>  <span class="p">:</span> <span class="mi">1</span>
+              <span class="p">}),</span>
           <span class="n">CONTROL</span><span class="p">(</span><span class="s1">&#39;BLOCHSF&#39;</span><span class="p">),</span>
           <span class="n">TAU</span><span class="p">,</span>
           <span class="n">MODE</span><span class="p">,</span>
