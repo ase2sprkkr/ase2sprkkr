@@ -374,7 +374,7 @@ class SPRKKR(Calculator):
                   input_file=None, potential_file=None, output_file=False,
                   directory:Union[str,bool,Directory,None]=None, create_subdirs:bool=False,
                   options={}, task=None,
-                  empty_spheres: Optional[str | bool] = None,
+                  empty_spheres: Optional[str | bool | tuple | abc.Mapping] = None,
                   mpi=None,
                   return_files=False,
                   ):
@@ -438,6 +438,8 @@ class SPRKKR(Calculator):
             'auto' means add if no empty sphere is present.
             Default None means use the default value from the calculator for this parameter
             (which is 'auto' by default).
+            Mapping pass the given arguments to the routine.
+            Tuple means min and max radius.
 
         options: dict
             Options to set to the input_parameters. If input_parameters are given by a filename,
@@ -583,6 +585,10 @@ class SPRKKR(Calculator):
                            empty_spheres = False
                            break
             if empty_spheres and atoms:
+                if isinstance(empty_spheres, tuple):
+                    assert len(empty_spheres) == 2, "Tuple of length 2, denoting min and max radius, is required for empty spheres"
+                    empty_spheres = { 'min_radius' : empty_spheres[0],
+                                      'max_radius' : empty_spheres[1] }
                 if not isinstance(empty_spheres, collections.abc.Mapping):
                     empty_spheres = {}
                 try:
