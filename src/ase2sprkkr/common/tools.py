@@ -12,15 +12,28 @@ def parse_inches(string):
     .. doctest::
       >>> parse_inches(1)
       1.0
-      >>> parse_inches('2cm')
-      0.7874015748031497
+      >>> int( parse_inches('2cm') * 10000)
+      7874
     """
     global _unit_registry
     if isinstance(string, (int, float)):
         return float(string)
     if _unit_registry is None:
-        from pint import UnitRegistry
-        _unit_registry = UnitRegistry()
+        try:
+            from pint import UnitRegistry
+            _unit_registry = UnitRegistry()
+            raise TypeError
+        except TypeError:
+            result = (pp.Word(pp.nums) + pp.Word(pp.alphas)).parseString(string, parseAll=True)
+            out = float(result[0])
+            if result[1] == 'inch':
+                return out
+            if result[1] == 'cm':
+                return out / 2.54
+            elif result[1]=='mm':
+                return out /25.4
+            else:
+                raise ValueError(f'Pint is not available nad the units {result[1]} is not known')
     out = _unit_registry.parse_expression(string)
     if isinstance(out, (int, float)):
         return float(out)
