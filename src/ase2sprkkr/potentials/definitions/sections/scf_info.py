@@ -50,7 +50,7 @@ class ScfInfoSectionDefinition(PotSectionDefinition):
       V = PotValueDefinition
       members = [
         V('INFO', line_string, 'NONE'),
-        V('SCFSTATUS', DefKeyword('START', 'CONVERGED', 'ITR-BULK')),
+        V('SCFSTATUS', DefKeyword('START', 'CONVERGED', 'ITR-BULK', 'ITR')),
         V('FULLPOT', False),
         V('BREITINT', False),
         V('NONMAG', False, alternative_names='NOMAG'),
