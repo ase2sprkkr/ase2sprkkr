@@ -60,6 +60,9 @@ class SpacegroupInfo:
         self.symmetry = symmetry
         self._block = None
 
+    def to_dict(self):
+        return {'dataset': self._dataset, 'symmetry': self.symmetry }
+
     def copy_for(self, atoms):
         """ Return copy of the object for the given atoms """
         out = copy.copy(self)
