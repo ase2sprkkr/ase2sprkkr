@@ -255,7 +255,7 @@ class ScfOutputReader(SprKkrOutputReader):
           if self.print_output == 'info':
             if not iterations:
                 print("ERROR: No iteration has been finished. There is probably an error in the input files, please, examine the SPR-KKR output file.")
-            elif iterations[-1]['converged']:
+            elif iterations[-1]['converged']():
                 print("OK: The computation converged.")
             else:
                 print("WARNING: The computation does not converged!!!")
