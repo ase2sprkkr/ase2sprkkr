@@ -16,24 +16,25 @@ def main():
     calculator.input_parameters.ENERGY.ImE=0.0
     calculator.input_parameters.ENERGY.GRID=[5,3]
     calculator.input_parameters.set(NE=32)
-    out=calculator.calculate()
+    out=calculator.calculate(options={'NITER':1})
 
     print(out.energy)
     print(len(out.iterations))
     print(out.iterations[-1]['error']())
     print(out.last_iteration['moment'].to_dict())
-    print("SECOND STEP: CALCULATION OF DOS============")
-    # Lets now calculate DOS
-    # First we need to change task (there are several input data tabulated for
-    # various tasks to help user.
-
+    print("SECOND (OPTIONAL) STEP: CALCULATION OF BSF============")
     calculator = out.calculator
     calculator.input_parameters='bsfek'
     calculator.input_parameters.ENERGY.EMAX=0.2
+    calculator.input_parameters.TASK.KPATH=1
     calculator.calculate()
-    calculator.input_parameters='DOS'
 
-    print("NEW INPUT PARAMETERS=======================")
+    print("THIRD STEP: CALCULATION OF DOS============")
+    # Lets now calculate DOS
+    # First we need to change task (there are several input data tabulated for
+    # various tasks to help user.
+    calculator.input_parameters='DOS'
+    print("INPUT PARAMETERS HAVE BEEN REPLACED =======")
     print(calculator.input_parameters.to_dict())
     print("===========================================")
 
