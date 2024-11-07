@@ -150,7 +150,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
     def values(self):
         return self._values.values()
 
-    def as_dict(self, only_changed:Union[bool,str]='basic', generated:bool=False, copy=False):
+    def _as_dict(self, only_changed:Union[bool,str]='basic', generated:bool=False, copy=False):
         """
         Return the content of the container as a dictionary.
         Nested containers will be transformed to dictionaries as well.
@@ -169,7 +169,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         """
         out = {}
         for k,v in self.items():
-            value = k.as_dict(only_changed, generated, copy)
+            value = v.as_dict(only_changed, generated, copy)
             if value is not None:
                 out[k] = value
         return out or None
