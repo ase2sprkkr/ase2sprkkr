@@ -31,7 +31,7 @@ def default_content(file):
 # -------------------------------
 
 # Please, DO NOT comment the following line.
-from ase2sprkkr.config import config
+from ase2sprkkr.configuration import config
 
 # This file is pure python and it is executed when ase2sprkkr is imported.
 # Place it into the following path:
