@@ -164,9 +164,12 @@ class InputParameters(ConfigurationFile):
 
         return process.run(executable, output_file, stdin = stdin, print_output=print_output, directory=directory, input_file=input_file.name)
       except FileNotFoundError as e:
-        e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable ' \
-                     'or ase2sp_rkkr.config.config.executable.suffix variable should be set?\n' + \
-                     e.strerror
+        add = 'Cannot find SPRKKR executable. Maybe, ase2sprkkr.config.executable.suffix ' \
+              'variable should be set (or the SPRKKR_EXECUTABLE_SUFFIX environment variable)?\n'
+        if mpi:
+            add+='Also, pleas check that the MPI is functional on your machine, or explicitly disable '\
+                 'MPI with mpi=False argument of calculate method (or set ase2sprkkr.config.running.mpi = False)\n\n';
+        e.strerror = add + "SPRKKR cannot be run due to the following error: \n" + e.strerror
         raise
       finally:
         input_file.close()
