@@ -15,7 +15,7 @@ from . import definitions
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
 from typing import Union
-from ..config import config, mpi_runner
+from ..configuration import config, mpi_runner
 from ..potentials.potentials import Potential
 from ..common.doc import process_input_parameters_definition
 import warnings

@@ -44,14 +44,14 @@ from ase2sprkkr.config import config
 # config.executables.dir = ''
 
 # Uncomment, if you don't want to run empty-spheres finding by default
-# config.runing.empty_spheres = False
+# config.running.empty_spheres = False
 
 # Set to False if MPI should not be used. Or set to the number of processor,
 # or just command line to run mpi programm, e.g.: [ '/usr/bin/mpiexec', '-n', '4' ]
 # config.running.mpi = []
 
 # You can change the verbosity of the output by setting the following to False or True
-# config.runing.print_output = 'info'
+# config.running.print_output = 'info'
 
 # Authentication token to Nomad. You can set it using ase2sprkkr nomad -a -u <username>
 # config.nomad.token = None
@@ -60,7 +60,7 @@ from ase2sprkkr.config import config
 
 def run(args):
     import os
-    from ...config import user_preferences_file, config
+    from ...configuration import user_preferences_file, config
     import subprocess
     file = user_preferences_file()
 

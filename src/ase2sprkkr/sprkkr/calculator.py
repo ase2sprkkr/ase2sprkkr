@@ -31,7 +31,7 @@ from pathlib import Path
 import re
 import warnings
 from ..common.misc import config_property, first_non_none
-from ..config import config
+from ..configuration import config
 
 
 class SPRKKR(Calculator):
@@ -89,13 +89,13 @@ class SPRKKR(Calculator):
           Write the output of runned executables to stdout (in addition to the output file)?
           (Default value for the calculator)
           If print_output = 'info', only a few info lines per iteration will be printed.
-          None means use the value from config.config.calculator_parameters.print_output.
+          None means use the value from config.running.print_output.
 
         mpi: Union[list,string,int,bool]
           Runner for mpi to run a mpi calculation. True and int means autodetect: use True
           for a cluster where mpi is able to autodetect the number of the processes, otherwise
           use integer to specify the number of processes. None means use the value from
-          config.config.calculator_parameters.mpi.
+          config.running.mpi.
           E.g. mpi = [ 'mpirun', '-np', '4' ], mpi = 4
 
         input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None

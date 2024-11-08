@@ -59,7 +59,7 @@ api=None
 
 
 def authenticate(args):
-    from ase2sprkkr.config import config
+    from ase2sprkkr.configuration import config
     if args.delete_credentials:
         token=None
         config.set_permanent('nomad.token', token, r"Authentication token to Nomad \(written by 'ase2sprkkr nomad -a -u [^\s]+'\)", True)
@@ -83,7 +83,7 @@ def retrieve_token(args, expires=None):
 
 
 def get_token(args):
-    from ase2sprkkr.config import config
+    from ase2sprkkr.configuration import config
     if args.user:
         token=retrieve_token(args)
     else:
@@ -95,7 +95,7 @@ def get_token(args):
 
 
 def token(args):
-    from ase2sprkkr.config import config
+    from ase2sprkkr.configuration import config
     print(config.nomad.token())
 
 
