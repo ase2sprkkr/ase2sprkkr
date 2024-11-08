@@ -63,6 +63,9 @@ class SpacegroupInfo:
     def to_dict(self):
         return {'dataset': self._dataset, 'symmetry': self.symmetry }
 
+    """ ASE require this form of name"""
+    todict = to_dict
+
     def copy_for(self, atoms):
         """ Return copy of the object for the given atoms """
         out = copy.copy(self)
