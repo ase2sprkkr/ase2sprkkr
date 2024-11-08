@@ -227,35 +227,50 @@ class Option(BaseOption):
 
       error:
       """
-      d = self._definition
-      if d.is_generated:
-          return d.setter(self._container, value)
+      with warnings.catch_warnings(record=True) as recorded_warnings:
+          d = self._definition
+          if d.is_generated:
+              return d.setter(self._container, value)
 
-      if value is None:
-          try:
-              return self.clear()
-          except ValueError:
-              if not error=='ignore':
-                  raise
-              return
-      elif d.is_repeated.is_dict:
-        if isinstance(value, dict):
-           self.clear(do_not_check_required=value, call_hooks=False)
-           for k,v in value.items():
-               self._set_item(k, v, error)
-        else:
-           try:
-               self._set_item('def', value, error)
-           except ValueError:
-               for i,v in enumerate(value):
-                  self._set_item(i + 1, v)
-      else:
-         try:
-             self._value = self._pack_value(value)
-         except ValueError:
-             if not error=='ignore':
-                  raise
-      self._post_set()
+          if value is None:
+              try:
+                  return self.clear()
+              except ValueError:
+                  if not error=='ignore':
+                      raise
+                  return
+          elif d.is_repeated.is_dict:
+            if isinstance(value, dict):
+               self.clear(do_not_check_required=value, call_hooks=False)
+               for k,v in value.items():
+                   self._set_item(k, v, error)
+            else:
+               try:
+                   self._set_item('def', value, error)
+               except ValueError:
+                   for i,v in enumerate(value):
+                      self._set_item(i + 1, v)
+          else:
+             try:
+                 self._value = self._pack_value(value)
+             except ValueError:
+                 if not error=='ignore':
+                      raise
+          self._post_set()
+      for w in recorded_warnings:
+          w.message.args = (
+              f"During setting the value {value} to {self.get_path()}, "
+              f"the following warning have been issued:\n {w.message}",
+              *w.message.args[1:]
+              )
+
+          warnings.warn_explicit(
+              message=w.message,
+              category=w.category,
+              filename=w.filename,
+              lineno=w.lineno,
+              source=w.source,
+          )
 
   def _post_set(self):
       """ Thus should be called after all modifications """
