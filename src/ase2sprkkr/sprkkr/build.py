@@ -2,13 +2,12 @@
 - e.g. system with vacuum pseudoatoms, or 2D semiinfinite systems
 """
 
-from ..ase.build import aperiodic_times, stack as _stack
+from ..ase.build import aperiodic_times, stack as _stack, rotate
 from .atoms_region import AtomsRegion
 from .sprkkr_atoms import SPRKKRAtoms
 import math
 import numpy as np
 from ase import Atoms
-from ase.build import surface
 
 from numbers import Real
 from typing import Union, Tuple, Optional,Dict
@@ -55,14 +54,14 @@ def semiinfinite_system(atoms:Atoms, repeat:Union[Tuple[Real,Real],Real], atoms2
        repeat=(repeat, math.floor(repeat) + math.ceil(repeat) - repeat)
 
     if hkl is not None:
-       atoms1 = surface(atoms, hkl, 1)
+       atoms1 = rotate(atoms, hkl)
     else:
        atoms1 = atoms
 
     if atoms2 is None:
        atoms2 = vacuum_like(atoms1 if hkl2 is None else atoms)
     if hkl2 is not None:
-       atoms = surface(atoms, hkl, 1)
+       atoms = rotate(atoms, hkl)
 
     catoms2 = aperiodic_times(atoms2, repeat[1], axis=axis, direction=-1)
     catoms = aperiodic_times(atoms1, repeat[0], axis=axis)

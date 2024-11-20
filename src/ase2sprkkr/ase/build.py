@@ -6,6 +6,7 @@ routines, possible usable with plain ASE (with any calculator).
 import numpy as np
 import ase
 from typing import List, Union, Optional
+from ase.build import surface
 
 
 def aperiodic_times(atoms:ase.Atoms,
@@ -252,3 +253,6 @@ def stack(atomses:List[ase.Atoms],
     update_origin(len(atomses))
     out.cell[axis] = origin
     return out
+
+def rotate(atoms, hkl):
+    return surface(atoms, hkl, 1, periodic=True)
