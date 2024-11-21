@@ -24,8 +24,11 @@ class Occupation:
       """ Create an occupation object associated with the given sites object """
       if not isinstance(occupation, Occupation):
          occupation = Occupation(occupation, site, update_atoms=False)
-      elif site is not None and occupation.site is not None:
-         occupation = Occupation.copy(occupation, site)
+      elif site is not None:
+         if occupation.site is None:
+              occupation._site = site
+         else:
+              occupation = Occupation.copy(occupation, site)
       return occupation
 
   def __init__(self, dct:Dict[Union[AtomicType,str], float],
