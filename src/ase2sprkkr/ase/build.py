@@ -5,7 +5,7 @@ routines, possible usable with plain ASE (with any calculator).
 
 import numpy as np
 import ase
-from typing import List, Union, Optional
+from typing import List, Union, Optional, Tuple
 from ase.build import surface
 
 
@@ -254,5 +254,71 @@ def stack(atomses:List[ase.Atoms],
     out.cell[axis] = origin
     return out
 
-def rotate(atoms, hkl):
+def rotate(atoms:ase.Atoms,
+           hkl:Tuple[float]):
+    """
+    Rotate the atoms according the given Miller coordinates.
+
+    Parameters
+    ----------
+    atoms
+      The atoms to be rotated and shifted
+    hkl
+      Miller indices. The atoms will be rotated so that the last axis will be perpendicular
+      to the plane and the other will be parallel.
+    """
     return surface(atoms, hkl, 1, periodic=True)
+
+
+def shift(atoms:ase.Atoms, shift:Optional[Union[float,int,tuple,list,np.ndarray]], axis=2, wrap=True):
+    """
+    Shift the atoms (to get the desired atom to the top/bottom of the cell).
+
+    Parameters
+    ----------
+    atoms
+      The atoms to shift their positions
+
+    shift
+      If a vector is given, add it to the positions.
+      If a float is given, shift byt the given fraction of the given axis
+      If an integer is given, shift so that the given atom is at [0,0,0]
+    """
+    if isinstance(shift, int):
+        shift = -atoms.positions[shift]
+    else:
+        shift = atoms.cell[axis] * shift
+    atoms.positions[:] = atoms.positions + shift
+    if wrap:
+        atoms.wrap()
+    return atoms
+
+def flip_around(atoms, around, axis=2, wrap=True):
+    """
+    Flip the atoms in given axis around given point (or site)
+    so that the point/site will be the most distant from origin of all the sites.
+    """
+    shift(atoms, -around, wrap=False)
+    flip(atoms, axis, wrap=False)
+    sp = atoms.get_scaled_positions()
+    aid = np.argmax(sp[:,axis] % 1.0)
+    return shift(atoms,
+          sp[aid, axis],
+          wrap=wrap)
+
+def flip(atoms, plane=2, wrap=True):
+    """
+    Flip the atoms around plane perpendicular to the given vector (if vector is given)
+    or axis (identified by an integer)
+    """
+    if isinstance(plane, int):
+        vc = atoms.cell[plane]
+    else:
+        vc = plane
+    vc = vc/np.linalg.norm(vc)
+    reflect = np.eye(3) - 2 * np.outer(vc,vc)
+    atoms.positions = np.dot(atoms.positions, reflect.T)
+
+    if wrap:
+        atoms.wrap()
+    return atoms

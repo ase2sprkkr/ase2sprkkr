@@ -39,12 +39,13 @@ def semiinfinite_system(atoms:Atoms, repeat:Union[Tuple[Real,Real],Real], atoms2
       it is created from the left one by replacing the atoms for vacuum pseudoatoms
 
     hkl
-      If not None, rotate the left atoms according the given Miller coordinates, first.
-
-    hkl2
       If not None, rotate the right atoms according the given Miller coordinates, first.
       If it is None, and the atoms2 are None too, the hkl argument is used for rotating
       the atoms2 object.
+      Deprecated. Use explicit call ase2sprkkr.ase.build.rotate
+
+    hkl2
+      Deprecated. Use explicit call ase2sprkkr.ase.build.rotate
 
     axis
       Along which axis build the system.
@@ -54,6 +55,9 @@ def semiinfinite_system(atoms:Atoms, repeat:Union[Tuple[Real,Real],Real], atoms2
        repeat=(repeat, math.floor(repeat) + math.ceil(repeat) - repeat)
 
     if hkl is not None:
+       DeprecationWarning("hkl parameter for semiinfinite system is deprecated,"
+                          "please use ase2sprkkr.ase.buil.rotate() before calling "
+                          "the function")
        atoms1 = rotate(atoms, hkl)
     else:
        atoms1 = atoms
@@ -61,7 +65,10 @@ def semiinfinite_system(atoms:Atoms, repeat:Union[Tuple[Real,Real],Real], atoms2
     if atoms2 is None:
        atoms2 = vacuum_like(atoms1 if hkl2 is None else atoms)
     if hkl2 is not None:
-       atoms = rotate(atoms, hkl)
+       atoms2 = rotate(atoms2, hkl2)
+       DeprecationWarning("hkl2 parameter for semiinfinite system is deprecated,"
+                          "please use ase2sprkkr.ase.buil.rotate() before calling "
+                          "the function")
 
     catoms2 = aperiodic_times(atoms2, repeat[1], axis=axis, direction=-1)
     catoms = aperiodic_times(atoms1, repeat[0], axis=axis)
