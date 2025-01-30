@@ -21,9 +21,11 @@ def parser(parser):
     parser.add_argument('-p', '--path', help='Just print the path to the file.', action='store_true')
     parser.add_argument('-i', '--info', help='Show the description of the configuration options.', action='store_true')
     parser.add_argument('-s', '--show', help='Print the configuration.', action='store_true')
+    parser.add_argument('-S', '--set', nargs=2,  help='Set the given configuration to the given value. Example "ase2sprkkr config -S executables.suffix 8.6".', metavar=("NAME", "VALUE"))
     parser.add_argument('-e', '--edit', help='Edit the file using the editor in the $EDITOR environment variable.', action='store_true')
     parser.add_argument('-d', '--default', help='Put the default values into the file, if it not exists', action='store_true')
-    parser.add_argument('-D', '--show-default', help='Show the default values', action='store_true')
+    parser.add_argument('-D', '--overwrite-by-default', dest='default', help='Put the default values into the file, even if it exists', action='store_const', const='overwrite')
+    parser.add_argument('-o', '--show-default', help='Show the default values', action='store_true')
 
 
 def default_content(file):
@@ -65,9 +67,12 @@ def run(args):
     file = user_preferences_file()
 
     run=True
-    if args.default and not os.path.isfile(file):
-        with open(file, 'w') as f:
-            f.write(default_content(file))
+
+    if args.default:
+        if args.default == 'overwrite' or not os.path.isfile(file):
+            with open(file, 'w') as f:
+                f.write(default_content(file))
+            print(f"Defaults written to {file}")
         run=False
     if args.path:
         print(file)
@@ -78,6 +83,13 @@ def run(args):
     if args.info:
         print(config._definition.description(verbose = 'all'))
         run=False
+    if args.set:
+        try:
+          val = config.find(args.set[0], unknown=False)
+          val.set_permanent(args.set[1])
+        except KeyError:
+          print(f"Neznámá konfigurační volba '{args.set[0]}'")
+        run=False
     if args.show:
         print(config.to_dict())
         run=False
@@ -87,6 +99,7 @@ def run(args):
             exit(-1)
         subprocess.run([os.environ['EDITOR'], file])
         run=False
+
     if run:
         if os.path.isfile(file):
              print("# Content of the ASE2SPRKKR user configuration file")
