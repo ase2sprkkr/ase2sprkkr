@@ -230,10 +230,10 @@ class ConfigurationContainer(BaseConfigurationContainer):
       for i in self._members.values():
           i.clear(do_not_check_required, call_hooks=call_hooks, generated=False if generated is None else generated)
 
-  def get_members(self, name=None, unknown='find', is_option=None):
+  def get_members(self, name=None, unknown='find', is_option=None, lower_case=False):
       """
       Get all the members of given name. According to ``unknown`` parameter,
-      either only from self, or from any child containers too.
+      either only from self, or from any child containers, too.
 
       Parameters
       ----------
@@ -245,16 +245,17 @@ class ConfigurationContainer(BaseConfigurationContainer):
         If unknown == 'find' and there is no member with a given name,
         try to find the first such-named item (case insensitive)
         in the descendant conainers.
-        unknown == 'find_exact' do the same, case sensitive.
 
       is_option: bool
         If set, limit to either Option or non-option items
+
+      lower_case: bool
+        If true, try to search for the lower-cased name
 
       Return
       ------
       value: mixed
       """
-
       if name is None:
           yield self
           return
@@ -262,26 +263,27 @@ class ConfigurationContainer(BaseConfigurationContainer):
           name, child = name.split('.')
       else:
           child=None
-      try:
-          v = self._members[name]
-      except KeyError:
-          try:
-              v = self._lowercase_members[name.lower()]
-          except KeyError:
-              if unknown=='find':
-                  yield from self._find_members(name.lower(), True, is_option)
-                  return
-              elif unknown=='find_exact':
-                  yield from self._find_members(name, False, is_option)
-                  return
-              else:
-                  raise
-      if child:
-          yield from v.get_members(child, unknown, is_option)
-      else:
-          yield v
 
-  def get(self, name=None, unknown='find'):
+      def values():
+          try:
+              yield self._members[name]
+              return
+          except KeyError:
+              n = name.lower() if lower_case else name
+              if unknown=='find':
+                  for i in self:
+                      yield from i._find_members(n, is_option, lower_case)
+              elif lower_case:
+                  v = self._lowercase_members[n]
+                  yield v
+
+      if child:
+          for v in values():
+              yield from v.get_members(child, unknown, is_option, lower_case)
+      else:
+          yield from values()
+
+  def get(self, name=None, unknown='find', is_option=True):
       """
       Get the value, either of self or of a child of a given name.
 
@@ -301,7 +303,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
       ------
       value: mixed
       """
-      item = self.get_members(name, unknown, True)
+      item = self.get_members(name, unknown, is_option)
       try:
           item=next(item)
       except StopIteration:
@@ -451,7 +453,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
               out[i._definition.real_name] = value
       return out or None
 
-  def _find_members(self, name:str, lower:bool=False, is_option=None):
+  def _find_members(self, name:str, is_option=None, lower:bool=False):
       """
       Iterates over a value of a given name in self or in any
       of owned subcontainers.
@@ -461,11 +463,11 @@ class ConfigurationContainer(BaseConfigurationContainer):
       name: str
       A name of the sought options
 
-      lower:bool
-      If True, find an option with given lowercased name (case insensitive)
-
       is_option:bool
       If True, find only options, if False, find only the others.
+
+      lower:bool
+      If True, find an option with given lowercased name (case insensitive)
 
       Returns
       -------
@@ -478,7 +480,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
       for i in self._values():
           if i._definition.is_hidden:
              continue
-          yield from i._find_members(name, lower, is_option)
+          yield from i._find_members(name, is_option, lower)
 
   @staticmethod
   def _interactive_member_name(name):
@@ -670,9 +672,13 @@ class RootConfigurationContainer(ConfigurationContainer):
          self.clear(True)
       self.set(values, unknown='add')
 
-  def find(self, name, lower_case=True, is_option=True, first=True):
+  def find(self, name, unknown='find', is_option=True, lower_case=True, first=True):
       """ Find a configuration value of a given name in the owned sections """
-      if lower_case:
-         name=name.lower()
-      method = self._find_member if first else self._find_members
-      return method(name, lower_case, is_option)
+      out = self.get_members(name, unknown, is_option, lower_case)
+      if first:
+          try:
+              return next(out)
+          except StopIteration:
+              raise ValueError(f"No {name} member of {self}")
+      else:
+          return out
