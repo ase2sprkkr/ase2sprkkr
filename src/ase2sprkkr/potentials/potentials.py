@@ -4,6 +4,7 @@ from ..sprkkr.configuration import ConfigurationFile
 from ..sprkkr.io_data import ReadIoData, WriteIoData
 from ..common.decorators import class_property, cache
 from io import StringIO
+from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 
 
 class Potential(ConfigurationFile):
@@ -24,6 +25,11 @@ class Potential(ConfigurationFile):
       self.make_complete()
       if atoms is not False:
          self._atoms = self.update_atoms(atoms or self._atoms)
+
+  @staticmethod
+  def from_atoms(self, atoms):
+      SPRKKRAtoms.promote_ase_atoms(atoms)
+      return atoms.potential
 
   def make_complete(self):
       """ Call this function, if you set manually all the properties necessary
