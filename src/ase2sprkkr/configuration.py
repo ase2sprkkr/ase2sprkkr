@@ -7,7 +7,8 @@ from .common.decorators import cache
 from .common.grammar_types import CustomMixed, QString, Array, Bool, Keyword, Integer
 from .common.container_definitions import SectionDefinition, ConfigurationRootDefinition
 from .common.configuration_containers import RootConfigurationContainer
-from .common.value_definitions import ValueDefinition as V
+from .common.value_definitions import ValueDefinition
+from .common.options import Option
 import warnings
 import shutil
 import platformdirs
@@ -113,7 +114,30 @@ def mpi_runner(mpi):
 
 class Configuration(RootConfigurationContainer):
 
-    def set_permanent(self, name, value, doc=None, doc_regex=False):
+    def set_permanent(self, name:str, value, doc=None, doc_regex:bool or str=False):
+        """
+        Set/remove permanently the value in the config file. If the value is present, it is
+        changed, otherwise, new line with setting the value is added to the file.
+        If the value is to be removed, all the lines value = .... will be removed
+        from the config file.
+
+        Parameters
+        ----------
+        name
+          Name of the value
+
+        value
+          Value to be set
+
+        doc
+          If it is not None:
+           - if the value is to be removed and it is preceeded by the line containing the given
+             docstring, prefixed by ' # ', the preceding line with docstring is removed as well.
+           - if the value is to be added, the docstring is added before the value as well.
+
+        doc_regex
+          If True, the doc parameter can be given as regular expression.
+        """
         global user_preference_file
         self.set(name, value)
 
@@ -161,12 +185,33 @@ class Configuration(RootConfigurationContainer):
                 f.write(line)
             f.truncate()
 
+class ConfigurationOption(Option):
+
+    def set_permanent(self, value):
+        """ Set the value and store it in the config file """
+        self.set(value)
+        self.permanent_store()
+
+    def permanent_store(self):
+        """ Store the actual value in the config file """
+        val = self()
+        if val is not None:
+            val = self._definition.type.string(val)
+        config.set_permanent(self.get_path(), val)
+
+
+class ConfigValueDefinition(ValueDefinition):
+
+    result_class = ConfigurationOption
+
 
 class ConfigFileDefinition(ConfigurationRootDefinition):
 
     dir_common_attributes = False
     result_class = Configuration
 
+
+V = ConfigValueDefinition
 
 """ The definition of ASE2SPRKKR configuration """
 definition = ConfigFileDefinition('config', [
