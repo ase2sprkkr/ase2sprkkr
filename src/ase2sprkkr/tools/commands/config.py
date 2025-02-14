@@ -93,9 +93,14 @@ def run(args):
         run=False
     if args.set:
         from ...common.grammar_types import Variant
+        from ...common.warnings import DataValidityError
         try:
-          val = Variant().parse(args.set[1])
-          config.find(args.set[0]).set_permanent(val)
+          try:
+            val = Variant().parse(args.set[1])
+            config.find(args.set[0]).set_permanent(val)
+          except DataValidityError:
+            #if parsing using mixed failed, just try store string
+            config.find(args.set[0]).set_permanent(args.set[1])
           print(f"Configuration '{args.set[0]}' have been set to '{args.set[1]}'.")
         except KeyError:
           print(f"Unknown configuration name '{args.set[0]}'.")
