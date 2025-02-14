@@ -1,3 +1,6 @@
+""" Common parent for all specialized readers and outputs and
+default reader for the tasks without specialized reader and output. """
+
 from ..task_result import TaskResult, KkrProcess
 from ..sprkkr_output_reader import SprKkrOutputReader
 

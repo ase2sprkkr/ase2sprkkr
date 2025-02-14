@@ -1,4 +1,4 @@
-""" The ARPES result: currently it """
+""" The Bloch spectral functions (BSF) reader and result."""
 
 from ..task_result import TaskResult, KkrProcess
 from .default import DefaultOutputReader
@@ -7,7 +7,8 @@ from ...output_files.output_files import OutputFile
 
 
 class BsfResult(TaskResult):
-  """ Objects of this class holds the results of computed SCF class """
+  """ BSF result provides access to the computed Bloch spectral functions in the
+  BSF output file using the :py:attr:`~bsf` property."""
 
   @cached_property
   def bsf_filename(self):

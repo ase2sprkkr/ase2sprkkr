@@ -113,17 +113,18 @@ class NomadApi():
     def edit_upload_metadata(self, upload_id, metadata, token=None):
         '''
         Example of new metadata:
-        upload_name = 'Test_Upload_Name'
-        metadata = {
-            "metadata": {
-            "upload_name": upload_name,
-            "references": ["https://doi.org/xx.xxxx/xxxxxx"],
-            "datasets": dataset_id,
-            "embargo_length": 0,
-            "coauthors": ["coauthor@affiliation.de"],
-            "comment": 'This is a test upload...'
-            },
-        }
+        ..code-block:: text
+            upload_name = 'Test_Upload_Name'
+            metadata = {
+                "metadata": {
+                "upload_name": upload_name,
+                "references": ["https://doi.org/xx.xxxx/xxxxxx"],
+                "datasets": dataset_id,
+                "embargo_length": 0,
+                "coauthors": ["coauthor@affiliation.de"],
+                "comment": 'This is a test upload...'
+                },
+            }
         '''
 
         try:

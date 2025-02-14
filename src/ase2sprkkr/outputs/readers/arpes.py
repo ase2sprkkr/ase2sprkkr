@@ -1,4 +1,4 @@
-""" The ARPES result: currently it """
+""" The ARPES reader and result. """
 
 from ..task_result import TaskResult, KkrProcess
 from .default import DefaultOutputReader
@@ -8,7 +8,9 @@ import os
 
 
 class ArpesResult(TaskResult):
-  """ Objects of this class holds the results of computed SCF class """
+  """ ARPES result provides acces to the generated SPC output file
+  containing the results of Angle resolved photoelectron electroscopy,
+  using the :py:attr:`~spc` property. """
 
   @cached_property
   def spc_filename(self):
