@@ -38,7 +38,8 @@ class TestGrammar(TestCase):
        self._test_types()
 
   def _test_types(self):
-    Error = object()
+    Error = object()        # both parse and attempt to set should fail
+    ParseError = object()   # just parse fail, attempt to set is ok
 
     class Invalid:
 
@@ -54,9 +55,13 @@ class TestGrammar(TestCase):
           out = out[0]
           self.assertEqual(out, res, "{} should be {} and is {} for type {}".format(val, res, out, type.__class__.__name__))
         except (ValueError, pyparsing.ParseException) as e:
-          assert res is Error, f"'{val}' should be validated as '{res}'" \
+          assert res is Error or res is ParseError, \
+              f"'{val}' should be validated as '{res}'" \
               f" for type {type.__class__.__name__}, an error {e} have been given"
-          test_invalid(val)
+          if res is Error:
+              test_invalid(val)
+          else:
+              assert type.validate(val)
           return
         assert type.validate(out)
         out = g.parseString(val, True)
@@ -100,6 +105,14 @@ class TestGrammar(TestCase):
     for val, res in [
         (-101, Error),
     ]:
+        test(val, res)
+
+    type = gt.QString()
+    for val, res in [
+        ('1', '1'),
+        ('"aaa bbb"', "aaa bbb"),
+        ('aaa bbb', ParseError),
+                    ]:
         test(val, res)
 
     type = gt.Integer()
@@ -413,7 +426,7 @@ class TestGrammar(TestCase):
         ('-2.4',-2.4),
         ('AHOJ', 'AHOJ'),
         ('', True),
-        ('aaaa aaaa', Error),
+        ('aaaa aaaa', ParseError),
         ('{1,2,3}', np.array([1,2,3])),
         ('{1.,2.,3.}', np.array([1.,2.,3.]))
                    ]:
