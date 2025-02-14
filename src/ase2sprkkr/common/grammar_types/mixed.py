@@ -7,7 +7,7 @@ import copy
 from .grammar_type import GrammarType, compare_numpy_values, recognized_set_types, type_from_type, type_from_value
 from ..decorators import cached_property, add_to_signature
 
-from .basic import Energy, Real, Integer, QString, LineString, Flag, Bool
+from .basic import Energy, Real, Integer, QString, LineString, Flag, Bool, Boolean
 from .arrays import SetOf, set_of_integers, set_of_reals
 
 
@@ -79,46 +79,19 @@ class Range(BaseMixed):
   def get_type(self, value):
       return self.types[1 if isinstance(value, recognized_set_types) else 0]
 
+def VariantGenerator(name, bool_type = Boolean.I, string_type = QString.I, add_types = None, doc=None):
 
-class Mixed(BaseMixed):
-  """ A variant value to be used in input files (in unknown - custom - options) """
-
-  types = [
+  base_types = [
         Energy.I,
         Real.I,
         Integer.I,
         set_of_integers,
         set_of_reals,
-        QString.I,
-        Flag.I,
+        bool_type,
+        string_type
   ]
-  """ Possible types of the value """
-
-  string_type = QString.I
-  """ Input files use quoted strings. """
-
-  def missing_value(self):
-    return True, True, False
-
-  is_the_same_value = staticmethod(compare_numpy_values)
-
-
-class PotMixed(BaseMixed):
-  """ A variant value to be used in potential files (in unknown - custom - options) """
-
-  types = [
-        Energy.I,
-        Real.I,
-        Integer.I,
-        Bool.I,
-        set_of_integers,
-        set_of_reals,
-        LineString.I,
-  ]
-  """ Possible types of the value """
-
-  string_type = LineString.I
-  """ Potential files use line strings. """
+  if add_types:
+        base_types+=add_types
 
   def _string(self, val):
     if isinstance(val, bool):
@@ -126,7 +99,22 @@ class PotMixed(BaseMixed):
     else:
        return super()._string(val)
 
-  is_the_same_value = staticmethod(compare_numpy_values)
+  return type(name, (BaseMixed,),{
+    "string_type" : string_type,
+    "is_the_same_value" : compare_numpy_values,
+    "types" : base_types,
+    "_string" : _string,
+    "__doc__" : doc
+    })
+
+Mixed = VariantGenerator("Mixed", Flag.I, QString.I,
+                          doc = """ A variant value to be used in input files (in unknown - custom - options) """)
+Mixed.missing_value = lambda : True, True, False
+
+PotMixed = VariantGenerator("PotMixed", Bool.I, LineString.I,
+                            doc = """ A variant value to be used in potential files (in unknown - custom - options) """)
+Variant =  VariantGenerator("PotMixed", Boolean.I, QString.I,
+                            doc = """ Variant type for configuration """)
 
 
 class CustomMixed(BaseMixed):
