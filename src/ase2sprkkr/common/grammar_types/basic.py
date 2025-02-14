@@ -271,8 +271,11 @@ class QString(BaseString):
   """ Either a quoted string, or just a word (without whitespaces or special chars) """
   _grammar = (pp.Word(pp.printables, excludeChars=",;{}") or pp.QuotedString("'")).setParseAction(lambda x:x[0])
 
+  def _string(self, value):
+    return f'"{value}"'
+
   def grammar_name(self):
-    return "'<str>'"
+    return '"<str>"'
 
 
 class LineString(BaseString):
@@ -280,7 +283,7 @@ class LineString(BaseString):
   _grammar = pp.SkipTo(pp.LineEnd() | pp.StringEnd())
 
   def grammar_name(self):
-    return "'<str....>\n'"
+    return "<str....>\n"
 
 
 class Keyword(GrammarType):
