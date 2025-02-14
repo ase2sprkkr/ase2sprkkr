@@ -112,7 +112,7 @@ class BaseBool(TypedGrammarType):
 
 class Bool(BaseBool):
   """ A bool type, whose value is represented by a letter (T or F) """
-  _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).setParseAction( lambda x: x[0] == 'T' )
+  _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).setParseAction( lambda x: x[0].upper() == 'T' )
 
   def grammar_name(self):
     return '<T|F>'
