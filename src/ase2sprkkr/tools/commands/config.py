@@ -73,7 +73,9 @@ def run(args):
         if args.default == 'overwrite' or not os.path.isfile(file):
             with open(file, 'w') as f:
                 f.write(default_content(file))
-            print(f"Defaults written to {file}")
+            print(f"Configuration defaults have been written to file '{file}'.")
+        else:
+            print(f"Configuration file have already existed, so it have not been overwritten.")
         run=False
     if args.path:
         print(file)
