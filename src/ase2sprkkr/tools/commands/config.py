@@ -20,6 +20,7 @@ description='On the most modern unix/linux systems, it is in the file ~/.config/
 def parser(parser):
     parser.add_argument('-p', '--path', help='Just print the path to the file.', action='store_true')
     parser.add_argument('-i', '--info', help='Show the description of the configuration options.', action='store_true')
+    parser.add_argument('-P', '--print', help='Just print the path configuration file.', action='store_true')
     parser.add_argument('-s', '--show', help='Print the configuration.', action='store_true')
     parser.add_argument('-S', '--set', nargs=2,  help='Set the given configuration to the given value. Example "ase2sprkkr config -S executables.suffix 8.6".', metavar=("NAME", "VALUE"))
     parser.add_argument('-e', '--edit', help='Edit the file using the editor in the $EDITOR environment variable.', action='store_true')
@@ -76,6 +77,10 @@ def run(args):
         run=False
     if args.path:
         print(file)
+        run=False
+    if args.print:
+        with open(file, 'r') as f:
+           print(f.read())
         run=False
     if args.show_default:
         print(default_content(file))
