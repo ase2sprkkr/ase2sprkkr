@@ -96,7 +96,8 @@ def run(args):
           print(f"Neznámá konfigurační volba '{args.set[0]}'")
         run=False
     if args.show:
-        print(config.to_dict())
+        import pprint
+        pprint.pp(config.to_dict())
         run=False
     if args.edit:
         if 'EDITOR' not in os.environ:
