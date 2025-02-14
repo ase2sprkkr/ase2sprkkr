@@ -5,7 +5,7 @@ import os
 import re
 from typing import Union
 from .common.decorators import cache
-from .common.grammar_types import CustomMixed, QString, Array, Bool, Keyword, Integer
+from .common.grammar_types import CustomMixed, AlwaysQString, Array, Bool, Keyword, Integer
 from .common.container_definitions import SectionDefinition, ConfigurationRootDefinition
 from .common.configuration_containers import RootConfigurationContainer
 from .common.value_definitions import ValueDefinition
@@ -228,27 +228,27 @@ definition = ConfigFileDefinition('config', [
       True : 'Always do empty spheres finding.',
       False: 'Newer do empty spheres finding.',
       'auto': 'Do empty spheres finding for unconverged potential not containing any vaccuum atom.'
-      }, transform=None), default_value='auto', info="Run empty spheres finding before calculation? Default value ``auto`` means only for SCF calculations not containing any vacuum atom."),
+      }, transform=None, quote='"'), default_value='auto', info="Run empty spheres finding before calculation? Default value ``auto`` means only for SCF calculations not containing any vacuum atom."),
     V('print_output', Keyword({
       True: 'Print all output of SPRKKR executables to screen.',
       False: 'Do not print any output of SPRKKR executables.',
       'info': 'Print only brief information about iterations of SCF cycle.',
-    }, transform=None), default_value='info', info="Print output of SPRKKR calculation. Default value ``info`` prints only short info each iteration."),
-    V('mpi', CustomMixed(Bool, Array(QString.I), Integer.I), is_optional=True, default_value=None,
+    }, transform=None, quote='"'), default_value='info', info="Print output of SPRKKR calculation. Default value ``info`` prints only short info each iteration."),
+    V('mpi', CustomMixed(Bool, Array(AlwaysQString.I), Integer.I), is_optional=True, default_value=None,
              info='Use mpi for calculation? List of strings means yes, use the given strings as mpi runner and its params (e.g. [ "mpirun", "-n", "4" ]). Default None means try to autodetect. Integer number means use the standard runner with a given number of processes.'),
     V('mpi_warning', True, info='Warn, if no MPI is found.')
   ], info='Default values for SPRKKR calculator parameters.'),
 
   Section('executables', [
-    V('suffix', QString.I,
+    V('suffix', AlwaysQString.I,
                 default_value=_get_suffix,
                 info="This suffix is appended (if not stated otherwise) to the SPRKKR "
                      "executable names."),
-    V('dir', QString.I, is_optional=True, info='Directory, from which the executables will be runned. None mean use the default environment variable PATH mechanism')
+    V('dir', AlwaysQString.I, is_optional=True, info='Directory, from which the executables will be runned. None mean use the default environment variable PATH mechanism')
   ], info="Configuration, that affects how the execubables are runned"),
 
   Section('nomad', [
-    V('token', QString.I, info = "Token for NOMAD upload", is_optional=True)
+    V('token', AlwaysQString.I, info = "Token for NOMAD upload", is_optional=True)
   ])
 
 ])
