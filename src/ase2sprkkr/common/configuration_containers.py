@@ -230,7 +230,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
       for i in self._members.values():
           i.clear(do_not_check_required, call_hooks=call_hooks, generated=False if generated is None else generated)
 
-  def get_members(self, name=None, unknown='find', is_option=None, lower_case=False):
+  def get_members(self, name=None, unknown='find', is_option=None, lower_case=True):
       """
       Get all the members of given name. According to ``unknown`` parameter,
       either only from self, or from any child containers, too.
