@@ -23,7 +23,7 @@ class BaseMixed(GrammarType):
   """ Type of string grammar_type to be used.  To be redefined in the descendants. """
 
   def _grammar(self, param_name=False):
-      return pp.MatchFirst((
+      return pp.Or((
         i.grammar(param_name) for i in self.types
       ))
 
@@ -109,7 +109,7 @@ def VariantGenerator(name, bool_type = Boolean.I, string_type = QString.I, add_t
 
 Mixed = VariantGenerator("Mixed", Flag.I, QString.I,
                           doc = """ A variant value to be used in input files (in unknown - custom - options) """)
-Mixed.missing_value = lambda : True, True, False
+Mixed.missing_value = lambda self: (True, True, False)
 
 PotMixed = VariantGenerator("PotMixed", Bool.I, LineString.I,
                             doc = """ A variant value to be used in potential files (in unknown - custom - options) """)

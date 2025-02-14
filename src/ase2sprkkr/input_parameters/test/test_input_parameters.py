@@ -71,8 +71,10 @@ class TestInputParameters(TestCase):
      assertNotValid("aaa=1")
      with generate_grammar():
         cv = cv + 'a'
-     out = self.parse("bbb=1a", cv)
+     out = self.parse("bbb=1 a", cv)
      self.assertEqual(list(out), [('bbb', 1), 'a'])
+     out = self.parse("bbb=1a a", cv)
+     self.assertEqual(list(out), [('bbb', "1a"), 'a'])
      assertNotValid("bbb=1\na")
 
   def test_dangerous_value(self):
