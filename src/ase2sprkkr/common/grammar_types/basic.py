@@ -5,6 +5,7 @@ import datetime
 import pyparsing as pp
 from typing import Optional
 import numpy as np
+import re
 
 from ..decorators import add_to_signature, cached_property
 from ..grammar import generate_grammar, separator_grammar, \
@@ -279,16 +280,31 @@ class String(BaseString):
   def grammar_name(self):
     return '<str>'
 
+class AlwaysQString(BaseString):
+  """ Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes. """
+  _grammar = (pp.Word(pp.printables, excludeChars="\",;{}") | pp.QuotedString('"')).setParseAction(lambda x:x[0])
 
-class QString(BaseString):
-  """ Either a quoted string, or just a word (without whitespaces or special chars) """
-  _grammar = (pp.Word(pp.printables, excludeChars=",;{}") or pp.QuotedString("'")).setParseAction(lambda x:x[0])
+  def _validate(self, value, why='set'):
+    if not value.__class__ is str:
+        return "String expected"
+    return True
 
   def _string(self, value):
+    value = value.replace('"', '\\"')
     return f'"{value}"'
 
   def grammar_name(self):
     return '"<str>"'
+
+
+class QString(AlwaysQString):
+  """ Either a quoted string, or just a word (without whitespaces or special chars) """
+
+  def _string(self, value):
+    value = str(value)
+    if re.match(r"^[\S\"]+$", value):
+        return value
+    return super()._string(value)
 
 
 class LineString(BaseString):
@@ -444,6 +460,8 @@ string = String.I = String()               # NOQA: E741
 """ A standard grammar type instance for strings """
 qstring = QString.I = QString()            # NOQA: E741
 """ A standard grammar type instance for quoted strings in input files """
+qstring = AlwaysQString.I = AlwaysQString() # NOQA: E741
+""" A standard grammar type instance for quoted strings in configuration files """
 line_string = LineString.I = LineString()  # NOQA: E741
 """ A standard grammar type instance for one-line strings in potential files """
 energy = Energy.I = Energy()               # NOQA: E741
