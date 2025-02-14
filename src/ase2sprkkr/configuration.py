@@ -3,6 +3,7 @@ by .config/ase2sprkkr/__init__.py file"""
 
 import os
 import re
+from typing import Union
 from .common.decorators import cache
 from .common.grammar_types import CustomMixed, QString, Array, Bool, Keyword, Integer
 from .common.container_definitions import SectionDefinition, ConfigurationRootDefinition
@@ -114,9 +115,10 @@ def mpi_runner(mpi):
 
 class Configuration(RootConfigurationContainer):
 
-    def set_permanent(self, name:str, value, doc=None, doc_regex:bool or str=False):
+    def store_value_permanent(self, name:str, value, doc=None, doc_regex:bool or str=False):
         """
-        Set/remove permanently the value in the config file. If the value is present, it is
+        Set/remove permanently the value with given name in the config file.
+        No name/value checking. If the value is present, it is
         changed, otherwise, new line with setting the value is added to the file.
         If the value is to be removed, all the lines value = .... will be removed
         from the config file.
@@ -139,8 +141,6 @@ class Configuration(RootConfigurationContainer):
           If True, the doc parameter can be given as regular expression.
         """
         global user_preference_file
-        self.set(name, value)
-
         file = user_preferences_file()
         if not os.path.isfile(file):
             raise ValueError("Please, generate the user prefernce file using 'ase2sprkkr config -d' first.")
@@ -161,7 +161,7 @@ class Configuration(RootConfigurationContainer):
                 else:
                     pre = ''
             else:
-                line = f"config.{name} = {value.__repr__()}\n"
+                line = f"config.{name} = {value}\n"
                 cnt = 1
                 pre = ''
                 last= f"(?!(.*\n)*{pattern})"
@@ -187,17 +187,24 @@ class Configuration(RootConfigurationContainer):
 
 class ConfigurationOption(Option):
 
-    def set_permanent(self, value):
-        """ Set the value and store it in the config file """
-        self.set(value)
-        self.permanent_store()
+    def set_permanent(self, value, doc=None, doc_regex: Union[bool, str]=False):
+        """ Set the value and store it in the config file
 
-    def permanent_store(self):
-        """ Store the actual value in the config file """
+        See :meth:`Configuration.store_value_permament` for the meaning of the parameters
+        """
+
+        self.set(value)
+        self.store_permanent()
+
+    def store_permanent(self, doc=None, doc_regex: Union[bool, str]=False):
+        """ Store the actual value in the config file
+
+        See :meth:`Configuration.store_value_permament` for the meaning of the parameters
+        """
         val = self()
         if val is not None:
             val = self._definition.type.string(val)
-        config.set_permanent(self.get_path(), val)
+        config.store_value_permanent(self.get_path(), val)
 
 
 class ConfigValueDefinition(ValueDefinition):

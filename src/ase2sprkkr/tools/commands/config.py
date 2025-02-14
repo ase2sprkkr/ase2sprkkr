@@ -18,15 +18,15 @@ description='On the most modern unix/linux systems, it is in the file ~/.config/
 
 
 def parser(parser):
-    parser.add_argument('-p', '--path', help='Just print the path to the file.', action='store_true')
-    parser.add_argument('-i', '--info', help='Show the description of the configuration options.', action='store_true')
+    parser.add_argument('-p', '--path', help='Just print the path to the configuration file.', action='store_true')
     parser.add_argument('-P', '--print', help='Just print the path configuration file.', action='store_true')
     parser.add_argument('-s', '--show', help='Print the configuration.', action='store_true')
-    parser.add_argument('-S', '--set', nargs=2,  help='Set the given configuration to the given value. Example "ase2sprkkr config -S executables.suffix 8.6".', metavar=("NAME", "VALUE"))
+    parser.add_argument('-i', '--info', help='Show the description of the configuration options.', action='store_true')
+    parser.add_argument('-S', '--set', nargs=2,  help='Set the given configuration to the given value. Example: "ase2sprkkr config -S executables.suffix 8.6".', metavar=("NAME", "VALUE"))
     parser.add_argument('-e', '--edit', help='Edit the file using the editor in the $EDITOR environment variable.', action='store_true')
-    parser.add_argument('-d', '--default', help='Put the default values into the file, if it not exists', action='store_true')
-    parser.add_argument('-D', '--overwrite-by-default', dest='default', help='Put the default values into the file, even if it exists', action='store_const', const='overwrite')
-    parser.add_argument('-o', '--show-default', help='Show the default values', action='store_true')
+    parser.add_argument('-d', '--default', help='Put the default values into the file, if it not exists.', action='store_true')
+    parser.add_argument('-D', '--overwrite-by-default', dest='default', help='Put the default values into the file. Owerwrite it if it exists.', action='store_const', const='overwrite')
+    parser.add_argument('-o', '--show-default', help='Show the default values.', action='store_true')
 
 
 def default_content(file):
@@ -56,13 +56,14 @@ from ase2sprkkr.configuration import config
 # You can change the verbosity of the output by setting the following to False or True
 # config.running.print_output = 'info'
 
-# Authentication token to Nomad. You can set it using ase2sprkkr nomad -a -u <username>
+# Authentication token to Nomad. You can set it using ase2sprkkr nomad authenticate <username>
 # config.nomad.token = None
 """
 
 
 def run(args):
     import os
+    import pyparsing
     from ...configuration import user_preferences_file, config
     import subprocess
     file = user_preferences_file()
@@ -91,11 +92,16 @@ def run(args):
         print(config._definition.description(verbose = 'all'))
         run=False
     if args.set:
+        from ...common.grammar_types import Variant
         try:
-          val = config.find(args.set[0], unknown=False)
-          val.set_permanent(args.set[1])
+          val = Variant().parse(args.set[1])
+          config.find(args.set[0]).set_permanent(val)
+          print(f"Configuration '{args.set[0]}' have been set to '{args.set[1]}'.")
         except KeyError:
-          print(f"Neznámá konfigurační volba '{args.set[0]}'")
+          print(f"Unknown configuration name '{args.set[0]}'.")
+        except pyparsing.ParseBaseException:
+          print(f"Suspicious configuration value '{args.set[1]}'. If you are sure,"
+                 "please edit the configuration file manually")
         run=False
     if args.show:
         import pprint

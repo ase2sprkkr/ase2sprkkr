@@ -62,12 +62,12 @@ def authenticate(args):
     from ase2sprkkr.configuration import config
     if args.delete_credentials:
         token=None
-        config.set_permanent('nomad.token', token, r"Authentication token to Nomad \(written by 'ase2sprkkr nomad -a -u [^\s]+'\)", True)
+        config.nomad.token.set_permanent(token, r"Authentication token to Nomad \(written by 'ase2sprkkr nomad authenticate [^\s]+'\)", True)
         return
     else:
         token=retrieve_token(args, args.expires * 24 * 3600)
     if not args.do_not_store:
-        config.set_permanent('nomad.token', token, f"Authentication token to Nomad (written by 'ase2sprkkr nomad -a -u {args.user}')")
+        config.nomad.token.set_permanent(token, f"Authentication token to Nomad (written by 'ase2sprkkr nomad authenticate {args.user}')")
 
     if args.print_token:
         print(token)
