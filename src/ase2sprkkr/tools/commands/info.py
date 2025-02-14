@@ -89,6 +89,7 @@ def run(args):
                 print(f"{x}\n{'-'*len(x)}")
 
         found = False
+
         for i in input_parameters:
             def print_ip(i, prefix='', add=None):
                 if args.verbose or args.verbose is None and filter is not True:
@@ -102,7 +103,7 @@ def run(args):
                     print(prefix + i.info())
 
             if path is not None:
-                ii = list(i.create_object().get_members(path))
+                ii = list(i.create_object().get_members(path, is_option=False))
                 if not ii:
                     continue
                 found = True
