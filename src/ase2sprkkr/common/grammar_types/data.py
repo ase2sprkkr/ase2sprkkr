@@ -65,7 +65,7 @@ class RawData(GrammarType):
           the value of the given option determines the number of lines.
 
         indented
-If there are <n> spaces before data, pass n to this arg.
+          If there are <n> spaces before data, pass n to this arg.
 
           If the file has the following structure:
           .. code-block:: text
