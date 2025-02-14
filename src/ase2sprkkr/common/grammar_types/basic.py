@@ -319,8 +319,9 @@ class Keyword(GrammarType):
   """
   A value, that can take values from the predefined set of strings.
   """
-  def __init__(self, *keywords, aliases=None, transform='upper', **kwargs):
+  def __init__(self, *keywords, aliases=None, transform='upper', quote=None, **kwargs):
     self.aliases = aliases or {}
+    self.quote = quote
     if transform == 'upper':
         self.transform = lambda x: str(x).upper()
     elif transform == 'lower':
@@ -342,6 +343,12 @@ class Keyword(GrammarType):
 
   def _validate(self, value, why='set'):
     return value in self.keywords or "Required one of [" + "|".join(self.keywords) + "]"
+
+  def _string(self, val):
+      if self.quote and val.__class__ == str:
+          return f"{self.quote}{val}{self.quote}"
+      else:
+          return str(val)
 
   def grammar_name(self):
       if len(self.keywords) == 1:
