@@ -367,10 +367,13 @@ class ValueDefinition(RealItemDefinition):
           if value is None:
              req = opt.is_required
              if req:
-                if req == 'save' and why != 'save':
-                    return True
+                if req == 'save':
+                    if why != 'save':
+                        return True
+                    else:
+                        req = True
                 if req is True:
-                    raise ValueError(f"The value is required for {opt._get_path()}, cannot set it to None")
+                    raise ValueError(f"The value is required for {opt._get_path()}, it can't be None")
                 else:
                     raise ValueError(req)
              return True
