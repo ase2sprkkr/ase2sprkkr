@@ -1,3 +1,5 @@
+""" SCF (selfconsisten cycle) reader and result. """
+
 import pyparsing as pp
 import numpy as np
 from ase.units import Rydberg
@@ -24,7 +26,9 @@ class RealOrStars(Real):
 
 
 class ScfResult(TaskResult):
-  """ Objects of this class holds the results of computed SCF class """
+  """ Objects of this class holds the results of a self-consistent cycle and its iterations.
+  It also allows to plot the convergence of values during iterations.
+  """
 
   @cached_property
   def calculator(self):
@@ -62,7 +66,7 @@ class ScfResult(TaskResult):
       """ Return the array of values of given name from the
       iterations (i.e. "the column of the table of the values")
 
-      E.g. result.iteration_values('ETOT') return list of
+      E.g. result.iteration_values(('energy', 'ETOT')) return list of
       floats - the total energies computed in each iteration.
 
       Parameters
