@@ -121,6 +121,19 @@ class Bool(BaseBool):
     return 'T' if val else 'F'
 
 
+class Boolean(BaseBool):
+  """ A bool type, whose value is represented by a letter (T or F) """
+  _items = [ 'True', 'False', '1', '0', 'yes', 'no' ]
+  _grammar =  pp.Or([pp.CaselessKeyword(i) for i in _items]).\
+                   setParseAction( lambda x: x[0].lower() in ('true','yes','1') )
+
+  def grammar_name(self):
+    return '<True|False|0|1|yes|no>'
+
+  def _string(self, val):
+    return 'True' if val else 'False'
+
+
 class IntBool(BaseBool):
   """ A bool type, whose value is represented by a letter (1 or 0) """
   _grammar = (pp.CaselessKeyword('1') | pp.CaselessKeyword('0')).setParseAction( lambda x: x[0] == '1' )
@@ -439,3 +452,5 @@ separator = Separator.I = Separator()      # NOQA: E741
 """ A standard grammar type instance for separators in potential files """
 int_bool = IntBool.I = IntBool()           # NOQA: E741
 """ A standard grammar type instance for bool expressed as integer """
+boolean = Boolean.I = Boolean()            # NOQA: E741
+""" A standard grammar type instance for True|False 0|1 yes|no boolean"""
