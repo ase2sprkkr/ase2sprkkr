@@ -4,6 +4,7 @@ import numpy as np
 from ase2sprkkr import SPRKKR
 from ase.units import Bohr
 import os
+from ase2sprkkr.bindings.spglib import spglib_dataset
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -61,9 +62,9 @@ class TestSpheres(TestCase):
 
   def test(self, temporary_dir):
       a2 = ase.build.bulk('Cu', 'fcc', a=3.6, orthorhombic=True)
-      sg = ase.spacegroup.get_spacegroup(a2)
+      sgno = spglib_dataset(a2).number
       cp = a2.cell.cellpar()
-      sy.find_symmetry_ex(sg.no, cp[:3],cp[3:], a2.cell[:], len(a2), np.ascontiguousarray(a2.get_scaled_positions()), len(a2), np.arange(len(a2), dtype=np.int32), a2.positions, False)
+      sy.find_symmetry_ex(sgno, cp[:3],cp[3:], a2.cell[:], len(a2), np.ascontiguousarray(a2.get_scaled_positions()), len(a2), np.arange(len(a2), dtype=np.int32), a2.positions, False)
       out = sy.find_symmetry(a2, subprocess=False)
       self.assertEqual(out.shape, (2,48))
       out = sy.find_symmetry(a2, subprocess=True)
