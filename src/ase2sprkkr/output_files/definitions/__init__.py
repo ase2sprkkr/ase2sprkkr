@@ -1,4 +1,5 @@
-""" This module describe common header, that appears in the output
+""" This subpackage contains definitions for known output files.
+This module itself describes the common header, that appears in the output
 files of SPRKKR """
 
 from ...sprkkr.configuration import ConfigurationFile, ConfigurationValue
