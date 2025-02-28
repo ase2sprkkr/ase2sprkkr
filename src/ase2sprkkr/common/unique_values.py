@@ -14,6 +14,10 @@ class UniqueValuesMapping:
       The instances of the class can be merged to distinct the values, that are
       the same according to one criterion, but distinct on the other.
 
+      .. testsetup::
+
+         np.set_printoptions(legacy='1.25')
+
       .. doctest::
 
         >>> UniqueValuesMapping.from_values([1,4,1]).mapping
@@ -61,6 +65,10 @@ class UniqueValuesMapping:
       start_from:
         The indexes are by default zero-based, however they can start with
         the given number (typically with 1).
+
+      .. testsetup::
+
+         np.set_printoptions(legacy='1.25')
 
       ..doctest::
         >>> UniqueValuesMapping([1,4,1]).indexes()
