@@ -39,6 +39,8 @@ authors = [
   { email = "ase2sprkkr@ntc.zcu.cz" }
 ]
 readme = "README.md"
+description = "Wrapper/calculator for SPRKKR to be used within ASE (Atomic Simulation Environment)"
+license-files = ["LICENCE"]
 
 [project.urls]
 Homepage = "https://ase2sprkkr.github.io/ase2sprkkr/"
