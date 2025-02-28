@@ -38,7 +38,7 @@ def run(args):
     if pytest.version_tuple[0] <= 6:
         print("Pytest version >= 6.0 is required. Please install it with pip install --upgrade 'pytest>=6'")
         exit(-1)
-    out = subprocess.run([sys.executable, '-m', 'pytest', '--import-mode=importlib', '--doctest-modules', '--rootdir', root_path, a2s_path ] +
+    out = subprocess.run([sys.executable, '-m', 'pytest', '--doctest-modules', '--rootdir', root_path, a2s_path ] +
                    args.pytest_arguments)
     exit(out.returncode)
 

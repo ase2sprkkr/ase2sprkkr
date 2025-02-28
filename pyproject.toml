@@ -1,13 +1,19 @@
 [build-system]
-build-backend = 'mesonpy'
-requires = ['meson-python', 'cython', 'numpy', 'ninja' ]
+#requires = ["scikit-build-core>=0.8", "cython"]
+build-backend = "scikit_build_core.build"
+requires = [
+    "scikit-build-core",
+    "cython",
+		"numpy"
+]
+#build-backend = "setuptools.build_meta"
 
 [project.scripts]
 ase2sprkkr = "ase2sprkkr.tools.ase2sprkkr:run"
 
 [project]
 name = "ase2sprkkr"
-version = "3.2.7b"
+version = "3.3.0b"
 requires-python = ">= 3.8"
 dependencies = [
   "ase",
@@ -39,3 +45,52 @@ Homepage = "https://ase2sprkkr.github.io/ase2sprkkr/"
 
 [project.entry-points."ase.plugins"]
 ase2sprkkr = "ase2sprkkr.ase.register"
+
+[tool.scikit-build]
+logging.level = "DEBUG"
+ninja.make-fallback = false
+cmake.version = ">=3.15"
+build.verbose = true
+
+wheel.packages = ["src/ase2sprkkr"]
+sdist.exclude = [
+	"**/*",
+	"**/*.sw?",
+	"**/.pytest_cache",
+	"**/.pytest_cache/**",
+]
+sdist.include = [
+	"src/ase2sprkkr/input_parameters/examples/*.in",
+	"src/ase2sprkkr/potentials/examples/*.pot",
+	"src/ase2sprkkr/output_files/examples/*.bsf",
+	"src/ase2sprkkr/output_files/examples/*.spc",
+	"src/ase2sprkkr/output_files/examples/*.dos",
+	"src/ase2sprkkr/outputs/examples/*.out",
+	"src/ase2sprkkr/examples/README",
+
+	"src/ase2sprkkr/sprkkr/test/*.cif",
+	"src/ase2sprkkr/bindings/xband/tests/*.pot",
+	"src/ase2sprkkr/run_tests",
+
+	"src/ase2sprkkr/**/*.py",
+	"src/ase2sprkkr/**/*.pyx",
+	"src/ase2sprkkr/**/*.f",
+	"src/ase2sprkkr/**/*.fi",
+	"src/ase2sprkkr/**/*.h",
+	"src/**/CMakeLists.txt",
+	"/CMakeLists.txt",
+	"/LICENCE",
+	"/CHANGELOG",
+  "/README.md",
+	"docs/**",
+
+	"pyproject.toml",
+  "meta.yaml"
+]
+wheel.exclude = [
+	"**/*.pyx",
+	"**/*.h",
+	"**/*.f",
+	"**/*.fi",
+	"CMakeLists.txt",
+]

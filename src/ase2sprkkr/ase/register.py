@@ -1,6 +1,5 @@
 registered = False
 
-
 def register():
     global registered
 
@@ -12,7 +11,7 @@ def register():
         from ase.calculators.calculator import register_calculator_class
         from ..sprkkr.calculator import SPRKKR  # NOQA: E402
         registered=True
-        #register_calculator_class('sprkkr', SPRKKR)
+        register_calculator_class('sprkkr', SPRKKR)
 
 
 try:
