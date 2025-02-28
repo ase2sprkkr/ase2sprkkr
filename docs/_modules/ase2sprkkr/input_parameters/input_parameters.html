@@ -106,7 +106,7 @@
 <span class="kn">from</span> <span class="nn">..sprkkr.configuration</span> <span class="kn">import</span> <span class="n">ConfigurationFile</span><span class="p">,</span> <span class="n">ConfigurationSection</span>
 <span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_class_property</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
-<span class="kn">from</span> <span class="nn">..config</span> <span class="kn">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpi_runner</span>
+<span class="kn">from</span> <span class="nn">..configuration</span> <span class="kn">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpi_runner</span>
 <span class="kn">from</span> <span class="nn">..potentials.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
 <span class="kn">from</span> <span class="nn">..common.doc</span> <span class="kn">import</span> <span class="n">process_input_parameters_definition</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -271,9 +271,12 @@
 
         <span class="k">return</span> <span class="n">process</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">executable</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">stdin</span> <span class="o">=</span> <span class="n">stdin</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
       <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">e</span><span class="o">.</span><span class="n">strerror</span> <span class="o">=</span> <span class="s1">&#39;Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable &#39;</span> \
-                     <span class="s1">&#39;or ase2sp_rkkr.config.config.executable.suffix variable should be set?</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
-                     <span class="n">e</span><span class="o">.</span><span class="n">strerror</span>
+        <span class="n">add</span> <span class="o">=</span> <span class="s1">&#39;Cannot find SPRKKR executable. Maybe, ase2sprkkr.config.executable.suffix &#39;</span> \
+              <span class="s1">&#39;variable should be set (or the SPRKKR_EXECUTABLE_SUFFIX environment variable)?</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="n">mpi</span><span class="p">:</span>
+            <span class="n">add</span><span class="o">+=</span><span class="s1">&#39;Also, pleas check that the MPI is functional on your machine, or explicitly disable &#39;</span>\
+                 <span class="s1">&#39;MPI with mpi=False argument of calculate method (or set ase2sprkkr.config.running.mpi = False)</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">;</span>
+        <span class="n">e</span><span class="o">.</span><span class="n">strerror</span> <span class="o">=</span> <span class="n">add</span> <span class="o">+</span> <span class="s2">&quot;SPRKKR cannot be run due to the following error: </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">strerror</span>
         <span class="k">raise</span>
       <span class="k">finally</span><span class="p">:</span>
         <span class="n">input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>

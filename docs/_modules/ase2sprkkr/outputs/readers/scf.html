@@ -89,7 +89,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.outputs.readers.scf</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
+<span></span><span class="sd">&quot;&quot;&quot; SCF (selfconsisten cycle) reader and result. &quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Rydberg</span>
 
@@ -120,7 +122,9 @@
 <div class="viewcode-block" id="ScfResult">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult">[docs]</a>
 <span class="k">class</span> <span class="nc">ScfResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; Objects of this class holds the results of computed SCF class &quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; Objects of this class holds the results of a self-consistent cycle and its iterations.</span>
+<span class="sd">  It also allows to plot the convergence of values during iterations.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="nd">@cached_property</span>
   <span class="k">def</span> <span class="nf">calculator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -160,7 +164,7 @@
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Return the array of values of given name from the</span>
 <span class="sd">      iterations (i.e. &quot;the column of the table of the values&quot;)</span>
 
-<span class="sd">      E.g. result.iteration_values(&#39;ETOT&#39;) return list of</span>
+<span class="sd">      E.g. result.iteration_values((&#39;energy&#39;, &#39;ETOT&#39;)) return list of</span>
 <span class="sd">      floats - the total energies computed in each iteration.</span>
 
 <span class="sd">      Parameters</span>
@@ -362,7 +366,7 @@
           <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">==</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">iterations</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERROR: No iteration has been finished. There is probably an error in the input files, please, examine the SPR-KKR output file.&quot;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;converged&#39;</span><span class="p">]:</span>
+            <span class="k">elif</span> <span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;converged&#39;</span><span class="p">]():</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OK: The computation converged.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: The computation does not converged!!!&quot;</span><span class="p">)</span>

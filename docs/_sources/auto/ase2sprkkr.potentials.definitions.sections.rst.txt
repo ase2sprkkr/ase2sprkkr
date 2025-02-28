@@ -46,18 +46,18 @@ Full name: **ase2sprkkr.potentials.definitions.sections**
      :template: custom-module-template.rst
      :recursive:
   
-     reference_system
-     types
+     charge
      charge_moments
+     global_system_parameter
      host_madelung_potential
      lattice
+     mesh_information
      moments
+     occupation
+     potential
+     reference_system
      scf_info
      sites
-     mesh_information
-     charge
-     potential
-     occupation
-     global_system_parameter
+     types
   
   

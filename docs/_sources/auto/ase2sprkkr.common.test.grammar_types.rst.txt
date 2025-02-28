@@ -1,0 +1,58 @@
+grammar\_types
+==============
+
+Full name: **ase2sprkkr.common.test.grammar\_types**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.test.grammar_types
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      type_from_type_map
+      type_from_set_map
+      recognized_set_types
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     arrays
+     basic
+     data
+     grammar_type
+     mixed
+     warnings
+  
+  

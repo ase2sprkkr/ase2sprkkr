@@ -38,7 +38,36 @@ Full name: **ase2sprkkr.ase.test**
      :template: custom-module-template.rst
      :recursive:
   
+     alternative_types
+     backward_compatibility
+     configuration
+     configuration_containers
+     configuration_definitions
+     container_definitions
+     debug
+     decorators
+     directory
+     doc
+     formats
+     generated_configuration_definitions
+     grammar
+     grammar_types
      init_tests
+     lazy_string
+     misc
+     no_output
+     options
+     parsing_results
+     process_output_reader
+     repeated_configuration_containers
+     section_adaptors
+     subprocess
+     test
+     tools
+     unique_values
+     value_definitions
+     warnings
+     yaml
      test_build
   
   

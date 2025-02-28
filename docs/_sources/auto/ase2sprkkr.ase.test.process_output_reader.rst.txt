@@ -1,0 +1,60 @@
+process\_output\_reader
+=======================
+
+Full name: **ase2sprkkr.ase.test.process\_output\_reader**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.ase.test.process_output_reader.AsyncioFileReader  ase2sprkkr.ase.test.process_output_reader.ProcessOutputReader 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.ase.test.process_output_reader
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      readline
+      readline_until
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      AsyncioFileReader
+      ProcessOutputReader
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -38,12 +38,12 @@ Full name: **ase2sprkkr.ase**
      :template: custom-module-template.rst
      :recursive:
   
-     pbc
-     symbols
-     io
-     register
-     visualise
      build
+     io
+     pbc
+     register
+     symbols
      test
+     visualise
   
   

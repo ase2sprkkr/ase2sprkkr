@@ -89,7 +89,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.outputs.readers.arpes</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; The ARPES result: currently it &quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot; The ARPES reader and result. &quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">KkrProcess</span>
 <span class="kn">from</span> <span class="nn">.default</span> <span class="kn">import</span> <span class="n">DefaultOutputReader</span>
@@ -101,7 +101,9 @@
 <div class="viewcode-block" id="ArpesResult">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.arpes.ArpesResult.html#ase2sprkkr.outputs.readers.arpes.ArpesResult">[docs]</a>
 <span class="k">class</span> <span class="nc">ArpesResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; Objects of this class holds the results of computed SCF class &quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; ARPES result provides acces to the generated SPC output file</span>
+<span class="sd">  containing the results of Angle resolved photoelectron electroscopy,</span>
+<span class="sd">  using the :py:attr:`~spc` property. &quot;&quot;&quot;</span>
 
   <span class="nd">@cached_property</span>
   <span class="k">def</span> <span class="nf">spc_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

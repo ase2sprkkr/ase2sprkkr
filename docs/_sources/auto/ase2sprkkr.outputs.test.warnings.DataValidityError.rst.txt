@@ -1,0 +1,6 @@
+ase2sprkkr.outputs.test.warnings.DataValidityError
+==================================================
+
+.. currentmodule:: ase2sprkkr.outputs.test.warnings
+
+.. autoexception:: DataValidityError

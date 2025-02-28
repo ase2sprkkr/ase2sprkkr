@@ -48,11 +48,11 @@ Full name: **ase2sprkkr.common.grammar\_types**
      :template: custom-module-template.rst
      :recursive:
   
-     warnings
      arrays
-     grammar_type
-     mixed
      basic
      data
+     grammar_type
+     mixed
+     warnings
   
   

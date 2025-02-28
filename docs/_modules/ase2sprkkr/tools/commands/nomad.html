@@ -155,15 +155,15 @@
 <div class="viewcode-block" id="authenticate">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.authenticate.html#ase2sprkkr.tools.commands.nomad.authenticate">[docs]</a>
 <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ase2sprkkr.config</span> <span class="kn">import</span> <span class="n">config</span>
+    <span class="kn">from</span> <span class="nn">ase2sprkkr.configuration</span> <span class="kn">import</span> <span class="n">config</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">delete_credentials</span><span class="p">:</span>
         <span class="n">token</span><span class="o">=</span><span class="kc">None</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span><span class="s1">&#39;nomad.token&#39;</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;Authentication token to Nomad \(written by &#39;ase2sprkkr nomad -a -u [^\s]+&#39;\)&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;Authentication token to Nomad \(written by &#39;ase2sprkkr nomad authenticate [^\s]+&#39;\)&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">token</span><span class="o">=</span><span class="n">retrieve_token</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">expires</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">3600</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">do_not_store</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span><span class="s1">&#39;nomad.token&#39;</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Authentication token to Nomad (written by &#39;ase2sprkkr nomad -a -u </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2">&#39;)&quot;</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Authentication token to Nomad (written by &#39;ase2sprkkr nomad authenticate </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2">&#39;)&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">print_token</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></div>
@@ -185,7 +185,7 @@
 <div class="viewcode-block" id="get_token">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.get_token.html#ase2sprkkr.tools.commands.nomad.get_token">[docs]</a>
 <span class="k">def</span> <span class="nf">get_token</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ase2sprkkr.config</span> <span class="kn">import</span> <span class="n">config</span>
+    <span class="kn">from</span> <span class="nn">ase2sprkkr.configuration</span> <span class="kn">import</span> <span class="n">config</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
         <span class="n">token</span><span class="o">=</span><span class="n">retrieve_token</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -200,7 +200,7 @@
 <div class="viewcode-block" id="token">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.nomad.token.html#ase2sprkkr.tools.commands.nomad.token">[docs]</a>
 <span class="k">def</span> <span class="nf">token</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ase2sprkkr.config</span> <span class="kn">import</span> <span class="n">config</span>
+    <span class="kn">from</span> <span class="nn">ase2sprkkr.configuration</span> <span class="kn">import</span> <span class="n">config</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">token</span><span class="p">())</span></div>
 
 

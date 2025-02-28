@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.configuration &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.configuration</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.configuration</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; This module contains configuration, that could be changed, preferrably</span>
+<span class="sd">by .config/ase2sprkkr/__init__.py file&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">.common.decorators</span> <span class="kn">import</span> <span class="n">cache</span>
+<span class="kn">from</span> <span class="nn">.common.grammar_types</span> <span class="kn">import</span> <span class="n">CustomMixed</span><span class="p">,</span> <span class="n">AlwaysQString</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">.common.container_definitions</span> <span class="kn">import</span> <span class="n">SectionDefinition</span><span class="p">,</span> <span class="n">ConfigurationRootDefinition</span>
+<span class="kn">from</span> <span class="nn">.common.configuration_containers</span> <span class="kn">import</span> <span class="n">RootConfigurationContainer</span>
+<span class="kn">from</span> <span class="nn">.common.value_definitions</span> <span class="kn">import</span> <span class="n">ValueDefinition</span>
+<span class="kn">from</span> <span class="nn">.common.options</span> <span class="kn">import</span> <span class="n">Option</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">platformdirs</span>
+
+
+<div class="viewcode-block" id="Section">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.Section.html#ase2sprkkr.configuration.Section">[docs]</a>
+<span class="k">class</span> <span class="nc">Section</span><span class="p">(</span><span class="n">SectionDefinition</span><span class="p">):</span>
+    <span class="n">info_in_data_description</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">dir_common_attributes</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="_get_suffix">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._get_suffix.html#ase2sprkkr.configuration._get_suffix">[docs]</a>
+<span class="k">def</span> <span class="nf">_get_suffix</span><span class="p">(</span><span class="o">*</span><span class="n">_</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SPRKKR_EXECUTABLE_SUFFIX&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="user_preferences_file">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.user_preferences_file.html#ase2sprkkr.configuration.user_preferences_file">[docs]</a>
+<span class="k">def</span> <span class="nf">user_preferences_file</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Return filename with user preferences &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">platformdirs</span><span class="o">.</span><span class="n">user_config_dir</span><span class="p">(</span><span class="s1">&#39;ase2sprkkr&#39;</span><span class="p">,</span> <span class="s1">&#39;ase2sprkkr&#39;</span><span class="p">),</span> <span class="s1">&#39;__init__.py&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="load_user_preferences">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.load_user_preferences.html#ase2sprkkr.configuration.load_user_preferences">[docs]</a>
+<span class="k">def</span> <span class="nf">load_user_preferences</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Load user defined preferences from</span>
+<span class="sd">        ``$HOME/.config/ase2sprkkr/__init__.py``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="n">user_preferences_file</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+       <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+           <span class="kn">import</span> <span class="nn">types</span>
+           <span class="kn">import</span> <span class="nn">importlib.machinery</span>
+           <span class="n">loader</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">machinery</span><span class="o">.</span><span class="n">SourceFileLoader</span><span class="p">(</span><span class="s1">&#39;ase2sprkkr.personal&#39;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+           <span class="n">mod</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">(</span><span class="n">loader</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+           <span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">warnings</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Can not import </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1"> file with the user preferences: </span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="find_default_mpi_runner">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.find_default_mpi_runner.html#ase2sprkkr.configuration.find_default_mpi_runner">[docs]</a>
+<span class="nd">@cache</span>
+<span class="k">def</span> <span class="nf">find_default_mpi_runner</span><span class="p">():</span>
+   <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;mpirun&#39;</span><span class="p">,</span> <span class="s1">&#39;mpirun.opmpirun&#39;</span><span class="p">,</span> <span class="s1">&#39;mpirun.mpich&#39;</span> <span class="p">]:</span>
+       <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+           <span class="k">return</span> <span class="p">[</span> <span class="n">r</span> <span class="p">]</span>
+   <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="get_default_mpi_runner">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.get_default_mpi_runner.html#ase2sprkkr.configuration.get_default_mpi_runner">[docs]</a>
+<span class="nd">@cache</span>
+<span class="k">def</span> <span class="nf">get_default_mpi_runner</span><span class="p">():</span>
+
+   <span class="n">out</span> <span class="o">=</span> <span class="n">find_default_mpi_runner</span><span class="p">()</span>
+   <span class="k">if</span> <span class="n">out</span><span class="p">:</span>
+       <span class="k">return</span> <span class="n">out</span>
+   <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">mpi_warning</span><span class="p">():</span>
+       <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No MPI runner found. Disabling MPI!!!&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="mpi_runner">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.mpi_runner.html#ase2sprkkr.configuration.mpi_runner">[docs]</a>
+<span class="k">def</span> <span class="nf">mpi_runner</span><span class="p">(</span><span class="n">mpi</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Return a shell command to execute a mpi task.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mpi_runner: Union[bool,str,list,int]</span>
+
+
+<span class="sd">      - If True is given, return the default mpi-runner</span>
+<span class="sd">      - If False is given, no mpi-runner is returned.</span>
+<span class="sd">      - If &#39;auto&#39; is given, it is the same as True, however</span>
+<span class="sd">           * no warning is given if no mpi is found</span>
+<span class="sd">           * MPI is not used, if only one CPU is available</span>
+<span class="sd">      - If a string is given, it is interpreted as a list of one item</span>
+<span class="sd">      - If a list (of strings) is given, the user specified its own runner, use it as is</span>
+<span class="sd">        as the parameters for subprocess.run.</span>
+<span class="sd">      - If an integer is given, it is interpreted as the number of</span>
+<span class="sd">        processes: the default mpi-runner is used, and the parameters</span>
+<span class="sd">        to specify the number of processes.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    mpi_runner: list</span>
+<span class="sd">      List of strings with the executable and its parameters, e.g.</span>
+
+<span class="sd">      ::</span>
+
+<span class="sd">          [&#39;mpirun&#39;, &#39;-np&#39;, &#39;4&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">mpi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+       <span class="n">mpi</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">running</span><span class="o">.</span><span class="n">mpi</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">mpi</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+       <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">mpi</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+       <span class="n">mpi</span><span class="o">=</span><span class="n">find_default_mpi_runner</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">mpi</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">mpi</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">os</span><span class="p">,</span> <span class="s1">&#39;sched_getaffinity&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sched_getaffinity</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="n">find_default_mpi_runner</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span> <span class="n">mpi</span> <span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+       <span class="k">return</span> <span class="n">find_default_mpi_runner</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;-np&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">mpi</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">mpi</span></div>
+
+
+
+<div class="viewcode-block" id="Configuration">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.Configuration.html#ase2sprkkr.configuration.Configuration">[docs]</a>
+<span class="k">class</span> <span class="nc">Configuration</span><span class="p">(</span><span class="n">RootConfigurationContainer</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Configuration.store_value_permanent">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.Configuration.html#ase2sprkkr.configuration.Configuration.store_value_permanent">[docs]</a>
+    <span class="k">def</span> <span class="nf">store_value_permanent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_regex</span><span class="p">:</span><span class="nb">bool</span> <span class="ow">or</span> <span class="nb">str</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set/remove permanently the value with given name in the config file.</span>
+<span class="sd">        No name/value checking. If the value is present, it is</span>
+<span class="sd">        changed, otherwise, new line with setting the value is added to the file.</span>
+<span class="sd">        If the value is to be removed, all the lines value = .... will be removed</span>
+<span class="sd">        from the config file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">          Name of the value</span>
+
+<span class="sd">        value</span>
+<span class="sd">          Value to be set</span>
+
+<span class="sd">        doc</span>
+<span class="sd">          If it is not None:</span>
+<span class="sd">           - if the value is to be removed and it is preceeded by the line containing the given</span>
+<span class="sd">             docstring, prefixed by &#39; # &#39;, the preceding line with docstring is removed as well.</span>
+<span class="sd">           - if the value is to be added, the docstring is added before the value as well.</span>
+
+<span class="sd">        doc_regex</span>
+<span class="sd">          If True, the doc parameter can be given as regular expression.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">global</span> <span class="n">user_preference_file</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">user_preferences_file</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please, generate the user prefernce file using &#39;ase2sprkkr config -d&#39; first.&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">pattern</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;(#?</span><span class="se">\\</span><span class="s2">s*)*config.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="se">\\</span><span class="s2">s+=&quot;</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">last</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">doc_regex</span><span class="p">:</span>
+                        <span class="n">pre</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">pre</span> <span class="o">=</span> <span class="n">doc</span>
+                    <span class="n">pre</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(?:(?:^|</span><span class="se">\n</span><span class="s2">)# </span><span class="si">{</span><span class="n">pre</span><span class="si">}</span><span class="s2"> *)?&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">pre</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;config.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">cnt</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">pre</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">last</span><span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(?!(.*</span><span class="se">\n</span><span class="s2">)*</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="n">content</span><span class="p">,</span> <span class="n">replaced</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">subn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pre</span><span class="si">}</span><span class="s2">(^|</span><span class="se">\n</span><span class="s2">)</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">[^</span><span class="se">\n</span><span class="s2">]*(</span><span class="se">\n</span><span class="s2">|$)</span><span class="si">{</span><span class="n">last</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\1&#39;</span> <span class="o">+</span> <span class="n">line</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">cnt</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">replaced</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">i</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="k">while</span> <span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">content</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">):</span>
+                        <span class="k">break</span>
+                    <span class="n">i</span><span class="o">-=</span><span class="mi">1</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# </span><span class="si">{</span><span class="n">doc</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span></div>
+</div>
+
+
+<div class="viewcode-block" id="ConfigurationOption">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.ConfigurationOption.html#ase2sprkkr.configuration.ConfigurationOption">[docs]</a>
+<span class="k">class</span> <span class="nc">ConfigurationOption</span><span class="p">(</span><span class="n">Option</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ConfigurationOption.set_permanent">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.ConfigurationOption.html#ase2sprkkr.configuration.ConfigurationOption.set_permanent">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_permanent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_regex</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Set the value and store it in the config file</span>
+
+<span class="sd">        See :meth:`Configuration.store_value_permament` for the meaning of the parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store_permanent</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ConfigurationOption.store_permanent">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.ConfigurationOption.html#ase2sprkkr.configuration.ConfigurationOption.store_permanent">[docs]</a>
+    <span class="k">def</span> <span class="nf">store_permanent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_regex</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Store the actual value in the config file</span>
+
+<span class="sd">        See :meth:`Configuration.store_value_permament` for the meaning of the parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">string</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">store_value_permanent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(),</span> <span class="n">val</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigValueDefinition">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.ConfigValueDefinition.html#ase2sprkkr.configuration.ConfigValueDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">ConfigValueDefinition</span><span class="p">(</span><span class="n">ValueDefinition</span><span class="p">):</span>
+
+    <span class="n">result_class</span> <span class="o">=</span> <span class="n">ConfigurationOption</span></div>
+
+
+
+<div class="viewcode-block" id="ConfigFileDefinition">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.ConfigFileDefinition.html#ase2sprkkr.configuration.ConfigFileDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">ConfigFileDefinition</span><span class="p">(</span><span class="n">ConfigurationRootDefinition</span><span class="p">):</span>
+
+    <span class="n">dir_common_attributes</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">result_class</span> <span class="o">=</span> <span class="n">Configuration</span></div>
+
+
+
+<span class="n">V</span> <span class="o">=</span> <span class="n">ConfigValueDefinition</span>
+
+<span class="sd">&quot;&quot;&quot; The definition of ASE2SPRKKR configuration &quot;&quot;&quot;</span>
+<span class="n">definition</span> <span class="o">=</span> <span class="n">ConfigFileDefinition</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="p">[</span>
+
+  <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;running&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="n">V</span><span class="p">(</span><span class="s1">&#39;empty_spheres&#39;</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">({</span>
+      <span class="kc">True</span> <span class="p">:</span> <span class="s1">&#39;Always do empty spheres finding.&#39;</span><span class="p">,</span>
+      <span class="kc">False</span><span class="p">:</span> <span class="s1">&#39;Newer do empty spheres finding.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;auto&#39;</span><span class="p">:</span> <span class="s1">&#39;Do empty spheres finding for unconverged potential not containing any vaccuum atom.&#39;</span>
+      <span class="p">},</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">quote</span><span class="o">=</span><span class="s1">&#39;&quot;&#39;</span><span class="p">),</span> <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Run empty spheres finding before calculation? Default value ``auto`` means only for SCF calculations not containing any vacuum atom.&quot;</span><span class="p">),</span>
+    <span class="n">V</span><span class="p">(</span><span class="s1">&#39;print_output&#39;</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">({</span>
+      <span class="kc">True</span><span class="p">:</span> <span class="s1">&#39;Print all output of SPRKKR executables to screen.&#39;</span><span class="p">,</span>
+      <span class="kc">False</span><span class="p">:</span> <span class="s1">&#39;Do not print any output of SPRKKR executables.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="s1">&#39;Print only brief information about iterations of SCF cycle.&#39;</span><span class="p">,</span>
+    <span class="p">},</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">quote</span><span class="o">=</span><span class="s1">&#39;&quot;&#39;</span><span class="p">),</span> <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Print output of SPRKKR calculation. Default value ``info`` prints only short info each iteration.&quot;</span><span class="p">),</span>
+    <span class="n">V</span><span class="p">(</span><span class="s1">&#39;mpi&#39;</span><span class="p">,</span> <span class="n">CustomMixed</span><span class="p">(</span><span class="n">Bool</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">),</span> <span class="n">Integer</span><span class="o">.</span><span class="n">I</span><span class="p">),</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Use mpi for calculation? List of strings means yes, use the given strings as mpi runner and its params (e.g. [ &quot;mpirun&quot;, &quot;-n&quot;, &quot;4&quot; ]). Default None means try to autodetect. Integer number means use the standard runner with a given number of processes.&#39;</span><span class="p">),</span>
+    <span class="n">V</span><span class="p">(</span><span class="s1">&#39;mpi_warning&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Warn, if no MPI is found.&#39;</span><span class="p">)</span>
+  <span class="p">],</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Default values for SPRKKR calculator parameters.&#39;</span><span class="p">),</span>
+
+  <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;executables&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="n">V</span><span class="p">(</span><span class="s1">&#39;suffix&#39;</span><span class="p">,</span> <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+                <span class="n">default_value</span><span class="o">=</span><span class="n">_get_suffix</span><span class="p">,</span>
+                <span class="n">info</span><span class="o">=</span><span class="s2">&quot;This suffix is appended (if not stated otherwise) to the SPRKKR &quot;</span>
+                     <span class="s2">&quot;executable names.&quot;</span><span class="p">),</span>
+    <span class="n">V</span><span class="p">(</span><span class="s1">&#39;dir&#39;</span><span class="p">,</span> <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Directory, from which the executables will be runned. None mean use the default environment variable PATH mechanism&#39;</span><span class="p">)</span>
+  <span class="p">],</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Configuration, that affects how the execubables are runned&quot;</span><span class="p">),</span>
+
+  <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;nomad&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="n">V</span><span class="p">(</span><span class="s1">&#39;token&#39;</span><span class="p">,</span> <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Token for NOMAD upload&quot;</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+  <span class="p">])</span>
+
+<span class="p">])</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">create_object</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

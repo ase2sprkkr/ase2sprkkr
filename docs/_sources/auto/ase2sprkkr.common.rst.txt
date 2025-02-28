@@ -38,35 +38,35 @@ Full name: **ase2sprkkr.common**
      :template: custom-module-template.rst
      :recursive:
   
-     no_output
-     directory
-     formats
      alternative_types
      backward_compatibility
-     debug
-     decorators
-     doc
-     init_tests
-     lazy_string
-     misc
-     section_adaptors
-     tools
-     unique_values
-     warnings
-     yaml
-     subprocess
-     parsing_results
-     container_definitions
-     grammar
-     process_output_reader
      configuration
      configuration_containers
      configuration_definitions
+     container_definitions
+     debug
+     decorators
+     directory
+     doc
+     formats
      generated_configuration_definitions
-     options
-     repeated_configuration_containers
-     value_definitions
-     test
+     grammar
      grammar_types
+     init_tests
+     lazy_string
+     misc
+     no_output
+     options
+     parsing_results
+     process_output_reader
+     repeated_configuration_containers
+     section_adaptors
+     subprocess
+     test
+     tools
+     unique_values
+     value_definitions
+     warnings
+     yaml
   
   

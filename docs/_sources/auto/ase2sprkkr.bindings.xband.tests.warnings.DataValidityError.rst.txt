@@ -1,0 +1,6 @@
+ase2sprkkr.bindings.xband.tests.warnings.DataValidityError
+==========================================================
+
+.. currentmodule:: ase2sprkkr.bindings.xband.tests.warnings
+
+.. autoexception:: DataValidityError

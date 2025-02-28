@@ -107,6 +107,10 @@
 <span class="sd">      The instances of the class can be merged to distinct the values, that are</span>
 <span class="sd">      the same according to one criterion, but distinct on the other.</span>
 
+<span class="sd">      .. testsetup::</span>
+
+<span class="sd">         np.set_printoptions(legacy=&#39;1.25&#39;)</span>
+
 <span class="sd">      .. doctest::</span>
 
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1,4,1]).mapping</span>
@@ -159,6 +163,10 @@
 <span class="sd">      start_from:</span>
 <span class="sd">        The indexes are by default zero-based, however they can start with</span>
 <span class="sd">        the given number (typically with 1).</span>
+
+<span class="sd">      .. testsetup::</span>
+
+<span class="sd">         np.set_printoptions(legacy=&#39;1.25&#39;)</span>
 
 <span class="sd">      ..doctest::</span>
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).indexes()</span>

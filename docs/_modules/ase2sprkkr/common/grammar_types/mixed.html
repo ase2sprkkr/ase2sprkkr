@@ -98,7 +98,7 @@
 <span class="kn">from</span> <span class="nn">.grammar_type</span> <span class="kn">import</span> <span class="n">GrammarType</span><span class="p">,</span> <span class="n">compare_numpy_values</span><span class="p">,</span> <span class="n">recognized_set_types</span><span class="p">,</span> <span class="n">type_from_type</span><span class="p">,</span> <span class="n">type_from_value</span>
 <span class="kn">from</span> <span class="nn">..decorators</span> <span class="kn">import</span> <span class="n">cached_property</span><span class="p">,</span> <span class="n">add_to_signature</span>
 
-<span class="kn">from</span> <span class="nn">.basic</span> <span class="kn">import</span> <span class="n">Energy</span><span class="p">,</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">QString</span><span class="p">,</span> <span class="n">LineString</span><span class="p">,</span> <span class="n">Flag</span><span class="p">,</span> <span class="n">Bool</span>
+<span class="kn">from</span> <span class="nn">.basic</span> <span class="kn">import</span> <span class="n">Energy</span><span class="p">,</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">QString</span><span class="p">,</span> <span class="n">LineString</span><span class="p">,</span> <span class="n">Flag</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Boolean</span>
 <span class="kn">from</span> <span class="nn">.arrays</span> <span class="kn">import</span> <span class="n">SetOf</span><span class="p">,</span> <span class="n">set_of_integers</span><span class="p">,</span> <span class="n">set_of_reals</span>
 
 
@@ -114,7 +114,7 @@
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Type of string grammar_type to be used.  To be redefined in the descendants. &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_name</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-      <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">MatchFirst</span><span class="p">((</span>
+      <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Or</span><span class="p">((</span>
         <span class="n">i</span><span class="o">.</span><span class="n">grammar</span><span class="p">(</span><span class="n">param_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span>
       <span class="p">))</span>
 
@@ -170,46 +170,19 @@
   <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">recognized_set_types</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span><span class="p">]</span>
 
+<span class="k">def</span> <span class="nf">VariantGenerator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bool_type</span> <span class="o">=</span> <span class="n">Boolean</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">string_type</span> <span class="o">=</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">add_types</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
-<span class="k">class</span> <span class="nc">Mixed</span><span class="p">(</span><span class="n">BaseMixed</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; A variant value to be used in input files (in unknown - custom - options) &quot;&quot;&quot;</span>
-
-  <span class="n">types</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="n">base_types</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">Energy</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
         <span class="n">Real</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
         <span class="n">Integer</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
         <span class="n">set_of_integers</span><span class="p">,</span>
         <span class="n">set_of_reals</span><span class="p">,</span>
-        <span class="n">QString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
-        <span class="n">Flag</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+        <span class="n">bool_type</span><span class="p">,</span>
+        <span class="n">string_type</span>
   <span class="p">]</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; Possible types of the value &quot;&quot;&quot;</span>
-
-  <span class="n">string_type</span> <span class="o">=</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; Input files use quoted strings. &quot;&quot;&quot;</span>
-
-  <span class="k">def</span> <span class="nf">missing_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span>
-
-  <span class="n">is_the_same_value</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">compare_numpy_values</span><span class="p">)</span>
-
-
-<span class="k">class</span> <span class="nc">PotMixed</span><span class="p">(</span><span class="n">BaseMixed</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; A variant value to be used in potential files (in unknown - custom - options) &quot;&quot;&quot;</span>
-
-  <span class="n">types</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">Energy</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
-        <span class="n">Real</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
-        <span class="n">Integer</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
-        <span class="n">Bool</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
-        <span class="n">set_of_integers</span><span class="p">,</span>
-        <span class="n">set_of_reals</span><span class="p">,</span>
-        <span class="n">LineString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
-  <span class="p">]</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; Possible types of the value &quot;&quot;&quot;</span>
-
-  <span class="n">string_type</span> <span class="o">=</span> <span class="n">LineString</span><span class="o">.</span><span class="n">I</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; Potential files use line strings. &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="n">add_types</span><span class="p">:</span>
+        <span class="n">base_types</span><span class="o">+=</span><span class="n">add_types</span>
 
   <span class="k">def</span> <span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
@@ -217,7 +190,22 @@
     <span class="k">else</span><span class="p">:</span>
        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_string</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
 
-  <span class="n">is_the_same_value</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">compare_numpy_values</span><span class="p">)</span>
+  <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">BaseMixed</span><span class="p">,),{</span>
+    <span class="s2">&quot;string_type&quot;</span> <span class="p">:</span> <span class="n">string_type</span><span class="p">,</span>
+    <span class="s2">&quot;is_the_same_value&quot;</span> <span class="p">:</span> <span class="n">compare_numpy_values</span><span class="p">,</span>
+    <span class="s2">&quot;types&quot;</span> <span class="p">:</span> <span class="n">base_types</span><span class="p">,</span>
+    <span class="s2">&quot;_string&quot;</span> <span class="p">:</span> <span class="n">_string</span><span class="p">,</span>
+    <span class="s2">&quot;__doc__&quot;</span> <span class="p">:</span> <span class="n">doc</span>
+    <span class="p">})</span>
+
+<span class="n">Mixed</span> <span class="o">=</span> <span class="n">VariantGenerator</span><span class="p">(</span><span class="s2">&quot;Mixed&quot;</span><span class="p">,</span> <span class="n">Flag</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+                          <span class="n">doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot; A variant value to be used in input files (in unknown - custom - options) &quot;&quot;&quot;</span><span class="p">)</span>
+<span class="n">Mixed</span><span class="o">.</span><span class="n">missing_value</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="n">PotMixed</span> <span class="o">=</span> <span class="n">VariantGenerator</span><span class="p">(</span><span class="s2">&quot;PotMixed&quot;</span><span class="p">,</span> <span class="n">Bool</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">LineString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+                            <span class="n">doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot; A variant value to be used in potential files (in unknown - custom - options) &quot;&quot;&quot;</span><span class="p">)</span>
+<span class="n">Variant</span> <span class="o">=</span>  <span class="n">VariantGenerator</span><span class="p">(</span><span class="s2">&quot;PotMixed&quot;</span><span class="p">,</span> <span class="n">Boolean</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+                            <span class="n">doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot; Variant type for configuration &quot;&quot;&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">CustomMixed</span><span class="p">(</span><span class="n">BaseMixed</span><span class="p">):</span>

@@ -39,13 +39,42 @@ Full name: **ase2sprkkr.sprkkr.test**
      :recursive:
   
      init_tests
-     test_build
-     test_occupation
-     test_sysfile
      test_arpes
+     test_build
+     test_calculator
+     test_occupation
+     test_sites
      test_spacegroup_info
      test_sprkkr_atoms
-     test_calculator
-     test_sites
+     test_sysfile
+     alternative_types
+     backward_compatibility
+     configuration
+     configuration_containers
+     configuration_definitions
+     container_definitions
+     debug
+     decorators
+     directory
+     doc
+     formats
+     generated_configuration_definitions
+     grammar
+     grammar_types
+     lazy_string
+     misc
+     no_output
+     options
+     parsing_results
+     process_output_reader
+     repeated_configuration_containers
+     section_adaptors
+     subprocess
+     test
+     tools
+     unique_values
+     value_definitions
+     warnings
+     yaml
   
   

@@ -122,7 +122,7 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">config_property</span><span class="p">,</span> <span class="n">first_non_none</span>
-<span class="kn">from</span> <span class="nn">..config</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">..configuration</span> <span class="kn">import</span> <span class="n">config</span>
 
 
 <div class="viewcode-block" id="SPRKKR">
@@ -184,13 +184,13 @@
 <span class="sd">          Write the output of runned executables to stdout (in addition to the output file)?</span>
 <span class="sd">          (Default value for the calculator)</span>
 <span class="sd">          If print_output = &#39;info&#39;, only a few info lines per iteration will be printed.</span>
-<span class="sd">          None means use the value from config.config.calculator_parameters.print_output.</span>
+<span class="sd">          None means use the value from config.running.print_output.</span>
 
 <span class="sd">        mpi: Union[list,string,int,bool]</span>
 <span class="sd">          Runner for mpi to run a mpi calculation. True and int means autodetect: use True</span>
 <span class="sd">          for a cluster where mpi is able to autodetect the number of the processes, otherwise</span>
 <span class="sd">          use integer to specify the number of processes. None means use the value from</span>
-<span class="sd">          config.config.calculator_parameters.mpi.</span>
+<span class="sd">          config.running.mpi.</span>
 <span class="sd">          E.g. mpi = [ &#39;mpirun&#39;, &#39;-np&#39;, &#39;4&#39; ], mpi = 4</span>
 
 <span class="sd">        input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None</span>
@@ -484,7 +484,7 @@
                   <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">directory</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">Directory</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">create_subdirs</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                  <span class="n">empty_spheres</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="n">empty_spheres</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">tuple</span> <span class="o">|</span> <span class="n">abc</span><span class="o">.</span><span class="n">Mapping</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                   <span class="n">mpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">return_files</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="p">):</span>
@@ -548,6 +548,8 @@
 <span class="sd">            &#39;auto&#39; means add if no empty sphere is present.</span>
 <span class="sd">            Default None means use the default value from the calculator for this parameter</span>
 <span class="sd">            (which is &#39;auto&#39; by default).</span>
+<span class="sd">            Mapping pass the given arguments to the routine.</span>
+<span class="sd">            Tuple means min and max radius.</span>
 
 <span class="sd">        options: dict</span>
 <span class="sd">            Options to set to the input_parameters. If input_parameters are given by a filename,</span>
@@ -693,6 +695,10 @@
                            <span class="n">empty_spheres</span> <span class="o">=</span> <span class="kc">False</span>
                            <span class="k">break</span>
             <span class="k">if</span> <span class="n">empty_spheres</span> <span class="ow">and</span> <span class="n">atoms</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">empty_spheres</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">empty_spheres</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Tuple of length 2, denoting min and max radius, is required for empty spheres&quot;</span>
+                    <span class="n">empty_spheres</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;min_radius&#39;</span> <span class="p">:</span> <span class="n">empty_spheres</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                      <span class="s1">&#39;max_radius&#39;</span> <span class="p">:</span> <span class="n">empty_spheres</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">}</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">empty_spheres</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">abc</span><span class="o">.</span><span class="n">Mapping</span><span class="p">):</span>
                     <span class="n">empty_spheres</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="k">try</span><span class="p">:</span>

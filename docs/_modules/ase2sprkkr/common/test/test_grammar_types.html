@@ -139,7 +139,8 @@
 <div class="viewcode-block" id="TestGrammar._test_types">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_grammar_types.TestGrammar.html#ase2sprkkr.common.test.test_grammar_types.TestGrammar._test_types">[docs]</a>
   <span class="k">def</span> <span class="nf">_test_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">Error</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+    <span class="n">Error</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>        <span class="c1"># both parse and attempt to set should fail</span>
+    <span class="n">ParseError</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>   <span class="c1"># just parse fail, attempt to set is ok</span>
 
     <span class="k">class</span> <span class="nc">Invalid</span><span class="p">:</span>
 
@@ -155,9 +156,13 @@
           <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> should be </span><span class="si">{}</span><span class="s2"> and is </span><span class="si">{}</span><span class="s2"> for type </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="nb">type</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">pyparsing</span><span class="o">.</span><span class="n">ParseException</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-          <span class="k">assert</span> <span class="n">res</span> <span class="ow">is</span> <span class="n">Error</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&#39; should be validated as &#39;</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s2">&#39;&quot;</span> \
+          <span class="k">assert</span> <span class="n">res</span> <span class="ow">is</span> <span class="n">Error</span> <span class="ow">or</span> <span class="n">res</span> <span class="ow">is</span> <span class="n">ParseError</span><span class="p">,</span> \
+              <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&#39; should be validated as &#39;</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s2">&#39;&quot;</span> \
               <span class="sa">f</span><span class="s2">&quot; for type </span><span class="si">{</span><span class="nb">type</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, an error </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2"> have been given&quot;</span>
-          <span class="n">test_invalid</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+          <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="n">Error</span><span class="p">:</span>
+              <span class="n">test_invalid</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+          <span class="k">else</span><span class="p">:</span>
+              <span class="k">assert</span> <span class="nb">type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
           <span class="k">return</span>
         <span class="k">assert</span> <span class="nb">type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
@@ -201,6 +206,14 @@
     <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
         <span class="p">(</span><span class="o">-</span><span class="mi">101</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
     <span class="p">]:</span>
+        <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">QString</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;&quot;aaa bbb&quot;&#39;</span><span class="p">,</span> <span class="s2">&quot;aaa bbb&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;aaa bbb&#39;</span><span class="p">,</span> <span class="n">ParseError</span><span class="p">),</span>
+                    <span class="p">]:</span>
         <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Integer</span><span class="p">()</span>
@@ -514,7 +527,7 @@
         <span class="p">(</span><span class="s1">&#39;-2.4&#39;</span><span class="p">,</span><span class="o">-</span><span class="mf">2.4</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;AHOJ&#39;</span><span class="p">,</span> <span class="s1">&#39;AHOJ&#39;</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">&#39;aaaa aaaa&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;aaaa aaaa&#39;</span><span class="p">,</span> <span class="n">ParseError</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;{1,2,3}&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])),</span>
         <span class="p">(</span><span class="s1">&#39;{1.,2.,3.}&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">]))</span>
                    <span class="p">]:</span>

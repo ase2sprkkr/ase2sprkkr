@@ -95,6 +95,7 @@
 <span class="kn">from</span> <span class="nn">..sprkkr.io_data</span> <span class="kn">import</span> <span class="n">ReadIoData</span><span class="p">,</span> <span class="n">WriteIoData</span>
 <span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">class_property</span><span class="p">,</span> <span class="n">cache</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">from</span> <span class="nn">..sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 
 
 <div class="viewcode-block" id="Potential">
@@ -123,6 +124,11 @@
       <span class="k">if</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_atoms</span><span class="p">(</span><span class="n">atoms</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span><span class="p">)</span></div>
 
+
+  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+      <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">atoms</span><span class="o">.</span><span class="n">potential</span>
 
 <div class="viewcode-block" id="Potential.make_complete">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potentials.Potential.html#ase2sprkkr.potentials.potential_definitions.Potential.make_complete">[docs]</a>

@@ -1,0 +1,453 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.outputs.test.unique_values &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.outputs.test.unique_values</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.outputs.test.unique_values</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; UniqueValuesMapping: the class for solving equivalence classes on a collection of objects. &quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping">[docs]</a>
+<span class="k">class</span> <span class="nc">UniqueValuesMapping</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; A class, that can map a collection of (possible non-unique) values to a set</span>
+<span class="sd">      of unique identifiers. It effectively makes the classes of equivalence</span>
+<span class="sd">      between indexes of the input array.</span>
+
+<span class="sd">      The instances of the class can be merged to distinct the values, that are</span>
+<span class="sd">      the same according to one criterion, but distinct on the other.</span>
+
+<span class="sd">      .. testsetup::</span>
+
+<span class="sd">         np.set_printoptions(legacy=&#39;1.25&#39;)</span>
+
+<span class="sd">      .. doctest::</span>
+
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1,4,1]).mapping</span>
+<span class="sd">        array([1, 2, 1], dtype=int32)</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([int, int, str]).mapping</span>
+<span class="sd">        array([1, 1, 2], dtype=int32)</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1,4,1]).value_to_class_id</span>
+<span class="sd">        {1: 1, 4: 2}</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1,4,1,1]).merge([1,1,2,1]).mapping</span>
+<span class="sd">        array([1, 2, 3, 1], dtype=int32)</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
+          <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalized</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span>
+      <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;UniqueValuesMapping: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+
+<div class="viewcode-block" id="UniqueValuesMapping.__init__">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.__init__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span><span class="n">List</span><span class="p">,</span> <span class="n">value_to_class_id</span><span class="p">:</span><span class="n">Dict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      mapping: Union[np.ndarray, list]</span>
+<span class="sd">        Array of equivalence class members</span>
+<span class="sd">        members[id] = &lt;eq class id&gt;</span>
+
+<span class="sd">      value_to_class_id: dict</span>
+<span class="sd">        Mapping { value: &lt;eq class id&gt; }</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+
+      <span class="c1">#: Map from &lt;object index&gt; to &lt;object equivalence class id&gt;.</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span> <span class="o">=</span> <span class="n">mapping</span>
+      <span class="c1">#: Map from &lt;object&gt; to &lt;object equivalence class id&gt;.</span>
+      <span class="c1">#: If two mappings are merged, this attribute is not available.</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span> <span class="o">=</span> <span class="n">value_to_class_id</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping.indexes">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.indexes">[docs]</a>
+  <span class="k">def</span> <span class="nf">indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_from</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Returns the dictionary that maps equivalence class id to the list</span>
+<span class="sd">      of class members indexes.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      start_from:</span>
+<span class="sd">        The indexes are by default zero-based, however they can start with</span>
+<span class="sd">        the given number (typically with 1).</span>
+
+<span class="sd">      .. testsetup::</span>
+
+<span class="sd">         np.set_printoptions(legacy=&#39;1.25&#39;)</span>
+
+<span class="sd">      ..doctest::</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).indexes()</span>
+<span class="sd">        {1: [0, 2], 4: [1]}</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).indexes(start_from = 1)</span>
+<span class="sd">        {1: [1, 3], 4: [2]}</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+
+      <span class="n">indexes</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">ec</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">):</span>
+          <span class="n">indexes</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">ec</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">start_from</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">indexes</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping.unique_indexes">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.unique_indexes">[docs]</a>
+  <span class="k">def</span> <span class="nf">unique_indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Returns the dictionary that maps equivalence class id to the list</span>
+<span class="sd">      of class members indexes.</span>
+
+<span class="sd">      ..doctest::</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,1,4]).unique_indexes()</span>
+<span class="sd">        [0, 2]</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="n">done</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+      <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">cid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done</span><span class="p">:</span>
+              <span class="n">done</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cid</span><span class="p">)</span>
+              <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping.iter_unique">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.iter_unique">[docs]</a>
+  <span class="k">def</span> <span class="nf">iter_unique</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping.unique_items">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.unique_items">[docs]</a>
+  <span class="k">def</span> <span class="nf">unique_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping.len_of_unique">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.len_of_unique">[docs]</a>
+  <span class="k">def</span> <span class="nf">len_of_unique</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span><span class="p">)</span></div>
+
+
+  <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UniqueValuesMapping.from_values">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.from_values">[docs]</a>
+  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">from_values</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Create equivalence-classes mapping. Unlike the constructor,</span>
+<span class="sd">      this method tags the values by integers and also compute the reverse</span>
+<span class="sd">      (value to equivalence class) mapping.</span>
+
+<span class="sd">      values: iterable</span>
+<span class="sd">        Values to find the equivalence classes</span>
+
+<span class="sd">      length: int</span>
+<span class="sd">        Length of values - provide it, if len(values) is not available</span>
+
+<span class="sd">      .. doctest::</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1.,4.,1.]).mapping</span>
+<span class="sd">        array([1, 2, 1], dtype=int32)</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1.,4.,1.]).value_to_class_id</span>
+<span class="sd">        {1.0: 1, 4.0: 2}</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">_create_mapping</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping._create_mapping">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping._create_mapping">[docs]</a>
+  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">_create_mapping</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Returns</span>
+<span class="sd">      -------</span>
+<span class="sd">      mapping : np.ndarray</span>
+<span class="sd">            maps the value indexes to equivalence class id</span>
+
+<span class="sd">      reverse : dict</span>
+<span class="sd">            maps equivalence classes to value indexes</span>
+
+<span class="sd">      .. doctest::</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping._create_mapping([1.,4.,1.])</span>
+<span class="sd">        (array([1, 2, 1], dtype=int32), {1.0: 1, 4.0: 2})</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="n">mapping</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">length</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+      <span class="n">reverse</span> <span class="o">=</span> <span class="p">{}</span>
+
+      <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">reverse</span><span class="p">:</span>
+             <span class="n">tag</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+          <span class="k">else</span><span class="p">:</span>
+             <span class="n">tag</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">reverse</span><span class="p">)</span> <span class="o">+</span> <span class="n">start_from</span>
+             <span class="n">reverse</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag</span>
+          <span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag</span>
+      <span class="k">return</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping.merge">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.merge">[docs]</a>
+  <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Merge two sets. Resulting UniqueValues uses integers as keys&quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">other</span><span class="p">),</span> <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping.is_equivalent_to">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.is_equivalent_to">[docs]</a>
+  <span class="k">def</span> <span class="nf">is_equivalent_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">UniqueValuesMapping</span><span class="p">,</span><span class="n">Iterable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Return, whether the mapping is equal to given another mapping, regardless the actual &quot;names&quot; of the equivalence classes.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      mapping</span>
+<span class="sd">        The other mapping can be given either by instance of this class, or just by any iterable (that returns equivalence class names for the items)</span>
+
+<span class="sd">      .. doctest::</span>
+
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).is_equivalent_to([0,1,0])</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).is_equivalent_to([0,0,0])</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).is_equivalent_to([0,1,1])</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).is_equivalent_to([5,3,5])</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).is_equivalent_to(UniqueValuesMapping.from_values([2,5,2]))</span>
+<span class="sd">        True</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">are_equivalent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping.are_equivalent">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.are_equivalent">[docs]</a>
+  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">are_equivalent</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">UniqueValuesMapping</span><span class="p">,</span><span class="n">Iterable</span><span class="p">],</span><span class="n">b</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">UniqueValuesMapping</span><span class="p">,</span><span class="n">Iterable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Return, whether the two mappings are equal, regardless the actual &quot;names&quot; of the equivalence classes.</span>
+
+<span class="sd">      See :meth:`is_equivalent&lt;ase2sprkkr.common.unique_values_mapping.UniqueValuesMapping.is_equivalent_to&gt;`</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+
+      <span class="n">mp</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="n">js</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+      <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mp</span><span class="p">:</span>
+             <span class="k">if</span> <span class="n">mp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+          <span class="k">else</span><span class="p">:</span>
+             <span class="k">if</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">js</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+             <span class="n">js</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+             <span class="n">mp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">j</span>
+      <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping.normalized">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.normalized">[docs]</a>
+  <span class="k">def</span> <span class="nf">normalized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Map the class ids to integers</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      strict</span>
+<span class="sd">         If True, the resulting integer names will be from range (start_from)..(n+start_from-1),</span>
+<span class="sd">         where n is the number of equivalence classes.</span>
+<span class="sd">         If False and the names are already integers in a numpy array, do nothing.</span>
+
+<span class="sd">      start_from</span>
+<span class="sd">         Number the equivalent classes starting from.</span>
+
+<span class="sd">      Returns</span>
+<span class="sd">      -------</span>
+<span class="sd">      mapping : np.ndarray</span>
+<span class="sd">         Array of integer starting from start_from, denotes the equivalence classes for the values,</span>
+<span class="sd">         It holds, that ``mappind[index] == equivalence_class``</span>
+<span class="sd">      reverse : dict</span>
+<span class="sd">         Dict ``{ equivalence_class : value }``</span>
+
+<span class="sd">      .. doctest::</span>
+
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized()</span>
+<span class="sd">        (array([1, 2, 1], dtype=int32), {1: 1, 2: 2})</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized(start_from=0)</span>
+<span class="sd">        (array([0, 1, 0], dtype=int32), {1: 0, 2: 1})</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">strict</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+          <span class="n">ttype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span> <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">dtype</span>
+          <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">ttype</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">dtype</span><span class="p">):</span>
+              <span class="k">return</span>
+      <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+          <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span>
+      <span class="k">elif</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span>
+      <span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_mapping</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="n">start_from</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping.normalize">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.html#ase2sprkkr.outputs.test.unique_values.UniqueValuesMapping.normalize">[docs]</a>
+  <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Replace the names of equivalent classes by the integers.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      strict</span>
+<span class="sd">         If True, the resulting integer names will be from range (start_from)..(n+start_from-1),</span>
+<span class="sd">         where n is the number of equivalence classes.</span>
+<span class="sd">         If False and the names are already integers in a numpy array, do nothing.</span>
+
+<span class="sd">      start_from</span>
+<span class="sd">         Number the equivalent classes starting from.</span>
+
+<span class="sd">      dtype</span>
+<span class="sd">         dtype of the normalized values. None means ``numpy.int32``, however if not strict,</span>
+<span class="sd">         any integer type will be sufficient.</span>
+
+<span class="sd">      Returns</span>
+<span class="sd">      -------</span>
+<span class="sd">      unique_values_mapping</span>
+<span class="sd">         Return self.</span>
+
+<span class="sd">      .. doctest::</span>
+
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().mapping</span>
+<span class="sd">        array([1, 2, 1], dtype=int32)</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().value_to_class_id[(0,3)]</span>
+<span class="sd">        2</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize(start_from=0).mapping</span>
+<span class="sd">        array([0, 1, 0], dtype=int32)</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalized</span><span class="p">(</span><span class="n">start_from</span><span class="p">,</span> <span class="n">strict</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
+      <span class="k">return</span> <span class="bp">self</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

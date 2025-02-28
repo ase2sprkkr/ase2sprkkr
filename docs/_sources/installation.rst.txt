@@ -134,7 +134,7 @@ copying them out from pyproject.toml:
 
 .. code:: bash
 
-   pip install meson-python cython numpy ninja
+   pip install scikit-build cmake ninja cython
 
 or (which will be usefull if I add a build requirement and forgot
 to update this help) run the following snippet to install all the build-dependencies

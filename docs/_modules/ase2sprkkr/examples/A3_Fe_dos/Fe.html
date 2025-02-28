@@ -109,24 +109,25 @@
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">ImE</span><span class="o">=</span><span class="mf">0.0</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">GRID</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NE</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
-    <span class="n">out</span><span class="o">=</span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+    <span class="n">out</span><span class="o">=</span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NITER&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;error&#39;</span><span class="p">]())</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SECOND STEP: CALCULATION OF DOS============&quot;</span><span class="p">)</span>
-    <span class="c1"># Lets now calculate DOS</span>
-    <span class="c1"># First we need to change task (there are several input data tabulated for</span>
-    <span class="c1"># various tasks to help user.</span>
-
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SECOND (OPTIONAL) STEP: CALCULATION OF BSF============&quot;</span><span class="p">)</span>
     <span class="n">calculator</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">calculator</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;bsfek&#39;</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">EMAX</span><span class="o">=</span><span class="mf">0.2</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">KPATH</span><span class="o">=</span><span class="mi">1</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;DOS&#39;</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NEW INPUT PARAMETERS=======================&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;THIRD STEP: CALCULATION OF DOS============&quot;</span><span class="p">)</span>
+    <span class="c1"># Lets now calculate DOS</span>
+    <span class="c1"># First we need to change task (there are several input data tabulated for</span>
+    <span class="c1"># various tasks to help user.</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;DOS&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;INPUT PARAMETERS HAVE BEEN REPLACED =======&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;===========================================&quot;</span><span class="p">)</span>
 

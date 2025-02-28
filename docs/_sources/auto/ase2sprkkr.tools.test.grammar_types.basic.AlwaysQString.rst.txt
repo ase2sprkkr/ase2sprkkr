@@ -1,0 +1,36 @@
+AlwaysQString
+=============
+
+
+.. currentmodule:: ase2sprkkr.tools.test.grammar_types.basic
+
+.. autoclass:: AlwaysQString
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.tools.test.grammar_types.basic.AlwaysQString
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

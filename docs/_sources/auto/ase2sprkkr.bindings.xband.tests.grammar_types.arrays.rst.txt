@@ -1,0 +1,65 @@
+arrays
+======
+
+Full name: **ase2sprkkr.bindings.xband.tests.grammar\_types.arrays**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.bindings.xband.tests.grammar_types.arrays.Array  ase2sprkkr.bindings.xband.tests.grammar_types.arrays.Complex  ase2sprkkr.bindings.xband.tests.grammar_types.arrays.Sequence  ase2sprkkr.bindings.xband.tests.grammar_types.arrays.SetOf  ase2sprkkr.bindings.xband.tests.grammar_types.arrays.SpecialColumn  ase2sprkkr.bindings.xband.tests.grammar_types.arrays.Table 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings.xband.tests.grammar_types.arrays
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      set_of_integers
+      set_of_reals
+      complex_number
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Array
+      Complex
+      Sequence
+      SetOf
+      SpecialColumn
+      Table
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

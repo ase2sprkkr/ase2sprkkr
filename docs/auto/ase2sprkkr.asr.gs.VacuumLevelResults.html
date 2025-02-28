@@ -65,15 +65,6 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.config.html">config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.asr.html">asr</a></li>
@@ -133,10 +124,19 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.workflow.html">workflow</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -172,7 +172,7 @@
 <h1>VacuumLevelResults<a class="headerlink" href="#vacuumlevelresults" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.VacuumLevelResults">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.gs.</span></span><span class="sig-name descname"><span class="pre">VacuumLevelResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evac2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evac1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evacmean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evacdiff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efermi_nosoc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dipz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/gs.html#VacuumLevelResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.gs.VacuumLevelResults" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.gs.</span></span><span class="sig-name descname"><span class="pre">VacuumLevelResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evac1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evac2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evacmean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efermi_nosoc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dipz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evacdiff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/gs.html#VacuumLevelResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.gs.VacuumLevelResults" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-ded928f39e17e2b15747c5d6ac8ce5e12e214eb8.png" alt="Inheritance diagram of ase2sprkkr.asr.gs.VacuumLevelResults" usemap="#inheritanced4fc6f4f1a" class="inheritance graphviz" /></div>
 <map id="inheritanced4fc6f4f1a" name="inheritanced4fc6f4f1a">
@@ -184,20 +184,20 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>evac2</strong> (<em>float</em>)</p></li>
-<li><p><strong>z_z</strong> (<em>ndarray</em>)</p></li>
 <li><p><strong>evac1</strong> (<em>float</em>)</p></li>
+<li><p><strong>v_z</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>evac2</strong> (<em>float</em>)</p></li>
 <li><p><strong>evacmean</strong> (<em>float</em>)</p></li>
-<li><p><strong>evacdiff</strong> (<em>float</em>)</p></li>
 <li><p><strong>efermi_nosoc</strong> (<em>float</em>)</p></li>
 <li><p><strong>dipz</strong> (<em>float</em>)</p></li>
-<li><p><strong>v_z</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>evacdiff</strong> (<em>float</em>)</p></li>
+<li><p><strong>z_z</strong> (<em>ndarray</em>)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.VacuumLevelResults.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evac2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evac1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evacmean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evacdiff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efermi_nosoc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dipz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.asr.gs.VacuumLevelResults.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evac1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evac2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evacmean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efermi_nosoc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dipz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evacdiff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.asr.gs.VacuumLevelResults.__init__" title="Link to this definition"></a></dt>
 <dd><p>Instantiate result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

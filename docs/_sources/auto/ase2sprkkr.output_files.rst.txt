@@ -38,9 +38,9 @@ Full name: **ase2sprkkr.output\_files**
      :template: custom-module-template.rst
      :recursive:
   
+     definitions
      output_files
      output_files_definitions
-     definitions
      test
   
   

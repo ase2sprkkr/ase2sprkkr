@@ -96,6 +96,7 @@
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">from</span> <span class="nn">..decorators</span> <span class="kn">import</span> <span class="n">add_to_signature</span><span class="p">,</span> <span class="n">cached_property</span>
 <span class="kn">from</span> <span class="nn">..grammar</span> <span class="kn">import</span> <span class="n">generate_grammar</span><span class="p">,</span> <span class="n">separator_grammar</span><span class="p">,</span> \
@@ -250,7 +251,7 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Bool.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Bool">[docs]</a>
 <span class="k">class</span> <span class="nc">Bool</span><span class="p">(</span><span class="n">BaseBool</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; A bool type, whose value is represented by a letter (T or F) &quot;&quot;&quot;</span>
-  <span class="n">_grammar</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;T&#39;</span> <span class="p">)</span>
+  <span class="n">_grammar</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;T&#39;</span> <span class="p">)</span>
 
 <div class="viewcode-block" id="Bool.grammar_name">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Bool.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Bool.grammar_name">[docs]</a>
@@ -262,6 +263,28 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Bool.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Bool._string">[docs]</a>
   <span class="k">def</span> <span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
     <span class="k">return</span> <span class="s1">&#39;T&#39;</span> <span class="k">if</span> <span class="n">val</span> <span class="k">else</span> <span class="s1">&#39;F&#39;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Boolean">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Boolean.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Boolean">[docs]</a>
+<span class="k">class</span> <span class="nc">Boolean</span><span class="p">(</span><span class="n">BaseBool</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; A bool type, whose value is represented by a letter (T or F) &quot;&quot;&quot;</span>
+  <span class="n">_items</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span> <span class="p">]</span>
+  <span class="n">_grammar</span> <span class="o">=</span>  <span class="n">pp</span><span class="o">.</span><span class="n">Or</span><span class="p">([</span><span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_items</span><span class="p">])</span><span class="o">.</span>\
+                   <span class="n">setParseAction</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;true&#39;</span><span class="p">,</span><span class="s1">&#39;yes&#39;</span><span class="p">,</span><span class="s1">&#39;1&#39;</span><span class="p">)</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="Boolean.grammar_name">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Boolean.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Boolean.grammar_name">[docs]</a>
+  <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;&lt;True|False|0|1|yes|no&gt;&#39;</span></div>
+
+
+<div class="viewcode-block" id="Boolean._string">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Boolean.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Boolean._string">[docs]</a>
+  <span class="k">def</span> <span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;True&#39;</span> <span class="k">if</span> <span class="n">val</span> <span class="k">else</span> <span class="s1">&#39;False&#39;</span></div>
 </div>
 
 
@@ -480,17 +503,47 @@
 </div>
 
 
+<div class="viewcode-block" id="AlwaysQString">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AlwaysQString">[docs]</a>
+<span class="k">class</span> <span class="nc">AlwaysQString</span><span class="p">(</span><span class="n">BaseString</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes. &quot;&quot;&quot;</span>
+  <span class="n">_grammar</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">printables</span><span class="p">,</span> <span class="n">excludeChars</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">,;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">QuotedString</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<div class="viewcode-block" id="AlwaysQString._validate">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AlwaysQString._validate">[docs]</a>
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;set&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;String expected&quot;</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="AlwaysQString._string">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AlwaysQString._string">[docs]</a>
+  <span class="k">def</span> <span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&quot;&#39;</span></div>
+
+
+<div class="viewcode-block" id="AlwaysQString.grammar_name">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AlwaysQString.grammar_name">[docs]</a>
+  <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;&quot;&lt;str&gt;&quot;&#39;</span></div>
+</div>
+
+
 
 <div class="viewcode-block" id="QString">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.QString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.QString">[docs]</a>
-<span class="k">class</span> <span class="nc">QString</span><span class="p">(</span><span class="n">BaseString</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">QString</span><span class="p">(</span><span class="n">AlwaysQString</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Either a quoted string, or just a word (without whitespaces or special chars) &quot;&quot;&quot;</span>
-  <span class="n">_grammar</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">printables</span><span class="p">,</span> <span class="n">excludeChars</span><span class="o">=</span><span class="s2">&quot;,;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pp</span><span class="o">.</span><span class="n">QuotedString</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-<div class="viewcode-block" id="QString.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.QString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.QString.grammar_name">[docs]</a>
-  <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s2">&quot;&#39;&lt;str&gt;&#39;&quot;</span></div>
+<div class="viewcode-block" id="QString._string">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.QString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.QString._string">[docs]</a>
+  <span class="k">def</span> <span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[\S</span><span class="se">\&quot;</span><span class="s2">]+$&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_string</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 </div>
 
 
@@ -504,7 +557,7 @@
 <div class="viewcode-block" id="LineString.grammar_name">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.LineString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.LineString.grammar_name">[docs]</a>
   <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s2">&quot;&#39;&lt;str....&gt;</span><span class="se">\n</span><span class="s2">&#39;&quot;</span></div>
+    <span class="k">return</span> <span class="s2">&quot;&lt;str....&gt;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
 </div>
 
 
@@ -517,8 +570,9 @@
 <span class="sd">  &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Keyword.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword.__init__">[docs]</a>
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">keywords</span><span class="p">,</span> <span class="n">aliases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s1">&#39;upper&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">keywords</span><span class="p">,</span> <span class="n">aliases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s1">&#39;upper&#39;</span><span class="p">,</span> <span class="n">quote</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">aliases</span> <span class="o">=</span> <span class="n">aliases</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">quote</span> <span class="o">=</span> <span class="n">quote</span>
     <span class="k">if</span> <span class="n">transform</span> <span class="o">==</span> <span class="s1">&#39;upper&#39;</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">transform</span> <span class="o">==</span> <span class="s1">&#39;lower&#39;</span><span class="p">:</span>
@@ -543,6 +597,15 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword._validate">[docs]</a>
   <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;set&#39;</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span> <span class="ow">or</span> <span class="s2">&quot;Required one of [&quot;</span> <span class="o">+</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span></div>
+
+
+<div class="viewcode-block" id="Keyword._string">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword._string">[docs]</a>
+  <span class="k">def</span> <span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quote</span> <span class="ow">and</span> <span class="n">val</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+          <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">quote</span><span class="si">}{</span><span class="n">val</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">quote</span><span class="si">}</span><span class="s2">&quot;</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Keyword.grammar_name">
@@ -717,6 +780,8 @@
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for strings &quot;&quot;&quot;</span>
 <span class="n">qstring</span> <span class="o">=</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">QString</span><span class="p">()</span>            <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for quoted strings in input files &quot;&quot;&quot;</span>
+<span class="n">qstring</span> <span class="o">=</span> <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">AlwaysQString</span><span class="p">()</span> <span class="c1"># NOQA: E741</span>
+<span class="sd">&quot;&quot;&quot; A standard grammar type instance for quoted strings in configuration files &quot;&quot;&quot;</span>
 <span class="n">line_string</span> <span class="o">=</span> <span class="n">LineString</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">LineString</span><span class="p">()</span>  <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for one-line strings in potential files &quot;&quot;&quot;</span>
 <span class="n">energy</span> <span class="o">=</span> <span class="n">Energy</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Energy</span><span class="p">()</span>               <span class="c1"># NOQA: E741</span>
@@ -725,6 +790,8 @@
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for separators in potential files &quot;&quot;&quot;</span>
 <span class="n">int_bool</span> <span class="o">=</span> <span class="n">IntBool</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">IntBool</span><span class="p">()</span>           <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for bool expressed as integer &quot;&quot;&quot;</span>
+<span class="n">boolean</span> <span class="o">=</span> <span class="n">Boolean</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Boolean</span><span class="p">()</span>            <span class="c1"># NOQA: E741</span>
+<span class="sd">&quot;&quot;&quot; A standard grammar type instance for True|False 0|1 yes|no boolean&quot;&quot;&quot;</span>
 </pre></div>
 
            </div>

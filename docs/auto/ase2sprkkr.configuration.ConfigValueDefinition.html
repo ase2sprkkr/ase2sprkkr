@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConfigValueDefinition &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Configuration" href="ase2sprkkr.configuration.Configuration.html" />
+    <link rel="prev" title="ConfigFileDefinition" href="ase2sprkkr.configuration.ConfigFileDefinition.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.V.html">V</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._get_suffix.html">_get_suffix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.find_default_mpi_runner.html">find_default_mpi_runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.get_default_mpi_runner.html">get_default_mpi_runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.load_user_preferences.html">load_user_preferences</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.mpi_runner.html">mpi_runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.user_preferences_file.html">user_preferences_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.ConfigFileDefinition.html">ConfigFileDefinition</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ConfigValueDefinition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ase2sprkkr.configuration.ConfigValueDefinition"><code class="docutils literal notranslate"><span class="pre">ConfigValueDefinition</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.Configuration.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.ConfigurationOption.html">ConfigurationOption</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.Section.html">Section</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.V.html">V</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.configuration.html">configuration</a></li>
+      <li class="breadcrumb-item active">ConfigValueDefinition</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.configuration.ConfigValueDefinition.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="configvaluedefinition">
+<h1>ConfigValueDefinition<a class="headerlink" href="#configvaluedefinition" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ase2sprkkr.configuration.ConfigValueDefinition">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.configuration.</span></span><span class="sig-name descname"><span class="pre">ConfigValueDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value_from_container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">written_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_by_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_is_visible</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_stored</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_expert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_repeated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_always_added</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_in_grammar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_alternative_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/configuration.html#ConfigValueDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.configuration.ConfigValueDefinition" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-3f1ed9e2ef8969894a91b755f65af3930fce6290.png" alt="Inheritance diagram of ase2sprkkr.configuration.ConfigValueDefinition" usemap="#inheritance250849d2a7" class="inheritance graphviz" /></div>
+<map id="inheritance250849d2a7" name="inheritance250849d2a7">
+<area shape="rect" id="node1" href="#ase2sprkkr.configuration.ConfigValueDefinition" target="_top" title="configuration.ConfigValueDefinition" alt="" coords="751,4,956,25"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" target="_top" title="value_definitions.ValueDefinition" alt="" coords="534,4,727,25"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="4,4,234,25"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="258,4,510,25"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>is_repeated</strong> (<em>bool</em><em> | </em><em>str</em><em> | </em><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated" title="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated"><em>Repeated</em></a>)</p></li>
+<li><p><strong>is_always_added</strong> (<em>bool</em>)</p></li>
+<li><p><strong>write_alternative_name</strong> (<em>bool</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.configuration.ConfigValueDefinition.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value_from_container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">written_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_by_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_is_visible</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_stored</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_expert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_repeated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_always_added</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_in_grammar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_alternative_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.configuration.ConfigValueDefinition.__init__" title="Link to this definition"></a></dt>
+<dd><p>Definition of a configuration value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the configuration value</p></li>
+<li><p><strong>type</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="ase2sprkkr.tools.test.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.tools.test.grammar_types.grammar_type.GrammarType" title="ase2sprkkr.tools.test.grammar_types.grammar_type.GrammarType"><em>GrammarType</em></a><em>|</em><em>mixed</em><em>]</em>) – Configuration value data type.
+If it is set to anyting what is not derived from GrammarType, the given value is used as the default value
+and the data type is derived from it.
+If it is None, the default value have to be set using <code class="docutils literal notranslate"><span class="pre">expert</span></code> parameter.</p></li>
+<li><p><strong>default</strong> (<em>mixed</em>) – Default value for the configuration option.
+Can accept callable (with option instance as an argument) - then the value will be determined
+at ‘runtime’ (possibly according to the other values of the section)</p></li>
+<li><p><strong>written_name</strong> (<em>str</em>) – Name of the configuration value in the input file</p></li>
+<li><p><strong>alternative_names</strong> (<em>str</em><em> or </em><em>[</em><em>str</em><em>]</em>) – Value can have an alternative name (that alternativelly denotes the value)</p></li>
+<li><p><strong>fixed_value</strong> (<em>mixed</em>) – If it is given, this option have a fixed_value value (provided by this parameter),
+that can not be changed by an user.
+#TODO - currently, callback (as in default_value) is not supported</p></li>
+<li><p><strong>init_by_default</strong> (<em>bool</em>) – If the value is not set, init it by default</p></li>
+<li><p><strong>result_is_visible</strong> (<em>bool</em>) – <p>If True, the result (see the result property of <code class="xref py py-class docutils literal notranslate"><span class="pre">Option</span></code>) assigned to the
+option is visible if the value is get as its default value - in this mode the result
+can be used as a kind of default value, specific for given configuration object.</p>
+<p>If False, the result is visible to the user just using the result property
+and it should be some transformation of the value of the object (e.g.
+relative path of the given absolute path, id of assigned object etc.)</p>
+</p></li>
+<li><p><strong>is_stored</strong> (<em>bool</em>) – If True, the value is readed/writed from the output file.
+If None, set to False if the value is Generated.</p></li>
+<li><p><strong>is_optional</strong> (<em>bool</em><em> or </em><em>None</em>) – If True, the value can be omited, if fixed order in the section is required
+None means True just if required is False (or it is determined to be False),
+see the <code class="docutils literal notranslate"><span class="pre">required</span></code> parameter.</p></li>
+<li><p><strong>is_required</strong> (<em>bool</em><em> or </em><em>callable</em><em> or </em><em>str</em>) – <p>Required option can not be set to None (however, a required one
+can be still be optional, if it has a default values).
+If required = None, it is set to True if both the conditions are met:</p>
+<blockquote>
+<div><ul>
+<li><p>the value is not expert</p></li>
+<li><p>the optional is not True and the option has not a default_value</p></li>
+</ul>
+</div></blockquote>
+<p>If required is str, it means the same as True, the string will be
+used as error message.</p>
+<p>If it is callable, it is evaluated on demand, with the Option as the
+argument of the function.</p>
+</p></li>
+<li><p><strong>is_hidden</strong> (<em>bool</em>) – The value is hidden from the user (no container.name access to the value).</p></li>
+<li><p><strong>is_expert</strong> (<em>Union</em><em>[</em><em>bool</em><em>,</em><em>mixed</em><em>]</em>) – Expert values are somewhat hidden (e.g. listed at end) from the user.
+Expert values are not exported to the result, if they are set to the
+default value.</p></li>
+<li><p><strong>is_repeated</strong> (<em>bool</em><em> | </em><em>str</em><em> | </em><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated" title="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated"><em>Repeated</em></a>) – Whether the value can apper more than once in the output. The result
+can be then (dense) array or (sparse) dict,
+see <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueDefinition.Repeated</span></code>.</p></li>
+<li><p><strong>is_always_added</strong> (<em>bool</em>) – If False, add the value, only if its value is not the default value.
+Default None means False for expert values, True for the others.</p></li>
+<li><p><strong>name_in_grammar</strong> (<em>bool</em><em> or </em><em>None</em>) – The value in the conf file is prefixed by &lt;name&gt;&lt;name_value_delimiter&gt;
+If None, the default type value (type.name_in_grammar) is used</p></li>
+<li><p><strong>name_format</strong> (<em>str</em><em> or </em><em>None</em>) – The way how the name is written</p></li>
+<li><p><strong>expert</strong> (<em>Optional</em><em>[</em><em>mixed</em><em>]</em>) – If not None, set <code class="docutils literal notranslate"><span class="pre">is_expert</span></code> to True, <code class="docutils literal notranslate"><span class="pre">default_value</span></code> to the given value and
+<code class="docutils literal notranslate"><span class="pre">required</span></code> to False. Note, that also <code class="docutils literal notranslate"><span class="pre">type</span></code> can be determined from such given
+<code class="docutils literal notranslate"><span class="pre">default_value</span></code>.</p></li>
+<li><p><strong>write_alternative_name</strong> (<em>bool</em>) – Wheter use the name or the (first) alternative name in the output.</p></li>
+<li><p><strong>write_condition</strong> – If defined, write the value, only if write_condition(the option) is True.</p></li>
+<li><p><strong>condition</strong> – <dl class="simple">
+<dt>If defined, the condition</dt><dd><ul>
+<li><p>the condition.parse_condition() is invoked, when given grammar element
+should be parsed. If it is False, the element is skipped</p></li>
+<li><p>the condition() is invoked, when the elements of the container is listed
+to hide the inactive members</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>result_class</strong> – Redefine the class that holds data for this option/section</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.configuration.ConfigValueDefinition.result_class">
+<span class="sig-name descname"><span class="pre">result_class</span></span><a class="headerlink" href="#ase2sprkkr.configuration.ConfigValueDefinition.result_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="ase2sprkkr.configuration.ConfigurationOption.html#ase2sprkkr.configuration.ConfigurationOption" title="ase2sprkkr.configuration.ConfigurationOption"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigurationOption</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.configuration.ConfigFileDefinition.html" class="btn btn-neutral float-left" title="ConfigFileDefinition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.configuration.Configuration.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

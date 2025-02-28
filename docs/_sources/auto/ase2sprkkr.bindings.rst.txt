@@ -38,11 +38,11 @@ Full name: **ase2sprkkr.bindings**
      :template: custom-module-template.rst
      :recursive:
   
-     xband
      empty_spheres
      es_finder
+     nomad
      spglib
      tests
-     nomad
+     xband
   
   

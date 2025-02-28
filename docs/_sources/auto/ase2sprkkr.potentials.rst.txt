@@ -39,10 +39,10 @@ Full name: **ase2sprkkr.potentials**
      :recursive:
   
      custom_potential_section
-     potential_sections
-     potential_definitions
-     potentials
      definitions
+     potential_definitions
+     potential_sections
+     potentials
      test
   
   

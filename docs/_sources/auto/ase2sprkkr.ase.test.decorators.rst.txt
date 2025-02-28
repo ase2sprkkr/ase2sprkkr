@@ -1,0 +1,71 @@
+decorators
+==========
+
+Full name: **ase2sprkkr.ase.test.decorators**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.ase.test.decorators.cached_class_property  ase2sprkkr.ase.test.decorators.cached_property  ase2sprkkr.ase.test.decorators.class_property  ase2sprkkr.ase.test.decorators.maybeclassmethod 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.ase.test.decorators
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      std_cached_property
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      add_called_class_as_argument
+      add_to_signature
+      warnings_from_here
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      cached_class_property
+      cached_property
+      class_property
+      maybeclassmethod
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

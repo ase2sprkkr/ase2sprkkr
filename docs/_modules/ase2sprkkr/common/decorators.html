@@ -101,7 +101,7 @@
 
 
 <div class="viewcode-block" id="cached_class_property">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.sprkkr.sites.cached_class_property">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.sprkkr.radial.cached_class_property">[docs]</a>
 <span class="k">class</span> <span class="nc">cached_class_property</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator that converts a method with a single cls argument into a property</span>
@@ -125,7 +125,7 @@
 <span class="sd">          x = Cls.cls_property</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="cached_class_property.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.sprkkr.sites.cached_class_property.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.sprkkr.radial.cached_class_property.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="o">=</span> <span class="n">method</span>
         <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span></div>
@@ -194,12 +194,12 @@
 
 
 <div class="viewcode-block" id="cached_property">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.sprkkr.sites.cached_property">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.sprkkr.radial.cached_property">[docs]</a>
 <span class="k">class</span> <span class="nc">cached_property</span><span class="p">(</span><span class="n">std_cached_property</span><span class="p">):</span>
 <span class="w">   </span><span class="sd">&quot;&quot;&quot; Cached property, that allows setter and deleter &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="cached_property.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.sprkkr.sites.cached_property.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.sprkkr.radial.cached_property.__init__">[docs]</a>
    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fdel</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fset</span> <span class="o">=</span> <span class="n">fset</span>
@@ -219,13 +219,13 @@
            <span class="k">del</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">attrname</span><span class="p">]</span>
 
 <div class="viewcode-block" id="cached_property.setter">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.sprkkr.sites.cached_property.setter">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.sprkkr.radial.cached_property.setter">[docs]</a>
    <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fset</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">fset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="cached_property.deleter">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.sprkkr.sites.cached_property.deleter">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.sprkkr.radial.cached_property.deleter">[docs]</a>
    <span class="k">def</span> <span class="nf">deleter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fdel</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fset</span><span class="p">,</span> <span class="n">fdel</span><span class="p">)</span></div>
 
@@ -241,7 +241,7 @@
 
 
 <div class="viewcode-block" id="class_property">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.class_property.html#ase2sprkkr.sprkkr.sites.class_property">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.class_property.html#ase2sprkkr.sprkkr.radial.class_property">[docs]</a>
 <span class="k">class</span> <span class="nc">class_property</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator that converts a method with a single cls argument into a property</span>
@@ -261,7 +261,7 @@
 <span class="sd">          x = Cls.cls_property</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="class_property.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.class_property.html#ase2sprkkr.sprkkr.sites.class_property.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.class_property.html#ase2sprkkr.sprkkr.radial.class_property.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="o">=</span> <span class="n">method</span></div>
 
@@ -272,7 +272,7 @@
 
 
 <div class="viewcode-block" id="add_to_signature">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.add_to_signature.html#ase2sprkkr.sprkkr.sites.add_to_signature">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.add_to_signature.html#ase2sprkkr.sprkkr.radial.add_to_signature">[docs]</a>
 <span class="k">def</span> <span class="nf">add_to_signature</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">excluding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Add the arguments in the ``func`` function to the list of arguments</span>
@@ -410,7 +410,7 @@
 
 
 <div class="viewcode-block" id="add_called_class_as_argument">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.add_called_class_as_argument.html#ase2sprkkr.sprkkr.sites.add_called_class_as_argument">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.add_called_class_as_argument.html#ase2sprkkr.sprkkr.radial.add_called_class_as_argument">[docs]</a>
 <span class="k">def</span> <span class="nf">add_called_class_as_argument</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; If a decorator is used on a method, the information about the defining class is lost.</span>
 <span class="sd">    As a consequence, the execution of ``super()....`` failed.</span>
@@ -484,7 +484,7 @@
 
 
 <div class="viewcode-block" id="warnings_from_here">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.warnings_from_here.html#ase2sprkkr.sprkkr.sites.warnings_from_here">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.warnings_from_here.html#ase2sprkkr.sprkkr.radial.warnings_from_here">[docs]</a>
 <span class="k">def</span> <span class="nf">warnings_from_here</span><span class="p">(</span><span class="n">stacklevel</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="n">stacklevel</span><span class="o">+=</span><span class="mi">1</span>
 
@@ -505,14 +505,14 @@
 
 
 <div class="viewcode-block" id="maybeclassmethod">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.maybeclassmethod.html#ase2sprkkr.sprkkr.sites.maybeclassmethod">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.maybeclassmethod.html#ase2sprkkr.sprkkr.radial.maybeclassmethod">[docs]</a>
 <span class="k">class</span> <span class="nc">maybeclassmethod</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; This decorator creates a method, that can behawes both as</span>
 <span class="sd">    classmethod and normal method - it provides both self and cls,</span>
 <span class="sd">    when self can be None &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="maybeclassmethod.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.maybeclassmethod.html#ase2sprkkr.sprkkr.sites.maybeclassmethod.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.maybeclassmethod.html#ase2sprkkr.sprkkr.radial.maybeclassmethod.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wrapper</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">method</span><span class="p">)</span></div>

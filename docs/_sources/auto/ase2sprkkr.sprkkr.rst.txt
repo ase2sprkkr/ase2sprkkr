@@ -38,23 +38,23 @@ Full name: **ase2sprkkr.sprkkr**
      :template: custom-module-template.rst
      :recursive:
   
-     reference_systems
-     structure
-     sprkkr_grammar_types
-     configuration
      atomic_types
-     moments
-     radial
-     sysfile
-     calculator
-     radial_meshes
-     occupations
-     sites
-     build
      atoms_region
-     sprkkr_atoms
-     spacegroup_info
+     build
+     calculator
+     configuration
      io_data
+     moments
+     occupations
+     radial
+     radial_meshes
+     reference_systems
+     sites
+     spacegroup_info
+     sprkkr_atoms
+     sprkkr_grammar_types
+     structure
+     sysfile
      test
   
   

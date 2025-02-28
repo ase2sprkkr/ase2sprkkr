@@ -1,0 +1,36 @@
+Directory
+=========
+
+
+.. currentmodule:: ase2sprkkr.outputs.test.directory
+
+.. autoclass:: Directory
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.test.directory.Directory
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

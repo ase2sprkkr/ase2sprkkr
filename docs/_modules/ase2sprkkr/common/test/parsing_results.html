@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.common.test.parsing_results &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.common.test.parsing_results</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.common.test.parsing_results</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
+
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.Result.html#ase2sprkkr.common.test.parsing_results.Result">[docs]</a>
+<span class="k">class</span> <span class="nc">Result</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; When data are parsed, some (repeated) options can yield</span>
+<span class="sd">    special keys, results in agregating &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Result.result">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.Result.html#ase2sprkkr.common.test.parsing_results.Result.result">[docs]</a>
+    <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Key">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.Key.html#ase2sprkkr.common.test.parsing_results.Key">[docs]</a>
+<span class="k">class</span> <span class="nc">Key</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; A base class for items, that have to be treated in a special way &quot;&quot;&quot;</span>
+
+    <span class="n">NONE</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; The regular items has no special key &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Key.__init__">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.Key.html#ase2sprkkr.common.test.parsing_results.Key.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span></div>
+
+
+<div class="viewcode-block" id="Key.get">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.Key.html#ase2sprkkr.common.test.parsing_results.Key.get">[docs]</a>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="ow">in</span> <span class="n">too</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">too</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ResultClass</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Conflicting values for item </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">out</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ResultClass</span><span class="p">()</span>
+        <span class="n">too</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span>
+        <span class="n">too</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="IgnoredKey">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.IgnoredKey.html#ase2sprkkr.common.test.parsing_results.IgnoredKey">[docs]</a>
+<span class="k">class</span> <span class="nc">IgnoredKey</span><span class="p">(</span><span class="n">Key</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This key is totaly and silently ignored. Use it</span>
+<span class="sd">    for the keys, that should be written, but not read.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="IgnoredKey.add">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.IgnoredKey.html#ase2sprkkr.common.test.parsing_results.IgnoredKey.add">[docs]</a>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="k">return</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ValidateKey">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.ValidateKey.html#ase2sprkkr.common.test.parsing_results.ValidateKey">[docs]</a>
+<span class="k">class</span> <span class="nc">ValidateKey</span><span class="p">(</span><span class="n">Key</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This key is totaly and silently ignored. Use it</span>
+<span class="sd">    for the keys, that should be written, but not read.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ValidateKey.add">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.ValidateKey.html#ase2sprkkr.common.test.parsing_results.ValidateKey.add">[docs]</a>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="n">too</span><span class="o">.</span><span class="n">checks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SubKey">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.SubKey.html#ase2sprkkr.common.test.parsing_results.SubKey">[docs]</a>
+<span class="k">class</span> <span class="nc">SubKey</span><span class="p">(</span><span class="n">Key</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; A base class for items that have subkeys &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SubKey.__init__">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.SubKey.html#ase2sprkkr.common.test.parsing_results.SubKey.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">sub</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SubKey.convert">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.SubKey.html#ase2sprkkr.common.test.parsing_results.SubKey.convert">[docs]</a>
+    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DictKey">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.DictKey.html#ase2sprkkr.common.test.parsing_results.DictKey">[docs]</a>
+<span class="k">class</span> <span class="nc">DictKey</span><span class="p">(</span><span class="n">SubKey</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DictKey.ResultClass">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.DictKey.html#ase2sprkkr.common.test.parsing_results.DictKey.ResultClass">[docs]</a>
+    <span class="k">class</span> <span class="nc">ResultClass</span><span class="p">(</span><span class="n">Result</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+
+<div class="viewcode-block" id="DictKey.add">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.DictKey.html#ase2sprkkr.common.test.parsing_results.DictKey.add">[docs]</a>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">too</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+             <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Duplicate key </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sub</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sub</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DefDictKey">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.DefDictKey.html#ase2sprkkr.common.test.parsing_results.DefDictKey">[docs]</a>
+<span class="k">class</span> <span class="nc">DefDictKey</span><span class="p">(</span><span class="n">DictKey</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DefDictKey.convert">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.DefDictKey.html#ase2sprkkr.common.test.parsing_results.DefDictKey.convert">[docs]</a>
+    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">sub</span> <span class="k">if</span> <span class="n">sub</span> <span class="o">==</span> <span class="s1">&#39;def&#39;</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ArrayKey">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.ArrayKey.html#ase2sprkkr.common.test.parsing_results.ArrayKey">[docs]</a>
+<span class="k">class</span> <span class="nc">ArrayKey</span><span class="p">(</span><span class="n">SubKey</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ArrayKey.ResultClass">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.ArrayKey.html#ase2sprkkr.common.test.parsing_results.ArrayKey.ResultClass">[docs]</a>
+    <span class="k">class</span> <span class="nc">ResultClass</span><span class="p">(</span><span class="n">Result</span><span class="p">):</span>
+
+        <span class="n">NOT_SET</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="ArrayKey.ResultClass.result">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.ArrayKey.html#ase2sprkkr.common.test.parsing_results.ArrayKey.ResultClass.result">[docs]</a>
+        <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div>
+</div>
+
+
+<div class="viewcode-block" id="ArrayKey.add">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.ArrayKey.html#ase2sprkkr.common.test.parsing_results.ArrayKey.add">[docs]</a>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">too</span><span class="p">)</span>
+        <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">ln</span> <span class="o">&lt;</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="o">+=</span><span class="p">[</span><span class="n">out</span><span class="o">.</span><span class="n">NOT_SET</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">ln</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ln</span> <span class="o">==</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">out</span><span class="o">.</span><span class="n">NOT_SET</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Duplicate key </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sub</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">val</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RepeatedKey">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.RepeatedKey.html#ase2sprkkr.common.test.parsing_results.RepeatedKey">[docs]</a>
+<span class="k">class</span> <span class="nc">RepeatedKey</span><span class="p">(</span><span class="n">Key</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RepeatedKey.ResultClass">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.RepeatedKey.html#ase2sprkkr.common.test.parsing_results.RepeatedKey.ResultClass">[docs]</a>
+    <span class="k">class</span> <span class="nc">ResultClass</span><span class="p">(</span><span class="n">Result</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="RepeatedKey.add">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.RepeatedKey.html#ase2sprkkr.common.test.parsing_results.RepeatedKey.add">[docs]</a>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">too</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Values">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.Values.html#ase2sprkkr.common.test.parsing_results.Values">[docs]</a>
+<span class="k">class</span> <span class="nc">Values</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Result of dict_from_parsed: dictionary with list of checks on the parsed values.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Values.__init__">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.Values.html#ase2sprkkr.common.test.parsing_results.Values.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="Values.to_dict">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.Values.html#ase2sprkkr.common.test.parsing_results.Values.to_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span> <span class="n">i</span><span class="p">:</span> <span class="n">j</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">Values</span><span class="p">)</span> <span class="k">else</span> <span class="n">j</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="dict_from_parsed">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.parsing_results.dict_from_parsed.html#ase2sprkkr.common.test.parsing_results.dict_from_parsed">[docs]</a>
+<span class="k">def</span> <span class="nf">dict_from_parsed</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Create a dictionary from the arguments.</span>
+<span class="sd">    From duplicate arguments create numpy arrays.</span>
+<span class="sd">    Moreover, if there is key of type (a,b), it will be transformed to subdictionary.</span>
+<span class="sd">    Such a keys do not allow duplicates.</span>
+
+<span class="sd">    &gt;&gt;&gt; dict_from_parsed( [ (&#39;x&#39;, &#39;y&#39;),  ((DictKey(&#39;a&#39;, 1)), 1 ), ((DictKey(&#39;a&#39;, 3)), 2) ] )</span>
+<span class="sd">    {&#39;x&#39;: &#39;y&#39;, &#39;a&#39;: {1: 1, 3: 2}}</span>
+<span class="sd">    &gt;&gt;&gt; dict_from_parsed( [ (&#39;x&#39;, 1), (&#39;x&#39;, &#39;2&#39;) ] ) # doctest: +IGNORE_EXCEPTION_DETAIL</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    pyparsing.exceptions.ParseException: There are non-unique keys: x</span>
+<span class="sd">    &gt;&gt;&gt; dict_from_parsed( [ (RepeatedKey(&#39;x&#39;), 1), (RepeatedKey(&#39;x&#39;), 2) ] )</span>
+<span class="sd">    {&#39;x&#39;: [1, 2]}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">Values</span><span class="p">()</span>
+    <span class="n">duplicates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">Key</span><span class="p">):</span>
+            <span class="n">key</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+            <span class="n">duplicates</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+           <span class="n">add</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+           <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">process</span><span class="p">:</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
+         <span class="k">try</span><span class="p">:</span>
+           <span class="n">i</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+           <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">duplicates</span><span class="p">:</span>
+        <span class="n">duplicates</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">i</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="p">))</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There are duplicate items named </span><span class="si">{</span><span class="n">duplicates</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There are errors in data: </span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

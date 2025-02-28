@@ -1,0 +1,50 @@
+configuration
+=============
+
+Full name: **ase2sprkkr.ase.test.configuration**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.ase.test.configuration.Configuration 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.ase.test.configuration
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Configuration
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

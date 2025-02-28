@@ -1,0 +1,8 @@
+find\_default\_mpi\_runner
+==========================
+
+Full name: **ase2sprkkr.configuration.find\_default\_mpi\_runner**
+
+.. currentmodule:: ase2sprkkr.configuration
+
+.. autofunction:: find_default_mpi_runner

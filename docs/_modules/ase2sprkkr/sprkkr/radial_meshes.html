@@ -97,13 +97,13 @@
 
 
 <div class="viewcode-block" id="Mesh">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.Mesh">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.sprkkr.radial_meshes.Mesh">[docs]</a>
 <span class="k">class</span> <span class="nc">Mesh</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  A base class for SPR-KKR radial meshes.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Mesh.default">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.Mesh.default">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.sprkkr.radial_meshes.Mesh.default">[docs]</a>
   <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">default</span><span class="p">():</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; SPR-KKR computes the mesh itself, if zeros are given &quot;&quot;&quot;</span>
@@ -111,7 +111,7 @@
 
 
 <div class="viewcode-block" id="Mesh.interpolate">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.Mesh.interpolate">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.sprkkr.radial_meshes.Mesh.interpolate">[docs]</a>
   <span class="k">def</span> <span class="nf">interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coors</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Interpolate values in the given coors to the mesh coors.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
@@ -119,7 +119,7 @@
 
 
 <div class="viewcode-block" id="Mesh.interpolator">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.Mesh.interpolator">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.sprkkr.radial_meshes.Mesh.interpolator">[docs]</a>
   <span class="k">def</span> <span class="nf">interpolator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolator_for_coors</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coors</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span></div>
 
@@ -130,7 +130,7 @@
       <span class="k">return</span> <span class="n">CubicSpline</span>
 
 <div class="viewcode-block" id="Mesh.interpolator_for_coors">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.Mesh.interpolator_for_coors">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.sprkkr.radial_meshes.Mesh.interpolator_for_coors">[docs]</a>
   <span class="nd">@classmethod</span>
   <span class="k">def</span> <span class="nf">interpolator_for_coors</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">coors</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
       <span class="n">v1</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -157,7 +157,7 @@
 
 
 <div class="viewcode-block" id="_clearing_property">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes._clearing_property.html#ase2sprkkr.potentials.definitions.sections.mesh_information._clearing_property">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes._clearing_property.html#ase2sprkkr.sprkkr.radial_meshes._clearing_property">[docs]</a>
 <span class="k">def</span> <span class="nf">_clearing_property</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
 
     <span class="n">attr</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span>
@@ -176,12 +176,12 @@
 
 
 <div class="viewcode-block" id="FullpotMesh">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.FullpotMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.FullpotMesh">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.FullpotMesh.html#ase2sprkkr.sprkkr.radial_meshes.FullpotMesh">[docs]</a>
 <span class="k">class</span> <span class="nc">FullpotMesh</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Data describing mesh for a full potential &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FullpotMesh.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.FullpotMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.FullpotMesh.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.FullpotMesh.html#ase2sprkkr.sprkkr.radial_meshes.FullpotMesh.__init__">[docs]</a>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jrns</span><span class="p">,</span> <span class="n">jrcri</span><span class="p">,</span> <span class="n">jrcut</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">jrns</span> <span class="o">=</span> <span class="n">jrns</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">jrcri</span> <span class="o">=</span> <span class="n">jrcri</span>
@@ -189,13 +189,13 @@
 
 
 <div class="viewcode-block" id="FullpotMesh.to_tuple">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.FullpotMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.FullpotMesh.to_tuple">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.FullpotMesh.html#ase2sprkkr.sprkkr.radial_meshes.FullpotMesh.to_tuple">[docs]</a>
   <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jrns</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jrcri</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jrcut</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">jrcut</span></div>
 
 
 <div class="viewcode-block" id="FullpotMesh.from_tuple">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.FullpotMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.FullpotMesh.from_tuple">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.FullpotMesh.html#ase2sprkkr.sprkkr.radial_meshes.FullpotMesh.from_tuple">[docs]</a>
   <span class="nd">@classmethod</span>
   <span class="k">def</span> <span class="nf">from_tuple</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span></div>
@@ -204,14 +204,14 @@
 
 
 <div class="viewcode-block" id="ExponentialMesh">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.ExponentialMesh">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh">[docs]</a>
 <span class="k">class</span> <span class="nc">ExponentialMesh</span><span class="p">(</span><span class="n">Mesh</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Radial mesh definition for an atomic site.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ExponentialMesh.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.ExponentialMesh.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.__init__">[docs]</a>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">jrmt</span><span class="p">,</span> <span class="n">rmt</span><span class="p">,</span> <span class="n">jrws</span><span class="p">,</span> <span class="n">rws</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Parameters</span>
@@ -257,7 +257,7 @@
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
 <div class="viewcode-block" id="ExponentialMesh._clear">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.ExponentialMesh._clear">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh._clear">[docs]</a>
   <span class="k">def</span> <span class="nf">_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_coors</span> <span class="o">=</span> <span class="kc">None</span></div>
 
@@ -273,25 +273,25 @@
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coors</span>
 
 <div class="viewcode-block" id="ExponentialMesh.to_tuple">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.ExponentialMesh.to_tuple">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.to_tuple">[docs]</a>
   <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jrmt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jrws</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rws</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ExponentialMesh.copy">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.ExponentialMesh.copy">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.copy">[docs]</a>
   <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ExponentialMesh.set_fullpot">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.ExponentialMesh.set_fullpot">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.set_fullpot">[docs]</a>
   <span class="k">def</span> <span class="nf">set_fullpot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">fullpot</span> <span class="o">=</span> <span class="n">FullpotMesh</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ExponentialMesh.fullpot_tuple">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.ExponentialMesh.fullpot_tuple">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.fullpot_tuple">[docs]</a>
   <span class="k">def</span> <span class="nf">fullpot_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fullpot</span><span class="p">:</span>
           <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fullpot</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>

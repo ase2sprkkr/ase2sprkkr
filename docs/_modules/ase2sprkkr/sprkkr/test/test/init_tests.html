@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.sprkkr.test.test.init_tests &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.sprkkr.test.test.init_tests</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.sprkkr.test.test.init_tests</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Routines and classes used in tests &quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">from</span> <span class="nn">ase.cell</span> <span class="kn">import</span> <span class="n">Cell</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="run_sprkkr">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.run_sprkkr.html#ase2sprkkr.sprkkr.test.test.init_tests.run_sprkkr">[docs]</a>
+<span class="k">def</span> <span class="nf">run_sprkkr</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; run this test only if SPRKKR executable can be runned &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span><span class="ow">not</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">run_sprkkr</span><span class="p">(),</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;The test require SPRKKR running&quot;</span><span class="p">)(</span><span class="n">fn</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="patch_package">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.patch_package.html#ase2sprkkr.sprkkr.test.test.init_tests.patch_package">[docs]</a>
+<span class="k">def</span> <span class="nf">patch_package</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Set the package name for the tests, to make the relative imports working.</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">    ..code::</span>
+
+<span class="sd">      if __package__:</span>
+<span class="sd">        from .init_tests import TestCase, patch_package</span>
+<span class="sd">      else:</span>
+<span class="sd">         from init_tests import TestCase, patch_package</span>
+<span class="sd">      __package__, __name__ = patch_package(__package__, __name__)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">package</span> <span class="ow">and</span> <span class="n">package</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+       <span class="k">return</span> <span class="n">package</span><span class="p">,</span> <span class="n">name</span>
+    <span class="n">frame</span><span class="o">=</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">filename</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">while</span> <span class="n">file</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;ase2sprkkr&#39;</span><span class="p">:</span>
+      <span class="n">file</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">parent</span>
+    <span class="n">top</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">ase2sprkkr</span> <span class="c1"># NOQA</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+    <span class="n">package</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">current</span><span class="p">)[</span><span class="nb">len</span><span class="p">(</span><span class="n">top</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">package</span><span class="p">,</span> <span class="n">package</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+
+<span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span> <span class="o">=</span> <span class="n">patch_package</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="extdict">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.extdict.html#ase2sprkkr.sprkkr.test.test.init_tests.extdict">[docs]</a>
+<span class="k">class</span> <span class="nc">extdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="TestCase">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase">[docs]</a>
+<span class="k">class</span> <span class="nc">TestCase</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; A testcase class with some usefull assertions and a better numpy</span>
+<span class="sd">  arrays comparison &quot;&quot;&quot;</span>
+
+  <span class="n">_print_output</span> <span class="o">=</span> <span class="s1">&#39;-v&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="ow">or</span> <span class="s1">&#39;--verbose&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+  <span class="n">_calc_args</span> <span class="o">=</span> <span class="n">extdict</span><span class="p">(</span>
+       <span class="n">directory</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">input_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.inp&#39;</span><span class="p">,</span>  <span class="c1"># empty_spheres=False,</span>
+       <span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.out&#39;</span><span class="p">,</span> <span class="n">potential_file</span> <span class="o">=</span><span class="s1">&#39;output_test_calc.pot&#39;</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="n">_print_output</span><span class="p">,</span>
+       <span class="n">mpi</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;NKTAB&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;NE&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">},</span>
+       <span class="n">empty_spheres</span> <span class="o">=</span> <span class="kc">False</span>
+  <span class="p">)</span>
+
+<div class="viewcode-block" id="TestCase.temporary_dir">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.temporary_dir">[docs]</a>
+  <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+  <span class="k">def</span> <span class="nf">temporary_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span>
+          <span class="n">TestCase</span><span class="o">.</span><span class="n">_calc_args</span><span class="p">[</span><span class="s1">&#39;directory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">dirname</span> <span class="o">=</span> <span class="n">d</span>
+          <span class="k">yield</span>
+          <span class="n">TestCase</span><span class="o">.</span><span class="n">_calc_args</span><span class="p">[</span><span class="s1">&#39;directory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+          <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirname</span></div>
+
+
+<div class="viewcode-block" id="TestCase.calc_args">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.calc_args">[docs]</a>
+  <span class="nd">@classmethod</span>
+  <span class="k">def</span> <span class="nf">calc_args</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">TYPE</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="p">:</span>
+          <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_calc_args</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_calc_args</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+      <span class="k">if</span> <span class="s1">&#39;options&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+          <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;options&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_calc_args</span><span class="p">[</span><span class="s1">&#39;options&#39;</span><span class="p">])</span>
+      <span class="n">out</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">TYPE</span> <span class="o">==</span> <span class="s1">&#39;save_input&#39;</span><span class="p">:</span>
+          <span class="k">try</span><span class="p">:</span>
+              <span class="k">del</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;print_output&#39;</span><span class="p">]</span>
+          <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+              <span class="k">pass</span>
+      <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="TestCase.run_sprkkr">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.run_sprkkr">[docs]</a>
+  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">run_sprkkr</span><span class="p">():</span>
+     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DO_NOT_RUN_SPRKKR&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span></div>
+
+
+<div class="viewcode-block" id="TestCase.assertAsyncEqual">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.assertAsyncEqual">[docs]</a>
+  <span class="k">def</span> <span class="nf">assertAsyncEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">runAsync</span><span class="p">(</span><span class="n">b</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="TestCase.assertAsyncRaises">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.assertAsyncRaises">[docs]</a>
+  <span class="k">def</span> <span class="nf">assertAsyncRaises</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+      <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">runAsync</span><span class="p">(</span><span class="n">b</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestCase.assertRaises">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.assertRaises">[docs]</a>
+  <span class="k">def</span> <span class="nf">assertRaises</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="k">return</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+      <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+          <span class="n">b</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TestCase.assertAlmostEqual">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.assertAlmostEqual">[docs]</a>
+  <span class="k">def</span> <span class="nf">assertAlmostEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_almost_equal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestCase.assertIsNone">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.assertIsNone">[docs]</a>
+  <span class="k">def</span> <span class="nf">assertIsNone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+      <span class="k">assert</span> <span class="n">a</span> <span class="ow">is</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="TestCase.runAsync">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.runAsync">[docs]</a>
+  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">runAsync</span><span class="p">(</span><span class="n">corr</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">corr</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestCase.assertTrue">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.assertTrue">[docs]</a>
+  <span class="k">def</span> <span class="nf">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+      <span class="k">assert</span> <span class="n">val</span></div>
+
+
+<div class="viewcode-block" id="TestCase.assertFalse">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.assertFalse">[docs]</a>
+  <span class="k">def</span> <span class="nf">assertFalse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+      <span class="k">assert</span> <span class="ow">not</span> <span class="n">val</span></div>
+
+
+<div class="viewcode-block" id="TestCase.assertEqual">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.assertEqual">[docs]</a>
+  <span class="k">def</span> <span class="nf">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+      <span class="n">assertion</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestCase.assertNotEqual">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.assertNotEqual">[docs]</a>
+  <span class="k">def</span> <span class="nf">assertNotEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+      <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">AssertionError</span><span class="p">):</span>
+          <span class="n">assertion</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestCase.almost_equal_precision">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.TestCase.html#ase2sprkkr.sprkkr.test.test.init_tests.TestCase.almost_equal_precision">[docs]</a>
+  <span class="nd">@classmethod</span>
+  <span class="nd">@contextmanager</span>
+  <span class="k">def</span> <span class="nf">almost_equal_precision</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+      <span class="n">tmp</span> <span class="o">=</span> <span class="n">assertion</span><span class="o">.</span><span class="n">_almost_equal_precision</span>
+      <span class="n">assertion</span><span class="o">.</span><span class="n">_almost_equal_precision</span> <span class="o">=</span> <span class="n">kwargs</span>
+      <span class="k">yield</span>
+      <span class="n">assertion</span><span class="o">.</span><span class="n">_almost_equal_precision</span> <span class="o">=</span> <span class="n">tmp</span></div>
+</div>
+
+
+
+<span class="n">assertion</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">(</span><span class="s1">&#39;__init__&#39;</span><span class="p">)</span>
+<span class="n">assertion</span><span class="o">.</span><span class="n">_almost_equal_precision</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="testfce">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.testfce.html#ase2sprkkr.sprkkr.test.test.init_tests.testfce">[docs]</a>
+<span class="k">def</span> <span class="nf">testfce</span><span class="p">(</span><span class="n">fce</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">np_array_equal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="n">msg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwar</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+          <span class="n">fce</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwar</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+          <span class="k">if</span> <span class="n">msg</span><span class="p">:</span>
+             <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+             <span class="k">raise</span> <span class="n">assertion</span><span class="o">.</span><span class="n">failureException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+          <span class="k">else</span><span class="p">:</span>
+             <span class="k">raise</span>
+    <span class="k">return</span> <span class="n">np_array_equal</span></div>
+
+
+
+<span class="n">assert_equals</span> <span class="o">=</span> <span class="n">testfce</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">)</span>
+<span class="n">assert_almost_equals</span> <span class="o">=</span> <span class="n">testfce</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_almost_equal</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="arr_testfce">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.arr_testfce.html#ase2sprkkr.sprkkr.test.test.init_tests.arr_testfce">[docs]</a>
+<span class="k">def</span> <span class="nf">arr_testfce</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; assert_almost_equal does not work for non-numeric dtypes &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;O&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">assert_equals</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;O&#39;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">assert_equals</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">msg</span><span class="p">)</span>
+    <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">assertion</span><span class="o">.</span><span class="n">_almost_equal_precision</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">assert_almost_equals</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<span class="n">assertion</span><span class="o">.</span><span class="n">addTypeEqualityFunc</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">arr_testfce</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="assertDictEqual">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.assertDictEqual.html#ase2sprkkr.sprkkr.test.test.init_tests.assertDictEqual">[docs]</a>
+<span class="k">def</span> <span class="nf">assertDictEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">!=</span> <span class="n">b</span><span class="o">.</span><span class="vm">__class__</span><span class="p">:</span>
+       <span class="k">if</span> <span class="n">msg</span><span class="p">:</span>
+           <span class="n">msg</span><span class="o">+=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+       <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;Classes </span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">b</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s1"> are not equal&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">,</span> <span class="n">msg</span> <span class="ow">or</span> <span class="s1">&#39;Dictionaries differ&#39;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ai</span><span class="p">,</span> <span class="n">av</span><span class="p">),(</span><span class="n">bi</span><span class="p">,</span> <span class="n">bv</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">b</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+       <span class="n">assertion</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ai</span><span class="p">,</span> <span class="n">bi</span><span class="p">,</span> <span class="s1">&#39;Dict keys are not equal&#39;</span><span class="p">)</span>
+       <span class="n">assertion</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">av</span><span class="p">,</span> <span class="n">bv</span><span class="p">,</span> <span class="s1">&#39;Dict values are not equal&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="assertListEqual">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.sprkkr.test.test.init_tests.assertListEqual.html#ase2sprkkr.sprkkr.test.test.init_tests.assertListEqual">[docs]</a>
+<span class="k">def</span> <span class="nf">assertListEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+
+   <span class="k">def</span> <span class="nf">message</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+       <span class="k">return</span> <span class="n">msg</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">error</span> <span class="k">if</span> <span class="n">msg</span> <span class="k">else</span> <span class="n">error</span>
+
+   <span class="k">assert</span> <span class="n">a</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="n">b</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">message</span><span class="p">(</span><span class="s1">&#39;A list is expected&#39;</span><span class="p">)</span>
+   <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">message</span><span class="p">(</span><span class="s1">&#39;The lists should have the same lengths, they have &#39;</span>
+                                <span class="sa">f</span><span class="s1">&#39;the lengths </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="si">}</span><span class="s1"> respectivelly&#39;</span><span class="p">)</span>
+   <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">vals</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)):</span>
+       <span class="k">try</span><span class="p">:</span>
+          <span class="n">assertion</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+       <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+          <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">message</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">th value of the lists differs: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span></div>
+
+
+
+<span class="n">assertion</span><span class="o">.</span><span class="n">addTypeEqualityFunc</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">assertListEqual</span><span class="p">)</span>
+<span class="n">assertion</span><span class="o">.</span><span class="n">addTypeEqualityFunc</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="n">assertDictEqual</span><span class="p">)</span>
+<span class="n">assertion</span><span class="o">.</span><span class="n">addTypeEqualityFunc</span><span class="p">(</span><span class="n">Cell</span><span class="p">,</span>
+    <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">msg</span><span class="p">:</span> <span class="n">arr_testfce</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">msg</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

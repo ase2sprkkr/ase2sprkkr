@@ -1,0 +1,36 @@
+RepeatedKey
+===========
+
+
+.. currentmodule:: ase2sprkkr.ase.test.parsing_results
+
+.. autoclass:: RepeatedKey
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.ase.test.parsing_results.RepeatedKey
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
