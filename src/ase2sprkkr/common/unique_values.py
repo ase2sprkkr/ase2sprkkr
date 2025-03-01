@@ -226,7 +226,7 @@ class UniqueValuesMapping:
          Dict ``{ equivalence_class : value }``
 
       .. doctest::
-        >>> if np.__version__ > '1.24': np.set_printoptions(legacy = '1.25')
+        >>> if np.__version__ > '2.0': np.set_printoptions(legacy = '1.25')
         >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized()
         (array([1, 2, 1], dtype=int32), {1: 1, 2: 2})
         >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized(start_from=0)
