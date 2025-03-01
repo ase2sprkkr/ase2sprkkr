@@ -28,10 +28,9 @@ dependencies = [
   "pint",
   "pytest",
   'pyyaml',
-  'importlib_metadata;python_version<"3.8"',
   'requests',
   'argcomplete',
-  'numpy>=1.22'
+  'numpy'
 ]
 authors = [
   { name = "Matyáš Novák", email = "novakmat@fzu.cz" },
