@@ -105,6 +105,7 @@ def auto_range(rng, data):
     """
     Fill the missing value in the given range by the data.
 
+    >>> if np.__version__ > '2.0': np.set_printoptions(legacy='1.25')
     >>> auto_range( (None, None), [2,5,-3,7] )
     (-3, 7)
     >>> auto_range( (None, 4), [2,5,-3,7] )
