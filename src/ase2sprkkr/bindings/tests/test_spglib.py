@@ -1,4 +1,5 @@
 from ase.build import bulk
+import pytest
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -19,8 +20,12 @@ class TestSpgilib(TestCase):
            self.assertTrue(UniqueValuesMapping(out.equivalent_atoms).is_equivalent_to(mapping))
 
        atoms = bulk('NaCl', "rocksalt", a=5.64)
-       ssert([0,1], spglib_dataset(atoms))
+       dataset = spglib_dataset(atoms)
+       ssert([0,1], dataset)
        ssert([0,0], spglib_dataset(atoms, atomic_numbers=[4,4]))
+
+       with pytest.raises(AttributeError):
+            dataset.non_existent_value
 
        atoms = bulk('NaNa', "rocksalt", a=5.64)
        ssert([0,0], spglib_dataset(atoms))

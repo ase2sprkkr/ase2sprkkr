@@ -18,11 +18,11 @@ def spglib_dataset_wrapper(dataset):
 
     class Convertor:
 
-         def __hasattr__(self, name):
-             return name in dataset
-
          def __getattr__(self, name):
-             return dataset[name]
+             try:
+                 return dataset[name]
+             except KeyError as ke:
+                 raise AttributeError(ke)
 
     return Convertor()
 
