@@ -1,5 +1,11 @@
 Changelog
 =========
+Version 3.3.0-beta
+------------------
+* Buildsystem changed to scikit-build-core (mesonpy do not support editable build at least in some setups)
+* Atoms rotating, shifting and flipping routines
+* Config file printing, value-setting etc. routines from cmdline
+
 Version 3.2.5-beta
 ------------------
 
@@ -9,7 +15,7 @@ User interface
 * Bash ase2sprkkr commandline completing
 * Faster package loading, lazy loading of some modules/data definitions
 * Task BSF improved
-* Python 3.8, pyparsing 2.x, and numpy < 1.23 support dropped
+* Python 3.7, pyparsing 2.x, and numpy < 1.23 support dropped
 * Nomad uploading proof of concept
 * Configuration file improved, help available
 * Occupancy and symmetry handling fixed
