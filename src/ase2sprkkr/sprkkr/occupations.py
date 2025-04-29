@@ -46,7 +46,11 @@ class Occupation:
           for_mesh = site.mesh
       return Occupation({ a.for_mesh(for_mesh): v for a,v in self._occupation.items() }, site)
 
-  def set(self, dct: Dict[AtomicType | str, float ], update_atoms=True, for_mesh=None) -> None:
+  def set(self, dct: Union[
+                           Dict[Union[AtomicType, str], float ],
+                           List[Tuple[Union[AtomicType, str], float]]
+                ],
+                update_atoms=True, for_mesh=None) -> None:
       """ Set (replace) the occupation data.
 
       The method automatically updates the symbols, atomic numbers and the occupancy property (if exists)
