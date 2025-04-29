@@ -111,6 +111,15 @@ class TestSites(TestCase):
   def test_occupancy(self):
       a=SPRKKRAtoms('Na')
       site = a.sites[0]
+      site.occupation = { 'Na' : 0.7 }
+      self.assertAlmostEqual(0.3, site.occupation[1])
+      self.assertEqual(site.occupation.atomic_type(1).symbol, 'Vc')
+      site.occupation.atomic_type(1).symbol = 'Fe'
+      self.assertEqual(site.occupation.atomic_type(1).symbol, 'Fe')
+      self.assertEqual(site.occupation.atomic_type(1).n_electrons, 26)
+
+      a=SPRKKRAtoms('Na')
+      site = a.sites[0]
       site.occupation = { 'Na' : 0.7, 'Cl' : None }
       self.assertAlmostEqual(0.3, site.occupation[1])
       self.assertAlmostEqual(0.3, site.occupation['Cl'])

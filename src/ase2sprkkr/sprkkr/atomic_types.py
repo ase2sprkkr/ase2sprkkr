@@ -133,17 +133,17 @@ n_semicore: {self._n_semicore}""")
     def _clear_symbol_cache(self):
         try:
           del self.mendeleev
-        except AttributeError:
+        except (AttributeError, KeyError):
           pass
 
         try:
           del self.atomic_number
-        except AttributeError:
+        except (AttributeError, KeyError):
           pass
 
         try:
           del self.symbol
-        except AttributeError:
+        except (AttributeError, KeyError):
           pass
 
     @atomic_number.setter
