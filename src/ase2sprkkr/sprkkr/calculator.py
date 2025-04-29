@@ -776,7 +776,7 @@ class SPRKKR(Calculator):
           if input_parameters.TASK.TASK() == 'SCF' and not potential and not atoms:
               try:
                   pot = out.potential
-              except ValueError:
+              except (ValueError, FileNotFoundError):
                   pot = None
               if pot:
                   self.potential = pot
