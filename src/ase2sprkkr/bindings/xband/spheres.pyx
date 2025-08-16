@@ -30,6 +30,7 @@ cdef extern from "spheres.h":
               int* n_symop,
               int* symop_number,
               int* symop_data,
+              int* mesh,
               int* verbose
   );
 
@@ -42,7 +43,8 @@ def empty_spheres(
     verbose=False,
     int max_spheres=256,
     return_atom_rws=False,
-    use_spacegroup=True
+    use_spacegroup=True,
+    mesh=24
     ):
 
     if point_symmetry is None:
@@ -69,7 +71,13 @@ def empty_spheres(
     cdef double[:] occupations = np.empty(n_types, np.double)
     cdef double[:] atomic_numbers = np.empty(n_types, np.double)
     cdef int[:] eq_classes = np.empty(n_types, np.int32)
+    cdef int[3] _mesh = np.empty(3, np.int32)
     cdef int type_no = 0
+    if isinstance(mesh, int):
+      _mesh[0] = _mesh[1] = _mesh[2] = mesh
+    else:
+      _mesh[:] = mesh
+
     for i, index in enumerate(ui):
         site = atoms.sites[i]
         for typ, occ  in site.occupation.items():
@@ -117,6 +125,7 @@ def empty_spheres(
                    &n_symops,
                    &point_symmetry[0,0] if n_symops else NULL,
                    &point_symmetry[1,0] if n_symops else NULL,
+                   &_mesh[0],
                    &_verbose
                   )
     ratio = 1 / ratio
