@@ -1,6 +1,11 @@
 Changelog
 =========
-Version 3.3.0-beta
+Version 3.3.3
+------------------
+* Added mesh parameter to empty spheres finding
+* Spacegroup from ASE is no longer used, since it have been deprecated
+
+Version 3.3.2
 ------------------
 * Buildsystem changed to scikit-build-core (mesonpy do not support editable build at least in some setups)
 * Atoms rotating, shifting and flipping routines
