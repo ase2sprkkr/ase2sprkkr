@@ -2,10 +2,38 @@
 This module contains various crystalographics classifications,
 and the LatticeData object, that provides various informations about a lattice.
 """
-
-from ase.spacegroup import get_spacegroup
+from ..common.decorators import cached_property
+import numpy as np
+from ase2sprkkr.bindings.spglib import spglib_dataset
 from ase.units import Bohr
 from collections import namedtuple
+from scipy.optimize import linear_sum_assignment
+
+def reorder_matrix(target, source):
+    # normalize vectors (rows)
+    src_norm = source / np.linalg.norm(source, axis=1, keepdims=True)
+    tgt_norm = target / np.linalg.norm(target, axis=1, keepdims=True)
+
+    # compute similarity matrix (cosine similarity)
+    sim = tgt_norm @ src_norm.T   # shape (3,3)
+    # convert to cost matrix (maximize similarity -> minimize negative similarity)
+    cost = -sim
+    # Hungarian algorithm
+    row_ind, col_ind = linear_sum_assignment(cost)
+
+    # reorder target rows to best match source
+    reordered = target[row_ind[np.argsort(col_ind)]]
+    return reordered
+
+# Example
+S = np.array([[1,0,0],
+              [0,1,0],
+              [0,0,1]], dtype=float)
+
+T = np.array([[0,0,2],
+              [3,0,0],
+              [0,5,0]], dtype=float)
+
 
 class Pearson(namedtuple("Pearson", [
     "pearson_symbol",
@@ -296,19 +324,18 @@ class LatticeData:
   def __init__(self, atoms):
       cell = atoms.get_cell()
       bl = cell.get_bravais_lattice()
-      sg = get_spacegroup(atoms)
+      sg = spglib_dataset(atoms)
       ps = bl.pearson_symbol
       self.pearson = Pearson.from_symbol(ps)
 
       self.basis = 0
-      self.sgno=sg.no
-      self.apno=international_numbers_to_AP[sg.no]
+      self.sgno=sg.number
+      self.apno=international_numbers_to_AP[sg.number]
 
       self.bravais = cell.get_bravais_lattice()
 
       self.boa = cell.cellpar()[1] / cell.cellpar()[0]
       self.coa = cell.cellpar()[2] / cell.cellpar()[0]
-      self.rbas = sg.scaled_primitive_cell
 
       self.alat = bl.a / Bohr
       self.blat = self.boa*self.alat
@@ -317,6 +344,15 @@ class LatticeData:
       self.alpha=cell.cellpar()[3]
       self.beta=cell.cellpar()[4]
       self.gamma=cell.cellpar()[5]
+      self.sg = sg
+      self.cell = cell
+
+  @cached_property
+  def rbas(self):
+      #self.rbas = sg.scaled_primitive_cell
+      sg = self.sg
+      out = sg.primitive_lattice.dot(np.linalg.inv(sg.std_lattice))
+      return reorder_matrix(out, self.cell)
 
   @property
   def bravais_number(self):
