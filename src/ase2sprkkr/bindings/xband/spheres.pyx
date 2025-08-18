@@ -79,13 +79,13 @@ def empty_spheres(
       _mesh[:] = mesh
 
     for i, index in enumerate(ui):
-        site = atoms.sites[i]
+        site = atoms.sites[index]
         for typ, occ  in site.occupation.items():
             s = typ.symbol.encode('utf8')[:4]
             symbols[type_no, :len(s)] = memoryview(s)
             occupations[type_no] = occ
             atomic_numbers[type_no] = float(typ.atomic_number)
-            eq_classes[type_no] = i+1
+            eq_classes[type_no] = index + 1
             type_no += 1
 
     cdef int n_symops=point_symmetry.shape[1]
