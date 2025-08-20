@@ -215,8 +215,8 @@ class SPRKKRAtoms(Atoms):
        out = super().__getitem__(i)
        if isinstance(out, Atoms) and 'spacegroup_info' in out.info:
           out.info['spacegroup_info'] = out.info['spacegroup_info'].copy_for(out)
-       if self.are_sites_inited():
-          out.info['spacegroup_info'].recompute(copy=True)
+          if self.are_sites_inited():
+              out.info['spacegroup_info'].recompute(copy=True)
        return out
 
    @property
