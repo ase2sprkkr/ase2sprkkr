@@ -131,7 +131,9 @@ def empty_spheres(
     ratio = 1 / ratio
     centres[:max_spheres] *= ratio
     radii[:max_spheres + len(atoms)] *= Bohr
-    out = EmptySpheresResult(centres[:max_spheres], radii[:max_spheres])
+    spheres = Atoms(cell=atoms.cell, pbc=atoms.pbc, positions=centres[:max_spheres])
+    spheres.wrap()
+    out = EmptySpheresResult(spheres.positions, radii[:max_spheres])
     if return_atom_rws:
       return out, radii[max_spheres:max_spheres+len(atoms)]
     else:
