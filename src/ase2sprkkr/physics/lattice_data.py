@@ -71,7 +71,7 @@ Pearson.pearsons = {i.pearson_symbol:i for i in [
         Pearson('mP',  2, 'monoclinic',  'primitive',      '2/m',    'C_2h'),
         Pearson('mS',  3, 'monoclinic',  'primitive',      '2/m',    'C_2h'),
         Pearson('oP',  4, 'orthorombic', 'primitive',      'mmm',    'D_2h'),
-        Pearson('oS',  5, 'orthorombic', 'body-centered',  'mmm',    'D_2h'),
+        Pearson('oS',  5, 'orthorombic', 'base-centered',  'mmm',    'D_2h'),
         Pearson('oI',  6, 'orthorombic', 'body-centered',  'mmm',    'D_2h'),
         Pearson('oF',  7, 'orthorombic', 'face-centered',  'mmm',    'D_2h'),
         Pearson('tP',  8, 'tetragonal',  'primitive',      '4/mmm',  'D_4h'),
