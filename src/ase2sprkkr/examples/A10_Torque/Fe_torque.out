@@ -1,0 +1,327 @@
+ 
+
+          **************************************************************
+          *                                                            *
+          *        ****   *****   *****   *    *  *    *  *****        *
+          *       *    *  *    *  *    *  *   *   *   *   *    *       *
+          *       *       *    *  *    *  *  *    *  *    *    *       *
+          *        ****   *****   *****   * *     * *     *****        *
+          *            *  *       *  *    ** *    ** *    *  *         *
+          *       *    *  *       *   *   *   *   *   *   *   *        *
+          *        ****   *       *    *  *    *  *    *  *    *       *
+          *                                                            *
+          *------------------------------------------------------------*
+          *       KKRGEN  VERSION  8.6.0          (C) 2021  H. Ebert   *
+          **************************************************************
+
+
+          programm execution  on    22/08/2025    at   15:25:18
+
+          Git branch       : master
+          Git hash         : 4c2a036d090a70b64f537cd12d200a7a77aa47ba
+          Date of commit   : Tue Feb 8 09:42:50 2022 +0100
+          Files changed as compared to commit (hash above): .gitignore NIST-constants.txt aes.f ame_grv.f ame_init.f ame_nab.f ame_sig_alf.f ame_sig_nab.f amebi.f amecoul.f ameop.f ametimrev.f amey1m.f bastrans.f beshan.f bextra.f blochint_sra.f blochsf.f breakpoint_key.f calc_chplm.f calc_obs.f calc_obs_me.f calc_rhplm.f calcame.f calccgc.f calcdfdr.f calcdos.f calcdos_write.f calcnos.f calcsmq.f cdiffer.f cdjlzdz.f cdnlzdz.f cgc1.f cgc_rac.f check_gfun.f check_input.f chi_cnvt_tktkqq.f chi_dk_std.f chi_drive.f chi_kloop_tb.f chi_kloop_tb.f.1 chi_kloop_tb.f.2 chi_nlc_std.f chi_q_std.f chi_sra_std.f chi_std.f chi_sumk_tktkqq.f chi_tab_std.f chi_tb.f chi_tktkchk.f chi_tktksym.f chi_tktktab.f chrdns.f chrdns_fp.f chrdns_norm.f cintabr.f cinthff.f cinvlapack.f cinvlu.f cinvrii3.f cjlz.f clu_chi_drive.f clubonding.f cludrive.f clug0mat.f clugaunt_rylm.f clugetlimits.f clupotgen.f clupotrd.f cluscfinitpot.f clusit2.f clussites.f clutauchk.f clutaumat.f cluxcpljij.f cluxcpltensor.f clxps.f cmatstruct.f cnlz.f compton.f compton_core_only.f compton_mod1_core0.f compton_mod1_core1.f compton_mod1_me0.f compton_mod1_me1.f compton_mod2_core0.f compton_mod2_core1.f compton_mod2_me0.f compton_mod2_me1.f compton_pmesh_utils.f core.f core_dir_abm.f core_dir_bs.f core_hff.f core_hff_split.f core_rmesh.f core_sra.f coreerr.f cpabroyden.f cpamills.f cpanesbet.f cradint.f cradint_hff.f cradint_inw_r.f csumsslt.f curdns.f cylag.f density.f derspl.f dirac_op.f dirbs.f dirbs_norm.f dirbs_soc.f dirbsbi.f dirbssig.f dirrk.f dmft_3bsreadsig.f dmft_broyd_sig.f dmft_calcg0.f dmft_close_iotmp.f dmft_drv.f dmft_drv_sosptflex.f dmft_drv_sosptflex_idm.f dmft_drv_sptflex.f dmft_drv_spttma.f dmft_edreadsig.f dmft_flexreadsig.f dmft_gfunmat.f dmft_green_config.f90 dmft_green_la.f90 dmft_green_mpi.f90 dmft_green_sptf_disk_access.f90 dmft_green_sptf_fft_interface.f90 dmft_green_sptf_fourier.f90 dmft_green_sptf_interface.f90 dmft_green_sptf_main.f90 dmft_green_sptf_mask.f90 dmft_green_sptf_model_functions.f90 dmft_green_sptf_mpi.f90 dmft_green_sptf_potentials.f90 dmft_green_sptf_zginvert.f90 dmft_green_stop.f90 dmft_init.f dmft_ldau_eref.f dmft_ldaureadsig.f dmft_lib_fft.f dmft_lib_pade.f dmft_lib_sosptflex.f dmft_lib_sptflex.f dmft_lib_spttma_int.f dmft_lib_spttma_kkt.f dmft_lib_spttma_splines.f dmft_matsub.f dmft_readselfene.f dmft_readsig.f dmft_sosptflex.f dmft_sptflex.f dmft_spttma.f dmft_spttmareadsig.f dmft_ssite_rotate.f dmft_tau_drive.f dmft_u_matrix.f dmft_vertex.f dmivector.f dumpmat.f dumptau.f dvdrspline.f egrid8_ime.f ekrel.f eloop.f epath.f errortrap.f excbj.f excmjw.f excpbe.f excpw92.f excvbh.f excvwn.f extend_txt_t.f force.f forcetensor.f fp_pot_local.f fp_sfn_local.f fpasastart.f fpcoupl.f fpdirborn.f fpdirbs.f fpecoub.f fpefg.f fpepotinb.f fpetot.f fplebedev.f fpnrssite.f fppickrules.f fppickrules_local.f fppickrules_voronoi.f fpplot2dpr.f fpplotprs.f fppot.f fprwfborn.f fprwfbs.f fpscfnewpot.f fpssite.f fpvintra.f fpvnfcor.f fpvxclm.f frelpole.f fscat.f gauleg.f gaunt_cylm.f gaunt_rylm.f gen.f genrmesh.f get_momentum.f getdelm.f getdmat.f getlrecreal.f getmrot.f getrnn.f getsystem.f gfunmat_drive.f gil.f gil0.f gil1.f gilme.f gilnlc.f gilnlcme.f gilsum.f grad_flm.f hffield.f ikapmue.f ikmlin.f imatstruct.f init_lkkrcalc.f init_mod_angmom.f init_mod_angmom_gen.f init_mod_calcmode.f init_mod_compton_pmesh.f init_mod_cpa.f init_mod_dmft_ldau.f init_mod_energy.f init_mod_files.f init_mod_kmesh.f init_mod_kmesh_full_bz.f init_mod_lattice.f init_mod_mpi.f init_mod_rmesh.f init_mod_rmesh_fullpot.f init_mod_sites.f init_mod_sites_rotmag.f init_mod_str.f init_mod_symmetry.f init_mod_tauij_cluster.f init_mod_tauij_loop.f init_mod_tauij_star.f init_mod_tb.f init_mod_tbclu.f init_mod_types.f init_mod_types_fullpot.f init_mrot_frame.f init_radii.f init_spiral.f init_umat.f initvar.f isint_vol.f kdirtab.f kkreos.f kkrmain.f kloopsij.f kmeshs.f ldau_drv.f lebedev_grid.f linresp_density.f linresp_eloop.f linresp_init.f linresp_magnet.f linresp_magnet_density.f linresp_magnet_eloop.f linresp_magnet_me_alf.f linresp_magnet_me_nab.f linresp_magnet_perturb.f linresp_perturb.f linresp_phon_single.f linresp_phonons.f linresp_pump.f linresp_susc_stat.f linresp_vertex.f linresp_vertex_nlc.f linresp_vxc.f lkkr_calc_gampm.f lkkr_double.f lkkr_halfspace.f lkkr_init_kmesh.f lkkr_initvars.f lkkr_inpstruc.f lkkr_k0set.f lkkr_kloop.f lkkr_layermatrices.f lkkr_matcops.f lkkr_mmatlg.f lkkr_reffgl.f lkkr_sorteo.f lkkr_sumtauml.f lkkr_tauml_to_tauq.f lkkr_trilayerd.f lloydpt1.f lloydpt2.f lmatstruct.f make.inc_example makefile mathlib.f me_alf_alf.f me_alf_alf_nondip.f me_alf_cor.f me_alf_int.f me_cheby.f me_convert_pol.f me_drive.f me_grv_grv.f me_nab_nab.f me_nab_nab_sra.f me_obs.f me_plot.f me_rotate.f me_sig_alf.f me_sig_alf_alf.f me_sig_nab_alf.f me_sot_alf.f me_test_10.f me_test_11.f me_test_9.f me_utrans.f mechngbas.f mecoul.f metorque.f mod_angmom.f mod_calcmode.f mod_compton_pmesh.f mod_constants.f mod_cpa.f mod_dmft_ldau.f mod_dmft_sosptflex.f mod_energy.f mod_files.f mod_kmesh.f mod_lattice.f mod_linresp.f mod_mpi.f mod_radial_solver.f mod_rmesh.f mod_rsp.f mod_scf.f mod_sites.f mod_spec.f mod_spec_commons.f mod_spec_laypot.f mod_str.f mod_symmetry.f mod_tables.f mod_tauij.f mod_tb.f mod_tbclu.f mod_thermal.f mod_types.f mpi_dummies.f mpi_own.f mpi_set_iproce.f mrot_check_settings.f mssinit.f negf.f negf_append_tau.f negf_clone_barrier.f negf_drive.f negf_fermi_dirac_distro.f negf_from_jue_to_bri.f negf_init_tau.f negf_kloop_gbar_mo.f negf_kloop_gbar_sa.f negf_kloop_gles.f negf_kloop_stt.f negf_kloops_tb.f negf_kloopsdrv_tb.f negf_mk_acon_energy.f negf_projectdos.f negf_shift_vt_by_emf.f negf_tbdecimate_mo.f negf_tchk.f negf_tmat_mo.f negf_tmat_sa.f negf_wr_gortauk_zpm_mo.f negf_wr_gortauk_zpm_sa.f nlcpa.f nlctauio.f nonrelt1.f nraes.f nraps.f nrssite.f nucsscpl.f occ_wgt.f open_scratch_file.f openfilt.f opt.f opt_abs.f opt_abs0.f opt_abs1.f opt_abssum.f opt_cfermi.f opt_emesh.f opt_sig0.f opt_sig1.f optimize_basis_2d.f optimize_basis_3d.f optimize_basis_drive.f orbcurdns.f pade.f phagen.f posani_gfactor.f posanilambda.f posanipot.f posaniprep.f posaniread.f posanirhoio.f posfil.f potfinnuc.f potio.f potwrphagen.f pshift.f rdiffer.f relt1.f rgnt_setup.f rgntsf_setup.f rinvgj.f rmatstruct.f rmserr.f rotate.f rotategen.f rotmat.f rotmat_rylm.f rradint.f rradint_hff.f rradint_inw_r.f rsp.f runssite.f rwfbs.f rwfbs_norm.f rwfrk.f sack_mad.f scan_input.f scf.f scf0atom.f scf_broyden_w_weiss.f scf_drive.f scf_ucalc.f scfbi2dstrmat.f scfbiint.f scfbimad.f scfbipot.f scfbipotmad.f scfbroyang.f scfbroyden.f scfbroypt1.f scfbroypt2.f scfchkcore.f scfchknval.f scfcmnt.f scfinitpot.f scfiterang.f scfmad0d.f scfmad0d_back.f scfmad0d_smat.f scfmad2d.f scfmad2d_ab.f scfmad2d_smat.f scfmad3d.f scfmad3d_smat.f scfmad_pot.f scfmad_rgnt.f scfmad_setup.f scfmadnbr.f scfnewpot.f scfoppot.f scfpoisson.f scfrhocorhol.f scfscale_alat.f scfscale_alat_eos.f scfseminit.f scftcheby.f sefin.f setkkr.f sfn_surfint_init.f sfncreate.f sfncreateclu.f sfnmtmesh.f sfnread.f sfnreaddim.f sfnshape.f sfnvoronoi.f sig.f sig0_fsea.f sig0_surf.f sig1_fsea.f sig1_surf.f sig_drv_kmesh.f siglayer.f sigmanipul.f sigme.f sigmeaux.f signlc.f signlc0.f signlc1.f signlcme.f signlcsum.f sigoff.f sigsum.f socpar.f spec_akmj.f spec_band.f spec_clpes.f spec_cpcorewff.f spec_cpsi2g.f spec_derivatf.f spec_detg.f spec_doublerad.f spec_eigen.f spec_euler.f spec_init_transfo.f spec_init_vjbhe.f spec_inputs.f spec_kfold.f spec_linalg_nrc.f spec_mat.f spec_me_utrans.f spec_mecalc.f spec_outputs.f spec_potfull_spkkr.f spec_rmat.f spec_rmbarpot.f spec_rslab.f spec_rslab_1.f spec_rslabsub.f spec_sphrm4.f spec_splee.f spec_ssite_drive.f spec_sumat.f spec_sumup_int.f spec_tau_drive.f spec_tau_prepare.f spec_tilt.f spec_transpho.f spec_vbrun.f spec_vbrun_subs.f spec_wavfun_zj_rh.f spec_zmatxps.f specmain.f ssite.f ssite_rotate.f ssite_symmetrize.f straa.f strcc.f strconfra.f strgaunt.f strgbad.f strinit.f strset.f strsmat.f strtest.f strvecgen.f sumupint.f susc.f susc_calc.f susc_fmagind.f susc_gamma.f susc_intabr2.f susc_intabr2in.f susc_intabr3.f susc_intabr3in.f susc_intabr4.f susc_intgabr2.f susc_intgabr3.f susc_intghff2.f susc_intghff3.f susc_inthff2.f susc_inthff3.f susc_inthff4.f susc_inthvv2.f susc_inthvv3.f susc_inthvv4.f susc_kloops.f susc_laname.f susc_lancalc.f susc_landau.f susc_lanme.f susc_orbpol.f susc_radint.f susc_tktkq2t.f susc_vwn.f susc_xas.f susc_xascalc.f susc_xasinit.f susc_xasradint.f symbravais.f syminit.f symlattice.f symplotuc.f symrot.f symrotlat.f symsites.f symsumrtr.f symtau.f table.f tau_chk_sym.f tau_dir_init.f tau_dir_inquire.f tau_dir_read.f tau_dir_write.f tau_drive.f tau_kloop_tb.f tau_lkkr.f tau_proj.f tau_real_space.f tau_spiral_std.f tau_spsrel_std.f tau_std.f tau_tb.f tau_tet_std.f tau_weyl_std.f tau_zoom_std.f taugfconv.f tauij_dir_init.f tauij_dir_inquire.f tauij_dir_read.f tauij_dir_write.f tauij_drive.f tauij_embedded.f tauij_equiv_pairs.f tauij_host_invwri.f tauij_integ.f tauij_kloop_tb.f tauij_std.f tauij_std.odt tauij_symmetrize.f tauij_tb.f tauij_tb.f.210112 tauqqk_del_tb.f tauqqk_dim2to4_std.f tauqqk_dim2to4_tb.f tauqqk_drive.f tauqqk_integ.f tauqqk_rot.f tauqqk_std.f tauqqk_sym_init.f tauqqk_tb.f tb_cnvt_to_tau.f tb_dssq.f tb_duvssq.f tb_gref_ke.f tb_gref_rs.f tb_inversion.f tb_tssref.f tetsubs.f thermal_debye1.f thermal_fluct_mesh_weight.f thermal_init.f thermal_init_pot_theta.f thermal_init_svec.f thermal_init_ufmat.f thermal_properties.f thermal_rmsdisp.f time_left.f torque.f tutorial.f types_swap.f uxcor.f vbpes.f vbpes_aux.f vbpesint.f vcepbm.f vcepdr.f viomix.f vmuftin.f wavfun_read.f wavfun_wgt_rad_flm_sra.f wcorehole.f wfplot.f wigner.f wrdate.f wrdosrep.f wrhead.f xcplj0.f xcpljij.f xcpltenme.f xcpltensor.f xcpltensor_udv.f xmgr.f xrayspec.f xrayspecdyn.f ylag.f zoom_aux.f zzcludrive.f zzclugen.f zzgen.f zzgentask.f zznegf.f zzrsp.f zzscf.f zzspec.f 
+          Compiled on      : Linux ridha-Nitro-AN515-58 6.14.0-27-generic GNU/Linux
+          Date of compile  : Wed Aug 20 11:22:03 CEST 2025
+
+
+ *******************************************************************************
+                                 <GETLRECREAL>
+ *******************************************************************************
+
+          record length parameter for REAL's   LRECREAL8 =  8
+          a double precision real*8 is stored in 8 Bytes              
+
+
+
+ *******************************************************************************
+                                    <POTRD2>
+ *******************************************************************************
+
+
+          system dimension: 3D        
+          system type:      BULK                          
+          SCF status:       CONVERGED 
+
+
+
+ *******************************************************************************
+                               <INIT_MOD_LATTICE>
+ *******************************************************************************
+
+          initialize the module <MOD_LATTICE> according to SYSDIM = 3D
+
+          set up basis vectors for reciprocal space 
+
+
+          real space Bravais lattice: cubic       body-centered  m3m    O_h 
+
+          primitive vectors for real space Bravais lattice
+
+            (  -0.50000,   0.50000,   0.50000 )
+            (   0.50000,  -0.50000,   0.50000 )
+            (   0.50000,   0.50000,  -0.50000 )
+
+          basis vectors in units of a
+
+            (   0.00000,   0.00000,   0.00000 )
+
+          primitive vectors of reciprocal space Bravais lattice
+                 in units of 2*pi/a
+
+            (   0.00000,   1.00000,   1.00000 )
+            (   1.00000,   0.00000,   1.00000 )
+            (   1.00000,   1.00000,   0.00000 )
+
+
+ *******************************************************************************
+                                   <SYMINIT>
+ *******************************************************************************
+
+          set up possible symmetry operations for the 
+          real space Bravais lattice: cubic       body-centered  m3m    O_h 
+
+          crystal system   7     CUB
+
+          symmetry operations to scan       NSYM  48
+          maximum possible symmetry operations    48
+
+           T T T T T T T T T T T T T T T T T T T T T T T T
+           T T T T T T T T T T T T T T T T T T T T T T T T
+
+
+ *******************************************************************************
+                                  <SYMLATTICE>
+ *******************************************************************************
+
+          find out symmetry properties of the lattice
+
+
+          crystal system accepted symmetry operations      48
+          accepted symmetry operations   NSYMACCEPTED       8
+          operations NSYM (loops)        NSYM              48
+          operations NSYM w/o INV        NSYM_WO_INV       24
+
+
+       I    Euler angles  INV SYMBOL TIM     shift  ->DQ     Q' 
+       1     0    0    0       E           0.00  0.00  0.00   1
+       3     0  180    0       C2y    T    0.00  0.00  0.00   1
+      21     0   90  180       C2c         0.00  0.00  0.00   1
+      23   180   90    0       C2e    T    0.00  0.00  0.00   1
+      25     0    0    0   I   I           0.00  0.00  0.00   1
+      27     0  180    0   I   sy     T    0.00  0.00  0.00   1
+      45     0   90  180   I   sdc         0.00  0.00  0.00   1
+      47   180   90    0   I   sde    T    0.00  0.00  0.00   1
+
+          the detected   8 symmetry operations form a group
+
+
+          BZ-wedges to be treated  NWEDGE   6
+          created by operations  
+           1  E       2  C2x     5  C+31    7  C+33    9  C-31   10  C-32
+
+
+ *******************************************************************************
+                                    <SYMROT>
+ *******************************************************************************
+
+          set up of rotation matrices  DROT  for IREL = 3
+
+          CHECK of rotation matrices   DROT  for COMPLEX spherical harmonics
+          comparison of analytical and numerical results
+          out of  1944 elements     0 deviate more than TOL =   1.0E-08
+          maximum deviation found:    2.5E-14
+
+
+
+ *******************************************************************************
+                                  <INIT_RADII>
+ *******************************************************************************
+
+
+                   muffin tin and Wigner-Seitz radii
+
+                   IM    RMT               RWS     final setting in  <INIT_RADII>
+                    1  2.34845044272885  2.67038919691684
+
+
+ *******************************************************************************
+                                 <POTRDSPR>
+ *******************************************************************************
+
+          POTFMTINP =  9
+
+ SPR-KKR dataset created by KKRSCF                                               
+
+          radial mesh parameters:
+
+          IM    JRMT   R(JRMT)    RMT      JRWS    RWS       DX
+           1    714   2.31257   2.34845    721   2.67039   0.020552409
+
+          Bravais lattice:                cubic       body-centered
+          lattice constant  ALAT               5.42351
+          number of sites   NQ                       1
+          average Wigner-Seitz radius          2.67039
+
+
+
+          potential data for IT =  1 ..   1
+          =================================
+
+    1    0.000001  -51.999816    0.000000
+   31    0.000002  -51.999659    0.000000
+   61    0.000003  -51.999367    0.000000
+   91    0.000006  -51.998824    0.000000
+  121    0.000012  -51.997818    0.000000
+  151    0.000022  -51.995949    0.000000
+  181    0.000040  -51.992480    0.000000
+  211    0.000075  -51.986040    0.000000
+  241    0.000139  -51.974082    0.000000
+  271    0.000257  -51.951869    0.000000
+  301    0.000476  -51.910585    0.000000
+  331    0.000882  -51.833781    0.000001
+  361    0.001634  -51.690694    0.000001
+  391    0.003027  -51.423703    0.000002
+  421    0.005608  -50.925576    0.000003
+  451    0.010390  -50.003222    0.000006
+  481    0.019248  -48.341587    0.000009
+  511    0.035658  -45.523296    0.000014
+  541    0.066059  -41.110041    0.000017
+  571    0.122378  -34.785915   -0.000330
+  601    0.226714  -26.722773   -0.005197
+  631    0.420003  -17.792806   -0.052028
+  661    0.778084   -8.977690   -0.081238
+  691    1.441453   -2.640902   -0.081695
+  721    2.670389    0.063239    0.014927
+  721    2.670389    0.063239    0.014927
+  
+
+                   spin-polarized calculation
+
+                   SELFENERGY applied:NONE      
+
+
+   number of lattice sites (NQ):   1
+
+   site NL mesh MGAM MTET MPHI   RWS  CPA NOQ IT ELMT VAL CONC QREP SYMG eq.sit.
+     1   3   1     0   45    0 2.6704  0   1                     1    1   1
+                                               1 Fe     8 1.00
+   average                     2.6704          total    8.00
+
+   KMROT:     2   global M-rotation      MOMENTS_ROTATED:  T
+   QMVEC:   0.000  0.000  0.000
+
+
+
+   number of atomic types  (NT):   1
+
+   type TXTT   NL VAL COR mesh    RMT     RWS   NAT  CONC  on sites
+     1  Fe      3   8  18   1   2.3485  2.6704   1  1.000   1
+
+
+
+
+ mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+
+          FULLY relativistic calculation 
+
+          the magnetization is rotated globally using the Euler angles 
+
+          ALF =   0.000   BET =  45.000   GAM =   0.000
+
+          the  BREIT interaction  will be ignored
+
+          the  ORBITAL POLARISATION  will be ignored
+
+          solver for     spherical Dirac equation: BS           TOL = 2.0E-08
+
+          solver for spherical equation:     BS        
+
+ *******************************************************************************
+                                 <TAU_DIR_INQUIRE>
+ *******************************************************************************
+
+          checking whether TAU - data are available
+
+          TAU-data available in: Fe_TORQUE.tau.dir
+          NEPANEL            1
+          IGRID              8
+          NETAB             36
+          for  3D-bulk system   TAU available:   T
+
+ *******************************************************************************
+
+
+ *******************************************************************************
+
+
+          SWS =  2.670389     ALAT =  5.423514
+
+          NQ =  1     NL =  3     NLM =   9   NQ*NLM =   9
+                      NK =  5     NKM =  18     NKKR =  18     NLIN =  30
+
+          POTFMTINP = 9     POTFMTOUT = 9
+          RDTAU     = T
+          WRTAU     = F
+          PLOTPOT   = F     PLOTRHO   = F     PLOTSFN   = F
+          PLOT2DPOT = F     PLOT2DRHO = F
+          IPRINT    = 0     ITEST     = 0     WRMAT     = F
+          INITELOOP = F     RUNELOOP  = F     SPLITSS   = F
+          adjusted          BRAVAIS   = F
+          symmetrized       BASIS     = F
+          optimized         BASIS     = F
+          NO_SYM for        HOST      = F     CLU       = F     LINRESP   = F
+          symmetrize        MSS       = T     TAU       = F
+                            RHO       = T     POT       = F
+          LLOYD      = F
+          GF_CONV_RH = F
+          NONMAG     = F
+          FULLPOT    = F
+          FULLCHARGE = F
+
+          TASK       = TORQUE    
+
+          SYSDIM     = 3D        
+          SYSTYPE    = BULK                          
+          SUBSYSTEM  = BULK                          
+          KKRMODE    = STANDARD-KKR                  
+
+ eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+
+          energy path:  ARC IN COMPLEX PLANE - LOGARITHMIC      
+          energies  :          36
+          E_min     :   -0.200000
+          E_max     :    0.716363
+          Im(E)     :    0.000000
+          E_Fermi   :    0.716363
+  
+
+ fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+
+          FILES:
+
+          potential :  ( 4) examples/A10_Torque/Fe.pot_new
+          TAU       :       Fe_TORQUE.tau.dir
+  
+
+
+ *******************************************************************************
+                                 <OCC_WGT_INIT>
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+ *******************************************************************************
+
+          calculation for task = TORQUE    
+          finished in subroutine <KKRGEN>
+          Regular stop
+          run time info  CPU      0.849 sec
+                         WALL     0.050 sec
+
+ *******************************************************************************
+ *******************************************************************************
+
+          program stopped regularly via STOP_REGULAR
+

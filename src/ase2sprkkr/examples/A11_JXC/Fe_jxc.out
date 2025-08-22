@@ -1,0 +1,590 @@
+ 
+
+          **************************************************************
+          *                                                            *
+          *        ****   *****   *****   *    *  *    *  *****        *
+          *       *    *  *    *  *    *  *   *   *   *   *    *       *
+          *       *       *    *  *    *  *  *    *  *    *    *       *
+          *        ****   *****   *****   * *     * *     *****        *
+          *            *  *       *  *    ** *    ** *    *  *         *
+          *       *    *  *       *   *   *   *   *   *   *   *        *
+          *        ****   *       *    *  *    *  *    *  *    *       *
+          *                                                            *
+          *------------------------------------------------------------*
+          *       KKRGEN  VERSION  9.4            (C) 2025  H. Ebert   *
+          **************************************************************
+
+
+          programm execution  on    22/08/2025    at   15:25:27
+
+
+          input file       : standard input
+
+
+ *******************************************************************************
+                                 <GETLRECREAL>
+ *******************************************************************************
+
+          record length parameter for REAL's   LRECREAL8 =  8
+          a double precision real*8 is stored in 8 Bytes              
+
+
+
+ *******************************************************************************
+                                    <POTRD2>
+ *******************************************************************************
+
+
+          system dimension: 3D        
+          system type:      BULK                          
+          SCF status:       CONVERGED 
+
+
+
+ *******************************************************************************
+                               <INIT_MOD_LATTICE>
+ *******************************************************************************
+
+          initialize the module <MOD_LATTICE> according to SYSDIM = 3D
+
+          set up basis vectors for reciprocal space 
+
+
+          real space Bravais lattice: cubic       body-centered  m3m    O_h 
+
+          primitive vectors for real space Bravais lattice
+
+            (  -0.50000,   0.50000,   0.50000 )
+            (   0.50000,  -0.50000,   0.50000 )
+            (   0.50000,   0.50000,  -0.50000 )
+
+          basis vectors in units of a
+
+            (   0.00000,   0.00000,   0.00000 )
+
+          primitive vectors of reciprocal space Bravais lattice
+                 in units of 2*pi/a
+
+            (   0.00000,   1.00000,   1.00000 )
+            (   1.00000,   0.00000,   1.00000 )
+            (   1.00000,   1.00000,   0.00000 )
+
+
+ *******************************************************************************
+                                   <SYMINIT>
+ *******************************************************************************
+
+          set up possible symmetry operations for the 
+          real space Bravais lattice: cubic       body-centered  m3m    O_h 
+
+          crystal system   7     CUB
+
+          symmetry operations to scan       NSYM  48
+          maximum possible symmetry operations    48
+
+           T T T T T T T T T T T T T T T T T T T T T T T T
+           T T T T T T T T T T T T T T T T T T T T T T T T
+
+
+ *******************************************************************************
+                                  <SYMLATTICE>
+ *******************************************************************************
+
+          find out symmetry properties of the lattice
+
+
+          crystal system accepted symmetry operations      48
+          accepted symmetry operations   NSYMACCEPTED      16
+          operations NSYM (loops)        NSYM              48
+          operations NSYM w/o INV        NSYM_WO_INV       24
+
+
+       I    Euler angles  INV SYMBOL TIM     shift  ->DQ     Q' 
+       1     0    0    0       E           0.00  0.00  0.00   1
+       2     0  180  180       C2x    T    0.00  0.00  0.00   1
+       3     0  180    0       C2y    T    0.00  0.00  0.00   1
+       4     0    0  180       C2z         0.00  0.00  0.00   1
+      15     0    0   90       C+4z        0.00  0.00  0.00   1
+      18     0    0  270       C-4z        0.00  0.00  0.00   1
+      19     0  180   90       C2a    T    0.00  0.00  0.00   1
+      20     0  180  270       C2b    T    0.00  0.00  0.00   1
+      25     0    0    0   I   I           0.00  0.00  0.00   1
+      26     0  180  180   I   sx     T    0.00  0.00  0.00   1
+      27     0  180    0   I   sy     T    0.00  0.00  0.00   1
+      28     0    0  180   I   sz          0.00  0.00  0.00   1
+      39     0    0   90   I   S-4z        0.00  0.00  0.00   1
+      42     0    0  270   I   S+4z        0.00  0.00  0.00   1
+      43     0  180   90   I   sda    T    0.00  0.00  0.00   1
+      44     0  180  270   I   sdb    T    0.00  0.00  0.00   1
+
+          the detected  16 symmetry operations form a group
+
+
+          BZ-wedges to be treated  NWEDGE   3
+          created by operations  
+           1  E       5  C+31    9  C-31
+
+
+ *******************************************************************************
+                                    <SYMROT>
+ *******************************************************************************
+
+          set up of rotation matrices  DROT  for IREL = 3
+
+          CHECK of rotation matrices   DROT  for COMPLEX spherical harmonics
+          comparison of analytical and numerical results
+          out of  1944 elements     0 deviate more than TOL =   1.0E-08
+          maximum deviation found:    2.5E-14
+
+
+
+ *******************************************************************************
+                                  <INIT_RADII>
+ *******************************************************************************
+
+
+                   muffin tin and Wigner-Seitz radii
+
+                   IM    RMT               RWS     final setting in  <INIT_RADII>
+                    1  2.34845044272885  2.67038919691684
+
+
+ *******************************************************************************
+                                 <POTRDSPR>
+ *******************************************************************************
+
+          POTFMTINP =  9
+
+ SPR-KKR dataset created by KKRSCF                                               
+
+          radial mesh parameters:
+
+          IM    JRMT   R(JRMT)    RMT      JRWS    RWS       DX
+           1    714   2.31257   2.34845    721   2.67039   0.020552409
+
+          Bravais lattice:                cubic       body-centered
+          lattice constant  ALAT               5.42351
+          number of sites   NQ                       1
+          average Wigner-Seitz radius          2.67039
+
+
+
+          potential data for IT =  1 ..   1
+          =================================
+
+    1    0.000001  -51.999816    0.000000
+   31    0.000002  -51.999659    0.000000
+   61    0.000003  -51.999367    0.000000
+   91    0.000006  -51.998824    0.000000
+  121    0.000012  -51.997818    0.000000
+  151    0.000022  -51.995949    0.000000
+  181    0.000040  -51.992480    0.000000
+  211    0.000075  -51.986040    0.000000
+  241    0.000139  -51.974082    0.000000
+  271    0.000257  -51.951869    0.000000
+  301    0.000476  -51.910585    0.000000
+  331    0.000882  -51.833781    0.000001
+  361    0.001634  -51.690694    0.000001
+  391    0.003027  -51.423703    0.000002
+  421    0.005608  -50.925576    0.000003
+  451    0.010390  -50.003222    0.000006
+  481    0.019248  -48.341587    0.000009
+  511    0.035658  -45.523296    0.000014
+  541    0.066059  -41.110041    0.000017
+  571    0.122378  -34.785915   -0.000330
+  601    0.226714  -26.722773   -0.005197
+  631    0.420003  -17.792806   -0.052028
+  661    0.778084   -8.977690   -0.081238
+  691    1.441453   -2.640902   -0.081695
+  721    2.670389    0.063239    0.014927
+  721    2.670389    0.063239    0.014927
+  
+
+                   spin-polarized calculation
+
+                   SELFENERGY applied:NONE      
+
+
+   number of lattice sites (NQ):   1
+
+   site NL mesh MGAM MTET MPHI   RWS  CPA NOQ IT ELMT VAL CONC QREP SYMG eq.sit.
+     1   3   1     0    0    0 2.6704  0   1                     1    1   1
+                                               1 Fe     8 1.00
+   average                     2.6704          total    8.00
+
+   KMROT:     0   no M-rotation          MOMENTS_ROTATED:  F
+   QMVEC:   0.000  0.000  0.000
+
+
+
+   number of atomic types  (NT):   1
+
+   type TXTT   NL VAL COR mesh    RMT     RWS   NAT  CONC  on sites
+     1  Fe      3   8  18   1   2.3485  2.6704   1  1.000   1
+
+
+
+
+ mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+
+          FULLY relativistic calculation 
+
+          the  BREIT interaction  will be ignored
+
+          the  ORBITAL POLARISATION  will be ignored
+
+          solver for     spherical Dirac equation: BS           TOL = 2.0E-08
+
+          solver for spherical equation:     BS        
+
+
+          SWS =  2.670389     ALAT =  5.423514
+
+          NQ =  1     NL =  3     NLM =   9   NQ*NLM =   9
+                      NK =  5     NKM =  18     NKKR =  18     NLIN =  30
+
+          POTFMTINP = 9     POTFMTOUT = 9
+          RDTAU     = F
+          WRTAU     = F
+          PLOTPOT   = F     PLOTRHO   = F     PLOTSFN   = F
+          PLOT2DPOT = F     PLOT2DRHO = F
+          IPRINT    = 0     ITEST     = 0     WRMAT     = F
+          INITELOOP = T     RUNELOOP  = T     SPLITSS   = F
+          adjusted          BRAVAIS   = F
+          symmetrized       BASIS     = F
+          optimized         BASIS     = F
+          NO_SYM for        HOST      = F     CLU       = F     LINRESP   = F
+          symmetrize        MSS       = T     TAU       = F
+                            RHO       = T     POT       = F
+          LLOYD      = F
+          GF_CONV_RH = F
+          NONMAG     = F
+          FULLPOT    = F
+          FULLCHARGE = F
+
+          TASK       = E-INTEGRAL
+
+          CALC    FMAG:    F    JXC:     T    DMI:     F    JALF:    F    ORB:    F
+                  TORQUE: F    BSDOSIJ:  F
+
+          SYSDIM     = 3D        
+          SYSTYPE    = BULK                          
+          SUBSYSTEM  = BULK                          
+          KKRMODE    = STANDARD-KKR                  
+
+ eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+
+          energy path:  ARC IN COMPLEX PLANE                    
+          energies  :          32
+          E_min     :   -0.200000
+          E_max     :    0.716363
+          Im(E)     :    0.000000
+          E_Fermi   :    0.716363
+  
+
+ *******************************************************************************
+                                   <STRINIT>
+ *******************************************************************************
+
+          parameters for calculation of structure constants:
+
+          primitive vectors for Bravais lattice
+
+            (  -0.50000,   0.50000,   0.50000 )
+            (   0.50000,  -0.50000,   0.50000 )
+            (   0.50000,   0.50000,  -0.50000 )
+
+          basis vectors in units of a
+
+            (   0.00000,   0.00000,   0.00000 )
+
+          primitive vectors of reciprocal space
+                 in units of 2*pi/a
+
+            (   0.00000,   1.00000,   1.00000 )
+            (   1.00000,   0.00000,   1.00000 )
+            (   1.00000,   1.00000,   0.00000 )
+
+          number of inequivalent QQP-block-matrices  NQQP_STR     =       1
+          reduced number of inequiv. block-matrices  NQQP_STR_RED =       1
+
+
+
+          RMAX  =    3.0388          GMAX  =    3.6179
+          RMAX1 =    0.0000          GMAX1 =    1.4142
+          RA    =    3.0388          GA    =    3.6179
+
+          NUMR  =         9          NUMG  =         7
+          NRDL  =       259          NGRL  =       225
+
+          for LMAX = 2    96 non-zero GAUNTS tabulated
+
+
+ *******************************************************************************
+            array sizes for calculation of structure constants
+ *******************************************************************************
+                                          used              available
+          G-vectors table       NGRL       225        NGRLMAX     729
+          R-vectors table       NRDL       259        NRDLMAX    1331
+          R-vectors (max.)      SMAX       259        NSDL        259
+          R-vectors (min.)      SMAX       259
+          l-max + 1             NL           3        NLMAX         3
+          sites                 NQ_STR       1        NQMAX         1
+          q-q'-blocks           NQQP_STR     1        LIMIT         1
+          auxilary array        R123MAX      4
+          auxilary array        G123MAX      3
+          Davis eq. (13)        J13MAX     113        LIMIT       300
+          Davis eq. (22)        J22MAX      30        LIMIT       150
+          Gaunts                LRGNT12     45
+          Gaunts                LRGNT123    96
+          Ewald parameter       ETA       0.31
+ *******************************************************************************
+
+
+          <INIT_MOD_STR>: section 1 of module MOD_STR initialized
+          allocated         586  integers        101842  reals (incl. complex)
+          corresp. to         0  Mbytes               0  Mbytes
+
+
+ ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+
+          parameters for k-space integration:
+          NWEDGE:   3  wedges:  1  5  9
+          regular k-mesh used for point sampling
+
+          k-vectors to start  NKPTS0             12000
+          k-vectors full BZ   NKTAB_FULL_BZ      10648
+          mesh parameters     NBGL                22   22   22
+          k-vectors created   NKTAB                834
+          array size (NKTABMAX)                   1080
+
+
+
+          ****************************
+          no CPA-iteration required
+          ****************************
+
+
+ fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+
+          FILES:
+
+          potential :  ( 4) examples/A11_JXC/Fe.pot_new
+  
+
+ *******************************************************************************
+                             <INIT_MOD_TAUIJ_STAR>
+ *******************************************************************************
+
+     number of TAU(I,J)'s to be calculated:   89
+
+
+ *******************************************************************************
+                             <INIT_MOD_TAUIJ_KMESH>
+ *******************************************************************************
+
+          NKTAB(ini) =     834     NKTAB =   10648
+          BZ integ. scheme    KMESHSYM   =       0
+
+
+
+ *******************************************************************************
+                                 <OCC_WGT_INIT>
+ *******************************************************************************
+
+
+
+  ATOM   IT      :     1
+  ATOMIC NUMBER  :    26
+
+  IT          MUE  KAP ITER      ENERGY         <S_z>         <B_xc> (Ry)  
+   1   1s1/2 -1/2  -1   1    -511.87352896    -0.98837808     0.00020929
+                 0.00020929  -511.87331967
+   1   1s1/2  1/2  -1   1    -511.87352896     0.98837808    -0.00020929
+                -0.00020929  -511.87373824     0.00000000
+   1   2s1/2 -1/2  -1   1     -58.82579425    -0.99786903     0.04718187
+                 0.04718187   -58.77861238
+   1   2s1/2  1/2  -1   1     -58.82579425     0.99786903    -0.04718187
+                -0.04718187   -58.87297612     0.00000000
+   1   2p3/2 -3/2  -2   1     -49.71092963    -0.99749954     0.03665724
+                 0.03665724   -49.67427239
+   1   2p3/2 -1/2  -2   1     -49.71092963    -0.33249985     0.01221908     0.03416467
+                 0.01221908   -49.69871055
+                 0.00127560   -49.69743495
+                -0.00001703   -49.69745198
+   1   2p1/2 -1/2   1   1     -50.62597012     0.33122015    -0.01192503     0.03416467
+                -0.01192503   -50.63789515
+                -0.00127560   -50.63917075
+                 0.00001662   -50.63915412
+   1   2p3/2  1/2  -2   1     -49.71092963     0.33249985    -0.01221908     0.03416467
+                -0.01221908   -49.72314871
+                 0.00127560   -49.72187311
+                 0.00001703   -49.72185608
+   1   2p1/2  1/2   1   1     -50.62597012    -0.33122015     0.01192503     0.03416467
+                 0.01192503   -50.61404508
+                -0.00127560   -50.61532068
+                -0.00001662   -50.61533731
+   1   2p3/2  3/2  -2   1     -49.71092963     0.99749954    -0.03665724
+                -0.03665724   -49.74758687     0.00000000
+   1   3s1/2 -1/2  -1   1      -5.59458981    -0.99953504     0.09545817
+                 0.09545817    -5.49913164
+   1   3s1/2  1/2  -1   1      -5.59458981     0.99953504    -0.09545817
+                -0.09545817    -5.69004798     0.00000000
+   1   3p3/2 -3/2  -2   1      -3.09317519    -0.99951528     0.09208786
+                 0.09208786    -3.00108733
+   1   3p3/2 -1/2  -2   1      -3.09317519    -0.33317176     0.03069595     0.08713344
+                 0.03069595    -3.06247924
+                 0.06681516    -2.99566408
+                -0.01804934    -3.01371343
+   1   3p1/2 -1/2   1   1      -3.20680564     0.33292189    -0.03090626     0.08713344
+                -0.03090626    -3.23771189
+                -0.06681516    -3.30452705
+                 0.01817300    -3.28635405
+   1   3p3/2  1/2  -2   1      -3.09317519     0.33317176    -0.03069595     0.08713344
+                -0.03069595    -3.12387115
+                 0.06681516    -3.05705599
+                 0.01804934    -3.03900664
+   1   3p1/2  1/2   1   1      -3.20680564    -0.33292189     0.03090626     0.08713344
+                 0.03090626    -3.17589938
+                -0.06681516    -3.24271454
+                -0.01817300    -3.26088755
+   1   3p3/2  3/2  -2   1      -3.09317519     0.99951528    -0.09208786
+                -0.09208786    -3.18526305    -0.00000000
+
+  ATOM   IT      :     1
+  ATOMIC NUMBER  :    26
+
+  IT          MUE  KAP ITER      ENERGY        B (k-Gauss)      <S_z>  
+   1   1s1/2 -1/2  -1   6    -511.87331860     -2973207.396    -0.988
+   1   1s1/2  1/2  -1   2    -511.87373933      2973187.679     0.988
+                                                    -19.717     0.000
+
+   1   2s1/2 -1/2  -1   6     -58.77861435      -276822.698    -0.998
+   1   2s1/2  1/2  -1   3     -58.87301723       276281.197     0.998
+                                                   -541.501     0.000
+
+   1   2p3/2 -3/2  -2   8     -49.67423421       -46592.840    -0.997
+   1   2p3/2 -1/2  -2   4     -49.69747325       -14591.740    -0.400
+   1   2p1/2 -1/2   1   5     -50.63916680       -83515.869     0.399
+   1   2p3/2  1/2  -2   4     -49.72188540        16687.600     0.260
+   1   2p1/2  1/2   1   4     -50.61536661        81513.048    -0.258
+   1   2p3/2  3/2  -2   3     -49.74767200        46501.564     0.998
+                                                      1.763     0.000
+
+   1   3s1/2 -1/2  -1  11      -5.49916561       -40099.013    -1.000
+   1   3s1/2  1/2  -1   4      -5.69007321        40410.407     1.000
+                                                    311.395    -0.000
+
+   1   3p3/2 -3/2  -2  13      -3.00121525        -5775.867    -1.000
+   1   3p3/2 -1/2  -2   4      -3.02665918        -1924.393    -0.901
+   1   3p1/2 -1/2   1   5      -3.27369027       -10414.924     0.900
+   1   3p3/2  1/2  -2   5      -3.05906513         6563.919    -0.807
+   1   3p1/2  1/2   1   6      -3.24081275         5705.713     0.808
+   1   3p3/2  3/2  -2   4      -3.18527179         5844.876     1.000
+                                                     -0.675    -0.000
+
+  ---------------------------------------------------------
+                                                   -248.736
+                                      (S)          -249.824
+  *********************************************************
+
+
+          integrated core charge density for atom type    1: 18.00000000
+          integrated core  spin  density for atom type    1: -0.00001420
+
+
+ *******************************************************************************
+                                 <THERMAL_INIT>
+ *******************************************************************************
+
+
+     No. of displacements:           1
+     mode to set dirs INIT_SVEC      0
+     type-dependent  RMSU_SCALE      F
+     Debye temperature:         420.00 [K]
+
+     FLUCT_DIR_SETTING: not set   
+     allowed input: SETFLUCT = M_T, MCS, RDLM, MLIN
+     N_TEMP_LAT:                 1
+     TEMP_LAT_MIN:           0.000
+     TEMP_LAT_MAX:           0.000
+
+       1 temperatures in the range  T =     0.00 --     0.00 [K]
+
+     NO thermal lattice vibrations NOR spin fluctuations to deal with
+
+     setting of parameters and array dimensions
+
+     NVIBFLU  =     1      NT      =     1
+     NVT      =     1      NVTMAX  =     1
+     NFT      =     1      NFTMAX  =     1
+     NVFT     =     1      NVFTMAX =     1
+
+
+ *******************************************************************************
+                                   <
+
+          results written to file:Fe_JXC_XCPLTEN_Jij.dat
+
+
+     Curie temperature within mean field approximation  T_C =    763.4 K
+
+
+     NOTE 1:
+     For calculations of mean field T_C one has to use
+     the cluster size, CLURAD, as large as possible
+
+
+     NOTE 2:
+     The calculated temperature should be treated 
+     as Neel temperature, when the exchange parameters
+     between sub-lattices are negative: J_0^{\mu\nu} < 0
+
+     Mean-field Curie temperature for multicomponent system
+     is evaluated according to  P. W. Anderson [1]:
+     [1] P.W.Anderson, Theory of magn. exchange interactions:
+     Exchange in insulators and semiconductors.
+     Solid State Physics, edited by F. Seitz and D. Turnbull,
+     (Academic Press, New York), Vol. 14 pp. 99-214.
+
+
+     exchange coupling parameters written to file Fe_JXC_XCPLTEN_Jij_Fe.agr
+
+
+ *******************************************************************************
+                                   <XCPLTENSOR>
+          Components of Dzyaloshinski-Moriya vector Dij
+          according to Phys. Rev. B 79, 045209 (2009)
+ *******************************************************************************
+
+
+          results written to file:Fe_JXC_XCPLTEN_Dij.dat
+
+
+     exchange tensor elements written to file Fe_JXC_XCPLTEN_Dij_x_Fe.agr
+
+
+     exchange tensor elements written to file Fe_JXC_XCPLTEN_Dij_y_Fe.agr
+
+
+     exchange tensor elements written to file Fe_JXC_XCPLTEN_Dij_z_Fe.agr
+
+
+ CPU - time used in  <GEN>:     23.867 sec
+
+
+ *******************************************************************************
+ *******************************************************************************
+
+          calculation for task = E-INTEGRAL
+          finished in subroutine <KKRGEN>
+          Regular stop
+          run time info  CPU         25.350 sec
+                         WALL        24.109 sec
+
+ *******************************************************************************
+ *******************************************************************************
+
+          program stopped regularly via STOP_REGULAR
+
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
