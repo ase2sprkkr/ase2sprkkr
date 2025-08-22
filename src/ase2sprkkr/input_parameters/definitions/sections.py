@@ -275,6 +275,9 @@ MODE = Section('MODE', [
     V('LLOYD', False, info='Use LLoyd formula for scattering operator. It can improve the accuracy of the Fermi energy.'),
     V('MDIR', Array(float, length=3), [1.,0.,0.], is_required=False, info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.",
                                       is_repeated='DEFAULTDICT', is_always_added=False ),
+    V('MALF',float , is_required=False, info="the angles characterizing the orientation  of the magnetic moment direction n " ),
+    V('MBET',float , is_required=False, info="the angles characterizing the orientation of the magnetic moment direction n "),
+    V('MGAM',float , is_required=False, info="the angles characterizing the orientation of the magnetic moment direction n "),
     V('C', 1.0, info='Scale the speed of light for a given atom type.', is_repeated='DEFAULTDICT', is_required=False, is_always_added=False),
     V('SOC', 1.0, info='Scale the strength of the spin-orbit coupling for atom type.', is_repeated='DEFAULTDICT', is_required=False, is_always_added=False),
   ], is_expert=True, is_optional=True, info=
