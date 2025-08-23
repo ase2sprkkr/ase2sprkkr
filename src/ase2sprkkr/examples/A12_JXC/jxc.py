@@ -23,7 +23,6 @@ def main():
         potential_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Fe.pot_new')
         result = calculator.calculate(
             potential=potential_file,
-            executable_dir='/home/ridha/bin/kkrgen9.4merge',
             print_output=True,
             output_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Fe_jxc.out')
         )
