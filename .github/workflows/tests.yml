@@ -15,5 +15,8 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+    - run: |
+         mkdir -p $MPLCONFIGDIR
+         echo "text.usetex : False" >> $MPLCONFIGDIR/matplotlibrc
     - run: ./install_dependencies.sh
     - run: DO_NOT_RUN_SPRKKR=1 ./run_tests

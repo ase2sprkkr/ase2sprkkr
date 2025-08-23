@@ -36,8 +36,11 @@ def parser(parser):
     parser.add_argument('-d','--dpi', dest='dpi', type=float, help='DPI of the resulting image (default 600)', required=False)
     parser.add_argument('-n','--norm', dest='norm', choices=['lin', 'log'], help='Matplotlib colormap will use linear or logarithmic scale (the default behavior depends on the plotted data)', required=False)
 
-    parser.add_argument('-L','--do_not_use_latex', dest='latex', action='store_false', default=True, help='Do not use LaTex for generating captions', required=False)
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('-l','--use_latex', dest='latex', action='store_true', help='Force use LaTex for generating captions. Default is to use the default matplotlib settings (can be configured per user).', required=False)
+    group.add_argument('-L','--do_not_use_latex', dest='latex', action='store_false', help='Do not use LaTex for generating captions', required=False)
     parser.add_argument('-S','--set', dest='args', type=lambda x: parse_named_option(x,True), help='Given a value of the format name=value, pass the value to the plotting function. You can so override various options that matplotlib plotting functions accept (e.g. vmin or vmax for pcolormesh), or the values that can be set using set_<something> functions (e.g. title or (x|y)label). This option can be repeated.', action='append', default=[], required=False)
+    parser.set_defaults(latex=None)  # or True/False if you want a default
 
 
 def run(args):
