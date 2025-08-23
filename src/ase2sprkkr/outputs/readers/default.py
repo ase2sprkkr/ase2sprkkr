@@ -14,8 +14,10 @@ class DefaultOutputReader(SprKkrOutputReader):
   async def read_output(self, stdout, result):
       await self.read_commons(stdout, result)
       # just consume the whole rest of output
-      while await stdout.readline():
-        pass
+
+      result.output_lines = []
+      async for line in stdout:
+            result.output_lines.append(line.decode('utf8').rstrip())
 
 
 class DefaultProcess(KkrProcess):
