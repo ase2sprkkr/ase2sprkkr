@@ -133,7 +133,7 @@ class DOSOutputFile(CommonOutputFile):
     def energy(self):
         return (self.ENERGY() - self.EFERMI()) * Rydberg
 
-    def plot(self, spin=None, l=None, layout=2, figsize=(6,4), latex=True,  # NOQA
+    def plot(self, spin=None, l=None, layout=2, figsize=(6,4), latex=None,  # NOQA
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
              **kwargs
              ):

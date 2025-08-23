@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 class ARPESOutputFile(CommonOutputFile, Arithmetic):
 
-    def plot(self, layout=(2,2), figsize=(10,6), latex=True,
+    def plot(self, layout=(2,2), figsize=(10,6), latex=None,
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
              **kwargs
              ):
