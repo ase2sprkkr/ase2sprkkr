@@ -24,11 +24,10 @@ def normalize_rc_params(params):
 
 
 rc_params = normalize_rc_params({
-    'font' : {'family' :'serif',
-             'serif'  :['cms10'],
-             'size'   : 16,
-             'weight' :'normal'},
-    'text' : { 'usetex' :True }
+    "font.family" : "serif",
+    "mathtext.fontset": "cm",
+    "font.size": 10,
+    "font.weight": "normal"
 })
 
 
@@ -52,7 +51,7 @@ def combined_colormap(range1=(0.5, 0), range2=(0.15, 1), n1=8000, n2=15000, cmap
     return combine_colormaps(cmap1, cmap2, n1, n2, range1, range2)
 
 
-def create_rc_context(latex:bool=None):
+def create_rc_context(latex:Optional[bool]=None):
     """
     Create the context that sets defaults for plotting
     """
@@ -129,7 +128,6 @@ def plotting_function(func):
     then the plot is either showed or saved, according to the rest of the added
     arguments
     """
-
     @add_to_signature(func)
     @functools.wraps(func)
     def plot_function(*args, filename=None, show=None, dpi=600, latex=None, figsize=(6,4), callback=None, axis=None, **kwargs):
@@ -203,6 +201,8 @@ class Multiplot:
   """ This class can be used for plotting more plots into one resulting image/window. """
 
   def __init__(self, layout, figsize=(6,4), latex=None, updown_layout=False, **kwargs):
+      self.context = create_rc_context(latex=latex)
+      self.context.__enter__()
       self.fig, self.axes = plt.subplots(figsize=figsize, nrows=layout[0], ncols=layout[1])
       plt.subplots_adjust(left=0.12,right=0.95,bottom=0.17,top=0.90, hspace=0.75, wspace=0.5)
       self.free_axes = self.axes.ravel(order='F' if not updown_layout else 'C')
@@ -254,6 +254,7 @@ class Multiplot:
       for i in self.free_axes:
           i.set_visible(False)
       finish_plot(filename, show, dpi)
+      self.context.__exit__(None,None,None)
 
 
 def change_default_kwargs(f, **kwargs):
