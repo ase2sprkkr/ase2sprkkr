@@ -1,4 +1,49 @@
 #!/usr/bin/env python3
+"""
+Convert SPRKKR output to UppASD input files and plots the computed Jij (experimental)
+"""
+from pathlib import Path
+import sys
+import argparse
+
+if not __package__:
+  __package__ = 'ase2sprkkr.tools.commands'
+sys.path.append(str(Path(__file__).resolve().parents[3]))
+from ...common.tools import main  # NOQA
+
+help='Convert SPRKKR output to UppASD input files and plots the computed Jij (experimental)'
+description='Given .pot, .jxc and .dmi file, plot the Jij values.'
+
+def parser(parser):
+    # File arguments
+    parser.add_argument('-p', '--pot-file', type=str, default=None,
+                       help='Input potential file (.pot_new)')
+    parser.add_argument('-j', '--jxc-file', type=str, default=None,
+                       help='Input exchange interaction file (_XCPLTEN_Jij.dat)')
+    parser.add_argument('-d', '--dmi-file', type=str, default=None,
+                       help='Input DMI file (_DMIVEC_Dij.dat)')
+
+    # Output control
+    parser.add_argument('-o', '--output-dir', type=str, default='.',
+                       help='Output directory for files')
+    parser.add_argument('-n', '--no-write', action='store_true',
+                       help='Skip writing output files')
+
+    # Plotting options
+    parser.add_argument('--plot', action='store_true',
+                       help='Generate exchange interaction plots')
+    parser.add_argument('--no-plot', action='store_true',
+                       help='Skip generating plots')
+    parser.add_argument('-r', '--exchange-radius', type=float, default=4.0,
+                       help='Maximum distance for exchange interactions')
+
+    # Processing options
+    parser.add_argument('-m', '--maptype', type=int, default=2, choices=[1, 2],
+                       help='Mapping type for coordinates (1: Cartesian, 2: Lattice)')
+    parser.add_argument('-e', '--exclude', type=str, nargs='+', default=['Vc'],
+                       help='Element types to exclude')
+    parser.add_argument('-f', '--font-size', type=int, default=28,
+                       help='Font size for plots')
 
 import numpy as np
 import glob
@@ -203,7 +248,7 @@ class JXCProcessor:
             line = JXCFile.readline()
             data = line.split()
             if len(data) > 1 and data[0] == 'IT':
-                data = pd.read_csv(JXCFile, skiprows=0, header=None, sep='\s+').values
+                data = pd.read_csv(JXCFile, skiprows=0, header=None, sep=r'\s+').values
                 non_zero_ind = np.where(data[:, 10] > 0)
 
                 self.bond_type1 = np.zeros([len(non_zero_ind[0]), 3], dtype=np.float64)
@@ -238,7 +283,7 @@ class JXCProcessor:
             line = DMIFile.readline()
             data = line.split()
             if len(data) > 1 and data[0] == 'IT':
-                data = pd.read_csv(DMIFile, skiprows=0, header=None, sep='\s+').values
+                data = pd.read_csv(DMIFile, skiprows=0, header=None, sep=r'\s+').values
                 non_zero_ind = np.where(data[:, 10] > 0)
 
                 self.Dij_x = np.asarray(data[non_zero_ind[0], 11], dtype=np.float64)
@@ -417,41 +462,6 @@ def write_mom_file(trim_labels, exclude_list, num_nt, spin_mom, icl, iq, output_
     return moments_written > 0
 
 
-def parse_arguments():
-    parser = argparse.ArgumentParser(description='Convert SPRKKR output to UppASD input files and plots the computed Jij (experimental)')
-
-    # File arguments
-    parser.add_argument('-p', '--pot-file', type=str, default=None,
-                       help='Input potential file (.pot_new)')
-    parser.add_argument('-j', '--jxc-file', type=str, default=None,
-                       help='Input exchange interaction file (_XCPLTEN_Jij.dat)')
-    parser.add_argument('-d', '--dmi-file', type=str, default=None,
-                       help='Input DMI file (_DMIVEC_Dij.dat)')
-
-    # Output control
-    parser.add_argument('-o', '--output-dir', type=str, default='.',
-                       help='Output directory for files')
-    parser.add_argument('-n', '--no-write', action='store_true',
-                       help='Skip writing output files')
-
-    # Plotting options
-    parser.add_argument('--plot', action='store_true',
-                       help='Generate exchange interaction plots')
-    parser.add_argument('--no-plot', action='store_true',
-                       help='Skip generating plots')
-    parser.add_argument('-r', '--exchange-radius', type=float, default=4.0,
-                       help='Maximum distance for exchange interactions')
-
-    # Processing options
-    parser.add_argument('-m', '--maptype', type=int, default=2, choices=[1, 2],
-                       help='Mapping type for coordinates (1: Cartesian, 2: Lattice)')
-    parser.add_argument('-e', '--exclude', type=str, nargs='+', default=['Vc'],
-                       help='Element types to exclude')
-    parser.add_argument('-f', '--font-size', type=int, default=28,
-                       help='Font size for plots')
-
-    return parser.parse_args()
-
 
 def find_files_by_pattern(args):
     """Find files by pattern if not explicitly provided"""
@@ -473,8 +483,7 @@ def find_files_by_pattern(args):
     return args
 
 
-def main():
-    args = parse_arguments()
+def run(args):
     args = find_files_by_pattern(args)
 
     # Create output directory if it doesn't exist
@@ -534,7 +543,3 @@ def main():
     except Exception as e:
         print(f"Unexpected error: {e}")
         sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()
