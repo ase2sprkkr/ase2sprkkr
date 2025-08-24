@@ -148,7 +148,11 @@ class InputParameters(ConfigurationFile):
 
         mpi = mpi_runner(mpi) if self._definition.mpi else None
         if mpi:
-             executable = mpi + [ executable + 'MPI', input_file.name ]
+             fname = input_file.name
+             #max length of the argument in SPRKKR
+             if len(fname) > 80:
+                 fname = os.path.relpath(fname, directory)
+             executable = mpi + [ executable + 'MPI', fname ]
              stdin = None
         else:
              executable = [ executable ]
@@ -161,7 +165,6 @@ class InputParameters(ConfigurationFile):
              else:
                 print(f"run <{input_file.name}")
              executable = [ 'gdb' ] + executable
-
         return process.run(executable, output_file, stdin = stdin, print_output=print_output, directory=directory, input_file=input_file.name)
       except FileNotFoundError as e:
         add = 'Cannot find SPRKKR executable. Maybe, ase2sprkkr.config.executable.suffix ' \
