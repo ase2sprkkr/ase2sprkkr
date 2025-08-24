@@ -22,7 +22,7 @@ from .warnings import DataValidityWarning
 from .options import Dummy, DummyStub
 from .decorators import cached_class_property
 from .grammar import generate_grammar
-from .grammar_types.basic import Separator
+from .grammar_types.basic import Separator, KeywordSeparator
 from .parsing_results import Key, ArrayKey, DictKey, RepeatedKey, DefDictKey, IgnoredKey
 
 
@@ -942,6 +942,8 @@ class SeparatorDefinition(VirtualDefinition):
         if separator_type is not None:
             if length is not None:
                 separator_type = Separator(char=separator_type,length=length)
+            if isinstance(separator_type, str):
+                separator_type = KeywordSeparator(separator_type)
             self.separator_type = separator_type
 
     def _create_grammar(self, allow_dangerous=False):

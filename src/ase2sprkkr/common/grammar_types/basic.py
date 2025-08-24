@@ -415,6 +415,20 @@ class BasicSeparator(GrammarType):
   def _validate(self, value, why='set'):
       return 'You can not set a value to a separator'
 
+class KeywordSeparator(BasicSeparator):
+  """ Separator with an exact string """
+  def __init__(self, keyword):
+      self.keyword = keyword
+
+  @cached_property
+  def _grammar(self):
+      return pp.Keyword(self.keyword)
+
+  def _grammar_name(self):
+      return self.keyword
+
+  def _string(self, val=None):
+      return self.keyword
 
 class Separator(BasicSeparator):
   """ Special class for a separator inside a section.
