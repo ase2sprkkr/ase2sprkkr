@@ -54,9 +54,6 @@ import argparse
 import os
 import sys
 
-plt.rc('text', usetex=True)
-plt.rc('font', family='serif')
-
 class PotentialFileReader:
     def __init__(self, file_name):
         self.file_name = file_name
@@ -353,73 +350,78 @@ class Plotter:
             print("No exchange data to plot")
             return False
 
-        # Apply distance cutoff
-        ind_cut = np.where(processor.mod_ij <= exchange_radius)
-        mod_ij = processor.mod_ij[ind_cut[0]]
-        Jij_meV = processor.Jij_meV[ind_cut[0]] / 13.6  # Convert to mRy
-        itype = processor.itype[ind_cut[0]] - 1  # Convert to 0-based indexing
-        jtype = processor.jtype[ind_cut[0]] - 1
-        bond_type1 = processor.bond_type1[ind_cut[0], :]
+        with mpl.rc_context(rc={
+          "text.usetex": False,
+          "font.family": 'serif'
+        }):
 
-        colors = cm.Paired(np.linspace(0, 1, 2 * num_nt + 2))
+            # Apply distance cutoff
+            ind_cut = np.where(processor.mod_ij <= exchange_radius)
+            mod_ij = processor.mod_ij[ind_cut[0]]
+            Jij_meV = processor.Jij_meV[ind_cut[0]] / 13.6  # Convert to mRy
+            itype = processor.itype[ind_cut[0]] - 1  # Convert to 0-based indexing
+            jtype = processor.jtype[ind_cut[0]] - 1
+            bond_type1 = processor.bond_type1[ind_cut[0], :]
 
-        plots_created = 0
-        for ii in range(num_nt):
-            if trim_labels[ii] not in exclude_list:
-                i_ind = np.where(itype == ii)
+            colors = cm.Paired(np.linspace(0, 1, 2 * num_nt + 2))
 
-                if len(i_ind[0]) == 0:
-                    continue
+            plots_created = 0
+            for ii in range(num_nt):
+                if trim_labels[ii] not in exclude_list:
+                    i_ind = np.where(itype == ii)
 
-                fig = plt.figure()
-                counter = 0
-
-                for jj in range(num_nt):
-                    j_ind = np.where(jtype[i_ind[0]] == jj)
-
-                    if len(j_ind[0]) == 0:
+                    if len(i_ind[0]) == 0:
                         continue
 
-                    if len(spin_mom) > ii and len(spin_mom) > jj:
-                        sign_i = np.sign(spin_mom[ii])
-                        sign_j = np.sign(spin_mom[jj])
-                        sign_ij = sign_i * sign_j
-                    else:
-                        sign_ij = 1.0
+                    fig = plt.figure()
+                    counter = 0
 
-                    if trim_labels[jj] not in exclude_list:
-                        counter += 1
-                        plt.plot(mod_ij[i_ind[0][j_ind[0]]], sign_ij * Jij_meV[i_ind[0][j_ind[0]]],
-                                alpha=0.75, lw=4, c=colors[counter],
-                                label=f'${trim_labels[ii]}$-${trim_labels[jj]}$')
-                        plt.scatter(mod_ij[i_ind[0][j_ind[0]]], sign_ij * Jij_meV[i_ind[0][j_ind[0]]],
-                                  color=colors[counter], alpha=0.75, s=300, lw=1.00, edgecolor='black')
+                    for jj in range(num_nt):
+                        j_ind = np.where(jtype[i_ind[0]] == jj)
 
-                # Plotting options
-                if len(Jij_meV[i_ind[0]]) > 0:
-                    extremum = max(abs(np.max(Jij_meV[i_ind[0]])), abs(np.min(Jij_meV[i_ind[0]]))) * 1.10
+                        if len(j_ind[0]) == 0:
+                            continue
 
-                    plt.legend(fontsize=self.font_size, loc='upper right')
-                    plt.ylabel(r'$J_{ij}$ [mRy]', fontsize=self.font_size)
-                    plt.xlabel(r'$r_{ij}/a_{lat}$', fontsize=self.font_size)
+                        if len(spin_mom) > ii and len(spin_mom) > jj:
+                            sign_i = np.sign(spin_mom[ii])
+                            sign_j = np.sign(spin_mom[jj])
+                            sign_ij = sign_i * sign_j
+                        else:
+                            sign_ij = 1.0
 
-                    ax = plt.gca()
-                    ax.set_facecolor((1, 1, 1))
-                    ax.tick_params(axis='x', colors='black', labelsize=self.font_size, width=2)
-                    ax.tick_params(axis='y', colors='black', labelsize=self.font_size, width=2)
-                    ax.set_ylim(-extremum, extremum)
-                    plt.axhline(0, color='black', linestyle='--')
+                        if trim_labels[jj] not in exclude_list:
+                            counter += 1
+                            plt.plot(mod_ij[i_ind[0][j_ind[0]]], sign_ij * Jij_meV[i_ind[0][j_ind[0]]],
+                                    alpha=0.75, lw=4, c=colors[counter],
+                                    label=f'${trim_labels[ii]}$-${trim_labels[jj]}$')
+                            plt.scatter(mod_ij[i_ind[0][j_ind[0]]], sign_ij * Jij_meV[i_ind[0][j_ind[0]]],
+                                      color=colors[counter], alpha=0.75, s=300, lw=1.00, edgecolor='black')
 
-                    for axis in ['top', 'bottom', 'left', 'right']:
-                        ax.spines[axis].set_linewidth(3)
+                    # Plotting options
+                    if len(Jij_meV[i_ind[0]]) > 0:
+                        extremum = max(abs(np.max(Jij_meV[i_ind[0]])), abs(np.min(Jij_meV[i_ind[0]]))) * 1.10
 
-                    plt.grid(False)
-                    fig.set_size_inches(18.5, 10.5)
-                    output_path = os.path.join(output_dir, f'Jij_{trim_labels[ii]}.pdf')
-                    plt.savefig(output_path, transparent=False, dpi=300, bbox_inches='tight')
-                    plt.close(fig)
-                    plots_created += 1
-                    print(f"Created plot: {output_path}")
+                        plt.legend(fontsize=self.font_size, loc='upper right')
+                        plt.ylabel(r'$J_{ij}$ [mRy]', fontsize=self.font_size)
+                        plt.xlabel(r'$r_{ij}/a_{lat}$', fontsize=self.font_size)
+
+                        ax = plt.gca()
+                        ax.set_facecolor((1, 1, 1))
+                        ax.tick_params(axis='x', colors='black', labelsize=self.font_size, width=2)
+                        ax.tick_params(axis='y', colors='black', labelsize=self.font_size, width=2)
+                        ax.set_ylim(-extremum, extremum)
+                        plt.axhline(0, color='black', linestyle='--')
+
+                        for axis in ['top', 'bottom', 'left', 'right']:
+                            ax.spines[axis].set_linewidth(3)
+
+                        plt.grid(False)
+                        fig.set_size_inches(18.5, 10.5)
+                        output_path = os.path.join(output_dir, f'Jij_{trim_labels[ii]}.pdf')
+                        plt.savefig(output_path, transparent=False, dpi=300, bbox_inches='tight')
+                        plt.close(fig)
+                        plots_created += 1
+                        print(f"Created plot: {output_path}")
 
         return plots_created > 0
 
