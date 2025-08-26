@@ -417,8 +417,9 @@ class BasicSeparator(GrammarType):
 
 class KeywordSeparator(BasicSeparator):
   """ Separator with an exact string """
-  def __init__(self, keyword):
+  def __init__(self, keyword, **kwargs):
       self.keyword = keyword
+      super().__init__(**kwargs)
 
   @cached_property
   def _grammar(self):
