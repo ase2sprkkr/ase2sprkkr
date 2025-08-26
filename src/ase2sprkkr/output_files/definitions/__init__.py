@@ -132,7 +132,7 @@ class CommonOutputFile(ConfigurationFile):
 
     def n_orbitals(self, type):
         type = self.site_type_index(type)
-        return self.ORBITALS[self.TYPES[type]['IQAT'][0]]
+        return self.ORBITALS[self.TYPES[type]['IQAT'][0]]['NLQ']
 
 
 class Arithmetic:

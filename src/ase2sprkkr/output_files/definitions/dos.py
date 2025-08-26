@@ -157,7 +157,7 @@ class DOSOutputFile(CommonOutputFile):
         except KeyError as ke:
             if not np.issubdtype(name.__class__, np.integer):
                 for i, type in enumerate(self.TYPES):
-                  if type[0] == name:
+                  if type['TXT_T'] == name:
                       name = i
                       break
                 else:
@@ -197,12 +197,13 @@ class DOSOutputFile(CommonOutputFile):
         for i,slic in enumerate(self.iterate_data_slices()):
             out = self._create_dos( slic, i, spin, l)
             yield out
-            if not total:
+            if total is False:
                 continue
+            ratio = self.TYPES[i]['CONC'] * len(self.TYPES[i]['IQAT'])
             if total is True:
-                total = out * self.TYPES[i][2]
+                total = out * ratio
             else:
-                total.dos += out.dos * self.TYPES[i][2]
+                total.dos += out.dos * ratio
         if total:
             total.type = 'total'
             yield total
@@ -244,7 +245,7 @@ class DOSOutputFile(CommonOutputFile):
         Return the number of orbitals for the given type record
         """
         return max(
-            self.ORBITALS[iq - 1] for iq in type['IQAT']
+            self.ORBITALS[iq - 1]['NLQ'] for iq in type['IQAT']
         )
 
     def n_spins(self):

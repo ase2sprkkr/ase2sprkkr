@@ -144,13 +144,13 @@ class CommonOutputFile(ConfigurationFile):
         if isinstance(type, int):
             return type
         for i,t in enumerate(self.TYPES):
-            if t[0] == type:
+            if t['TXT_T'] == type:
                return i
         raise ValueError(f'There is no {type} atom in the output file')
 
     def n_orbitals(self, type):
         type = self.site_type_index(type)
-        return self.ORBITALS[self.TYPES[type]['IQAT'][0]]
+        return self.ORBITALS[self.TYPES[type]['IQAT'][0]]['NLQ']
 
 
 class Arithmetic:
