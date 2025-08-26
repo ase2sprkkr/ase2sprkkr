@@ -151,9 +151,9 @@ def create_definition():
                 return data[limit:].reshape(nk1,nq,nk2)
           else:
              if c.MODE() == 'EK-REL':
-                return data.reshape(c.NE(), 4, nq, nk2)[:,type]
+                return data.reshape(c.NE(), 4, nq, nk2)[:,type + 1]
              else:
-                return data.reshape(4, c.NK1(), nq, nk2)[:,type]
+                return data.reshape(4, c.NK1(), nq, nk2)[:,type + 1]
         return index
 
     norm = np.linalg.norm
