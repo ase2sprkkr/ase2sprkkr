@@ -10,6 +10,7 @@ from ..common.decorators import cached_class_property
 from ..common.grammar_types.data import RestOfTheFile
 import io
 import os
+import re
 
 
 class UnknownDataValue(ConfigurationValue):
@@ -45,7 +46,8 @@ class OutputFile(ConfigurationFile):
       for imp, module, ispackage in pkgutil.iter_modules(path=[path], prefix=name):
            __import__(module)
            mod = sys.modules[module]
-           out[mod.__name__.rsplit('.',1)[1]] = mod
+           ext = getattr(mod, "extension", None) or mod.__name__.rsplit('.',1)[1]
+           out[ext] = mod
       return out
 
   @classmethod
@@ -82,6 +84,10 @@ class OutputFile(ConfigurationFile):
              fname = filename.name
          if isinstance(filename, str):
              first_try = fname.rsplit('.',1)[1].lower()
+             #nektere soubory jsou typu _Dij.data
+             special = re.match( r"^.+_([^/\\]+\.[^/\\]+)$", filename)
+             if special:
+                first_try = [ special.groups(1)[0], first_try ]
          else:
              first_try = ''
       if isinstance(first_try,str):
@@ -98,16 +104,24 @@ class OutputFile(ConfigurationFile):
              return out
       else:
          last = None
-      for ext, i in cls.definitions.items():
-          if try_only and ext not in try_only:
-             continue
-          if first_try and ext in first_try:
-             continue
-          try:
-             out = i.definition.read_from_file(filename)
-             return out
-          except Exception as e:
-             last = e
+
+      if try_only:
+         for i in try_only:
+             if i in cls.definitions:
+                 try:
+                    out = cls.definitions[i].definition.read_from_file(filename)
+                    return out
+                 except Exception as e:
+                    last = e
+      else:
+          for ext, i in cls.definitions.items():
+              if first_try and ext in first_try:
+                 continue
+              try:
+                 out = i.definition.read_from_file(filename)
+                 return out
+              except Exception as e:
+                 last = e
       if unknown is None:
          unknown = try_only is None
       if unknown:
@@ -115,7 +129,7 @@ class OutputFile(ConfigurationFile):
               return cls.unknown_output_file_definition.read_from_file(filename)
           except pp.ParseBaseException as e:
               raise Exception(f'Can not parse file: {filename}') from e
-      raise first or last
+      raise first or last or ValueError(f'File is not recognized as any known file type')
 
 
 class CommonOutputFile(ConfigurationFile):
