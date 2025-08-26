@@ -34,8 +34,6 @@ class BlankSeparator(SeparatorDefinition):
 class Separator(SeparatorDefinition):
   """
   A special (hidden) value, that appears in a output file header
-
-  The separator is a blank line
   """
   separator_type = SeparatorType(char='#', length=80)
 
@@ -94,7 +92,7 @@ def output_file_header():
 def create_output_file_definition(keyword, add, name=None,
                                   cls=OutputFileDefinition,
                                   **kwargs):
-    """ Create a definition of a output file. One should supply the additional values
+    """ Create a definition of an output file. One should supply the additional values
     containing the actual data.
     """
     V = OutputFileValueDefinition
