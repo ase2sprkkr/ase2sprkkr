@@ -169,19 +169,23 @@ def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=Fal
        if norm == 'log':
            colormap = colormap or 'RdBu_r'
            norm = SymLogNorm(linthresh=1e-12,vmax=vmax)  # vmin=c.min(), vmax=c.max())
+           vmax = None
        elif norm =='lin':
            colormap = colormap or 'seismic'
            norm = CenteredNorm(vmax=vmax)
+           vmax = None
    else:
        colormap = colormap or 'BuPu'
        if norm == 'log':
            norm=LogNorm(vmin=1e-8, vmax=vmax)
+           vmax = None
        elif norm=='lin':
            norm=Normalize(vmin=0. if mode == 'from_zero' else None, vmax=vmax)
+           vmax = None
 
    axis.set_xlim(auto_range(xrange, x))
    axis.set_ylim(auto_range(yrange, y))
-   axis.pcolormesh(x,y,c,cmap=colormap,shading='gouraud', norm=norm, vmin=None, vmax=None)
+   axis.pcolormesh(x,y,c,cmap=colormap,shading='gouraud', norm=norm, vmin=vmin, vmax=vmax)
    if show_zero_line:
        opts = {
            'lw' : 1.,
