@@ -16,7 +16,7 @@ from ...visualise.plot import colormesh, Multiplot
 
 class BSFOutputFile(CommonOutputFile, Arithmetic):
 
-    plot_parameters = { 'layer' }
+    plot_parameters = { 'layer', 'fermi' }
 
     """
     Output file for Bloch spectral functions
@@ -64,10 +64,12 @@ def create_definition():
 
     def plot(title, colormap='bwr', negative=True):
 
-        def plot(option, colormap=colormap, layer=None, **kwargs):
+        def plot(option, colormap=colormap, layer=None, fermi=None, **kwargs):
           c = option._container
           mesh = c.MESH()
           data = option()
+          if fermi is True:
+               fermi = 0.5
 
           def check_layer(layer):
               limit = data.shape[0]
@@ -101,14 +103,14 @@ def create_definition():
               'xticklabels' : [],
               'xlabel' : r'K',
               'colorbar' : True,
-              'title' : title
+              'title' : title,
+              'show_zero_line' : fermi,
           }
 
           if c.MODE()=='CONST-E':
             kw.update({
               'ylabel' : r'$E-E_{\rm F}$ (eV)',
               'yrange' : (c.E[0], c.E[-1]),
-              'show_zero_line' : 0.5,
             })
           else:
             kw.update({

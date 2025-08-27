@@ -51,7 +51,7 @@ def parser(parser):
 
     group = parser.add_argument_group('BSF specific options')
     group.add_argument('--layer', help='Select a layer for plotting. Either number or two comma delimited numbers from,to. Numbering starts from 1. ', type=parse_layer, required=False)
-
+    group.add_argument('--fermi', help='Draw a line at Fermi energy. Optional float specifies line width.', nargs='?', const=True, type=float, required=False)
 
 def run(args):
   from ...output_files.output_files import OutputFile
