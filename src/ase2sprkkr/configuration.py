@@ -115,6 +115,9 @@ def mpi_runner(mpi):
 
 class Configuration(RootConfigurationContainer):
 
+    def _generic_info(self):
+        return "ASE2SPRKKR Configuration"
+
     def store_value_permanent(self, name:str, value, doc=None, doc_regex:bool or str=False):
         """
         Set/remove permanently the value with given name in the config file.
@@ -244,7 +247,7 @@ definition = ConfigFileDefinition('config', [
                 default_value=_get_suffix,
                 info="This suffix is appended (if not stated otherwise) to the SPRKKR "
                      "executable names."),
-    V('dir', AlwaysQString.I, is_optional=True, info='Directory, from which the executables will be runned. None mean use the default environment variable PATH mechanism')
+    V('dir', AlwaysQString.I, is_optional=True, info='Directory, from which the executables will be runned. None mean use the default PATH-environment-variable mechanism.')
   ], info="Configuration, that affects how the execubables are runned"),
 
   Section('nomad', [

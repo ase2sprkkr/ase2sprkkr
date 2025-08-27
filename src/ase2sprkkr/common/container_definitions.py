@@ -678,3 +678,6 @@ class ConfigurationRootDefinition(ContainerDefinition):
        grammar = pp.Suppress(pp.Regex(r'(\s*\n)*')) + grammar
        grammar = grammar.ignore("#" + pp.restOfLine + pp.LineEnd())
        return grammar
+
+   def _generic_info(self):
+      return f"Configuration"
