@@ -27,6 +27,13 @@ help='Plot SPR-KKR output files.'
 
 
 def parser(parser):
+    def parse_layer(value):
+        out=parse_tuple_function(int, 1, 2)(value)
+        if len(out) == 1:
+            return out[0]-1
+        else:
+            return slice(out[0]-1, out[1])
+
     parser.add_argument('output', help='SPR-KKR output file name (see the supported files above).')
     parser.add_argument('-o','--output_filename', dest='filename', type=str, help='The plot will be saved to a file with given name, instead of showing it on the screen. If more values are given (see -v), their name will be added to the filename.', default=None, required=False)
     parser.add_argument('-v','--value', dest='value', type=str, help='Only the value of the given name will be plotted (option can be repeated)', action='append', default=[], required=False)
@@ -42,6 +49,9 @@ def parser(parser):
     parser.add_argument('-S','--set', dest='args', type=lambda x: parse_named_option(x,True), help='Given a value of the format name=value, pass the value to the plotting function. You can so override various options that matplotlib plotting functions accept (e.g. vmin or vmax for pcolormesh), or the values that can be set using set_<something> functions (e.g. title or (x|y)label). This option can be repeated.', action='append', default=[], required=False)
     parser.set_defaults(latex=None)  # or True/False if you want a default
 
+    group = parser.add_argument_group('BSF specific options')
+    group.add_argument('--layer', help='Select a layer for plotting. Either number or two comma delimited numbers from,to. Numbering starts from 1. ', type=parse_layer, required=False)
+
 
 def run(args):
   from ...output_files.output_files import OutputFile
@@ -49,6 +59,10 @@ def run(args):
   del args.version
 
   of = OutputFile.from_file(args.output)
+  for x in [ 'layer' ]:
+      if x in kwargs and not x in of.plot_parameters:
+          raise ValueError(f"Argument '--{x}' is not valid for {of}")
+
   del kwargs['output']
 
   value = args.value

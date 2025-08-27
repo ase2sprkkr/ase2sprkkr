@@ -16,15 +16,18 @@ from ...visualise.plot import colormesh, Multiplot
 
 class BSFOutputFile(CommonOutputFile, Arithmetic):
 
+    plot_parameters = { 'layer' }
+
     """
     Output file for Bloch spectral functions
     """
     def plot(self, layout=(2,2), figsize=(10,6), latex=None,
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
-             **kwargs
+             layer=None, **kwargs
              ):
-        mp=Multiplot(layout=layout, figsize=figsize, latex=latex, **kwargs)
+        mp=Multiplot(layout=layout, figsize=figsize, latex=latex, layer=layer, **kwargs)
         plt.subplots_adjust(left=0.12,right=0.95,bottom=0.17,top=0.90, hspace=0.75, wspace=0.5)
+
         if self.KEYWORD() == 'BSF-SPOL':
             mp.plot(self.I)
             mp.plot(self.I_X)
@@ -61,11 +64,28 @@ def create_definition():
 
     def plot(title, colormap='bwr', negative=True):
 
-        def plot(option, colormap=colormap, **kwargs):
+        def plot(option, colormap=colormap, layer=None, **kwargs):
           c = option._container
           mesh = c.MESH()
           data = option()
-          data = data.sum(axis = 0)
+
+          def check_layer(layer):
+              limit = data.shape[0]
+              if layer < 0 or layer >= limit:
+                  raise ValueError(f"Layer number should be between {1} and {limit}.")
+
+          if layer is None:
+              data = data.sum(axis = 0)
+          elif isinstance(layer, int):
+              check_layer(layer)
+              data = data[layer]
+          else:
+              check_layer(layer.start)
+              check_layer(layer.stop)
+              if layer.start >= layer.stop:
+                  raise ValueError(f"Empty layer range.")
+              data = data[layer].sum(axis = 0)
+
           if negative:
             vmax = max(np.max(data), -np.min(data))
             vmin = -vmax

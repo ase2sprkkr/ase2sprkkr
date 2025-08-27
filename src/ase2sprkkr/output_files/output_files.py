@@ -25,6 +25,8 @@ class UnknownDataValue(ConfigurationValue):
 class OutputFile(ConfigurationFile):
   """ Objects of this class holds datas of an output file """
 
+  plot_parameters = {}
+
   @cached_class_property
   def unknown_output_file_definition(cls):
       """ a definition of unwnown (not yet known) output file that can hold any data in the rest
