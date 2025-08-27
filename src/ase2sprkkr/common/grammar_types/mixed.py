@@ -101,7 +101,7 @@ def VariantGenerator(name, bool_type = Boolean.I, string_type = QString.I, add_t
 
   return type(name, (BaseMixed,),{
     "string_type" : string_type,
-    "is_the_same_value" : compare_numpy_values,
+    "is_the_same_value" : staticmethod(compare_numpy_values),
     "types" : base_types,
     "_string" : _string,
     "__doc__" : doc
