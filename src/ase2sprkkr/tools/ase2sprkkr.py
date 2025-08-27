@@ -74,6 +74,9 @@ def run():
       import ase2sprkkr.version
       print(ase2sprkkr.version.__version__)
       help=False
+  else:
+      del args.version
+
   if args.ase2sprkkr_command is None:
       if help:
           parser.print_help()

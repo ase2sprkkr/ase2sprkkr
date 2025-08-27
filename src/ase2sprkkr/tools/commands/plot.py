@@ -56,7 +56,6 @@ def parser(parser):
 def run(args):
   from ...output_files.output_files import OutputFile
   kwargs = vars(args)
-  del args.version
 
   of = OutputFile.from_file(args.output)
   for x in [ 'layer' ]:
