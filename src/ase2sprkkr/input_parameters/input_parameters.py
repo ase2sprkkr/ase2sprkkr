@@ -141,7 +141,7 @@ class InputParameters(ConfigurationFile):
           if executable_dir is None:
              executable_dir=config.executables.dir()
           if executable_dir:
-             executable = os.path.join(executable, executable_dir)
+             executable = os.path.join(executable_dir, executable)
 
       process = self.result_reader(calculator, directory=directory)
       try:
