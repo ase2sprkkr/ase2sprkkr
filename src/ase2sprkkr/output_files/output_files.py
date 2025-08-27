@@ -132,7 +132,7 @@ class OutputFile(ConfigurationFile):
       raise first or last or ValueError(f'File is not recognized as any known file type')
 
 
-class CommonOutputFile(ConfigurationFile):
+class CommonOutputFile(OutputFile):
 
     def n_atoms(self):
         return len(self.ORBITALS)
