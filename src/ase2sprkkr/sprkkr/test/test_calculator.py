@@ -68,9 +68,15 @@ class TestCalculator(TestCase):
      self.assertEqual(calculator.get('NE'),11111)
      self.assertEqual(calculator.input_parameters.ENERGY.NE(),11111)
      self.assertEqual(calculator.input_parameters.TASK.TASK(), 'SCF')
+     calculator.change_task('DOS')
+     self.assertEqual(calculator.input_parameters.TASK.TASK(), 'DOS')
+     self.assertEqual(calculator.input_parameters.get('NE'), 11111)
+     calculator.input_parameters.change_task('JXC')
+     self.assertEqual(calculator.input_parameters.TASK.TASK(), 'JXC')
+     self.assertEqual(calculator.input_parameters.get('NE'), 11111)
      calculator.input_parameters = 'PHAGEN'
      self.assertEqual(calculator.input_parameters.TASK.TASK(), 'PHAGEN')
-     self.assertNotEqual(calculator.input_parameters.get('NE'), 111111)
+     self.assertNotEqual(calculator.input_parameters.get('NE'), 11111)
 
      calculator = SPRKKR(atoms = atoms, **self.calc_args())
 

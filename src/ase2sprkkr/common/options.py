@@ -253,7 +253,7 @@ class Option(BaseOption):
           else:
              try:
                  self._value = self._pack_value(value)
-             except ValueError:
+             except DataValidityError:
                  if not error=='ignore':
                       raise
           self._post_set()
