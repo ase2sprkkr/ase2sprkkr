@@ -73,17 +73,23 @@ class Configuration:
       raise NotImplementedError()
 
   @staticmethod
-  def as_dict_getter(only_changed:Union[bool,str]='basic', generated=False, copy=False):
+  def as_dict_getter(only_changed:Union[bool,str]='default', generated=False, copy=False):
+
+      if only_changed == 'default':
+        pick_only_changed = lambda d: not d.is_always_added
+      elif only_changed == 'basic':
+        pick_only_changed = lambda d: d.is_expert
+      else:
+        only_changed = bool(only_changed)
+        pick_only_changed = lambda d: only_changed
 
       def get(self):
           d = self._definition
           if d.is_generated and not generated:
                return None
           if only_changed == 'explicit':
-                if self._definition.is_generated and not generated:
-                    return None
                 v = self._unpack_value(self._value)
-          elif only_changed and (only_changed!='basic' or d.is_expert) and not d.is_always_added:
+          elif pick_only_changed(d):
                v,c = self.value_and_changed()
                if not c:
                     return None

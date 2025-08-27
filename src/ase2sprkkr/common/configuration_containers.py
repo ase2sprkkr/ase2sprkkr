@@ -35,7 +35,7 @@ class BaseConfigurationContainer(Configuration):
           (e.g. for numpy arrays)
         """
         d=self._definition
-        vals=self.as_dict(copy=copy_values)
+        vals=self.as_dict(copy=copy_values, only_changed=True)
         out =d.result_class(definition=d)
         out.set(vals, unknown='add')
         return out
