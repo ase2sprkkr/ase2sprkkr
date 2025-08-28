@@ -16,28 +16,43 @@ from ...visualise.plot import colormesh, Multiplot
 
 class BSFOutputFile(CommonOutputFile, Arithmetic):
 
-    plot_parameters = { 'layer', 'fermi' }
+    plot_parameters = { 'layer', 'fermi', 'seperate_plots' }
 
     """
     Output file for Bloch spectral functions
     """
+
+
     def plot(self, layout=(2,2), figsize=(10,6), latex=None,
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
-             layer=None, **kwargs
+             layer=None, seperate_plots=False, **kwargs
              ):
-        mp=Multiplot(layout=layout, figsize=figsize, latex=latex, layer=layer, **kwargs)
-        plt.subplots_adjust(left=0.12,right=0.95,bottom=0.17,top=0.90, hspace=0.75, wspace=0.5)
-
-        if self.KEYWORD() == 'BSF-SPOL':
-            mp.plot(self.I)
-            mp.plot(self.I_X)
-            mp.plot(self.I_Y)
-            mp.plot(self.I_Z)
+        # Create a copy of kwargs without seperate_plots to pass to subplots
+    #    plot_kwargs = {k: v for k, v in kwargs.items() if k != 'seperate_plots'}
+    
+        if seperate_plots:
+            if self.KEYWORD() in ['BSF-SPN', 'BSF-SPOL']:
+                self.I.plot(filename=filename, show=show, dpi=dpi, **kwargs)
+                self.I_X.plot(filename=filename, show=show, dpi=dpi, **kwargs)
+                self.I_Y.plot(filename=filename, show=show, dpi=dpi, **kwargs)
+                self.I_Z.plot(filename=filename, show=show, dpi=dpi, **kwargs)
+            else:
+                self.I.plot(filename=filename, show=show, dpi=dpi, **kwargs)
+                self.I_UP.plot(filename=filename, show=show, dpi=dpi, **kwargs)
+                self.I_DOWN.plot(filename=filename, show=show, dpi=dpi, **kwargs)
         else:
-            mp.plot(self.I)
-            mp.plot(self.I_UP)
-            mp.plot(self.I_DOWN)
-        mp.finish(filename, show, dpi)
+            mp=Multiplot(layout=layout, figsize=figsize, latex=latex, **kwargs)
+            plt.subplots_adjust(left=0.12,right=0.95,bottom=0.17,top=0.90, hspace=0.75, wspace=0.5)
+            if self.KEYWORD() in ['BSF-SPN', 'BSF-SPOL']:
+                mp.plot(self.I)
+                mp.plot(self.I_X)
+                mp.plot(self.I_Y)
+                mp.plot(self.I_Z)       
+            else:
+                mp.plot(self.I)
+                mp.plot(self.I_UP)
+                mp.plot(self.I_DOWN)
+            mp.finish(filename, show, dpi)
 
     _arithmetic_values = [('RAW_DATA', slice(None))]
 
@@ -152,7 +167,7 @@ def create_definition():
           ('NQ_EFF', 'NE/NK1', 'NK2')
 
           Data structure:
-            IX,Y,Z (BSF-SPOL)
+            IX,Y,Z (BSF-SPOL/SPN)
                 k-e: NE, type, NQ, NK  types(I,x,y,z)
                 k-k: type, K1, NQ, K2, types(I,x,y,z)
 
@@ -238,15 +253,15 @@ def create_definition():
       V('RAW_DATA', NumpyArray(written_shape=(-1,1), shape=(-1,)), name_in_grammar=False),
       *switch('KEYWORD', {
         'BSF' : [
-            NV('I_UP', 'RAW_DATA', i(0), reorder=reorder, plot=plot(title='Spin up', negative=True, colormap=mymap) ),
-            NV('I_DOWN', 'RAW_DATA', i(1), reorder=reorder, plot=plot(title='Spin down', negative=True, colormap=mymap) ),
+            NV('I_UP', 'RAW_DATA', i(0), reorder=reorder, plot=plot(title='Spin up', negative=False, colormap='Reds') ),
+            NV('I_DOWN', 'RAW_DATA', i(1), reorder=reorder, plot=plot(title='Spin down', negative=False, colormap='Blues') ),
         ],
-        'BSF-SPN' : 'BSF',
         'BSF-SPOL': [
             NV('I_X', 'RAW_DATA', i(0), reorder=reorder, plot=plot(title=r'$\sigma_x$') ),
             NV('I_Y', 'RAW_DATA', i(1), reorder=reorder, plot=plot(title=r'$\sigma_y$')),
             NV('I_Z', 'RAW_DATA', i(2), reorder=reorder, plot=plot(title=r'$\sigma_z$') ),
-        ]
+        ],
+        'BSF-SPN' : 'BSF-SPOL',
       }),
       NV('I', 'RAW_DATA', i(-1), reorder=reorder, plot=plot(negative=False, colormap=mymap, title='Total') ),
 
