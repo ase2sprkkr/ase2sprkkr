@@ -402,6 +402,7 @@ class Table(GrammarType):
                      named_result=None,
                      group_size=None, group_size_format="{:<12}{}",
                      groups_as_list=None,
+                     repeat_sparse=None,
                      **kwargs):
       """
       Parameters
@@ -455,10 +456,14 @@ class Table(GrammarType):
       groups_as_list
         If True - groups are contained in list
         If False - groups are contained in np.ndarray
-        If None - True if group_size is defined (and thus if it is possible)
+        If None - False if the group_size is defined (and thus if it is possible to
+                  interpret it as multidimensional array)
       kwargs
         Columns and their names can be assigned as kwargs, e.g.
         ``column1_name = float, column2_name = int, ...``
+      repeat_sparse
+        There can be rows, that have only some columns, given as list.
+        Then the data will be added from the previous row.
       """
       if columns is None:
          columns = kwargs
@@ -480,6 +485,14 @@ class Table(GrammarType):
       self.group_size_format = group_size_format
 
       self.sequence = Sequence(*columns, format=format, format_all=format_all, condition = row_condition, default_values=default_values)
+      if repeat_sparse:
+         if self.names:
+            repeat_sparse = [ i for i,name in enumerate(self.names) if name in repeat_sparse ]
+         self.repeat_sparse_sequence = Sequence(*(c for i,c in enumerate(columns) if i in repeat_sparse),
+                                                format=format, format_all=format_all,
+                                                condition = row_condition, default_values=default_values)
+      self.repeat_sparse = repeat_sparse
+
       self.flatten = flatten
       self.free_header = free_header
 
@@ -502,10 +515,13 @@ class Table(GrammarType):
 
   def _grammar(self, param_name=False):
       line = self.sequence.grammar(param_name)
-      cols = 1
+
       for i in self.special_columns():
-          cols+=1
           line = i.add_grammar(line)
+
+      if self.repeat_sparse:
+         line = line | self.repeat_sparse_sequence.grammar(param_name)
+
       grammar = delimitedList(line, line_end)
 
       if self.group_size:
@@ -609,6 +625,22 @@ class Table(GrammarType):
                 return np.asarray(out, dtype = self._numpy_type)
 
       def tabelize(x):
+          if self.repeat_sparse and len(x):
+              ln = len(self.repeat_sparse)
+              vals = iter(x)
+              prev = next(vals)
+              out = [ prev ]
+              for line in vals:
+                  if len(line) == ln:
+                      add = list(prev)
+                      for si,di in enumerate(self.repeat_sparse):
+                          add[di] = line[si]
+                      out.append(tuple(add))
+                  else:
+                      out.append(line)
+                      prev = line
+              x=out
+
           out = np.array(x, dtype=self._numpy_type)
           if self.flatten:
               out = out.ravel()

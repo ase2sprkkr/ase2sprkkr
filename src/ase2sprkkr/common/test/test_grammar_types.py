@@ -266,6 +266,17 @@ class TestGrammar(TestCase):
                     ]:
         test(val, res)
 
+    type = gt.Table(X=int, YY=str, ZZZ=float, repeat_sparse=['ZZZ'])
+    for val, res in [(
+        """ X YY ZZZ
+        1 dog 2.5
+              3e-2
+        2 cat 2.5
+              0.8""", np.array([(1,'dog',2.5), (1,'dog', 3e-2), (2,'cat', 2.5), (2,'cat', 0.8)], dtype=[('X', int), ('YY', object), ('ZZZ', float)])
+                    ),
+                    ]:
+        test(val, res)
+
     type = gt.Table(X=int, YY=str, ZZZ=float, numbering=True)
     for val, res in [(
         """ X YY ZZZ
