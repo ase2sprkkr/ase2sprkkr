@@ -113,9 +113,9 @@ class DOS(Arithmetic):
 
     def __repr__(self):
         if self.type:
-           return f'<DOS of {self.type}>'
+           return f'DOS of {self.type}'
         else:
-           return '<DOS>'
+           return 'DOS'
 
 
 class DOSOutputFile(CommonOutputFile):
@@ -138,12 +138,12 @@ class DOSOutputFile(CommonOutputFile):
              **kwargs
              ):
         if isinstance(layout, int):
-          layout = ( (self.n_types() ) // layout +1, layout)
-        mp=Multiplot(layout=layout, figsize=figsize, latex=latex, **kwargs)
-        plt.subplots_adjust(left=0.12,right=0.95,bottom=0.1,top=0.9, hspace=0.6, wspace=0.4)
-        for dos in self.iterate_dos(spin, l, total=True):
-            mp.plot(dos)
-        mp.finish(filename, show, dpi)
+            layout = ( (self.n_types() ) // layout +1, layout)
+        with Multiplot(layout=layout, figsize=figsize, latex=latex, filename=filename, show=show, dpi=dpi,
+                       adjust = {'left': 0.12, 'right': 0.95, 'bottom': 0.1, 'top': 0.9, 'hspace': 0.6, 'wspace': 0.4},
+                       **kwargs) as mp:
+            for dos in self.iterate_dos(spin, l, total=True):
+                mp.plot(dos)
 
     def __getitem__(self, name):
         """

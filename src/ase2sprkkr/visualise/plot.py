@@ -3,10 +3,14 @@ import matplotlib
 from matplotlib import rc_context
 import matplotlib.pyplot as plt
 from matplotlib.colors import SymLogNorm, CenteredNorm, LogNorm, Normalize
+from matplotlib.colors import ListedColormap
+
 from typing import Optional, Callable
 import numpy as np
+import os
+import re
 import functools
-from matplotlib.colors import ListedColormap
+from contextlib import contextmanager
 
 from ..common.decorators import add_to_signature
 
@@ -60,8 +64,8 @@ def create_rc_context(latex:Optional[bool]=None):
         params['text.usetex'] = latex
     return rc_context(params)
 
-
-def single_plot(fn:Callable, *args, filename:Optional[str]=None, show:Optional[bool]=None, dpi=600, latex=None, figsize=(6,4), callback=None, **kwargs):
+@contextmanager
+def single_plot(filename:Optional[str]=None, show:Optional[bool]=None, dpi=600, latex=None, figsize=(6,4)):
     """
     Creates single plot according to the given function a either show it or save it.
 
@@ -81,9 +85,7 @@ def single_plot(fn:Callable, *args, filename:Optional[str]=None, show:Optional[b
     with create_rc_context(latex):
       fig, ax = plt.subplots(figsize=figsize)
       plt.subplots_adjust(left=0.15,right=0.95,bottom=0.17,top=0.93)
-      fn(*args, **kwargs, axis=ax)
-      if callback:
-          callback(ax)
+      yield ax
       finish_plot(filename, show, dpi)
 
 
@@ -136,7 +138,10 @@ def plotting_function(func):
            if callback:
              callback(axis)
         else:
-           single_plot(func, filename=filename, show=show, dpi=dpi, latex=latex, callback=None, figsize=figsize, *args, **kwargs)
+           with single_plot(func, filename=filename, show=show, dpi=dpi, latex=latex, figsize=figsize) as axis:
+                func(*args, axis=axis, **kwargs)
+                if callback:
+                    callback(axis)
     return plot_function
 
 
@@ -204,13 +209,28 @@ def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=Fal
 class Multiplot:
   """ This class can be used for plotting more plots into one resulting image/window. """
 
-  def __init__(self, layout, figsize=(6,4), latex=None, updown_layout=False, **kwargs):
-      self.context = create_rc_context(latex=latex)
-      self.context.__enter__()
-      self.fig, self.axes = plt.subplots(figsize=figsize, nrows=layout[0], ncols=layout[1])
-      plt.subplots_adjust(left=0.12,right=0.95,bottom=0.17,top=0.90, hspace=0.75, wspace=0.5)
-      self.free_axes = self.axes.ravel(order='F' if not updown_layout else 'C')
-      self.free_axes = [ i for i in self.free_axes[::-1] ]
+  def __init__(self, layout, figsize=(6,4), latex=None, updown_layout=False,
+               filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
+               separate_plots=False, adjust={},
+               **kwargs):
+      self.separate_plots = separate_plots
+      self.filename = filename
+      self.show = show
+      self.dpi = dpi
+      self.latex = latex
+
+      if separate_plots:
+          self.figsize = figsize
+          self.number = layout[0] * layout[1]
+          self.figure = None
+      else:
+          self.figure, self.axes = plt.subplots(figsize=figsize, nrows=layout[0], ncols=layout[1])
+          adj = {'left': 0.12, 'right': 0.95, 'bottom': 0.17, 'top': 0.90, 'hspace': 0.75, 'wspace': 0.5}
+          adj.update(adjust)
+          plt.subplots_adjust(**adjust)
+          self.free_axes = self.axes.ravel(order='F' if not updown_layout else 'C')
+          self.free_axes = [ i for i in self.free_axes[::-1] ]
+
       self.specific_kwargs = { k:v for k,v in kwargs.items() if str(k).isnumeric() }
       for i in self.specific_kwargs:
           del kwargs[i]
@@ -218,47 +238,76 @@ class Multiplot:
       self.specific_kwargs = { int(k):v for k,v in self.specific_kwargs.items() }
       self.index = 0
 
-  def get_new_axis(self):
-      axis = self.free_axes.pop()
+  def __enter__(self):
+      if not self.separate_plots:
+          self.context = create_rc_context(latex=self.latex)
+          self.context.__enter__()
+      return self
+
+  def __exit__(self,type, value, traceback):
+      if not self.separate_plots:
+          for i in self.free_axes:
+              i.set_visible(False)
+          finish_plot(self.filename, self.show, self.dpi)
+          return self.context.__exit__(type, value, traceback)
+      else:
+          if self.separate_plots!='show':
+              show = self.show
+              if show is None:
+                  show = not self.filename
+              if show:
+                  plt.show()
+
+  def plot(self, option, name=None, plot_function=None, **kwargs):
+      name = name or getattr(option, 'name', None) or str(option)
+      with self.new_axis(name=name) as axis:
+          kw = self.kwargs.copy()
+          kw.update(self.specific_kwargs.get(self.index, {}))
+          kw.update(kwargs)
+          if not plot_function:
+              plot_function = lambda **kwargs: option.plot(**kwargs)
+          plot_function(axis=axis, **kw)
+
+  @contextmanager
+  def new_axis(self, name=None):
+      if self.separate_plots:
+          if self.index >= self.number:
+             raise StopIteration()
+
+          def append_before_ext(filename: str, suffix: str) -> str:
+              root, ext = os.path.splitext(filename)
+              if ext:
+                  return f"{root}{suffix}{ext}"
+              else:
+                  return f"{root}{suffix}"
+
+          filename = self.filename
+          if filename:
+              if name is None:
+                  fname = str(self.index+1)
+              else:
+                  fname = re.sub(r'[<>:"/\\|?*\x00-\x1f\x7f ]', '_', name)
+                  fname = re.sub(r"_+", '_', fname)
+
+              filename = append_before_ext(filename, '_' + fname)
+
+          with single_plot(filename, self.show if self.separate_plots=='each' else False,
+                           self.dpi, self.latex, self.figsize) as axis:
+               if name:
+                   axis.figure.canvas.manager.set_window_title(name)
+               yield axis
+      else:
+          try:
+              yield self.free_axes.pop()
+          except IndexError:
+              raise StopIteration()
       self.index += 1
-      return axis
 
   def __iter__(self):
-      axis = self.get_new_axis()
-      while axis:
-          yield axis
-          axis = self.get_new_axis()
+      while True:
+          with self.new_axis() as ax:
+              yield ax
 
-  def plot(self, option, plot_function=None, **kwargs):
-      axis = self.get_new_axis()
-      kw = self.kwargs.copy()
-      kw.update(self.specific_kwargs.get(self.index, {}))
-      kw.update(kwargs)
-      if not plot_function:
-          plot_function = lambda **kwargs: option.plot(**kwargs)
-      plot_function(axis=axis, **kw)
-
-  def finish(self, filename:Optional[str]=None, show:Optional[bool]=None, dpi=600):
-      """
-      Show the prepared plots or save them
-
-      Parameters
-      ----------
-      filename
-        The filename where the plot should be stored
-
-      show
-        If True, always show the plot.
-        If False, never.
-        If None, show it, if the filename is not set.
-
-      dpi
-        Dpi for generated plot
-      """
-      for i in self.free_axes:
-          i.set_visible(False)
-      finish_plot(filename, show, dpi)
-      self.context.__exit__(None,None,None)
 
 
 def change_default_kwargs(f, **kwargs):

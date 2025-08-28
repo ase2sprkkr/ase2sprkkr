@@ -4,6 +4,7 @@ This is a sctipt to visualise in_struct.inp files. Run it to see the doc.
 """
 from pathlib import Path
 import sys
+import argparse
 
 if not __package__:
   __package__ = 'ase2sprkkr.tools.commands'
@@ -48,11 +49,14 @@ def parser(parser):
     group.add_argument('-L','--do_not_use_latex', dest='latex', action='store_false', help='Do not use LaTex for generating captions', required=False)
     parser.add_argument('-S','--set', dest='args', type=lambda x: parse_named_option(x,True), help='Given a value of the format name=value, pass the value to the plotting function. You can so override various options that matplotlib plotting functions accept (e.g. vmin or vmax for pcolormesh), or the values that can be set using set_<something> functions (e.g. title or (x|y)label). This option can be repeated.', action='append', default=[], required=False)
     parser.set_defaults(latex=None)  # or True/False if you want a default
+    group.add_argument('--separate_plots', help='Plot each value from file in a separate window or/and file.', action='store_true', required=False)
 
     group = parser.add_argument_group('BSF specific options')
-    group.add_argument('--layer', help='Select a layer for plotting. Either number or two comma delimited numbers from,to. Numbering starts from 1. ', type=parse_layer, required=False)
-    group.add_argument('--fermi', help='Draw a line at Fermi energy. Optional float specifies line width.', nargs='?', const=True, type=float, required=False)
-    group.add_argument('--seperate_plots', help='Plot each value in a separate plot.', action='store_true', required=False)
+    group.add_argument('--layer', help='Select a layer for plotting. Either number or two comma delimited numbers from,to. Numbering starts from 1. ', type=parse_layer,
+                       default=argparse.SUPPRESS, required=False)
+    group.add_argument('--fermi', help='Draw a line at Fermi energy. Optional float specifies line width.', nargs='?', const=True, type=float,
+                       default=argparse.SUPPRESS, required=False)
+
 def run(args):
   from ...output_files.output_files import OutputFile
   kwargs = vars(args)
