@@ -28,7 +28,7 @@ class BSFOutputFile(CommonOutputFile, Arithmetic):
         mp=Multiplot(layout=layout, figsize=figsize, latex=latex, layer=layer, **kwargs)
         plt.subplots_adjust(left=0.12,right=0.95,bottom=0.17,top=0.90, hspace=0.75, wspace=0.5)
 
-        if self.KEYWORD() == 'BSF-SPOL':
+        if self.KEYWORD() in ['BSF-SPN', 'BSF-SPOL']:
             mp.plot(self.I)
             mp.plot(self.I_X)
             mp.plot(self.I_Y)
@@ -152,7 +152,7 @@ def create_definition():
           ('NQ_EFF', 'NE/NK1', 'NK2')
 
           Data structure:
-            IX,Y,Z (BSF-SPOL)
+            IX,Y,Z (BSF-SPOL/SPN)
                 k-e: NE, type, NQ, NK  types(I,x,y,z)
                 k-k: type, K1, NQ, K2, types(I,x,y,z)
 
@@ -241,12 +241,12 @@ def create_definition():
             NV('I_UP', 'RAW_DATA', i(0), reorder=reorder, plot=plot(title='Spin up', negative=True, colormap=mymap) ),
             NV('I_DOWN', 'RAW_DATA', i(1), reorder=reorder, plot=plot(title='Spin down', negative=True, colormap=mymap) ),
         ],
-        'BSF-SPN' : 'BSF',
         'BSF-SPOL': [
             NV('I_X', 'RAW_DATA', i(0), reorder=reorder, plot=plot(title=r'$\sigma_x$') ),
             NV('I_Y', 'RAW_DATA', i(1), reorder=reorder, plot=plot(title=r'$\sigma_y$')),
             NV('I_Z', 'RAW_DATA', i(2), reorder=reorder, plot=plot(title=r'$\sigma_z$') ),
-        ]
+        ],
+        'BSF-SPN' : 'BSF-SPOL',
       }),
       NV('I', 'RAW_DATA', i(-1), reorder=reorder, plot=plot(negative=False, colormap=mymap, title='Total') ),
 
