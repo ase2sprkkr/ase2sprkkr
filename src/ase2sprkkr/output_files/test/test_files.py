@@ -45,7 +45,7 @@ class TestOutput(TestCase):
 
             elif ext=='bsf':
                self.assertEqual(out.I().shape, (out.NQ_EFF(), out.NE(), out.NK()))
-               if out.KEYWORD() == 'BSF':
+               if out.KEYWORD() in ('BSF', 'BSF-SPN'):
                   self.assertEqual(out.I_UP().shape, (out.NQ_EFF(), out.NE(), out.NK()))
                   self.assertRaises(DisabledAttributeError, lambda: out.I_X)
                else:

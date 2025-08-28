@@ -180,7 +180,7 @@ def create_definition():
 
     norm = np.linalg.norm
 
-    definition = create_output_file_definition(Keyword('BSF', 'BSF-SPOL'), [
+    definition = create_output_file_definition(Keyword('BSF-SPOL', 'BSF-SPN', 'BSF'), [
       Separator(),
       V('DATASET', str, written_name='#DATASET'),
       V('MODE', Keyword('EK-REL', 'CONST-E')),
@@ -241,6 +241,7 @@ def create_definition():
             NV('I_UP', 'RAW_DATA', i(0), reorder=reorder, plot=plot(title='Spin up', negative=True, colormap=mymap) ),
             NV('I_DOWN', 'RAW_DATA', i(1), reorder=reorder, plot=plot(title='Spin down', negative=True, colormap=mymap) ),
         ],
+        'BSF-SPN' : 'BSF',
         'BSF-SPOL': [
             NV('I_X', 'RAW_DATA', i(0), reorder=reorder, plot=plot(title=r'$\sigma_x$') ),
             NV('I_Y', 'RAW_DATA', i(1), reorder=reorder, plot=plot(title=r'$\sigma_y$')),
