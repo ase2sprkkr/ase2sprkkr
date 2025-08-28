@@ -834,13 +834,22 @@ class Switch(ControlDefinition):
        def convert(v):
            if isinstance(v, dict):
                 return { i: create(v) for i,v in v.items() }
+           elif isinstance(v, str):
+                #strings are "symlinks", will be resolved in the second run
+                return None
+           elif not isinstance(v, (tuple, list)):
+                return { v.name: create(v) }
            else:
-                if not isinstance(v, (tuple, list)):
-                   v=[v]
                 return { i.name: create(i) for i in v }
-       self.values = { k : convert(v) if isinstance(v, (list, tuple)) else { v.name: v} for k,v in values.items() }
+
+       self.values = { k : convert(v) for k,v in values.items() }
+
+       #resolve the "symlinks"
+       for i in self.values:
+           if self.values[i] == None:
+              self.values[i] = self.values[values[i]]
        self.container = None
-       self.copied = False
+       #self.copied = False
 
        if template is None and name is None:
            name=f'_SWITCH_{item}'
@@ -911,9 +920,10 @@ class Switch(ControlDefinition):
    def added_to_container(self, container):
        self.remove_from_container()
        if container:
-           if self.copied:
-               self.copied = False
-               self.values = { k:{ n : container[n] for n in v } for k,v in self.values }
+           #copying is not implemented yet
+           #if self.copied:
+           #    self.copied = False
+           #    self.values = { k:{ n : container[n] for n in v } for k,v in self.values }
            container[self.item].add_grammar_hook(self.item_hook)
            for i in self.values.values():
                for j in i.values():
