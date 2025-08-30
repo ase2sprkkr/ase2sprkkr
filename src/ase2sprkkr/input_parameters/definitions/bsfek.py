@@ -7,8 +7,10 @@ from ..input_parameters_definitions import \
 from ...common.generated_configuration_definitions import Length
 from ...common.configuration_definitions import if_not_defined
 
-input_parameters = lambda: InputParameters(
-    'bsfek', [
+def input_parameters():
+    """ BSF - Bloch-spectral-function task input-parameters definition"""
+    out = InputParameters(
+        'bsfek', [
           CONTROL('BSF'),
           TAU,
           TASK('BSF').copy([
@@ -68,7 +70,19 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
     executable='kkrgen',
     mpi=True,
     info="BSFEK - Bloch spectral functions in the E-K plane"
-)
-""" JXC -JXC task input parameters definition"""
+    )
+
+    class BSFEKTaskSection(out['TASK'].result_class):
+
+        def k_path_gui(self, atoms):
+            from ase2sprkkr.gui.k_path import k_path_gui
+            out = k_path_gui(atoms)
+            if out:
+                self.KPATH.clear()
+                self.set(out)
+
+
+    out['TASK'].result_class = BSFEKTaskSection
+    return out
 
 # TODO - AKI scripts to generate KA/KE
