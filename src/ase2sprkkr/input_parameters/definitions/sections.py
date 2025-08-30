@@ -39,7 +39,9 @@ def CONTROL(ADSI):
         '6' : 'take average of 3 and 4 (=> KRWS=1)',
       }, default_value=None, info='It controls how the muffin-tin radii are calculated.',is_required=False),
       V('PRINT', Integer(min=0, max=5), default_value=0, info="Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output."),
-      V('NONMAG', False, info="Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation. ")
+      V('NONMAG', False, info="Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation. "),
+      V('NOHFF', False, info="Set this flag, if you want to include hyper fine field calculation. This leads to a slower calculation. "),
+      V('NOSYM', False, info="Set this flag, if you want to supress all symetry consideration. This leads to a slower calculation. "),
   ])
 
 
