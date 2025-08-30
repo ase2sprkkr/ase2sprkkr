@@ -106,7 +106,7 @@ class Potential(ConfigurationFile):
   def from_atoms(cls, atoms):
       """ Create a potential, that describes the given atoms object. """
       SPRKKRAtoms.promote_ase_atoms(atoms)
-      if atoms.has_potential:
+      if atoms.has_potential():
           return atoms.potential
       pd = Potential.potential_definition
       return cls(atoms = atoms, definition = pd)
