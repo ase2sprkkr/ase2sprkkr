@@ -10,7 +10,7 @@ from ...common.grammar_types import NumpyArray
 from ...common.decorators import cached_property
 from ...common.generated_configuration_definitions import \
     NumpyViewDefinition as NV
-from ...visualise.plot import Multiplot, set_up_common_plot
+from ...gui.plot import Multiplot, set_up_common_plot
 
 from ase.units import Rydberg
 from packaging.version import Version

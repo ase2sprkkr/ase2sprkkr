@@ -5,7 +5,7 @@ import numpy as np
 from ..output_files import Arithmetic, CommonOutputFile
 from ...common.grammar_types import NumpyArray, Prefixed
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV
-from ...visualise.plot import change_default_kwargs, colormesh, Multiplot
+from ...gui.plot import change_default_kwargs, colormesh, Multiplot
 import matplotlib.pyplot as plt
 
 

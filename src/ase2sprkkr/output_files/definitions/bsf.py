@@ -11,7 +11,7 @@ import matplotlib.colors as mcolors
 from functools import lru_cache
 import warnings
 from ase.units import Rydberg
-from ...visualise.plot import colormesh, Multiplot
+from ...gui.plot import colormesh, Multiplot
 
 
 class BSFOutputFile(CommonOutputFile, Arithmetic):
