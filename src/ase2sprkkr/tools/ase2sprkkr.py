@@ -44,6 +44,7 @@ def run():
   unknowns = {}
 
   for name, m in modules.items():
+      name = name.replace('_', '-')
       sub = subs.add_parser( name,
                              help=m.help,
                              formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -81,7 +82,7 @@ def run():
       if help:
           parser.print_help()
   else:
-      action = modules[ args.ase2sprkkr_command ].run
+      action = modules[ args.ase2sprkkr_command.replace('-','_') ].run
       del args.ase2sprkkr_command
       action(args)
 
