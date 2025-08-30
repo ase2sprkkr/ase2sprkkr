@@ -41,7 +41,7 @@ class InputParameters(ConfigurationFile):
       if pot:
           if potfil == pot[0]:
               return pot[1]
-      out = Potential(potfil) if potfil else None
+      out = Potential.from_file(potfil) if potfil else None
       self._potential = potfil, out
       return out
 
