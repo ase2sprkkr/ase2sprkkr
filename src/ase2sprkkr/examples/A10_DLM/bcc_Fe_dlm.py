@@ -69,7 +69,7 @@ def main():
     calculator.input_parameters.SCF.MIX = 0.05 # Gentle mixing paramter to ensure convergence
     calculator.input_parameters.SCF.TOL = 1e-7 # Tight tolerance on SCF cycle
     calculator.input_parameters.SCF.NITER = 1000 # Allow for lots of iterations if needed
-    calculator.input_parameters.ENERGY.ImE = 0.005 # Distance of closest approach to real axis
+    calculator.input_parameters.ENERGY.ImE = 0.00 # Distance of closest approach to real axis
     calculator.input_parameters.CPA.NITER = 100 # Allow for a lot of CPA iterations if needed
     calculator.input_parameters.CPA.TOL = 1e-8 # Tight CPA tol to go with tight SCF tol
     calculator.input_parameters.SCF.USEVMATT = True # I like to use the Mattheiss construction for the potential
