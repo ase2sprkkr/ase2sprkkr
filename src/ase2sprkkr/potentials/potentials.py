@@ -13,23 +13,22 @@ class Potential(ConfigurationFile):
   It, in addition to being a containers for their sections, can read/write
   its properties from/to an ASE atoms object."""
 
-  def __init__(self, atoms=None, definition=None):
+  def __init__(self, atoms=None, definition=None, set_from_atoms=True):
+      """ Use Potential.from_atoms to reuse already created Potential object stored
+      in atoms """
       if definition is None:
          from .definitions.potential import potential_definition as definition
       self._atoms = atoms
       self._complete = False
       super().__init__(definition)
+      if set_from_atoms and atoms:
+          self.set_from_atoms()
 
   def read_from_file(self, file, atoms=None, allow_dangerous=False):
       super().read_from_file(file, allow_dangerous=allow_dangerous)
       self.make_complete()
       if atoms is not False:
          self._atoms = self.update_atoms(atoms or self._atoms)
-
-  @staticmethod
-  def from_atoms(self, atoms):
-      SPRKKRAtoms.promote_ase_atoms(atoms)
-      return atoms.potential
 
   def make_complete(self):
       """ Call this function, if you set manually all the properties necessary
@@ -106,6 +105,9 @@ class Potential(ConfigurationFile):
   @classmethod
   def from_atoms(cls, atoms):
       """ Create a potential, that describes the given atoms object. """
+      SPRKKRAtoms.promote_ase_atoms(atoms)
+      if atoms.has_potential:
+          return atoms.potential
       pd = Potential.potential_definition
       return cls(atoms = atoms, definition = pd)
 
