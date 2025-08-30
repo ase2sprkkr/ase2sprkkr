@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This command just run the tests
+Tool to configuration of ASE2SPRKKR
 """
 from pathlib import Path
 import sys

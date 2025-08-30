@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This is a sctipt to visualise in_struct.inp files. Run it to see the doc.
+This is a script to run calculation from commandline. Run it to see the doc.
 """
 from pathlib import Path
 import sys

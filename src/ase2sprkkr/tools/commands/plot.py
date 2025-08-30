@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This is a sctipt to visualise in_struct.inp files. Run it to see the doc.
+Plotting the values in SPRKKR output files
 """
 from pathlib import Path
 import sys
