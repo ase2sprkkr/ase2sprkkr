@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 class ARPESOutputFile(CommonOutputFile, Arithmetic):
 
     def plot(self, layout=(2,2), figsize=(10,6), latex=None,
-             filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
+             filename:Optional[str]=None, show:Optional[bool]=None, dpi=800,
              separate_plots=False,
              **kwargs
              ):
@@ -43,7 +43,7 @@ def create_definition():
     def plot(option, **kwargs):
         c = option._container
         kw = {
-            'show_zero_line' : True,
+            'show_zero_line' : False,
             'mode' : 'from_zero',
             'norm' : 'log',
             'vmax' : c.TOTAL().max(),
@@ -55,7 +55,6 @@ def create_definition():
 
     def i(j):
         return slice(None),j
-
     definition = create_output_file_definition('ARPES', [
       V('NT', int),
       V('NP', int),
@@ -64,11 +63,11 @@ def create_definition():
 
       NV('THETA', 'RAW_DATA', i(0), ('NE', 'NT')),
       NV('ENERGY', 'RAW_DATA', i(1), ('NE', 'NT')),
-      NV('TOTAL', 'RAW_DATA', i(2), ('NE', 'NT'), info='Total intensity', plot=plot),
-      NV('UP', 'RAW_DATA', i(3), ('NE', 'NT'), info='Spin up', plot=plot),
-      NV('DOWN', 'RAW_DATA', i(4), ('NE', 'NT'), info='Spin down', plot=plot),
+      NV('TOTAL', 'RAW_DATA', i(2), ('NE', 'NT'), info='Total intensity', plot=change_default_kwargs(plot,title=r'Total intensity',colormap='grey')),
+      NV('UP', 'RAW_DATA', i(3), ('NE', 'NT'), info='Spin up', plot=change_default_kwargs(plot,title=r'Spin up',colormap='grey')),
+      NV('DOWN', 'RAW_DATA', i(4), ('NE', 'NT'), info='Spin down', plot=change_default_kwargs(plot, title=r'Spin down', colormap='gray')),
       NV('POLARIZATION', 'RAW_DATA', i(5), ('NE', 'NT'), info='Spin polarization',
-         plot=change_default_kwargs(plot, mode = 'zero_centered', norm = 'lin', vmax = None)
+         plot=change_default_kwargs(plot, colormap='bwr', mode = 'zero_centered', norm = 'lin',title=r'Spin polarization', vmax = None)
         ),
       NV('K', 'RAW_DATA', i(6), ('NE', 'NT'), info='K_parallel (pi/A)'),
       NV('DETERMINANT', 'RAW_DATA', i(7), ('NE', 'NT')),
