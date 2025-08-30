@@ -173,6 +173,19 @@ class Occupation:
       primary = self.primary_atomic_type
       return primary.atomic_number if primary else 0
 
+  def update_primary_atomic_number(self, number):
+      if number == 0:
+          return
+      prim = self.primary_atomic_type
+      if prim:
+          if prim.atomic_number == number:
+              return
+          prim.atomic_number = number
+      else:
+          for i in occ:
+              i.atomic_number = number
+              return
+
   @property
   def primary_symbol(self):
       """ Return the chemical symbol of the atom at the site.

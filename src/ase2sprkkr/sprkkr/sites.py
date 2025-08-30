@@ -190,6 +190,9 @@ class SiteType:
       """ Symbol of the most important (most probable) chemical element present on the site. """
       return self.occupation.primary_symbol
 
+  def update_atomic_number(self, symbol):
+      self.occupation.update_primary_atomic_number(symbol)
+
   @property
   def primary_atomic_number(self):
       """ Atomic symbol of the most important (most probable) chemical element present on the site. """
@@ -293,6 +296,21 @@ class Site:
   def __del__(self):
       if self._site_type:
           self._site_type.unregister(self)
+
+  def update_atomic_number(self, atomic_number):
+      site_type = self.site_type
+      if site_type.primary_atomic_number == atomic_number or \
+         atomic_number == 0:
+            return
+      index = site_type.index()
+      atoms = self.atoms
+      mask = atoms.numbers[index] == atomic_number
+      if mask.sum() != len(index):
+          site_type = site_type.copy(atoms=atoms)
+          for i, m  in zip(atoms.sites[index], mask):
+              if m:
+                  i.site_type = site_type
+      site_type.update_atomic_number(atomic_number)
 
   def unregister(self):
       if self._site_type:

@@ -125,6 +125,10 @@ class SPRKKRAtoms(Atoms):
        if self.spacegroup_info.symmetry != value:
            self.compute_sites_symmetry(value)
 
+   def update_sites_from_symbols(self):
+       for number, site in zip(self.numbers, self.sites):
+            site.update_atomic_number(number)
+
    def compute_sites_symmetry(self, symmetry=None, consider_old=False, symmetry_precision=1e-5, angular_precision=1e-5):
        """ SPRKKR has some properties shared by all by-symmetry-equal sites.
        This method can be called to recompute the equivalent sites.

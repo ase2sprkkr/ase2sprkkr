@@ -5,6 +5,7 @@ import copy
 from .radial import RadialPotential, RadialCharge
 from .moments import Moments
 from typing import Dict
+import numpy as np
 
 
 class AtomicType:
@@ -61,14 +62,14 @@ class AtomicType:
 
         n_electrons: int
         """
-        if isinstance(symbol, int):
+        if isinstance(symbol, (int, np.int64)):
            if atomic_number is not None and atomic_number != symbol:
               raise ValueError(f'Number of electrons in symbol ({symbol}) and atomic_number ({atomic_number}) differ')
-           atomic_number = symbol
+           atomic_number = int(symbol)
            symbol = None
         else:
            symbol = symbol
-           atomic_number = atomic_number
+           atomic_number = None if atomic_number is None else int(atomic_number)
 
         if atomic_number is None and symbol is None:
            raise ValueError("Unknown atomic type")
@@ -146,9 +147,14 @@ n_semicore: {self._n_semicore}""")
         except (AttributeError, KeyError):
           pass
 
+        self._n_core = None
+        self._n_semicore = None
+        self._n_valence = None
+        self._n_electrons = None
+
     @atomic_number.setter
     def atomic_number(self, v):
-        self._atomic_number = v
+        self._atomic_number = int(v)
         self._clear_symbol_cache()
         self._symbol = self.mendeleev.symbol if v else 'Vc'
 
@@ -162,6 +168,7 @@ n_semicore: {self._n_semicore}""")
         self._atomic_number = None
         self._clear_symbol_cache()
         self._atomic_number = self.mendeleev.atomic_number if v not in ['X', 'Vc'] else 0
+
 
     @property
     def n_electrons(self):
