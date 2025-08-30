@@ -50,8 +50,9 @@ class TauSection(Section):
 
     def set_from_atoms(self, section, atoms, io_data):
         """ NKTAB[xD] values has to be set according to the type of the problem."""
-        for i in (section.NKTAB, section.NKTAB2D, section.NKTAB3D):
+        for i in (section.NKTAB, section.NKTAB2D, section.NKTAB3D, section.KKRMODE):
             i.clear_result()
+
         if atoms is not None:
            pbc = atoms.pbc.sum()
            # setting the dangerous value to the non-used options
@@ -61,10 +62,11 @@ class TauSection(Section):
                section.NKTAB2D.result = section.NKTAB2D._create_dangerous_value(None)
                section.NKTAB3D.result = section.NKTAB3D._create_dangerous_value(None)
            else:
+               section.NKTAB2D.result = section.NKTAB2D()
+               section.NKTAB3D.result = section.NKTAB3D()
                section.NKTAB.result = section.NKTAB._create_dangerous_value(None)
                if not section.KKRMODE():
-                   section.KKRMODE = 'TB-KKR'
-
+                     section.KKRMODE.result = 'TB-KKR'
 
 def _nktab_value(option):
     return option._container.NKTAB()
