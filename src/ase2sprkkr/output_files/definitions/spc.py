@@ -63,8 +63,8 @@ def create_definition():
 
       NV('THETA', 'RAW_DATA', i(0), ('NE', 'NT')),
       NV('ENERGY', 'RAW_DATA', i(1), ('NE', 'NT')),
-      NV('TOTAL', 'RAW_DATA', i(2), ('NE', 'NT'), info='Total intensity', plot=change_default_kwargs(plot,title=r'Total intensity',colormap='grey')),
-      NV('UP', 'RAW_DATA', i(3), ('NE', 'NT'), info='Spin up', plot=change_default_kwargs(plot,title=r'Spin up',colormap='grey')),
+      NV('TOTAL', 'RAW_DATA', i(2), ('NE', 'NT'), info='Total intensity', plot=change_default_kwargs(plot,title=r'Total intensity',colormap='gray')),
+      NV('UP', 'RAW_DATA', i(3), ('NE', 'NT'), info='Spin up', plot=change_default_kwargs(plot,title=r'Spin up',colormap='gray')),
       NV('DOWN', 'RAW_DATA', i(4), ('NE', 'NT'), info='Spin down', plot=change_default_kwargs(plot, title=r'Spin down', colormap='gray')),
       NV('POLARIZATION', 'RAW_DATA', i(5), ('NE', 'NT'), info='Spin polarization',
          plot=change_default_kwargs(plot, colormap='bwr', mode = 'zero_centered', norm = 'lin',title=r'Spin polarization', vmax = None)
