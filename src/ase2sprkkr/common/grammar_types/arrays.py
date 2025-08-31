@@ -455,7 +455,7 @@ class Table(GrammarType):
       numbering_format
         Format for the numering column
       grouping
-        If True, the data are not one table, but list of tables.
+        If True, the data are not one table, but a list of tables.
         Numbering then numbers the tables, not the rows of the tables.
         There will be one extra column which numbers rows within the table.
       grouping_label
@@ -533,9 +533,6 @@ class Table(GrammarType):
       self.groups_as_list = bool(self.grouping) and (
           groups_as_list if groups_as_list is not None else not group_size
       )
-      if self.grouping and not self.groups_as_list and not group_size:
-          raise ValueError("Groups have to be returned as list, if there is not fixed number"
-              " of items in a group")
 
   def special_columns(self):
       if self.grouping:
