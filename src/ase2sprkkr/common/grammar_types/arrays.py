@@ -238,13 +238,14 @@ class SetOf(Array):
       return copy.deepcopy(value)
 
 
-class Complex(SetOf, TypedGrammarType):
-  array_access = False
+class Complex(TypedGrammarType):
   numpy_type = complex
 
-  @add_to_signature(SetOf.__init__)
-  def __init__(self, *args, **kwargs):
-    super().__init__(Real.I, *args, as_list=complex, length=2, **kwargs)
+  @add_to_signature(TypedGrammarType.__init__)
+  def __init__(self, delimiter='', **kwargs):
+    self.data =  Array(Real.I, length=2, delimiter=delimiter, **kwargs)
+    self._grammar = self.data.grammar().setParseAction(lambda x: complex(*x[0]))
+    super().__init__()
 
   def convert(self, value):
     return complex(value)
@@ -254,6 +255,11 @@ class Complex(SetOf, TypedGrammarType):
 
   def _grammar_name(self):
     return '{complex (as 2 reals)}'
+
+  def transform_grammar(self, grammar, param_name=False):
+    if self.just_one:
+        return super().transform_grammar(grammar, param_name)
+    return grammar
 
   def _string(self, val):
     return real._string(val.real) + ' ' + real._string(val.imag)
