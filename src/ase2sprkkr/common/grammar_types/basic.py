@@ -14,6 +14,19 @@ from .grammar_type import TypedGrammarType, GrammarType, add_to_parent_validatio
 
 ppc = pp.pyparsing_common
 
+class Char(TypedGrammarType):
+
+  datatype = str
+
+  @add_to_parent_validation
+  def _validate(self, value, why='set'):
+      return len(value) == 1 or "Char has to have length one"
+
+  def grammar_name(self):
+      return "<char>"
+
+  _grammar = pp.Word(pp.printables, exact=1)
+
 
 class Number(TypedGrammarType):
   """ Base class for a number - descendants of this class can have minimal and/or maximal possible value. """
