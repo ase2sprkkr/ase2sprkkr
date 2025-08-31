@@ -1,4 +1,7 @@
-from ..sprkkr.configuration import ConfigurationValueDefinition, ConfigurationFileDefinition
+from ..sprkkr.configuration import ConfigurationValueDefinition, \
+                                   ConfigurationFileDefinition, \
+                                   ConfigurationSectionDefinition, \
+                                   ConfigurationSection
 
 from ..common.configuration_definitions import SeparatorDefinition
 from ..common.decorators import cached_class_property, cache
@@ -20,6 +23,15 @@ class OutputFileValueDefinition(ConfigurationValueDefinition):
 
   type_from_type_map = { str: line_string }
   type_of_dangerous = pot_mixed
+
+
+class OutputFileSection(ConfigurationSection):
+  pass
+
+class OutputFileSectionDefinition(ConfigurationSectionDefinition):
+  delimiter = '\n'
+  grammar_of_delimiter = pp.Suppress('\n').setWhitespaceChars(' \r\t')
+  custom_class = None
 
 
 class BlankSeparator(SeparatorDefinition):
