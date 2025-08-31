@@ -175,9 +175,9 @@ class GrammarType:
     if self.prefix or self.postfix:
        with generate_grammar():
         if self.prefix:
-           grammar = pp.Literal(self.prefix).suppress().setName(self.prefix) + grammar
+           grammar = pp.Literal(self.prefix.strip()).suppress().setName(self.prefix) + grammar
         if self.postfix:
-           grammar += pp.Literal(self.postfix).suppress().setName(self.postfix)
+           grammar += pp.Literal(self.postfix.strip()).suppress().setName(self.postfix)
         grammar = self.transform_grammar(grammar, param_name)
 
     if self.has_value:
