@@ -32,6 +32,7 @@ class OutputFileSectionDefinition(ConfigurationSectionDefinition):
   delimiter = '\n'
   grammar_of_delimiter = pp.Suppress('\n').setWhitespaceChars(' \r\t')
   custom_class = None
+  force_order = True
 
 
 class BlankSeparator(SeparatorDefinition):
@@ -55,7 +56,7 @@ class OutputFileDefinition(ConfigurationFileDefinition):
   value of a standard potential section """
 
   force_order = True
-  """ The order of items in potential file is fixed """
+  """ The order of items in an output file is fixed """
 
   value_name_format = '<12'
 
