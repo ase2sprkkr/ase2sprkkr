@@ -53,6 +53,7 @@ class ValueDefinition(RealItemDefinition):
                write_alternative_name:bool=False,
                write_condition=None, condition=None,
                result_class=None,
+               indentation=None,
                ):
     """
     Definition of a configuration value.
@@ -161,6 +162,9 @@ class ValueDefinition(RealItemDefinition):
         - the condition() is invoked, when the elements of the container is listed
           to hide the inactive members
 
+    indentation
+       Prefix before the name of the value. Currently support only spaces
+
     result_class
        Redefine the class that holds data for this option/section
     """
@@ -224,6 +228,8 @@ class ValueDefinition(RealItemDefinition):
 
     if is_optional is None:
        is_optional = is_required is False
+
+    self.indentation = indentation
 
     super().__init__(
          name = name,
@@ -516,6 +522,8 @@ class ValueDefinition(RealItemDefinition):
          name_in_grammar = self.name_in_grammar
 
      def write(name, value):
+         if self.indentation:
+            file.write(self.indentation)
          if name_in_grammar:
             if delimiter:
                 file.write(delimiter)
