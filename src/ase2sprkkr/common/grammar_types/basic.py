@@ -423,7 +423,7 @@ class KeywordSeparator(BasicSeparator):
 
   @cached_property
   def _grammar(self):
-      return pp.Keyword(self.keyword)
+      return pp.Keyword(self.keyword.strip())
 
   def _grammar_name(self):
       return self.keyword
