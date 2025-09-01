@@ -65,7 +65,7 @@ def create_rc_context(latex:Optional[bool]=None):
     return rc_context(params)
 
 @contextmanager
-def single_plot(filename:Optional[str]=None, show:Optional[bool]=None, dpi=600, latex=None, figsize=(6,4)):
+def single_plot(filename:Optional[str]=None, show:Optional[bool]=None, window_title=None, dpi=600, latex=None, figsize=(6,4)):
     """
     Creates single plot according to the given function a either show it or save it.
 
@@ -84,7 +84,8 @@ def single_plot(filename:Optional[str]=None, show:Optional[bool]=None, dpi=600, 
     """
     with create_rc_context(latex):
       fig, ax = plt.subplots(figsize=figsize)
-      fig.canvas.manager.set_window_title(name)
+      if window_title:
+          fig.canvas.manager.set_window_title()
       plt.subplots_adjust(left=0.15,right=0.95,bottom=0.17,top=0.93)
       yield ax
       finish_plot(filename, show, dpi)
