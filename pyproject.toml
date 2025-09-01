@@ -12,7 +12,7 @@ ase2sprkkr = "ase2sprkkr.tools.ase2sprkkr:run"
 
 [project]
 name = "ase2sprkkr"
-version = "3.3.3"
+version = "3.3.4"
 requires-python = ">= 3.8"
 dependencies = [
   "ase",

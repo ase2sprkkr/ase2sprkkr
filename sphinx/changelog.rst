@@ -1,5 +1,21 @@
 Changelog
 =========
+
+Version 3.3.4
+------------------
+* Sites are update according to the symbols during save
+* XAS task
+* Torque Task
+* Empty-spheres finding improved
+* MALF, MBET and MGAM options
+* BSF-SPN file added
+* K-path generating tool for BSF task
+* Layer and fermi argument to BSF plotting
+* --separate_plots argument for plotting routines
+* Uppasd task for generating Uppasd input files
+* Various fixies
+
+
 Version 3.3.3
 ------------------
 * Added mesh parameter to empty spheres finding
