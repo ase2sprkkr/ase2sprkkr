@@ -85,7 +85,7 @@ def single_plot(filename:Optional[str]=None, show:Optional[bool]=None, window_ti
     with create_rc_context(latex):
       fig, ax = plt.subplots(figsize=figsize)
       if window_title:
-          fig.canvas.manager.set_window_title()
+          fig.canvas.manager.set_window_title(window_title)
       plt.subplots_adjust(left=0.15,right=0.95,bottom=0.17,top=0.93)
       yield ax
       finish_plot(filename, show, dpi)
@@ -294,9 +294,7 @@ class Multiplot:
               filename = append_before_ext(filename, '_' + fname)
 
           with single_plot(filename, self.show if self.separate_plots=='each' else False,
-                           self.dpi, self.latex, self.figsize) as axis:
-               if name:
-                   axis.figure.canvas.manager.set_window_title(name)
+                           name, self.dpi, self.latex, self.figsize) as axis:
                yield axis
       else:
           try:
