@@ -108,7 +108,6 @@ class AtomicTypePotentialSection(PotentialSectionTrait, RepeatedConfigurationSec
 
         for typ, i in write_io_data.types.unique_items():
             section = self.add()
-            breakpoint()
             self.write_data(typ, section, i)
 
     def _update_atoms(self, atoms, read_io_data):
