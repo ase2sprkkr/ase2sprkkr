@@ -1,15 +1,10 @@
 from .configuration_containers import BaseConfigurationContainer
-from typing import Union, Any, Dict
+from typing import Union, Any, List
 from .warnings import DataValidityError
 
 
 class RepeatedConfigurationContainer(BaseConfigurationContainer):
-    """ A container for configuration (problem-definition) options and/or sections.
-
-    Options in the configuration (problem-definition) files are grouped to
-    sections, sections are then grouped in a configuration file object.
-    This is a base class for these containers.
-    """
+    """ A group, that can be repeated """
 
     def __init__(self, definition, container=None):
          """ Create the container and its members, according to the definition """
@@ -17,7 +12,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
          """
          The members of the container, in a form of ``{obj.name : obj}``
          """
-         self._values = {}
+         self._values = []
 
     def __getitem__(self, name):
          """
@@ -31,14 +26,10 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
     def __bool__(self):
          return True
 
-    def add(self, id):
+    def add(self):
          out=self._definition.create_object(self, repeated=False)
-         self._values[id]=out
+         self._values.append(out)
          return out
-
-    def __contains__(self, name):
-        """ The check for existence of a member with the given name."""
-        return name in self._values
 
     def clear(self, do_not_check_required=False, call_hooks=True, generated=None):
         """
@@ -59,7 +50,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         generated: bool
           If True
         """
-        self._values = {}
+        self._values = []
 
     def get(self, name=None, unknown='find'):
         """
@@ -84,7 +75,8 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
            return self.as_dict()
         if '.' in name:
            section, name = name.split('.')
-           return self._values[section].get(name)
+           return self._values[int(section)].get(name)
+        name = int(name)
         if name in self._values:
            val = self._values[name]
         else:
@@ -93,10 +85,10 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
            raise ValueError(f"No {name} member of {self}")
         return val.get()
 
-    def set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
+    def set(self, values:Union[List,None]={}, value=None, *, unknown='find', error=None, **kwargs):
         self._set(values, value, unknown=unknown, error=error, **kwargs)
 
-    def _set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
+    def _set(self, values:Union[List,None]={}, value=None, *, unknown='find', error=None, **kwargs):
         """
         Set the value(s) of parameter(s). Usage:
 
@@ -123,32 +115,21 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         **kwargs: dict
           The values to be set (an alternative syntax as syntactical sugar)
         """
-        if values.__class__ is str:
-           values = { values : value }
-        elif value is not None:
-           raise ValueError("If value argument of Container.set method is given,"
-           " the values have to be string name of the value")
+        self._values = []
 
-        try:
-            items = values.items()
-        except AttributeError:
-            items = enumerate(values)
-
-        for k,v in items:
-           if not k in self._values:
-               self.add(k).set(v)
-           else:
-               self._values[k].set(v)
+        if values:
+            for v in values:
+               self.add().set(v)
 
     def __iter__(self):
         """ Iterate over all members of the container """
-        yield from self._values.keys()
+        yield from self._values
 
     def items(self):
-        return self._values.items()
+        yield from enumerate(self._values)
 
     def values(self):
-        return self._values.values()
+        yield from self._values
 
     def _as_dict(self, only_changed:Union[bool,str]='basic', generated:bool=False, copy=False):
         """
@@ -167,11 +148,10 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         generated: bool
           Add generated values
         """
-        out = {}
-        for k,v in self.items():
-            value = v.as_dict(only_changed, generated, copy)
-            if value is not None:
-                out[k] = value
+        out = [
+            v.as_dict(only_changed, generated, copy)
+            for v in self._values
+        ]
         return out or None
 
     def is_changed(self):
