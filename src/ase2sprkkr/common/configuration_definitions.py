@@ -356,6 +356,7 @@ class RealItemDefinition(BaseDefinition):
                 name_regex=None,
                 condition=None, write_condition=None,
                 result_class=None, warning_condition=None,
+                plot=None,
                 ):
        """
        Parameters
@@ -446,6 +447,12 @@ class RealItemDefinition(BaseDefinition):
            self.result_class = result_class
        self.warning_condition = None
        self.name_format = name_format
+       self.plot=plot
+
+   def enrich(self, option):
+       if self.plot:
+         option.plot = lambda **kwargs: self.plot(option, **kwargs)
+         option.plot.__doc__ = " Plot the data."
 
    @property
    def formated_name(self):

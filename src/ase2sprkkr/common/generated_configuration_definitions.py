@@ -33,11 +33,6 @@ class BaseGeneratedValueDefinition(RealItemDefinition):
 
   item_type = 'generated value'
 
-  def enrich(self, option):
-      """ By default, generated values recieve no enhancement from
-      its definition """
-      pass
-
   def __repr__(self):
        return f"<{self.name} (generated)>"
 
@@ -200,13 +195,11 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
    def __init__(self, name, data, selector=slice(None),
                 shape=None, transpose=False, reorder=None,
                 transform_key=None,
-                plot=None,
                 *args, **kwargs):
        super().__init__(name, *args, **kwargs)
        self.selector = selector
        self.shape = shape
        self.data = data
-       self.plot = plot
        self.transform_key=transform_key
        if reorder:
            self.reorder=reorder
@@ -245,11 +238,6 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
        if self.transform_key:
           key=self.transform_key(key, container)
        self.source(container)[key]=value
-
-   def enrich(self, option):
-       if self.plot:
-         option.plot = lambda **kwargs: self.plot(option, **kwargs)
-         option.plot.__doc__ = " Plot the data."
 
    def copy_value(self, value, all_values=False):
        return copy.copy(value)
