@@ -160,6 +160,12 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
                 return True
         return False
 
+    def __repr__(self):
+        return super().__repr__+'[]'
+
+    def ITEMS(self):
+        return self._values
+
     def _save_to_file(self, file, always=False, name_in_grammar=None, delimiter='')->bool:
         """ Save the content of the container to the file (according to the definition)
 
