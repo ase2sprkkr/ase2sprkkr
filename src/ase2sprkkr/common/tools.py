@@ -94,7 +94,8 @@ token = pp.pyparsing_common.number | pp.Word(pp.alphanums + '-_@#$!/[]') | forwa
 tupl = pp.Literal('(').suppress() + pp.delimited_list( token, delim = ',' ).set_parse_action(lambda x: tuple(x)) + pp.Literal(')').suppress()
 dict_token = ((pp.pyparsing_common.number | pp.Word(pp.alphanums + '-_@#$!/[]')) + pp.Literal(':').suppress() + token).set_parse_action(lambda x: (x[0],x[1]) )
 dicti = pp.Literal('{').suppress() + pp.delimited_list( dict_token, delim = ':').set_parse_action(lambda x: dict(x.as_list())) + pp.Literal('}').suppress()
-forward << dicti | tupl
+forward << ( dicti | tupl )
+
 
 option = token ^ pp.Regex('.*').set_parse_action(lambda x: x[0])
 
@@ -114,7 +115,7 @@ def parse_named_option(x:str, numbers_allowed:bool=False):
       Value of the parsed option
     """
     if numbers_allowed:
-        p = pp.Word(pp.alphanums)
+        p = pp.Word(pp.alphanums+'_')
     else:
         p = pp.Word(pp.alphas)
     return tuple((p + equal_value).parse_string(x, True))

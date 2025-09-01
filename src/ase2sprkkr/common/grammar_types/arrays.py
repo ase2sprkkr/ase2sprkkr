@@ -565,7 +565,7 @@ class Table(GrammarType):
           grp_size = Unsigned.I.grammar().copy().setParseAction(set_g_size)
           grammar = pp.Suppress(pp.CaselessKeyword(self.group_size) + grp_size + "\n") + grammar
 
-      if self.names:
+      if self.header:
          if self.free_header:
              fh = pp.SkipTo(line_end) + line_end
              if callable(self.free_header):
