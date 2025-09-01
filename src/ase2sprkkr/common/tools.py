@@ -115,7 +115,7 @@ def parse_named_option(x:str, numbers_allowed:bool=False):
       Value of the parsed option
     """
     if numbers_allowed:
-        p = pp.Word(pp.alphanums)
+        p = pp.Word(pp.alphanums+'_')
     else:
         p = pp.Word(pp.alphas)
     return tuple((p + equal_value).parse_string(x, True))
