@@ -19,6 +19,9 @@ void find_empty_spheres_(
               int* symop_number,
               int* symop_data,
               int* mesh,
+              int* n_symmetry_ops,
+              double* rotations,
+              double* translations,
               int* verbose
   );
 

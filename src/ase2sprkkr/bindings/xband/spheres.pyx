@@ -31,7 +31,10 @@ cdef extern from "spheres.h":
               int* symop_number,
               int* symop_data,
               int* mesh,
-              int* verbose
+              int* n_symmetry_operations,
+              double *rotations,
+              double *translations,
+              int* verbose,
   );
 
 
@@ -44,7 +47,9 @@ def empty_spheres(
     int max_spheres=256,
     return_atom_rws=False,
     use_spacegroup=True,
-    mesh=24
+    mesh=24,
+    double[:,:,::1] rotations=None,
+    double[:,::1]   translations=None
     ):
 
     if point_symmetry is None:
@@ -105,6 +110,13 @@ def empty_spheres(
     cdef double[:,:] _centres = centres
     cdef double[:] _radii = radii
 
+    cdef int n_symmetry_ops= -1 if (translations is None) else len(translations)
+    assert n_symmetry_ops == -1 if (rotations is None) else len(rotations)
+    if n_symmetry_ops > 0:
+        assert translations.shape[1] == 3
+        assert rotations.shape[1] == 3
+        assert rotations.shape[2] == 3
+
     find_empty_spheres_(
                    &max_spheres,
                    &_centres[0,0],
@@ -126,6 +138,9 @@ def empty_spheres(
                    &point_symmetry[0,0] if n_symops else NULL,
                    &point_symmetry[1,0] if n_symops else NULL,
                    &_mesh[0],
+                   &n_symmetry_ops,
+                   &rotations[0,0,0] if n_symmetry_ops >= 0 else NULL,
+                   &translations[0,0] if n_symmetry_ops >= 0 else NULL,
                    &_verbose
                   )
     ratio = 1 / ratio

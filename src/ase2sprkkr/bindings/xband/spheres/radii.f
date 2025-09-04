@@ -20,6 +20,12 @@
      >   ITOP,    ! first line of point symmetry operations
      >   IQA,     ! second line of point symmetry operations
      >   MESH,    ! mesh for empty spheres finding
+
+     >   N_SYMMETRY_OPS,    ! n of ops for the new oustanding symmetry
+                            ! operation handling
+     >   ROTATIONS,
+     >   TRANSLATIONS,
+
      >   VERBOSE  ! print output to the stdout
      > )
       IMPLICIT NONE
@@ -39,6 +45,11 @@ C
       INTEGER NQ
       DOUBLE PRECISION BAS(3,NTMAX)
       INTEGER MESH(3)
+      INTEGER N_SYMMETRY_OPS
+      DOUBLE PRECISION, OPTIONAL, DIMENSION(3,3,N_SYMMETRY_OPS)
+     &       :: ROTATIONS
+      DOUBLE PRECISION, OPTIONAL, DIMENSION(3,N_SYMMETRY_OPS)
+     &       :: TRANSLATIONS
       INTEGER VERBOSE
       INTEGER IPRINT
       COMMON /IPRINT/ IPRINT
@@ -86,6 +97,21 @@ C ==================================================
 C
 C  parameters which can be read from input
 C
+      INTEGER k
+      if ( N_SYMMETRY_OPS .ge. 0 ) THEN
+
+          do k = 1, n_symmetry_ops
+              write(*,'(a,i3)') "Symmetry op:", k
+              do i = 1, 3
+                  write(*,'(3f10.5)') (rotations(i,j,k), j=1,3)
+              end do
+              write(*,'(a,3f10.5)') "  Translation:",
+     &                              (translations(i,k), i=1,3)
+              write(*,*)
+          end do
+      end if
+
+
       R0ACT = 1.D-2                  ! - basic translation vectors
       NRADMAX = NRMAX - 1
       DPAS = 0.05D0                     !exp. pass
