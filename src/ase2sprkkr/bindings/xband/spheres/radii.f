@@ -250,9 +250,11 @@ C
 C
       NATOMNEW = NATOM
       IF ( NEED_ES.EQ.0 ) THEN
+
          CALL EMPTYSPHERES(AV,BV,CV,BAS,IMQ,ALAT,NATOM,NSORT,RWS,
      &                     NSORTES,TAUES,SES,MAX2SORT,ITOP,IQA,NG,ISNEW,
-     &                     BASNEW,NATOMNEW)
+     &                     BASNEW,NATOMNEW,ROTATIONS,
+     &                     TRANSLATIONS,N_SYMMETRY_OPS)
 Cccccccccccccccccccccccccccccccccccccccccccccccccccc
       ELSE
          DO IATOM = 1,NATOM
@@ -487,7 +489,9 @@ C
             V0(I) = V0(I) + V2(J)*G1(J,I)
          END DO
       END DO
+      WRITE(*,*) "V0",V0
       CALL SHORTN(V0,V0)
+      WRITE(*,*) "V0shrt",V0
       END
 C*==getgbasis.f    processed by SPAG 7.10RU at 07:46 on 26 Mar 2020
       SUBROUTINE GETGBASIS

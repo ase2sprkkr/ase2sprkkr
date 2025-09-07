@@ -1,4 +1,4 @@
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -std=legacy")
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -std=legacy -finit-integer=0 -O0 -finit-local-zero")
 find_package(Python COMPONENTS Interpreter Development NumPy REQUIRED)
 include_directories(${Python_NumPy_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
