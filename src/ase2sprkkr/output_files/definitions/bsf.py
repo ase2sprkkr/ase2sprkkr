@@ -94,7 +94,7 @@ def create_definition():
               data = data[layer].sum(axis = 0)
 
           if negative:
-            vmax = max(np.max(data), -np.min(data))
+            vmax = max(np.abs(np.max(data)), np.abs(np.min(data)))
             vmin = -vmax
           else:
             vmin = 0
@@ -243,8 +243,8 @@ def create_definition():
       V('RAW_DATA', NumpyArray(written_shape=(-1,1), shape=(-1,)), name_in_grammar=False),
       *switch('KEYWORD', {
         'BSF' : [
-            NV('I_UP', 'RAW_DATA', i(0), reorder=reorder, plot=plot(title='Spin up', negative=False, colormap='Reds') ),
-            NV('I_DOWN', 'RAW_DATA', i(1), reorder=reorder, plot=plot(title='Spin down', negative=False, colormap='Blues') ),
+            NV('I_UP', 'RAW_DATA', i(0), reorder=reorder, plot=plot(title='Spin up', negative=True, colormap='Reds') ),
+            NV('I_DOWN', 'RAW_DATA', i(1), reorder=reorder, plot=plot(title='Spin down', negative=True, colormap='Blues') ),
         ],
         'BSF-SPOL': [
             NV('I_X', 'RAW_DATA', i(0), reorder=reorder, plot=plot(title=r'$\sigma_x$') ),
@@ -253,7 +253,7 @@ def create_definition():
         ],
         'BSF-SPN' : 'BSF-SPOL',
       }),
-      NV('I', 'RAW_DATA', i(-1), reorder=reorder, plot=plot(negative=False, colormap=mymap, title='Total') ),
+      NV('I', 'RAW_DATA', i(-1), reorder=reorder, plot=plot(negative=True, colormap=mymap, title='Total') ),
 
     ], cls=BSFDefinition, name='BSF', info='BSF output file')
 
