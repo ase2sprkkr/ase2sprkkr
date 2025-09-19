@@ -12,14 +12,12 @@ import matplotlib.pyplot as plt
 class ARPESOutputFile(CommonOutputFile, Arithmetic):
 
     def plot(self, layout=(2,2), figsize=(10,6), latex=None,
-             filename:Optional[str]=None, show:Optional[bool]=None, dpi=800,
+             filename:Optional[str]=None, show:Optional[bool]=None, dpi=300,
              separate_plots=False,
              **kwargs
              ):
         with Multiplot(layout=layout, figsize=figsize, latex=latex,
-                       filename=filename, show=show, dpi=dpi, separate_plots=separate_plots,
-                       adjust={'left':0.12, 'right':0.95, 'bottom':0.17, 'top':0.90, 'hspace':0.75, 'wspace':0.5},
-                       **kwargs) as mp:
+                       filename=filename, show=show, dpi=dpi, separate_plots=separate_plots,**kwargs) as mp:
             mp.plot(self.TOTAL)
             mp.plot(self.UP)
             mp.plot(self.DOWN)
@@ -46,7 +44,7 @@ def create_definition():
             'show_zero_line' : False,
             'mode' : 'from_zero',
             'norm' : 'log',
-            'vmax' : c.TOTAL().max(),
+            'vmax' : c.TOTAL().max(), 
             'xlabel' : r'$k_{\parallel} $(${\rm \AA}^{-1}$)',
             'ylabel' : r'$E-E_{\rm F}$ (eV)',
         }
@@ -63,12 +61,10 @@ def create_definition():
 
       NV('THETA', 'RAW_DATA', i(0), ('NE', 'NT')),
       NV('ENERGY', 'RAW_DATA', i(1), ('NE', 'NT')),
-      NV('TOTAL', 'RAW_DATA', i(2), ('NE', 'NT'), info='Total intensity', plot=change_default_kwargs(plot,title=r'Total intensity',colormap='gray')),
-      NV('UP', 'RAW_DATA', i(3), ('NE', 'NT'), info='Spin up', plot=change_default_kwargs(plot,title=r'Spin up',colormap='gray')),
-      NV('DOWN', 'RAW_DATA', i(4), ('NE', 'NT'), info='Spin down', plot=change_default_kwargs(plot, title=r'Spin down', colormap='gray')),
-      NV('POLARIZATION', 'RAW_DATA', i(5), ('NE', 'NT'), info='Spin polarization',
-         plot=change_default_kwargs(plot, colormap='bwr', mode = 'zero_centered', norm = 'lin',title=r'Spin polarization', vmax = None)
-        ),
+      NV('TOTAL', 'RAW_DATA', i(2), ('NE', 'NT'), info='Total intensity', plot=change_default_kwargs(plot,title=r'Total intensity',colormap='grey')),
+      NV('UP', 'RAW_DATA', i(3), ('NE', 'NT'), info='Spin up', plot=change_default_kwargs(plot,title=r'Spin up',colormap='grey')),
+      NV('DOWN', 'RAW_DATA', i(4), ('NE', 'NT'), info='Spin down', plot=change_default_kwargs(plot, title=r'Spin down',colormap='grey')),
+      NV('POLARIZATION', 'RAW_DATA', i(5), ('NE', 'NT'), info='Spin polarization', plot=change_default_kwargs(plot, colormap='bwr', norm='lin', title=r'Spin polarization')),
       NV('K', 'RAW_DATA', i(6), ('NE', 'NT'), info='K_parallel (pi/A)'),
       NV('DETERMINANT', 'RAW_DATA', i(7), ('NE', 'NT')),
     ], cls=ARPESDefinition, info='ARPES (Angle-resolved photoemission spectroscopy) output.')
