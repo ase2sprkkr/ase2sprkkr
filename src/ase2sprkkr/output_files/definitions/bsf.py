@@ -104,9 +104,6 @@ def create_definition():
               'vmin' : vmin,
               'vmax' : vmax,
               'colormap' : colormap,
-              'xticks' : np.insert(k[[x - 1 for x in c.INDKDIR()]], 0, 0),
-              'xticklabels' : [],
-              'xlabel' : r'K',
               'colorbar' : True,
               'title' : title,
               'show_zero_line' : fermi,
@@ -114,12 +111,19 @@ def create_definition():
 
           if c.MODE()=='CONST-E':
             kw.update({
-              'ylabel' : r'$E-E_{\rm F}$ (eV)',
-              'yrange' : (c.E[0], c.E[-1]),
+              'xticks' : np.insert(k[[x - 1 for x in c.INDKDIR()]], 0, 0),
+              'xticklabels' : [],
+              'xlabel' : r'Kx',
+              'ylabel' : r'Ky',
+              'yticks' : np.insert(k[[x - 1 for x in c.INDKDIR()]], 0, 0),
+              'yticklabels' : [],
             })
           else:
             kw.update({
-              'ylabel' : r'$E-E_{\rm F}$ (eV)'
+              'ylabel' : r'$E-E_{\rm F}$ (eV)',
+              'xticks' : np.insert(k[[x - 1 for x in c.INDKDIR()]], 0, 0),
+              'xticklabels' : [],
+              'xlabel' : r'K',
             })
 
           def callback(ax):
@@ -215,6 +219,7 @@ def create_definition():
               V('NK1', int, info='Number of K points (the first axis)'),
               V('NK2', int, info='Number of K points (the first axis)'),
               V('ERYD', Array(float, length=2)),
+              Separator(),
               V('VECK_START', Array(float, length=3), is_stored=False, default_value=init_veck_start, init_by_default=True),
               V('NK1_1', int, written_name='NK1', is_hidden=True),
               V('VECK1', Array(float, length=3)),
