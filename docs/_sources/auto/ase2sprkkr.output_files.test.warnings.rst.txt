@@ -1,0 +1,42 @@
+warnings
+========
+
+Full name: **ase2sprkkr.output\_files.test.warnings**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.output_files.test.warnings
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      DataValidityError
+      DataValidityWarning
+   
+   
+
+
+  
+  
+  

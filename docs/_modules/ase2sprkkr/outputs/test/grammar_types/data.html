@@ -1,0 +1,463 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.outputs.test.grammar_types.data &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.outputs.test.grammar_types.data</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.outputs.test.grammar_types.data</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; This module contains special GrammarTypes used for large data in output files &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.grammar_type</span> <span class="kn">import</span> <span class="n">GrammarType</span><span class="p">,</span> <span class="n">compare_numpy_values</span>
+<span class="kn">from</span> <span class="nn">..decorators</span> <span class="kn">import</span> <span class="n">add_to_signature</span><span class="p">,</span> <span class="n">cached_property</span>
+<span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">..grammar</span> <span class="kn">import</span> <span class="n">SkipToRegex</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+
+<div class="viewcode-block" id="RestOfTheFile">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.RestOfTheFile.html#ase2sprkkr.outputs.test.grammar_types.data.RestOfTheFile">[docs]</a>
+<span class="k">class</span> <span class="nc">RestOfTheFile</span><span class="p">(</span><span class="n">GrammarType</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Match anything up to the end of the file &quot;&quot;&quot;</span>
+
+    <span class="n">datatype</span> <span class="o">=</span> <span class="nb">str</span>
+    <span class="n">datatype_name</span> <span class="o">=</span> <span class="s1">&#39;string&#39;</span>
+
+    <span class="n">_grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;.*$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">S</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">_grammar</span><span class="o">.</span><span class="n">skipWhitespace</span><span class="o">=</span><span class="kc">False</span>
+
+<div class="viewcode-block" id="RestOfTheFile.grammar_name">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.RestOfTheFile.html#ase2sprkkr.outputs.test.grammar_types.data.RestOfTheFile.grammar_name">[docs]</a>
+    <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="s1">&#39;&lt;the rest of the file&gt;&#39;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Prefixed">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.Prefixed.html#ase2sprkkr.outputs.test.grammar_types.data.Prefixed">[docs]</a>
+<span class="k">class</span> <span class="nc">Prefixed</span><span class="p">(</span><span class="n">GrammarType</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This value consists from a few lines, each prefixed with a given prefix &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Prefixed.__init__">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.Prefixed.html#ase2sprkkr.outputs.test.grammar_types.data.Prefixed.__init__">[docs]</a>
+    <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">GrammarType</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_prefix</span><span class="p">,</span> <span class="n">allow_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_prefix</span> <span class="o">=</span> <span class="n">data_prefix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allow_empty</span><span class="o">=</span><span class="n">allow_empty</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">pref</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_prefix</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">pref</span><span class="si">}</span><span class="s1">[^</span><span class="se">\n</span><span class="s1">]*)(</span><span class="se">\n</span><span class="si">{</span><span class="n">pref</span><span class="si">}</span><span class="s1">[^</span><span class="se">\n</span><span class="s1">]*)*&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_empty</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s1">)?&#39;</span>
+        <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Prefixed._string">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.Prefixed.html#ase2sprkkr.outputs.test.grammar_types.data.Prefixed._string">[docs]</a>
+    <span class="k">def</span> <span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;^|</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_prefix</span><span class="si">}</span><span class="se">\\</span><span class="s1">1&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RawData">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.RawData.html#ase2sprkkr.outputs.test.grammar_types.data.RawData">[docs]</a>
+<span class="k">class</span> <span class="nc">RawData</span><span class="p">(</span><span class="n">GrammarType</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Match anything up to the end of the file or to the given delimiter &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RawData.__init__">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.RawData.html#ase2sprkkr.outputs.test.grammar_types.data.RawData.__init__">[docs]</a>
+    <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">GrammarType</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indented</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                              <span class="n">line_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">ends_with</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">ends_with_str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">include_ends_with</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                              <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        lines</span>
+<span class="sd">          Number of lines to read. Can be given as string - then</span>
+<span class="sd">          the value of the given option determines the number of lines.</span>
+
+<span class="sd">        indented</span>
+<span class="sd">          If there are &lt;n&gt; spaces before data, pass n to this arg.</span>
+
+<span class="sd">          If the file has the following structure:</span>
+<span class="sd">          .. code-block:: text</span>
+
+<span class="sd">             .......................................</span>
+<span class="sd">                  ....rest of the splitted line.....</span>
+<span class="sd">                  ....rest of the splitted line.</span>
+<span class="sd">             ....... The second line................</span>
+<span class="sd">                  ..... the rest of the ............</span>
+<span class="sd">                  ............ second line ...</span>
+<span class="sd">             ............</span>
+
+<span class="sd">          Pass a tuple with two integers into this argument.</span>
+<span class="sd">          The first number of tuple is the max. number of characters on a line,</span>
+<span class="sd">          longer lines will be splitted.</span>
+<span class="sd">          The second number is the number of spaces placed on the begining of the</span>
+<span class="sd">          new lines created by splitting the old.</span>
+
+<span class="sd">        line_length</span>
+<span class="sd">          Wrap the lines longer than a given number</span>
+
+<span class="sd">        ends_with</span>
+<span class="sd">          The data ends with a given string.</span>
+
+<span class="sd">        ends_with_str</span>
+<span class="sd">          If ends_with is regex, print this on end of the data</span>
+
+<span class="sd">        include_ends_with</span>
+<span class="sd">          Include the ending delimiter to the data.</span>
+
+<span class="sd">        **kwargs</span>
+<span class="sd">          Any other arguments are passed to the :meth:`GrammarType constructor&lt;GrammarType.__init__&gt;`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ends_with</span> <span class="o">=</span> <span class="n">ends_with</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ends_with_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ends_with</span> <span class="k">if</span> <span class="n">ends_with_str</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ends_with_str</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indented</span><span class="o">=</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="n">indented</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">indented</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="n">indented</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="o">=</span><span class="n">lines</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">line_length</span> <span class="o">=</span> <span class="n">line_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_ends_with</span> <span class="o">=</span> <span class="n">include_ends_with</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_forward</span><span class="o">=</span><span class="kc">None</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RawData._n_lines_grammar">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.RawData.html#ase2sprkkr.outputs.test.grammar_types.data.RawData._n_lines_grammar">[docs]</a>
+    <span class="k">def</span> <span class="nf">_n_lines_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+<span class="w">         </span><span class="sd">&quot;&quot;&quot; return a grammar for n lines of text &quot;&quot;&quot;</span>
+         <span class="n">out</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;([^</span><span class="se">\n</span><span class="s2">]*</span><span class="se">\n</span><span class="s2">)</span><span class="se">{{</span><span class="si">{</span><span class="n">lines</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="se">}}</span><span class="s2">[^</span><span class="se">\n</span><span class="s2">]*(?=</span><span class="se">\n</span><span class="s2">|$)&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
+         <span class="n">out</span><span class="o">.</span><span class="n">leaveWhitespace</span><span class="p">()</span>
+         <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="RawData._grammar">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.RawData.html#ase2sprkkr.outputs.test.grammar_types.data.RawData._grammar">[docs]</a>
+    <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_name</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+               <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_lines_grammar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+               <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ends_with</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ends_with</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">):</span>
+                <span class="n">out</span><span class="o">=</span><span class="n">SkipToRegex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ends_with</span><span class="p">,</span> <span class="n">include_pattern</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">include_ends_with</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">SkipTo</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ends_with</span><span class="p">),</span> <span class="n">include</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">include_ends_with</span><span class="p">)</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">RestOfTheFile</span><span class="o">.</span><span class="n">_grammar</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="n">v</span><span class="o">=</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">indented</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indented</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                  <span class="n">v</span><span class="o">=</span><span class="n">v</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">indented</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                  <span class="n">v</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(^|</span><span class="se">\n</span><span class="s1">)</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">indented</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span><span class="sa">r</span><span class="s1">&#39;\1&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_length</span><span class="p">:</span>
+                <span class="n">v</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;([^</span><span class="se">\n</span><span class="s1">]</span><span class="se">{{</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">line_length</span><span class="si">}</span><span class="se">}}</span><span class="s1">[^</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">written_delimiter</span><span class="si">}</span><span class="se">\n</span><span class="s1">]*)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">1</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">written_delimiter</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">v</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">indented</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_length</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="n">parse</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="RawData._string">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.RawData.html#ase2sprkkr.outputs.test.grammar_types.data.RawData._string">[docs]</a>
+    <span class="k">def</span> <span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_length</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;([^</span><span class="se">\n</span><span class="s1">]</span><span class="se">{{</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">line_length</span><span class="si">}</span><span class="se">}}</span><span class="s1">[^</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">written_delimiter</span><span class="si">}</span><span class="se">\n</span><span class="s1">]*)</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">written_delimiter</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">1</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+
+        <span class="n">indented</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indented</span>
+        <span class="k">if</span> <span class="n">indented</span><span class="p">:</span>
+          <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">indented</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="n">indented</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">nexts</span> <span class="o">=</span> <span class="n">first</span> <span class="o">-</span> <span class="n">indented</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="n">indented</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">def</span> <span class="nf">g</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">i</span><span class="p">[:</span><span class="n">first</span><span class="p">]</span>
+                    <span class="n">s</span><span class="o">=</span><span class="n">first</span>
+                    <span class="n">ln</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="k">while</span> <span class="n">s</span><span class="o">&lt;</span><span class="n">ln</span><span class="p">:</span>
+                      <span class="n">e</span><span class="o">=</span><span class="n">s</span> <span class="o">+</span> <span class="n">nexts</span>
+                      <span class="k">yield</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">i</span><span class="p">[</span><span class="n">s</span><span class="p">:</span><span class="n">e</span><span class="p">]</span>
+                      <span class="n">s</span><span class="o">=</span><span class="n">e</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">g</span><span class="p">())</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;(^|</span><span class="se">\n</span><span class="s1">(?!$))&#39;</span><span class="p">,</span><span class="sa">r</span><span class="s1">&#39;\1&#39;</span> <span class="o">+</span> <span class="n">indented</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ends_with_str</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_ends_with</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">+=</span><span class="bp">self</span><span class="o">.</span><span class="n">ends_with_str</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="RawData.added_to_container">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.RawData.html#ase2sprkkr.outputs.test.grammar_types.data.RawData.added_to_container">[docs]</a>
+    <span class="k">def</span> <span class="nf">added_to_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_forward</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">remove_forward</span>
+        <span class="k">if</span> <span class="n">container</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">Forward</span><span class="p">()</span>
+           <span class="n">obj</span> <span class="o">=</span> <span class="n">container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span>
+
+           <span class="k">def</span> <span class="nf">paction</span><span class="p">(</span><span class="n">parsed</span><span class="p">):</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">forward</span> <span class="o">&lt;&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_lines_grammar</span><span class="p">(</span><span class="n">parsed</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+               <span class="k">return</span> <span class="n">parsed</span>
+           <span class="n">hook</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">grammar</span><span class="p">:</span> <span class="n">grammar</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="n">paction</span><span class="p">)</span>
+           <span class="n">obj</span><span class="o">.</span><span class="n">add_grammar_hook</span><span class="p">(</span><span class="n">hook</span><span class="p">)</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">remove_forward</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">remove_grammar_hook</span><span class="p">(</span><span class="n">hook</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">remove_forward</span><span class="o">=</span><span class="kc">None</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">added_to_container</span><span class="p">(</span><span class="n">container</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_forward</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">remove_forward</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_forward</span><span class="o">=</span><span class="kc">None</span>
+
+<div class="viewcode-block" id="RawData.convert">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.RawData.html#ase2sprkkr.outputs.test.grammar_types.data.RawData.convert">[docs]</a>
+    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="NumpyArray">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.NumpyArray.html#ase2sprkkr.outputs.test.grammar_types.data.NumpyArray">[docs]</a>
+<span class="k">class</span> <span class="nc">NumpyArray</span><span class="p">(</span><span class="n">RawData</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Match anything up to the end of the file or to the given delimiter, as numpy array &quot;&quot;&quot;</span>
+
+    <span class="n">array_access</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="NumpyArray.__init__">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.NumpyArray.html#ase2sprkkr.outputs.test.grammar_types.data.NumpyArray.__init__">[docs]</a>
+    <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">GrammarType</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">written_shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">item_format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">% .18e</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">no_newline_at_end</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        delimiter</span>
+<span class="sd">          None - default behavior.</span>
+<span class="sd">          int  - the number will take given fixed number of chars</span>
+
+<span class="sd">        shape</span>
+<span class="sd">          Resize to given shape after read</span>
+
+<span class="sd">        written_shape</span>
+<span class="sd">          Resize to given shape before writing</span>
+
+<span class="sd">        item_format</span>
+<span class="sd">          Output format of the array (just for writing).</span>
+
+<span class="sd">        dtype</span>
+<span class="sd">          Type of the resulting data. Pass ``&#39;line&#39;`` to get array of whole lines</span>
+
+<span class="sd">        **kwargs</span>
+<span class="sd">          Any other arguments are passed to the :meth:`GrammarType constructor&lt;GrammarType.__init__&gt;`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delimiter</span><span class="o">=</span><span class="n">delimiter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">written_delimiter</span> <span class="o">=</span> <span class="n">delimiter</span> <span class="ow">or</span> <span class="s1">&#39; &#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">written_shape</span><span class="o">=</span><span class="n">written_shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">item_format</span><span class="o">=</span><span class="n">item_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">=</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">no_newline_at_end</span><span class="o">=</span><span class="n">no_newline_at_end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NumpyArray._validate">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.NumpyArray.html#ase2sprkkr.outputs.test.grammar_types.data.NumpyArray._validate">[docs]</a>
+    <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;set&#39;</span><span class="p">):</span>
+       <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NumpyArray.convert">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.NumpyArray.html#ase2sprkkr.outputs.test.grammar_types.data.NumpyArray.convert">[docs]</a>
+    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+       <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NumpyArray._string">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.NumpyArray.html#ase2sprkkr.outputs.test.grammar_types.data.NumpyArray._string">[docs]</a>
+    <span class="k">def</span> <span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+       <span class="n">out</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+       <span class="n">delimiter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delimiter</span>
+       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">delimiter</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+           <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">written_shape</span><span class="p">:</span>
+          <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">written_shape</span><span class="p">)</span>
+       <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">written_delimiter</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">item_format</span><span class="p">)</span>
+       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">no_newline_at_end</span><span class="p">:</span>
+           <span class="n">out</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">SEEK_SET</span><span class="p">)</span>
+           <span class="n">out</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span>
+       <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+       <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_string</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
+
+
+    <span class="n">is_the_same_value</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">compare_numpy_values</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NumpyArray._grammar">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.NumpyArray.html#ase2sprkkr.outputs.test.grammar_types.data.NumpyArray._grammar">[docs]</a>
+    <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_name</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+         <span class="n">grammar</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_grammar</span><span class="p">(</span><span class="n">param_name</span><span class="p">)</span>
+
+         <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+             <span class="n">v</span><span class="o">=</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="o">==</span><span class="s1">&#39;line&#39;</span><span class="p">:</span>
+                <span class="n">v</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="n">i</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+             <span class="k">else</span><span class="p">:</span>
+                <span class="n">v</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">delimiter</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="p">)</span>
+             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span>
+             <span class="k">return</span> <span class="n">v</span>
+
+         <span class="n">grammar</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span>
+             <span class="n">parse</span>
+         <span class="p">)</span>
+         <span class="k">return</span> <span class="n">grammar</span></div>
+
+
+<div class="viewcode-block" id="NumpyArray.copy_value">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.outputs.test.grammar_types.data.NumpyArray.html#ase2sprkkr.outputs.test.grammar_types.data.NumpyArray.copy_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">copy_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

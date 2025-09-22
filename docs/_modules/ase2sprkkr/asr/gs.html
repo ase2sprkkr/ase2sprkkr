@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.gs &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -150,7 +149,9 @@
     <span class="k">return</span> <span class="n">ASRResult</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="webpanel"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.webpanel.html#ase2sprkkr.asr.gs.webpanel">[docs]</a><span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+<div class="viewcode-block" id="webpanel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.webpanel.html#ase2sprkkr.asr.gs.webpanel">[docs]</a>
+<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span>
                                       <span class="n">entry_parameter_description</span><span class="p">,</span>
                                       <span class="n">describe_entry</span><span class="p">)</span>
@@ -197,7 +198,10 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">,</span> <span class="n">summary</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="bz_with_band_extremums"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.bz_with_band_extremums.html#ase2sprkkr.asr.gs.bz_with_band_extremums">[docs]</a><span class="k">def</span> <span class="nf">bz_with_band_extremums</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+
+<div class="viewcode-block" id="bz_with_band_extremums">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.bz_with_band_extremums.html#ase2sprkkr.asr.gs.bz_with_band_extremums">[docs]</a>
+<span class="k">def</span> <span class="nf">bz_with_band_extremums</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase.geometry.cell</span> <span class="kn">import</span> <span class="n">Cell</span>
     <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -233,7 +237,10 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="GapsResult"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.GapsResult.html#ase2sprkkr.asr.gs.GapsResult">[docs]</a><span class="nd">@prepare_result</span>
+
+<div class="viewcode-block" id="GapsResult">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.GapsResult.html#ase2sprkkr.asr.gs.GapsResult">[docs]</a>
+<span class="nd">@prepare_result</span>
 <span class="k">class</span> <span class="nc">GapsResult</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">gap</span><span class="p">:</span> <span class="nb">float</span>
@@ -271,7 +278,10 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="gaps"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.gaps.html#ase2sprkkr.asr.gs.gaps">[docs]</a><span class="k">def</span> <span class="nf">gaps</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GapsResult</span><span class="p">:</span>
+
+<div class="viewcode-block" id="gaps">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.gaps.html#ase2sprkkr.asr.gs.gaps">[docs]</a>
+<span class="k">def</span> <span class="nf">gaps</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GapsResult</span><span class="p">:</span>
     <span class="c1"># ##TODO min kpt dens? XXX</span>
     <span class="c1"># inputs: gpw groundstate file, soc?, direct gap? XXX</span>
     <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
@@ -326,7 +336,10 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_1bz_k"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.get_1bz_k.html#ase2sprkkr.asr.gs.get_1bz_k">[docs]</a><span class="k">def</span> <span class="nf">get_1bz_k</span><span class="p">(</span><span class="n">ibzkpts</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">k_index</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_1bz_k">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.get_1bz_k.html#ase2sprkkr.asr.gs.get_1bz_k">[docs]</a>
+<span class="k">def</span> <span class="nf">get_1bz_k</span><span class="p">(</span><span class="n">ibzkpts</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">k_index</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">gpaw.kpt_descriptor</span> <span class="kn">import</span> <span class="n">to1bz</span>
     <span class="n">k_c</span> <span class="o">=</span> <span class="n">ibzkpts</span><span class="p">[</span><span class="n">k_index</span><span class="p">]</span> <span class="k">if</span> <span class="n">k_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">k_c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -334,7 +347,10 @@
     <span class="k">return</span> <span class="n">k_c</span></div>
 
 
-<div class="viewcode-block" id="get_gap_info"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.get_gap_info.html#ase2sprkkr.asr.gs.get_gap_info">[docs]</a><span class="k">def</span> <span class="nf">get_gap_info</span><span class="p">(</span><span class="n">soc</span><span class="p">,</span> <span class="n">direct</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_gap_info">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.get_gap_info.html#ase2sprkkr.asr.gs.get_gap_info">[docs]</a>
+<span class="k">def</span> <span class="nf">get_gap_info</span><span class="p">(</span><span class="n">soc</span><span class="p">,</span> <span class="n">direct</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase.dft.bandgap</span> <span class="kn">import</span> <span class="n">bandgap</span>
     <span class="kn">from</span> <span class="nn">asr.utils.gpw2eigs</span> <span class="kn">import</span> <span class="n">calc2eigs</span>
     <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span>
@@ -363,7 +379,10 @@
     <span class="k">return</span> <span class="n">x</span></div>
 
 
-<div class="viewcode-block" id="VacuumLevelResults"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.VacuumLevelResults.html#ase2sprkkr.asr.gs.VacuumLevelResults">[docs]</a><span class="nd">@prepare_result</span>
+
+<div class="viewcode-block" id="VacuumLevelResults">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.VacuumLevelResults.html#ase2sprkkr.asr.gs.VacuumLevelResults">[docs]</a>
+<span class="nd">@prepare_result</span>
 <span class="k">class</span> <span class="nc">VacuumLevelResults</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
     <span class="n">z_z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="n">v_z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -385,7 +404,10 @@
         <span class="s1">&#39;efermi_nosoc&#39;</span><span class="p">:</span> <span class="s1">&#39;Fermi level without SOC [eV].&#39;</span><span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="vacuumlevels"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.vacuumlevels.html#ase2sprkkr.asr.gs.vacuumlevels">[docs]</a><span class="k">def</span> <span class="nf">vacuumlevels</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+
+<div class="viewcode-block" id="vacuumlevels">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.vacuumlevels.html#ase2sprkkr.asr.gs.vacuumlevels">[docs]</a>
+<span class="k">def</span> <span class="nf">vacuumlevels</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the vacuumlevels on both sides of a 2D material.</span>
 
 <span class="sd">    Get the vacuumlevels on both sides of a 2D material. Will</span>
@@ -436,7 +458,10 @@
         <span class="n">efermi_nosoc</span><span class="o">=</span><span class="n">calc</span><span class="o">.</span><span class="n">get_fermi_level</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="evacdiff"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.evacdiff.html#ase2sprkkr.asr.gs.evacdiff">[docs]</a><span class="k">def</span> <span class="nf">evacdiff</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+
+<div class="viewcode-block" id="evacdiff">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.evacdiff.html#ase2sprkkr.asr.gs.evacdiff">[docs]</a>
+<span class="k">def</span> <span class="nf">evacdiff</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Derive vacuum energy level difference from the dipole moment.</span>
 
 <span class="sd">    Calculate vacuum energy level difference from the dipole moment of</span>
@@ -457,7 +482,10 @@
     <span class="k">return</span> <span class="n">evacsplit</span></div>
 
 
-<div class="viewcode-block" id="Result"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.Result.html#ase2sprkkr.asr.gs.Result">[docs]</a><span class="nd">@prepare_result</span>
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.Result.html#ase2sprkkr.asr.gs.Result">[docs]</a>
+<span class="nd">@prepare_result</span>
 <span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for ground state results.</span>
 
@@ -525,6 +553,7 @@
     <span class="p">)</span>
 
     <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
+
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.gs&#39;</span><span class="p">,</span>

@@ -1,0 +1,36 @@
+Section
+=======
+
+
+.. currentmodule:: ase2sprkkr.configuration
+
+.. autoclass:: Section
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.configuration.Section
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

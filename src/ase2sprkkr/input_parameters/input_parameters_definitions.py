@@ -11,7 +11,7 @@ from ..common.container_definitions import dict_from_parsed
 from ..sprkkr.configuration import \
          ConfigurationValueDefinition, ConfigurationSectionDefinition, ConfigurationFileDefinition, \
          CustomConfigurationValue, CustomConfigurationSection
-from ..common.grammar_types import mixed, flag, DefKeyword
+from ..common.grammar_types import mixed, flag
 from ..common.grammar import generate_grammar, delimitedList
 from ..common.decorators import cached_class_property, cache
 from .input_parameters import InputParameters, InputSection
@@ -94,7 +94,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
       value = cls.child_class.custom_member_grammar()
       delim = cls.child_class.grammar_of_delimiter()
       return delimitedList(value, delim).\
-            setParseAction(lambda x: dict_from_parsed(x.asList(), lambda x: True))
+            setParseAction(lambda x: dict_from_parsed(x.asList()))
 
   def _generic_info(self):
       return f"Input parameters for task {self.name}"
@@ -124,8 +124,8 @@ class InputParametersDefinition(ConfigurationFileDefinition):
       self.result_reader = result_reader
 
       super().__init__(name, members, **kwargs)
-      #if not 'TASK' in self:
-      #   breakpoint()
-      #   self['TASK'] = InputSectionDefinition('TASK', [ InputValueDefinition('TASK', DefKeyword(self.name), name_in_grammar=False) ] )
-      #elif not 'TASK' in self['TASK']:
-      #   self['TASK']['TASK'] = InputValueDefinition(DefKeyword(self.name), name_in_grammar=False)
+      # if not 'TASK' in self:
+      #    breakpoint()
+      #    self['TASK'] = InputSectionDefinition('TASK', [ InputValueDefinition('TASK', DefKeyword(self.name), name_in_grammar=False) ] )
+      # elif not 'TASK' in self['TASK']:
+      #    self['TASK']['TASK'] = InputValueDefinition(DefKeyword(self.name), name_in_grammar=False)

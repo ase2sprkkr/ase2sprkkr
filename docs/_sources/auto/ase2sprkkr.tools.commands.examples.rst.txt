@@ -1,0 +1,43 @@
+examples
+========
+
+Full name: **ase2sprkkr.tools.commands.examples**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.tools.commands.examples
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      parser
+      run
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

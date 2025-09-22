@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.container\_definitions**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.container_definitions.ConfigurationRootDefinition  ase2sprkkr.common.container_definitions.ContainerDefinition  ase2sprkkr.common.container_definitions.MergeDictAdaptor  ase2sprkkr.common.container_definitions.SectionDefinition 
+.. inheritance-diagram::  ase2sprkkr.common.container_definitions.ConfigurationRootDefinition  ase2sprkkr.common.container_definitions.ContainerDefinition  ase2sprkkr.common.container_definitions.SectionDefinition 
       :parts: 1
 
 |
@@ -24,15 +24,6 @@ Full name: **ase2sprkkr.common.container\_definitions**
 
    
    
-   .. rubric:: Functions
-
-   .. autosummary::
-      :toctree:
-      :template: custom-base-template.rst
-   
-      add_excluded_names_condition
-      dict_from_parsed
-   
    
 
 
@@ -46,7 +37,6 @@ Full name: **ase2sprkkr.common.container\_definitions**
    
       ConfigurationRootDefinition
       ContainerDefinition
-      MergeDictAdaptor
       SectionDefinition
    
    

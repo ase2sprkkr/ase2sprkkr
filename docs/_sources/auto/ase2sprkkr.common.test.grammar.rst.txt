@@ -1,0 +1,76 @@
+grammar
+=======
+
+Full name: **ase2sprkkr.common.test.grammar**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.test.grammar.SkipToRegex  ase2sprkkr.common.test.grammar.White 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.test.grammar
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      optional_line_end
+      line_end
+      end_of_file
+      optional_quote
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      addConditionEx
+      addParseActionEx
+      delimitedList
+      generate_grammar
+      replace_whitechars
+      separator_grammar
+      separator_pattern
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SkipToRegex
+      White
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

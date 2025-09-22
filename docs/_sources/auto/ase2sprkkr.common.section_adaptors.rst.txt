@@ -1,0 +1,52 @@
+section\_adaptors
+=================
+
+Full name: **ase2sprkkr.common.section\_adaptors**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.section_adaptors.MergeSectionAdaptor  ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor  ase2sprkkr.common.section_adaptors.SectionAdaptor 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.section_adaptors
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      MergeSectionAdaptor
+      MergeSectionDefinitionAdaptor
+      SectionAdaptor
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -4,7 +4,8 @@ from ..sprkkr.configuration import ConfigurationFile
 from ..sprkkr.io_data import ReadIoData, WriteIoData
 from ..common.decorators import class_property, cache
 from io import StringIO
-
+from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
+from typing import Union
 
 class Potential(ConfigurationFile):
   """ It holds data form SPR-KKR potential file
@@ -12,12 +13,16 @@ class Potential(ConfigurationFile):
   It, in addition to being a containers for their sections, can read/write
   its properties from/to an ASE atoms object."""
 
-  def __init__(self, atoms=None, definition=None):
+  def __init__(self, atoms=None, definition=None, set_from_atoms=True):
+      """ Use Potential.from_atoms to reuse already created Potential object stored
+      in atoms """
       if definition is None:
          from .definitions.potential import potential_definition as definition
       self._atoms = atoms
       self._complete = False
       super().__init__(definition)
+      if set_from_atoms and atoms:
+          self.set_from_atoms()
 
   def read_from_file(self, file, atoms=None, allow_dangerous=False):
       super().read_from_file(file, allow_dangerous=allow_dangerous)
@@ -76,7 +81,10 @@ class Potential(ConfigurationFile):
         that contains e.g. numbering of the sites, atomic types etc.
         If is not set, it is created from the atoms.
       """
-      super().set_from_atoms(atoms or self._atoms, io_data)
+      atoms = atoms or self._atoms
+      atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
+      atoms.update_sites_from_symbols()
+      super().set_from_atoms(atoms, io_data)
       self.make_complete()
 
   @class_property
@@ -100,6 +108,9 @@ class Potential(ConfigurationFile):
   @classmethod
   def from_atoms(cls, atoms):
       """ Create a potential, that describes the given atoms object. """
+      SPRKKRAtoms.promote_ase_atoms(atoms)
+      if atoms.has_potential():
+          return atoms.potential
       pd = Potential.potential_definition
       return cls(atoms = atoms, definition = pd)
 
@@ -118,6 +129,9 @@ class Potential(ConfigurationFile):
   def __str__(self):
       return "SPRKKR POTENTIAL"
 
+  def save_to_file(self, file, atoms=None, *, validate:Union[str, bool]='save'):
+      self.set_from_atoms()
+      super().save_to_file(file, atoms, validate=validate)
 
 # At last - to avoid circular import problem
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms  # NOQA: E402

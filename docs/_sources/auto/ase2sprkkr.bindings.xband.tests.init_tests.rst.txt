@@ -36,6 +36,7 @@ Full name: **ase2sprkkr.bindings.xband.tests.init\_tests**
       assert_almost_equals
       assert_equals
       patch_package
+      run_sprkkr
       testfce
    
    

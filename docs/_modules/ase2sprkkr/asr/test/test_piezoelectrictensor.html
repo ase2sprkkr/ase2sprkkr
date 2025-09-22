@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.test.test_piezoelectrictensor &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -95,15 +94,23 @@
 <span class="kn">import</span> <span class="nn">pytest</span>
 
 
-<div class="viewcode-block" id="zero_pad_non_pbc_strain_directions"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_piezoelectrictensor.zero_pad_non_pbc_strain_directions.html#ase2sprkkr.asr.test.test_piezoelectrictensor.zero_pad_non_pbc_strain_directions">[docs]</a><span class="k">def</span> <span class="nf">zero_pad_non_pbc_strain_directions</span><span class="p">(</span><span class="n">matrix_cvv</span><span class="p">,</span> <span class="n">pbc_c</span><span class="p">):</span>
+<div class="viewcode-block" id="zero_pad_non_pbc_strain_directions">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_piezoelectrictensor.zero_pad_non_pbc_strain_directions.html#ase2sprkkr.asr.test.test_piezoelectrictensor.zero_pad_non_pbc_strain_directions">[docs]</a>
+<span class="k">def</span> <span class="nf">zero_pad_non_pbc_strain_directions</span><span class="p">(</span><span class="n">matrix_cvv</span><span class="p">,</span> <span class="n">pbc_c</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">matrix_cvv</span> <span class="o">*</span> <span class="n">pbc_c</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">pbc_c</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="get_strain_from_atoms"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_piezoelectrictensor.get_strain_from_atoms.html#ase2sprkkr.asr.test.test_piezoelectrictensor.get_strain_from_atoms">[docs]</a><span class="k">def</span> <span class="nf">get_strain_from_atoms</span><span class="p">(</span><span class="n">inv_cell_vc</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_strain_from_atoms">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_piezoelectrictensor.get_strain_from_atoms.html#ase2sprkkr.asr.test.test_piezoelectrictensor.get_strain_from_atoms">[docs]</a>
+<span class="k">def</span> <span class="nf">get_strain_from_atoms</span><span class="p">(</span><span class="n">inv_cell_vc</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">inv_cell_vc</span><span class="p">,</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_cell</span><span class="p">()</span> <span class="o">/</span> <span class="n">Bohr</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="test_piezoelectrictensor"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_piezoelectrictensor.test_piezoelectrictensor.html#ase2sprkkr.asr.test.test_piezoelectrictensor.test_piezoelectrictensor">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
+
+<div class="viewcode-block" id="test_piezoelectrictensor">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_piezoelectrictensor.test_piezoelectrictensor.html#ase2sprkkr.asr.test.test_piezoelectrictensor.test_piezoelectrictensor">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;nspins&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">test_piezoelectrictensor</span><span class="p">(</span><span class="n">asr_tmpdir_w_params</span><span class="p">,</span> <span class="n">mockgpaw</span><span class="p">,</span> <span class="n">mocker</span><span class="p">,</span> <span class="n">test_material</span><span class="p">,</span>
                              <span class="n">nspins</span><span class="p">,</span> <span class="n">get_webcontent</span><span class="p">):</span>
@@ -198,6 +205,7 @@
     <span class="k">assert</span> <span class="n">eps_vvv</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">eps_analytic_vvv</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">eps_clamped_vvv</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">eps_analytic_vvv</span><span class="p">)</span>
     <span class="k">assert</span> <span class="s2">&quot;Piezoelectrictensor&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">,</span> <span class="n">content</span></div>
+
 </pre></div>
 
            </div>

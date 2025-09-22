@@ -1,5 +1,6 @@
-from .configuration_containers import BaseConfigurationContainer, DictAdaptor
+from .configuration_containers import BaseConfigurationContainer
 from typing import Union, Any, Dict
+from .warnings import DataValidityError
 
 
 class RepeatedConfigurationContainer(BaseConfigurationContainer):
@@ -93,6 +94,9 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         return val.get()
 
     def set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
+        self._set(values, value, unknown=unknown, error=error, **kwargs)
+
+    def _set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
         """
         Set the value(s) of parameter(s). Usage:
 
@@ -146,7 +150,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
     def values(self):
         return self._values.values()
 
-    def as_dict(self, only_changed:Union[bool,str]='basic', generated:bool=False, copy=False):
+    def _as_dict(self, only_changed:Union[bool,str]='basic', generated:bool=False, copy=False):
         """
         Return the content of the container as a dictionary.
         Nested containers will be transformed to dictionaries as well.
@@ -165,7 +169,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         """
         out = {}
         for k,v in self.items():
-            value = k.as_dict(only_changed, generated, copy)
+            value = v.as_dict(only_changed, generated, copy)
             if value is not None:
                 out[k] = value
         return out or None
@@ -175,6 +179,12 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             if i.is_changed():
                 return True
         return False
+
+    def __repr__(self):
+        return super().__repr__+'[]'
+
+    def ITEMS(self):
+        return self._values
 
     def _save_to_file(self, file, always=False, name_in_grammar=None, delimiter='')->bool:
         """ Save the content of the container to the file (according to the definition)
@@ -192,16 +202,16 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         something_have_been_written
           If any value have been written return True, otherwise return False.
         """
-        delim = '' if self._definition.is_repeated is True else self._definition.is_repeated
         out = False
         for i in self.values():
-            if self._definition._save_to_file(file, i, always, name_in_grammar, delimiter=delimiter):
+            d=self._definition
+            if d._save_to_file(file, i, always, name_in_grammar, delimiter=delimiter):
                 name_in_grammar=False
-                delimiter=delim
+                delimiter=d.repeated_delimiter
                 out=True
         return out
 
-    def validate(self, why:str='save'):
+    def _validate(self, why:str='save'):
         """ Validate the configuration data. Raise an exception, if the validation fail.
 
         Parameters
@@ -212,9 +222,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
           ``set`` - Validation on user input. Allow required values not to be set.
           ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.
         """
-        for i in self.values():
-            self._definition.validate(DictAdaptor(i), why)
-            if why == 'save' and not self._definition.is_optional and not self.has_any_value():
-                raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
+        if why == 'save' and not self._definition.is_optional and not self.has_any_value():
+            DataValidityError.warn(f"Non-optional section {self._definition.name} has no value to save")
         for o in self.values():
-            o.validate(why)
+            o._validate(why)

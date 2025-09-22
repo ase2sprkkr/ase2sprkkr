@@ -12,14 +12,31 @@ e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 
 import pyparsing as pp
 import inspect
-from typing import Dict
+from typing import Dict, Union
 import itertools
+from . import backward_compatibility  # NOQA
+from enum import Enum, nonmember
+import numpy as np
 
 from .warnings import DataValidityWarning
 from .options import Dummy, DummyStub
 from .decorators import cached_class_property
 from .grammar import generate_grammar
-from .grammar_types.basic import Separator
+from .grammar_types.basic import Separator, KeywordSeparator
+from .parsing_results import Key, ArrayKey, DictKey, RepeatedKey, DefDictKey, IgnoredKey
+
+
+class NotAllowed:
+    """ Object of this class can be returned as a result of a :func:ConfigurationDefinition.condition """
+    def __init__(self, msg):
+        self.msg = msg
+
+    def __str__(self):
+        return self.msg
+
+    def __bool__(self):
+        """ When returned, the value is NOT ALLOWED"""
+        return False
 
 
 class BaseDefinition:
@@ -43,7 +60,110 @@ class BaseDefinition:
       - the condition() is invoked, when the elements of the container is listed
         to hide the inactive members
   """
+  validate_section = None
+  """ Can be redefined for validating whole section """
 
+  class Repeated(Enum):
+
+      @nonmember
+      class Type(Enum):
+          """ Type of repetition. """
+          NO = None
+          # No repetition allowed
+          ARRAY = np.ndarray
+          # The item can be repeated, the result is an (dense) array of values
+          LIST = list
+          # The item can be repeated, the result is an (dense) array of values
+          DICT = dict
+          # The item can be repeated, the result is a (sparse) dict of values
+
+          def __bool__(self):
+              return self.value
+
+      @nonmember
+      class Numbering(Enum):
+          """ Is the output numbered or not? """
+          NO = 0
+          # No numbering, just repeating (if allowed)
+          YES = 1
+          # Yes, number
+          WITH_DEFAULT = 2
+          # Numbered output, default value without number
+
+          def __bool__(self):
+              return self.value > 0
+
+          @property
+          def has_default(self):
+              return self.value == 2
+
+      def __init__(self, type:Type, key_type:Union[Key, callable]=Key.NONE,
+                   is_numbered:Numbering=Numbering.NO,
+                   has_header:bool=True):
+          """
+          Params
+          ------
+          type
+            Type of the repetition (and the resulting storage)
+
+          key_type
+            If grammar emits a special type for keys (name of the option), pass it here.
+            Such special keys takes care of aggregating the values into the propper storage (dict, list,...)
+
+          is_numbered
+            Whether the repeated occurences are numbered or not and how. Numbered
+            means, that there can be values in the form
+            NAME1=... NAME2=.... etc...
+          """
+
+          self.type = type
+          self.key_type = key_type
+          self.is_numbered = is_numbered
+          self.has_header = True
+
+      def __bool__(self):
+          return self.type != self.Type.NO
+
+      @classmethod
+      def create(cls, val, grammar_type=None):
+          if val is False:
+              return cls.NO
+          if val is True:
+              if hasattr(grammar_type, 'is_numpy_array') and grammar_type.is_numpy_array:
+                  return cls.ARRAY
+              else:
+                  return cls.REPEATED
+          if isinstance(val, str):
+              return cls[val]
+          return val
+
+      @property
+      def is_array(self):
+          return self.type in (self.Type.ARRAY, self.Type.LIST)
+
+      @property
+      def is_dict(self):
+          return self.type == self.Type.DICT
+
+      NO = (Type.NO)
+      # No repetition at all
+      IGNORED = (Type.NO, IgnoredKey)
+      # The value is completely ignored
+      REPEATED = (Type.LIST, RepeatedKey)
+      # Values can be repeated, the result is array of values
+      ARRAY = (Type.ARRAY, RepeatedKey)
+      # Values can be repeated, the result is array of values
+      REPEATED_SECTION = (Type.ARRAY, Key.NONE, Numbering.NO, False)
+      # Repeated sections has no header, and their repetition solves themselves
+      NUMBERED = (Type.ARRAY, ArrayKey, Numbering.YES)
+      # Values are given in form "{NAME}{INDEX}", the result is array of values
+      DICT = (Type.DICT, DictKey, Numbering.YES)
+      # Values are given in form "{NAME}{INDEX}", the result is dict of values
+      DEFAULTDICT = (Type.DICT, DefDictKey, Numbering.WITH_DEFAULT)
+      # Same as NUMBERED_DICT, with non-numbered item possible, serving as default value
+
+#
+#
   def __init__(self, name, is_optional=False, condition=None):
        self.name = name
        self.name_lcase = name.lower()
@@ -53,12 +173,18 @@ class BaseDefinition:
        self.condition = condition
        self.container = None
 
+  is_repeated = Repeated.NO
+  """ By default, the configuration items are not repeated """
+
   @property
   def real_name(self):
       return self.name
 
   def has_name(self, name, lower_case=False):
        return name == ( self.name_lcase if lower_case else self.name )
+
+  def allowed(self, container):
+        return not self.condition or self.condition(self, container)
 
   def add_grammar_hook(self, hook):
        """ Added hooks process the grammar of the option/container.
@@ -113,7 +239,12 @@ class BaseDefinition:
        return self._add_hooks_to_grammar(out)
 
   def _add_hooks_to_grammar(self, grammar):
-       """ Add registered grammar hooks to a grammar """
+       """ Add registered grammar hooks to a grammar.
+
+       Developer note: the hooks are added even by grammar types, so it
+       can not accept definition as argument, if you need it, use the closure
+       of the hook to "pass" the argument.
+       """
        if self.grammar_hooks:
            for i in self.grammar_hooks:
                grammar=i(grammar)
@@ -165,8 +296,7 @@ class BaseDefinition:
   can_be_repeated = False
   """ If True, the item can be repeated in the parsed file. The results will
   appear multiple times in the resulting dictionary after the parse.
-  This behavior have currently the same value as is_numbered_array property = True.
-  This function is to be redefined in descendants
+  This attribute/property function is to be redefined in descendants.
   """
   is_independent_on_the_predecessor = True
 
@@ -220,8 +350,10 @@ class RealItemDefinition(BaseDefinition):
 
    def __init__(self, name, written_name=None, alternative_names=None,
                 is_optional=False, is_hidden=False, is_expert=False,
-                name_in_grammar=None, info=None, description=None,
+                name_in_grammar=None, name_format=None,
+                info=None, description=None,
                 write_alternative_name:bool=False,
+                name_regex=None,
                 condition=None, write_condition=None,
                 result_class=None, warning_condition=None,
                 ):
@@ -256,6 +388,9 @@ class RealItemDefinition(BaseDefinition):
           If False, there the name of the variable is not printed in the
           configuration file. The variable is recognized by its position.
           If None, the default class value is used
+
+        name_format: str or None
+          The way how the name is written
 
         info: str
           A short help message for the value/section. It will be the perex for description.
@@ -292,13 +427,13 @@ class RealItemDefinition(BaseDefinition):
            self.alternative_names_lcase = [ i.lower() for i in alternative_names ]
        else:
            self.alternative_names_lcase = self.alternative_names
+       self.name_regex = name_regex
        """ Alternative names of the option/section. The option/section can
        be "denoted" in the configuration file by either by its name or any
        of the alternative names.
        """
        self.is_expert = is_expert
        self.is_hidden = is_hidden
-       """ Is it required part of configuration (or can it be ommited)? """
        self.write_alternative_name = write_alternative_name
        self.write_condition = write_condition or (lambda x: True)
        self.name_in_grammar = self.__class__.name_in_grammar \
@@ -310,6 +445,17 @@ class RealItemDefinition(BaseDefinition):
        if result_class:
            self.result_class = result_class
        self.warning_condition = None
+       self.name_format = name_format
+
+   @property
+   def formated_name(self):
+      if self.written_name:
+         name = self.written_name
+      else:
+         name = next(iter(self.alternative_names)) if self.write_alternative_name else self.name
+      if self.name_format:
+         return "{:{}}".format(name, self.name_format)
+      return name
 
    def has_name(self, name, lower_case=False):
        if super().has_name(name, lower_case):
@@ -392,42 +538,46 @@ class RealItemDefinition(BaseDefinition):
           out.append(prefix + self._description.replace('\n', '\n' + prefix))
        return '\n'.join(out)
 
-   def _grammar_of_name(self, is_numbered_array:bool=False):
+   def _grammar_of_name(self):
         """
         Return grammar for the name (and possible alternative names etc.)
-
-          Parameters
-          ----------
-
-          is_numbered_array
-             If True, the resulting grammar is in the form
-             NAME[index]
         """
         if self.name_in_grammar:
-            names = self.all_names_in_grammar()
-            keyword = pp.CaselessLiteral if is_numbered_array else pp.CaselessKeyword
-            if self.do_not_skip_whitespaces_before_name:
-               names = [ keyword(i).leaveWhitespace() for i in names ]
+            if self.name_regex:
+                reg = pp.Regex(self.name_regex)
+                if self.do_not_skip_whitespaces_before_name:
+                   reg.leaveWhitespace()
+                names=[pp.Regex(self.name_regex)]
             else:
-               names = [ keyword(i) for i in names ]
+                names = self.all_names_in_grammar()
+                keyword = pp.CaselessLiteral if self.is_repeated.is_numbered else pp.CaselessKeyword
+                if self.do_not_skip_whitespaces_before_name:
+                   names = [ keyword(i).leaveWhitespace() for i in names ]
+                else:
+                   names = [ keyword(i) for i in names ]
             if len(names) > 1:
                 name = pp.Or(names)
                 if self.do_not_skip_whitespaces_before_name:
                     names=names.leaveWhitespace()
             else:
                 name = names[0]
-            name.setParseAction(lambda x: self.name)
-            if is_numbered_array:
-               name += pp.Optional(pp.Word(pp.nums), default='def')
-               name.setParseAction(lambda x: (x[0], 'def' if x[1]=='def' else int(x[1])) )
+            if self.is_repeated:
+                if self.is_repeated.is_numbered:
+                    idx = pp.Word(pp.nums)
+                    if self.is_repeated.is_numbered.has_default:
+                      name += pp.Optional(idx, default='def')
+                    else:
+                      name += idx
+                    name+= pp.WordEnd(pp.alphanums + "_")
+            name.setParseAction(lambda x: self.is_repeated.key_type(self.name, *x.asList()[1:]))
         else:
             name = pp.Empty().setParseAction(lambda x: self.name)
+
         return name
 
    def _tuple_with_my_name(self, expr,
                            delimiter=None,
                            has_value:bool=True,
-                           is_numbered_array:bool=False,
                            name_in_grammar=None):
         """ Create the grammar returning tuple (self.name, <result of the expr>)
 
@@ -440,12 +590,9 @@ class RealItemDefinition(BaseDefinition):
             has_value
               If False, do not add the parsed value to the results.
               This can be used e.g. for separators (see :class:`ase2sprkkr.common.grammar_types.Separator`) etc.
-            is_numbered_array
-              If True, the resulting grammar is in the form
-              NAME[index]=....
         """
         if self.name_in_grammar if name_in_grammar is None else name_in_grammar:
-           name = self._grammar_of_name(is_numbered_array)
+           name = self._grammar_of_name()
            if delimiter:
               name += delimiter
            out = name - expr
@@ -505,7 +652,7 @@ class Stub(VirtualDefinition):
 
     def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=''):
          item = value._container[self.item]
-         if not always and self.condition and not self.condition(value):
+         if not always and not self.allowed(value._container):
              return False
          return item._save_to_file(file, always=True, name_in_grammar=name_in_grammar, delimiter=delimiter)
 
@@ -616,9 +763,21 @@ def gather(first, *members):
     return (first, ) + members
 
 
-def switch(item, values, name=None):
-    switch = Switch(item, values, name)
+def switch(item, values, condition=lambda x:x, name=None):
+    switch = Switch(item, values, condition, name)
     return (switch, ) + tuple(switch.all_values())
+
+
+def if_defined(item, values, not_values=[], name=None):
+    if name is None:
+        name = "IF_{item}"
+    return switch(item, { None: not_values, True: values}, lambda x: None if x is None else True, name)
+
+
+def if_not_defined(item, values, not_values=[], name=None):
+    if name is None:
+        name = "IF_{item}"
+    return if_defined(item, not_values, values, name)
 
 
 class Switch(ControlDefinition):
@@ -628,8 +787,9 @@ class Switch(ControlDefinition):
 
    with generate_grammar():
        empty = pp.Empty()
+       empty.__xx = 1
 
-   def __init__(self, item, values, name=None, template=None):
+   def __init__(self, item, values, condition=lambda x:x, name=None, template=None):
        """
        Parameters
        ----------
@@ -659,8 +819,9 @@ class Switch(ControlDefinition):
           Not needed to be supplied, it can be autogenerated.
        """
 
-       self.item = item
        used = set()
+       self.item = item
+       self.fn = condition
 
        def create(n):
            nonlocal used
@@ -671,25 +832,34 @@ class Switch(ControlDefinition):
                return n
 
        def convert(v):
-           nonlocal used
            if isinstance(v, dict):
                 return { i: create(v) for i,v in v.items() }
+           elif isinstance(v, str):
+                #strings are "symlinks", will be resolved in the second run
+                return None
+           elif not isinstance(v, (tuple, list)):
+                return { v.name: create(v) }
            else:
-                if not isinstance(v, (tuple, list)):
-                   v=[v]
                 return { i.name: create(i) for i in v }
-       self.values = { k : convert(v) if isinstance(v, (list, tuple)) else { v.name: v} for k,v in values.items() }
+
+       self.values = { k : convert(v) for k,v in values.items() }
+
+       #resolve the "symlinks"
+       for i in self.values:
+           if self.values[i] == None:
+              self.values[i] = self.values[values[i]]
        self.container = None
-       self.copied = False
-       if template is None:
-          template=f'_SWITCH_{item}'
+       #self.copied = False
+
+       if template is None and name is None:
+           name=f'_SWITCH_{item}'
        super().__init__(name, template)
 
    def copy(self):
        raise NotImplementedError
 
-   def __call__(self, option):
-       return option._definition in self.items_for(option._container[self.item]())
+   def __call__(self, definition, data):
+       return definition in self.items_for(self.switch_value(data))
 
    def items_for(self, value):
        return self.values[value].values()
@@ -697,42 +867,51 @@ class Switch(ControlDefinition):
    def all_values(self):
        return itertools.chain.from_iterable( (i.values() for i in self.values.values()) )
 
-   def item_hook(self, grammar):
-       if not self.container.force_order:
-          raise NotImplementedError("Switch for custom-order containers have not yet been implemented")
-
-       def item_value(value):
-           ok = self.values.get(value, {})
-           for i in ok.values():
-               tpl = grammar._prepared.get(i.name, None)
-               if tpl:
-                  tpl[1] << tpl[0]
-                  tpl[1].setName(f"<IF True THEN {str(tpl[0])}>")
-               elif i.output_definition.has_grammar():
-                  raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
-
-           # no.setParseAction(lambda x: breakpoint() or x)
-           for i in set(self.all_values()).difference(ok.values()):
-               tpl = grammar._prepared.get(i.name, None)
-               if tpl:
-                  tpl[1].setName(f"<IF False THEN {str(tpl[0])}>")
-                  tpl[1] << self.empty
-               elif i.output_definition.has_grammar():
-                  raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
-       grammar._prepared = {}
-       self.grammar = grammar
-       return grammar.addParseAction(lambda x: item_value(x[0][1]) and x)
-
    def prepare_grammar(self, definition, grammar):
+       """ Childs will have either the original grammar, or empty - set by _choose method.
+       So replace the grammar by the forward.
+       """
+       if not self.container.force_order:
+            return grammar
        f = pp.Forward()
-       # old pyparsing compatibility
-       if hasattr(f, 'set_name'):
-           f.set_name(f"<IF {self.item} THEN {grammar.name}>")
-       self.grammar._prepared[definition.name] = (grammar, f)
+       if definition.name in self.values.get(None, {}):
+           f <<= grammar
+           f.setName(f"<IF* ndef THEN {str(grammar)}>")
+       else:
+           f <<= self.empty
+           f.setName(f"<IF* False THEN {str(grammar)}")
+       self._grammars[definition.name] = (grammar, f)
        return f
 
+   def item_hook(self, grammar):
+       grammars = self._grammars = {}
+
+       def choose(value):
+           ok = self.values.get(value, {})
+           for i in ok.values():
+               tpl = grammars.get(i.name, None)
+               if tpl:
+                  f = tpl[1]
+                  f <<= tpl[0]
+                  f.setName(f"<IF True THEN {str(tpl[0])}>")
+               elif i.output_definition.has_grammar():
+                  raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
+
+           for i in set(self.all_values()).difference(ok.values()):
+               tpl = grammars.get(i.name, None)
+               if tpl:
+                  f = tpl[1]
+                  f.setName(f"<IF False THEN {str(tpl[0])}>")
+                  f <<= self.empty
+               elif i.output_definition.has_grammar():
+                  raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
+
+       if not self.container.force_order:
+            return grammar
+       return grammar.addParseAction(lambda x: choose(x[0][1]) and x)
+
    def remove_from_container(self):
-       if self.container:
+     if self.container:
            self.container[self.item].remove_grammar_hook(self.item_hook)
            for i in self.values.values():
                for j in i.values():
@@ -741,18 +920,25 @@ class Switch(ControlDefinition):
    def added_to_container(self, container):
        self.remove_from_container()
        if container:
-           if self.copied:
-              self.copied = False
-              self.values = { k:{ n : container[n] for n in v } for k,v in self.values }
-
+           #copying is not implemented yet
+           #if self.copied:
+           #    self.copied = False
+           #    self.values = { k:{ n : container[n] for n in v } for k,v in self.values }
            container[self.item].add_grammar_hook(self.item_hook)
            for i in self.values.values():
-                for j in i.values():
-                    j.condition = self
+               for j in i.values():
+                   j.condition = self
        super().added_to_container(container)
 
    def __del__(self):
        self.remove_from_container()
+
+   def switch_value(self, container):
+       return self.fn(container.get(self.item))
+
+   @property
+   def condition_name(self):
+       return self.item
 
 
 class SeparatorDefinition(VirtualDefinition):
@@ -760,17 +946,22 @@ class SeparatorDefinition(VirtualDefinition):
     def __repr__(self):
         return "<SEPARATOR>"
 
-    def __init__(self, separator_type=None, length=None):
+    def __init__(self, separator_type=None, length=None, write_condition=None):
         super().__init__(template='SEPARATOR')
+        self.write_condition = write_condition
         if separator_type is not None:
             if length is not None:
                 separator_type = Separator(char=separator_type,length=length)
+            if isinstance(separator_type, str):
+                separator_type = KeywordSeparator(separator_type)
             self.separator_type = separator_type
 
     def _create_grammar(self, allow_dangerous=False):
         return pp.Suppress(self.separator_type.grammar())
 
     def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=''):
+        if self.write_condition and not self.write_condition(value):
+            return False
         if not always:
             if self.condition and self.condition(value):
                     return False

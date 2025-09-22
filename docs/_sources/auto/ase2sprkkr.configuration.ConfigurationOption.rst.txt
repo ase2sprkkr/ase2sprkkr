@@ -1,0 +1,36 @@
+ConfigurationOption
+===================
+
+
+.. currentmodule:: ase2sprkkr.configuration
+
+.. autoclass:: ConfigurationOption
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.configuration.ConfigurationOption
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

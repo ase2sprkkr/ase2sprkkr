@@ -23,8 +23,8 @@ class OutputValueDefinition(ValueDefinition):
 
   prefix = ''
 
-  def __init__(self, *args, required=True, **kwargs):
-      super().__init__(*args, required=required, **kwargs)
+  def __init__(self, *args, is_required=True, **kwargs):
+      super().__init__(*args, is_required=is_required, **kwargs)
 
 
 class OutputValueEqualDefinition(OutputValueDefinition):
@@ -44,8 +44,8 @@ class OutputNonameValueDefinition(OutputValueDefinition):
 
   name_in_grammar = False
 
-  def __init__(self, *args, required=True, **kwargs):
-      super().__init__(*args, required=required, **kwargs)
+  def __init__(self, *args, is_required=True, **kwargs):
+      super().__init__(*args, is_required=is_required, **kwargs)
 
 
 class OutputSectionDefinition(SectionDefinition):

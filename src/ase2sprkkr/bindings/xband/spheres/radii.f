@@ -19,6 +19,7 @@
      >   NG,      ! number of symmetry operations
      >   ITOP,    ! first line of point symmetry operations
      >   IQA,     ! second line of point symmetry operations
+     >   MESH,    ! mesh for empty spheres finding
      >   VERBOSE  ! print output to the stdout
      > )
       IMPLICIT NONE
@@ -37,6 +38,7 @@ C
       DOUBLE PRECISION CELL(3,3)
       INTEGER NQ
       DOUBLE PRECISION BAS(3,NTMAX)
+      INTEGER MESH(3)
       INTEGER VERBOSE
       INTEGER IPRINT
       COMMON /IPRINT/ IPRINT
@@ -89,9 +91,9 @@ C
       DPAS = 0.05D0                     !exp. pass
       NDNEV = 14                        !interpolation
 C
-      N1ES = 24                         !cell division
-      N2ES = 24
-      N3ES = 24
+      N1ES = MESH(1)                    !cell division
+      N2ES = MESH(2)
+      N3ES = MESH(3)
 C
 C      rmines=1.2D0              !minimal ES
 C      rmaxes=2.5D0              !maximal ES

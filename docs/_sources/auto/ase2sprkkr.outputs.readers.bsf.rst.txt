@@ -1,0 +1,51 @@
+bsf
+===
+
+Full name: **ase2sprkkr.outputs.readers.bsf**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.bsf.BsfProcess  ase2sprkkr.outputs.readers.bsf.BsfResult 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.readers.bsf
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BsfProcess
+      BsfResult
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

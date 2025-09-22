@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.setinfo &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -99,22 +98,30 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
 
-<div class="viewcode-block" id="KeyValuePair"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.setinfo.KeyValuePair.html#ase2sprkkr.asr.setinfo.KeyValuePair">[docs]</a><span class="k">class</span> <span class="nc">KeyValuePair</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">ParamType</span><span class="p">):</span>
+<div class="viewcode-block" id="KeyValuePair">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.setinfo.KeyValuePair.html#ase2sprkkr.asr.setinfo.KeyValuePair">[docs]</a>
+<span class="k">class</span> <span class="nc">KeyValuePair</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">ParamType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read atoms object from filename and return Atoms object.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="KeyValuePair.convert"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.setinfo.KeyValuePair.html#ase2sprkkr.asr.setinfo.KeyValuePair.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<div class="viewcode-block" id="KeyValuePair.convert">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.setinfo.KeyValuePair.html#ase2sprkkr.asr.setinfo.KeyValuePair.convert">[docs]</a>
+    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert string to a (key, value) tuple.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">value</span>
         <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span></div></div>
+        <span class="k">return</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span></div>
+</div>
+
 
 
 <span class="n">protected_keys</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;first_class_material&#39;</span><span class="p">:</span> <span class="p">{</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">}}</span>
 
 
-<div class="viewcode-block" id="check_key_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.setinfo.check_key_value.html#ase2sprkkr.asr.setinfo.check_key_value">[docs]</a><span class="k">def</span> <span class="nf">check_key_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="check_key_value">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.setinfo.check_key_value.html#ase2sprkkr.asr.setinfo.check_key_value">[docs]</a>
+<span class="k">def</span> <span class="nf">check_key_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check validity of any protected key value pairs.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">protected_keys</span><span class="p">:</span>
         <span class="n">allowed_values</span> <span class="o">=</span> <span class="n">protected_keys</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
@@ -123,6 +130,7 @@
                 <span class="sa">f</span><span class="s1">&#39;Protected </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1"> not in allowed values: &#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">allowed_values</span><span class="si">}</span><span class="s1">.&#39;</span>
             <span class="p">)</span></div>
+
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.setinfo&#39;</span><span class="p">)</span>

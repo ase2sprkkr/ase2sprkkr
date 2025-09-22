@@ -1,5 +1,56 @@
 Changelog
 =========
+
+Version 3.3.4
+------------------
+* Sites are update according to the symbols during save
+* XAS task
+* Torque Task
+* Empty-spheres finding improved
+* MALF, MBET and MGAM options
+* BSF-SPN file added
+* K-path generating tool for BSF task
+* Layer and fermi argument to BSF plotting
+* --separate_plots argument for plotting routines
+* Uppasd task for generating Uppasd input files
+* Various fixies
+
+
+Version 3.3.3
+------------------
+* Added mesh parameter to empty spheres finding
+* Spacegroup from ASE is no longer used, since it have been deprecated
+
+Version 3.3.2
+------------------
+* Buildsystem changed to scikit-build-core (mesonpy do not support editable build at least in some setups)
+* Atoms rotating, shifting and flipping routines
+* Config file printing, value-setting etc. routines from cmdline
+
+Version 3.2.5-beta
+------------------
+
+User interface
+~~~~~~~~~~~~~~
+* Better data validation, warnings on data validity
+* Bash ase2sprkkr commandline completing
+* Faster package loading, lazy loading of some modules/data definitions
+* Task BSF improved
+* Python 3.7, pyparsing 2.x, and numpy < 1.23 support dropped
+* Nomad uploading proof of concept
+* Configuration file improved, help available
+* Occupancy and symmetry handling fixed
+* show_structure tools a bit improved (it uses temp files by default)
+* Radial charge and potentials for multiple occupancy and FULLPOT
+* EMIN/EMAX can be always specified as EMINEV/EMAXEV
+
+For developers
+~~~~~~~~~~~~~~
+* Switch element improved to allow implementation of if_defined element
+* Repeated arrays
+* Length element
+* Profiling
+
 Version 3.1.0-beta
 ------------------
 * BSF task and result

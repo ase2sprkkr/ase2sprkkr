@@ -17,7 +17,7 @@ test:
 doc: doc-gather doc-build doc-readme
 
 doc-gather: doc-clean
-	sphinx-apidoc -feM -o sphinx/auto src/ase2sprkkr */test/
+	(cd sphinx ; sphinx-apidoc -feM -o ./auto ../src/ase2sprkkr */test/)
 
 doc-clean:
 	rm -rf sphinx/auto/*
@@ -25,7 +25,7 @@ doc-clean:
 	rm -rf docs/.??*
 
 doc-debug:
-	sphinx-build -P sphinx docs/
+	(cd docs;  sphinx-build -P sphinx .)
 
 doc-build:
 	sphinx-build -j auto sphinx docs/

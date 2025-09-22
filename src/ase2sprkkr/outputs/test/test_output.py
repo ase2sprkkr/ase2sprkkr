@@ -1,5 +1,5 @@
 import os
-from ..readers.scf import ScfOutputReader, atomic_types_definition
+from ..readers.scf import ScfOutputReader, ScfResult, atomic_types_definition
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -27,11 +27,11 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
               os.path.dirname(__file__),
               '..', 'examples', 'scf.out'
       )
-      for reader in ScfOutputReader,ScfOutputReader():
 
-          class Out:
-              pass
-          out = Out()
+      # read_from_file is both method and class_method
+      for reader in ScfOutputReader, ScfOutputReader():
+
+          out = ScfResult(None, None, None)
           reader.read_from_file(path, read_args = [out])
 
           self.assertEqual(out.iterations[-1]['energy']['EMIN'](), -0.5)

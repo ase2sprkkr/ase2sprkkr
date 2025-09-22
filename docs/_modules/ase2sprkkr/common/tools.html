@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.common.tools &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -95,31 +94,49 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">from</span> <span class="nn">pint</span> <span class="kn">import</span> <span class="n">UnitRegistry</span>
 
 <span class="n">_unit_registry</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<div class="viewcode-block" id="parse_inches"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.tools.parse_inches.html#ase2sprkkr.common.tools.parse_inches">[docs]</a><span class="k">def</span> <span class="nf">parse_inches</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_inches">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.tools.parse_inches.html#ase2sprkkr.common.tools.parse_inches">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_inches</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    .. doctest::</span>
 <span class="sd">      &gt;&gt;&gt; parse_inches(1)</span>
 <span class="sd">      1.0</span>
-<span class="sd">      &gt;&gt;&gt; parse_inches(&#39;2cm&#39;)</span>
-<span class="sd">      0.7874015748031497</span>
+<span class="sd">      &gt;&gt;&gt; int( parse_inches(&#39;2cm&#39;) * 10000)</span>
+<span class="sd">      7874</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">_unit_registry</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">_unit_registry</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">_unit_registry</span> <span class="o">=</span> <span class="n">UnitRegistry</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">pint</span> <span class="kn">import</span> <span class="n">UnitRegistry</span>
+            <span class="n">_unit_registry</span> <span class="o">=</span> <span class="n">UnitRegistry</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">nums</span><span class="p">)</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">alphas</span><span class="p">))</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">parseAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;inch&#39;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">out</span>
+            <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;cm&#39;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">out</span> <span class="o">/</span> <span class="mf">2.54</span>
+            <span class="k">elif</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;mm&#39;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">out</span> <span class="o">/</span><span class="mf">25.4</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Pint is not available nad the units </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> is not known&#39;</span><span class="p">)</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">_unit_registry</span><span class="o">.</span><span class="n">parse_expression</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">_unit_registry</span><span class="o">.</span><span class="n">inch</span><span class="p">)</span><span class="o">.</span><span class="n">magnitude</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="parse_tuple_function"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.tools.parse_tuple_function.html#ase2sprkkr.common.tools.parse_tuple_function">[docs]</a><span class="k">def</span> <span class="nf">parse_tuple_function</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="parse_tuple_function">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.tools.parse_tuple_function.html#ase2sprkkr.common.tools.parse_tuple_function">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_tuple_function</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Returns a function, that can parse a comma delimited tuple of values</span>
 
 <span class="sd">    .. doctest ::</span>
@@ -157,9 +174,13 @@
     <span class="k">return</span> <span class="n">parse</span></div>
 
 
-<div class="viewcode-block" id="append_id_to_filename"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.tools.append_id_to_filename.html#ase2sprkkr.common.tools.append_id_to_filename">[docs]</a><span class="k">def</span> <span class="nf">append_id_to_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">connector</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="append_id_to_filename">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.tools.append_id_to_filename.html#ase2sprkkr.common.tools.append_id_to_filename">[docs]</a>
+<span class="k">def</span> <span class="nf">append_id_to_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">connector</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">stem</span><span class="p">)</span><span class="si">}{</span><span class="n">connector</span><span class="si">}{</span><span class="nb">id</span><span class="si">}{</span><span class="n">p</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
 
 
 <span class="n">string</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;&quot;([^&quot;]|&quot;&quot;)*&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&quot;&#39;</span><span class="p">,</span><span class="s1">&#39;&quot;&#39;</span><span class="p">))</span> <span class="o">|</span>\
@@ -167,15 +188,22 @@
 <span class="n">boolean</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Keyword</span><span class="p">(</span><span class="s1">&#39;True&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span><span class="p">)</span> <span class="o">|</span>\
           <span class="n">pp</span><span class="o">.</span><span class="n">Keyword</span><span class="p">(</span><span class="s1">&#39;False&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">False</span><span class="p">)</span>
 
-<span class="n">token</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">pyparsing_common</span><span class="o">.</span><span class="n">number</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">alphanums</span> <span class="o">+</span> <span class="s1">&#39;-_@#$!/[]&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">string</span> <span class="o">|</span> <span class="n">boolean</span>
+
+<span class="n">forward</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Forward</span><span class="p">()</span>
+<span class="n">token</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">pyparsing_common</span><span class="o">.</span><span class="n">number</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">alphanums</span> <span class="o">+</span> <span class="s1">&#39;-_@#$!/[]&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">forward</span> <span class="o">|</span> <span class="n">string</span> <span class="o">|</span> <span class="n">boolean</span>
 <span class="n">tupl</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">delimited_list</span><span class="p">(</span> <span class="n">token</span><span class="p">,</span> <span class="n">delim</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
+<span class="n">dict_token</span> <span class="o">=</span> <span class="p">((</span><span class="n">pp</span><span class="o">.</span><span class="n">pyparsing_common</span><span class="o">.</span><span class="n">number</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">alphanums</span> <span class="o">+</span> <span class="s1">&#39;-_@#$!/[]&#39;</span><span class="p">))</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span> <span class="o">+</span> <span class="n">token</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">)</span>
+<span class="n">dicti</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">delimited_list</span><span class="p">(</span> <span class="n">dict_token</span><span class="p">,</span> <span class="n">delim</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">as_list</span><span class="p">()))</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="s1">&#39;}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
+<span class="n">forward</span> <span class="o">&lt;&lt;</span> <span class="n">dicti</span> <span class="o">|</span> <span class="n">tupl</span>
 
-<span class="n">option</span> <span class="o">=</span> <span class="p">(</span><span class="n">token</span> <span class="o">|</span> <span class="n">tupl</span><span class="p">)</span> <span class="o">^</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;.*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">option</span> <span class="o">=</span> <span class="n">token</span> <span class="o">^</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;.*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-<span class="n">name_value</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">alphas</span><span class="p">)</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span> <span class="o">+</span> <span class="n">option</span>
+<span class="n">equal_value</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span> <span class="o">+</span> <span class="n">option</span>
 
 
-<div class="viewcode-block" id="parse_named_option"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.tools.parse_named_option.html#ase2sprkkr.common.tools.parse_named_option">[docs]</a><span class="k">def</span> <span class="nf">parse_named_option</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_named_option">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.tools.parse_named_option.html#ase2sprkkr.common.tools.parse_named_option">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_named_option</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">numbers_allowed</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Parse a given string of the format `name=value`</span>
 <span class="sd">    If it recognizes number, bool or tuple of values or quoted string in the value,</span>
 <span class="sd">    it converts it to a given type.</span>
@@ -187,10 +215,17 @@
 <span class="sd">    value:Any</span>
 <span class="sd">      Value of the parsed option</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">name_value</span><span class="o">.</span><span class="n">parse_string</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span></div>
+    <span class="k">if</span> <span class="n">numbers_allowed</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">alphanums</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">alphas</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">p</span> <span class="o">+</span> <span class="n">equal_value</span><span class="p">)</span><span class="o">.</span><span class="n">parse_string</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.tools.main.html#ase2sprkkr.common.tools.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.tools.main.html#ase2sprkkr.common.tools.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Cli subcommands can be runned on its own.</span>
 <span class="sd">    This method creates the main function for the the sub-scripts.</span>
@@ -202,6 +237,7 @@
     <span class="n">local</span><span class="p">[</span><span class="s1">&#39;parser&#39;</span><span class="p">](</span><span class="n">parser</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
     <span class="n">local</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">](</span><span class="n">args</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

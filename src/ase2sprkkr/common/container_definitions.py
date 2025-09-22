@@ -3,89 +3,21 @@ from .grammar import delimitedList
 from .misc import dict_first_item
 from .repeated_configuration_containers import RepeatedConfigurationContainer
 from .configuration_containers import Section
+from .section_adaptors import MergeSectionDefinitionAdaptor
 from .decorators import cache
+from .parsing_results import dict_from_parsed
 
 import pyparsing as pp
-import numpy as np
 from typing import Union
-import itertools
 from collections.abc import Iterable
 import inspect
+import re
 from io import StringIO
 
 # This serves just for dealing with various pyparsing versions
 _parse_all_name = 'parse_all' if \
   'parse_all' in inspect.getfullargspec(pp.Or.parseString).args \
   else 'parseAll'
-
-
-def dict_from_parsed(values, allowed_duplicates):
-    """ Create a dictionary from the arguments.
-    From duplicate arguments create numpy arrays.
-    Moreover, if there is key of type (a,b), it will be transformed to subdictionary.
-    Such a keys do not allow duplicates.
-
-    >>> dict_from_parsed( [ ('x', 'y'), (('a','b'), 1 ), (('a', 'c'), 2) ], [] )
-    {'x': 'y', 'a': {'b': 1, 'c': 2}}
-    >>> dict_from_parsed( [ ('x', 1), ('x', '2') ], [] ) # doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    pyparsing.exceptions.ParseException: There are non-unique keys: x
-    >>> dict_from_parsed( [ ('x', 1), ('x', 2) ], ['x'] )
-    {'x': array([1, 2])}
-    """
-    out = {}
-    duplicates = []
-    errors = []
-
-    if isinstance(allowed_duplicates, list):
-       _allowed_duplicates = lambda x: x in allowed_duplicates
-    else:
-       _allowed_duplicates = allowed_duplicates
-
-    def add(out, k, key, check):
-         if k in out:
-            if key in duplicates:
-               out[k].append(v)
-            else:
-               if not _allowed_duplicates(check):
-                   return errors.append(check)
-               out[k] = [ out[k], v ]
-               duplicates.append(k)
-         else:
-            out[k] = v
-
-    for k, v in values:
-        if isinstance(k, tuple):
-           if not k[0] in out:
-              o = out[k[0]] = {}
-           elif not isinstance(out[k[0]], dict):
-              raise pp.ParseException(f"There is duplicate key {k[0]}, however, I should created "
-                                "both arrays and dict from the data, which is not possible")
-           else:
-              o = out[k[0]]
-           add(o, k[1], k, k[0])
-        else:
-           add(out, k, k, k)
-    for k in duplicates:
-        if isinstance(k, tuple):
-            o=out[k[0]]
-            k=k[1]
-        else:
-            o=out
-        o[k] = np.array(out[k])
-    if errors:
-       errors = ','.join(errors)
-       raise pp.ParseException(f"There are non-unique keys: {errors}")
-    return out
-
-
-def add_excluded_names_condition(element, names):
-    """ Add the condition to the element, that
-    its value is not any of given names """
-    if not names:
-       return
-    names = set((i.upper() for i in names))
-    element.addCondition(lambda x: x[0].upper() not in names)
 
 
 class ContainerDefinition(RealItemDefinition):
@@ -114,10 +46,13 @@ class ContainerDefinition(RealItemDefinition):
            items[value.name] = value
         return items
 
+    dir_common_attributes = True
+    """ In dir listing, show the common 'object' attributes """
+
     def __init__(self, name, members=[], alternative_names=[], info=None, description=None,
                  is_optional=False, is_hidden=False, is_expert=False,
                  has_hidden_members=False, name_in_grammar=None, force_order=None,
-                 write_alternative_name:bool=False, result_class=None,
+                 write_alternative_name:bool=False, name_regex=False, result_class=None,
                  is_repeated=False
                  ):
        """
@@ -146,6 +81,7 @@ class ContainerDefinition(RealItemDefinition):
            info = info,
            description = description,
            write_alternative_name = write_alternative_name,
+           name_regex = name_regex,
            result_class = result_class
        )
 
@@ -162,10 +98,14 @@ class ContainerDefinition(RealItemDefinition):
        self.has_hidden_members = has_hidden_members
        if force_order is not None:
           self.force_order = force_order
-       self.is_repeated = is_repeated
+       self.repeated_delimiter = is_repeated if isinstance(is_repeated, str) else None
+       self.is_repeated = self.Repeated.REPEATED_SECTION if is_repeated else self.Repeated.NO
 
     configuration_type_name = 'SECTION'
     """ Name of the container type in the runtime documentation """
+
+    def allow_duplication(self):
+        return self.is_repeated
 
     def __repr__(self):
         return f"<{self.configuration_type_name} {self.name}>"
@@ -227,9 +167,6 @@ class ContainerDefinition(RealItemDefinition):
               under=prefix + "-" * len(out) + '\n'
               out=f"{prefix}{out}\n{under}{add}"
         return out
-
-    def allow_duplication(self):
-        return self.is_repeated
 
     def additional_data_description(self, verbose:Union[bool,str,int]=False, show_hidden=False, prefix:str=''):
         """
@@ -335,14 +272,9 @@ class ContainerDefinition(RealItemDefinition):
         self._members[name] = out
         return out
 
-    def all_member_names(self):
-        return itertools.chain.from_iterable(
-            i.all_names_in_grammar() for i in self
-        )
-
     def _grammar_of_values(self, allow_dangerous:bool=False, delimiter=None):
        if self.custom_class:
-          custom_value = self.custom_member_grammar(self.all_member_names())
+          custom_value = self.custom_member_grammar(self.excluded_names_condition())
        else:
           custom_value = None
        delimiter = delimiter or self.grammar_of_delimiter
@@ -430,12 +362,12 @@ class ContainerDefinition(RealItemDefinition):
            if first:
                values = first + pp.Optional(delimiter + values)
 
-       values.setParseAction(lambda x: dict_from_parsed(x.asList(), self._allow_duplicates_of))
+       values.setParseAction(lambda x: dict_from_parsed(x.asList()))
 
        if self.validate:
           def _validate(s, loc, value):
               # just pass the dict to the validate function
-              is_ok = self.validate(MergeDictAdaptor(value[0], self), 'parse')
+              is_ok = self.validate(MergeSectionDefinitionAdaptor(value[0], self), 'parse')
               if is_ok is not True:
                 if is_ok is None:
                    is_ok = f'Validation of parsed data of {self.name} section failed'
@@ -444,8 +376,8 @@ class ContainerDefinition(RealItemDefinition):
           values.addParseAction(_validate)
        if self.is_repeated:
           rdelim = delimiter
-          if self.is_repeated is not True:
-              rdelim = rdelim + pp.Literal(self.is_repeated)
+          if self.repeated_delimiter:
+              rdelim = rdelim + pp.Literal(self.repeated_delimiter)
           values = pp.delimitedList(values, rdelim)
           values.addParseAction(lambda x: [x.asList()])
        return values
@@ -464,9 +396,6 @@ class ContainerDefinition(RealItemDefinition):
        out.setName(self.name)
        return out
 
-    validate = None
-    """ A function for validation of just the parsed result (not the user input) """
-
     @classmethod
     @cache
     def delimited_custom_value_grammar(cls):
@@ -479,13 +408,32 @@ class ContainerDefinition(RealItemDefinition):
     """ Which characters can appears in an unknown child (value/section) name """
 
     @classmethod
-    def custom_member_grammar(cls, value_names = []):
+    def custom_member_grammar(cls, name_condition=None):
        """ Grammar for the custom - unknown - child """
        name = pp.Word(cls.custom_name_characters).setParseAction(lambda x: x[0].strip())
-       add_excluded_names_condition(name, value_names)
+       if name_condition:
+          name.add_condition(name_condition)
        out = (name + cls.delimited_custom_value_grammar()).setParseAction(lambda x: tuple(x))
        out.setName(cls.custom_value_name)
        return out
+
+    def all_member_names(self):
+        for i in self:
+            yield from i.all_names_in_grammar()
+
+    def excluded_names_condition(self):
+        """ Add the condition to the element, that
+        its value is not any of given names """
+        names = set((_ending_numbers.sub('',i).upper() for i in self.all_member_names()))
+
+        if not names:
+            return
+
+        def cond(x):
+            striped = _ending_numbers.sub('', x[0]).upper()
+            return striped not in names
+
+        return cond
 
     def _first_section_has_to_be_first(self):
        """ Has/ve the first child(s) in an unordered sequence fixed position? """
@@ -545,6 +493,9 @@ class ContainerDefinition(RealItemDefinition):
 
     def validate(self, container, why:str='save'):
         self.validate_warning(container)
+        for i in self.members():
+            if i.validate_section and i.allowed(container):
+                i.validate_section(container)
         return True
 
     repeated_class = RepeatedConfigurationContainer
@@ -583,7 +534,7 @@ class ContainerDefinition(RealItemDefinition):
           If any value have been written return True, otherwise return False.
         """
         if not always:
-            if not self.write_condition(self) or (self.condition and not self.condition(self)):
+            if not self.write_condition(self) or not self.allowed(value._container):
                 return
 
         if self.is_expert:
@@ -598,7 +549,7 @@ class ContainerDefinition(RealItemDefinition):
         if delimiter:
            file.write(delimiter)
         if name_in_grammar:
-           file.write(self.name)
+           file.write(self.formated_name)
            file.write('\n')
 
         members = iter(value)
@@ -613,6 +564,9 @@ class ContainerDefinition(RealItemDefinition):
                    delimiter=self.delimiter
 
         return True
+
+
+_ending_numbers = re.compile("[0-9]*$")
 
 
 class SectionDefinition(ContainerDefinition):
@@ -725,25 +679,5 @@ class ConfigurationRootDefinition(ContainerDefinition):
        grammar = grammar.ignore("#" + pp.restOfLine + pp.LineEnd())
        return grammar
 
-
-class MergeDictAdaptor:
-    """ This class returns a read-only dict-like class
-    that merge values from a container and from the
-    definition of a section """
-
-    def __init__(self, values, definition):
-        self.values = values
-        self.definition = definition
-
-    def __hasitem__(self, name):
-        return self.values.__hasitem__(name) or \
-               self.definition.__hasitem__(name)
-
-    def __getitem__(self, name):
-        try:
-            return self.values[name]
-        except KeyError:
-            return self.definition[name].get_value()
-
-    def __repr__(self):
-        return f'Section {self.definition.name} with values {self.values}'
+   def _generic_info(self):
+      return f"Configuration"

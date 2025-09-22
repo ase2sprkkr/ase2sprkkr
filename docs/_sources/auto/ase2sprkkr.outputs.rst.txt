@@ -38,9 +38,10 @@ Full name: **ase2sprkkr.outputs**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.outputs.output_definitions
-     ase2sprkkr.outputs.task_result
-     ase2sprkkr.outputs.readers
-     ase2sprkkr.outputs.test
+     output_definitions
+     readers
+     sprkkr_output_reader
+     task_result
+     test
   
   

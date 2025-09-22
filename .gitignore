@@ -1,5 +1,7 @@
 **.pyc
 **/.*.swp
+**/.gdb_history
+CMakeFiles/*
 dist/**
 src/ase2sprkkr.egg-info/**
 docs/.doctrees/**

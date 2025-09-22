@@ -34,8 +34,12 @@ class ScfInfoSection(PotentialSection):
           self.VMTZ = atoms.info['sprkkr_vmtz']
       if self.SCFSTATUS() == 'START':
           for i in atoms.sites:
-              if i.potential is None:
-                  break
+              for j in i.occupation.atomic_types():
+                  if not j.has_converged_data():
+                      break
+              else:
+                  continue
+              break
           else:
               self.SCFSTATUS = 'CONVERGED'
 
@@ -46,7 +50,7 @@ class ScfInfoSectionDefinition(PotSectionDefinition):
       V = PotValueDefinition
       members = [
         V('INFO', line_string, 'NONE'),
-        V('SCFSTATUS', DefKeyword('START', 'CONVERGED', 'ITR-BULK')),
+        V('SCFSTATUS', DefKeyword('START', 'CONVERGED', 'ITR-BULK', 'ITR-R-BULK', 'ITR-L-BULK', 'ITR-I-ZONE', 'ITR')),
         V('FULLPOT', False),
         V('BREITINT', False),
         V('NONMAG', False, alternative_names='NOMAG'),
@@ -59,6 +63,7 @@ class ScfInfoSectionDefinition(PotSectionDefinition):
         V('NE', Array(int), is_optional = True),
         V('IBZINT', int, is_optional = True),
         V('NKTAB', int, is_optional = True),
+        V('TETDEPPOT',False),
         V('XC-POT', str, is_optional = True),
         V('SCF-ALG', str, is_optional = True),
         V('SCF-ITER', 0),
@@ -68,6 +73,7 @@ class ScfInfoSectionDefinition(PotSectionDefinition):
         V('RMSAVB', 999999.),
         V('EF', 999999.),
         V('VMTZ', 0.7),
+        V('EWORK',float,is_optional = True)
       ]
       super().__init__(name, members, has_hidden_members=True)
 

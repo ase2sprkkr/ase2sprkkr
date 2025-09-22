@@ -2,6 +2,10 @@
 
 from ..common.decorators import cached_property
 import copy
+from .radial import RadialPotential, RadialCharge
+from .moments import Moments
+from typing import Dict
+import numpy as np
 
 
 class AtomicType:
@@ -12,6 +16,12 @@ class AtomicType:
     """
 
     _mendeleev_module = None
+
+    @classmethod
+    def to_atomic_type(cls, value, for_mesh=None):
+        if isinstance(value, cls):
+            return value.for_mesh(for_mesh)
+        return cls(value, mesh=for_mesh)
 
     @cached_property
     def mendeleev(self):
@@ -25,7 +35,7 @@ class AtomicType:
           AtomicType._mendeleev_module = mendeleev
         return AtomicType._mendeleev_module.element(self.atomic_number or self.symbol)
 
-    def __init__(self, symbol, atomic_number=None, n_core=None, n_valence=None, n_semicore=None, n_electrons=None):
+    def __init__(self, symbol, atomic_number=None, n_core=None, n_valence=None, n_semicore=None, n_electrons=None, mesh=None):
         """
         Parameters
         ----------
@@ -52,14 +62,14 @@ class AtomicType:
 
         n_electrons: int
         """
-        if isinstance(symbol, int):
+        if isinstance(symbol, (int, np.int64)):
            if atomic_number is not None and atomic_number != symbol:
               raise ValueError(f'Number of electrons in symbol ({symbol}) and atomic_number ({atomic_number}) differ')
-           atomic_number = symbol
+           atomic_number = int(symbol)
            symbol = None
         else:
            symbol = symbol
-           atomic_number = atomic_number
+           atomic_number = None if atomic_number is None else int(atomic_number)
 
         if atomic_number is None and symbol is None:
            raise ValueError("Unknown atomic type")
@@ -82,7 +92,26 @@ class AtomicType:
         self._n_core = n_core
         self._n_semicore = n_semicore
 
+        self._potential = None
+        self._charge = None
+        self._moments = None
+        self._mesh = mesh
+
         self._check_n_electrons()
+
+    @property
+    def mesh(self):
+        return self._mesh
+
+    @mesh.setter
+    def mesh(self, mesh):
+        if self._mesh is mesh:
+            return
+        self._mesh = mesh
+        if self.potential:
+            self.potential.mesh = mesh
+        if self.charge:
+            self.charge.mesh = mesh
 
     def _check_n_electrons(self):
         if (
@@ -105,22 +134,27 @@ n_semicore: {self._n_semicore}""")
     def _clear_symbol_cache(self):
         try:
           del self.mendeleev
-        except AttributeError:
+        except (AttributeError, KeyError):
           pass
 
         try:
           del self.atomic_number
-        except AttributeError:
+        except (AttributeError, KeyError):
           pass
 
         try:
           del self.symbol
-        except AttributeError:
+        except (AttributeError, KeyError):
           pass
+
+        self._n_core = None
+        self._n_semicore = None
+        self._n_valence = None
+        self._n_electrons = None
 
     @atomic_number.setter
     def atomic_number(self, v):
-        self._atomic_number = v
+        self._atomic_number = int(v)
         self._clear_symbol_cache()
         self._symbol = self.mendeleev.symbol if v else 'Vc'
 
@@ -135,6 +169,7 @@ n_semicore: {self._n_semicore}""")
         self._clear_symbol_cache()
         self._atomic_number = self.mendeleev.atomic_number if v not in ['X', 'Vc'] else 0
 
+
     @property
     def n_electrons(self):
         if self._n_electrons is not None:
@@ -146,6 +181,8 @@ n_semicore: {self._n_semicore}""")
     @n_electrons.setter
     def n_electrons(self, v):
         self._n_electrons = v
+        if self._potential:
+            self._potential.z = v
         self.__check_n_electrons()
 
     @property
@@ -187,9 +224,6 @@ n_semicore: {self._n_semicore}""")
         self._n_semicore = v
         self.__check_n_electrons()
 
-    def copy(self):
-        return copy.copy(self)
-
     def __repr__(self):
         return f"({self.atomic_number})" if self.symbol == 'X' else self.symbol
 
@@ -199,11 +233,86 @@ n_semicore: {self._n_semicore}""")
     def to_tuple(self):
         return (self.symbol, self.n_electrons, self.n_core, self.n_valence, self.n_semicore)
 
-    @classmethod
-    def to_atomic_type(cls, value):
-        if isinstance(value, cls):
-           return value
-        return cls(value)
-
     def is_vacuum(self):
         return self.atomic_number == 0
+
+    @property
+    def potential(self):
+        """ The radial potential data of the site """
+        return self._potential
+
+    @potential.setter
+    def potential(self, value):
+        if value is None:
+            self._potential = None
+            return
+        if not isinstance(value, RadialPotential):
+            self._potential = RadialPotential(value, self._mesh, self.n_electrons)
+        elif value.z is not None:
+            self._potential = value.copy(self.mesh)
+            self._potential.z = self._n_electrons
+        else:
+            self._potential = value
+            self._potential.z = self._n_electrons
+
+    @property
+    def charge(self):
+        """ The radial charge data of the site """
+        return self._charge
+
+    @charge.setter
+    def charge(self, value):
+        if value is None:
+            self._charge = None
+            return
+        if not isinstance(value, RadialCharge):
+            self._charge = RadialCharge(value, self.mesh)
+        else:
+            self._charge = value.for_mesh(self.mesh)
+
+    @property
+    def moments(self):
+        """ The moments data of the site """
+        return self._moments
+
+    @moments.setter
+    def moments(self, value):
+        if not isinstance(value, Moments):
+            value = Moments(*value)
+        self._moments = value
+
+    def for_mesh(self, mesh):
+        """ Return copy for a given mesh """
+        if mesh is None:
+            return self
+        smesh = self.mesh
+        if smesh is mesh:
+            return self
+        if smesh is None:
+            self.mesh = mesh
+            return self
+        return self.copy(mesh)
+
+    def copy(self, for_mesh=None):
+        out = copy.copy(self)
+        if out.potential is not None:
+            out.potential = out.potential.copy(for_mesh)
+        if out.charge is not None:
+            out.charge = out.charge.copy(for_mesh)
+        if out.moments is not None:
+            out.moments = out.moments.copy()
+        if for_mesh is not None:
+            out._mesh = for_mesh
+        return out
+
+    def remesh(self, mesh, map:'Dict[AtomicType,AtomicType]'):
+        """ Return the copy for a given mesh, updating the informations
+        in the map of the old: new objects, so the remeshed items will
+        share the meshes. """
+        if self in map:
+            return map[self]
+        out = map[self] = self.for_mesh(mesh)
+        return out
+
+    def has_converged_data(self):
+        return self.potential and self.charge and self.moments

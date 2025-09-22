@@ -1,0 +1,100 @@
+basic
+=====
+
+Full name: **ase2sprkkr.tools.test.grammar\_types.basic**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.tools.test.grammar_types.basic.AlwaysQString  ase2sprkkr.tools.test.grammar_types.basic.BaseBool  ase2sprkkr.tools.test.grammar_types.basic.BaseRealWithUnits  ase2sprkkr.tools.test.grammar_types.basic.BaseString  ase2sprkkr.tools.test.grammar_types.basic.BasicSeparator  ase2sprkkr.tools.test.grammar_types.basic.BlankSeparator  ase2sprkkr.tools.test.grammar_types.basic.Bool  ase2sprkkr.tools.test.grammar_types.basic.Boolean  ase2sprkkr.tools.test.grammar_types.basic.Date  ase2sprkkr.tools.test.grammar_types.basic.Energy  ase2sprkkr.tools.test.grammar_types.basic.FixedPointNumber  ase2sprkkr.tools.test.grammar_types.basic.Flag  ase2sprkkr.tools.test.grammar_types.basic.IntBool  ase2sprkkr.tools.test.grammar_types.basic.Integer  ase2sprkkr.tools.test.grammar_types.basic.Keyword  ase2sprkkr.tools.test.grammar_types.basic.LineString  ase2sprkkr.tools.test.grammar_types.basic.Number  ase2sprkkr.tools.test.grammar_types.basic.ObjectNumber  ase2sprkkr.tools.test.grammar_types.basic.QString  ase2sprkkr.tools.test.grammar_types.basic.Real  ase2sprkkr.tools.test.grammar_types.basic.RealWithUnits  ase2sprkkr.tools.test.grammar_types.basic.Separator  ase2sprkkr.tools.test.grammar_types.basic.String  ase2sprkkr.tools.test.grammar_types.basic.Unsigned 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.tools.test.grammar_types.basic
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      integer
+      unsigned
+      boolean
+      flag
+      real
+      date
+      string
+      qstring
+      line_string
+      energy
+      separator
+      int_bool
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      DefKeyword
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      AlwaysQString
+      BaseBool
+      BaseRealWithUnits
+      BaseString
+      BasicSeparator
+      BlankSeparator
+      Bool
+      Boolean
+      Date
+      Energy
+      FixedPointNumber
+      Flag
+      IntBool
+      Integer
+      Keyword
+      LineString
+      Number
+      ObjectNumber
+      QString
+      Real
+      RealWithUnits
+      Separator
+      String
+      Unsigned
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

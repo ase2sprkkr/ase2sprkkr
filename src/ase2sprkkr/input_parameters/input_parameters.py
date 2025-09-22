@@ -15,8 +15,10 @@ from . import definitions
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
 from typing import Union
-from ..config import config, mpi_runner
+from ..configuration import config, mpi_runner
 from ..potentials.potentials import Potential
+from ..common.doc import process_input_parameters_definition
+import warnings
 
 
 class InputSection(ConfigurationSection):
@@ -39,7 +41,7 @@ class InputParameters(ConfigurationFile):
       if pot:
           if potfil == pot[0]:
               return pot[1]
-      out = Potential(potfil) if potfil else None
+      out = Potential.from_file(potfil) if potfil else None
       self._potential = potfil, out
       return out
 
@@ -139,14 +141,18 @@ class InputParameters(ConfigurationFile):
           if executable_dir is None:
              executable_dir=config.executables.dir()
           if executable_dir:
-             executable = os.path.join(executable, executable_dir)
+             executable = os.path.join(executable_dir, executable)
 
-      process = self.result_reader(calculator)
+      process = self.result_reader(calculator, directory=directory)
       try:
 
         mpi = mpi_runner(mpi) if self._definition.mpi else None
         if mpi:
-             executable = mpi + [ executable + 'MPI', input_file.name ]
+             fname = input_file.name
+             #max length of the argument in SPRKKR
+             if len(fname) > 80:
+                 fname = os.path.relpath(fname, directory)
+             executable = mpi + [ executable + 'MPI', fname ]
              stdin = None
         else:
              executable = [ executable ]
@@ -159,12 +165,14 @@ class InputParameters(ConfigurationFile):
              else:
                 print(f"run <{input_file.name}")
              executable = [ 'gdb' ] + executable
-
         return process.run(executable, output_file, stdin = stdin, print_output=print_output, directory=directory, input_file=input_file.name)
       except FileNotFoundError as e:
-        e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable ' \
-                     'or ase2sp_rkkr.config.config.executable.suffix variable should be set?\n' + \
-                     e.strerror
+        add = 'Cannot find SPRKKR executable. Maybe, ase2sprkkr.config.executable.suffix ' \
+              'variable should be set (or the SPRKKR_EXECUTABLE_SUFFIX environment variable)?\n'
+        if mpi:
+            add+='Also, pleas check that the MPI is functional on your machine, or explicitly disable '\
+                 'MPI with mpi=False argument of calculate method (or set ase2sprkkr.config.running.mpi = False)\n\n';
+        e.strerror = add + "SPRKKR cannot be run due to the following error: \n" + e.strerror
         raise
       finally:
         input_file.close()
@@ -225,17 +233,45 @@ class InputParameters(ConfigurationFile):
           raise KeyError("No option with name {} in any of the members".format(name))
 
   @cached_class_property
-  def definitions():
-      # user = os.path.join(platformdirs.user_config_dir('ase2sprkkr', 'ase2sprkkr'), 'input_parameters')
+  def definition_modules():
       names = (i for i in pkgutil.iter_modules(definitions.__path__))
       im = importlib.import_module
       modules = ( im('.definitions.' + i.name, __package__) for i in names )
-      return { m.__name__.rsplit('.',1)[1].upper(): m.input_parameters for m in modules if hasattr(m, 'input_parameters') }
+      return { m.__name__.rsplit('.', 1)[-1].upper(): m for m in modules if hasattr(m, 'input_parameters') }
+
+  _definitions = {}
 
   @classmethod
-  def is_it_a_input_parameters_name(cls, name):
+  def definition(cls, name):
       name = name.upper()
-      return name if name in cls.definitions else False
+      if not name in cls._definitions:
+          module = cls.definition_modules[name]
+          ip = module.input_parameters
+          if isinstance(ip, ipdefs.InputParametersDefinition):
+              warnings.warn(f"In the module '{module.__name__}' in file '{module.__file__}' "
+              "is an InputParametersDefinition object directly defined. "
+              "Consider to enclose its definition in a lambda function to "
+              "speed up ase2sprkkr loading.")
+          else:
+              try:
+                  ip = ip()
+              except Exception as e:
+                  raise RuntimeError(f"Can not load file {module.__name__} in {module.__file__} "
+                                     f"due to the following error:\n {e}") from e
+          cls._definitions[name] = ip
+          process_input_parameters_definition(module, ip)
+      return cls._definitions[name]
+
+  @cached_class_property
+  def definitions():
+      # user = os.path.join(platformdirs.user_config_dir('ase2sprkkr', 'ase2sprkkr'), 'input_parameters')
+        ip = InputParameters
+        return { n: ip.definition(n) for n in ip.definition_modules }
+
+  @classmethod
+  def is_it_an_input_parameters_name(cls, name):
+      name = name.upper()
+      return name if name in cls.definition_modules else False
 
   @classmethod
   def create_input_parameters(cls, arg):
@@ -255,7 +291,7 @@ class InputParameters(ConfigurationFile):
       input_parameters: InputParameters
       """
       if isinstance(arg, str):
-         name = cls.is_it_a_input_parameters_name(arg)
+         name = cls.is_it_an_input_parameters_name(arg)
          if name:
             return cls.create(arg)
          return cls.from_file(arg)
@@ -276,11 +312,7 @@ class InputParameters(ConfigurationFile):
       input_parameters: InputParameters
         Input parameters with the default values for the given task.
       """
-      return InputParameters(cls.task_definition(name))
-
-  @classmethod
-  def task_definition(cls, task_name):
-      return cls.definitions[task_name.upper()]
+      return InputParameters(cls.definition(name))
 
   @classmethod
   def default_parameters(cls):
@@ -325,7 +357,7 @@ class InputParameters(ConfigurationFile):
       that are present in the new task.
       """
       vals = self.to_dict()
-      self._definition = self.task_definition(task)
+      self._definition = self.definition(task)
       self._init_members_from_the_definition()
       self.set(vals, unknown = 'ignore', error='ignore')
 
@@ -340,3 +372,4 @@ class InputParameters(ConfigurationFile):
 
 # at least, to avoid a circular import
 from ..sprkkr import calculator   # NOQA: E402
+from . import input_parameters_definitions as ipdefs  # NOQA: E402

@@ -1,0 +1,36 @@
+NomadApi
+========
+
+
+.. currentmodule:: ase2sprkkr.bindings.nomad.nomad_api
+
+.. autoclass:: NomadApi
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.bindings.nomad.nomad_api.NomadApi
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

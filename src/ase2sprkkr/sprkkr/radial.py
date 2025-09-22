@@ -12,7 +12,6 @@ class RadialValue:
 
   @cached_property
   def interpolator(self):
-
       def inter(x):
           return self._mesh.interpolator(x)
       ndim = self._value.ndim
@@ -42,6 +41,9 @@ class RadialValue:
   @mesh.setter
   def mesh(self, mesh):
       if mesh is self._mesh:
+          return
+      if not self._mesh:
+          self._mesh=mesh
           return
       value = self.interpolate(mesh.coors)
       self._mesh=mesh

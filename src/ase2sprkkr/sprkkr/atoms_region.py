@@ -6,7 +6,7 @@ from ase import Atoms
 import numpy as np
 from typing import List, Union, Optional
 from ..common.decorators import cached_property
-from .sprkkr_atoms import SPRKKRAtoms
+from . import sprkkr_atoms
 
 
 class AtomsRegion:
@@ -26,7 +26,7 @@ class AtomsRegion:
                cell:Union[Cell, np.ndarray],
                pbc:List[Optional[bool]]=[True, True, True],
                inherit_cell:Union[bool,List[bool]]=False,
-               atoms:Atoms=None):
+               atoms:Atoms=None, add=True):
       """
       Atoms region defines a spatial part of an Atoms object.
       The cell can has zero vectors - such vectors are taken from the parent
@@ -45,7 +45,7 @@ class AtomsRegion:
 
       inherit_cell
          Inherit the cell and the pcb from the parent atoms for given axes.
-         Use of this argument is the same, as setting ``pcb`` to None and
+         Use of this argument is the same, as setting ``pbc`` to None and
          ``cell`` to ``[0,0,0]`` for the given axes.
 
       atoms
@@ -66,7 +66,7 @@ class AtomsRegion:
       self.incomplete_cell = Cell(cell)
       self.incomplete_pbc = pbc
       if atoms:
-         self.set_atoms(atoms)
+         self.set_atoms(atoms, add)
 
   @staticmethod
   def from_atoms(from_atoms: Atoms, name:str, slice:slice, inherit_cell=False, atoms:Atoms=None):
@@ -87,6 +87,9 @@ class AtomsRegion:
               if not v.any():     # no nonzero
                   v[:] = self.atoms.cell[i]
       return cell
+
+  def get_cell(self):
+      return self.cell
 
   @cell.setter
   def cell(self, cell):
@@ -132,7 +135,7 @@ class AtomsRegion:
       """ Set the master atoms - of which the region is described """
       if add:
          # atoms will call set_atoms again
-         SPRKKRAtoms.promote_ase_atoms(atoms)
+         sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms(atoms)
          atoms.add_region(self)
       else:
          self.atoms = atoms
@@ -173,8 +176,35 @@ class AtomsRegion:
       return self.atoms.positions[self.slice]
 
   def only_vacuum_atoms(self):
-      for site in self.atoms.sites[self.ids]:
+      for site in self.atoms.sites[self.slice]:
           for at in site.occupation:
               if not at.is_vacuum():
                   return False
       return True
+
+  def sites(self):
+      return self.atoms.sites[self.slice]
+
+  def get_array(self, name, copy):
+      return self.atoms.get_array(name, copy)[self.slice]
+
+  def are_sites_inited(self):
+      return isinstance(self.atoms, sprkkr_atoms.SPRKKRAtoms) and self.atoms.are_sites_inited()
+
+  def get_atomic_numbers(self):
+      return self.atoms.get_atomic_numbers()[self.slice]
+
+  @cached_property
+  def arrays(self):
+
+      class Wrap:
+          def __getitem__(slf, name):
+              return self.atoms.arrays[name][self.slice]
+
+          def __contains__(slf, name):
+              return name in self.atoms.arrays
+
+      return Wrap()
+
+  def get_scaled_positions(self):
+      return self.atoms.get_scaled_positions()[self.slice]

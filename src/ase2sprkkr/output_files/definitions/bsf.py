@@ -11,30 +11,38 @@ import matplotlib.colors as mcolors
 from functools import lru_cache
 import warnings
 from ase.units import Rydberg
-from ...visualise.plot import colormesh, Multiplot
+from ...gui.plot import colormesh, Multiplot
 
 
 class BSFOutputFile(CommonOutputFile, Arithmetic):
 
+    plot_parameters = { 'layer', 'fermi', 'seperate_plots' }
+
     """
     Output file for Bloch spectral functions
     """
-    def plot(self, layout=(2,2), figsize=(10,6), latex=True,
+
+
+    def plot(self, layout=(2,2), figsize=(10,6), latex=None,
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
-             **kwargs
+             layer=None, separate_plots=False, **kwargs
              ):
-        mp=Multiplot(layout=layout, figsize=figsize, latex=latex, **kwargs)
-        plt.subplots_adjust(left=0.12,right=0.95,bottom=0.17,top=0.90, hspace=0.75, wspace=0.5)
-        if self.KEYWORD() == 'BSF-SPOL':
-            mp.plot(self.I)
-            mp.plot(self.I_X)
-            mp.plot(self.I_Y)
-            mp.plot(self.I_Z)
-        else:
-            mp.plot(self.I)
-            mp.plot(self.I_UP)
-            mp.plot(self.I_DOWN)
-        mp.finish(filename, show, dpi)
+
+            with Multiplot(layout=layout, figsize=figsize, latex=latex,
+                         filename=filename, show=show, dpi=dpi,
+                         separate_plots=separate_plots,
+                         adjust={'left':0.12, 'right': 0.95,'bottom': 0.17, 'top':0.90, 'hspace': 0.75, 'wspace':0.5 },
+                         **kwargs) as mp:
+
+                if self.KEYWORD() in ['BSF-SPN', 'BSF-SPOL']:
+                    mp.plot(self.I)
+                    mp.plot(self.I_X)
+                    mp.plot(self.I_Y)
+                    mp.plot(self.I_Z)
+                else:
+                    mp.plot(self.I)
+                    mp.plot(self.I_UP)
+                    mp.plot(self.I_DOWN)
 
     _arithmetic_values = [('RAW_DATA', slice(None))]
 
@@ -61,13 +69,32 @@ def create_definition():
 
     def plot(title, colormap='bwr', negative=True):
 
-        def plot(option, colormap=colormap, **kwargs):
+        def plot(option, colormap=colormap, layer=None, fermi=None, **kwargs):
           c = option._container
           mesh = c.MESH()
           data = option()
-          data = data.sum(axis = 0)
+          if fermi is True:
+               fermi = 0.5
+
+          def check_layer(layer):
+              limit = data.shape[0]
+              if layer < 0 or layer >= limit:
+                  raise ValueError(f"Layer number should be between {1} and {limit}.")
+
+          if layer is None:
+              data = data.sum(axis = 0)
+          elif isinstance(layer, int):
+              check_layer(layer)
+              data = data[layer]
+          else:
+              check_layer(layer.start)
+              check_layer(layer.stop)
+              if layer.start >= layer.stop:
+                  raise ValueError(f"Empty layer range.")
+              data = data[layer].sum(axis = 0)
+
           if negative:
-            vmax = max(np.max(data), -np.min(data))
+            vmax = max(np.abs(np.max(data)), np.abs(np.min(data)))
             vmin = -vmax
           else:
             vmin = 0
@@ -77,22 +104,26 @@ def create_definition():
               'vmin' : vmin,
               'vmax' : vmax,
               'colormap' : colormap,
-              'xticks' : np.insert(k[[x - 1 for x in c.INDKDIR()]], 0, 0),
-              'xticklabels' : [],
-              'xlabel' : r'K',
               'colorbar' : True,
-              'title' : title
+              'title' : title,
+              'show_zero_line' : fermi,
           }
 
           if c.MODE()=='CONST-E':
             kw.update({
-              'ylabel' : r'$E-E_{\rm F}$ (eV)',
-              'yrange' : (c.E[0], c.E[-1]),
-              'show_zero_line' : 0.5,
+              'xticks' : np.insert(k[[x - 1 for x in c.INDKDIR()]], 0, 0),
+              'xticklabels' : [],
+              'xlabel' : r'Kx',
+              'ylabel' : r'Ky',
+              'yticks' : np.insert(k[[x - 1 for x in c.INDKDIR()]], 0, 0),
+              'yticklabels' : [],
             })
           else:
             kw.update({
-              'ylabel' : r'$E-E_{\rm F}$ (eV)'
+              'ylabel' : r'$E-E_{\rm F}$ (eV)',
+              'xticks' : np.insert(k[[x - 1 for x in c.INDKDIR()]], 0, 0),
+              'xticklabels' : [],
+              'xlabel' : r'K',
             })
 
           def callback(ax):
@@ -130,7 +161,7 @@ def create_definition():
           ('NQ_EFF', 'NE/NK1', 'NK2')
 
           Data structure:
-            IX,Y,Z (BSF-SPOL)
+            IX,Y,Z (BSF-SPOL/SPN)
                 k-e: NE, type, NQ, NK  types(I,x,y,z)
                 k-k: type, K1, NQ, K2, types(I,x,y,z)
 
@@ -151,14 +182,14 @@ def create_definition():
                 return data[limit:].reshape(nk1,nq,nk2)
           else:
              if c.MODE() == 'EK-REL':
-                return data.reshape(c.NE(), 4, nq, nk2)[:,type]
+                return data.reshape(c.NE(), 4, nq, nk2)[:,type + 1]
              else:
-                return data.reshape(4, c.NK1(), nq, nk2)[:,type]
+                return data.reshape(4, c.NK1(), nq, nk2)[:,type + 1]
         return index
 
     norm = np.linalg.norm
 
-    definition = create_output_file_definition(Keyword('BSF', 'BSF-SPOL'), [
+    definition = create_output_file_definition(Keyword('BSF-SPOL', 'BSF-SPN', 'BSF'), [
       Separator(),
       V('DATASET', str, written_name='#DATASET'),
       V('MODE', Keyword('EK-REL', 'CONST-E')),
@@ -188,6 +219,7 @@ def create_definition():
               V('NK1', int, info='Number of K points (the first axis)'),
               V('NK2', int, info='Number of K points (the first axis)'),
               V('ERYD', Array(float, length=2)),
+              Separator(),
               V('VECK_START', Array(float, length=3), is_stored=False, default_value=init_veck_start, init_by_default=True),
               V('NK1_1', int, written_name='NK1', is_hidden=True),
               V('VECK1', Array(float, length=3)),
@@ -216,16 +248,17 @@ def create_definition():
       V('RAW_DATA', NumpyArray(written_shape=(-1,1), shape=(-1,)), name_in_grammar=False),
       *switch('KEYWORD', {
         'BSF' : [
-            NV('I_UP', 'RAW_DATA', i(0), reorder=reorder, plot=plot(title='Spin up', negative=True, colormap=mymap) ),
-            NV('I_DOWN', 'RAW_DATA', i(1), reorder=reorder, plot=plot(title='Spin down', negative=True, colormap=mymap) ),
+            NV('I_UP', 'RAW_DATA', i(0), reorder=reorder, plot=plot(title='Spin up', negative=True, colormap='Reds') ),
+            NV('I_DOWN', 'RAW_DATA', i(1), reorder=reorder, plot=plot(title='Spin down', negative=True, colormap='Blues') ),
         ],
         'BSF-SPOL': [
             NV('I_X', 'RAW_DATA', i(0), reorder=reorder, plot=plot(title=r'$\sigma_x$') ),
             NV('I_Y', 'RAW_DATA', i(1), reorder=reorder, plot=plot(title=r'$\sigma_y$')),
             NV('I_Z', 'RAW_DATA', i(2), reorder=reorder, plot=plot(title=r'$\sigma_z$') ),
-        ]
+        ],
+        'BSF-SPN' : 'BSF-SPOL',
       }),
-      NV('I', 'RAW_DATA', i(-1), reorder=reorder, plot=plot(negative=False, colormap=mymap, title='Total') ),
+      NV('I', 'RAW_DATA', i(-1), reorder=reorder, plot=plot(negative=True, colormap=mymap, title='Total') ),
 
     ], cls=BSFDefinition, name='BSF', info='BSF output file')
 

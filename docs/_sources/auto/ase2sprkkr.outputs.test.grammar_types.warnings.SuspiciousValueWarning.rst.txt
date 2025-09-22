@@ -1,0 +1,6 @@
+ase2sprkkr.outputs.test.grammar\_types.warnings.SuspiciousValueWarning
+======================================================================
+
+.. currentmodule:: ase2sprkkr.outputs.test.grammar_types.warnings
+
+.. autoexception:: SuspiciousValueWarning

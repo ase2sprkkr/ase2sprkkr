@@ -1,0 +1,195 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.input_parameters.definitions.bsfek &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.input_parameters.definitions.bsfek</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.input_parameters.definitions.bsfek</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; DOS task input parameters definition&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">...common.grammar_types</span> <span class="kn">import</span> <span class="n">SetOf</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">.sections</span> <span class="kn">import</span> <span class="n">TASK</span><span class="p">,</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">MODE</span>
+<span class="kn">from</span> <span class="nn">..input_parameters_definitions</span> <span class="kn">import</span> \
+    <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span><span class="p">,</span> \
+    <span class="n">InputValueDefinition</span> <span class="k">as</span> <span class="n">V</span>
+<span class="kn">from</span> <span class="nn">...common.generated_configuration_definitions</span> <span class="kn">import</span> <span class="n">Length</span>
+<span class="kn">from</span> <span class="nn">...common.configuration_definitions</span> <span class="kn">import</span> <span class="n">if_not_defined</span>
+
+<span class="n">input_parameters</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">InputParameters</span><span class="p">(</span>
+    <span class="s1">&#39;bsfek&#39;</span><span class="p">,</span> <span class="p">[</span>
+          <span class="n">CONTROL</span><span class="p">(</span><span class="s1">&#39;BSF&#39;</span><span class="p">),</span>
+          <span class="n">TAU</span><span class="p">,</span>
+          <span class="n">TASK</span><span class="p">(</span><span class="s1">&#39;BSF&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">([</span>
+            <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NK&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;total number of k-points&quot;</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s1">&#39;KPATH&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Predefined path in k-space&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Bravais-lattice KPATH path</span>
+<span class="s2">==========================</span>
+<span class="s2">orb 1  Γ-Σ-X-G-U-A-Z-Λ-Γ-∆-Y-H-T-B-Z</span>
+<span class="s2">       + X-D-S-C-Y + U-P-R-E-T + S-Q-T</span>
+<span class="s2">    2  Γ-Σ-X-G-U-A-Z-Λ-Γ-∆-Y-H-T-B-Z</span>
+<span class="s2">    3  Γ-Σ-X-G-U-A-Z-Λ-Γ</span>
+<span class="s2">    4  Γ-∆-Y-H-T-B-Z</span>
+<span class="s2">hex 1  Γ-Σ-M-T’-K-T-Γ-∆-A-R-L-S’-H-S-A</span>
+<span class="s2">       + M-U-L + K-P-H</span>
+<span class="s2">    2  Γ-Σ-M-T’-K-T-Γ-∆-A-R-L-S’-H-S-A</span>
+<span class="s2">    3  Γ-Σ-M-T’-K-T-Γ-∆-A</span>
+<span class="s2">    4  Γ-Σ-M</span>
+<span class="s2">    5  K-T-Γ</span>
+<span class="s2">sc  1  Γ-∆-X-Y-M-V-R-Λ-Γ-Σ-M</span>
+<span class="s2">    2  Γ-∆-X-Y-M-V-R-Λ-Γ</span>
+<span class="s2">    3  Γ-∆-X-Y-M-V-R</span>
+<span class="s2">    4  Γ-∆-X-Y-M</span>
+<span class="s2">fcc 1  X-∆-Γ-Λ-L-Q-W-N-K-Σ-Γ</span>
+<span class="s2">       + L-M-U-S-X-Z-W-D-U</span>
+<span class="s2">    2  X-∆-Γ-Λ-L-Q-W-N-K-Σ-Γ</span>
+<span class="s2">    3  X-∆-Γ-Λ-L</span>
+<span class="s2">    4  Γ-∆-X</span>
+<span class="s2">    5  Γ-Λ-L</span>
+<span class="s2">bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P</span>
+<span class="s2">    2  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H</span>
+<span class="s2">    3  Γ-D-H-G-N-Σ-Γ-Λ-P</span>
+<span class="s2">    4  Γ-D-H-G-N-Σ-Γ</span>
+<span class="s2">    5  Γ-D-H</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="o">*</span><span class="n">if_not_defined</span><span class="p">(</span><span class="s1">&#39;KPATH&#39;</span><span class="p">,</span> <span class="p">[</span>
+                <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NKDIR&#39;</span><span class="p">,</span> <span class="n">Length</span><span class="p">(</span><span class="s1">&#39;KA&#39;</span><span class="p">,</span> <span class="s1">&#39;KE&#39;</span><span class="p">,</span> <span class="n">default_values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,]]),</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of directions treated in k-spaces&quot;</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="s1">&#39;Please, specify either TASK.KPATH or TASK.KA and TASK.KE&#39;</span><span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span><span class="s1">&#39;KA&#39;</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">is_repeated</span><span class="o">=</span><span class="s1">&#39;NUMBERED&#39;</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR&quot;</span><span class="p">,</span>
+                <span class="n">is_required</span><span class="o">=</span><span class="s2">&quot;Please, specify either TASK.KPATH or TASK.KA and TASK.KE&quot;</span><span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span><span class="s1">&#39;KE&#39;</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">is_repeated</span><span class="o">=</span><span class="s1">&#39;NUMBERED&#39;</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR&quot;</span><span class="p">,</span>
+                <span class="n">is_required</span><span class="o">=</span><span class="s2">&quot;Please, specify either TASK.KPATH or TASK.KA and TASK.KE&quot;</span><span class="p">),</span>
+            <span class="p">])</span>
+          <span class="p">]),</span>
+          <span class="n">ENERGY</span><span class="p">(</span>
+            <span class="n">emin</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;The lowest E-value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="n">emax</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;The highest E-value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="n">defaults</span><span class="o">=</span><span class="p">{</span>
+              <span class="s1">&#39;GRID&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+              <span class="s1">&#39;NE&#39;</span>  <span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;ImE&#39;</span> <span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+            <span class="p">}),</span>
+          <span class="n">CONTROL</span><span class="p">(</span><span class="s1">&#39;BLOCHSF&#39;</span><span class="p">),</span>
+          <span class="n">TAU</span><span class="p">,</span>
+          <span class="n">MODE</span><span class="p">,</span>
+          <span class="n">STRCONST</span><span class="p">,</span>
+          <span class="n">SITES</span>
+      <span class="p">],</span>
+    <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;kkrgen&#39;</span><span class="p">,</span>
+    <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">info</span><span class="o">=</span><span class="s2">&quot;BSFEK - Bloch spectral functions in the E-K plane&quot;</span>
+<span class="p">)</span>
+<span class="sd">&quot;&quot;&quot; JXC -JXC task input parameters definition&quot;&quot;&quot;</span>
+
+<span class="c1"># TODO - AKI scripts to generate KA/KE</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

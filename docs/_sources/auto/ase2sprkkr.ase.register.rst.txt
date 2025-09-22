@@ -23,9 +23,7 @@ Full name: **ase2sprkkr.ase.register**
       :template: custom-base-template.rst
    
       ase_register
-      load_user_preferences
       register
-      user_preferences_file
    
    
 

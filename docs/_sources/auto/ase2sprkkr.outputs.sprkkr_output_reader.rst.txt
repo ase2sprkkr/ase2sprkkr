@@ -1,0 +1,50 @@
+sprkkr\_output\_reader
+======================
+
+Full name: **ase2sprkkr.outputs.sprkkr\_output\_reader**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputReader 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.sprkkr_output_reader
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SprKkrOutputReader
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

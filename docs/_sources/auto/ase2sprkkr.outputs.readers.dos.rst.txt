@@ -1,0 +1,51 @@
+dos
+===
+
+Full name: **ase2sprkkr.outputs.readers.dos**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.dos.DosProcess  ase2sprkkr.outputs.readers.dos.DosResult 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.readers.dos
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      DosProcess
+      DosResult
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

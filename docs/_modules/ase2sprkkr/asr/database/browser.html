@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.database.browser &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -121,7 +120,9 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="create_table"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.create_table.html#ase2sprkkr.asr.database.browser.create_table">[docs]</a><span class="k">def</span> <span class="nf">create_table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>  <span class="c1"># AtomsRow</span>
+<div class="viewcode-block" id="create_table">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.create_table.html#ase2sprkkr.asr.database.browser.create_table">[docs]</a>
+<span class="k">def</span> <span class="nf">create_table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>  <span class="c1"># AtomsRow</span>
                  <span class="n">header</span><span class="p">,</span>  <span class="c1"># List[str]</span>
                  <span class="n">keys</span><span class="p">,</span>  <span class="c1"># List[str]</span>
                  <span class="n">key_descriptions</span><span class="p">,</span>  <span class="c1"># Dict[str, Tuple[str, str, str]]</span>
@@ -149,7 +150,10 @@
             <span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="n">table</span><span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="miscellaneous_section"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.miscellaneous_section.html#ase2sprkkr.asr.database.browser.miscellaneous_section">[docs]</a><span class="k">def</span> <span class="nf">miscellaneous_section</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">,</span> <span class="n">exclude</span><span class="p">):</span>
+
+<div class="viewcode-block" id="miscellaneous_section">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.miscellaneous_section.html#ase2sprkkr.asr.database.browser.miscellaneous_section">[docs]</a>
+<span class="k">def</span> <span class="nf">miscellaneous_section</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">,</span> <span class="n">exclude</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make help function for adding a &quot;miscellaneous&quot; section.</span>
 
 <span class="sd">    Create table with all keys except those in exclude.</span>
@@ -160,7 +164,10 @@
     <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;Miscellaneous&#39;</span><span class="p">,</span> <span class="p">[[</span><span class="n">misc</span><span class="p">]])</span></div>
 
 
-<div class="viewcode-block" id="describe_entry"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.describe_entry.html#ase2sprkkr.asr.database.browser.describe_entry">[docs]</a><span class="k">def</span> <span class="nf">describe_entry</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+
+<div class="viewcode-block" id="describe_entry">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.describe_entry.html#ase2sprkkr.asr.database.browser.describe_entry">[docs]</a>
+<span class="k">def</span> <span class="nf">describe_entry</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> \
        <span class="ow">and</span> <span class="s1">&#39;value&#39;</span> <span class="ow">in</span> <span class="n">value</span> \
        <span class="ow">and</span> <span class="s1">&#39;description&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
@@ -169,7 +176,10 @@
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="describe_entries"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.describe_entries.html#ase2sprkkr.asr.database.browser.describe_entries">[docs]</a><span class="k">def</span> <span class="nf">describe_entries</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+
+<div class="viewcode-block" id="describe_entries">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.describe_entries.html#ase2sprkkr.asr.database.browser.describe_entries">[docs]</a>
+<span class="k">def</span> <span class="nf">describe_entries</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">ir</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rows</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">ic</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -179,7 +189,10 @@
     <span class="k">return</span> <span class="n">rows</span></div>
 
 
-<div class="viewcode-block" id="dict_to_list"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.dict_to_list.html#ase2sprkkr.asr.database.browser.dict_to_list">[docs]</a><span class="k">def</span> <span class="nf">dict_to_list</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">char</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="dict_to_list">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.dict_to_list.html#ase2sprkkr.asr.database.browser.dict_to_list">[docs]</a>
+<span class="k">def</span> <span class="nf">dict_to_list</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">char</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
     <span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dct</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -194,7 +207,10 @@
     <span class="k">return</span> <span class="n">lst</span></div>
 
 
-<div class="viewcode-block" id="entry_parameter_description"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.entry_parameter_description.html#ase2sprkkr.asr.database.browser.entry_parameter_description">[docs]</a><span class="k">def</span> <span class="nf">entry_parameter_description</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">entry</span><span class="p">):</span>
+
+<div class="viewcode-block" id="entry_parameter_description">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.entry_parameter_description.html#ase2sprkkr.asr.database.browser.entry_parameter_description">[docs]</a>
+<span class="k">def</span> <span class="nf">entry_parameter_description</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">entry</span><span class="p">):</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;results-</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="s1">&#39;params&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span>
         <span class="n">params</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">params</span>
@@ -222,7 +238,10 @@
     <span class="k">return</span> <span class="n">describe_entry</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="val2str"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.val2str.html#ase2sprkkr.asr.database.browser.val2str">[docs]</a><span class="k">def</span> <span class="nf">val2str</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">digits</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+<div class="viewcode-block" id="val2str">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.val2str.html#ase2sprkkr.asr.database.browser.val2str">[docs]</a>
+<span class="k">def</span> <span class="nf">val2str</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">digits</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">value</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
@@ -234,7 +253,10 @@
     <span class="k">return</span> <span class="n">value</span></div>
 
 
-<div class="viewcode-block" id="fig"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.fig.html#ase2sprkkr.asr.database.browser.fig">[docs]</a><span class="k">def</span> <span class="nf">fig</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">link</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+
+<div class="viewcode-block" id="fig">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.fig.html#ase2sprkkr.asr.database.browser.fig">[docs]</a>
+<span class="k">def</span> <span class="nf">fig</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">link</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">caption</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Dict[str, Any]&#39;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Shortcut for figure dict.&quot;&quot;&quot;</span>
     <span class="n">dct</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;figure&#39;</span><span class="p">,</span> <span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="n">filename</span><span class="p">}</span>
@@ -245,11 +267,17 @@
     <span class="k">return</span> <span class="n">dct</span></div>
 
 
-<div class="viewcode-block" id="table"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.table.html#ase2sprkkr.asr.database.browser.table">[docs]</a><span class="k">def</span> <span class="nf">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">kd</span><span class="o">=</span><span class="p">{},</span> <span class="n">digits</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+
+<div class="viewcode-block" id="table">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.table.html#ase2sprkkr.asr.database.browser.table">[docs]</a>
+<span class="k">def</span> <span class="nf">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">kd</span><span class="o">=</span><span class="p">{},</span> <span class="n">digits</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">create_table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="p">[</span><span class="n">title</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">],</span> <span class="n">keys</span><span class="p">,</span> <span class="n">kd</span><span class="p">,</span> <span class="n">digits</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="merge_panels"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.merge_panels.html#ase2sprkkr.asr.database.browser.merge_panels">[docs]</a><span class="k">def</span> <span class="nf">merge_panels</span><span class="p">(</span><span class="n">page</span><span class="p">):</span>
+
+<div class="viewcode-block" id="merge_panels">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.merge_panels.html#ase2sprkkr.asr.database.browser.merge_panels">[docs]</a>
+<span class="k">def</span> <span class="nf">merge_panels</span><span class="p">(</span><span class="n">page</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge panels which have the same title.</span>
 
 <span class="sd">    Also merge tables with same first entry in header.</span>
@@ -290,22 +318,34 @@
         <span class="n">page</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">panel</span></div>
 
 
-<div class="viewcode-block" id="extract_recipe_from_filename"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.extract_recipe_from_filename.html#ase2sprkkr.asr.database.browser.extract_recipe_from_filename">[docs]</a><span class="k">def</span> <span class="nf">extract_recipe_from_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+
+<div class="viewcode-block" id="extract_recipe_from_filename">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.extract_recipe_from_filename.html#ase2sprkkr.asr.database.browser.extract_recipe_from_filename">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_recipe_from_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse filename and return recipe name.&quot;&quot;&quot;</span>
     <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;results-(.*)\.json&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="is_results_file"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.is_results_file.html#ase2sprkkr.asr.database.browser.is_results_file">[docs]</a><span class="k">def</span> <span class="nf">is_results_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+<div class="viewcode-block" id="is_results_file">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.is_results_file.html#ase2sprkkr.asr.database.browser.is_results_file">[docs]</a>
+<span class="k">def</span> <span class="nf">is_results_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">filename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;results-&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="RowWrapper"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.RowWrapper.html#ase2sprkkr.asr.database.browser.RowWrapper">[docs]</a><span class="k">class</span> <span class="nc">RowWrapper</span><span class="p">:</span>
 
-<div class="viewcode-block" id="RowWrapper.__init__"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.RowWrapper.html#ase2sprkkr.asr.database.browser.RowWrapper.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+<div class="viewcode-block" id="RowWrapper">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.RowWrapper.html#ase2sprkkr.asr.database.browser.RowWrapper">[docs]</a>
+<span class="k">class</span> <span class="nc">RowWrapper</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RowWrapper.__init__">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.RowWrapper.html#ase2sprkkr.asr.database.browser.RowWrapper.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_row</span> <span class="o">=</span> <span class="n">row</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap attribute lookup of AtomsRow.&quot;&quot;&quot;</span>
@@ -318,7 +358,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="layout"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.layout.html#ase2sprkkr.asr.database.browser.layout">[docs]</a><span class="k">def</span> <span class="nf">layout</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">AtomsRow</span><span class="p">,</span>
+
+<div class="viewcode-block" id="layout">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.layout.html#ase2sprkkr.asr.database.browser.layout">[docs]</a>
+<span class="k">def</span> <span class="nf">layout</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">AtomsRow</span><span class="p">,</span>
            <span class="n">key_descriptions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
            <span class="n">prefix</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Page layout.&quot;&quot;&quot;</span>
@@ -423,6 +466,7 @@
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">columns</span><span class="p">):</span>
             <span class="n">final_page</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">title</span><span class="p">,</span> <span class="n">columns</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">final_page</span></div>
+
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.database.browser&#39;</span><span class="p">)</span>

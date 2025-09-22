@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.output_files.definitions &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -103,16 +102,24 @@
 <span class="kn">import</span> <span class="nn">io</span>
 
 
-<div class="viewcode-block" id="UnknownDataValue"><a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.UnknownDataValue.html#ase2sprkkr.output_files.definitions.UnknownDataValue">[docs]</a><span class="k">class</span> <span class="nc">UnknownDataValue</span><span class="p">(</span><span class="n">ConfigurationValue</span><span class="p">):</span>
+<div class="viewcode-block" id="UnknownDataValue">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.UnknownDataValue.html#ase2sprkkr.output_files.definitions.UnknownDataValue">[docs]</a>
+<span class="k">class</span> <span class="nc">UnknownDataValue</span><span class="p">(</span><span class="n">ConfigurationValue</span><span class="p">):</span>
 
-<div class="viewcode-block" id="UnknownDataValue.as_array"><a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.UnknownDataValue.html#ase2sprkkr.output_files.definitions.UnknownDataValue.as_array">[docs]</a>  <span class="k">def</span> <span class="nf">as_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UnknownDataValue.as_array">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.UnknownDataValue.html#ase2sprkkr.output_files.definitions.UnknownDataValue.as_array">[docs]</a>
+  <span class="k">def</span> <span class="nf">as_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">()</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
           <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="p">)</span>
-      <span class="k">return</span> <span class="n">out</span></div></div>
+      <span class="k">return</span> <span class="n">out</span></div>
+</div>
 
 
-<div class="viewcode-block" id="OutputFile"><a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.OutputFile.html#ase2sprkkr.output_files.definitions.OutputFile">[docs]</a><span class="k">class</span> <span class="nc">OutputFile</span><span class="p">(</span><span class="n">ConfigurationFile</span><span class="p">):</span>
+
+<div class="viewcode-block" id="OutputFile">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.OutputFile.html#ase2sprkkr.output_files.definitions.OutputFile">[docs]</a>
+<span class="k">class</span> <span class="nc">OutputFile</span><span class="p">(</span><span class="n">ConfigurationFile</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Objects of this class holds datas of an output file &quot;&quot;&quot;</span>
 
   <span class="nd">@cached_class_property</span>
@@ -135,7 +142,9 @@
            <span class="n">out</span><span class="p">[</span><span class="n">mod</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">mod</span>
       <span class="k">return</span> <span class="n">out</span>
 
-<div class="viewcode-block" id="OutputFile.from_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.OutputFile.html#ase2sprkkr.output_files.definitions.OutputFile.from_file">[docs]</a>  <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="OutputFile.from_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.OutputFile.html#ase2sprkkr.output_files.definitions.OutputFile.from_file">[docs]</a>
+  <span class="nd">@classmethod</span>
   <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">first_try</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">try_only</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Read SPRKKR output file (DOS, BSF....). The type of content of the</span>
@@ -202,18 +211,30 @@
               <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">unknown_output_file_definition</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
           <span class="k">except</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseBaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
               <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Can not parse file: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
-      <span class="k">raise</span> <span class="n">first</span> <span class="ow">or</span> <span class="n">last</span></div></div>
+      <span class="k">raise</span> <span class="n">first</span> <span class="ow">or</span> <span class="n">last</span></div>
+</div>
 
 
-<div class="viewcode-block" id="CommonOutputFile"><a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.CommonOutputFile.html#ase2sprkkr.output_files.definitions.CommonOutputFile">[docs]</a><span class="k">class</span> <span class="nc">CommonOutputFile</span><span class="p">(</span><span class="n">ConfigurationFile</span><span class="p">):</span>
 
-<div class="viewcode-block" id="CommonOutputFile.n_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.CommonOutputFile.html#ase2sprkkr.output_files.definitions.CommonOutputFile.n_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">n_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CommonOutputFile">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.CommonOutputFile.html#ase2sprkkr.output_files.definitions.CommonOutputFile">[docs]</a>
+<span class="k">class</span> <span class="nc">CommonOutputFile</span><span class="p">(</span><span class="n">ConfigurationFile</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CommonOutputFile.n_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.CommonOutputFile.html#ase2sprkkr.output_files.definitions.CommonOutputFile.n_atoms">[docs]</a>
+    <span class="k">def</span> <span class="nf">n_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ORBITALS</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CommonOutputFile.n_types"><a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.CommonOutputFile.html#ase2sprkkr.output_files.definitions.CommonOutputFile.n_types">[docs]</a>    <span class="k">def</span> <span class="nf">n_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CommonOutputFile.n_types">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.CommonOutputFile.html#ase2sprkkr.output_files.definitions.CommonOutputFile.n_types">[docs]</a>
+    <span class="k">def</span> <span class="nf">n_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CommonOutputFile.site_type_index"><a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.CommonOutputFile.html#ase2sprkkr.output_files.definitions.CommonOutputFile.site_type_index">[docs]</a>    <span class="k">def</span> <span class="nf">site_type_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CommonOutputFile.site_type_index">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.CommonOutputFile.html#ase2sprkkr.output_files.definitions.CommonOutputFile.site_type_index">[docs]</a>
+    <span class="k">def</span> <span class="nf">site_type_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">type</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">):</span>
@@ -221,20 +242,30 @@
                <span class="k">return</span> <span class="n">i</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;There is no </span><span class="si">{</span><span class="nb">type</span><span class="si">}</span><span class="s1"> atom in the output file&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CommonOutputFile.n_orbitals"><a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.CommonOutputFile.html#ase2sprkkr.output_files.definitions.CommonOutputFile.n_orbitals">[docs]</a>    <span class="k">def</span> <span class="nf">n_orbitals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CommonOutputFile.n_orbitals">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.CommonOutputFile.html#ase2sprkkr.output_files.definitions.CommonOutputFile.n_orbitals">[docs]</a>
+    <span class="k">def</span> <span class="nf">n_orbitals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
         <span class="nb">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_type_index</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ORBITALS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="nb">type</span><span class="p">][</span><span class="s1">&#39;IQAT&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ORBITALS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="nb">type</span><span class="p">][</span><span class="s1">&#39;IQAT&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span></div>
+</div>
 
 
-<div class="viewcode-block" id="Arithmetic"><a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.Arithmetic.html#ase2sprkkr.output_files.definitions.Arithmetic">[docs]</a><span class="k">class</span> <span class="nc">Arithmetic</span><span class="p">:</span>
 
-<div class="viewcode-block" id="Arithmetic._check_arithmetic"><a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.Arithmetic.html#ase2sprkkr.output_files.definitions.Arithmetic._check_arithmetic">[docs]</a>    <span class="k">def</span> <span class="nf">_check_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="Arithmetic">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.Arithmetic.html#ase2sprkkr.output_files.definitions.Arithmetic">[docs]</a>
+<span class="k">class</span> <span class="nc">Arithmetic</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Arithmetic._check_arithmetic">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.Arithmetic.html#ase2sprkkr.output_files.definitions.Arithmetic._check_arithmetic">[docs]</a>
+    <span class="k">def</span> <span class="nf">_check_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_assert_arithmetic&#39;</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_assert_arithmetic</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The outputs are not compatibile to be summed or subtracted.&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
         <span class="k">pass</span></div>
+
 
     <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">copy_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -262,10 +293,13 @@
         <span class="n">out</span><span class="o">*=</span><span class="n">other</span>
         <span class="k">return</span> <span class="n">out</span>
 
-<div class="viewcode-block" id="Arithmetic._do_arithmetic"><a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.Arithmetic.html#ase2sprkkr.output_files.definitions.Arithmetic._do_arithmetic">[docs]</a>    <span class="k">def</span> <span class="nf">_do_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="Arithmetic._do_arithmetic">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.Arithmetic.html#ase2sprkkr.output_files.definitions.Arithmetic._do_arithmetic">[docs]</a>
+    <span class="k">def</span> <span class="nf">_do_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Run given function for all &quot;summable/subtractable/etc... data&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">selector</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arithmetic_values</span><span class="p">:</span>
             <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">val</span><span class="p">]()[</span><span class="n">selector</span><span class="p">],</span><span class="n">func</span><span class="p">)(</span><span class="n">other</span><span class="p">[</span><span class="n">val</span><span class="p">]()[</span><span class="n">selector</span><span class="p">])</span></div>
+
 
     <span class="k">def</span> <span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_arithmetic</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
@@ -284,6 +318,7 @@
     <span class="k">def</span> <span class="nf">__idiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_do_arithmetic</span><span class="p">(</span><span class="s1">&#39;__idiv__&#39;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
+
 
 
 <span class="c1"># at last, import this file that need this module</span>

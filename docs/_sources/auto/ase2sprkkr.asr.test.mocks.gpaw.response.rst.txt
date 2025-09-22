@@ -38,8 +38,8 @@ Full name: **ase2sprkkr.asr.test.mocks.gpaw.response**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.asr.test.mocks.gpaw.response.bse
-     ase2sprkkr.asr.test.mocks.gpaw.response.df
-     ase2sprkkr.asr.test.mocks.gpaw.response.g0w0
+     bse
+     df
+     g0w0
   
   

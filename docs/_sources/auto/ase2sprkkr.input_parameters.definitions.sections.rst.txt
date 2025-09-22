@@ -26,7 +26,6 @@ Full name: **ase2sprkkr.input\_parameters.definitions.sections**
       :template: custom-base-template.rst
    
       TAU
-      ENERGY
       SCF
       STRCONST
       SITES
@@ -45,8 +44,10 @@ Full name: **ase2sprkkr.input\_parameters.definitions.sections**
       :template: custom-base-template.rst
    
       CONTROL
+      ENERGY
       TASK
       _nktab_value
+      xc
    
    
 

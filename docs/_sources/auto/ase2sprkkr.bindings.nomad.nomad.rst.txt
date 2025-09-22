@@ -1,0 +1,60 @@
+nomad
+=====
+
+Full name: **ase2sprkkr.bindings.nomad.nomad**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.bindings.nomad.nomad.ExternalEntry  ase2sprkkr.bindings.nomad.nomad.NomadArchive  ase2sprkkr.bindings.nomad.nomad.NomadEntry 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings.nomad.nomad
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      map_io_to_nomad
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ExternalEntry
+      NomadArchive
+      NomadEntry
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,36 @@
+NomadArchive
+============
+
+
+.. currentmodule:: ase2sprkkr.bindings.nomad.nomad
+
+.. autoclass:: NomadArchive
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.bindings.nomad.nomad.NomadArchive
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

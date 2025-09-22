@@ -1,0 +1,50 @@
+yaml
+====
+
+Full name: **ase2sprkkr.potentials.test.yaml**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.test.yaml.IndentDumper 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.test.yaml
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      IndentDumper
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

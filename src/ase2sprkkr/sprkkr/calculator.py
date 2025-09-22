@@ -29,7 +29,9 @@ import datetime
 from typing import Union, Any, Dict, Optional
 from pathlib import Path
 import re
+import warnings
 from ..common.misc import config_property, first_non_none
+from ..configuration import config
 
 
 class SPRKKR(Calculator):
@@ -87,13 +89,13 @@ class SPRKKR(Calculator):
           Write the output of runned executables to stdout (in addition to the output file)?
           (Default value for the calculator)
           If print_output = 'info', only a few info lines per iteration will be printed.
-          None means use the value from config.config.calculator_parameters.print_output.
+          None means use the value from config.running.print_output.
 
         mpi: Union[list,string,int,bool]
           Runner for mpi to run a mpi calculation. True and int means autodetect: use True
           for a cluster where mpi is able to autodetect the number of the processes, otherwise
           use integer to specify the number of processes. None means use the value from
-          config.config.calculator_parameters.mpi.
+          config.running.mpi.
           E.g. mpi = [ 'mpirun', '-np', '4' ], mpi = 4
 
         input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None
@@ -184,11 +186,11 @@ class SPRKKR(Calculator):
         self._counter = 0
         # For %c template in file names
 
-    print_output = config_property('print_output', 'running.print_output')
-    mpi = config_property('mpi', 'running.mpi')
-    empty_spheres = config_property('empty_spheres', 'running.empty_spheres')
-    executable_dir = config_property('executable_dir', 'executables.dir')
-    executable_suffix = config_property('exectable_suffix', 'executables.suffix')
+    print_output = config_property('print_output', config.running.print_output)
+    mpi = config_property('mpi', config.running.mpi)
+    empty_spheres = config_property('empty_spheres', config.running.empty_spheres)
+    executable_dir = config_property('executable_dir', config.executables.dir)
+    executable_suffix = config_property('exectable_suffix', config.executables.suffix)
 
     @property
     def input_parameters(self):
@@ -372,7 +374,7 @@ class SPRKKR(Calculator):
                   input_file=None, potential_file=None, output_file=False,
                   directory:Union[str,bool,Directory,None]=None, create_subdirs:bool=False,
                   options={}, task=None,
-                  empty_spheres: Optional[str | bool] = None,
+                  empty_spheres: Optional[str | bool | tuple | abc.Mapping] = None,
                   mpi=None,
                   return_files=False,
                   ):
@@ -436,6 +438,8 @@ class SPRKKR(Calculator):
             'auto' means add if no empty sphere is present.
             Default None means use the default value from the calculator for this parameter
             (which is 'auto' by default).
+            Mapping pass the given arguments to the routine.
+            Tuple means min and max radius.
 
         options: dict
             Options to set to the input_parameters. If input_parameters are given by a filename,
@@ -544,7 +548,7 @@ class SPRKKR(Calculator):
                 input_parameters=self.input_parameters
             if input_parameters:
                if isinstance(input_parameters, str):
-                  if InputParameters.is_it_a_input_parameters_name(input_parameters):
+                  if InputParameters.is_it_an_input_parameters_name(input_parameters):
                      input_parameters = InputParameters.create_input_parameters(input_parameters)
                   else:
                      ip = InputParameters.from_file(input_parameters)
@@ -580,10 +584,17 @@ class SPRKKR(Calculator):
                        if site.is_vacuum():
                            empty_spheres = False
                            break
-            if empty_spheres:
+            if empty_spheres and atoms:
+                if isinstance(empty_spheres, tuple):
+                    assert len(empty_spheres) == 2, "Tuple of length 2, denoting min and max radius, is required for empty spheres"
+                    empty_spheres = { 'min_radius' : empty_spheres[0],
+                                      'max_radius' : empty_spheres[1] }
                 if not isinstance(empty_spheres, collections.abc.Mapping):
                     empty_spheres = {}
-                add_empty_spheres(atoms, **empty_spheres)
+                try:
+                    add_empty_spheres(atoms, **empty_spheres)
+                except Exception as e:
+                    warnings.warn(f"Failed to search empty-spheres. Error: {e}")
 
         def save_potential_file():
              pf = from_input_name(potential_file or self.potential_file, '.pot', '%a.pot')
@@ -731,9 +742,6 @@ class SPRKKR(Calculator):
         For the other parameters, see the save_input() method
         """
 
-        if print_output is None:
-           print_output = self.print_output
-
         if output_file is False:
            output_file = None
 
@@ -768,7 +776,7 @@ class SPRKKR(Calculator):
           if input_parameters.TASK.TASK() == 'SCF' and not potential and not atoms:
               try:
                   pot = out.potential
-              except ValueError:
+              except (ValueError, FileNotFoundError):
                   pot = None
               if pot:
                   self.potential = pot

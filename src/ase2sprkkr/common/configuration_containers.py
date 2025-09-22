@@ -10,6 +10,8 @@ from .configuration import Configuration
 import itertools
 import re
 from typing import Union, Any, Dict
+from .warnings import warnings, DataValidityError
+from .section_adaptors import SectionAdaptor, MergeSectionAdaptor
 
 
 class DisabledAttributeError(AttributeError):
@@ -33,7 +35,7 @@ class BaseConfigurationContainer(Configuration):
           (e.g. for numpy arrays)
         """
         d=self._definition
-        vals=self.as_dict(copy=copy_values)
+        vals=self.as_dict(copy=copy_values, only_changed=True)
         out =d.result_class(definition=d)
         out.set(vals, unknown='add')
         return out
@@ -47,7 +49,7 @@ class BaseConfigurationContainer(Configuration):
           has_any_value: bool
               True, if no value in the container is set, False otherwise
         """
-        for i in self.values():
+        for i in self._values():
           if i.has_any_value():
              return True
         return False
@@ -125,12 +127,16 @@ class ConfigurationContainer(BaseConfigurationContainer):
                                        'Probably it''s a hidden attribute used for some kind of logic, '
                                        'for which a direct access has no sense. If you really need '
                                        'an access to the attribute, you can use the "container[''name'']" notation.')
-      if d.condition and not d.condition(out):
-          raise DisabledAttributeError(f'member {name} of {self} is not accessible for '
-                                'the current data. It is probably not available or has no sense '
-                                'in this particular case (e.g. data file does not contain needed '
-                                'data for it). If you eally need an access to the attribute, you can use the '
-                                '"container[''name'']" notation.')
+      allowed = d.allowed(self)
+      if not allowed:
+          if allowed is False:
+              raise DisabledAttributeError(f'member {name} of {self} is not accessible for '
+                              'the current data. It is probably not available or has no sense '
+                              'in this particular case (e.g. data file does not contain needed '
+                              'data for it). If you eally need an access to the attribute, you can use the '
+                              '"container[''name'']" notation.')
+          else:
+              raise DisabledAttributeError(str(allowed))
       return out
 
   def __getattr__(self, name):
@@ -175,12 +181,14 @@ class ConfigurationContainer(BaseConfigurationContainer):
       Expose the interactive_members in the container attribute listing.
       Interactive_members are the non-hidden members identified by their sanitized names.
       """
-      def ok(member):
-          d = member._defintion
-          return not d.condtion or d.condition(self)
-      members = ( k.name for i,k in self._interactive_members.items() )
+      # def ok(member):
+      #    d = member._defintion
+      #    return not d.condtion or d.condition(self)
 
-      return itertools.chain( members, super().__dir__())
+      members = ( k.name for i,k in self._interactive_members.items() )
+      if self._definition.dir_common_attributes:
+          members = itertools.chain( members, super().__dir__())
+      return members
 
   def __contains__(self, name):
       """ The check for existence of a member with the given name."""
@@ -222,10 +230,10 @@ class ConfigurationContainer(BaseConfigurationContainer):
       for i in self._members.values():
           i.clear(do_not_check_required, call_hooks=call_hooks, generated=False if generated is None else generated)
 
-  def get_members(self, name=None, unknown='find', is_option=None):
+  def get_members(self, name=None, unknown='find', is_option=None, lower_case=True):
       """
       Get all the members of given name. According to ``unknown`` parameter,
-      either only from self, or from any child containers too.
+      either only from self, or from any child containers, too.
 
       Parameters
       ----------
@@ -237,16 +245,17 @@ class ConfigurationContainer(BaseConfigurationContainer):
         If unknown == 'find' and there is no member with a given name,
         try to find the first such-named item (case insensitive)
         in the descendant conainers.
-        unknown == 'find_exact' do the same, case sensitive.
 
       is_option: bool
         If set, limit to either Option or non-option items
+
+      lower_case: bool
+        If true, try to search for the lower-cased name
 
       Return
       ------
       value: mixed
       """
-
       if name is None:
           yield self
           return
@@ -254,26 +263,27 @@ class ConfigurationContainer(BaseConfigurationContainer):
           name, child = name.split('.')
       else:
           child=None
-      try:
-          v = self._members[name]
-      except KeyError:
-          try:
-              v = self._lowercase_members[name.lower()]
-          except KeyError:
-              if unknown=='find':
-                  yield from self._find_members(name.lower(), True, is_option)
-                  return
-              elif unknown=='find_exact':
-                  yield from self._find_members(name, False, is_option)
-                  return
-              else:
-                  raise
-      if child:
-          yield from v.get_members(child, unknown, is_option)
-      else:
-          yield v
 
-  def get(self, name=None, unknown='find'):
+      def values():
+          try:
+              yield self._members[name]
+              return
+          except KeyError:
+              n = name.lower() if lower_case else name
+              if unknown=='find':
+                  for i in self:
+                      yield from i._find_members(n, is_option, lower_case)
+              elif lower_case:
+                  v = self._lowercase_members[n]
+                  yield v
+
+      if child:
+          for v in values():
+              yield from v.get_members(child, unknown, is_option, lower_case)
+      else:
+          yield from values()
+
+  def get(self, name=None, unknown='find', is_option=True):
       """
       Get the value, either of self or of a child of a given name.
 
@@ -293,7 +303,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
       ------
       value: mixed
       """
-      item = self.get_members(name, unknown, True)
+      item = self.get_members(name, unknown, is_option)
       try:
           item=next(item)
       except StopIteration:
@@ -301,6 +311,11 @@ class ConfigurationContainer(BaseConfigurationContainer):
       return item.as_dict(only_changed=False)
 
   def set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
+      error = error or 'section'
+      self._set(values, value, unknown=unknown, error=error, **kwargs)
+      self.validate(why='warning')
+
+  def _set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
       """
       Set the value(s) of parameter(s). Usage:
 
@@ -341,14 +356,14 @@ class ConfigurationContainer(BaseConfigurationContainer):
                    self.add(section)
                else:
                    raise KeyError(f"There is no section {section} in {self} to set{section}.{name} to {value}")
-            self._members[section].set({name:value}, unknown='fail' if unknown == 'find' else unknown, error=error)
+            self._members[section]._set({name:value}, unknown='fail' if unknown == 'find' else unknown, error=error)
             return
         option = self._members.get(name, None)
         if not option or not option._definition.accept_value(value):
            if unknown == 'find':
               option = self._find_member(name.lower(), True, True)
               if option:
-                 option.set(value, error=error)
+                 option._set(value, error=error)
                  return
            if unknown == 'ignore':
                return
@@ -357,7 +372,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
               return
            self.add(name, value)
         else:
-           option.set(value, unknown=unknown, error=error)
+           option._set(value, unknown=unknown, error=error)
 
       if values:
         try:
@@ -366,9 +381,11 @@ class ConfigurationContainer(BaseConfigurationContainer):
           raise ValueError('Only a dictionary can be assigned to a section.')
         for i,v in items:
            set_value(i,v)
+
       if kwargs:
-        for i,v in kwargs.items():
-          set_value(i,v)
+          self.validate_section(why='set', section_adaptor=MergeSectionAdaptor(kwargs, self))
+          for i,v in kwargs.items():
+              set_value(i,v)
 
   def add(self, name:str, value=None):
       """
@@ -414,6 +431,10 @@ class ConfigurationContainer(BaseConfigurationContainer):
       """ Iterate over all members of the container """
       yield from self._members.values()
 
+  def _values(self):
+      """ Iterate over all members of the container """
+      yield from self._members.values()
+
   def _as_dict(self, get):
       """
       Return the content of the container as a dictionary.
@@ -426,13 +447,13 @@ class ConfigurationContainer(BaseConfigurationContainer):
         the values
       """
       out = {}
-      for i in self:
+      for i in self._values():
           value = i._as_dict(get)
           if value is not None:
               out[i._definition.real_name] = value
       return out or None
 
-  def _find_members(self, name:str, lower:bool=False, is_option=None):
+  def _find_members(self, name:str, is_option=None, lower:bool=False):
       """
       Iterates over a value of a given name in self or in any
       of owned subcontainers.
@@ -442,11 +463,11 @@ class ConfigurationContainer(BaseConfigurationContainer):
       name: str
       A name of the sought options
 
-      lower:bool
-      If True, find an option with given lowercased name (case insensitive)
-
       is_option:bool
       If True, find only options, if False, find only the others.
+
+      lower:bool
+      If True, find an option with given lowercased name (case insensitive)
 
       Returns
       -------
@@ -456,10 +477,10 @@ class ConfigurationContainer(BaseConfigurationContainer):
       if is_option is not True and \
          name == (self.name.lower() if lower else self.name):
             yield self
-      for i in self:
+      for i in self._values():
           if i._definition.is_hidden:
              continue
-          yield from i._find_members(name, lower, is_option)
+          yield from i._find_members(name, is_option, lower)
 
   @staticmethod
   def _interactive_member_name(name):
@@ -487,7 +508,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
                   self._lowercase_members[iname] = member
 
   def is_changed(self):
-      for i in self:
+      for i in self._values():
           if i.is_changed():
               return True
       return False
@@ -520,7 +541,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
         val = self._get_member(name)
         val.set(value)
 
-  def validate(self, why:str='save'):
+  def _validate(self, why:str='save'):
       """ Validate the configuration data. Raise an exception, if the validation fail.
 
       Parameters
@@ -531,11 +552,32 @@ class ConfigurationContainer(BaseConfigurationContainer):
         ``set`` - Validation on user input. Allow required values not to be set.
         ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.
       """
-      self._definition.validate(DictAdaptor(self), why)
+      sa = SectionAdaptor(self)
+      self._definition.validate(sa, why)
       if why == 'save' and not self._definition.is_optional and not self.has_any_value():
           raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
-      for o in self:
-          o.validate(why)
+      for o in self._values():
+          d = o._definition
+          if d.allowed(self):
+              o._validate(why)
+      self.validate_section(why, sa)
+
+  def validate_section(self, why:str='save', section_adaptor=None):
+      if why == 'warning':
+          self._validate_section('save', section_adaptor)
+      else:
+          with warnings.catch_warnings():
+              warnings.simplefilter("error", DataValidityError)
+              self._validate_section(why)
+
+  def _validate_section(self, why:str='save', section_adaptor=None):
+      if section_adaptor is None:
+          section_adaptor = SectionAdaptor(self)
+
+      for o in self._values():
+          d = o._definition
+          if d.allowed(section_adaptor) and d.validate_section:
+                  d.validate_section(section_adaptor, why)
 
   def has_any_value(self) -> bool:
       """
@@ -546,25 +588,10 @@ class ConfigurationContainer(BaseConfigurationContainer):
         has_any_value: bool
             True, if no value in the container is set, False otherwise
       """
-      for i in self:
+      for i in self._values():
         if i.has_any_value():
            return True
       return False
-
-
-class DictAdaptor:
-  """ This class wraps a container to behave as a read-only dict.
-  It is used during validation of a container.
-  """
-
-  def __init__(self, container):
-      self.container=container
-
-  def __hasitem__(self, name):
-      return self.container__hasitem__(name)
-
-  def __getitem__(self, name):
-      return self.container.__getitem__(name)()
 
 
 class BaseSection(ConfigurationContainer):
@@ -645,9 +672,13 @@ class RootConfigurationContainer(ConfigurationContainer):
          self.clear(True)
       self.set(values, unknown='add')
 
-  def find(self, name, lower_case=True, is_option=True, first=True):
+  def find(self, name, unknown='find', is_option=True, lower_case=True, first=True):
       """ Find a configuration value of a given name in the owned sections """
-      if lower_case:
-         name=name.lower()
-      method = self._find_member if first else self._find_members
-      return method(name, lower_case, is_option)
+      out = self.get_members(name, unknown, is_option, lower_case)
+      if first:
+          try:
+              return next(out)
+          except StopIteration:
+              raise ValueError(f"No {name} member of {self}")
+      else:
+          return out

@@ -1,3 +1,5 @@
+""" SCF (selfconsisten cycle) reader and result. """
+
 import pyparsing as pp
 import numpy as np
 from ase.units import Rydberg
@@ -24,7 +26,9 @@ class RealOrStars(Real):
 
 
 class ScfResult(TaskResult):
-  """ Objects of this class holds the results of computed SCF class """
+  """ Objects of this class holds the results of a self-consistent cycle and its iterations.
+  It also allows to plot the convergence of values during iterations.
+  """
 
   @cached_property
   def calculator(self):
@@ -62,7 +66,7 @@ class ScfResult(TaskResult):
       """ Return the array of values of given name from the
       iterations (i.e. "the column of the table of the values")
 
-      E.g. result.iteration_values('ETOT') return list of
+      E.g. result.iteration_values(('energy', 'ETOT')) return list of
       floats - the total energies computed in each iteration.
 
       Parameters
@@ -158,10 +162,10 @@ atomic_types_definition = Section('atoms', [
       'm_orb' : float,
       'B_val' : float,
       'B_val_desc': String(default_value = ''),
-      'B_core' : Real(default_value = float('NaN'))
+      'B_core' : Real(default_value = float('NaN'), nan=r'\*+')
     }, free_header=True, default_values=True)),
-  V('E_band', RealWithUnits(units = {'[Ry]' : Rydberg }), is_optional=True),
-  V('dipole moment', Sequence(int, Array(float, length=3)), is_optional=True)
+  V('E_band', RealWithUnits(units = {'[Ry]' : Rydberg }), is_required=False),
+  V('dipole moment', Sequence(int, Array(float, length=3)), is_required=False)
 ])
 
 
@@ -182,8 +186,8 @@ scf_section = Section('iteration', [
     V('EF', float, info='Fermi energy', alternative_names='fermi'),
     V('ETOT', float, info='Total energy', alternative_names='total'),
     V('EMIN', float, info='Bottom of energy contour for band states', alternative_names='band_states_min'),
-    V('ESCBOT', float, info='Lower limit for semi-core states', alternative_names='semi_core_min'),
-    V('ECTOP', float, info='Upper limit for core states', alternative_names='core_max')
+    V('ESCBOT', float, info='Lower limit for semi-core states', alternative_names='semi_core_min', is_required=False),
+    V('ECTOP', float, info='Upper limit for core states', alternative_names='core_max', is_required=False)
   ]),
   Section('atomic_types', atomic_types_definition.members(), is_repeated=True)
 ])
@@ -255,7 +259,7 @@ class ScfOutputReader(SprKkrOutputReader):
           if self.print_output == 'info':
             if not iterations:
                 print("ERROR: No iteration has been finished. There is probably an error in the input files, please, examine the SPR-KKR output file.")
-            elif iterations[-1]['converged']:
+            elif iterations[-1]['converged']():
                 print("OK: The computation converged.")
             else:
                 print("WARNING: The computation does not converged!!!")

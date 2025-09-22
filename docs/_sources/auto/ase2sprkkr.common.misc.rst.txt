@@ -23,6 +23,7 @@ Full name: **ase2sprkkr.common.misc**
       :template: custom-base-template.rst
    
       as_integer
+      config_property
       copy_list
       dict_first_item
       first_non_none

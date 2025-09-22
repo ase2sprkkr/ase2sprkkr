@@ -31,6 +31,7 @@ Full name: **ase2sprkkr.common.warnings**
    .. autosummary::
       :toctree:
    
+      DataValidityError
       DataValidityWarning
    
    

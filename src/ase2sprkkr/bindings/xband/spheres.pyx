@@ -3,8 +3,7 @@ import numpy as np
 cimport numpy as np
 from ase import Atoms
 from ...sprkkr.sprkkr_atoms import SPRKKRAtoms
-from ase.spacegroup.spacegroup import Spacegroup
-from ..spglib import SpacegroupInfo
+from ...common.unique_values import UniqueValuesMapping
 from .symmetry import find_symmetry
 from ..empty_spheres import EmptySpheresResult
 from ase.units import Bohr
@@ -31,6 +30,7 @@ cdef extern from "spheres.h":
               int* n_symop,
               int* symop_number,
               int* symop_data,
+              int* mesh,
               int* verbose
   );
 
@@ -43,7 +43,8 @@ def empty_spheres(
     verbose=False,
     int max_spheres=256,
     return_atom_rws=False,
-    use_spacegroup=True
+    use_spacegroup=True,
+    mesh=24
     ):
 
     if point_symmetry is None:
@@ -58,6 +59,7 @@ def empty_spheres(
     cdef int n = len(atoms)
 
     es = atoms.spacegroup_info.equivalent_sites
+    es = UniqueValuesMapping(es)
     ui = es.unique_indexes()
     cdef int[:] mapping = es.normalized(dtype=np.int32)[0]
 
@@ -69,15 +71,21 @@ def empty_spheres(
     cdef double[:] occupations = np.empty(n_types, np.double)
     cdef double[:] atomic_numbers = np.empty(n_types, np.double)
     cdef int[:] eq_classes = np.empty(n_types, np.int32)
+    cdef int[3] _mesh = np.empty(3, np.int32)
     cdef int type_no = 0
+    if isinstance(mesh, int):
+      _mesh[0] = _mesh[1] = _mesh[2] = mesh
+    else:
+      _mesh[:] = mesh
+
     for i, index in enumerate(ui):
-        site = atoms.sites[i]
+        site = atoms.sites[index]
         for typ, occ  in site.occupation.items():
             s = typ.symbol.encode('utf8')[:4]
             symbols[type_no, :len(s)] = memoryview(s)
             occupations[type_no] = occ
             atomic_numbers[type_no] = float(typ.atomic_number)
-            eq_classes[type_no] = i+1
+            eq_classes[type_no] = index + 1
             type_no += 1
 
     cdef int n_symops=point_symmetry.shape[1]
@@ -117,12 +125,15 @@ def empty_spheres(
                    &n_symops,
                    &point_symmetry[0,0] if n_symops else NULL,
                    &point_symmetry[1,0] if n_symops else NULL,
+                   &_mesh[0],
                    &_verbose
                   )
     ratio = 1 / ratio
     centres[:max_spheres] *= ratio
     radii[:max_spheres + len(atoms)] *= Bohr
-    out = EmptySpheresResult(centres[:max_spheres], radii[:max_spheres])
+    spheres = Atoms(cell=atoms.cell, pbc=atoms.pbc, positions=centres[:max_spheres])
+    spheres.wrap()
+    out = EmptySpheresResult(spheres.positions, radii[:max_spheres])
     if return_atom_rws:
       return out, radii[max_spheres:max_spheres+len(atoms)]
     else:

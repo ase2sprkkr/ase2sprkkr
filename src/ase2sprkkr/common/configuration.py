@@ -3,6 +3,8 @@ and configuration containers - :class:`Sections<ase2sprkkr.common.configuration_
 """
 
 from typing import Union
+from .warnings import DataValidityWarning, DataValidityError
+import warnings
 
 
 class Configuration:
@@ -71,17 +73,23 @@ class Configuration:
       raise NotImplementedError()
 
   @staticmethod
-  def as_dict_getter(only_changed:Union[bool,str]='basic', generated=False, copy=False):
+  def as_dict_getter(only_changed:Union[bool,str]='default', generated=False, copy=False):
+
+      if only_changed == 'default':
+        pick_only_changed = lambda d: not d.is_always_added
+      elif only_changed == 'basic':
+        pick_only_changed = lambda d: d.is_expert
+      else:
+        only_changed = bool(only_changed)
+        pick_only_changed = lambda d: only_changed
 
       def get(self):
           d = self._definition
           if d.is_generated and not generated:
                return None
           if only_changed == 'explicit':
-                if self._definition.is_generated and not generated:
-                    return None
                 v = self._unpack_value(self._value)
-          elif only_changed and (only_changed!='basic' or d.is_expert) and not d.is_always_added:
+          elif pick_only_changed(d):
                v,c = self.value_and_changed()
                if not c:
                     return None
@@ -149,6 +157,26 @@ class Configuration:
       out = out + ' ' + d.name.upper()
       return out
 
+  def check_for_errors(self, validate='save', print=True):
+      with warnings.catch_warnings(record = True) as lst:
+          warnings.simplefilter("always", DataValidityWarning)
+          self._validate(validate)
+      if lst and print:
+          for warning in lst:
+              warnings.showwarning(
+                  message=warning.message,
+                  category=warning.category,
+                  filename=warning.filename,
+                  lineno=warning.lineno
+              )
+
+  def validate(self, why='save'):
+      if why=='warning':
+          return self._validate(why)
+      with warnings.catch_warnings():
+          warnings.simplefilter("error", DataValidityError)
+          self._validate(why)
+
   def save_to_file(self, file, *, validate:Union[str, bool]='save'):
       """ Save the configuration to a file in a given format.
 
@@ -168,21 +196,29 @@ class Configuration:
         ``save`` means the full check (same as the default value ``True``),
         use ``set`` to allow some missing values.
       """
-      if validate:
-         self.validate(validate)
+      if validate == 'warning':
+          self.check_for_errors('save')
+      else:
+          self.validate(validate)
 
       if not hasattr(file, 'write'):
-         with open(file, "w") as file:
-           out=self._save_to_file(file)
-           file.flush()
+          with open(file, "w") as file:
+              out=self._save_to_file(file)
+              file.flush()
       else:
-         out=self._save_to_file(file)
-         file.flush()
+          out=self._save_to_file(file)
+          file.flush()
       return out
 
-  def to_string(self):
+  def to_string(self, *, validate:Union[str, bool]='warning'):
       """
       Return the configuration (problem definition) in a string.
+
+      Parameters
+      ----------
+      Validate. How to validate before retrieving. See the method
+      validate.
+      Default 'warning' means the same as 'save', but only throw a warning.
 
       Returns
       -------
@@ -191,7 +227,7 @@ class Configuration:
       """
       from io import StringIO
       s = StringIO()
-      self._save_to_file(s)
+      self.save_to_file(s, validate=validate)
       return s.getvalue()
 
   def _find_member(self, name, lower_case:bool=False, is_option=None):

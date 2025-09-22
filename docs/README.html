@@ -1,24 +1,23 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ASE2SPRKKR &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -91,7 +90,7 @@
            <div itemprop="articleBody">
              
   <section id="ase2sprkkr">
-<h1>ASE2SPRKKR<a class="headerlink" href="#ase2sprkkr" title="Permalink to this heading"></a></h1>
+<h1>ASE2SPRKKR<a class="headerlink" href="#ase2sprkkr" title="Link to this heading"></a></h1>
 <p>ASE2SPRKKR package provide an interface that allow use of the <a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR
 package</a>
 to electronic structure calculation within <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">Atomic Simulation
@@ -99,7 +98,7 @@ Environment</a> (abbreviated as ASE) —
 Python tool that integrates the various tools for electronic structure
 calculation.</p>
 <section id="usefull-links">
-<h2>Usefull links<a class="headerlink" href="#usefull-links" title="Permalink to this heading"></a></h2>
+<h2>Usefull links<a class="headerlink" href="#usefull-links" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></p></li>
 <li><p><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation
@@ -113,7 +112,7 @@ manual</a></p></li>
 </ul>
 </section>
 <section id="installation-of-the-package-using-package-managers">
-<h2>Installation of the package using package managers<a class="headerlink" href="#installation-of-the-package-using-package-managers" title="Permalink to this heading"></a></h2>
+<h2>Installation of the package using package managers<a class="headerlink" href="#installation-of-the-package-using-package-managers" title="Link to this heading"></a></h2>
 <p>The simplest way how to install and use the package is to install them
 using package managers: either pip</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>ase2sprkkr
@@ -123,10 +122,23 @@ using package managers: either pip</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>ase2sprkkr<span class="w"> </span>ase2sprkkr
 </pre></div>
 </div>
+<p>I reccomend to install beta version: there can be some bugs, but mostly it has
+more bugs repaired than introduced, moreover, you can enjoy new properties. The
+beta versions are available only through <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span>ase2sprkkr
+</pre></div>
+</div>
+<p>To use bleading edge sources (the newest features, but you risk to encounter bugs),
+you can install the packages from github:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/ase2sprkkr/ase2sprkkr.git@develop
+</pre></div>
+</div>
 <section id="further-notes">
-<h3>Further notes<a class="headerlink" href="#further-notes" title="Permalink to this heading"></a></h3>
+<h3>Further notes<a class="headerlink" href="#further-notes" title="Link to this heading"></a></h3>
 <p>In some systems, the <code class="docutils literal notranslate"><span class="pre">pip</span></code> utility for <code class="docutils literal notranslate"><span class="pre">python3</span></code> is called <code class="docutils literal notranslate"><span class="pre">pip3</span></code>.
-If it is not installed, you can install it using the linux distribution package
+It may be possible, that <code class="docutils literal notranslate"><span class="pre">pip</span></code> is installed, but it is not in <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.
+In such case, the pip utility can be runned using <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span></code> or <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip3</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">pip</span></code> is not installed, you can install it using the linux distribution package
 manager, e.g. in Debian/Ubuntu</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt<span class="w"> </span>install<span class="w"> </span>pip3
 </pre></div>
@@ -135,45 +147,44 @@ manager, e.g. in Debian/Ubuntu</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>zypper<span class="w"> </span>install<span class="w"> </span>pip
 </pre></div>
 </div>
-<p>in OpenSUSE</p>
 <p>For the conda installation instructions, see the Anaconda documentation
 <a class="reference external" href="https://docs.anaconda.com/anaconda/install/linux/">https://docs.anaconda.com/anaconda/install/linux/</a> however, for the users
 unexperienced with conda, the (simpler) pip way is recommended.</p>
 </section>
 </section>
 <section id="install-the-packages-from-git-and-or-source-codes">
-<h2>Install the packages from GIT (and/or source codes)<a class="headerlink" href="#install-the-packages-from-git-and-or-source-codes" title="Permalink to this heading"></a></h2>
+<h2>Install the packages from GIT (and/or source codes)<a class="headerlink" href="#install-the-packages-from-git-and-or-source-codes" title="Link to this heading"></a></h2>
 <p>If you do not want to use public package managers as pip or conda, or
 you want to contribute to development, you can use GIT to obtain the
 package sources.</p>
 <section id="requirements">
-<h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h3>
+<h3>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Python &gt;= 3.7</p></li>
+<li><p>Python &gt;= 3.8</p></li>
 <li><p>SPR-KKR (not checked by the installer)</p></li>
-<li><p>Python packages: see the the setup.cfg</p></li>
+<li><p>Python packages: see the the pypoject.toml file</p></li>
 <li><p>Git (to obtain the sources)</p></li>
 </ul>
 </section>
 <section id="obtaining-the-package-using-git">
-<h3>Obtaining the package using GIT<a class="headerlink" href="#obtaining-the-package-using-git" title="Permalink to this heading"></a></h3>
+<h3>Obtaining the package using GIT<a class="headerlink" href="#obtaining-the-package-using-git" title="Link to this heading"></a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ase2sprkkr/ase2sprkkr.git
 git<span class="w"> </span>checkout<span class="w"> </span>release
 </pre></div>
 </div>
 <p>The first line fetches the code of the package. The second one checks
-out the recommended production version of the code.</p>
+out the stable (production) version of the code.</p>
 <p>If you want to obtain the current version of the (earlier-downloaded)
 code, run</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>fetch
 git<span class="w"> </span>checkout<span class="w"> </span>release
 </pre></div>
 </div>
-<p>Alternatively, you can checkout <code class="docutils literal notranslate"><span class="pre">master</span></code> or <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch</p>
+<p>Alternatively, you can checkout <code class="docutils literal notranslate"><span class="pre">master</span></code> branch</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>master
 </pre></div>
 </div>
-<p>to obtain a newer (not thorougly tested yet) version or</p>
+<p>to obtain a newer (not thorougly tested yet) version or <code class="docutils literal notranslate"><span class="pre">develop`</span></code></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>develop
 </pre></div>
 </div>
@@ -181,29 +192,45 @@ git<span class="w"> </span>checkout<span class="w"> </span>release
 and report the bugs).</p>
 </section>
 <section id="using-the-package-without-installing-the-pip-conda-packages">
-<h3>Using the package (without installing the pip/conda packages)<a class="headerlink" href="#using-the-package-without-installing-the-pip-conda-packages" title="Permalink to this heading"></a></h3>
-<p>You can either just add the src directory to your PYTHONPATH, or you can
-build and install the package, as it is described below.</p>
+<h3>Using the package (without installing the pip/conda packages)<a class="headerlink" href="#using-the-package-without-installing-the-pip-conda-packages" title="Link to this heading"></a></h3>
+<p>You can install the package from the obtained sources using</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>.
+</pre></div>
+</div>
+<p>Or, if you want to develop ase2sprkkr, it is better idea to
+do an <cite>editable</cite> installation, where the package will see
+the changes made.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--no-build-isolation<span class="w"> </span>--editable<span class="w"> </span>.
+</pre></div>
+</div>
+<p>You can add <code class="docutils literal notranslate"><span class="pre">--no-deps</span></code> switch for a faster rebuild.</p>
+<section id="the-known-issues-of-the-editable-build">
+<h4>The known issues of the editable build<a class="headerlink" href="#the-known-issues-of-the-editable-build" title="Link to this heading"></a></h4>
+<p>1. Unfortunatelly, pip is not able to install the build requirements.
+So if they are not installed, the previous command will fail.
+You can either install the dependencies manually,
+copying them out from pyproject.toml:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>scikit-build<span class="w"> </span>cmake<span class="w"> </span>ninja<span class="w"> </span>cython
+</pre></div>
+</div>
+<p>or (which will be usefull if I add a build requirement and forgot
+to update this help) run the following snippet to install all the build-dependencies
+mentioned in pyproject.toml:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>tomllib
+pip<span class="w"> </span>install<span class="w"> </span>--no-build-isolation<span class="w"> </span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import tomllib; print(&#39; &#39;.join(tomllib.load(open(&#39;pyproject.toml&#39;,&#39;rb&#39;))[&#39;build-system&#39;][&#39;requires&#39;]))&quot;</span><span class="k">)</span>
+</pre></div>
+</div>
+<p>2. The limitation of the editable install is, that it won’t see
+newly created files automatically: you need run the command above
+again to make it notice it.</p>
+<p>3. If the build process fail, try to remove the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory created
+by the previous build (if it exists). Mostly, it happens if the
+<code class="docutils literal notranslate"><span class="pre">--no-build-isolation</span></code> switch is ommited.</p>
 </section>
-<section id="installation-of-the-package-from-the-sources">
-<h3>Installation of the package from the sources<a class="headerlink" href="#installation-of-the-package-from-the-sources" title="Permalink to this heading"></a></h3>
-<p>To install the package, the simplest way is to use pip</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>.
-</pre></div>
-</div>
-<p>Maybe, you will have to replace <code class="docutils literal notranslate"><span class="pre">python3</span></code> with <code class="docutils literal notranslate"><span class="pre">python</span></code>.
-For an editable install, please run</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>setup.py<span class="w"> </span>develop<span class="w"> </span>--user
-</pre></div>
-</div>
-<p>and ignore some deprecation warning. Editable install is aimed for developers:
-in this type of install, only link to the current directory will be added to
-your local <code class="docutils literal notranslate"><span class="pre">site-packages</span></code>, which allows you to use the changesyou make to
-the source code.</p>
 </section>
 </section>
 <section id="documentation-of-the-package">
-<h2>Documentation of the package<a class="headerlink" href="#documentation-of-the-package" title="Permalink to this heading"></a></h2>
+<h2>Documentation of the package<a class="headerlink" href="#documentation-of-the-package" title="Link to this heading"></a></h2>
 <p>The documentation is published online at
 <a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">https://ase2sprkkr.github.io/ase2sprkkr/</a></p>
 <p>If you are using Git cloned sources, you can run</p>
@@ -225,7 +252,7 @@ building the documentation.
 <a class="reference external" href="https://github.com/lokik/sphinx.git">https://github.com/lokik/sphinx.git</a></p>
 </section>
 <section id="how-to-contribute-or-to-report-a-bug">
-<h2>How to contribute or to report a bug<a class="headerlink" href="#how-to-contribute-or-to-report-a-bug" title="Permalink to this heading"></a></h2>
+<h2>How to contribute or to report a bug<a class="headerlink" href="#how-to-contribute-or-to-report-a-bug" title="Link to this heading"></a></h2>
 <p>Please feel free to make a pull-request or post an issue at:
 <a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">https://github.com/ase2sprkkr/ase2sprkkr</a></p>
 </section>

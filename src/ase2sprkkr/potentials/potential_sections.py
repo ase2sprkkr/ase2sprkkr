@@ -5,6 +5,7 @@ there are a generic classes for these sections.
 from ..sprkkr.configuration import ConfigurationSection, RepeatedConfigurationSection
 from ..sprkkr.io_data import ReadIoData, WriteIoData
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
+from ..common.warnings import DataValidityWarning
 
 
 class PotentialSectionTrait:
@@ -62,6 +63,60 @@ class PotentialSection(PotentialSectionTrait, ConfigurationSection):
 
 class RepeatedPotentialSection(PotentialSectionTrait, RepeatedConfigurationSection):
     """ A base class for all repeated sections in potentials """
+
+
+class AtomicTypePotentialSection(PotentialSectionTrait, RepeatedConfigurationSection):
+    """ A section containing the data of atomic types """
+
+    @property
+    def property_label(self):
+        """ Name of the in the section stored property used in the error string. """
+        return self.property_name
+
+    def _has_data(self, typ):
+        return getattr(typ, self.property_name)
+
+    def read_data(self, typ, section):
+        setattr(typ, self.property_name, section.DATA())
+
+    def write_data(self, typ, section, index):
+        section.TYPE = index
+        section.DATA = getattr(typ, self.property_name).raw_value
+
+    def _set_from_atoms(self, atoms, write_io_data):
+        self.clear()
+        converged = write_io_data.has_converged_data(self._container)
+
+        found = False
+        notfound = False
+
+        for typ, i in write_io_data.types.unique_items():
+            if getattr(typ, self.property_name) is None:
+                notfound=True
+            else:
+                found = True
+
+        if notfound:
+            if found:
+                DataValidityWarning.warn(f'Not all the atomic types have the {self.property_label} set')
+            elif converged:
+                DataValidityWarning.warn(f'The atomic types have not the {self.property_label} set, but the computation is set to converged.')
+            return
+        elif not converged:
+             DataValidityWarning.warn(f'The atomic types have the {self.property_label} set, but the computation will start from scratch.')
+             return
+
+        for typ, i in write_io_data.types.unique_items():
+            section = self.add(i)
+            self.write_data(typ, section, i)
+
+    def _update_atoms(self, atoms, read_io_data):
+        if len(self):
+            for i in self:
+                self.read_data(read_io_data['types'][i], self[i])
+
+    def _depends_on(self):
+        return 'TYPES'
 
 
 class UniqueListSection(PotentialSection):

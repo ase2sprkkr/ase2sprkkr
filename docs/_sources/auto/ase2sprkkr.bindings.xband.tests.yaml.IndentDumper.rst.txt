@@ -1,0 +1,36 @@
+IndentDumper
+============
+
+
+.. currentmodule:: ase2sprkkr.bindings.xband.tests.yaml
+
+.. autoclass:: IndentDumper
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.bindings.xband.tests.yaml.IndentDumper
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

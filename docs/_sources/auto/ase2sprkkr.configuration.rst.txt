@@ -1,0 +1,76 @@
+configuration
+=============
+
+Full name: **ase2sprkkr.configuration**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.configuration.ConfigFileDefinition  ase2sprkkr.configuration.ConfigValueDefinition  ase2sprkkr.configuration.Configuration  ase2sprkkr.configuration.ConfigurationOption  ase2sprkkr.configuration.Section  ase2sprkkr.configuration.V 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.configuration
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      V
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _get_suffix
+      find_default_mpi_runner
+      get_default_mpi_runner
+      load_user_preferences
+      mpi_runner
+      user_preferences_file
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ConfigFileDefinition
+      ConfigValueDefinition
+      Configuration
+      ConfigurationOption
+      Section
+      V
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,4 +1,4 @@
-""" The ARPES result: currently it """
+""" Density of states (DOS) reader and result. """
 
 from ..task_result import TaskResult, KkrProcess
 from .default import DefaultOutputReader
@@ -8,7 +8,8 @@ import os
 
 
 class DosResult(TaskResult):
-  """ Objects of this class holds the results of computed SCF class """
+  """ Density of states (DOS) results provides access to the computed
+  density of states in the DOS output file, using the :py:attr:dos property. """
 
   @cached_property
   def dos_filename(self):

@@ -6,6 +6,29 @@ import builtins
 from typing import Union, Dict
 import numpy as np
 import pyparsing as pp
+from .warnings import warnings, DataValidityError
+
+
+class ValueModifier:
+    """ If this class is given as a type of a Value, it will modify the definition
+    of value somehow. It is responsibile to set the True type of the value """
+
+
+class InheritingValueModifier(ValueModifier):
+    """ The definition of the value will be inherited from this class as well. """
+
+    _enriching_classes = {}
+
+    def modify_definition(self, definition):
+        dcls = definition.__class__
+        cls = self._enriching_classes.get(dcls)
+        if not cls:
+            scls = self.__class__
+            self._enriching_classes[dcls] = cls = \
+                type(scls.__name__ + dcls.__name__, (scls, dcls), {})
+
+        definition.__class__ = cls
+        return self.type
 
 
 class ValueDefinition(RealItemDefinition):
@@ -14,15 +37,17 @@ class ValueDefinition(RealItemDefinition):
 
   name_in_grammar = None
   is_generated = False
+  is_validated = None  # default is is_generated
+
   item_type = 'value'
 
   def __init__(self, name, type=None, default_value=None,
                default_value_from_container=None,
                written_name=None, alternative_names=None,
-               fixed_value=None, required=None, init_by_default=False,
+               fixed_value=None, init_by_default=False,
                result_is_visible=False, info=None, description=None,
-               is_stored=None, is_hidden=False, is_optional=None, is_expert=False,
-               is_numbered_array:bool=False, is_repeated=False,
+               is_stored=None, is_hidden=False, is_optional=None, is_required=None,
+               is_expert=False, is_repeated:Union[bool,str,RealItemDefinition.Repeated]=False,
                is_always_added:bool=None,
                name_in_grammar=None, name_format=None, expert=None,
                write_alternative_name:bool=False,
@@ -59,14 +84,6 @@ class ValueDefinition(RealItemDefinition):
       that can not be changed by an user.
       #TODO - currently, callback (as in default_value) is not supported
 
-    required: bool
-      Required option can not be set to None (however, a required one
-      can be still be optional, if it has a default values).
-      If required = None, it is set to True if both the conditions are met:
-
-       * the value is not expert
-       * the optional is not True and the option has not a default_value
-
     init_by_default: bool
       If the value is not set, init it by default
 
@@ -88,6 +105,20 @@ class ValueDefinition(RealItemDefinition):
       None means True just if required is False (or it is determined to be False),
       see the ``required`` parameter.
 
+    is_required: bool or callable or str
+      Required option can not be set to None (however, a required one
+      can be still be optional, if it has a default values).
+      If required = None, it is set to True if both the conditions are met:
+
+       * the value is not expert
+       * the optional is not True and the option has not a default_value
+
+      If required is str, it means the same as True, the string will be
+      used as error message.
+
+      If it is callable, it is evaluated on demand, with the Option as the
+      argument of the function.
+
     is_hidden: bool
       The value is hidden from the user (no container.name access to the value).
 
@@ -96,14 +127,10 @@ class ValueDefinition(RealItemDefinition):
       Expert values are not exported to the result, if they are set to the
       default value.
 
-    is_numbered_array
-      Such values can contains (sparse) arrays. In the resulting ouput, the
-      members of the array are in the form NAME1=..., NAME2=..., ... The default
-      value for missing number can appear in the form NAME=...
-
     is_repeated
-      If True, the real type of the Value is array of values of the given type.
-      The name-value pair is repeated for each value of the array.
+      Whether the value can apper more than once in the output. The result
+      can be then (dense) array or (sparse) dict,
+      see :class:`ValueDefinition.Repeated`.
 
     is_always_added
       If False, add the value, only if its value is not the default value.
@@ -145,7 +172,7 @@ class ValueDefinition(RealItemDefinition):
        else:
           default_value=expert
        is_expert = True
-       required = False
+       is_required = False
     elif type is None:
        raise TypeError("The data-type of the configuration value is required.")
 
@@ -163,6 +190,9 @@ class ValueDefinition(RealItemDefinition):
        default_value = fixed_value
        self.is_fixed = True
 
+    if isinstance(type, ValueModifier):
+        type = type.modify_definition(self)
+
     if default_value is None and not isinstance(type, (GrammarType, builtins.type)):
        self.type = type_from_value(type, type_map = self.type_from_type_map)
        self.default_value = None if isinstance(type,dict) else self.type.convert(type)
@@ -176,11 +206,11 @@ class ValueDefinition(RealItemDefinition):
     assert isinstance(self.type, GrammarType), "grammar_type (sprkkr.common.grammar_types.GrammarType descendat) required as a value type"
     self.type.used_in_definition(self)
 
-    if is_repeated is True:
-        self.is_repeated = self.type
+    self.is_repeated = self.Repeated.create(is_repeated)
+
+    self.grammar_type = self.type
+    if self.is_repeated.is_array:
         self.type = Array(self.type)
-    else:
-        self.is_repeated = is_repeated
 
     if self.default_value is None and self.type.default_value is not None:
        self.default_value = self.type.default_value
@@ -188,12 +218,12 @@ class ValueDefinition(RealItemDefinition):
     if result_is_visible:
        self.default_value = lambda o: o._result if hasattr(o, '_result') else default_value
 
-    if required is None:
-       required = not is_expert and (not is_optional and default_value is None)
-    self.required = required
+    if is_required is None:
+       is_required = not is_expert and (not is_optional and default_value is None)
+    self.is_required = is_required
 
     if is_optional is None:
-       is_optional = required is False
+       is_optional = is_required is False
 
     super().__init__(
          name = name,
@@ -206,6 +236,7 @@ class ValueDefinition(RealItemDefinition):
          info=info,
          description = description,
          write_alternative_name = write_alternative_name,
+         name_format = name_format,
          write_condition = write_condition,
          condition = condition,
          result_class = result_class,
@@ -214,11 +245,8 @@ class ValueDefinition(RealItemDefinition):
     if self.name_in_grammar is None:
         self.name_in_grammar = self.type.name_in_grammar
 
-    self.is_numbered_array = is_numbered_array
-    if is_numbered_array and not self.name_in_grammar:
-       raise ValueError('Numbered_array value type has to have its name in the grammar')
-
-    self.name_format = name_format
+    if self.is_repeated.is_numbered and not self.name_in_grammar:
+       raise ValueError('Repeated numbered values have to have its name in the grammar')
 
   configuration_type_name = 'OPTION'
 
@@ -228,7 +256,7 @@ class ValueDefinition(RealItemDefinition):
 
   def allow_duplication(self):
        """ Can be the item repeated in the output file """
-       return self.is_repeated
+       return self.is_repeated and not self.is_repeated.is_numbered
 
   @property
   def is_independent_on_the_predecessor(self):
@@ -240,16 +268,6 @@ class ValueDefinition(RealItemDefinition):
   def enrich(self, option):
       """ The Option can be enriched by the definition, e.g. the docsting can be extended. """
       self.type.enrich(option)
-
-  @property
-  def formated_name(self):
-    if self.written_name:
-       name = self.written_name
-    else:
-       name = next(iter(self.alternative_names)) if self.write_alternative_name else self.name
-    if self.name_format:
-       return "{:{}}".format(name, self.name_format)
-    return name
 
   def data_description(self, verbose:Union[bool,str]=False, show_hidden=False, prefix:str=''):
     """
@@ -285,7 +303,7 @@ class ValueDefinition(RealItemDefinition):
        flags.append('expert')
     if self.is_expert == self.is_always_added:
        flags.append('always add' if self.is_expert else 'add non-default')
-    if self.is_numbered_array:
+    if self.is_repeated:
        flags.append('array')
     if self.is_fixed:
        flags.append('read_only')
@@ -329,20 +347,52 @@ class ValueDefinition(RealItemDefinition):
        self.container = container
        self.type.added_to_container(container)
 
-  def validate(self, value, why='set'):
-    if value is None:
-       if self.required:
-          raise ValueError(f"The value is required for {self.name}, cannot set it to None")
-       return True
-    if self.is_fixed and not np.array_equal(self.default_value, value):
-       raise ValueError(f'The value of {self.name} is required to be {self.default_value}, cannot set it to {value}')
-    self.type.validate(value, self.get_path, why=why)
-    self.validate_warning(value)
+  def validate_type(self, item:bool):
+      """ Return the DataType against which should be data validated.
 
-  def convert_and_validate(self, value, why='set'):
-    value = self.type.convert(value)
-    self.validate(value, why)
-    return value
+      Parameters
+      ----------
+      item: if True, not the whole value is set, but only item of an array
+            (in the case of repeated option, or e.g. the one with :class:`ase2sprkkr.common.grammar_types.Array`
+            type)
+      """
+      if item:
+          if self.grammar_type is self.type:
+               return self.type.type
+          return self.grammar_type
+      return self.type
+
+  def validate(self, opt, value, why='set', item=False):
+      try:
+          if value is None:
+             req = opt.is_required
+             if req:
+                if req == 'save':
+                    if why != 'save':
+                        return True
+                    else:
+                        req = True
+                if req is True:
+                    raise ValueError(f"The value is required for {opt._get_path()}, it can't be None")
+                else:
+                    raise ValueError(req)
+             return True
+          if self.is_fixed and not np.array_equal(self.default_value, value):
+              ValueError(f'The value of {opt._get_path()} is required to be {self.default_value}, cannot set it to {value}')
+          self.validate_type(item).validate(value, self.get_path, why=why)
+          self.validate_warning(value)
+      except ValueError as e:
+          DataValidityError.warn(str(e))
+
+  def convert_and_validate(self, opt, value, why='set', item=False):
+      with warnings.catch_warnings():
+          warnings.simplefilter("error", DataValidityError)
+          try:
+              value = self.validate_type(item).convert(value)
+              self.validate(opt, value, why, item)
+              return value
+          except ValueError as v:
+              DataValidityError.warn(str(v))
 
   @property
   def value_name_format(self):
@@ -367,7 +417,7 @@ class ValueDefinition(RealItemDefinition):
 
   def _grammar_of_value(self, delimiter, allow_dangerous=False):
     """ Return grammar for the (possible optional) value pair """
-    type = self.is_repeated or self.type
+    type = self.grammar_type
     body = type.grammar(self.name)
 
     if self.is_fixed:
@@ -419,13 +469,12 @@ class ValueDefinition(RealItemDefinition):
     else:
        nbody = ''
 
-    if not self.type.missing_value()[0]:
+    if not self.grammar_type.missing_value()[0]:
         if nbody:
             nbody +=str(name_value_delimiter) or ' '
-        nbody+=self.type.grammar_name()
+        nbody+=self.grammar_type.grammar_name()
 
     out = self._tuple_with_my_name(body, has_value=self.type.has_value,
-                                         is_numbered_array=self.is_numbered_array,
                                          name_in_grammar=name_in_grammar)
     out.setName(nbody)
     return out
@@ -481,12 +530,18 @@ class ValueDefinition(RealItemDefinition):
             return self.write_value(file, value, deli)
 
      name = self.formated_name
-     if self.is_numbered_array or self.is_repeated:
-
-        if self.is_numbered_array:
-            written = ( (name + (str(i) if i!='def' else ''), v) for i, v in value.items() )
+     if self.is_repeated:
+        nmb = self.is_repeated.is_numbered
+        if self.is_repeated.type == self.Repeated.Type.DICT:
+            if nmb == self.Repeated.Numbering.WITH_DEFAULT:
+                written = ( (name + (str(i) if i!='def' else ''), v) for i, v in value.items() )
+            else:  # Dict has to be numbered
+                written = ( (name + str(i) , v) for i, v in value.items() )
         else:
-            written = ( (name, v) for v in value )
+            if nmb:
+                written = ( (name + str(i + 1), v) for i, v in enumerate(value) )
+            else:
+                written = ( (name, v) for v in value )
         out = False
         for mname, val in written:
             if write(mname, val):
@@ -509,7 +564,7 @@ class ValueDefinition(RealItemDefinition):
         value = value()
 
      else:
-        type = self.is_repeated or self.type
+        type = self.grammar_type
 
      if type.has_value:
          if value is None and not dangerous:
@@ -542,7 +597,7 @@ class ValueDefinition(RealItemDefinition):
 
   @property
   def can_be_repeated(self):
-      return self.is_numbered_array or bool(self.is_repeated)
+      return bool(self.is_repeated)
 
   def _get_copy_args(self)->Dict[str, str]:
        """
@@ -572,6 +627,11 @@ class ValueDefinition(RealItemDefinition):
       all_values
         Wheter, for a numbered array, a whole dict is supplied
       """
-      if not all_values or not self.is_numbered_array:
+      if not all_values or not self.is_repeated.is_dict:
           return self.type.copy_value(value)
       return { k:self.type.copy_value(v) for k,v in value.items() }
+
+  def check_array_access(self):
+      """ Check, whether the option is array type (or repeated) and thus it can be accessed as array using [] """
+      if not self.is_repeated and not self.type.array_access:
+          raise TypeError('It is not allowed to access {self.get_path()} as array')

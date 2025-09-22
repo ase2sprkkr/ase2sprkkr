@@ -1,23 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.physics.lattice_data &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -99,7 +98,9 @@
 <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Bohr</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 
-<div class="viewcode-block" id="Pearson"><a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson">[docs]</a><span class="k">class</span> <span class="nc">Pearson</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;Pearson&quot;</span><span class="p">,</span> <span class="p">[</span>
+<div class="viewcode-block" id="Pearson">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson">[docs]</a>
+<span class="k">class</span> <span class="nc">Pearson</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;Pearson&quot;</span><span class="p">,</span> <span class="p">[</span>
     <span class="s2">&quot;pearson_symbol&quot;</span><span class="p">,</span>
     <span class="s2">&quot;bravais_number&quot;</span><span class="p">,</span>
     <span class="s2">&quot;family&quot;</span><span class="p">,</span>
@@ -110,25 +111,35 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; This class holds informations about translation symmetry of a lattice with a given</span>
 <span class="sd">    Pearson symbol. &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Pearson.xband_data"><a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson.xband_data">[docs]</a>    <span class="k">def</span> <span class="nf">xband_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Pearson.xband_data">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson.xband_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">xband_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Data used by Xband sysfile and SPRKKR to describe translation symmetry.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span></div>
 
-<div class="viewcode-block" id="Pearson.from_symbol"><a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson.from_symbol">[docs]</a>    <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="Pearson.from_symbol">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson.from_symbol">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_symbol</span><span class="p">(</span><span class="n">pearson_symbol</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Return the Pearson symbol (describing the translation symmetry) that corresponds to the</span>
 <span class="sd">        given Pearson symbol &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Pearson</span><span class="o">.</span><span class="n">pearsons</span><span class="p">[</span><span class="n">Pearson</span><span class="o">.</span><span class="n">normalize_symbol</span><span class="p">(</span><span class="n">pearson_symbol</span><span class="p">)]</span></div>
 
-<div class="viewcode-block" id="Pearson.normalize_symbol"><a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson.normalize_symbol">[docs]</a>    <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="Pearson.normalize_symbol">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson.normalize_symbol">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">normalize_symbol</span><span class="p">(</span><span class="n">pearson_symbol</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Normalize a Pearson symbol to its cannonical shape&quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="n">pearson_symbol</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">):</span>
           <span class="n">pearson_symbol</span> <span class="o">=</span> <span class="n">pearson_symbol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;S&#39;</span>
       <span class="k">return</span> <span class="n">pearson_symbol</span></div>
 
+
     <span class="n">pearson</span><span class="o">=</span><span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Mapping of all possible Pearson symbols to Pearson objects&quot;&quot;&quot;</span></div>
+
 
 <span class="n">Pearson</span><span class="o">.</span><span class="n">pearsons</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="o">.</span><span class="n">pearson_symbol</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span>
         <span class="n">Pearson</span><span class="p">(</span><span class="s1">&#39;aP&#39;</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;triclinic&#39;</span><span class="p">,</span>   <span class="s1">&#39;primitive&#39;</span><span class="p">,</span>      <span class="s1">&#39;-1&#39;</span><span class="p">,</span>     <span class="s1">&#39;C_i&#39;</span><span class="p">),</span>
@@ -383,9 +394,13 @@
                 <span class="mi">230</span> <span class="p">:</span> <span class="mi">499</span>
                 <span class="p">}</span>
 
-<div class="viewcode-block" id="LatticeData"><a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.LatticeData.html#ase2sprkkr.physics.lattice_data.LatticeData">[docs]</a><span class="k">class</span> <span class="nc">LatticeData</span><span class="p">:</span>
+<div class="viewcode-block" id="LatticeData">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.LatticeData.html#ase2sprkkr.physics.lattice_data.LatticeData">[docs]</a>
+<span class="k">class</span> <span class="nc">LatticeData</span><span class="p">:</span>
 
-<div class="viewcode-block" id="LatticeData.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.LatticeData.html#ase2sprkkr.physics.lattice_data.LatticeData.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+<div class="viewcode-block" id="LatticeData.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.LatticeData.html#ase2sprkkr.physics.lattice_data.LatticeData.__init__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
       <span class="n">cell</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_cell</span><span class="p">()</span>
       <span class="n">bl</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">get_bravais_lattice</span><span class="p">()</span>
       <span class="n">sg</span> <span class="o">=</span> <span class="n">get_spacegroup</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
@@ -410,6 +425,7 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">cellpar</span><span class="p">()[</span><span class="mi">4</span><span class="p">]</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">cellpar</span><span class="p">()[</span><span class="mi">5</span><span class="p">]</span></div>
 
+
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">bravais_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pearson</span><span class="o">.</span><span class="n">bravais_number</span>
@@ -417,6 +433,7 @@
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">shoenflies_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="n">pearson_to_shoenflies</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pearson</span><span class="o">.</span><span class="n">pearson_symbol</span><span class="p">]</span></div>
+
 </pre></div>
 
            </div>

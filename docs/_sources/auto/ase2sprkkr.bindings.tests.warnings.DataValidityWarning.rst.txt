@@ -1,0 +1,6 @@
+ase2sprkkr.bindings.tests.warnings.DataValidityWarning
+======================================================
+
+.. currentmodule:: ase2sprkkr.bindings.tests.warnings
+
+.. autoexception:: DataValidityWarning

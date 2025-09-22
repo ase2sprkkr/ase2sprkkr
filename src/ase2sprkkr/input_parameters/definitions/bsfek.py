@@ -4,15 +4,18 @@ from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import \
     InputParametersDefinition as InputParameters, \
     InputValueDefinition as V
-from ...common.doc import process_input_parameters_definition
+from ...common.generated_configuration_definitions import Length
+from ...common.configuration_definitions import if_not_defined
 
-input_parameters = InputParameters(
-    'bsfek', [
+def input_parameters():
+    """ BSF - Bloch-spectral-function task input-parameters definition"""
+    out = InputParameters(
+        'bsfek', [
           CONTROL('BSF'),
           TAU,
           TASK('BSF').copy([
             V('NK', 300, info="total number of k-points"),
-            V('KPATH', Integer(min=1, max=5), 1, info="Predefined path in k-space", description="""
+            V('KPATH', Integer(min=1, max=5), info="Predefined path in k-space", description="""
 Bravais-lattice KPATH path
 ==========================
 orb 1  Γ-Σ-X-G-U-A-Z-Λ-Γ-∆-Y-H-T-B-Z
@@ -41,19 +44,23 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
     3  Γ-D-H-G-N-Σ-Γ-Λ-P
     4  Γ-D-H-G-N-Σ-Γ
     5  Γ-D-H
-""", is_optional=True),  # TODO -either KPATH for some lattices, or NKDIR, KA end KE, length(KA) = NKDIR
-            V('NKDIR', 1, info="Number of directions treated in k-spaces"),
-            V('KA', SetOf(float, length=3), is_numbered_array=True, info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR", is_optional=True),
-            V('KE', SetOf(float, length=3), is_numbered_array=True, info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR", is_optional=True),
+""", is_optional=True),
+            *if_not_defined('KPATH', [
+                V('NKDIR', Length('KA', 'KE', default_values=[[0.,0.,0.],[1.,1.,1.,]]), info="Number of directions treated in k-spaces", is_required='Please, specify either TASK.KPATH or TASK.KA and TASK.KE'),
+                V('KA', SetOf(float, length=3), is_repeated='NUMBERED', info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR",
+                is_required="Please, specify either TASK.KPATH or TASK.KA and TASK.KE"),
+                V('KE', SetOf(float, length=3), is_repeated='NUMBERED', info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR",
+                is_required="Please, specify either TASK.KPATH or TASK.KA and TASK.KE"),
+            ])
           ]),
-          ENERGY.copy([
-            V('EMAX', 1., info="highest E-value"),
-          ], defaults={
-            'EMIN': -0.2,
-            'GRID': 3,
-            'NE'  : 200,
-            'ImE' : 0.001,
-          }),
+          ENERGY(
+            emin = (-0.2, 'The lowest E-value', None),
+            emax = (-1., 'The highest E-value', None),
+            defaults={
+              'GRID': 3,
+              'NE'  : 200,
+              'ImE' : 0.001,
+            }),
           CONTROL('BLOCHSF'),
           TAU,
           MODE,
@@ -63,9 +70,19 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
     executable='kkrgen',
     mpi=True,
     info="BSFEK - Bloch spectral functions in the E-K plane"
-)
-""" JXC -JXC task input parameters definition"""
+    )
 
-process_input_parameters_definition(__name__)
+    class BSFEKTaskSection(out['TASK'].result_class):
+
+        def k_path_gui(self, atoms):
+            from ase2sprkkr.gui.k_path import k_path_gui
+            out = k_path_gui(atoms)
+            if out:
+                self.KPATH.clear()
+                self.set(out)
+
+
+    out['TASK'].result_class = BSFEKTaskSection
+    return out
 
 # TODO - AKI scripts to generate KA/KE

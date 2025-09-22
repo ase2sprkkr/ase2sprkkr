@@ -1,0 +1,36 @@
+MergeSectionAdaptor
+===================
+
+
+.. currentmodule:: ase2sprkkr.common.section_adaptors
+
+.. autoclass:: MergeSectionAdaptor
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.section_adaptors.MergeSectionAdaptor
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

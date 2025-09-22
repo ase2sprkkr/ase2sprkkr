@@ -5,19 +5,20 @@ Full name: **ase2sprkkr.tools.commands.info**
 
 
 
-.. rubric:: Module class hierarchy
-
-.. inheritance-diagram::  ase2sprkkr.tools.commands.info.TestsArgAction 
-      :parts: 1
-
-|
-
-
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.tools.commands.info
 
    
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      description
+      default_options
    
    
 
@@ -30,8 +31,6 @@ Full name: **ase2sprkkr.tools.commands.info**
       :toctree:
       :template: custom-base-template.rst
    
-      info_output_files
-      info_tasks
       parser
       run
    
@@ -39,14 +38,6 @@ Full name: **ase2sprkkr.tools.commands.info**
 
 
    
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-      :toctree:
-      :template: custom-class-template.rst
-   
-      TestsArgAction
    
    
 

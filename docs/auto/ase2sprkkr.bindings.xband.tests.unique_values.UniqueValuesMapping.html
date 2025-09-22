@@ -1,0 +1,428 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniqueValuesMapping &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="warnings" href="ase2sprkkr.bindings.xband.tests.warnings.html" />
+    <link rel="prev" title="unique_values" href="ase2sprkkr.bindings.xband.tests.unique_values.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.empty_spheres.html">empty_spheres</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.es_finder.html">es_finder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.nomad.html">nomad</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.spglib.html">spglib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.tests.html">tests</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.bindings.xband.html">xband</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.xband.spheres.html">spheres</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.xband.symmetry.html">symmetry</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="ase2sprkkr.bindings.xband.tests.html">tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.bindings.html">bindings</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.bindings.xband.html">xband</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.bindings.xband.tests.html">tests</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.bindings.xband.tests.unique_values.html">unique_values</a></li>
+      <li class="breadcrumb-item active">UniqueValuesMapping</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="uniquevaluesmapping">
+<h1>UniqueValuesMapping<a class="headerlink" href="#uniquevaluesmapping" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.bindings.xband.tests.unique_values.</span></span><span class="sig-name descname"><span class="pre">UniqueValuesMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_to_class_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping" title="Link to this definition"></a></dt>
+<dd><p>A class, that can map a collection of (possible non-unique) values to a set
+of unique identifiers. It effectively makes the classes of equivalence
+between indexes of the input array.</p>
+<p>The instances of the class can be merged to distinct the values, that are
+the same according to one criterion, but distinct on the other.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">mapping</span>
+<span class="go">array([1, 2, 1], dtype=int32)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span><span class="o">.</span><span class="n">mapping</span>
+<span class="go">array([1, 1, 2], dtype=int32)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">value_to_class_id</span>
+<span class="go">{1: 1, 4: 2}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">merge</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">mapping</span>
+<span class="go">array([1, 2, 3, 1], dtype=int32)</span>
+</pre></div>
+</div>
+<p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-e49b2158811c5fd3e83404717e5e901a8eb8c39c.png" alt="Inheritance diagram of ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping" usemap="#inheritance5c1fb381c0" class="inheritance graphviz" /></div>
+<map id="inheritance5c1fb381c0" name="inheritance5c1fb381c0">
+<area shape="rect" id="node1" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping" target="_top" title="A class, that can map a collection of (possible non&#45;unique) values to a set" alt="" coords="5,5,271,31"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapping</strong> (<em>List</em>)</p></li>
+<li><p><strong>value_to_class_id</strong> (<em>Dict</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_to_class_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapping</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>list</em><em>]</em>) – Array of equivalence class members
+members[id] = &lt;eq class id&gt;</p></li>
+<li><p><strong>value_to_class_id</strong> (<em>dict</em>) – Mapping { value: &lt;eq class id&gt; }</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.mapping">
+<span class="sig-name descname"><span class="pre">mapping</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.mapping" title="Link to this definition"></a></dt>
+<dd><p>Map from &lt;object index&gt; to &lt;object equivalence class id&gt;.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.value_to_class_id">
+<span class="sig-name descname"><span class="pre">value_to_class_id</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.value_to_class_id" title="Link to this definition"></a></dt>
+<dd><p>Map from &lt;object&gt; to &lt;object equivalence class id&gt;.
+If two mappings are merged, this attribute is not available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.indexes">
+<span class="sig-name descname"><span class="pre">indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_from</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping.indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.indexes" title="Link to this definition"></a></dt>
+<dd><p>Returns the dictionary that maps equivalence class id to the list
+of class members indexes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_from</strong> (<em>int</em>) – The indexes are by default zero-based, however they can start with
+the given number (typically with 1).</p></li>
+<li><p><strong>testsetup::</strong> (<em>..</em>) – np.set_printoptions(legacy=’1.25’)</p></li>
+<li><p><strong>..doctest::</strong> – <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">indexes</span><span class="p">()</span>
+<span class="go">{1: [0, 2], 4: [1]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">indexes</span><span class="p">(</span><span class="n">start_from</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">{1: [1, 3], 4: [2]}</span>
+</pre></div>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.unique_indexes">
+<span class="sig-name descname"><span class="pre">unique_indexes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping.unique_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.unique_indexes" title="Link to this definition"></a></dt>
+<dd><p>Returns the dictionary that maps equivalence class id to the list
+of class members indexes.</p>
+<dl>
+<dt>..doctest::</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span><span class="o">.</span><span class="n">unique_indexes</span><span class="p">()</span>
+<span class="go">[0, 2]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.iter_unique">
+<span class="sig-name descname"><span class="pre">iter_unique</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping.iter_unique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.iter_unique" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.unique_items">
+<span class="sig-name descname"><span class="pre">unique_items</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping.unique_items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.unique_items" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.len_of_unique">
+<span class="sig-name descname"><span class="pre">len_of_unique</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping.len_of_unique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.len_of_unique" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.from_values">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping.from_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.from_values" title="Link to this definition"></a></dt>
+<dd><p>Create equivalence-classes mapping. Unlike the constructor,
+this method tags the values by integers and also compute the reverse
+(value to equivalence class) mapping.</p>
+<dl class="simple">
+<dt>values: iterable</dt><dd><p>Values to find the equivalence classes</p>
+</dd>
+<dt>length: int</dt><dd><p>Length of values - provide it, if len(values) is not available</p>
+</dd>
+</dl>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>length</strong> (<em>int</em><em> | </em><em>None</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping._create_mapping">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_create_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_from=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'numpy.int32'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping._create_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping._create_mapping" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>mapping</strong> (<em>np.ndarray</em>) – maps the value indexes to equivalence class id</p></li>
+<li><p><strong>reverse</strong> (<em>dict</em>) – maps equivalence classes to value indexes</p></li>
+<li><p><em>.. doctest::</em> – &gt;&gt;&gt; UniqueValuesMapping._create_mapping([1.,4.,1.])
+(array([1, 2, 1], dtype=int32), {1.0: 1, 4.0: 2})</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.merge">
+<span class="sig-name descname"><span class="pre">merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping.merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.merge" title="Link to this definition"></a></dt>
+<dd><p>Merge two sets. Resulting UniqueValues uses integers as keys</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.is_equivalent_to">
+<span class="sig-name descname"><span class="pre">is_equivalent_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping.is_equivalent_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.is_equivalent_to" title="Link to this definition"></a></dt>
+<dd><p>Return, whether the mapping is equal to given another mapping, regardless the actual “names” of the equivalence classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapping</strong> (<a class="reference internal" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping" title="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping"><em>UniqueValuesMapping</em></a><em> | </em><em>Iterable</em>) – The other mapping can be given either by instance of this class, or just by any iterable (that returns equivalence class names for the items)</p></li>
+<li><p><strong>doctest::</strong> (<em>..</em>) – <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">(</span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.are_equivalent">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">are_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping.are_equivalent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.are_equivalent" title="Link to this definition"></a></dt>
+<dd><p>Return, whether the two mappings are equal, regardless the actual “names” of the equivalence classes.</p>
+<p>See <code class="xref py py-meth docutils literal notranslate"><span class="pre">is_equivalent</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<a class="reference internal" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping" title="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping"><em>UniqueValuesMapping</em></a><em> | </em><em>Iterable</em>)</p></li>
+<li><p><strong>b</strong> (<a class="reference internal" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping" title="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping"><em>UniqueValuesMapping</em></a><em> | </em><em>Iterable</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.normalized">
+<span class="sig-name descname"><span class="pre">normalized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_from</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping.normalized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.normalized" title="Link to this definition"></a></dt>
+<dd><p>Map the class ids to integers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strict</strong> (<em>bool</em>) – If True, the resulting integer names will be from range (start_from)..(n+start_from-1),
+where n is the number of equivalence classes.
+If False and the names are already integers in a numpy array, do nothing.</p></li>
+<li><p><strong>start_from</strong> – Number the equivalent classes starting from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>mapping</strong> (<em>np.ndarray</em>) – Array of integer starting from start_from, denotes the equivalence classes for the values,
+It holds, that <code class="docutils literal notranslate"><span class="pre">mappind[index]</span> <span class="pre">==</span> <span class="pre">equivalence_class</span></code></p></li>
+<li><p><strong>reverse</strong> (<em>dict</em>) – Dict <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">equivalence_class</span> <span class="pre">:</span> <span class="pre">value</span> <span class="pre">}</span></code></p></li>
+<li><p><em>.. doctest::</em> – &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized()
+(array([1, 2, 1], dtype=int32), {1: 1, 2: 2})
+&gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized(start_from=0)
+(array([0, 1, 0], dtype=int32), {1: 0, 2: 1})</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_from</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/tests/unique_values.html#UniqueValuesMapping.normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.tests.unique_values.UniqueValuesMapping.normalize" title="Link to this definition"></a></dt>
+<dd><p>Replace the names of equivalent classes by the integers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strict</strong> (<em>bool</em>) – If True, the resulting integer names will be from range (start_from)..(n+start_from-1),
+where n is the number of equivalence classes.
+If False and the names are already integers in a numpy array, do nothing.</p></li>
+<li><p><strong>start_from</strong> – Number the equivalent classes starting from.</p></li>
+<li><p><strong>dtype</strong> – dtype of the normalized values. None means <code class="docutils literal notranslate"><span class="pre">numpy.int32</span></code>, however if not strict,
+any integer type will be sufficient.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>unique_values_mapping</em> – Return self.</p></li>
+<li><p><em>.. doctest::</em> – &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().mapping
+array([1, 2, 1], dtype=int32)
+&gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().value_to_class_id[(0,3)]
+2
+&gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize(start_from=0).mapping
+array([0, 1, 0], dtype=int32)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.bindings.xband.tests.unique_values.html" class="btn btn-neutral float-left" title="unique_values" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.bindings.xband.tests.warnings.html" class="btn btn-neutral float-right" title="warnings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

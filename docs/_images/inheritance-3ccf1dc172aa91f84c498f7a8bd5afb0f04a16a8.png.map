@@ -1,0 +1,7 @@
+<map id="inheritance63116ef39d" name="inheritance63116ef39d">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="5,55,123,80"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="167,55,311,80"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.value_definitions.InheritingValueModifier.html#ase2sprkkr.common.value_definitions.InheritingValueModifier" target="_top" title="The definition of the value will be inherited from this class as well." alt="" coords="152,5,325,31"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.value_definitions.ValueModifier.html#ase2sprkkr.common.value_definitions.ValueModifier" target="_top" title="If this class is given as a type of a Value, it will modify the definition" alt="" coords="9,5,119,31"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" target="_top" title="ValueDefinition" alt="" coords="355,55,476,80"/>
+</map>

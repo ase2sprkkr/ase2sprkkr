@@ -13,6 +13,11 @@ import unittest
 import os
 
 
+def run_sprkkr(fn):
+    """ run this test only if SPRKKR executable can be runned """
+    return pytest.mark.skipif(not TestCase.run_sprkkr(), reason="The test require SPRKKR running")(fn)
+
+
 def patch_package(package, name):
     """ Set the package name for the tests, to make the relative imports working.
 
@@ -77,16 +82,22 @@ class TestCase:
           del self.dirname
 
   @classmethod
-  def calc_args(cls, **kwargs):
+  def calc_args(cls, TYPE=None, **kwargs):
       if not kwargs:
           return cls._calc_args
       out = cls._calc_args.copy()
       if 'options' in kwargs:
           kwargs['options'].update(cls._calc_args['options'])
       out.update(kwargs)
+      if TYPE == 'save_input':
+          try:
+              del out['print_output']
+          except KeyError:
+              pass
       return out
 
-  def run_sprkkr(self):
+  @staticmethod
+  def run_sprkkr():
      return os.environ.get('DO_NOT_RUN_SPRKKR', '') == ''
 
   def assertAsyncEqual(self, a, b):

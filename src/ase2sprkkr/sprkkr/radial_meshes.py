@@ -2,7 +2,7 @@
 import copy
 import numpy as np
 import math
-from scipy.interpolate import CubicSpline
+from ..common.decorators import cached_class_property
 
 
 class Mesh:
@@ -22,8 +22,13 @@ class Mesh:
   def interpolator(self, values):
       return self.interpolator_for_coors(self.coors, values)
 
-  @staticmethod
-  def interpolator_for_coors(coors, values):
+  @cached_class_property
+  def CubicSpline():
+      from scipy.interpolate import CubicSpline
+      return CubicSpline
+
+  @classmethod
+  def interpolator_for_coors(cls, coors, values):
       v1 = abs(values[0])
       v2 = abs(values[-1])
 
@@ -39,10 +44,10 @@ class Mesh:
           r_method = abs(d) > abs(dr)
 
       if r_method:
-          spl = CubicSpline(coors, values * coors, extrapolate=True)
+          spl = cls.CubicSpline(coors, values * coors, extrapolate=True)
           return lambda x: spl(x) / x
 
-      return CubicSpline(coors, values)
+      return cls.CubicSpline(coors, values)
 
 
 def _clearing_property(name):
@@ -59,6 +64,22 @@ def _clearing_property(name):
     out = property(reader)
     out = out.setter(writer)
     return out
+
+
+class FullpotMesh:
+  """ Data describing mesh for a full potential """
+
+  def __init__(self, jrns, jrcri, jrcut):
+      self.jrns = jrns
+      self.jrcri = jrcri
+      self.jrcut = jrcut
+
+  def to_tuple(self):
+      return self.jrns, self.jrcri, len(self.jrcut), self.jrcut
+
+  @classmethod
+  def from_tuple(cls, data):
+      return cls(data[0], data[1], data[3])
 
 
 class ExponentialMesh(Mesh):
@@ -91,6 +112,7 @@ class ExponentialMesh(Mesh):
       self._jrws = jrws
       self._rws = rws
       self._coors = None
+      self.fullpot = None
 
   r1 = _clearing_property('r1')
   dx = _clearing_property('dx')
@@ -126,3 +148,11 @@ class ExponentialMesh(Mesh):
 
   def copy(self):
       copy.copy(self)
+
+  def set_fullpot(self, data):
+      self.fullpot = FullpotMesh.from_tuple(data)
+
+  def fullpot_tuple(self):
+      if self.fullpot:
+          return self.fullpot.to_tuple()
+      return None

@@ -1,0 +1,398 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.output_files.test.configuration &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.output_files.test.configuration</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.output_files.test.configuration</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; This module contains just a base class for both configuration values - :class:`Options&lt;ase2sprkkr.common.options.Option&gt;`</span>
+<span class="sd">and configuration containers - :class:`Sections&lt;ase2sprkkr.common.configuration_containers.Section&gt;`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">.warnings</span> <span class="kn">import</span> <span class="n">DataValidityWarning</span><span class="p">,</span> <span class="n">DataValidityError</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+
+<div class="viewcode-block" id="Configuration">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration">[docs]</a>
+<span class="k">class</span> <span class="nc">Configuration</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; The common base class for all configurations values and containers. I.e.</span>
+<span class="sd">  for :class:`Options&lt;ase2sprkkr.common.options.Option&gt;` and :class:`Sections&lt;ase2sprkkr.common.configuration_containers.Section&gt;`.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Configuration.__init__">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration.__init__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Create the object. Just sets the two properties from the parameters.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      definition: ase2sprkkr.common.configuration_definitions.BaseDefinition</span>
+<span class="sd">        Definition of this configuration object.</span>
+
+<span class="sd">      container: ase2sprkkr.common.configuration_containers.ConfigurationContainer</span>
+<span class="sd">        The container, that owns this configuration object.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span> <span class="o">=</span> <span class="n">definition</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      The &quot;definition&quot; of the option or section. The definition determines</span>
+<span class="sd">      the name(s), value type(s) etc... contained in the configuration object.</span>
+<span class="sd">      Instance of :class:`ase2sprkkr.common.configuration_definitions.BaseDefinition`</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">_container</span> <span class="o">=</span> <span class="n">container</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      The parent container. I.e. the container that holds this object (e.g.</span>
+<span class="sd">      for a value it is the section that owns the value)</span>
+<span class="sd">      Instance of :class:`ase2sprkkr.common.configuration_containers.ConfigurationContainer`</span>
+<span class="sd">      &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="Configuration._get_path">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration._get_path">[docs]</a>
+  <span class="k">def</span> <span class="nf">_get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_root</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Return the dot-delimited path to the item in the configuration tree.</span>
+
+<span class="sd">      E.g. the ``ENERGY`` option in the ``CONTROL`` section has the path</span>
+<span class="sd">      ``CONTROL.ENERGY``</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span> <span class="ow">and</span> <span class="p">(</span><span class="n">include_root</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">_container</span><span class="p">):</span>
+         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+      <span class="k">return</span> <span class="n">name</span></div>
+
+
+<div class="viewcode-block" id="Configuration._get_root_container">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration._get_root_container">[docs]</a>
+  <span class="k">def</span> <span class="nf">_get_root_container</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Return the root object of the configuration tree.</span>
+
+<span class="sd">      I.E. the object, that represents the whole configuration or problem-definition file</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">_get_root_container</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span> <span class="k">else</span> <span class="bp">self</span></div>
+
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Return the name of the option/section. The name is defined by the definition</span>
+<span class="sd">      of the object.</span>
+
+<span class="sd">      Returns</span>
+<span class="sd">      -------</span>
+<span class="sd">      name: str</span>
+<span class="sd">      The name of the object.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span>
+
+<div class="viewcode-block" id="Configuration._as_dict">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration._as_dict">[docs]</a>
+  <span class="k">def</span> <span class="nf">_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Configuration.as_dict_getter">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration.as_dict_getter">[docs]</a>
+  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">as_dict_getter</span><span class="p">(</span><span class="n">only_changed</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+      <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+          <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_generated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">generated</span><span class="p">:</span>
+               <span class="k">return</span> <span class="kc">None</span>
+          <span class="k">if</span> <span class="n">only_changed</span> <span class="o">==</span> <span class="s1">&#39;explicit&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_generated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">generated</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">)</span>
+          <span class="k">elif</span> <span class="n">only_changed</span> <span class="ow">and</span> <span class="p">(</span><span class="n">only_changed</span><span class="o">!=</span><span class="s1">&#39;basic&#39;</span> <span class="ow">or</span> <span class="n">d</span><span class="o">.</span><span class="n">is_expert</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">is_always_added</span><span class="p">:</span>
+               <span class="n">v</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_and_changed</span><span class="p">()</span>
+               <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+          <span class="k">else</span><span class="p">:</span>
+               <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">all_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+          <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+              <span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
+                   <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">copy_value</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">all_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+          <span class="k">return</span> <span class="n">v</span>
+
+      <span class="k">return</span> <span class="n">get</span></div>
+
+
+<div class="viewcode-block" id="Configuration.as_dict">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration.as_dict">[docs]</a>
+  <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_changed</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">getter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Return the value of self, in the case of container as a dictionary. To be redefined in the descendants.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      only_changed</span>
+<span class="sd">        Return only changed values, or all of them?</span>
+<span class="sd">        If True, return only the values, that differ from the defaults.</span>
+<span class="sd">        If False, return all the values.</span>
+<span class="sd">        The default value ``basic`` means, return all non-expert values</span>
+<span class="sd">        and all the changed expert values.</span>
+<span class="sd">        ``explicit`` means just the values, that were explicitly set (even</span>
+<span class="sd">        if they are the same as the default value)</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">getter</span><span class="p">:</span>
+          <span class="n">getter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict_getter</span><span class="p">(</span><span class="n">only_changed</span><span class="p">,</span> <span class="n">generated</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_as_dict</span><span class="p">(</span><span class="n">getter</span><span class="p">)</span></div>
+
+
+  <span class="n">to_dict</span> <span class="o">=</span> <span class="n">as_dict</span>
+
+<div class="viewcode-block" id="Configuration.show">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration.show">[docs]</a>
+  <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Print the configuration, as it will be saved into the configuration/problem definition file. &quot;&quot;&quot;</span>
+      <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span></div>
+
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">doc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">try</span><span class="p">:</span>
+         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">description</span><span class="p">()</span>
+      <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot retrieve documentation&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+<div class="viewcode-block" id="Configuration.help">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration.help">[docs]</a>
+  <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+         <span class="n">verbose</span><span class="o">=</span><span class="s1">&#39;all&#39;</span>
+      <span class="k">elif</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+         <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>
+      <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">description</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="n">show_hidden</span><span class="p">))</span>
+
+      <span class="k">global</span> <span class="n">_help_warning_printed</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">_help_warning_printed</span><span class="p">:</span>
+          <span class="kn">import</span> <span class="nn">__main__</span> <span class="k">as</span> <span class="nn">main</span>
+          <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">main</span><span class="p">,</span> <span class="s1">&#39;__file__&#39;</span><span class="p">):</span>  <span class="c1"># I&#39;m in repl</span>
+             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> You can use &lt;Configuration&gt;.help(True) for a more detailed description of the possible configuration options. Enjoy ASE2SPRKKR!</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+          <span class="n">_help_warning_printed</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+  <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">configuration_type_name</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+      <span class="k">return</span> <span class="n">out</span>
+
+<div class="viewcode-block" id="Configuration.check_for_errors">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration.check_for_errors">[docs]</a>
+  <span class="k">def</span> <span class="nf">check_for_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="nb">print</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+      <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">lst</span><span class="p">:</span>
+          <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;always&quot;</span><span class="p">,</span> <span class="n">DataValidityWarning</span><span class="p">)</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">validate</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">lst</span> <span class="ow">and</span> <span class="nb">print</span><span class="p">:</span>
+          <span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
+              <span class="n">warnings</span><span class="o">.</span><span class="n">showwarning</span><span class="p">(</span>
+                  <span class="n">message</span><span class="o">=</span><span class="n">warning</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                  <span class="n">category</span><span class="o">=</span><span class="n">warning</span><span class="o">.</span><span class="n">category</span><span class="p">,</span>
+                  <span class="n">filename</span><span class="o">=</span><span class="n">warning</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
+                  <span class="n">lineno</span><span class="o">=</span><span class="n">warning</span><span class="o">.</span><span class="n">lineno</span>
+              <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Configuration.validate">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration.validate">[docs]</a>
+  <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">why</span><span class="o">==</span><span class="s1">&#39;warning&#39;</span><span class="p">:</span>
+          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">why</span><span class="p">)</span>
+      <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+          <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">DataValidityError</span><span class="p">)</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">why</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Configuration.save_to_file">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration.save_to_file">[docs]</a>
+  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Save the configuration to a file in a given format.</span>
+
+<span class="sd">      This routine do some basic stuff and then call _save_to_file routine,</span>
+<span class="sd">      that contains the implementation specific for the type of the</span>
+<span class="sd">      configuration container/value.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      file: str or file</span>
+<span class="sd">        File to read the data from</span>
+
+<span class="sd">      validate</span>
+<span class="sd">        Validate the data in the container first and raise an exception,</span>
+<span class="sd">        if there is an error (e.g. the the data are not complete).</span>
+<span class="sd">        The string value can be used to select the type of validation</span>
+<span class="sd">        ``save`` means the full check (same as the default value ``True``),</span>
+<span class="sd">        use ``set`` to allow some missing values.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">if</span> <span class="n">validate</span> <span class="o">==</span> <span class="s1">&#39;warning&#39;</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">check_for_errors</span><span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">validate</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">):</span>
+          <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+              <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+              <span class="n">file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+          <span class="n">file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+      <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="Configuration.to_string">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration.to_string">[docs]</a>
+  <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;warning&#39;</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Return the configuration (problem definition) in a string.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      Validate. How to validate before retrieving. See the method</span>
+<span class="sd">      validate.</span>
+<span class="sd">      Default &#39;warning&#39; means the same as &#39;save&#39;, but only throw a warning.</span>
+
+<span class="sd">      Returns</span>
+<span class="sd">      -------</span>
+<span class="sd">      configuration:str</span>
+<span class="sd">      The configuration, as it should be saved in a configuration/problem definition file.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Configuration._find_member">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.test.configuration.Configuration.html#ase2sprkkr.output_files.test.configuration.Configuration._find_member">[docs]</a>
+  <span class="k">def</span> <span class="nf">_find_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_option</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+      <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_members</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="p">,</span> <span class="n">is_option</span><span class="p">)</span>
+      <span class="k">try</span><span class="p">:</span>
+          <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+      <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+          <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<span class="n">_help_warning_printed</span><span class="o">=</span><span class="kc">False</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

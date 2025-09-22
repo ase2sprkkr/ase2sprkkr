@@ -38,10 +38,40 @@ Full name: **ase2sprkkr.potentials.test**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.potentials.test.init_tests
-     ase2sprkkr.potentials.test.test_structure
-     ase2sprkkr.potentials.test.test_2D
-     ase2sprkkr.potentials.test.test_custom_section
-     ase2sprkkr.potentials.test.test_potential
+     alternative_types
+     backward_compatibility
+     configuration
+     configuration_containers
+     configuration_definitions
+     container_definitions
+     debug
+     decorators
+     directory
+     doc
+     formats
+     generated_configuration_definitions
+     grammar
+     grammar_types
+     init_tests
+     lazy_string
+     misc
+     no_output
+     options
+     parsing_results
+     process_output_reader
+     repeated_configuration_containers
+     section_adaptors
+     subprocess
+     test
+     tools
+     unique_values
+     value_definitions
+     warnings
+     yaml
+     test_2D
+     test_custom_section
+     test_occupancy
+     test_potential
+     test_structure
   
   

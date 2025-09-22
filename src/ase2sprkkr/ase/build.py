@@ -5,9 +5,10 @@ routines, possible usable with plain ASE (with any calculator).
 
 import numpy as np
 import ase
-from ase.build import stack as _stack
+from typing import List, Union, Optional, Tuple
+from ase.build import surface
 
-from typing import List, Union, Optional
+
 def aperiodic_times(atoms:ase.Atoms,
                     times:Union[int, float, List[Union[int,float]]],
                     axis:Optional[int]=None,
@@ -62,8 +63,8 @@ def aperiodic_times(atoms:ase.Atoms,
         inum = int(num)
         mlt = np.ones(3, dtype=int)
         mlt[i] = inum
-        natoms = atoms*mlt
-        fnum=num-inum
+        natoms = atoms * mlt
+        fnum=num - inum
         if fnum>0:
            pos=atoms.get_scaled_positions(False)
            if direction > 0:
@@ -75,11 +76,12 @@ def aperiodic_times(atoms:ase.Atoms,
                add.positions -= atoms.cell[i]
                add += natoms
                natoms = add
-               natoms.positions+= atoms.cell[i]*fnum
-        natoms.cell[i] = atoms.cell[i]*num
+               natoms.positions+= atoms.cell[i] * fnum
+        natoms.cell[i] = atoms.cell[i] * num
         natoms.pbc[i]=False
         atoms = natoms
     return atoms
+
 
 def stack(atomses:List[ase.Atoms],
           axis:int,
@@ -166,7 +168,7 @@ def stack(atomses:List[ase.Atoms],
 
     out = atoms0.copy()
 
-    #first, define a function to retrieve the shifts
+    # first, define a function to retrieve the shifts
     if at is None:
        valid_at = lambda n: False
     else:
@@ -178,11 +180,11 @@ def stack(atomses:List[ase.Atoms],
             return None
         a = at[i]
         if isinstance(a, (int, float)):
-           out = out.cell[axis]
-           out *= a / np.linalg.norm(out)
+           o = out.cell[axis]
+           o *= a / np.linalg.norm(out)
         else:
-           out = a
-        return out
+           o = a
+        return o
 
     def update_origin(i):
        nonlocal origin
@@ -194,7 +196,7 @@ def stack(atomses:List[ase.Atoms],
        else:
           origin=a
 
-    #set the initial origin and shift
+    # set the initial origin and shift
     at0 = get_at(0)
     if at0 is None:
        origin = np.array([0.,0.,0.])
@@ -203,8 +205,7 @@ def stack(atomses:List[ase.Atoms],
        origin = at0
     shift = out.cell[axis]
 
-
-    #resolve resulting pbc
+    # resolve resulting pbc
     cell_index = [ i for i in range(3) if i!=axis ]
     if check_strain == 'auto':
        check_strain = scale
@@ -218,7 +219,7 @@ def stack(atomses:List[ase.Atoms],
                  raise ValueError("The stacked atoms has incompatibile pbc. Check the check_pbc argument.")
     out.pbc[axis] = periodic
 
-    #and finally, stack the atoms
+    # and finally, stack the atoms
     a0cell = atoms0.cell.complete()
     for i,a in enumerate(remains, start=1):
        update_origin(i)
@@ -226,7 +227,7 @@ def stack(atomses:List[ase.Atoms],
        out.pbc *= a.pbc
        positions = out.positions[-len(a):]
 
-       #scaling of the incompatibile cells
+       # scaling of the incompatibile cells
        do_scale = []
        for c in cell_index:
           if (a.cell[c] != atoms0.cell[c]).any():
@@ -240,7 +241,7 @@ def stack(atomses:List[ase.Atoms],
           cell = a.cell.complete()
           ncell = cell.copy()
           for c in do_scale:
-              #copied from atoms.set_cell(scale_atoms=True)
+              # copied from atoms.set_cell(scale_atoms=True)
               ncell[c] = a0cell[c]
           m = np.linalg.solve(cell, ncell)
           positions[:] = np.dot(positions, m)
@@ -248,7 +249,76 @@ def stack(atomses:List[ase.Atoms],
        positions += origin
        shift=a.cell[axis]
 
-    #update the cell of the resulting atoms
+    # update the cell of the resulting atoms
     update_origin(len(atomses))
     out.cell[axis] = origin
     return out
+
+def rotate(atoms:ase.Atoms,
+           hkl:Tuple[float]):
+    """
+    Rotate the atoms according the given Miller coordinates.
+
+    Parameters
+    ----------
+    atoms
+      The atoms to be rotated and shifted
+    hkl
+      Miller indices. The atoms will be rotated so that the last axis will be perpendicular
+      to the plane and the other will be parallel.
+    """
+    return surface(atoms, hkl, 1, periodic=True)
+
+
+def shift(atoms:ase.Atoms, shift:Optional[Union[float,int,tuple,list,np.ndarray]], axis=2, wrap=True):
+    """
+    Shift the atoms (to get the desired atom to the top/bottom of the cell).
+
+    Parameters
+    ----------
+    atoms
+      The atoms to shift their positions
+
+    shift
+      If a vector is given, add it to the positions.
+      If a float is given, shift byt the given fraction of the given axis
+      If an integer is given, shift so that the given atom is at [0,0,0]
+    """
+    if isinstance(shift, int):
+        shift = -atoms.positions[shift]
+    else:
+        shift = atoms.cell[axis] * shift
+    atoms.positions[:] = atoms.positions + shift
+    if wrap:
+        atoms.wrap()
+    return atoms
+
+def flip_around(atoms, around, axis=2, wrap=True):
+    """
+    Flip the atoms in given axis around given point (or site)
+    so that the point/site will be the most distant from origin of all the sites.
+    """
+    shift(atoms, -around, wrap=False)
+    flip(atoms, axis, wrap=False)
+    sp = atoms.get_scaled_positions()
+    aid = np.argmax(sp[:,axis] % 1.0)
+    return shift(atoms,
+          sp[aid, axis],
+          wrap=wrap)
+
+def flip(atoms, plane=2, wrap=True):
+    """
+    Flip the atoms around plane perpendicular to the given vector (if vector is given)
+    or axis (identified by an integer)
+    """
+    if isinstance(plane, int):
+        vc = atoms.cell[plane]
+    else:
+        vc = plane
+    vc = vc/np.linalg.norm(vc)
+    reflect = np.eye(3) - 2 * np.outer(vc,vc)
+    atoms.positions = np.dot(atoms.positions, reflect.T)
+
+    if wrap:
+        atoms.wrap()
+    return atoms

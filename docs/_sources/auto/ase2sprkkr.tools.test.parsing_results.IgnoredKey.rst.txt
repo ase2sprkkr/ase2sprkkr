@@ -1,0 +1,36 @@
+IgnoredKey
+==========
+
+
+.. currentmodule:: ase2sprkkr.tools.test.parsing_results
+
+.. autoclass:: IgnoredKey
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.tools.test.parsing_results.IgnoredKey
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

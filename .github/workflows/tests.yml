@@ -9,11 +9,14 @@ jobs:
     strategy:
       matrix:
         # in this example, there is a newer version already installed, 3.7.7, so the older version will be downloaded
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13.0']
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+    - run: |
+         mkdir -p ~/.config/matplotlib
+         echo "text.usetex : False" >> ~/.config/matplotlib/matplotlibrc
     - run: ./install_dependencies.sh
     - run: DO_NOT_RUN_SPRKKR=1 ./run_tests

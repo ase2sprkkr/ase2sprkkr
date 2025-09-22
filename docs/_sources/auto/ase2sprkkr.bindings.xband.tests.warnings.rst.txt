@@ -1,0 +1,42 @@
+warnings
+========
+
+Full name: **ase2sprkkr.bindings.xband.tests.warnings**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings.xband.tests.warnings
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      DataValidityError
+      DataValidityWarning
+   
+   
+
+
+  
+  
+  

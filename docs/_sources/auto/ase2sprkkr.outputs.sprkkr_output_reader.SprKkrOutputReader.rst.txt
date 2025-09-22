@@ -1,0 +1,36 @@
+SprKkrOutputReader
+==================
+
+
+.. currentmodule:: ase2sprkkr.outputs.sprkkr_output_reader
+
+.. autoclass:: SprKkrOutputReader
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputReader
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

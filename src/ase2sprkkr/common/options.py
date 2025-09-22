@@ -5,6 +5,8 @@ from ..common.grammar_types import mixed, GrammarType
 from .configuration import Configuration
 from ..common.misc import as_integer
 from .decorators import warnings_from_here
+from .warnings import DataValidityError
+import warnings
 
 
 class DangerousValue:
@@ -31,8 +33,10 @@ class DangerousValue:
 
       if validate:
           if value_type:
-              value = value_type.convert(value)
-              value_type.validate(value)
+              with warnings.catch_warnings():
+                  warnings.simplefilter("error", DataValidityError)
+                  value = value_type.convert(value)
+                  value_type.validate(value)
           else:
               value = str(value)
       self.value = value
@@ -75,7 +79,7 @@ class BaseOption(Configuration):
 
 class Dummy(BaseOption):
 
-  def validate(self, why='save'):
+  def _validate(self, why='save'):
       return True
 
   def has_any_value(self):
@@ -88,7 +92,7 @@ class Dummy(BaseOption):
 class DummyStub(Dummy):
 
   def _as_dict(self, get):
-      if self._definition.condition and not self._definition.condition(self):
+      if not self._definition.allowed(self._container):
           return None
       return get(self._container[self._definition.item])
 
@@ -114,6 +118,7 @@ class Option(BaseOption):
   >>> conf.ENERGY.ImE()
   '1J'
   """
+
   def __init__(self, definition, container=None, value=None):
       """"
       Parameters
@@ -132,32 +137,43 @@ class Option(BaseOption):
       self._definition.enrich(self)
       self._value = value
 
-  def __call__(self, all_values:bool=False):
+  def _value_or_default(self):
+      d = self._definition
+      if d.is_generated:
+          return d.getter(self._container)
+      if hasattr(self, '_result'):
+          return self._result
+      if self._value is not None:
+          return self._value
+      value = self.default_value
+      if self._definition.is_repeated.is_dict and value is not None:
+          return { 'def' : value }
+      return value
+
+  def __call__(self, all_values:bool=False, unpack=True):
       """
       Return the value of the option.
 
       Parameters
       ----------
-      all_values: For numbered_array (see :class:`ConfigurationDefinition.is_numbered_array <ConfigurationDefinition>`,
-      pass True as this argument to obtain array of all values. If False (the default) is given,
-      only the 'wildcard' value (i.e. the one without array index, which is used for the all values
-      not explicitly specified) is returned.
+      all_values: Control the behavior for the dict_like repeated values
+      (see `is_repeated` attribute of :class:`ConfigurationDefinition`).
+      Pass True as this argument to obtain dictionary
+      of all values. If False (the default) is given, only the 'wildcard' value
+      (i.e. the one without array index, which is used for the all values not explicitly specified)
+      is returned.
       """
       d = self._definition
-      if d.is_generated:
-         return d.getter(self._container)
-
-      value = self._unpack_value(self._value)
-      if value is not None:
-          if d.is_numbered_array and not all_values:
-              return value.get('def', self.default_value)
-          return value
-      dv = self.default_value
-      if d.is_numbered_array and all_values and dv is not None:
-          return { 'def' : dv }
-      if d.init_by_default:
-          self._value = self._pack_value( dv )
-      return self.default_value
+      value = self._value_or_default()
+      if not d.is_generated and d.init_by_default and self._value is None:
+          self._value = self._pack_value( value )
+      if isinstance(value, DangerousValue) and unpack:
+          value = value()
+      if d.is_repeated.is_dict and not all_values:
+           value = value.get('def', self.default_value)
+      if unpack:
+           value = self._unpack_value(value)
+      return value
 
   def is_dangerous(self):
       """ Return, whether the option is set to a dangerous value, i.e. a value
@@ -190,8 +206,13 @@ class Option(BaseOption):
       """
       return self._definition.get_value(self)
 
-  @warnings_from_here(stacklevel=2)
   def set(self, value, *, unknown=None, error=None):
+      self._set(value, unknown=unknown, error=error)
+      if self._container and not error:
+          self._container._validate_section()
+
+  @warnings_from_here(stacklevel=2)
+  def _set(self, value, *, unknown=None, error=None):
       """
       Set the value of the option.
 
@@ -206,34 +227,50 @@ class Option(BaseOption):
 
       error:
       """
-      if self._definition.is_generated:
-          return self._definition.setter(self._container, value)
+      with warnings.catch_warnings(record=True) as recorded_warnings:
+          d = self._definition
+          if d.is_generated:
+              return d.setter(self._container, value)
 
-      if value is None:
-          try:
-              return self.clear()
-          except ValueError:
-              if not error=='ignore':
-                  raise
-              return
-      elif self._definition.is_numbered_array:
-        if isinstance(value, dict):
-           self.clear(do_not_check_required=value, call_hooks=False)
-           for k,v in value.items():
-               self._set_item(k, v, error)
-        else:
-           try:
-               self._set_item('def', value, error)
-           except ValueError:
-               for i,v in enumerate(value):
-                  self._set_item(i + 1, v)
-      else:
-         try:
-             self._value = self._pack_value(value)
-         except ValueError:
-             if not error=='ignore':
-                  raise
-      self._post_set()
+          if value is None:
+              try:
+                  return self.clear()
+              except ValueError:
+                  if not error=='ignore':
+                      raise
+                  return
+          elif d.is_repeated.is_dict:
+            if isinstance(value, dict):
+               self.clear(do_not_check_required=value, call_hooks=False)
+               for k,v in value.items():
+                   self._set_item(k, v, error)
+            else:
+               try:
+                   self._set_item('def', value, error)
+               except ValueError:
+                   for i,v in enumerate(value):
+                      self._set_item(i + 1, v)
+          else:
+             try:
+                 self._value = self._pack_value(value)
+             except DataValidityError:
+                 if not error=='ignore':
+                      raise
+          self._post_set()
+      for w in recorded_warnings:
+          w.message.args = (
+              f"During setting the value {value} to {self.get_path()}, "
+              f"the following warning have been issued:\n {w.message}",
+              *w.message.args[1:]
+              )
+
+          warnings.warn_explicit(
+              message=w.message,
+              category=w.category,
+              filename=w.filename,
+              lineno=w.lineno,
+              source=w.source,
+          )
 
   def _post_set(self):
       """ Thus should be called after all modifications """
@@ -246,20 +283,19 @@ class Option(BaseOption):
       self._hook = hook
 
   def _check_array_access(self):
-      """ Check, whether the option is numbered array and thus it can be accessed as array using [] """
-      if not self._definition.is_numbered_array and not self._definition.type.array_access:
-          raise TypeError('It is not allowed to access {self._get_path()} as array')
+      """ Check, whether the option is array type (or repeated) and thus it can be accessed as array using [] """
+      return self._definition.check_array_acces(self)
 
   def __setitem__(self, name, value):
       """ Set an item of a numbered array. If the Option is not a numbered array, throw an Exception. """
-      if self._definition.is_generated:
-          self._definition.setter(self._container, value, name)
+      d = self._definition
+      if d.is_generated:
+          d.setter(self._container, value, name)
           return
 
-      self._check_array_access()
-
-      if not self._definition.is_numbered_array:
-          self()[name]=value
+      d.check_array_access()
+      if not d.is_repeated.is_dict:
+          self()[name]=d.convert_and_validate(self, value, item=True)
           self.validate(why='set')
       else:
         if isinstance(name, (list, tuple)):
@@ -286,7 +322,7 @@ class Option(BaseOption):
       """ Set a single item of a numbered array. For internal use - so no sanity checks """
       if self._value is None:
          self._value = {}
-      if name != 'def':
+      if not (self._definition.is_repeated.is_numbered.has_default and name == 'def'):
          try:
             name = as_integer(name)
          except TypeError as e:
@@ -307,10 +343,11 @@ class Option(BaseOption):
 
   def __getitem__(self, name):
       """ Get an item of a numbered array. If the Option is not a numbered array, throw an Exception. """
-      if self._definition.is_generated:
-          return self._definition.getter(self._container, name)
-      self._check_array_access()
-      if not self._definition.is_numbered_array:
+      d = self._definition
+      if d.is_generated:
+          return d.getter(self._container, name)
+      d.check_array_access()
+      if not d.is_repeated.is_dict:
           return self()[name]
 
       if isinstance(name, (list, tuple)):
@@ -349,7 +386,7 @@ class Option(BaseOption):
       """ Unpack potentionally dangerous values. """
       if isinstance(value, DangerousValue):
          value = value()
-      if self._definition.is_numbered_array and isinstance(value, dict):
+      if self._definition.is_repeated.is_dict and isinstance(value, dict):
          value = { i: v() if isinstance(v, DangerousValue) else v for i,v in value.items() }
       return value
 
@@ -359,12 +396,13 @@ class Option(BaseOption):
          """ The dangerous value is immutable, checked during its creation """
          pass
       else:
-         value = self._definition.convert_and_validate(value)
+         value = self._definition.convert_and_validate(self, value)
       return value
 
   def __hasitem__(self, name):
-      self._check_array_access()
-      if not self._definition.is_numbered_array:
+      d = self._definition
+      d.check_array_access()
+      if not d.is_repeated.is_dict:
           return name in self()
 
       if self._value is None:
@@ -410,8 +448,8 @@ class Option(BaseOption):
       else:
           if not self._definition.type.has_value:
              return
-          if self._definition.default_value is None and not do_not_check_required and self._definition.required:
-             raise ValueError(f'Option {self._get_path()} must have a value')
+          if self._definition.default_value is None and not do_not_check_required and self.is_required:
+             raise DataValidityError(f'Option {self._get_path()} must have a value.')
           self._value = None
           self.clear_result()
       if call_hooks:
@@ -444,10 +482,10 @@ class Option(BaseOption):
           return None, False
 
       if not always:
-          if d.condition and not d.condition(self):
+          if not d.allowed(self._container):
              return None, False
-          if not d.write_condition(self):
-             return None, False
+      if not d.write_condition(self):
+          return None, False
 
       if not d.type.has_value:
          return None, True
@@ -463,40 +501,44 @@ class Option(BaseOption):
           return value, False
       return value, True
 
-  def validate(self, why='save'):
+  @property
+  def is_required(self):
+      r = self._definition.is_required
+      if not r:
+          return False
+      if callable(r):
+          return r(self)
+      return r
+
+  def _validate(self, why='save'):
       d = self._definition
-      if d.is_generated or self.is_dangerous():
-         return
+      if (not d.is_validated if d.is_validated is not None else d.is_generated) or \
+           not d.type.has_value:
+             return
 
-      if d.type.has_value:
+      def vali(value):
+          if isinstance(value, DangerousValue):
+              return
+          d.validate(self, value, why)
 
-        def vali(value):
+      value = self(unpack=False, all_values=True)
+      if d.is_repeated.is_dict:
           if value is None:
-             if not d.is_optional:
-                 name = self._get_root_container()
-                 raise Exception(f'Value {self._get_path()} is None and it is not an optional value. Therefore, I cannot save the {name}')
-          else:
-             d.validate(value, why)
-
-        if why == 'set':
-           vali(self())
-        else:
-           value = self.result
-           if d.is_numbered_array:
-              if value is None:
-                 vali(value)
-              else:
-                 for i in value.values():
-                     vali(i)
-           else:
               vali(value)
+          elif isinstance(value, DangerousValue):
+              return
+          else:
+              for i in value.values():
+                  vali(i)
+      else:
+          vali(value)
 
   @property
   def name(self):
       return self._definition.name
 
   def _as_dict(self, get):
-      if self._definition.condition and not self._definition.condition(self):
+      if not self._definition.allowed(self._container):
           return None
       return get(self)
 
@@ -511,13 +553,14 @@ class Option(BaseOption):
           changed:bool
             Whether the value is the same as the default value or not
       """
-      if self._definition.is_generated:
+      d = self._definition
+      if d.is_generated:
           return self(), False
 
       value = self._unpack_value(self._value)
       if value is not None:
          return value, not self.is_it_the_default_value(value)
-      if self._definition.is_numbered_array and self.default_value is not None:
+      if d.is_repeated.is_numbered.has_default and self.default_value is not None:
          return {'def' : self.default_value}, False
       else:
          return self.default_value, False
@@ -526,12 +569,12 @@ class Option(BaseOption):
       """ Return, whether the given value is the default value. For
       numbered array, only the wildcard value can be set and this value
       have to be the same as the default. """
-      if self._definition.is_generated:
+      d = self._definition
+      if d.is_generated:
           return True
 
       default = self.default_value
-      d = self._definition
-      if d.is_numbered_array:
+      if d.is_repeated.is_numbered.has_default:
           return 'def' in value and len(value) == 1 and \
                   d.type.is_the_same_value(value['def'], default)
       else:

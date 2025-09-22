@@ -1,27 +1,24 @@
-""" The ARPES result: currently it """
+""" The Bloch spectral functions (BSF) reader and result."""
 
 from ..task_result import TaskResult, KkrProcess
 from .default import DefaultOutputReader
 from ...common.decorators import cached_property
 from ...output_files.output_files import OutputFile
-import os
 
 
 class BsfResult(TaskResult):
-  """ Objects of this class holds the results of computed SCF class """
+  """ BSF result provides access to the computed Bloch spectral functions in the
+  BSF output file using the :py:attr:`~bsf` property."""
 
   @cached_property
   def bsf_filename(self):
       """ New (output) potential file name """
-      fname = self.input_parameters.CONTROL.DATASET() + '.bsf'
-      if self.directory:
-         fname = os.path.join(self.directory, fname)
-      return fname
+      return self.path_to('Bloch-SF')
 
   @cached_property
-  def spc(self):
+  def bsf(self):
       """ The new (output) potential - that contains the converged charge density etc. """
-      return OutputFile.from_file(self.spc_filename, try_only='bsf')
+      return OutputFile.from_file(self.bsf_filename, try_only='bsf')
 
 
 class BsfProcess(KkrProcess):

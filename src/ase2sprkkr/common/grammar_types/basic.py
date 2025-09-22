@@ -5,6 +5,7 @@ import datetime
 import pyparsing as pp
 from typing import Optional
 import numpy as np
+import re
 
 from ..decorators import add_to_signature, cached_property
 from ..grammar import generate_grammar, separator_grammar, \
@@ -112,7 +113,7 @@ class BaseBool(TypedGrammarType):
 
 class Bool(BaseBool):
   """ A bool type, whose value is represented by a letter (T or F) """
-  _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).setParseAction( lambda x: x[0] == 'T' )
+  _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).setParseAction( lambda x: x[0].upper() == 'T' )
 
   def grammar_name(self):
     return '<T|F>'
@@ -121,13 +122,32 @@ class Bool(BaseBool):
     return 'T' if val else 'F'
 
 
+class Boolean(BaseBool):
+  """ A bool type, whose value is represented by a letter (T or F) """
+  _items = [ 'True', 'False', '1', '0', 'yes', 'no' ]
+  _grammar =  pp.Or([pp.CaselessKeyword(i) for i in _items]).\
+                   setParseAction( lambda x: x[0].lower() in ('true','yes','1') )
+
+  def grammar_name(self):
+    return '<True|False|0|1|yes|no>'
+
+  def _string(self, val):
+    return 'True' if val else 'False'
+
+
 class IntBool(BaseBool):
   """ A bool type, whose value is represented by a letter (1 or 0) """
   _grammar = (pp.CaselessKeyword('1') | pp.CaselessKeyword('0')).setParseAction( lambda x: x[0] == '1' )
   _rev_grammar = _grammar.copy().setParseAction( lambda x: x[0] == '0' )
 
   @add_to_signature(TypedGrammarType.__init__)
-  def __init__(self, reversed=True, *args, **kwargs):
+  def __init__(self, reversed=False, *args, **kwargs):
+      """
+      Parameters
+      ----------
+      reversed
+       "reversed integer-boolean" returns 1 if it is False
+      """
       self.reversed = bool(reversed)
       super().__init__(*args, **kwargs)
 
@@ -146,6 +166,15 @@ class Real(Number):
     return '<float>'
 
   numpy_type = float
+
+  nan = None
+
+  @add_to_signature(Number.__init__)
+  def __init__(self, nan=None ,*args, **kwargs):
+      self.nan = nan
+      if nan is not None:
+          self._grammar = self._grammar | pp.Regex(nan).set_parse_action(lambda x: float('NaN'))
+      super().__init__(*args, **kwargs)
 
   def convert(self, value):
       if isinstance(value, (int, np.integer)):
@@ -251,13 +280,31 @@ class String(BaseString):
   def grammar_name(self):
     return '<str>'
 
+class AlwaysQString(BaseString):
+  """ Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes. """
+  _grammar = (pp.Word(pp.printables, excludeChars="\",;{}") | pp.QuotedString('"')).setParseAction(lambda x:x[0])
 
-class QString(BaseString):
-  """ Either a quoted string, or just a word (without whitespaces or special chars) """
-  _grammar = (pp.Word(pp.printables, excludeChars=",;{}") or pp.QuotedString("'")).setParseAction(lambda x:x[0])
+  def _validate(self, value, why='set'):
+    if not value.__class__ is str:
+        return "String expected"
+    return True
+
+  def _string(self, value):
+    value = value.replace('"', '\\"')
+    return f'"{value}"'
 
   def grammar_name(self):
-    return "'<str>'"
+    return '"<str>"'
+
+
+class QString(AlwaysQString):
+  """ Either a quoted string, or just a word (without whitespaces or special chars) """
+
+  def _string(self, value):
+    value = str(value)
+    if re.match(r"^[\S\"]+$", value):
+        return value
+    return super()._string(value)
 
 
 class LineString(BaseString):
@@ -265,41 +312,54 @@ class LineString(BaseString):
   _grammar = pp.SkipTo(pp.LineEnd() | pp.StringEnd())
 
   def grammar_name(self):
-    return "'<str....>\n'"
+    return "<str....>\n"
 
 
 class Keyword(GrammarType):
   """
   A value, that can take values from the predefined set of strings.
   """
-
-  def __init__(self, *keywords, aliases=None, **kwargs):
+  def __init__(self, *keywords, aliases=None, transform='upper', quote=None, **kwargs):
     self.aliases = aliases or {}
+    self.quote = quote
+    if transform == 'upper':
+        self.transform = lambda x: str(x).upper()
+    elif transform == 'lower':
+        self.transform = lambda x: str(x).lower()
+    else:
+        self.transform = lambda x:x
+
     if len(keywords)==1 and isinstance(keywords[0], dict):
        self.choices = keywords[0]
        keywords = self.choices.keys()
     else:
        self.choices = None
 
-    self.keywords = [ str(i).upper() for i in keywords ]
+    self.keywords = [ self.transform(i) for i in keywords ]
     with generate_grammar():
-      self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(i) for i in self.keywords)).setParseAction(lambda x: x[0].upper()) + optional_quote
+      self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(str(i)) for i in self.keywords)).setParseAction(lambda x: self.transform(x[0])) + optional_quote
 
     super().__init__(**kwargs)
 
   def _validate(self, value, why='set'):
     return value in self.keywords or "Required one of [" + "|".join(self.keywords) + "]"
 
+  def _string(self, val):
+      if self.quote and val.__class__ == str:
+          return f"{self.quote}{val}{self.quote}"
+      else:
+          return str(val)
+
   def grammar_name(self):
       if len(self.keywords) == 1:
          return f'FixedValue({next(iter(self.keywords))})'
-      return 'AnyOf(' + ','.join((i for i in self.keywords )) + ')'
+      return 'AnyOf(' + ','.join((str(i) for i in self.keywords )) + ')'
 
   def __str__(self):
       return self.grammar_name()
 
   def convert(self, value):
-      out = str(value).upper()
+      out = self.transform(value)
       return self.aliases.get(out, out)
 
   def additional_description(self, prefix=''):
@@ -307,7 +367,7 @@ class Keyword(GrammarType):
       if not self.choices:
          return ad
       out = f'\n{prefix}Possible values:\n'
-      out += '\n'.join([f"{prefix}  {k:<10}{v}" for k,v in self.choices.items()])
+      out += '\n'.join([f"{prefix}  {str(k):<10}{v}" for k,v in self.choices.items()])
       if ad:
          out += f'\n\n{prefix}' + ad
       return out
@@ -355,6 +415,21 @@ class BasicSeparator(GrammarType):
   def _validate(self, value, why='set'):
       return 'You can not set a value to a separator'
 
+class KeywordSeparator(BasicSeparator):
+  """ Separator with an exact string """
+  def __init__(self, keyword, **kwargs):
+      self.keyword = keyword
+      super().__init__(**kwargs)
+
+  @cached_property
+  def _grammar(self):
+      return pp.Keyword(self.keyword)
+
+  def _grammar_name(self):
+      return self.keyword
+
+  def _string(self, val=None):
+      return self.keyword
 
 class Separator(BasicSeparator):
   """ Special class for a separator inside a section.
@@ -407,6 +482,8 @@ string = String.I = String()               # NOQA: E741
 """ A standard grammar type instance for strings """
 qstring = QString.I = QString()            # NOQA: E741
 """ A standard grammar type instance for quoted strings in input files """
+qstring = AlwaysQString.I = AlwaysQString() # NOQA: E741
+""" A standard grammar type instance for quoted strings in configuration files """
 line_string = LineString.I = LineString()  # NOQA: E741
 """ A standard grammar type instance for one-line strings in potential files """
 energy = Energy.I = Energy()               # NOQA: E741
@@ -415,3 +492,5 @@ separator = Separator.I = Separator()      # NOQA: E741
 """ A standard grammar type instance for separators in potential files """
 int_bool = IntBool.I = IntBool()           # NOQA: E741
 """ A standard grammar type instance for bool expressed as integer """
+boolean = Boolean.I = Boolean()            # NOQA: E741
+""" A standard grammar type instance for True|False 0|1 yes|no boolean"""

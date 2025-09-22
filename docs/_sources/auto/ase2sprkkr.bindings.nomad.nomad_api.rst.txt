@@ -1,0 +1,58 @@
+nomad\_api
+==========
+
+Full name: **ase2sprkkr.bindings.nomad.nomad\_api**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.bindings.nomad.nomad_api.NomadApi 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings.nomad.nomad_api
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      with_token
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      NomadApi
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

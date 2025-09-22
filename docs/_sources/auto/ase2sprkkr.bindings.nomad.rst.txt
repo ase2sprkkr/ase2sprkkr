@@ -1,0 +1,44 @@
+nomad
+=====
+
+Full name: **ase2sprkkr.bindings.nomad**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings.nomad
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     nomad
+     nomad_api
+  
+  

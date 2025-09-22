@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This command just run the tests
+This command just show the path to the examples
 """
 from pathlib import Path
 import sys

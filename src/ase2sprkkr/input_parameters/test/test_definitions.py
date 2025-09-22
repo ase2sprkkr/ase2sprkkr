@@ -11,6 +11,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 if True:
     from ..input_parameters import InputParameters
+    from ...common.warnings import DataValidityError
 
 
 class TestDefinitions(TestCase):
@@ -37,9 +38,28 @@ class TestDefinitions(TestCase):
   def test_defaults(self):
       for i in InputParameters.definitions:
           ip=InputParameters.create_input_parameters(i)
+          ip.CONTROL.POTFIL = 'xxx'
           df= ip._definition
-          ip2 = df.read_from_string(ip.to_string())
+          try:
+              out = ip.to_string(validate=True)
+          except DataValidityError:
+              if i in 'BSFEK':
+                  ip.TASK.KPATH = 1
+                  out = ip.to_string(validate=True)
+                  with pytest.raises(Exception):
+                      ip.TASK.NKDIR = 2
+                  ip.TASK.KPATH = None
+                  ip.TASK.NKDIR = 2
+                  out = ip.to_string(validate=True)
+              else:
+                  raise
+          else:
+              if i in 'BSFEK':
+                  raise Exception('This tasks should not be runnable using the defaults argument')
+
+          ip2 = df.read_from_string(out)
           self.assertEqual(ip.to_dict(), ip2.to_dict())
+
           if i == 'SCF':
               ip.MODE.MDIR[1]=1.,1.,1.
               ip.MODE.MDIR[4]=1.,1.,1.

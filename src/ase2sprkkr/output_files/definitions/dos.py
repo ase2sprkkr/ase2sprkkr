@@ -10,7 +10,7 @@ from ...common.grammar_types import NumpyArray
 from ...common.decorators import cached_property
 from ...common.generated_configuration_definitions import \
     NumpyViewDefinition as NV
-from ...visualise.plot import Multiplot, set_up_common_plot
+from ...gui.plot import Multiplot, set_up_common_plot
 
 from ase.units import Rydberg
 from packaging.version import Version
@@ -113,9 +113,9 @@ class DOS(Arithmetic):
 
     def __repr__(self):
         if self.type:
-           return f'<DOS of {self.type}>'
+           return f'DOS of {self.type}'
         else:
-           return '<DOS>'
+           return 'DOS'
 
 
 class DOSOutputFile(CommonOutputFile):
@@ -133,17 +133,17 @@ class DOSOutputFile(CommonOutputFile):
     def energy(self):
         return (self.ENERGY() - self.EFERMI()) * Rydberg
 
-    def plot(self, spin=None, l=None, layout=2, figsize=(6,4), latex=True,  # NOQA
+    def plot(self, spin=None, l=None, layout=2, figsize=(6,4), latex=None,  # NOQA
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
              **kwargs
              ):
         if isinstance(layout, int):
-          layout = ( (self.n_types() ) // layout +1, layout)
-        mp=Multiplot(layout=layout, figsize=figsize, latex=latex, **kwargs)
-        plt.subplots_adjust(left=0.12,right=0.95,bottom=0.1,top=0.9, hspace=0.6, wspace=0.4)
-        for dos in self.iterate_dos(spin, l, total=True):
-            mp.plot(dos)
-        mp.finish(filename, show, dpi)
+            layout = ( (self.n_types() ) // layout +1, layout)
+        with Multiplot(layout=layout, figsize=figsize, latex=latex, filename=filename, show=show, dpi=dpi,
+                       adjust = {'left': 0.12, 'right': 0.95, 'bottom': 0.1, 'top': 0.9, 'hspace': 0.6, 'wspace': 0.4},
+                       **kwargs) as mp:
+            for dos in self.iterate_dos(spin, l, total=True):
+                mp.plot(dos)
 
     def __getitem__(self, name):
         """
@@ -157,7 +157,7 @@ class DOSOutputFile(CommonOutputFile):
         except KeyError as ke:
             if not np.issubdtype(name.__class__, np.integer):
                 for i, type in enumerate(self.TYPES):
-                  if type[0] == name:
+                  if type['TXT_T'] == name:
                       name = i
                       break
                 else:
@@ -197,12 +197,13 @@ class DOSOutputFile(CommonOutputFile):
         for i,slic in enumerate(self.iterate_data_slices()):
             out = self._create_dos( slic, i, spin, l)
             yield out
-            if not total:
+            if total is False:
                 continue
+            ratio = self.TYPES[i]['CONC'] * len(self.TYPES[i]['IQAT'])
             if total is True:
-                total = out * self.TYPES[i][2]
+                total = out * ratio
             else:
-                total.dos += out.dos * self.TYPES[i][2]
+                total.dos += out.dos * ratio
         if total:
             total.type = 'total'
             yield total
@@ -244,7 +245,7 @@ class DOSOutputFile(CommonOutputFile):
         Return the number of orbitals for the given type record
         """
         return max(
-            self.ORBITALS[iq - 1] for iq in type['IQAT']
+            self.ORBITALS[iq - 1]['NLQ'] for iq in type['IQAT']
         )
 
     def n_spins(self):

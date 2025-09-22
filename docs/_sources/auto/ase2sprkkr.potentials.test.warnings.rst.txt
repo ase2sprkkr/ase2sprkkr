@@ -1,0 +1,42 @@
+warnings
+========
+
+Full name: **ase2sprkkr.potentials.test.warnings**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.test.warnings
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      DataValidityError
+      DataValidityWarning
+   
+   
+
+
+  
+  
+  
