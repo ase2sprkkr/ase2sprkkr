@@ -63,7 +63,7 @@ class ScfInfoSectionDefinition(PotSectionDefinition):
         V('NE', Array(int), is_optional = True),
         V('IBZINT', int, is_optional = True),
         V('NKTAB', int, is_optional = True),
-        V('TETDEPPOT',False),
+        V('TETDEPPOT',False, is_optional = True),
         V('XC-POT', str, is_optional = True),
         V('SCF-ALG', str, is_optional = True),
         V('SCF-ITER', 0),
