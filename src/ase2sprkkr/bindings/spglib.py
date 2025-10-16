@@ -8,6 +8,7 @@ import spglib
 import numpy as np
 from ase import Atoms
 from ..common.unique_values import UniqueValuesMapping
+from ..sprkkr.occupations import Occupation
 
 
 def spglib_dataset_wrapper(dataset):
@@ -36,33 +37,38 @@ def tag_sites(atoms:Atoms, consider_old:bool, return_mapping:False):
       The atoms to return the equivalence classes
 
     consider_old
-      If True, tag according to the spacegroup_kinds (which for SPRKKRAtoms
+      If True, tag according to the spacegroup_kinds (which foor SPRKKRAtoms
       reflects the site_types.
       If False, tag just according to the atomic numbers and, for SPRKKRAtoms,
       occupancy (thus, possibly merge the old differnt site_types into one).
     """
     def mapp(x):
-        if return_mapping:
+        if return_mapping or consider_old:
             return UniqueValuesMapping(x)
         else:
-           return x
+            return x
 
     def unmap(x):
         return x if return_mapping else x.mapping
 
-    if hasattr(atoms, 'are_sites_inited') and atoms.are_sites_inited() and \
-                  np.sum(atoms.arrays['sprkkr_sites_data'] == 0) == 0:
-                  # if SPRKKR Atoms is added to Atoms, it seems that has the sites inited
-        if consider_old:
-            return mapp(atoms.arrays['spacegroup_kinds'])
-        out = ( i.site_type.occupation.as_dict for i in atoms.sites )
-        return mapp(np.unique([str(sorted(i.items())) for i in out], return_inverse=True)[1])
+    if hasattr(atoms, 'are_sites_inited') and atoms.are_sites_inited():
+        if consider_old and np.sum(atoms.arrays['sprkkr_sites_data'] == 0) == 0:
+            out = [ i.site_type for i in atoms.sites ]
+        else:
+            def occ(i, site):
+                return site.occupation if site else Occupation.for_atom_from_ase_atoms(atoms, i)
+            out = ( occ(i, site).as_dict for i, site in enumerate(atoms.sites) )
+            out = [str(sorted(i.items())) for i in out]
+    else:
+        out = atoms.get_atomic_numbers()
 
-    equivalent_sites = atoms.get_atomic_numbers()
-    if not ('spacegroup_kinds' in atoms.arrays and consider_old):
-        return mapp(equivalent_sites)
-    return unmap(UniqueValuesMapping(equivalent_sites).
-        merge(atoms.arrays['spacegroup_kinds']))
+    if consider_old and 'spacegroup_kinds' in atoms.arrays:
+        return unmap(UniqueValuesMapping(out).
+                  merge(atoms.arrays['spacegroup_kinds']))
+    else:
+        return mapp(out)
+
+
 
 
 def spglib_dataset(atoms: "Union[Atoms,AtomsRegion]",
@@ -93,13 +99,41 @@ def spglib_dataset(atoms: "Union[Atoms,AtomsRegion]",
         if hasattr(equivalent_sites, 'mapping'):
             equivalent_sites=equivalent_sites.normalize(start_from=0).mapping
 
-    sg_dataset = spglib.get_symmetry_dataset((atoms.get_cell(),
+    def dataset(equivalent_sites):
+        sg_dataset = spglib.get_symmetry_dataset((atoms.get_cell(),
                        atoms.get_scaled_positions(),
                        equivalent_sites),
                        symprec = precision,
                        angle_tolerance = angular_precision)
-    if sg_dataset:
-       dataset = spglib_dataset_wrapper(sg_dataset)
-    else:
-       dataset = False
-    return dataset
+        if sg_dataset:
+           dataset = spglib_dataset_wrapper(sg_dataset)
+        else:
+           dataset = False
+        return dataset
+
+    sg_dataset = dataset(equivalent_sites)
+    if sg_dataset and consider_old and \
+        hasattr(atoms, 'are_sites_inited') and atoms.are_sites_inited() and \
+        np.sum(atoms.arrays['sprkkr_sites_data'] == 0) != 0:
+            equivalent_sites = sg_dataset.equivalent_atoms
+            recompute = False
+            types = {}
+            counter = max(equivalent_sites)
+            for i,(site,typ) in enumerate(zip(atoms.arrays['sprkkr_sites_data'], equivalent_sites)):
+                if site == 0:
+                    continue
+                stype = site.site_type
+                if not typ in types:
+                    types[typ] = { stype : typ }
+                    out = typ
+                else:
+                    out = types[typ].get(stype, None)
+                if out is not None:
+                    equivalent_sites[i] = out
+                else:
+                    counter+=1
+                    types[typ][stype] = counter
+                    equivalent_sites[i] = counter
+            sg_dataset = dataset(equivalent_sites)
+
+    return sg_dataset
