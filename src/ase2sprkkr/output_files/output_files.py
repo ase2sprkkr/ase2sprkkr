@@ -53,6 +53,10 @@ class OutputFile(ConfigurationFile):
       return out
 
   @classmethod
+  def definition(cls, self):
+      return cls.definitions[self].definition
+
+  @classmethod
   def from_file(cls, filename, first_try=None, try_only=None, unknown=None):
       """
       Read SPRKKR output file (DOS, BSF....). The type of content of the
@@ -92,8 +96,6 @@ class OutputFile(ConfigurationFile):
                 first_try = [ special.groups(1)[0], first_try ]
          else:
              first_try = ''
-      if isinstance(first_try,str):
-          first_try=[ first_try ]
 
       first = None
       if first_try:
@@ -108,7 +110,9 @@ class OutputFile(ConfigurationFile):
          last = None
 
       if try_only:
-         for i in try_only:
+        if isinstance(try_only,str):
+            try_only=[ try_only ]
+        for i in try_only:
              if i in cls.definitions:
                  try:
                     out = cls.definitions[i].definition.read_from_file(filename)
