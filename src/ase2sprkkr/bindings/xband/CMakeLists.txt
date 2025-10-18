@@ -46,4 +46,25 @@ target_link_libraries(spheres PRIVATE spheres_lib)
 install(TARGETS spheres
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/ase2sprkkr/bindings/xband)
 
+#----
+
+add_library(aaa_lib STATIC "aaa.f90")
+target_compile_definitions(aaa_lib PUBLIC MYLIB_STATIC_DEFINE)
+set_target_properties(aaa_lib PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+add_custom_command(
+  OUTPUT aaa.c
+  COMMENT
+    "Making ${CMAKE_CURRENT_BINARY_DIR}/aaa.c from ${CMAKE_CURRENT_SOURCE_DIR}/aaa.pyx"
+  COMMAND Python::Interpreter -m cython
+          "${CMAKE_CURRENT_SOURCE_DIR}/aaa.pyx" --output-file aaa.c
+  DEPENDS aaa.pyx
+  VERBATIM)
+
+python_add_library(aaa MODULE aaa.c WITH_SOABI)
+target_link_libraries(aaa PRIVATE aaa_lib)
+
+install(TARGETS aaa
+    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/ase2sprkkr/bindings/xband)
+
 
