@@ -24,7 +24,7 @@ dependencies = [
   "packaging",
   "cython",
   "setuptools",
-  "pint",
+  "unyts",
   "pytest",
   'pyyaml',
   'requests',

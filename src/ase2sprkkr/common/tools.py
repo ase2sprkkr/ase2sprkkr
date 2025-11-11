@@ -3,9 +3,7 @@
 from pathlib import Path
 import pyparsing as pp
 import argparse
-
-_unit_registry = None
-
+unyt = None
 
 def parse_inches(string):
     """
@@ -15,29 +13,16 @@ def parse_inches(string):
       >>> int( parse_inches('2cm') * 10000)
       7874
     """
-    global _unit_registry
+    global unyt
     if isinstance(string, (int, float)):
         return float(string)
-    if _unit_registry is None:
-        try:
-            from pint import UnitRegistry
-            _unit_registry = UnitRegistry()
-            raise TypeError
-        except TypeError:
-            result = (pp.Word(pp.nums) + pp.Word(pp.alphas)).parseString(string, parseAll=True)
-            out = float(result[0])
-            if result[1] == 'inch':
-                return out
-            if result[1] == 'cm':
-                return out / 2.54
-            elif result[1]=='mm':
-                return out /25.4
-            else:
-                raise ValueError(f'Pint is not available nad the units {result[1]} is not known')
-    out = _unit_registry.parse_expression(string)
-    if isinstance(out, (int, float)):
-        return float(out)
-    return float(out.to(_unit_registry.inch).magnitude)
+    if not unyt:
+        import unyt
+
+    out = unyt.iunyt_quantity.from_string(string)
+    if out.units != unyt.dimensionless:
+        out = out.to(unyt.inch)
+    return float(out)
 
 
 def parse_tuple_function(type, length=None, max_length=True, delimiter=','):
