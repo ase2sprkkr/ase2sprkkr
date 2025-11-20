@@ -53,7 +53,7 @@ class ContainerDefinition(RealItemDefinition):
                  is_optional=False, is_hidden=False, is_expert=False,
                  has_hidden_members=False, name_in_grammar=None, force_order=None,
                  write_alternative_name:bool=False, name_regex=False, result_class=None,
-                 is_repeated=False
+                 is_repeated=False, write_condition=None,
                  ):
        """
        Definition of container (e.g. section of an input file).
@@ -82,7 +82,8 @@ class ContainerDefinition(RealItemDefinition):
            description = description,
            write_alternative_name = write_alternative_name,
            name_regex = name_regex,
-           result_class = result_class
+           result_class = result_class,
+           write_condition = write_condition
        )
 
        if not isinstance(members, dict):
@@ -534,8 +535,9 @@ class ContainerDefinition(RealItemDefinition):
           If any value have been written return True, otherwise return False.
         """
         if not always:
-            if not self.write_condition(self) or not self.allowed(value._container):
-                return
+            if not self.write_condition(value._container) or \
+               not self.allowed(value._container):
+                   return
 
         if self.is_expert:
             if not value.is_changed():
