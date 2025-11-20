@@ -144,9 +144,7 @@ class SPRKKR(Calculator):
         if kwargs:
             print(f"Warning - unknown arguments in the SPRKKR calculator: {kwargs}")
 
-        if potential and not isinstance(potential, bool):
-           if isinstance(potential, str):
-               potential = Potential.from_file(potential, atoms = atoms)
+        if potential and not isinstance(potential, (bool, str)):
            if atoms:
                raise ValueError('You can not specify both atoms and potential. '
                                 'If you specify one of them, the other will be generated from it.')
@@ -300,6 +298,8 @@ class SPRKKR(Calculator):
        if self._atoms is None:
           if not self._potential or isinstance(self._potential, (bool, str)):
              return None
+          if isinstance(self._potential, str):
+             potential = Potential.from_file(potential, atoms = atoms)
           self._atoms = self._potential.atoms
        return self._atoms
 
@@ -307,8 +307,11 @@ class SPRKKR(Calculator):
     def atoms(self, atoms):
        atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
        self._atoms = atoms
-       if self._potential and self._potential is not True:
-          self._potential.atoms = atoms
+       if self._potential:
+          if isinstance(self._potential, str):
+              self._potential = None
+          elif self._potential is not True:
+              self._potential.atoms = atoms
 
     def _advance_counter(self):
         """ Advance counter for generating filenames with %c counter placeholder """
@@ -894,9 +897,9 @@ class SPRKKR(Calculator):
           self.potential = Potential.from_file(self.potential)
         return self.potential
 
-    def change_task(self, task):
+    def change_task(self, task, retain_values=False):
         """ Just a shortcut to ``input_parameters.change_task`` """
-        self.input_parameters.change_task(task)
+        self.input_parameters.change_task(task, retain_values)
 
 
 class FilenameTemplator:
