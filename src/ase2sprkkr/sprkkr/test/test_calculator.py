@@ -68,10 +68,10 @@ class TestCalculator(TestCase):
      self.assertEqual(calculator.get('NE'),11111)
      self.assertEqual(calculator.input_parameters.ENERGY.NE(),11111)
      self.assertEqual(calculator.input_parameters.TASK.TASK(), 'SCF')
-     calculator.change_task('DOS')
+     calculator.change_task('DOS', retain_values=True)
      self.assertEqual(calculator.input_parameters.TASK.TASK(), 'DOS')
      self.assertEqual(calculator.input_parameters.get('NE'), 11111)
-     calculator.input_parameters.change_task('JXC')
+     calculator.input_parameters.change_task('JXC', retain_values=True)
      self.assertEqual(calculator.input_parameters.TASK.TASK(), 'JXC')
      self.assertEqual(calculator.input_parameters.get('NE'), 11111)
      calculator.input_parameters = 'PHAGEN'
