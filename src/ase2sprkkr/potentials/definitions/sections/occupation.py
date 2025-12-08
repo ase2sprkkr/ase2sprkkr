@@ -41,6 +41,7 @@ class OccupationSection(PotentialSection):
 
       tags = {}
 
+      read_io_data.site_types = []
       def site(i, d):
           ind = unique[i]
           if not ind in tags:
@@ -52,6 +53,7 @@ class OccupationSection(PotentialSection):
                          reference_system = read_io_data['reference_systems'][d['IREFQ'] - 1],
                          mesh = mesh)
              tags[ind] = site
+             read_io_data.site_types.append(site.site_type)
              return site
           else:
              return Site(tags[ind].site_type)

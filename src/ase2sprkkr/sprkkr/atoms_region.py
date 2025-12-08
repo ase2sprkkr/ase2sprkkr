@@ -212,4 +212,4 @@ class AtomsRegion:
 
   @property
   def spacegroup_info(self):
-      return self.atoms.spacegroup_info.for_region(self.name)
+      return self.atoms.spacegroup_info.for_region(self)

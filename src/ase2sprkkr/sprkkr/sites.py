@@ -60,6 +60,7 @@ class SiteType:
       self._mesh = mesh or Mesh.default()
       self._occupation = Occupation.to_occupation(occupation, self)
       self.sites = set()
+      self.magnetisation = np.zeros(3)
 
   def register(self, site):
       self.sites.add(site)
@@ -291,6 +292,7 @@ class Site:
   def __init__(self, site_type):
       assert isinstance(site_type, SiteType)
       self._site_type = None
+      self.magnetisation = np.zeros(2)
       self.site_type = site_type
 
   def __del__(self):
