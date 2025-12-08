@@ -54,7 +54,7 @@ class BaseSpacegroupInfo:
             self.recompute()
         return self._dataset
 
-    def kto_kyda_table(atoms, symprec=1e-5):
+    def kto_kyda_table(self, symprec=1e-5):
         """
         Build KTO_KYDA-style table, that maps the atoms before-after symmetry operations.
 
@@ -70,33 +70,35 @@ class BaseSpacegroupInfo:
             into k-th atom
         """
 
+        atoms = self.for_atoms
         frac = atoms.get_scaled_positions(wrap=True)   # (nat, 3), fractional
         types = np.empty(len(atoms), dtype=object)     # species
-        atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
-        rotations = atoms.spacegroup_info.dataset.rotations
-        translations = atoms.spacegroup_info.dataset.translations
+        if not self.dataset or self.dataset.rotations is None:
+            return None
+        rotations = self.dataset.rotations
+        translations = self.dataset.translations
         sites = atoms.sites
         for i in range(len(types)):
-            types[i] = sites.site_type
+            types[i] = atoms.sites[i].site_type
         B = atoms.cell.array                           # 3x3 (row-vectors); frac @ B → Cartesian
 
-        table = -np.ones((nops, len(sites)), dtype=int)
+        table = -np.ones((len(rotations), len(sites)), dtype=int)
 
         # group atoms by species to avoid cross-species matches
         byType = {}
         for i, typ in enumerate(types):
-            byType.setdefault(z, []).append(i)
+            byType.setdefault(typ, []).append(i)
         byType = {typ: np.array(idxs, int) for typ, idxs in byType.items()}
         pos_byType = {typ: frac[idxs] for typ, idxs in byType.items()}
 
 
-        for g in range(nops):
+        for g in range(len(rotations)):
             rot = rotations[g]
             trn = translations[g]
             # Apply op in fractional coordinates (row-vectors → use rot.T)
             Xp = (frac @ rot.T + trn) % 1.0
 
-            for i in range(nat):
+            for i in range(len(atoms)):
                 typ = types[i]
                 idxs = byType[typ]
                 cand = pos_byType[typ]                 # candidate positions (the same species)
@@ -115,9 +117,10 @@ class BaseSpacegroupInfo:
 
 class RegionSpacegroupInfo(BaseSpacegroupInfo):
 
-    def __init__(self, spacegroup_info):
+    def __init__(self, spacegroup_info, region):
         self.info = spacegroup_info
         self._dataset = None
+        self.for_atoms = region
 
     def recompute(self):
         self._dataset.recompute()
@@ -149,12 +152,17 @@ class SpacegroupInfo(BaseSpacegroupInfo):
         self._block = None
         self._regions = {}
 
+    @property
+    def for_atoms(self):
+        return self.atoms
+
     def to_dict(self):
         return {'dataset': self._dataset, 'symmetry': self.symmetry }
 
-    def info_for_region(self, name):
+    def info_for_region(self, region):
+        name = region.name
         if not name in self._regions:
-            self._regions[name] = RegionSpacegroupInfo(self)
+            self._regions[name] = RegionSpacegroupInfo(self, region)
         return self._regions[name]
 
     """ ASE requires this form of name"""
@@ -183,8 +191,10 @@ class SpacegroupInfo(BaseSpacegroupInfo):
                   return False
         return True
 
-    def update_spacegroup_kinds(self, if_required=False):
+    def update_spacegroup_kinds(self, if_required=False, invalidate_spacegroup=False):
         """ Update the occupancy info and spagroup_kinds array """
+        if invalidate_spacegroup:
+            self._dataset = None
         if if_required and not self.check_spacegroup_kinds():
             return
         sgi = np.empty(len(self.atoms), dtype=int)
@@ -300,7 +310,7 @@ class SpacegroupInfo(BaseSpacegroupInfo):
 
        for r in atoms.regions.values():
            dataset = solve_region(r, r.slice)
-           self.info_for_region(r.name)._dataset = dataset
+           self.info_for_region(r)._dataset = dataset
        dataset=solve_region(atoms, slice(None))
        self._dataset = dataset
        atoms.set_sites(sites, True, update=update_info)

@@ -325,12 +325,17 @@ class Site:
 
   @site_type.setter
   def site_type(self, site_type):
-      if self._site_type:
-          self._site_type.unregister(self)
+      st = self._site_type
+      if site_type == st:
+          return
       self._site_type = site_type
+      if st:
+          st.unregister(self)
+          si = self.site_type.atoms.spacegroup_info
+          si.update_spacegroup_kinds(invalidate_spacegroup=True)
+
       if site_type:
           self._site_type.register(self)
-
   @property
   def has_symmetry(self):
       return self._site_type.has_symmetry
