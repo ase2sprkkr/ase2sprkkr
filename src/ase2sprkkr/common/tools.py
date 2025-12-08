@@ -19,7 +19,7 @@ def parse_inches(string):
     if not unyt:
         import unyt
 
-    out = unyt.iunyt_quantity.from_string(string)
+    out = unyt.unyt_quantity.from_string(string)
     if out.units != unyt.dimensionless:
         out = out.to(unyt.inch)
     return float(out)

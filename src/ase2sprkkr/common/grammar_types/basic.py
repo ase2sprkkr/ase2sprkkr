@@ -1,7 +1,7 @@
 """ Common GrammarTypes as numbers, strings etc. """
 
-from ase.units import Rydberg
 import datetime
+import numbers
 import pyparsing as pp
 from typing import Optional
 import numpy as np
@@ -214,7 +214,7 @@ class BaseRealWithUnits(Real):
 
   @cached_property
   def unit_strings(self):
-    return { v:k for k,v in self.units.items() }
+    return { str(v):k for k,v in self.units.items() }
 
   def _grammar_units(self, units):
     i = id(units)
@@ -240,7 +240,7 @@ class BaseRealWithUnits(Real):
         return value
     if isinstance(value, tuple) and len(value) == 2 and value[1] in self.units:
         return super().convert(value[0]) * self.units[value[1]]
-    if self.default_unit:
+    if self.default_unit and isinstance(value, numbers.Real):
         return super().convert(value) * self.units[self.default_unit]
     return value
 
@@ -251,7 +251,7 @@ class BaseRealWithUnits(Real):
         return "Real with units have to be given as tuple containing " \
                "a float (the value) and a string (the units), or as "\
                "Unyt.unit_object.Unit object with propper units."
-    if not value.units in self.unit_strings:
+    if not str(value.units) in self.unit_strings:
            return f"Invalid unit {value.units}, allowed are {",".join(self.unit_strings.keys())}"
     return True
 
@@ -260,7 +260,7 @@ class BaseRealWithUnits(Real):
           value = value.to(self.units[self.default_unit])
       val = super()._string(value.value)
       if not self.default_unit:
-          val += " " + self.unit_strings[value.units]
+          val += " " + self.unit_strings[str(value.units)]
       return val
 
   def grammar_name(self):

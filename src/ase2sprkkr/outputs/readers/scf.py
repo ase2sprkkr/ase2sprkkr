@@ -2,7 +2,7 @@
 
 import pyparsing as pp
 import numpy as np
-from ase.units import Rydberg
+import unyt
 
 from ..output_definitions import OutputSectionDefinition as Section, \
                                  OutputValueDefinition as V, \
@@ -164,7 +164,7 @@ atomic_types_definition = Section('atoms', [
       'B_val_desc': String(default_value = ''),
       'B_core' : Real(default_value = float('NaN'), nan=r'\*+')
     }, free_header=True, default_values=True)),
-  V('E_band', RealWithUnits(units = {'[Ry]' : Rydberg }), is_required=False),
+  V('E_band', RealWithUnits(units = {'[Ry]' : unyt.Ry }), is_required=False),
   V('dipole moment', Sequence(int, Array(float, length=3)), is_required=False)
 ])
 
@@ -246,7 +246,7 @@ class ScfOutputReader(SprKkrOutputReader):
             out['moment'] = {'spin' : float(items[10]),
                              'orbital' : float(items[11]) }
             line = (await readline(stdout)).split()
-            out['energy']['ETOT'] = float(line[1]) * Rydberg
+            out['energy']['ETOT'] = float((float(line[1]) * unyt.Ry).to(unyt.eV))
             out['converged'] = line[5] == 'converged'
 
             iterations.append(scf_section.read_from_dict(out))

@@ -2,7 +2,7 @@ import warnings
 import pyparsing
 import numpy as np
 import datetime
-from ase.units import Rydberg
+import unyt
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -189,15 +189,15 @@ class TestGrammar(TestCase):
 
     type = gt.Energy()
     for val, res in [
-         ('1', 1.0),
+         ('1', 1.0 * unyt.Ry),
          ('Ry', Error),
-         ('1 Ry',1.0),
-         ('1 eV', 1.0 / Rydberg),
+         ('1 Ry', 1.0 * unyt.Ry),
+         ('1 eV', 1.0 * unyt.eV),
                     ]:
          test(val, res)
     for v in ['aaaa', (1,2,3)]:
         test_invalid(v)
-    for v,r in [(1, 1.0),(15, 15.0)]:
+    for v,r in [(1, 1.0 * unyt.Ry),(15, 15.0 * unyt.Ry)]:
         test_warning(v,r)
 
     type = gt.SetOf(int)
