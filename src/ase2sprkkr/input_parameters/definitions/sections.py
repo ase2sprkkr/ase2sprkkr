@@ -73,8 +73,9 @@ def _nktab_value(option):
 
 
 TAU = TauSection('TAU',[
-      V('BZINT', DefKeyword({'POINTS' : 'special points method',
-                             'WEYL' : 'Weyl method'},
+      V('BZINT', Keyword({'POINTS' : 'special points method',
+                          'WEYL' : 'Weyl method',
+                          'CLUSTER': 'Cluster method'},
                              description=
 """
 The Weyl method (BZINT=WEYL) is a point sampling method using more or less ran-
@@ -85,7 +86,7 @@ The special point method (BZINT=POINTS) uses a regular k-point grid with NKTAB
 points. It is the standard method and gives a good compromise concerning accuracy
 and efficiency. For BZINT=POINTS the parameter NKTAB will be adjusted to allow a
 regular mesh.
-"""), is_required=True,
+"""), is_required=False, default_value = lambda c: None if c._container.CLUSTER() or c._container.MOL() else 'POINTS',
                              info='The mode of BZ-integration used for calculation of the scattering '
                                   ' path operator τ'),
       V('NKTAB', 250, info='Number of points for the special points method', is_optional=True,
