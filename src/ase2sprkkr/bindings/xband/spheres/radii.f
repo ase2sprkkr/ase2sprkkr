@@ -1,4 +1,4 @@
-      SUBROUTINE FIND_EMPTY_SPHERES(
+      INTEGER FUNCTION FIND_EMPTY_SPHERES(
      >   N_OUT,   ! maximum number of outputs
      >   CENTRES, ! out: centres of the empty spheres
      >   RADII,   ! out: radii of the empty spheres, n_out:n_out+nQ
@@ -27,6 +27,8 @@
      >   VERBOSE  ! print output to the stdout
      > )
       IMPLICIT NONE
+      INTEGER EMPTYSPHERES
+      EXTERNAL EMPTYSPHERES
 
 C PARAMETER definitions
 C
@@ -39,9 +41,9 @@ C
       DOUBLE PRECISION RADII(MAXDIM)
 
       DOUBLE PRECISION RMINES_, RMAXES_
-      DOUBLE PRECISION CELL(3,3)
+      REAL*8 CELL(3,3)
       INTEGER NQ
-      DOUBLE PRECISION BAS(3,NTMAX)
+      REAL*8 BAS(3,NTMAX)
       INTEGER MESH(3)
       INTEGER N_SYMMETRY_OPS
       DOUBLE PRECISION, DIMENSION(3,3,N_SYMMETRY_OPS)
@@ -51,6 +53,7 @@ C
       INTEGER VERBOSE
       INTEGER IPRINT
       COMMON /IPRINT/ IPRINT
+
 C*==aa0001.f    processed by SPAG 7.10RU at 07:46 on 26 Mar 2020
 C
 C*** Start of declarations rewritten by SPAG
@@ -58,21 +61,21 @@ C
 C
 C COMMON variables
 C
-      DOUBLE PRECISION AV(3),BV(3),CV(3),QLAT(3,3),RMAXES,RMINES
+      REAL*8 AV(3),BV(3),CV(3),QLAT(3,3),RMAXES,RMINES
       INTEGER N1ES,N2ES,N3ES,NATES
       COMMON /EMPTYS/ NATES,N1ES,N2ES,N3ES,RMINES,RMAXES
       COMMON /L2LAT / AV,BV,CV,QLAT
 C
 C Local variables
 C
-      DOUBLE PRECISION ALAT,AMTC(NRMAX,NTMAX),
+      REAL*8 ALAT,AMTC(NRMAX,NTMAX),
      &                 BASNEW(3,MAX2SORT),CONC(NTMAX),DPAS,R0(NTMAX),
      &                 R0ACT,R0SITE(MAX2SORT),RAD,RAT(NRAD1,MAX2SORT),
      &                 RHOSITE(NRAD1,MAX2SORT),RINT,RWS(NTMAX),
      &                 SES(MAX2SORT),TAUES(3,MAX2SORT),WS,
      &                 WSREST(MAX2SORT),Z(NTMAX),ZN,ZZ(MAX2SORT)
       LOGICAL DB
-      DOUBLE PRECISION DNEVMOD
+      REAL*8 DNEVMOD
       CHARACTER*100 FFF
       INTEGER I,IATOM,IDUM,IMQ(NQ),IMT(NQ),IPNT,
      &        ISNEW(MAX2SORT),ISORT,ISP1,ISP2,ISR,IST,IT,ITYPE,
@@ -233,13 +236,18 @@ C
 C
       NATOMNEW = NATOM
       IF ( NEED_ES.EQ.0 ) THEN
-         CALL EMPTYSPHERES(AV,BV,CV,BAS,IMQ,ALAT,NATOM,NSORT,RWS,
+         FIND_EMPTY_SPHERES = EMPTYSPHERES(AV,BV,CV,BAS,IMQ,
+     &                     ALAT,NATOM,NSORT,RWS,
      &                     NSORTES,TAUES,SES,MAX2SORT,
      &                     ISNEW, BASNEW, NATOMNEW,
      &                     N_SYMMETRY_OPS, ROTATIONS, TRANSLATIONS,
      &                     KTO_KYDA)
 Cccccccccccccccccccccccccccccccccccccccccccccccccccc
+        IF (FIND_EMPTY_SPHERES .ne. 0) THEN
+            RETURN
+        END IF
       ELSE
+         FIND_EMPTY_SPHERES = 1
          DO IATOM = 1,NATOM
             ISNEW(IATOM) = IMQ(IATOM)
             DO I = 1,3
@@ -285,7 +293,7 @@ C     CLOSE (22)
       FLUSH(6)
 99001 FORMAT (i4,2x,3F21.15,3x,f21.15,3x,a)
 
-      END SUBROUTINE
+      END FUNCTION
 
 C*==readro.f    processed by SPAG 7.10RU at 07:46 on 26 Mar 2020
       SUBROUTINE READRO(NSORT,RO,Z,R0,TXT,ROM,NRADMAX,NRAD1)

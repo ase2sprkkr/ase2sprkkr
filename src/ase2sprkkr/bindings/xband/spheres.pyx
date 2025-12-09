@@ -8,9 +8,17 @@ from .symmetry import find_symmetry
 from ..empty_spheres import EmptySpheresResult
 from ase.units import Bohr
 
+empty_spheres_errors = {
+    -1 : 'Can not find averadged position',
+    -2 : 'Too many atoms',
+     1 : 'Empty spheres not needed'
+}
+
+
+
 
 cdef extern from "spheres.h":
-  cdef void find_empty_spheres_(
+  cdef int find_empty_spheres_(
               int* n,
               double* centres,
               double* radii,
@@ -126,7 +134,7 @@ def empty_spheres(
         assert rotations.shape[1] == 3
         assert rotations.shape[2] == 3
 
-    find_empty_spheres_(
+    cdef int ret = find_empty_spheres_(
                    &max_spheres,
                    &_centres[0,0],
                    &_radii[0],
@@ -153,6 +161,8 @@ def empty_spheres(
                    &kto_kyda[0],
                    &_verbose
                   )
+    if ret < 0:
+        raise Exception(empty_spheres_errors.get(ret, f"Unknown error {ret} in empty spheres"))
     ratio = 1 / ratio
     centres[:max_spheres] *= ratio
     radii[:max_spheres + len(atoms)] *= Bohr

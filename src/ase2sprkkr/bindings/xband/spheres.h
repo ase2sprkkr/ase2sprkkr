@@ -1,4 +1,4 @@
-void find_empty_spheres_(
+int find_empty_spheres_(
               int* n_out,
               double* centres,
               double* radii,

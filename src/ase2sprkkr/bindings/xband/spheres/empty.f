@@ -1,6 +1,6 @@
 C*==emptyspheres.f    processed by SPAG 7.10RU at 07:46 on 26 Mar 2020
-      SUBROUTINE EMPTYSPHERES(AVC,BVC,CVC,BAS,IS,ALAT,NATOM,NSORT,S,
-     &                        NSORTES,TAUES,SES,MAX2SORT,
+      INTEGER FUNCTION EMPTYSPHERES(AVC,BVC,CVC,BAS,IS,ALAT,NATOM,NSORT,
+     &                        S, NSORTES,TAUES,SES,MAX2SORT,
      &                        ISNEW,BASNEW,NATOMNEW,
      &                        N_SYMMETRY_OPS, ROTATIONS,
      &                        TRANSLATIONS, KTO_KYDA)
@@ -37,6 +37,8 @@ C
 
       COMMON /IPRINT/ IPRINT
       INTEGER IPRINT
+      INTEGER EMPTY
+      EXTERNAL EMPTY
 C
 C*** End of declarations rewritten by SPAG
 C
@@ -61,7 +63,8 @@ C
       ALLOCATE (SNEW(MAXNPAT),S2NEW(MAXNPAT),TAU(3,MAXNPATG))
       ALLOCATE (NHSORTES(MAXNPAT),ISKIP(MAXNPAT),ISB(MAXNPATG))
 C
-      CALL EMPTY(IER,AVC,BVC,CVC,BAS,IS,ALAT,NATOM,NSORT,S,BASNEW,ISNEW,
+      EMPTYSPHERES=EMPTY(IER,AVC,BVC,CVC,BAS,IS,ALAT,NATOM,NSORT,S,
+     &           BASNEW, ISNEW,
      &           SNEW,S2NEW,ISB,TAU,MAXNPAT,MAXNPATG,NSORTES,TAUES,SES,
      &           NHSORTES,ISKIP,ROTATIONS,VC,NG,NATOMNEW)
 C
@@ -78,7 +81,8 @@ C      stop
 
       END
 C*==empty.f    processed by SPAG 7.10RU at 07:46 on 26 Mar 2020
-      SUBROUTINE EMPTY(IER,AVC,BVC,CVC,BAS,IS,ALAT,NATOM,NSORT,S,BASNEW,
+      INTEGER FUNCTION EMPTY(IER,AVC,BVC,CVC,BAS,IS,ALAT,NATOM,
+     &                 NSORT,S,BASNEW,
      &                 ISNEW,SNEW,S2NEW,ISB,TAU,MAXNPAT,MAXNPATG,
      &                 NSORTES,TAUES,SES,NHSORTES,ISKIP,GM,VC,NG,
      &                 NATOMNEW)
@@ -300,7 +304,8 @@ C         print*,'in=',in,vv
             IF ( ITAV.LE.5 ) GOTO 150   ! to avoide infinite cycle
             IF (IPRINT > 0 )
      >          WRITE (IUN,*) 'can not find averaged position'
-            STOP
+            EMPTY = -1
+            RETURN
          ELSE IF ( DEMIN.LT.2.D0*RAD ) THEN
                                         ! overlapping spheres
             IF (IPRINT > 0 )
@@ -322,7 +327,8 @@ C         print*,'in=',in,vv
             PRINT *,'EMPTY: too many atoms',NATOMNEW + IN,' maxnpat=',
      &            MAXNPAT
             PRINT *,'try to increase array sizes in empty.f'
-            STOP
+            EMPTY = -2
+            RETURN
          END IF
          DO IATOM = NATOMNEW + 1,NATOMNEW + IN
             ISNEW(IATOM) = NSORTNEW + 1
@@ -616,59 +622,3 @@ C
       END DO                            ! natb
       RAD = DMIN
       END
-
-      SUBROUTINE READ_IQA1(FNAME, IQA, NG)
-C-----------------------------------------------------------------------
-C  Reads IQA1.txt:
-C    Line 1 : NG  (number of symmetry operations)
-C    Next NG items: 1-based indices (one per line is fine; list-directed
-C                   read also accepts multiple per line)
-C
-C  Inputs:
-C    FNAME  - file name (CHARACTER*(*))
-C    MAXNG  - max length of IQA array
-C  Outputs:
-C    IQA    - integer array of length NG with 1-based indices
-C    NG     - number of operations read
-C    IERR   - 0 OK; 1 open fail; 2 header read fail; 3 NG>MAXNG; 4 data read fail
-C-----------------------------------------------------------------------
-      CHARACTER*(*) FNAME
-      INTEGER IQA(*), NG, MAXNG, IERR,NGINP
-      INTEGER U, IOS, I
-
-      IERR = 0
-      U = 41
-
-      OPEN(U, FILE=FNAME, STATUS='OLD', IOSTAT=IOS)
-      IF (IOS .NE. 0) THEN
-         IERR = 1
-         STOP "CAN NOT READ IQA1.txt"
-         RETURN
-      ENDIF
-
-C     Read number of operations
-      READ(U, *, IOSTAT=IOS) NGINP
-      IF (IOS .NE. 0) THEN
-         IERR = 2
-         STOP "CAN NOT READ IQA1.txt"
-         GOTO 900
-      ENDIF
-
-      IF (NG .NE. NGINP) THEN
-         IERR = 3
-         STOP "CAN NOT READ IQA1.txt"
-         GOTO 900
-      ENDIF
-
-C     Read NG integers (list-directed: spans multiple lines if needed)
-      READ(U, *, IOSTAT=IOS) (IQA(I), I = 1, NG)
-      IF (IOS .NE. 0) THEN
-         IERR = 4
-         GOTO 900
-      ENDIF
-
-  900 CONTINUE
-      CLOSE(U)
-      RETURN
-      END
-
