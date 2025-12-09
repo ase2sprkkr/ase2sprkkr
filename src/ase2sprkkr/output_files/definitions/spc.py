@@ -26,7 +26,8 @@ class ARPESOutputFile(CommonOutputFile, Arithmetic):
             mp.plot(self.DOWN)
             mp.plot(self.POLARIZATION)
 
-    _arithmetic_values = [('RAW_DATA', (slice(None), slice(2, lambda self: 6 if self.MODE() == 'energy' else 5)))]
+    def _arithmetic_values(self):
+        return [('RAW_DATA', (slice(None), slice(2, 6 if self.MODE() == 'energy' else 5)))]
 
     def _assert_arithmetic(self, other):
          """ Check, that the file can be summed/subtracked from an other file """
@@ -55,7 +56,7 @@ def create_definition():
             'vmax': np.max([c.TOTAL().max(), c.UP().max(), c.DOWN().max()]),
         }
 
-        if self.MODE() == 'energy':
+        if c.MODE() == 'energy':
             x = c.THETA()
             y = c.ENERGY()
             kw['xlabel'] = r'$\theta$ (deg)'
