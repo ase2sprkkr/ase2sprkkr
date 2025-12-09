@@ -29,10 +29,12 @@ dependencies = [
   'pyyaml',
   'requests',
   'argcomplete',
-  'numpy',
-	'unyt',
-	"phonopy<2.22; python_version <= '3.8'",
+  'unyt',
+  "phonopy<2.22; python_version < '3.9'",
+  "numpy<2.0; python_version < '3.10'",
+  "numpy>=2.1; python_version >= '3.10'",
 ]
+
 authors = [
   { name = "Matyáš Novák", email = "novakmat@fzu.cz" },
   { name = "Jano Minár" },
