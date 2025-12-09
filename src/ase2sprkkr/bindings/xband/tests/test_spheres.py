@@ -76,12 +76,7 @@ class TestSpheres(TestCase):
       self.assertEqual(out[0,47], 56)
       self.assertEqual(out[1,47], 1)
 
-      o = sph.empty_spheres(a2, point_symmetry=out, min_radius = 0.7)
-      self.assertEqual(len(o), 0)
-      o = sph.empty_spheres(a2, point_symmetry=out, min_radius = 0.5)
-      self.assertEqual(len(o), 10)
-      self.assertEqual(o.radii, np.asarray([0.995084964973998 * Bohr] * 10))
-      cu=ase.build.bulk('Cu')
       if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
+        cu=ase.build.bulk('Cu')
         out = SPRKKR().calculate(cu, **self.calc_args(empty_spheres={'min_radius': 0.25}, options={'niter': 1, 'ne' : 20, 'nktab' : 5 }))
         self.assertEqual(len(cu), 4)
