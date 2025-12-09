@@ -107,13 +107,13 @@ class Option(BaseOption):
   >>> conf = calculator.input_parameters
   >>> conf.ENERGY.ImE = 5.
   >>> conf.ENERGY.ImE()
-  5.0
+  unyt_quantity(5., 'Ry')
   >>> conf.ENERGY.ImE.info
   'Configuration value ImE'
   >>> conf.ENERGY.ImE.help()                     # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
   Configuration value ImE
   <BLANKLINE>
-  ImE : Energy (<Real> [Ry|eV]) ≝ 0.0  (optional)
+  ImE : Energy (<Real> [Ry|eV]) ≝ 0.0 Ry (optional)
   >>> conf.ENERGY.ImE.set_dangerous('1J')
   >>> conf.ENERGY.ImE()
   '1J'

@@ -73,8 +73,9 @@ def _nktab_value(option):
 
 
 TAU = TauSection('TAU',[
-      V('BZINT', DefKeyword({'POINTS' : 'special points method',
-                             'WEYL' : 'Weyl method'},
+      V('BZINT', Keyword({'POINTS' : 'special points method',
+                          'WEYL' : 'Weyl method',
+                          'CLUSTER': 'Cluster method'},
                              description=
 """
 The Weyl method (BZINT=WEYL) is a point sampling method using more or less ran-
@@ -85,7 +86,7 @@ The special point method (BZINT=POINTS) uses a regular k-point grid with NKTAB
 points. It is the standard method and gives a good compromise concerning accuracy
 and efficiency. For BZINT=POINTS the parameter NKTAB will be adjusted to allow a
 regular mesh.
-"""), is_required=True,
+"""), is_required=False, default_value = lambda c: None if c._container.CLUSTER() or c._container.MOL() else 'POINTS',
                              info='The mode of BZ-integration used for calculation of the scattering '
                                   ' path operator τ'),
       V('NKTAB', 250, info='Number of points for the special points method', is_optional=True,
@@ -277,7 +278,7 @@ MODE = Section('MODE', [
                 is_required=False, name_in_grammar=False,
                 info='Using this option you can switch on the spin polarization and relativistic mode. If it''s not set (or set to ''FREL''), the ''full'' relativity mode is used.'),
     V('LLOYD', False, info='Use LLoyd formula for scattering operator. It can improve the accuracy of the Fermi energy.'),
-    V('MDIR', SetOf(float, length=3), [1.,0.,0.], is_required=False, info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.",
+    V('MDIR', SetOf(float, length=3), is_required=False, info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.",
                                       is_repeated='DEFAULTDICT', is_always_added=False ),
     V('MALF',float , is_required=False, info="the (first) angle characterizing the orientation  of the magnetic moment direction n.", description='If it is not set, angle of MDIR is used'),
     V('MBET',float , is_required=False, info="the (second) angle characterizing the orientation of the magnetic moment direction n.", description='If it is not set, angle of MDIR is used'),

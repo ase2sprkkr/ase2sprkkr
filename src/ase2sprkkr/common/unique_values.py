@@ -27,8 +27,9 @@ class UniqueValuesMapping:
   """
 
   def __repr__(self):
-      if np.issubdtype(self.mapping.dtype, np.integer):
-          v = self.normalized(dtype=False)[0]
+      if isinstance(self.mapping, np.ndarray) and \
+         np.issubdtype(self.mapping.dtype, np.integer):
+            v = self.normalized(dtype=False)[0]
       else:
           v = self.mapping
       return f"<UniqueValuesMapping: {v}>"

@@ -27,11 +27,15 @@ cdef extern from "spheres.h":
               double* atomic_numbers,
               double* occupations,
               int* type_eq_class,
-              int* n_symop,
-              int* symop_number,
-              int* symop_data,
+              #int* n_symop,
+              #int* symop_number,
+              #int* symop_data,
               int* mesh,
-              int* verbose
+              int* n_symmetry_operations,
+              double *rotations,
+              double *translations,
+              int* kto_kyda,
+              int* verbose,
   );
 
 
@@ -39,18 +43,18 @@ def empty_spheres(
     atoms,
     double min_radius=0.65,
     double max_radius=2.,
-    int[:,:] point_symmetry=None,
+    #int[:,:] point_symmetry=None,
     verbose=False,
     int max_spheres=256,
     return_atom_rws=False,
     use_spacegroup=True,
-    mesh=24
+    mesh=24,
     ):
 
-    if point_symmetry is None:
-        point_symmetry = find_symmetry(atoms, use_spacegroup=use_spacegroup)
-    else:
-        SPRKKRAtoms.promote_ase_atoms(atoms)
+    #if point_symmetry is None:
+    #    point_symmetry = find_symmetry(atoms, use_spacegroup=use_spacegroup)
+    #else:
+    SPRKKRAtoms.promote_ase_atoms(atoms)
 
     cdef double to_bohr = 1 / Bohr
     min_radius *= to_bohr
@@ -88,7 +92,7 @@ def empty_spheres(
             eq_classes[type_no] = index + 1
             type_no += 1
 
-    cdef int n_symops=point_symmetry.shape[1]
+    #cdef int n_symops=point_symmetry.shape[1]
     cdef double ratio = to_bohr / alat
     cdef double[:,:] cell = atoms.cell[:] * ratio
     cdef double[:,:] positions = atoms.positions * ratio
@@ -104,6 +108,23 @@ def empty_spheres(
 
     cdef double[:,:] _centres = centres
     cdef double[:] _radii = radii
+
+    cdef double[:,:,:] rotations = None
+    cdef double[:,:] translations = None
+    cdef int[:] kto_kyda = None
+    cdef int n_symmetry_ops = -1
+
+    sp = atoms.spacegroup_info
+    if sp and sp.dataset and sp.dataset.rotations is not None:
+        d = sp.dataset
+        rotations = np.array(d.rotations, dtype=np.double)
+        translations = d.translations
+        n_symmetry_ops = len(translations)
+        kto_kyda = np.array(sp.kto_kyda_table()[:,0] + 1, dtype=np.int32)
+        assert n_symmetry_ops == len(rotations)
+        assert translations.shape[1] == 3
+        assert rotations.shape[1] == 3
+        assert rotations.shape[2] == 3
 
     find_empty_spheres_(
                    &max_spheres,
@@ -122,10 +143,14 @@ def empty_spheres(
                    &atomic_numbers[0],
                    &occupations[0],
                    &eq_classes[0],
-                   &n_symops,
-                   &point_symmetry[0,0] if n_symops else NULL,
-                   &point_symmetry[1,0] if n_symops else NULL,
+                   #&n_symops,
+                   #&point_symmetry[0,0] if n_symops else NULL,
+                   #&point_symmetry[1,0] if n_symops else NULL,
                    &_mesh[0],
+                   &n_symmetry_ops,
+                   &rotations[0,0,0] if n_symmetry_ops >= 0 else NULL,
+                   &translations[0,0] if n_symmetry_ops >= 0 else NULL,
+                   &kto_kyda[0],
                    &_verbose
                   )
     ratio = 1 / ratio

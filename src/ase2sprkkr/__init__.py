@@ -33,7 +33,9 @@ def _init():
     from .configuration import load_user_preferences
 
     register()
-    load_user_preferences()
+    import os
+    if not os.environ.get('ASE2SPRKKR_NO_USER_PROFILE', False):
+        load_user_preferences()
 
 
 _init()

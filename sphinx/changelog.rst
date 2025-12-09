@@ -1,6 +1,13 @@
 Changelog
 =========
 
+* Magnetization moments parse
+* Units uses unyts for better units support (retaining the unit user used)
+* Fix for empty_spheres finding, avoiding using spglib instead of xband for symmetry
+* Calculator do not longer overwrite the potential file, if it is given in constructor
+* Symmetry handling improved
+* Some fixies for plot
+
 Version 3.3.4
 ------------------
 * Sites are update according to the symbols during save

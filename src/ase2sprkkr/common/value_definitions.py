@@ -572,7 +572,10 @@ class ValueDefinition(RealItemDefinition):
          if value is None:
            return False
          missing, df, _ = type.missing_value()
-         write_value = not ( missing and df == value )
+         try:
+             write_value = not ( missing and df == value )
+         except TypeError: #unyt fix
+             write_value = True
      else:
         value=None
         write_value=True

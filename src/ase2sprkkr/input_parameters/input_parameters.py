@@ -352,14 +352,16 @@ class InputParameters(ConfigurationFile):
       out = out + ' for task ' + d.name.upper()
       return out
 
-  def change_task(self, task):
+  def change_task(self, task, retain_values=False):
       """ Change the task to the given task. Retain the value of the options,
       that are present in the new task.
       """
-      vals = self.to_dict()
+      if retain_values:
+          vals = self.to_dict(only_changed=True)
       self._definition = self.definition(task)
       self._init_members_from_the_definition()
-      self.set(vals, unknown = 'ignore', error='ignore')
+      if retain_values:
+          self.set(vals, unknown = 'ignore', error='ignore')
 
   def save_to_file(self, file, atoms=None, *, validate='save'):
       if self._definition.save_hook:

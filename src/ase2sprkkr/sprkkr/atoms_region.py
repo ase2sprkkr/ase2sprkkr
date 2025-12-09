@@ -182,6 +182,7 @@ class AtomsRegion:
                   return False
       return True
 
+  @property
   def sites(self):
       return self.atoms.sites[self.slice]
 
@@ -208,3 +209,7 @@ class AtomsRegion:
 
   def get_scaled_positions(self):
       return self.atoms.get_scaled_positions()[self.slice]
+
+  @property
+  def spacegroup_info(self):
+      return self.atoms.spacegroup_info.for_region(self)

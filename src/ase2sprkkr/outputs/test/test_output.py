@@ -1,4 +1,5 @@
 import os
+import unyt
 from ..readers.scf import ScfOutputReader, ScfResult, atomic_types_definition
 
 if __package__:

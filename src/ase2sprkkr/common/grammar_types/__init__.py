@@ -5,6 +5,7 @@ Each grammar type can both parse string containing a value of a given type, and 
 """
 from ..grammar import generate_grammar
 import numpy as np
+import unyt
 
 context = generate_grammar()
 context.__enter__()
@@ -28,7 +29,8 @@ type_from_type_map = {
     int  : Integer.I,
     np.int32  : Integer.I,
     bool : Bool.I,
-    str  : String.I
+    str  : String.I,
+    unyt.unyt_quantity: Energy.I
 }
 """ The standard grammar_types for python types.
 

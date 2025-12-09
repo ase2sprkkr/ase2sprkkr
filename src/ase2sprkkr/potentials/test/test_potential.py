@@ -99,7 +99,7 @@ class TestPotential(TestCase):
 
   def test_sequence(self):
     p = Potential()
-    self.assertEqual(7, p.HEADER.FORMAT.VERSION)
+    self.assertEqual(9, p.HEADER.FORMAT.VERSION)
     p.HEADER.FORMAT.VERSION=5
     self.assertEqual(5, p.HEADER.FORMAT.VERSION)
     p.HEADER.FORMAT[0] = 8

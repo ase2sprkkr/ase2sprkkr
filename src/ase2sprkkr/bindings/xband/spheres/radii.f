@@ -7,19 +7,23 @@
      >   RMAXES_, ! maximal radius (2.5)
      >   ALAT,
      >   CELL,    ! 3x3 array, primitive vectors
-     >   NQ,      ! number of atoms
+     >   NQ,      ! number
      >   BAS,     ! atom positions, cartesian
      >   IMQ,     ! atom equivalence class
      >   NM,      ! number of classes (equivalent sites)
      >   NSORT,   ! number of core types
      >   TXTT,    ! type of the core type (chemical symbol)
-     >   Z,       ! atomic numbers of the core types
+     >   Z,       ! atomic numbers of the core types - float for some reason
      >   CONC,    ! occupations of the core types
      >   IMT,     ! the core type is used by the class nb.
-     >   NG,      ! number of symmetry operations
-     >   ITOP,    ! first line of point symmetry operations
-     >   IQA,     ! second line of point symmetry operations
      >   MESH,    ! mesh for empty spheres finding
+
+     >   N_SYMMETRY_OPS,    ! n of ops for the new oustanding symmetry
+                            ! operation handling
+     >   ROTATIONS,
+     >   TRANSLATIONS,
+     >   KTO_KYDA,  ! the first row of mapping by symmetry ops
+
      >   VERBOSE  ! print output to the stdout
      > )
       IMPLICIT NONE
@@ -39,6 +43,11 @@ C
       INTEGER NQ
       DOUBLE PRECISION BAS(3,NTMAX)
       INTEGER MESH(3)
+      INTEGER N_SYMMETRY_OPS
+      DOUBLE PRECISION, DIMENSION(3,3,N_SYMMETRY_OPS)
+     &       :: ROTATIONS
+      DOUBLE PRECISION, DIMENSION(3,N_SYMMETRY_OPS)
+     &       :: TRANSLATIONS
       INTEGER VERBOSE
       INTEGER IPRINT
       COMMON /IPRINT/ IPRINT
@@ -65,11 +74,11 @@ C
       LOGICAL DB
       DOUBLE PRECISION DNEVMOD
       CHARACTER*100 FFF
-      INTEGER I,IATOM,IDUM,IMQ(NTMAX),IMT(NTMAX),IPNT,IQA(48),
-     &        ISNEW(MAX2SORT),ISORT,ISP1,ISP2,ISR,IST,IT,ITOP(48),ITYPE,
+      INTEGER I,IATOM,IDUM,IMQ(NQ),IMT(NQ),IPNT,
+     &        ISNEW(MAX2SORT),ISORT,ISP1,ISP2,ISR,IST,IT,ITYPE,
      &        J,NATOM,NATOMNEW,NDNEV,NEED_ES,NG,NM,NRADMAX,NSORT,
-     &        NSORTES,NT,W(MAXDIM)
-      CHARACTER*4 TXTT(NTMAX)
+     &        NSORTES,NT,WORK(MAXDIM),KTO_KYDA(NQ)
+      CHARACTER*4 TXTT(NSORT)
 C
 C*** End of declarations rewritten by SPAG
 C
@@ -219,14 +228,16 @@ C
          PRINT *,'dpas,alat,natom,nsort:',DPAS,ALAT,NATOM,NSORT
       END IF
 C
-      CALL DEFMTR(W,NRAD1,AV,BV,CV,IMQ,BAS,RHOSITE,R0SITE,DPAS,ALAT,
+      CALL DEFMTR(WORK,NRAD1,AV,BV,CV,IMQ,BAS,RHOSITE,R0SITE,DPAS,ALAT,
      &            NATOM,NSORT,ZZ,RWS,NEED_ES,NRAD1,WSREST)
 C
       NATOMNEW = NATOM
       IF ( NEED_ES.EQ.0 ) THEN
          CALL EMPTYSPHERES(AV,BV,CV,BAS,IMQ,ALAT,NATOM,NSORT,RWS,
-     &                     NSORTES,TAUES,SES,MAX2SORT,ITOP,IQA,NG,ISNEW,
-     &                     BASNEW,NATOMNEW)
+     &                     NSORTES,TAUES,SES,MAX2SORT,
+     &                     ISNEW, BASNEW, NATOMNEW,
+     &                     N_SYMMETRY_OPS, ROTATIONS, TRANSLATIONS,
+     &                     KTO_KYDA)
 Cccccccccccccccccccccccccccccccccccccccccccccccccccc
       ELSE
          DO IATOM = 1,NATOM

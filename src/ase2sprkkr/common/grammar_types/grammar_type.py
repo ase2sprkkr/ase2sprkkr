@@ -1,13 +1,14 @@
 """ Basic types for GrammarTypes and usefull functions """
 import copy
+import unyt
 from typing import Union, Any, Callable, Optional, Type, Dict, List
 import functools
 from collections.abc import Hashable
 import numpy as np
 import pyparsing as pp
 import inspect
-from .. import grammar_types
 
+from .. import grammar_types
 from ..decorators import cached_class_property, cache, \
                          add_called_class_as_argument, cached_property
 from ..alternative_types import normalize_type, allowed_types
@@ -514,7 +515,7 @@ def type_from_value(value, type_map={}):
 
   type_from_set_map = grammar_types.type_from_set_map
 
-  if isinstance(value, recognized_set_types):
+  if isinstance(value, recognized_set_types) and not isinstance(value, unyt.unyt_quantity):
      return type_from_set_map[normalize_type(value[0].__class__)] if len(value) else grammar_types.Integer.I
   if isinstance(value, str):
      try:

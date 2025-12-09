@@ -1,11 +1,13 @@
 """ Common GrammarTypes as numbers, strings etc. """
 
-from ase.units import Rydberg
 import datetime
+import numbers
 import pyparsing as pp
 from typing import Optional
 import numpy as np
 import re
+import unyt
+from unyt.array import unyt_quantity
 
 from ..decorators import add_to_signature, cached_property
 from ..grammar import generate_grammar, separator_grammar, \
@@ -210,15 +212,22 @@ class BaseRealWithUnits(Real):
   grammar_cache = {}
   """ The grammar for units is cached """
 
+  @cached_property
+  def unit_strings(self):
+    return { str(v):k for k,v in self.units.items() }
+
   def _grammar_units(self, units):
     i = id(units)
     if not i in self.grammar_cache:
-      units = pp.Or(
-        (pp.Empty() if v is None else pp.CaselessKeyword(v))
-        .setParseAction(lambda x,*args, u=u: u) for v,u in units.items()
-      )
+      def unit_defs():
+          for i in self.units:
+              yield pp.CaselessKeyword(i), i
+          if self.default_unit:
+              yield pp.Empty(), self.default_unit
+
+      units = ( g.setParseAction(lambda x,*args,unit=unit: unit) for g, unit in unit_defs() )
       out = Real.I.grammar() + pp.Or(units)
-      out.setParseAction(lambda x: x[0] * x[1])
+      out.setParseAction(lambda x: x[0] * self.units[x[1]])
       self.grammar_cache[i] = out
       return out
     return self.grammar_cache[i]
@@ -226,8 +235,33 @@ class BaseRealWithUnits(Real):
   def _grammar(self, param_name):
     return self._grammar_units(self.units)
 
+  def convert(self, value):
+    if isinstance(value, unyt_quantity):
+        return value
+    if isinstance(value, tuple) and len(value) == 2 and value[1] in self.units:
+        return super().convert(value[0]) * self.units[value[1]]
+    if self.default_unit and isinstance(value, numbers.Real):
+        return super().convert(value) * self.units[self.default_unit]
+    return value
+
   def _validate(self, value, why='set'):
-    return isinstance(value, float) or "A float value required"
+    if not isinstance(value, unyt_quantity):
+        if isinstance(value, tuple) and len(value) == 2 and not value[1] in self.units:
+            return f"Given unit {value[1]} is not allowed, allowed are: {",".join(self.units.keys())}"
+        return "Real with units have to be given as tuple containing " \
+               "a float (the value) and a string (the units), or as "\
+               "Unyt.unit_object.Unit object with propper units."
+    if not str(value.units) in self.unit_strings:
+           return f"Invalid unit {value.units}, allowed are {",".join(self.unit_strings.keys())}"
+    return True
+
+  def _string(self, value):
+      if self.default_unit:
+          value = value.to(self.units[self.default_unit])
+      val = super()._string(value.value)
+      if not self.default_unit:
+          val += " " + self.unit_strings[str(value.units)]
+      return val
 
   def grammar_name(self):
     return '<float>[{}]'.format("|".join(('' if i is None else i for i in self.units)))
@@ -238,8 +272,9 @@ class BaseRealWithUnits(Real):
 class RealWithUnits(BaseRealWithUnits):
   """ A float value with user-defined units """
 
-  def __init__(self, *args, units, **kwargs):
+  def __init__(self, *args, units, default_unit=False, **kwargs):
      self.units = units
+     self.default_unit = default_unit
      super().__init__(*args, **kwargs)
 
 
@@ -247,15 +282,16 @@ class Energy(BaseRealWithUnits):
   """ The grammar type for energy. The default units are Rydberg, one can specify eV. """
 
   units = {
-      'Ry' : 1.,
-      'eV' : 1. / Rydberg,
-      None : 1.,
+      'Ry' : unyt.Ry,
+      'eV' : unyt.eV
   }
+
+  default_unit = 'Ry'
+
   """ The allowed units and their conversion factors """
 
   def __str__(self):
       return "Energy (<Real> [Ry|eV])"
-
 
 class BaseString(TypedGrammarType):
   """ Base type for string grammar types """

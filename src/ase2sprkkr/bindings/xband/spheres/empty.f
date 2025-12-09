@@ -1,7 +1,10 @@
 C*==emptyspheres.f    processed by SPAG 7.10RU at 07:46 on 26 Mar 2020
       SUBROUTINE EMPTYSPHERES(AVC,BVC,CVC,BAS,IS,ALAT,NATOM,NSORT,S,
-     &                        NSORTES,TAUES,SES,MAX2SORT,ITOP,IQA,NG,
-     &                        ISNEW,BASNEW,NATOMNEW)
+     &                        NSORTES,TAUES,SES,MAX2SORT,
+     &                        ISNEW,BASNEW,NATOMNEW,
+     &                        N_SYMMETRY_OPS, ROTATIONS,
+     &                        TRANSLATIONS, KTO_KYDA)
+      USE DEBUG_DUMP
       IMPLICIT NONE
 C
 C*** Start of declarations rewritten by SPAG
@@ -15,13 +18,20 @@ C Dummy arguments
 C
       REAL*8 ALAT
       INTEGER MAX2SORT,NATOM,NATOMNEW,NG,NSORT,NSORTES
-      REAL*8 AVC(3),BAS(3,*),BASNEW(*),BVC(3),CVC(3),S(*),SES(*),
-     &       TAUES(3,*)
-      INTEGER IQA(*),IS(*),ISNEW(*),ITOP(*)
+      INTEGER N_SYMMETRY_OPS
+      REAL*8 AVC(3),BAS(3,MAX2SORT),BASNEW(3,MAX2SORT),BVC(3),
+     &       CVC(3),S(MAX2SORT),
+     &       SES(MAX2SORT),
+     &       TAUES(3,MAX2SORT)
+      INTEGER IS(MAX2SORT),ISNEW(MAX2SORT),KTO_KYDA(N_SYMMETRY_OPS)
+      DOUBLE PRECISION,  DIMENSION(3,3,N_SYMMETRY_OPS)
+     &       :: ROTATIONS
+      DOUBLE PRECISION,  DIMENSION(3,N_SYMMETRY_OPS)
+     &       :: TRANSLATIONS
 C
 C Local variables
 C
-      REAL*8 ANG(3),GEN(3,3,48),S2NEW(:),SNEW(:),TAU(:,:),VC(3,48),VV(3)
+      REAL*8 ANG(3),S2NEW(:),SNEW(:),TAU(:,:),VC(3,48),VV(3)
       INTEGER I,IER,IG,IGA,IGC,ISB(:),ISKIP(:),I_ISB,I_ISKIP,I_NHSORTES,
      &        I_S2NEW,I_SNEW,I_TAU,J,MAXNPAT,MAXNPATG,NHSORTES(:)
 
@@ -38,44 +48,22 @@ C
       DO I = 1,3
          VV(I) = -BAS(I,1)
       END DO
+
+         NG=N_SYMMETRY_OPS
+
+         DO IGC=1,N_SYMMETRY_OPS
+           CALL VEC(VC(1,IGC),BAS(1,KTO_KYDA(IGC)),VV,
+     &             ROTATIONS(1,1,IGC))
+         END DO
 C
-      DO IGC = 1,NG
-         IG = ITOP(IGC)
-         IGA = IG
-         IF ( IGA.GT.32 ) IGA = IGA - 32
-         CALL EILANG(ANG,IGA)
-         CALL TURNM(ANG,GEN(1,1,IGC))
-C                              !DEF TURN MATRIX
-         IF ( IG.NE.IGA ) THEN
-C                              !ADD INVERSION IF NEED
-            DO I = 1,3
-               DO J = 1,3
-                  GEN(I,J,IGC) = -GEN(I,J,IGC)
-               END DO
-            END DO
-         END IF
-         CALL VEC(VC(1,IGC),BAS(1,IQA(IGC)),VV,GEN(1,1,IGC))
-C        print*,Igc,ig,(vc(i,igc),i=1,3)
-      END DO
 C
-      DO I = 1,NG
-         IG = ITOP(I)
-C
-      END DO
-C
-      CALL DEFRR(I_SNEW,MAXNPAT)
-      CALL DEFRR(I_S2NEW,MAXNPAT)
-      CALL DEFI(I_ISB,MAXNPATG)
-      CALL DEFRR(I_TAU,MAXNPATG*3)
-      CALL DEFI(I_NHSORTES,MAXNPAT)
-      CALL DEFI(I_ISKIP,MAXNPAT)
 C
       ALLOCATE (SNEW(MAXNPAT),S2NEW(MAXNPAT),TAU(3,MAXNPATG))
       ALLOCATE (NHSORTES(MAXNPAT),ISKIP(MAXNPAT),ISB(MAXNPATG))
 C
       CALL EMPTY(IER,AVC,BVC,CVC,BAS,IS,ALAT,NATOM,NSORT,S,BASNEW,ISNEW,
      &           SNEW,S2NEW,ISB,TAU,MAXNPAT,MAXNPATG,NSORTES,TAUES,SES,
-     &           NHSORTES,ISKIP,GEN,VC,NG,NATOMNEW)
+     &           NHSORTES,ISKIP,ROTATIONS,VC,NG,NATOMNEW)
 C
 C     nsortes=iter-1
       IF( IPRINT > 0 ) THEN
@@ -94,6 +82,8 @@ C*==empty.f    processed by SPAG 7.10RU at 07:46 on 26 Mar 2020
      &                 ISNEW,SNEW,S2NEW,ISB,TAU,MAXNPAT,MAXNPATG,
      &                 NSORTES,TAUES,SES,NHSORTES,ISKIP,GM,VC,NG,
      &                 NATOMNEW)
+
+      USE DEBUG_DUMP
       IMPLICIT NONE
 C
 C*** Start of declarations rewritten by SPAG
@@ -151,6 +141,7 @@ C
 C
 C*** End of declarations rewritten by SPAG
 C
+C ---- Dump each variable
       DO I = 1,3
          DO J = 1,3
             U(I,J) = 0
@@ -341,6 +332,7 @@ C         print*,'in=',in,vv
             IF (IPRINT > 0 )
      &          WRITE (IUN,'(2x,3f15.8)') (BASNEW(I,IATOM),I=1,3)
          END DO
+         write(*,*) "MUMU",VE,UM1
 C
          DO K = 1,3
             VV(K) = 0
@@ -493,6 +485,7 @@ C
       IER = 0
       DIAG = SQRT(DIAG)/2
       DDMAX = (SM+DIAG)**2
+      TAU=0.0D0
 C
       NATB = 0
       DO I = -3,3
@@ -505,7 +498,6 @@ C
                   X = DX + BAS(1,IATOM)
                   Y = DY + BAS(2,IATOM)
                   Z = DZ + BAS(3,IATOM)
-C              print*,X,Y,Z
                   DD = X**2 + Y**2 + Z**2
                   IF ( DD.LT.DDMAX ) THEN
                      NATB = NATB + 1
@@ -527,6 +519,9 @@ C              print*,X,Y,Z
             END DO                      ! k
          END DO                         ! j
       END DO                            ! i
+      do i=1,NATB
+      write(999,*) TAU(1,i),TAU(2,i),TAU(3,i)
+      end do
 C
       PAE = 0
       PBE = 0
@@ -564,8 +559,8 @@ C$$$                print*,tau(1,i),tau(2,i),tau(3,i)
                   DD = SQRT(DIST2) - S(ISB(I))
                   DMIN = MIN(DD,DMIN)
                END DO                   ! i
-C            print*,DMIN
                IF ( DMIN.GT.DMAX ) THEN
+C            print*,"HUHU",PA,PB,PC,DMIN
                   DMAX = DMIN
                   PAE = PA
                   PBE = PB
@@ -621,3 +616,59 @@ C
       END DO                            ! natb
       RAD = DMIN
       END
+
+      SUBROUTINE READ_IQA1(FNAME, IQA, NG)
+C-----------------------------------------------------------------------
+C  Reads IQA1.txt:
+C    Line 1 : NG  (number of symmetry operations)
+C    Next NG items: 1-based indices (one per line is fine; list-directed
+C                   read also accepts multiple per line)
+C
+C  Inputs:
+C    FNAME  - file name (CHARACTER*(*))
+C    MAXNG  - max length of IQA array
+C  Outputs:
+C    IQA    - integer array of length NG with 1-based indices
+C    NG     - number of operations read
+C    IERR   - 0 OK; 1 open fail; 2 header read fail; 3 NG>MAXNG; 4 data read fail
+C-----------------------------------------------------------------------
+      CHARACTER*(*) FNAME
+      INTEGER IQA(*), NG, MAXNG, IERR,NGINP
+      INTEGER U, IOS, I
+
+      IERR = 0
+      U = 41
+
+      OPEN(U, FILE=FNAME, STATUS='OLD', IOSTAT=IOS)
+      IF (IOS .NE. 0) THEN
+         IERR = 1
+         STOP "CAN NOT READ IQA1.txt"
+         RETURN
+      ENDIF
+
+C     Read number of operations
+      READ(U, *, IOSTAT=IOS) NGINP
+      IF (IOS .NE. 0) THEN
+         IERR = 2
+         STOP "CAN NOT READ IQA1.txt"
+         GOTO 900
+      ENDIF
+
+      IF (NG .NE. NGINP) THEN
+         IERR = 3
+         STOP "CAN NOT READ IQA1.txt"
+         GOTO 900
+      ENDIF
+
+C     Read NG integers (list-directed: spans multiple lines if needed)
+      READ(U, *, IOSTAT=IOS) (IQA(I), I = 1, NG)
+      IF (IOS .NE. 0) THEN
+         IERR = 4
+         GOTO 900
+      ENDIF
+
+  900 CONTINUE
+      CLOSE(U)
+      RETURN
+      END
+
