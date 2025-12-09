@@ -7,10 +7,12 @@ from ...common.unique_values import UniqueValuesMapping
 from .symmetry import find_symmetry
 from ..empty_spheres import EmptySpheresResult
 from ase.units import Bohr
+from libc.stdint cimport int32_t
 
 empty_spheres_errors = {
     -1 : 'Can not find averadged position',
     -2 : 'Too many atoms',
+    -3 : 'GETEPOS: too many atoms are generated',
      1 : 'Empty spheres not needed'
 }
 
@@ -18,32 +20,32 @@ empty_spheres_errors = {
 
 
 cdef extern from "spheres.h":
-  cdef int find_empty_spheres_(
-              int* n,
+  cdef int32_t find_empty_spheres_(
+              int32_t* n_out,
               double* centres,
               double* radii,
               double* min_radius,
               double* max_radius,
               double* alat,
               double* cell,
-              int* n,
+              int32_t* n,
               double* positions,
-              int* atom_eq_class,
-              int* n_classes,
-              int* n_types,
+              int32_t* atom_eq_class,
+              int32_t* n_classes,
+              int32_t* n_types,
               char* symbols,
               double* atomic_numbers,
               double* occupations,
-              int* type_eq_class,
-              #int* n_symop,
-              #int* symop_number,
-              #int* symop_data,
-              int* mesh,
-              int* n_symmetry_operations,
+              int32_t* type_eq_class,
+              #int32_t* n_symop,
+              #int32_t* symop_number,
+              #int32_t* symop_data,
+              int32_t* mesh,
+              int32_t* n_symmetry_operations,
               double *rotations,
               double *translations,
-              int* kto_kyda,
-              int* verbose,
+              int32_t* kto_kyda,
+              int32_t* verbose
   );
 
 
@@ -51,9 +53,8 @@ def empty_spheres(
     atoms,
     double min_radius=0.65,
     double max_radius=2.,
-    #int[:,:] point_symmetry=None,
     verbose=False,
-    int max_spheres=256,
+    int32_t max_spheres=256,
     return_atom_rws=False,
     use_spacegroup=True,
     mesh=24,
@@ -68,23 +69,23 @@ def empty_spheres(
     min_radius *= to_bohr
     max_radius *= to_bohr
     cdef double alat = atoms.cell.get_bravais_lattice().a * to_bohr
-    cdef int n = len(atoms)
+    cdef int32_t n = len(atoms)
 
     es = atoms.spacegroup_info.equivalent_sites
     es = UniqueValuesMapping(es)
     ui = es.unique_indexes()
-    cdef int[:] mapping = es.normalized(dtype=np.int32)[0]
+    cdef int32_t[:] mapping = es.normalized(dtype=np.int32)[0]
 
-    cdef int i
-    cdef int n_types = sum(len(atoms.sites[i].occupation) for i in ui)
-    cdef int n_classes = len(ui)
+    cdef int32_t i
+    cdef int32_t n_types = sum(len(atoms.sites[i].occupation) for i in ui)
+    cdef int32_t n_classes = len(ui)
     cdef np.ndarray symbols = np.zeros((n_types, 4), dtype=np.byte)
     cdef char[:,:] _symbols = symbols
     cdef double[:] occupations = np.empty(n_types, np.double)
     cdef double[:] atomic_numbers = np.empty(n_types, np.double)
-    cdef int[:] eq_classes = np.empty(n_types, np.int32)
-    cdef int[3] _mesh = np.empty(3, np.int32)
-    cdef int type_no = 0
+    cdef int32_t[:] eq_classes = np.empty(n_types, np.int32)
+    cdef int32_t[3] _mesh = np.empty(3, np.int32)
+    cdef int32_t type_no = 0
     if isinstance(mesh, int):
       _mesh[0] = _mesh[1] = _mesh[2] = mesh
     else:
@@ -104,7 +105,7 @@ def empty_spheres(
     cdef double ratio = to_bohr / alat
     cdef double[:,:] cell = atoms.cell[:] * ratio
     cdef double[:,:] positions = atoms.positions * ratio
-    cdef int _verbose
+    cdef int32_t _verbose
 
     if isinstance(verbose, bool):
         _verbose = 1 if verbose else 0
@@ -119,8 +120,8 @@ def empty_spheres(
 
     cdef double[:,:,:] rotations = None
     cdef double[:,:] translations = None
-    cdef int[:] kto_kyda = None
-    cdef int n_symmetry_ops = -1
+    cdef int32_t[:] kto_kyda = None
+    cdef int32_t n_symmetry_ops = -1
 
     sp = atoms.spacegroup_info
     if sp and sp.dataset and sp.dataset.rotations is not None:
@@ -128,7 +129,7 @@ def empty_spheres(
         rotations = np.array(d.rotations, dtype=np.double)
         translations = d.translations
         n_symmetry_ops = len(translations)
-        kto_kyda = np.array(sp.kto_kyda_table()[:,0] + 1, dtype=np.int32)
+        kto_kyda = np.array(sp.kto_kyda_table()[:,0] + 1, dtype=np.int32).ravel()
         assert n_symmetry_ops == len(rotations)
         assert translations.shape[1] == 3
         assert rotations.shape[1] == 3
@@ -158,7 +159,7 @@ def empty_spheres(
                    &n_symmetry_ops,
                    &rotations[0,0,0] if n_symmetry_ops >= 0 else NULL,
                    &translations[0,0] if n_symmetry_ops >= 0 else NULL,
-                   &kto_kyda[0],
+                   &kto_kyda[0] if kto_kyda is not None else NULL,
                    &_verbose
                   )
     if ret < 0:

@@ -145,6 +145,8 @@ C
 C
 C*** End of declarations rewritten by SPAG
 C
+      EMPTY = 0       ! default to success
+
 C ---- Dump each variable
       DO I = 1,3
          DO J = 1,3
@@ -338,7 +340,6 @@ C         print*,'in=',in,vv
             IF (IPRINT > 0 )
      &          WRITE (IUN,'(2x,3f15.8)') (BASNEW(I,IATOM),I=1,3)
          END DO
-         write(*,*) "MUMU",VE,UM1
 C
          DO K = 1,3
             VV(K) = 0
