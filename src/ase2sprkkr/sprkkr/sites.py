@@ -60,7 +60,6 @@ class SiteType:
       self._mesh = mesh or Mesh.default()
       self._occupation = Occupation.to_occupation(occupation, self)
       self.sites = set()
-      self.magnetisation = np.zeros(3)
 
   def register(self, site):
       self.sites.add(site)
