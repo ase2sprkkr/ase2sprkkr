@@ -5,6 +5,8 @@ import contextlib
 
 _pool=None
 
+import multiprocessing as mp
+mp.set_start_method("spawn", force=True)
 
 @contextlib.contextmanager
 def ignore_signal(num):
