@@ -395,6 +395,7 @@ class Table(GrammarType):
                      header:Optional[bool]=None, free_header=False,
                      format = {float: '>22.14', None: '>16'}, format_all=True,
                      numbering:Union[str,bool,GrammarType]=None, numbering_label=None, numbering_format=True,
+                     free_numbering:bool=False,
                      grouping=False, grouping_label=None, grouping_format=True,
                      prefix=None, postfix=None, length=None,
                      row_condition=None, flatten=False,
@@ -422,6 +423,8 @@ class Table(GrammarType):
         String argument means the label of the column.
       numbering_label
         The label of the numbering column (if not given in numbering).
+      free_numbering
+        If True, the numering is not required to be correct on input.
       numbering_format
         Format for the numering column
       grouping
@@ -499,6 +502,7 @@ class Table(GrammarType):
       self.named_result = named_result
       self.length = length
       self.numbering = SpecialColumn(self, numbering, numbering_label, numbering_format)
+      self.free_numbering = free_numbering
       self.grouping = SpecialColumn(self, grouping, grouping_label, grouping_format)
       self.groups_as_list = bool(self.grouping) and (
           groups_as_list if groups_as_list is not None else not group_size
@@ -554,10 +558,11 @@ class Table(GrammarType):
              grammar = pp.Suppress(header + pp.lineEnd) + grammar
 
       def data_numbering(s, loc, x):
-          numbers = x[::2]
           datas = x[1::2]
-          if not numbers == [*range(1, len(numbers) + 1)]:
-             raise pp.ParseException(s, loc, 'The first column should contain row numbering')
+          if not self.free_numbering:
+              should_be = [*range(1, len(datas) + 1)]
+              if not x[::2] == should_be:
+                  raise pp.ParseException(s, loc, 'The first column should contain row numbering')
           return tabelize(datas)
 
       def data_grouping(s, loc, data):
