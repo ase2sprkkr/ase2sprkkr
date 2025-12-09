@@ -15,13 +15,14 @@ void find_empty_spheres_(
               double* atomic_numbers,
               double* occupations,
               int* type_eq_class,
-              int* n_symop,
-              int* symop_number,
-              int* symop_data,
+              //int* n_symop,
+              //int* symop_number,
+              //int* symop_data,
               int* mesh,
               int* n_symmetry_ops,
               double* rotations,
               double* translations,
+              int* kto_kyda,
               int* verbose
   );
 

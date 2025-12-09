@@ -1,8 +1,9 @@
 C*==emptyspheres.f    processed by SPAG 7.10RU at 07:46 on 26 Mar 2020
       SUBROUTINE EMPTYSPHERES(AVC,BVC,CVC,BAS,IS,ALAT,NATOM,NSORT,S,
-     &                        NSORTES,TAUES,SES,MAX2SORT,ITOP,IQA,NG,
-     &                        ISNEW,BASNEW,NATOMNEW,ROTATIONS,
-     &                        TRANSLATIONS,N_SYMMETRY_OPS)
+     &                        NSORTES,TAUES,SES,MAX2SORT,
+     &                        ISNEW,BASNEW,NATOMNEW,
+     &                        N_SYMMETRY_OPS, ROTATIONS,
+     &                        TRANSLATIONS, KTO_KYDA)
       USE DEBUG_DUMP
       IMPLICIT NONE
 C
@@ -22,7 +23,7 @@ C
      &       CVC(3),S(MAX2SORT),
      &       SES(MAX2SORT),
      &       TAUES(3,MAX2SORT)
-      INTEGER IQA(48),IS(MAX2SORT),ISNEW(MAX2SORT),ITOP(48),N_SYMMETRY_OPS
+      INTEGER IS(MAX2SORT),ISNEW(MAX2SORT),KTO_KYDA(N_SYMMETRY_OPS)
       DOUBLE PRECISION,  DIMENSION(3,3,N_SYMMETRY_OPS)
      &       :: ROTATIONS
       DOUBLE PRECISION,  DIMENSION(3,N_SYMMETRY_OPS)
@@ -30,7 +31,7 @@ C
 C
 C Local variables
 C
-      REAL*8 ANG(3),GEN(3,3,48),S2NEW(:),SNEW(:),TAU(:,:),VC(3,48),VV(3)
+      REAL*8 ANG(3),S2NEW(:),SNEW(:),TAU(:,:),VC(3,48),VV(3)
       INTEGER I,IER,IG,IGA,IGC,ISB(:),ISKIP(:),I_ISB,I_ISKIP,I_NHSORTES,
      &        I_S2NEW,I_SNEW,I_TAU,J,MAXNPAT,MAXNPATG,NHSORTES(:)
 
@@ -47,39 +48,12 @@ C
       DO I = 1,3
          VV(I) = -BAS(I,1)
       END DO
-C
-CCC      DO IGC = 1,NG
-CCC         IG = ITOP(IGC)
-CCC         IGA = IG
-CCC         IF ( IGA.GT.32 ) IGA = IGA - 32
-CCC         CALL EILANG(ANG,IGA)
-CCC         CALL TURNM(ANG,GEN(1,1,IGC))
-CCCC                              !DEF TURN MATRIX
-CCC         IF ( IG.NE.IGA ) THEN
-CCCC                              !ADD INVERSION IF NEED
-CCC            DO I = 1,3
-CCC               DO J = 1,3
-CCC                  GEN(I,J,IGC) = -GEN(I,J,IGC)
-CCC               END DO
-CCC            END DO
-CCC         END IF
-CCC         write(*,*) "IGC",IGC,ITOP(IGC),IQA(IGC)
-CCC         write(*,*) "VEC",VV,BAS(1:3,IQA(IGC))
-CCC         write(*,*) "ROTMAT1",GEN(1:3,1,IGC)
-CCC         write(*,*) "ROTMAT2",GEN(1:3,2,IGC)
-CCC         write(*,*) "ROTMAT3",GEN(1:3,3,IGC)
-CCC         CALL VEC(VC(1,IGC),BAS(1,IQA(IGC)),VV,GEN(1,1,IGC))
-CCC         write(*,*) "RES",VC(1:3,IGC)
-CCC         END DO
-CCC
-                 
-         NG=N_SYMMETRY_OPS 
 
-         CALL READ_IQA1("IQA1.txt", IQA, NG)
-         GEN=ROTATIONS
+         NG=N_SYMMETRY_OPS
 
          DO IGC=1,N_SYMMETRY_OPS
-           CALL VEC(VC(1,IGC),BAS(1,IQA(IGC)),VV,GEN(1,1,IGC))
+           CALL VEC(VC(1,IGC),BAS(1,KTO_KYDA(IGC)),VV,
+     &             ROTATIONS(1,1,IGC))
          END DO
 C
 C
@@ -89,7 +63,7 @@ C
 C
       CALL EMPTY(IER,AVC,BVC,CVC,BAS,IS,ALAT,NATOM,NSORT,S,BASNEW,ISNEW,
      &           SNEW,S2NEW,ISB,TAU,MAXNPAT,MAXNPATG,NSORTES,TAUES,SES,
-     &           NHSORTES,ISKIP,GEN,VC,NG,NATOMNEW)
+     &           NHSORTES,ISKIP,ROTATIONS,VC,NG,NATOMNEW)
 C
 C     nsortes=iter-1
       IF( IPRINT > 0 ) THEN

@@ -7,24 +7,22 @@
      >   RMAXES_, ! maximal radius (2.5)
      >   ALAT,
      >   CELL,    ! 3x3 array, primitive vectors
-     >   NQ,      ! number of atoms
+     >   NQ,      ! number
      >   BAS,     ! atom positions, cartesian
      >   IMQ,     ! atom equivalence class
      >   NM,      ! number of classes (equivalent sites)
      >   NSORT,   ! number of core types
      >   TXTT,    ! type of the core type (chemical symbol)
-     >   Z,       ! atomic numbers of the core types
+     >   Z,       ! atomic numbers of the core types - float for some reason
      >   CONC,    ! occupations of the core types
      >   IMT,     ! the core type is used by the class nb.
-     >   NG,      ! number of symmetry operations
-     >   ITOP,    ! first line of point symmetry operations
-     >   IQA,     ! second line of point symmetry operations
      >   MESH,    ! mesh for empty spheres finding
 
      >   N_SYMMETRY_OPS,    ! n of ops for the new oustanding symmetry
                             ! operation handling
      >   ROTATIONS,
      >   TRANSLATIONS,
+     >   KTO_KYDA,  ! the first row of mapping by symmetry ops
 
      >   VERBOSE  ! print output to the stdout
      > )
@@ -46,9 +44,9 @@ C
       DOUBLE PRECISION BAS(3,NTMAX)
       INTEGER MESH(3)
       INTEGER N_SYMMETRY_OPS
-      DOUBLE PRECISION, OPTIONAL, DIMENSION(3,3,N_SYMMETRY_OPS)
+      DOUBLE PRECISION, DIMENSION(3,3,N_SYMMETRY_OPS)
      &       :: ROTATIONS
-      DOUBLE PRECISION, OPTIONAL, DIMENSION(3,N_SYMMETRY_OPS)
+      DOUBLE PRECISION, DIMENSION(3,N_SYMMETRY_OPS)
      &       :: TRANSLATIONS
       INTEGER VERBOSE
       INTEGER IPRINT
@@ -76,11 +74,11 @@ C
       LOGICAL DB
       DOUBLE PRECISION DNEVMOD
       CHARACTER*100 FFF
-      INTEGER I,IATOM,IDUM,IMQ(NTMAX),IMT(NTMAX),IPNT,IQA(48),
-     &        ISNEW(MAX2SORT),ISORT,ISP1,ISP2,ISR,IST,IT,ITOP(48),ITYPE,
+      INTEGER I,IATOM,IDUM,IMQ(NQ),IMT(NQ),IPNT,
+     &        ISNEW(MAX2SORT),ISORT,ISP1,ISP2,ISR,IST,IT,ITYPE,
      &        J,NATOM,NATOMNEW,NDNEV,NEED_ES,NG,NM,NRADMAX,NSORT,
-     &        NSORTES,NT,W(MAXDIM)
-      CHARACTER*4 TXTT(NTMAX)
+     &        NSORTES,NT,WORK(MAXDIM),KTO_KYDA(NQ)
+      CHARACTER*4 TXTT(NSORT)
 C
 C*** End of declarations rewritten by SPAG
 C
@@ -97,21 +95,6 @@ C ==================================================
 C
 C  parameters which can be read from input
 C
-      INTEGER k
-      if ( N_SYMMETRY_OPS .ge. 0 ) THEN
-
-          do k = 1, n_symmetry_ops
-              write(*,'(a,i3)') "Symmetry op:", k
-              do i = 1, 3
-                  write(*,'(3f10.5)') (rotations(i,j,k), j=1,3)
-              end do
-              write(*,'(a,3f10.5)') "  Translation:",
-     &                              (translations(i,k), i=1,3)
-              write(*,*)
-          end do
-      end if
-
-
       R0ACT = 1.D-2                  ! - basic translation vectors
       NRADMAX = NRMAX - 1
       DPAS = 0.05D0                     !exp. pass
@@ -245,16 +228,16 @@ C
          PRINT *,'dpas,alat,natom,nsort:',DPAS,ALAT,NATOM,NSORT
       END IF
 C
-      CALL DEFMTR(W,NRAD1,AV,BV,CV,IMQ,BAS,RHOSITE,R0SITE,DPAS,ALAT,
+      CALL DEFMTR(WORK,NRAD1,AV,BV,CV,IMQ,BAS,RHOSITE,R0SITE,DPAS,ALAT,
      &            NATOM,NSORT,ZZ,RWS,NEED_ES,NRAD1,WSREST)
 C
       NATOMNEW = NATOM
       IF ( NEED_ES.EQ.0 ) THEN
-
          CALL EMPTYSPHERES(AV,BV,CV,BAS,IMQ,ALAT,NATOM,NSORT,RWS,
-     &                     NSORTES,TAUES,SES,MAX2SORT,ITOP,IQA,NG,ISNEW,
-     &                     BASNEW,NATOMNEW,ROTATIONS,
-     &                     TRANSLATIONS,N_SYMMETRY_OPS)
+     &                     NSORTES,TAUES,SES,MAX2SORT,
+     &                     ISNEW, BASNEW, NATOMNEW,
+     &                     N_SYMMETRY_OPS, ROTATIONS, TRANSLATIONS,
+     &                     KTO_KYDA)
 Cccccccccccccccccccccccccccccccccccccccccccccccccccc
       ELSE
          DO IATOM = 1,NATOM
@@ -489,9 +472,7 @@ C
             V0(I) = V0(I) + V2(J)*G1(J,I)
          END DO
       END DO
-      WRITE(*,*) "V0",V0
       CALL SHORTN(V0,V0)
-      WRITE(*,*) "V0shrt",V0
       END
 C*==getgbasis.f    processed by SPAG 7.10RU at 07:46 on 26 Mar 2020
       SUBROUTINE GETGBASIS
