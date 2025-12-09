@@ -1,4 +1,12 @@
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -std=legacy -finit-integer=0 -O0 -finit-local-zero")
+# Base Fortran flags
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -std=legacy -finit-integer=0")
+
+# Debug-specific options
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -std=legacy -O0 -finit-local-zero -g")
+  add_compile_options(-g)
+endif()
+
 find_package(Python COMPONENTS Interpreter Development NumPy REQUIRED)
 include_directories(${Python_NumPy_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -43,7 +51,13 @@ add_custom_command(
 python_add_library(spheres MODULE spheres.c WITH_SOABI)
 target_link_libraries(spheres PRIVATE spheres_lib)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  target_compile_options(spheres PRIVATE -g)
+  target_link_options(spheres PRIVATE -g)
+  set(CMAKE_STRIP FALSE)
+  set(CMAKE_INSTALL_DO_STRIP FALSE)
+endif()
+
 install(TARGETS spheres
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/ase2sprkkr/bindings/xband)
-
 
