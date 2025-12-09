@@ -252,7 +252,7 @@ class BaseRealWithUnits(Real):
                "a float (the value) and a string (the units), or as "\
                "Unyt.unit_object.Unit object with propper units."
     if not str(value.units) in self.unit_strings:
-           return f"Invalid unit {value.units}, allowed are {",".join(self.unit_strings.keys())}"
+           return f"Invalid unit {value.units}, allowed are {','.join(self.unit_strings.keys())}"
     return True
 
   def _string(self, value):
