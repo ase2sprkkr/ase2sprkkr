@@ -30,6 +30,7 @@ dependencies = [
   'requests',
   'argcomplete',
   'numpy',
+	'unyt',
 	"phonopy<2.22; python_version <= '3.8'",
 ]
 authors = [
