@@ -197,6 +197,8 @@ class Arithmetic:
     def _do_arithmetic(self, func, other):
         """ Run given function for all "summable/subtractable/etc... data"""
         for val, selector in self._arithmetic_values:
+            if callable(selector):
+                selector = selector(self)
             getattr(self[val]()[selector],func)(other[val]()[selector])
 
     def __iadd__(self, other):
