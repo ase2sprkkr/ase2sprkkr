@@ -247,7 +247,7 @@ class BaseRealWithUnits(Real):
   def _validate(self, value, why='set'):
     if not isinstance(value, unyt_quantity):
         if isinstance(value, tuple) and len(value) == 2 and not value[1] in self.units:
-            return f"Given unit {value[1]} is not allowed, allowed are: {",".join(self.units.keys())}"
+            return f"Given unit {value[1]} is not allowed, allowed are: {','.join(self.units.keys())}"
         return "Real with units have to be given as tuple containing " \
                "a float (the value) and a string (the units), or as "\
                "Unyt.unit_object.Unit object with propper units."
