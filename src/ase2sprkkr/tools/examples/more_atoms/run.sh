@@ -1,2 +1,2 @@
 #!/bin/bash
-../../ase2sprkkr show_structure pot -i in_structur.inp -a
+../../ase2sprkkr show-structure pot -i in_structur.inp -a
