@@ -308,7 +308,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
           item=next(item)
       except StopIteration:
          raise ValueError(f"No {name} member of {self}")
-      return item.as_dict(only_changed=False)
+      return item.as_dict(only_changed=False, generated=True)
 
   def set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
       error = error or 'section'
