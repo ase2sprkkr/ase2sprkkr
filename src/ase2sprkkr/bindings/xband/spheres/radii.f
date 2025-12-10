@@ -22,8 +22,6 @@
                             ! operation handling
      >   ROTATIONS,
      >   TRANSLATIONS,
-     >   KTO_KYDA,  ! the first row of mapping by symmetry ops
-
      >   VERBOSE  ! print output to the stdout
      > )
       IMPLICIT NONE
@@ -80,7 +78,7 @@ C
       INTEGER I,IATOM,IDUM,IMQ(NQ),IMT(NQ),IPNT,
      &        ISNEW(MAX2SORT),ISORT,ISP1,ISP2,ISR,IST,IT,ITYPE,
      &        J,NATOM,NATOMNEW,NDNEV,NEED_ES,NG,NM,NRADMAX,NSORT,
-     &        NSORTES,NT,WORK(MAXDIM),KTO_KYDA(N_SYMMETRY_OPS)
+     &        NSORTES,NT,WORK(MAXDIM)
       CHARACTER*4 TXTT(NSORT)
 C
 C*** End of declarations rewritten by SPAG
@@ -240,8 +238,7 @@ C
      &                     ALAT,NATOM,NSORT,RWS,
      &                     NSORTES,TAUES,SES,MAX2SORT,
      &                     ISNEW, BASNEW, NATOMNEW,
-     &                     N_SYMMETRY_OPS, ROTATIONS, TRANSLATIONS,
-     &                     KTO_KYDA)
+     &                     N_SYMMETRY_OPS, ROTATIONS, TRANSLATIONS)
 Cccccccccccccccccccccccccccccccccccccccccccccccccccc
         IF (FIND_EMPTY_SPHERES .ne. 0) THEN
             RETURN
@@ -479,8 +476,8 @@ C
          DO J = 1,3
             V0(I) = V0(I) + V2(J)*G1(J,I)
          END DO
+         V0(I) = V0(I) - DNINT(V0(I))            
       END DO
-      CALL SHORTN(V0,V0)
       END
 C*==getgbasis.f    processed by SPAG 7.10RU at 07:46 on 26 Mar 2020
       SUBROUTINE GETGBASIS

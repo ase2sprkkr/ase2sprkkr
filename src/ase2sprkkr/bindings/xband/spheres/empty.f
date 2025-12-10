@@ -3,7 +3,7 @@ C*==emptyspheres.f    processed by SPAG 7.10RU at 07:46 on 26 Mar 2020
      &                        S, NSORTES,TAUES,SES,MAX2SORT,
      &                        ISNEW,BASNEW,NATOMNEW,
      &                        N_SYMMETRY_OPS, ROTATIONS,
-     &                        TRANSLATIONS, KTO_KYDA)
+     &                        TRANSLATIONS)
       USE DEBUG_DUMP
       IMPLICIT NONE
 C
@@ -17,13 +17,13 @@ C
 C Dummy arguments
 C
       REAL*8 ALAT
-      INTEGER MAX2SORT,NATOM,NATOMNEW,NG,NSORT,NSORTES
+      INTEGER MAX2SORT,NATOM,NATOMNEW,NSORT,NSORTES
       INTEGER N_SYMMETRY_OPS
       REAL*8 AVC(3),BAS(3,MAX2SORT),BASNEW(3,MAX2SORT),BVC(3),
      &       CVC(3),S(MAX2SORT),
      &       SES(MAX2SORT),
      &       TAUES(3,MAX2SORT)
-      INTEGER IS(MAX2SORT),ISNEW(MAX2SORT),KTO_KYDA(N_SYMMETRY_OPS)
+      INTEGER IS(MAX2SORT),ISNEW(MAX2SORT)
       DOUBLE PRECISION,  DIMENSION(3,3,N_SYMMETRY_OPS)
      &       :: ROTATIONS
       DOUBLE PRECISION,  DIMENSION(3,N_SYMMETRY_OPS)
@@ -31,7 +31,7 @@ C
 C
 C Local variables
 C
-      REAL*8 ANG(3),S2NEW(:),SNEW(:),TAU(:,:),VC(3,48),VV(3)
+      REAL*8 ANG(3),S2NEW(:),SNEW(:),TAU(:,:)
       INTEGER I,IER,IG,IGA,IGC,ISB(:),ISKIP(:),I_ISB,I_ISKIP,I_NHSORTES,
      &        I_S2NEW,I_SNEW,I_TAU,J,MAXNPAT,MAXNPATG,NHSORTES(:)
 
@@ -47,26 +47,14 @@ C
       MAXNPAT = MAX2SORT
       MAXNPATG = NPATB1
 C
-      DO I = 1,3
-         VV(I) = -BAS(I,1)
-      END DO
-
-         NG=N_SYMMETRY_OPS
-
-         DO IGC=1,N_SYMMETRY_OPS
-           CALL VEC(VC(1,IGC),BAS(1,KTO_KYDA(IGC)),VV,
-     &             ROTATIONS(1,1,IGC))
-         END DO
-C
-C
-C
       ALLOCATE (SNEW(MAXNPAT),S2NEW(MAXNPAT),TAU(3,MAXNPATG))
       ALLOCATE (NHSORTES(MAXNPAT),ISKIP(MAXNPAT),ISB(MAXNPATG))
 C
       EMPTYSPHERES=EMPTY(IER,AVC,BVC,CVC,BAS,IS,ALAT,NATOM,NSORT,S,
      &           BASNEW, ISNEW,
      &           SNEW,S2NEW,ISB,TAU,MAXNPAT,MAXNPATG,NSORTES,TAUES,SES,
-     &           NHSORTES,ISKIP,ROTATIONS,VC,NG,NATOMNEW)
+     &           NHSORTES,ISKIP,ROTATIONS,TRANSLATIONS,N_SYMMETRY_OPS,
+     &           NATOMNEW)
 C
 C     nsortes=iter-1
       IF( IPRINT > 0 ) THEN
@@ -99,19 +87,23 @@ C
       COMMON /EMPTYS/ NATES,N1ES,N2ES,N3ES,RMINES,RMAXES
       COMMON /TAU2  / BOA,COA
       COMMON /U     / U,UM1,IDATASTR
+      REAL*8 PLAT(3,3),QLAT(3,3)
+      COMMON /L2LAT / PLAT,QLAT
 C
 C Dummy arguments
 C
       REAL*8 ALAT
       INTEGER IER,MAXNPAT,MAXNPATG,NATOM,NATOMNEW,NG,NSORT,NSORTES
       REAL*8 AVC(3),BAS(3,*),BASNEW(3,*),BVC(3),CVC(3),GM(3,3,48),S(*),
-     &       S2NEW(*),SES(*),SNEW(*),TAU(3,*),TAUES(3,*),VC(3,48)
+     &         S2NEW(*),SES(*),SNEW(*),TAU(3,*),TAUES(3,*),VC(3,48)
       INTEGER IS(*),ISB(*),ISKIP(*),ISNEW(*),NHSORTES(*)
 C
 C Local variables
 C
-      REAL*8 ANG(3),CS,CVOL,DEMIN,EPS_ANG,EPS_ANGMAX,PA,PB,PC,PI43,RAD,
-     &       RADNEW,SM,SMN,SSM,SVOLA,SVOLE,VE(3,48),VSHIFT(3),VV(3)
+      REAL*8 ANG(3),CS,CVOL,DEMIN,DEMAX,EPS_ANG,EPS_ANGMAX,PI43,RAD
+      REAL*8 RADNEW,SM,SMN,SSM,SVOLA,SVOLE
+      REAL*8 VE(3,48),VSHIFT(3),VV(3),VVF(3)
+      REAL*8 P(3),PSH(3)
       REAL*8 DPI,TRNT
       INTEGER I,IATOM,IG,IIN,IN,INVMAX,IODN,ISORT,ITAV,ITER,IUN,J,K,
      &        NATB,NATS,NSORTNEW
@@ -204,11 +196,11 @@ C---------------------------------------
       END IF
 C
       CALL GETEPOS(MAXNPATG,AVC,BVC,CVC,BASNEW,NATOMNEW,ISNEW,TAU,NATB,
-     &             ISB,SNEW,S2NEW,N1ES,N2ES,N3ES,PA,PB,PC,RAD,IER,SM)
+     &             ISB,SNEW,S2NEW,N1ES,N2ES,N3ES,P,RAD,IER,SM)
 C
       IF(IPRINT >0) THEN
         WRITE (IUN,99001) ' Maximum possible sphere is ',RAD*ALAT
-        WRITE (IUN,99001) ' Position in a,b,c:',PA,PB,PC
+      WRITE (IUN,99001) ' Position in a,b,c:',P(1),P(2),P(3)
       END IF
       IF ( RAD.LT.SMN ) THEN
 
@@ -236,20 +228,34 @@ C
          END IF
 C
 C multiplication :
-         VE(1,1) = PA*AVC(1) + PB*BVC(1) + PC*CVC(1) - VSHIFT(1)
-         VE(2,1) = PA*AVC(2) + PB*BVC(2) + PC*CVC(2) - VSHIFT(2)
-         VE(3,1) = PA*AVC(3) + PB*BVC(3) + PC*CVC(3) - VSHIFT(3)
+C        Convert VSHIFT (Cartesian) to fractional shift via QLAT, then apply to P
+         DO K = 1,3
+            PSH(K) = 0
+            DO J = 1,3
+               PSH(K) = PSH(K) + QLAT(K,J)*VSHIFT(J)
+            END DO
+            P(K) = P(K) - PSH(K)
+            P(K) = P(K) - DNINT(P(K))
+         END DO
+C         Build VE from shifted fractional P (no direct VSHIFT subtraction)
+         VE(1,1) = P(1)*AVC(1) + P(2)*BVC(1) + P(3)*CVC(1)
+         VE(2,1) = P(1)*AVC(2) + P(2)*BVC(2) + P(3)*CVC(2)
+         VE(3,1) = P(1)*AVC(3) + P(2)*BVC(3) + P(3)*CVC(3)
 C
          ITAV = 0
  150     CONTINUE
          ITAV = ITAV + 1
          IN = 1
          EPS_ANGMAX = 0.D0
-         CALL SHORTN(VE,VE)
-C       print*,(ve(i,1),i=1,3)
+C        print*,(ve(i,1),i=1,3)
          DO IG = 1,NG
-            CALL VEC(VV,VC(1,IG),VE,GM(1,1,IG))
-C         print*,vv
+            CALL VEC(VVF,VC(1,IG),P,GM(1,1,IG))
+            VV(1) = VVF(1)*AVC(1) + VVF(2)*BVC(1) + VVF(3)*CVC(1)
+            VV(2) = VVF(1)*AVC(2) + VVF(2)*BVC(2) + VVF(3)*CVC(2)
+            VV(3) = VVF(1)*AVC(3) + VVF(2)*BVC(3) + VVF(3)*CVC(3)
+
+
+C           print*,vv
             DO IIN = 1,IN
                ANG(1) = VE(1,IIN) - VV(1)
                ANG(2) = VE(2,IIN) - VV(2)
@@ -273,6 +279,7 @@ C         print*,'in=',in,vv
          VV(3) = 0
          IODN = 0
          DEMIN = 1.D10
+         DEMAX = 0D0
          DO IIN = 2,IN
             ANG(1) = VE(1,IIN) - VE(1,1)
             ANG(2) = VE(2,IIN) - VE(2,1)
@@ -285,8 +292,9 @@ C         print*,'in=',in,vv
                VV(2) = VV(2) + ANG(2)
                VV(3) = VV(3) + ANG(3)
                IODN = IODN + 1
-            ELSE IF ( DEMIN.GT.EPS_ANG ) THEN
-               DEMIN = EPS_ANG
+               DEMAX = MAX(DEMAX, EPS_ANG)
+            ELSE
+               DEMIN = MIN(EPS_ANG, DEMIN)
             END IF
          END DO                         ! iin
          IF ( IODN.NE.0 ) THEN
@@ -306,7 +314,7 @@ C         print*,'in=',in,vv
      &              'rad,radtst',RAD*ALAT,RADNEW*ALAT
             RAD = RADNEW
             IF ( ITAV.LE.5 ) GOTO 150   ! to avoide infinite cycle
-            IF ((VV(1)**2 + VV(2)**2 + VV(3)**2) .gt. 1e-24) THEN
+            IF ( DEMAX .gt. 1e-12 ) THEN
                IF (IPRINT > 0 )
      >             WRITE (IUN,*) 'can not find averaged position'
                EMPTY = -1
@@ -466,7 +474,7 @@ C        print*,'SES::',ses(isort),isort
 C*==getepos.f    processed by SPAG 7.10RU at 07:46 on 26 Mar 2020
 C
       SUBROUTINE GETEPOS(NPAT,A,B,C,BAS,NATOM,IS,TAU,NATB,ISB,S,S2,N1,
-     &                   N2,N3,PAE,PBE,PCE,RAD,IER,SM)
+     &                   N2,N3,P,RAD,IER,SM)
       IMPLICIT NONE
 C
 C*** Start of declarations rewritten by SPAG
@@ -474,7 +482,8 @@ C
 C Dummy arguments
 C
       INTEGER IER,N1,N2,N3,NATB,NATOM,NPAT
-      REAL*8 PAE,PBE,PCE,RAD,SM
+      REAL*8 RAD,SM
+      REAL*8 P(3)
       REAL*8 A(3),B(3),BAS(3,*),C(3),S(*),S2(*),TAU(3,NPAT)
       INTEGER IS(NPAT),ISB(NPAT)
 C
@@ -535,9 +544,9 @@ C
       write(999,*) TAU(1,i),TAU(2,i),TAU(3,i)
       end do
 C
-      PAE = 0
-      PBE = 0
-      PCE = 0
+      P(1) = 0
+      P(2) = 0
+      P(3) = 0
 C
       ANA = 0.5D0/N1
       ANB = 0.5D0/N2
@@ -574,9 +583,9 @@ C$$$                print*,tau(1,i),tau(2,i),tau(3,i)
                IF ( DMIN.GT.DMAX ) THEN
 C            print*,"HUHU",PA,PB,PC,DMIN
                   DMAX = DMIN
-                  PAE = PA
-                  PBE = PB
-                  PCE = PC
+                  P(1) = PA
+                  P(2) = PB
+                  P(3) = PC
 C$$$              iae=ia
 C$$$              ibe=ib
 C$$$              ice=ic

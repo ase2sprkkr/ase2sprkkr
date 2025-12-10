@@ -44,7 +44,6 @@ cdef extern from "spheres.h":
               int32_t* n_symmetry_operations,
               double *rotations,
               double *translations,
-              int32_t* kto_kyda,
               int32_t* verbose
   );
 
@@ -120,7 +119,6 @@ def empty_spheres(
 
     cdef double[:,:,:] rotations = None
     cdef double[:,:] translations = None
-    cdef int32_t[:] kto_kyda = None
     cdef int32_t n_symmetry_ops = -1
 
     sp = atoms.spacegroup_info
@@ -129,7 +127,6 @@ def empty_spheres(
         rotations = np.array(d.rotations, dtype=np.double)
         translations = d.translations
         n_symmetry_ops = len(translations)
-        kto_kyda = np.array(sp.kto_kyda_table()[:,0] + 1, dtype=np.int32).ravel()
         assert n_symmetry_ops == len(rotations)
         assert translations.shape[1] == 3
         assert rotations.shape[1] == 3
@@ -159,7 +156,6 @@ def empty_spheres(
                    &n_symmetry_ops,
                    &rotations[0,0,0] if n_symmetry_ops >= 0 else NULL,
                    &translations[0,0] if n_symmetry_ops >= 0 else NULL,
-                   &kto_kyda[0] if kto_kyda is not None else NULL,
                    &_verbose
                   )
     if ret < 0:

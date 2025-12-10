@@ -22,7 +22,6 @@ int32_t find_empty_spheres_(
               int32_t* n_symmetry_ops,
               double* rotations,
               double* translations,
-              int32_t* kto_kyda,
               int32_t* verbose
   );
 
