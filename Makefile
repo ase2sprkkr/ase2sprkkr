@@ -4,7 +4,7 @@ install:
 	pip install .
 
 editable_install:
-	pip install --no-deps --no-build-isolation --editable .
+	pip install -C cmake.build-type=Debug --no-deps --editable .
 
 ei: editable_install
 
