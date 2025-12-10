@@ -1,4 +1,4 @@
-""" DOS task input parameters definition"""
+"""  bsfkk task input parameters definition"""
 from ...common.grammar_types import SetOf
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import \
@@ -10,7 +10,6 @@ input_parameters = lambda: InputParameters(
           CONTROL('BSF'),
           TAU,
           TASK('BSF', add=[
-            V('NK', 300, info="total number of k-points"),
             V('NK1', int, info="number of k-points along k1", is_optional=True),
             V('NK2', int, info="number of k-points along k2", is_optional=True),
             V('K1', SetOf(float, length=3), is_optional=True, info="ﬁrst k-vector to span a two-dimensional region in k-space."),
@@ -34,6 +33,4 @@ input_parameters = lambda: InputParameters(
     mpi=True,
     info="BSFKK - Bloch spectral functions in the K-K plane"
 )
-""" JXC -JXC task input parameters definition"""
-
-# TODO - AKI scripts to generate KA/KE
+""" BSFKK - Bloch spectral functions in the K-K plane task input parameters definition"""
