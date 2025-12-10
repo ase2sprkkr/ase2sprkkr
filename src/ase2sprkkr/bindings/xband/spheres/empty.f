@@ -280,18 +280,20 @@ C         print*,'in=',in,vv
             CALL SHORTN(ANG,ANG)
             EPS_ANG = ANG(1)**2 + ANG(2)**2 + ANG(3)**2
             EPS_ANG = SQRT(EPS_ANG)
-            IF ( DEMIN.GT.EPS_ANG ) DEMIN = EPS_ANG
             IF ( EPS_ANG.LT.RAD*1.5D0 ) THEN
                VV(1) = VV(1) + ANG(1)
                VV(2) = VV(2) + ANG(2)
                VV(3) = VV(3) + ANG(3)
                IODN = IODN + 1
+            ELSE IF ( DEMIN.GT.EPS_ANG ) THEN
+               DEMIN = EPS_ANG
             END IF
          END DO                         ! iin
          IF ( IODN.NE.0 ) THEN
             IF (IPRINT > 0 ) THEN
-              WRITE (IUN,'(a,i3,2f21.15)') 'a bit shifted position'
-     &             ,IODN, REAL(DEMIN),REAL(RAD)
+              WRITE (IUN,'(a,i3,f21.15, 3f21.15)')
+     &             'a bit shifted position'
+     &             ,IODN, REAL(RAD), VV
               WRITE (IUN,99001) 'OLD:',VE(1,1),VE(2,1)/BOA,VE(3,1)/COA
             END IF
             VE(1,1) = VE(1,1) + VV(1)/(IODN+1)
@@ -304,11 +306,14 @@ C         print*,'in=',in,vv
      &              'rad,radtst',RAD*ALAT,RADNEW*ALAT
             RAD = RADNEW
             IF ( ITAV.LE.5 ) GOTO 150   ! to avoide infinite cycle
-            IF (IPRINT > 0 )
-     >          WRITE (IUN,*) 'can not find averaged position'
-            EMPTY = -1
-            RETURN
-         ELSE IF ( DEMIN.LT.2.D0*RAD ) THEN
+            IF ((VV(1)**2 + VV(2)**2 + VV(3)**2) .gt. 1e-24) THEN
+               IF (IPRINT > 0 )
+     >             WRITE (IUN,*) 'can not find averaged position'
+               EMPTY = -1
+               RETURN
+            END IF
+         END IF
+         IF ( DEMIN.LT.2.D0*RAD ) THEN
                                         ! overlapping spheres
             IF (IPRINT > 0 )
      &          WRITE (IUN,*) 'radius is decreased from',RAD,' to',
