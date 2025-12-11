@@ -115,7 +115,7 @@ def create_definition():
           }
 
           if c.MODE()=='CONST-E':
-            v = lambda v: np.array2string(np.array(v), precision=3, separator=", ")
+            v = lambda v: np.array2string(np.array(v), precision=3, separator=",")
             kw.update({
               'xticks' : [0., 1.],
               'xticklabels' : [ '' if c.VECK_START() is None else v(c.VECK_START()), v(c.VECK1()) ],
@@ -124,7 +124,9 @@ def create_definition():
               'yticks' : [1.],
               'yticklabels' : [ v(c.VECK2()) ],
             })
-            callback = None
+            def callback(ax):
+                ax.tick_params(axis='y', rotation=90)
+                ax.tick_params(axis='both', labelsize=8)
           else:
             kw.update({
               'ylabel' : r'$E-E_{\rm F}$ (eV)',
