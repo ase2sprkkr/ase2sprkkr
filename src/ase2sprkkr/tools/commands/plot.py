@@ -85,9 +85,11 @@ def run(args):
       except KeyError:
          raise ValueError(f"There is no value named '{name.upper()}' in the output file.")
       if not hasattr(val, 'plot'):
-         raise ValueError(f"Value '{name.upper()}' do not know, how it should be plotted.")
+         raise ValueError(f"Value '{name.upper()}' does not know, how it should be plotted.")
       val.plot(**kwargs)
   else:
+    if not hasattr(of, 'plot'):
+         raise ValueError(f"File '{of}' does not know, how it should be plotted.")
     of.plot(**kwargs)
 
 
