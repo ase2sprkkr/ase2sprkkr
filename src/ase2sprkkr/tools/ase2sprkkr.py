@@ -37,7 +37,7 @@ def run():
   parser.add_argument('--version', '-v', help='Print the version of ASE2SPRKKR.', action='store_true')
   parser.add_argument('--debug', '-G', help='Raise a debugger on an unhandled exception.', action='store_true')
   parser.add_argument('--profile', '-P', help='Run a python profiler on the command.', action='store_true')
-  parser.add_argument('--no-user-profile', '-U', help='Do not load the user profile file.', action='store_true')
+  #parser.add_argument('--no-user-profile', '-U', help='Do not load the user profile file.', action='store_true')
 
   subs = parser.add_subparsers( dest = 'ase2sprkkr_command', description='Run ase2sprkkr <subcommand> -h for futhrer info')
 
