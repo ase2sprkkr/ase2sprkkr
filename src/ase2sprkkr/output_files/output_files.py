@@ -135,7 +135,7 @@ class OutputFile(ConfigurationFile):
               return cls.unknown_output_file_definition.read_from_file(filename)
           except pp.ParseBaseException as e:
               raise Exception(f'Can not parse file: {filename}') from e
-      raise first or last or ValueError(f'File is not recognized as any known file type')
+      raise first or last or ValueError(f'File {filename} is not recognized as any known file type')
 
 
 class CommonOutputFile(OutputFile):
