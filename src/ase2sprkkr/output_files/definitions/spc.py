@@ -89,7 +89,7 @@ def create_definition():
       V('NP', int),
       V('COMMENT', Prefixed('#'), name_in_grammar=False),
       V('RAW_DATA', NumpyArray(written_shape=(-1,8)), name_in_grammar=False),
-      GV('MODE', lambda c,k=None: 'energy' if c.NE() >= 1 else 'kx_ky'),
+      GV('MODE', lambda c,k=None: 'energy' if c.NE() > 1 else 'kx_ky'),
       *switch('MODE', {
         'energy': [
           NV('THETA', 'RAW_DATA', i(0), ('NE', 'NT')),
