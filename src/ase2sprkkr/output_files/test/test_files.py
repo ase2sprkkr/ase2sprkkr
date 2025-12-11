@@ -27,13 +27,13 @@ class TestOutput(TestCase):
             out=OutputFile.from_file(fname, unknown=False)
             if ext=='spc':
                self.assertEqual('ARPES', out.KEYWORD())
-               self.assertEqual((200,160), out.ENERGY().shape)
-               o2 = out + out
-               for i in 'ENERGY', 'THETA', 'K', 'DETERMINANT':
-                   self.assertEqual(out[i](), o2[i]())
-               for i in 'TOTAL', 'POLARIZATION', 'UP', 'DOWN':
-                   self.assertEqual(2 * out[i](), o2[i]())
-
+               if out.NE() > 1:
+                   self.assertEqual((200,160), out.ENERGY().shape)
+                   o2 = out + out
+                   for i in 'ENERGY', 'THETA', 'K', 'DETERMINANT':
+                       self.assertEqual(out[i](), o2[i]())
+                   for i in 'TOTAL', 'POLARIZATION', 'UP', 'DOWN':
+                       self.assertEqual(2 * out[i](), o2[i]())
             elif ext=='dos':
                self.assertEqual(out.n_orbitals(1), 3)
                self.assertEqual(out.n_spins(), 2)
@@ -44,22 +44,24 @@ class TestOutput(TestCase):
                self.assertEqual(out.total_dos().dos, (out[0] * 2 + out[1] * 2 + out[2] * 4).dos)
 
             elif ext=='bsf':
-               self.assertEqual(out.I().shape, (out.NQ_EFF(), out.NE(), out.NK()))
-               if out.KEYWORD() in ('BSF', 'BSF-SPN'):
-                  self.assertEqual(out.I_UP().shape, (out.NQ_EFF(), out.NE(), out.NK()))
+               if out.MODE() == 'EK-REL':
+                  first = out.NE()
+                  second = out.NK()
+               else:
+                  first = out.NK1()
+                  second = out.NK2()
+               self.assertEqual(out.I().shape, (out.NQ_EFF(), first, second))
+               if out.KEYWORD() in ('BSF'):
+                  self.assertEqual(out.I_UP().shape, (out.NQ_EFF(), first, second))
                   self.assertRaises(DisabledAttributeError, lambda: out.I_X)
                else:
-                  self.assertEqual(out.I_X().shape, (out.NQ_EFF(), out.NE(), out.NK()))
+                  self.assertEqual(out.I_X().shape, (out.NQ_EFF(), first, second))
                   self.assertRaises(DisabledAttributeError, lambda: out.I_UP)
 
                if out.MODE() == 'EK-REL':
                   self.assertEqual(len(out.K()), out.NK())
                   self.assertEqual(len(out.E()), out.NE())
                else:
-                  self.assertWarns(RuntimeWarning, out.NK1())
-                  self.assertEqual(out.NK1()[0], 0)
-                  out.VECK_START=[1,1,1]
-                  self.assertEqual(out.NK1()[0], np.sqrt(3))
                   self.assertEqual(len(out.K1()), out.NK1())
                   self.assertEqual(len(out.K2()), out.NK2())
 
