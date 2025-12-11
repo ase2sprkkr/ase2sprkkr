@@ -50,10 +50,15 @@ class BSFOutputFile(CommonOutputFile, Arithmetic):
          """ Check, that the file can be summed/subtracked from an other file """
          assert self.MODE() == other.MODE()
          assert self.KEYWORD() == other.KEYWORD()
-         for i in ['SHAPE','NQ_EFF', 'NK2']:
+         for i in ['SHAPE','NQ_EFF']:
              assert self[i]() == other[i]()
          if self.MODE() == 'EK_REL':
+             assert self.NK() == other.NK() and self.NE() == other.NE()
              assert np.allclose(self.K(), other.K())
+         else:
+             assert self.NK1() == other.NK1() and self.NK2() == other.NK2()
+             assert np.allclose(self.VECK1(), other.VECK1())
+             assert np.allclose(self.VECK2(), other.VECK2())
 
 
 class BSFDefinition(OutputFileDefinition):
@@ -104,27 +109,34 @@ def create_definition():
               'vmin' : vmin,
               'vmax' : vmax,
               'colormap' : colormap,
-              'xticks' : np.insert(k[[x - 1 for x in c.INDKDIR()]], 0, 0),
-              'xticklabels' : [],
-              'xlabel' : r'K',
               'colorbar' : True,
               'title' : title,
               'show_zero_line' : fermi,
           }
 
           if c.MODE()=='CONST-E':
+            v = lambda v: np.array2string(np.array(v), precision=3, separator=", ")
             kw.update({
-              'ylabel' : r'$E-E_{\rm F}$ (eV)',
-              'yrange' : (c.E[0], c.E[-1]),
+              'xticks' : [0., 1.],
+              'xticklabels' : [ '' if c.VECK_START() is None else v(c.VECK_START()), v(c.VECK1()) ],
+              'xlabel' : r'Kx',
+              'ylabel' : r'Ky',
+              'yticks' : [1.],
+              'yticklabels' : [ v(c.VECK2()) ],
             })
+            callback = None
           else:
             kw.update({
-              'ylabel' : r'$E-E_{\rm F}$ (eV)'
+              'ylabel' : r'$E-E_{\rm F}$ (eV)',
+              'xticks' : np.insert(k[[x - 1 for x in c.INDKDIR()]], 0, 0),
+              'xticklabels' : [],
+              'xlabel' : r'K',
             })
 
-          def callback(ax):
-              for index in c.INDKDIR()[:-1]:
-                  ax.plot([k[index - 1],k[index - 1]],[mesh[1,0,1], mesh[1,-1,1]],color='black',lw=0.5)
+            def callback(ax):
+                for index in c.INDKDIR()[:-1]:
+                    ax.plot([k[index - 1],k[index - 1]],[mesh[1,0,1], mesh[1,-1,1]],color='black',lw=0.5)
+
 
           kw.update(kwargs)
           colormesh(*mesh, data, callback=callback, **kw)
@@ -132,12 +144,6 @@ def create_definition():
         return plot
 
     reorder = (1, 0, 2)
-
-    def init_veck_start(option):
-        warnings.warn("VECK_START attribute was not set! It should be set to the KA attribute "
-        "of the input file, however, this value is not available in the BSF file, so it is inited "
-        "to the [0,0,0] vector. K-point coordinates for CONST-E mode will can be wrong.")
-        return [0,0,0]
 
     @lru_cache(maxsize=2)
     def k_points(start, end, num):
@@ -151,10 +157,10 @@ def create_definition():
         def index(data, c):
           """
           Returns data in the shape
-          ('NE/NK1','NQ_EFF', 'NK2')
+          ('NE/NK1','NQ_EFF', 'NK(2)')
           for a given type.
           Reorder parameter then change the order of the axes to
-          ('NQ_EFF', 'NE/NK1', 'NK2')
+          ('NQ_EFF', 'NE/NK1', 'NK(2)')
 
           Data structure:
             IX,Y,Z (BSF-SPOL/SPN)
@@ -168,19 +174,21 @@ def create_definition():
                      NK, NQ, NK   types(I)
           """
           nq=c.NQ_EFF()
-          nk2=c.NK2()
+
+          ekrel = c.MODE() == 'EK-REL'
+          nk2=c.NK() if ekrel else c.NK2()
           if c.KEYWORD() == 'BSF':
-             nk1 = c.NE() if c.MODE() == 'EK-REL' else c.NK1()
+             nk1 = c.NE() if ekrel else c.NK1()
              limit = nq * nk1 * nk2 * 2
              if type >= 0:
                 return data[:limit].reshape(nk1, 2, nq, nk2)[:,type]
              else:
                 return data[limit:].reshape(nk1,nq,nk2)
           else:
-             if c.MODE() == 'EK-REL':
+             if ekrel:
                 return data.reshape(c.NE(), 4, nq, nk2)[:,type + 1]
              else:
-                return data.reshape(4, c.NK1(), nq, nk2)[:,type + 1]
+                return data.reshape(4, c.NK1(), nq, nk2)[type + 1]
         return index
 
     norm = np.linalg.norm
@@ -191,7 +199,7 @@ def create_definition():
       V('MODE', Keyword('EK-REL', 'CONST-E')),
       *switch('MODE', {
           'EK-REL' : [
-              V('NE2', int, written_name='NE', info="Number of energies (the second axis)"),
+              V('NE_a', int, written_name='NE', info="Number of energies (the second axis)", is_hidden=True),
               V('NK', int, info="Number of K points (the same as NK2)"),
               Separator(),
               *gather(
@@ -205,7 +213,7 @@ def create_definition():
               Separator(),
               V('INDKDIR', int, is_repeated=True),
               Separator(),
-              V('NK2', int, written_name='NK', info="Number of K points (the last axis)"),
+              V('NK_a', int, written_name='NK', info="Number of K points (the last axis)", is_hidden=True),
               V('K', NumpyArray(written_shape=(-1,1), shape=(-1,), lines='NK'), name_in_grammar=False),
               Separator(),
               V('E', Array(float), default_value_from_container=lambda o:
@@ -213,23 +221,24 @@ def create_definition():
             ],
           'CONST-E' : [
               V('NK1', int, info='Number of K points (the first axis)'),
-              V('NK2', int, info='Number of K points (the first axis)'),
+              V('NK2', int, info='Number of K points (the second axis)'),
               V('ERYD', Array(float, length=2)),
-              V('VECK_START', Array(float, length=3), is_stored=False, default_value=init_veck_start, init_by_default=True),
-              V('NK1_1', int, written_name='NK1', is_hidden=True),
+              Separator(),
+              V('VECK_START', Array(float, length=3), is_stored=False, is_optional=True),
+              V('NK1_a', int, written_name='NK1', is_hidden=True),
               V('VECK1', Array(float, length=3)),
-              V('NK2_1', int, written_name='NK2', is_hidden=True),
+              V('NK2_a', int, written_name='NK2', is_hidden=True),
               V('VECK2', Array(float, length=3)),
               Separator(),
               V('K1', Array(float), init_by_default=True, default_value_from_container=lambda o:
-                 k_points(norm(o.VECK_START()),
-                          norm(o.VECK1()),
-                          norm(o.NK1()),
+                 k_points(0.,
+                          1.,
+                          o.NK1(),
                  ), is_stored=False, info='First axis for the data'),
               V('K2', Array(float), init_by_default=True, default_value_from_container=lambda o:
-                 k_points(norm(o.VECK_START()),
-                          norm(o.VECK2()),
-                          norm(o.NK2()),
+                 k_points(0.,
+                          1.,
+                          o.NK2(),
                  ), is_stored=False, info='Second axis for the data'),
           ]}
       ),
