@@ -8,6 +8,7 @@ import functools
 import subprocess
 import os
 import numpy as np
+from threading import Thread
 from .decorators import maybeclassmethod
 
 
@@ -112,7 +113,7 @@ class ProcessOutputReader:
 
         import logging
         logging.getLogger("asyncio").setLevel(logging.WARNING)
-        out = asyncio.run( self.run_subprocess(read_args) )
+        out = run_coro_sync( self.run_subprocess, read_args )
       finally:
         if self.outfile:
            self.outfile.close()
@@ -259,3 +260,38 @@ async def readline_until(stdout, cond, can_end=True):
             raise EOFError()
         if cond(line):
             return line.decode('utf8')
+
+
+def run_coro_sync(coro_func, *args):
+    """
+    Run an async coroutine from a synchronous context,
+    even if an event loop is already running.
+    `coro_func` must be an async function, not a coroutine object.
+    """
+    coro = lambda: coro_func(*args)
+
+    try:
+        # Is there a running event loop?
+        asyncio.get_running_loop()
+
+        # YES → must run in another thread
+        result = []
+        exc = []
+
+        def runner():
+            try:
+                result.append(asyncio.run(coro()))
+            except Exception as e:
+                exc.append(e)
+
+        t = Thread(target=runner)
+        t.start()
+        t.join()
+
+        if exc:
+            raise exc[0]
+        return result[0]
+
+    except RuntimeError:
+        # NO loop running → direct run is safe
+        return asyncio.run(coro())
