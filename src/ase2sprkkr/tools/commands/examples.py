@@ -14,17 +14,42 @@ sys.path.append(root_path)
 
 from ...common.tools import main  # NOQA
 
-help='Show path to the examples.'
-description=''
-
+help="Show path to the examples, or example itself, or copy a given example."
+description = "See also the 'shell -e' subcommand for interactivelly running the example"
 
 def parser(parser):
-    pass
-
+    parser.add_argument('example', type=int, nargs='?', help='The number of the example to print. If ommited')
+    parser.add_argument('-c', '--copy', help='Copy the example to a given dir', action='store_true')
+    parser.add_argument('-p', '--path', help='Print a path to the example(s)', action='store_true')
 
 def run(args):
-    import ase2sprkkr.examples as e
-    print(os.path.dirname(e.__file__))
+    from ase2sprkkr.gui import examples
+
+    if not args.example:
+        if not args.path:
+            print("Examples dir: ", end='')
+        print(examples.examples_dir())
+        if args.path:
+            return
+        print("")
+
+        exs = examples.list_of_examples()
+        print(f"{'NAME':<30} {'SCRIPT':<20} DESCRIPTION")
+        for e in exs:
+            print(f"{e.name:<30} {e.main_script.name:<20} {e.short_docstring or ''}")
+        return
+
+    example = examples.Example.by_number(args.example)
+
+    show = True
+    if args.copy:
+        example.copy(args.copy)
+        show = False
+    if args.path:
+        print(example.dir)
+        show = False
+    if show:
+        print(example.source())
 
 
 if __name__ == "__main__":
