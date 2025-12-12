@@ -45,6 +45,8 @@ class Example:
         # Copy contents of example dir → destination
         for item in self.dir.iterdir():
             dst = dest_dir / item.name
+            if item.name.startswith('__'):
+                continue
             if item.is_dir():
                 shutil.copytree(item, dst, dirs_exist_ok=True)
             else:

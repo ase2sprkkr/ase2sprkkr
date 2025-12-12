@@ -19,7 +19,7 @@ description = "See also the 'shell -e' subcommand for interactivelly running the
 
 def parser(parser):
     parser.add_argument('example', type=int, nargs='?', help='The number of the example to print. If ommited')
-    parser.add_argument('-c', '--copy', help='Copy the example to a given dir', action='store_true')
+    parser.add_argument('-c', '--copy', help='Copy the example to a given dir', type=str)
     parser.add_argument('-p', '--path', help='Print a path to the example(s)', action='store_true')
 
 def run(args):
