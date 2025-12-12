@@ -17,6 +17,9 @@ from .potentials.potentials import Potential  # NOQA: F401, E402
 """ An extension of ASE atoms object """
 from .sprkkr.sprkkr_atoms import SPRKKRAtoms  # NOQA: F401, E402
 
+""" For promoting ASE atoms to use ASE2SPRKKR extensions"""
+promote_ase_atoms = SPRKKRAtoms.promote_ase_atoms
+
 """ SPRKKR Output File """
 from .output_files.output_files import OutputFile  # NOQA: F401, E402
 
