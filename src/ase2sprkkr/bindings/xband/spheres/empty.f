@@ -102,7 +102,7 @@ C Local variables
 C
       REAL*8 ANG(3),CS,CVOL,DEMIN,DEMAX,EPS_ANG,EPS_ANGMAX,PI43,RAD
       REAL*8 RADNEW,SM,SMN,SSM,SVOLA,SVOLE
-      REAL*8 VE(3,48),VSHIFT(3),VV(3),VVF(3)
+      REAL*8 VE(3,48),VSHIFT(3),VV(3),VVF(3),VVS(3)
       REAL*8 P(3),PSH(3)
       REAL*8 DPI,TRNT
       INTEGER I,IATOM,IG,IIN,IN,INVMAX,IODN,ISORT,ITAV,ITER,IUN,J,K,
@@ -248,12 +248,19 @@ C
          IN = 1
          EPS_ANGMAX = 0.D0
 C        print*,(ve(i,1),i=1,3)
+
+         VVS(1) = 0
+         VVS(2) = 0
+         VVS(3) = 0
+         IODN = 0
+         DEMIN = 1.D10
+         DEMAX = 0D0
+
          DO IG = 1,NG
             CALL VEC(VVF,VC(1,IG),P,GM(1,1,IG))
             VV(1) = VVF(1)*AVC(1) + VVF(2)*BVC(1) + VVF(3)*CVC(1)
             VV(2) = VVF(1)*AVC(2) + VVF(2)*BVC(2) + VVF(3)*CVC(2)
             VV(3) = VVF(1)*AVC(3) + VVF(2)*BVC(3) + VVF(3)*CVC(3)
-
 
 C           print*,vv
             DO IIN = 1,IN
@@ -272,44 +279,43 @@ C              print*,iin,eps_ang
             VE(1,IN) = VV(1)
             VE(2,IN) = VV(2)
             VE(3,IN) = VV(3)
-C         print*,'in=',in,vv
- 200     END DO
-         VV(1) = 0
-         VV(2) = 0
-         VV(3) = 0
-         IODN = 0
-         DEMIN = 1.D10
-         DEMAX = 0D0
-         DO IIN = 2,IN
-            ANG(1) = VE(1,IIN) - VE(1,1)
-            ANG(2) = VE(2,IIN) - VE(2,1)
-            ANG(3) = VE(3,IIN) - VE(3,1)
-            CALL SHORTN(ANG,ANG)
-            EPS_ANG = ANG(1)**2 + ANG(2)**2 + ANG(3)**2
+
             EPS_ANG = SQRT(EPS_ANG)
             IF ( EPS_ANG.LT.RAD*1.5D0 ) THEN
-               VV(1) = VV(1) + ANG(1)
-               VV(2) = VV(2) + ANG(2)
-               VV(3) = VV(3) + ANG(3)
+               VVS(1) = VVS(1) + ANG(1)
+               VVS(2) = VVS(2) + ANG(2)
+               VVS(3) = VVS(3) + ANG(3)
                IODN = IODN + 1
                DEMAX = MAX(DEMAX, EPS_ANG)
             ELSE
                DEMIN = MIN(EPS_ANG, DEMIN)
             END IF
-         END DO                         ! iin
+C         print*,'in=',in,vv
+ 200     END DO
+
          IF ( IODN.NE.0 ) THEN
             IF (IPRINT > 0 ) THEN
               WRITE (IUN,'(a,i3,f21.15, 3f21.15)')
      &             'a bit shifted position'
-     &             ,IODN, REAL(RAD), VV
+     &             ,IODN, REAL(RAD), VVS
               WRITE (IUN,99001) 'OLD:',VE(1,1),VE(2,1)/BOA,VE(3,1)/COA
             END IF
-            VE(1,1) = VE(1,1) + VV(1)/(IODN+1)
-            VE(2,1) = VE(2,1) + VV(2)/(IODN+1)
-            VE(3,1) = VE(3,1) + VV(3)/(IODN+1)
+            VE(1,1) = VE(1,1) + VVS(1)/(IODN+1)
+            VE(2,1) = VE(2,1) + VVS(2)/(IODN+1)
+            VE(3,1) = VE(3,1) + VVS(3)/(IODN+1)
             IF (IPRINT > 0 ) WRITE (IUN,99001)
      &              'new:',VE(1,1),VE(2,1)/BOA,VE(3,1)/COA
             CALL REGET_RE(TAU,ISB,SNEW,NATB,VSHIFT,VE(1,1),RADNEW)
+
+C           Update fractional coordinates P from finalized VE(:,1)
+            DO K = 1,3
+               P(K) = 0.D0
+               DO J = 1,3
+                  P(K) = P(K) + QLAT(K,J)*VE(J,1)
+               END DO
+               P(K) = P(K) - DNINT(P(K))
+            END DO
+
             IF (IPRINT > 0 ) WRITE (IUN,99001)
      &              'rad,radtst',RAD*ALAT,RADNEW*ALAT
             RAD = RADNEW
