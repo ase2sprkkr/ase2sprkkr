@@ -175,12 +175,11 @@ INTEGER FUNCTION EMPTY(IER, PPLAT, BAS, IS, ALAT, NATOM, &
             WRITE (IUN, *) 'skipped'
             PRINT *, 'RAD=', RAD*ALAT, ' RMINES=', RMINES
         END IF
+        EMPTY = IER
         GOTO 300
     END IF
 !
-    IF (IER /= 0) THEN
-        EMPTY = -IER
-    ELSE    
+    IF (IER == 0) THEN
         ISKIP(ITER) = 0
         IF (RAD .GT. RMAXES/ALAT) THEN
             IF (INVMAX .EQ. 0) THEN
