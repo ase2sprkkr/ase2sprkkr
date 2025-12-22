@@ -36,9 +36,9 @@ def empty_spheres_atoms(atoms, round_zero=True, **kwargs):
                         pbc = atoms.pbc,
                         cell = atoms.cell,
                         symmetry = False)
-    empty.positions = empty.get_scaled_positions(True) @ empty.cell
     if round_zero:
         empty.positions[np.abs(empty.positions) < 1e-15] = 0
+    empty.positions = empty.get_scaled_positions(True) @ empty.cell
     return empty
     # for i,radius in zip(empty.sites, res.radii):
     # not TO DO: set the radius of the sphere, since SPRKKR make it itself
