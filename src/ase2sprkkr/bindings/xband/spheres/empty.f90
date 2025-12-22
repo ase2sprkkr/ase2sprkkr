@@ -293,9 +293,7 @@ INTEGER FUNCTION EMPTY(IER, PPLAT, BAS, IS, ALAT, NATOM, &
         END IF
         DO IATOM = NATOMNEW + 1, NATOMNEW + IN
             ISNEW(IATOM) = NSORTNEW + 1
-            DO I = 1, 3
-                BASNEW(I, IATOM) = VE(I, IATOM - NATOMNEW) + VSHIFT(I)
-            END DO
+            BASNEW(:, IATOM) = VE(:, IATOM - NATOMNEW) + VSHIFT
             IF (IPRINT > 0) &
               &          WRITE (IUN, '(2x,3f15.8)') (BASNEW(I, IATOM), I=1, 3)
         END DO
