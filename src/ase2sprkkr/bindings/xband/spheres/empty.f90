@@ -505,15 +505,15 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
             P(3) = -N3 * ANC
             XYZ = matmul(PLAT, P)
             IC = -N3
-            cloop: DO WHILE (IC <= N3)
+            cloop: DO WHILE (IC < N3)
                 DMIN = 1.D10
                 DO I = 1, NATB
                     DIST2 = sum((XYZ - TAU(:, I))**2)
                     DD = SQRT(DIST2) - S(ISB(I))
                     IF (DD .LT. DMAX) THEN
-                        MOV = MAX(1, CEILING((DMAX - DD) / SHIFTL))
+                        MOV = MAX(1, CEILING((DMAX - DD - 0.001) / SHIFTL))
                         IC = IC + 2*MOV
-                        XYZ = XYZ + MOV * SHIFT  
+                        XYZ = XYZ + MOV * SHIFT
                         CYCLE cloop
                     END IF
                     DMIN = MIN(DD, DMIN)                    
