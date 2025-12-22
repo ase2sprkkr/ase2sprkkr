@@ -33,11 +33,18 @@ install(TARGETS symmetry
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/ase2sprkkr/bindings/xband)
 
 
-
-file(GLOB SPHERES_SOURCES "spheres/*.f")
-add_library(spheres_lib STATIC ${SPHERES_SOURCES})
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -finit-integer=0")
+# Include both fixed-form and free-form Fortran sources
+file(GLOB SPHERES_F_SOURCES "spheres/*.f90")
+file(GLOB SPHERES_F90_SOURCES "spheres/*.f90")
+add_library(spheres_lib STATIC ${SPHERES_F90_SOURCES})
 target_compile_definitions(spheres_lib PUBLIC MYLIB_STATIC_DEFINE)
 set_target_properties(spheres_lib PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+# Ensure free-form Fortran is recognized where needed
+foreach(src ${SPHERES_F90_SOURCES})
+  set_source_files_properties(${src} PROPERTIES Fortran_FORMAT FREE)
+endforeach()
 
 add_custom_command(
   OUTPUT spheres.c

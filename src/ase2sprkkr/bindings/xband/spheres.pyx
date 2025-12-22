@@ -102,7 +102,7 @@ def empty_spheres(
 
     #cdef int n_symops=point_symmetry.shape[1]
     cdef double ratio = to_bohr / alat
-    cdef double[:,:] cell = atoms.cell[:] * ratio
+    cdef double[:,:] cell = np.asarray(atoms.cell[:], order='C') * ratio
     cdef double[:,:] positions = atoms.positions * ratio
     cdef int32_t _verbose
 
@@ -111,8 +111,8 @@ def empty_spheres(
     else:
         _verbose = verbose
 
-    centres = np.empty((max_spheres, 3), dtype=np.double)
-    radii = np.empty(max_spheres+n, dtype=np.double)
+    centres = np.empty((max_spheres, 3), dtype=np.double, order='C')
+    radii = np.empty(max_spheres+n, dtype=np.double, order='C')
 
     cdef double[:,:] _centres = centres
     cdef double[:] _radii = radii
@@ -124,8 +124,8 @@ def empty_spheres(
     sp = atoms.spacegroup_info
     if sp and sp.dataset and sp.dataset.rotations is not None:
         d = sp.dataset
-        rotations = np.array(d.rotations, dtype=np.double)
-        translations = d.translations
+        rotations = np.array(d.rotations, dtype=np.double, order='C')
+        translations = np.ascontiguousarray(d.translations)
         n_symmetry_ops = len(translations)
         assert n_symmetry_ops == len(rotations)
         assert translations.shape[1] == 3
@@ -166,6 +166,8 @@ def empty_spheres(
     spheres = Atoms(cell=atoms.cell, pbc=atoms.pbc, positions=centres[:max_spheres])
     spheres.wrap()
     out = EmptySpheresResult(spheres.positions, radii[:max_spheres])
+    if verbose:
+      print(f"Spheres found {max_spheres}, ret {ret}")
     if return_atom_rws:
       return out, radii[max_spheres:max_spheres+len(atoms)]
     else:
