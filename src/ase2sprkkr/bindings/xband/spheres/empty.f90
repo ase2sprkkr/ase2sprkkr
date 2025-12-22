@@ -434,7 +434,7 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
     ! Local variables
     !
     DOUBLE PRECISION ANA, ANB, ANC, DD, DDMAX, DIAG, DIST2, DMAX, DMIN, D(3), P(3), &
-      &       XYZ(3), V(3)
+                     XYZ(3), V(3), PROJ
     INTEGER I, IA, IATOM, IB, IC, J, K
     !
     !*** End of declarations rewritten by SPAG
@@ -507,11 +507,14 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
             IC = -N3
             cloop: DO WHILE (IC < N3)
                 DMIN = 1.D10
-                DO I = 1, NATB
-                    DIST2 = sum((XYZ - TAU(:, I))**2)
-                    DD = SQRT(DIST2) - S(ISB(I))
+                DO I=1, NATB
+                    V = (XYZ - TAU(:, I))
+                    DIST2 = SQRT(sum(V**2))
+                    DD = DIST2 - S(ISB(I))
                     IF (DD .LT. DMAX) THEN
-                        MOV = MAX(1, CEILING((DMAX - DD - 0.001) / SHIFTL))
+                        ! jump to the end of the current coliding sphere
+                        proj  = DOT_PRODUCT(V, SHIFT) / dist2   ! change in dist per unit SHIFT
+                        MOV = MAX(1, CEILING((DMAX - DD - 0.00001) / proj))
                         IC = IC + 2*MOV
                         XYZ = XYZ + MOV * SHIFT
                         CYCLE cloop
