@@ -423,7 +423,8 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
     INTEGER IER, N1, N2, N3, NATB, NATOM, NPAT
     DOUBLE PRECISION RAD, SM
     DOUBLE PRECISION RES(3)
-    DOUBLE PRECISION PLAT(3, 3), BAS(3, *), S(*), S2(*), TAU(3, NPAT),SHIFT(3),SHIFTL
+    DOUBLE PRECISION PLAT(3, 3), BAS(3, *), S(*), S2(*), TAU(3, NPAT),SHIFT(3),SHIFTL, SHIFT2
+    DOUBLE PRECISION SISB(NPAT)
     INTEGER IS(NPAT), ISB(NPAT),MOV
     
     COMMON/IPRINT/IPRINT
@@ -432,7 +433,7 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
     ! Local variables
     !
     DOUBLE PRECISION ANA, ANB, ANC, DD, DDMAX, DIAG, DIST2, DMAX, DMIN, D(3), P(3), &
-                     XYZ(3), V(3), PROJ
+                     XYZ(3), V(3), PROJ, b,c, disc,r2
     INTEGER I, IA, IATOM, IB, IC, J, K
     !
     !*** End of declarations rewritten by SPAG
@@ -479,6 +480,7 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
                         END IF
                         TAU(:, NATB) = XYZ
                         ISB(NATB) = IS(IATOM)
+                        SISB(NATB) = S(ISB(NATB))
                     END IF
                 END DO                   ! iatom
             END DO                      ! k
@@ -494,7 +496,8 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
     !      npnt=0
 
     SHIFT(:) = 2.0D0 * ANC * PLAT(:, 3)
-    SHIFTL = SQRT(sum(shift**2))
+    !SHIFTL = SQRT(sum(shift**2))
+    SHIFT2 = sum(shift**2)*2
 
     DO IA = -N1, N1 - 1, 2
         P(1) = ANA*IA
@@ -507,12 +510,24 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
                 DMIN = 1.D10
                 DO I=1, NATB
                     V = (XYZ - TAU(:, I))
-                    DIST2 = SQRT(sum(V**2))
-                    DD = DIST2 - S(ISB(I))
+                    DIST2 = sum(V**2)
+                    DD = SQRT(DIST2) - SISB(I)
                     IF (DD .LT. DMAX) THEN
                         ! jump to the end of the current coliding sphere
-                        proj  = DOT_PRODUCT(V, SHIFT) / dist2   ! change in dist per unit SHIFT
-                        MOV = MAX(1, CEILING((DMAX - DD - 0.00001) / proj))
+
+                        !   Používá se kvadratická rovnice z geometrie ve 3D:
+                        !     |V + MOV*SHIFT| = R
+                        !   místo primitivního odhadu
+                        !     MOV = CEILING((DMAX - DD) / SHIFTL - 0.00001)
+                        b = 2.0D0*DOT_PRODUCT(V, SHIFT)
+                        R2 = (SISB(I) + DMAX)**2.0D0
+                        c = DIST2 - R2
+                        disc = b**2 - 2.0D0*SHIFT2*c
+
+                        ! vezmi kladný kořen
+                        MOV = CEILING( (-b + sqrt(disc)) / SHIFT2  - 0.00001)
+                        MOV = MAX(1, MOV)
+
                         IC = IC + 2*MOV
                         XYZ = XYZ + MOV * SHIFT
                         CYCLE cloop
