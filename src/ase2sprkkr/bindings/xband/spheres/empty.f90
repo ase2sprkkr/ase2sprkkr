@@ -425,7 +425,7 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
     INTEGER IER, N1, N2, N3, NATB, NATOM, NPAT
     DOUBLE PRECISION RAD, SM
     DOUBLE PRECISION RES(3)
-    DOUBLE PRECISION PLAT(3, 3), BAS(3, *), S(*), S2(*), TAU(3, NPAT)
+    DOUBLE PRECISION PLAT(3, 3), BAS(3, *), S(*), S2(*), TAU(3, NPAT),SHIFT(3)
     INTEGER IS(NPAT), ISB(NPAT)
     
     COMMON/IPRINT/IPRINT
@@ -493,17 +493,17 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
     ANC = 0.5D0/N3
     DMAX = 0
     !      npnt=0
+
+    SHIFT(:) = MATMUL(PLAT, (/0.D0,0.D0,ANC/))
+    
     DO IA = -N1, N1 - 1, 2
         P(1) = ANA*IA
         DO IB = -N2, N2 - 1, 2
             P(2) = ANB*IB
-            DO IC = -N3, N3 - 1, 2
-                !            npnt=npnt+1
-                P(3) = ANC*IC
-                !$$$            lg=ia.eq.-24.and.ib.eq.0.and.ic.eq.-72
-                XYZ = matmul(PLAT, P)
+            P(3) = -N3 * ANC
+            XYZ = matmul(PLAT, P)
 
-                !           if(lg)print*,'XYZ:',x,y,z
+            DO IC = -N3, N3 - 1, 2
                 DMIN = 1.D10
                 DO I = 1, NATB
                     DIST2 = sum((XYZ - TAU(:, I))**2)
@@ -516,6 +516,7 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
                     DMAX = DMIN
                     RES(:) = P(:)
                 END IF
+                XYZ = XYZ + SHIFT
 20          END DO                        ! ic
         END DO                          ! ib
     END DO                            ! ia
