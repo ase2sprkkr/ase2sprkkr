@@ -395,6 +395,7 @@ INTEGER FUNCTION EMPTY(IER, PPLAT, BAS, IS, ALAT, NATOM, &
         !        print*,'SES::',ses(isort),isort
     END DO
     CVOL = TRNT(PLAT(:, 1), PLAT(:, 2), PLAT(:, 3))*ALAT**3
+    CVOL = ABS(CVOL)
     CS = CVOL/(SVOLA + SVOLE)
     SVOLA = SVOLA*CS
     SVOLE = SVOLE*CS
