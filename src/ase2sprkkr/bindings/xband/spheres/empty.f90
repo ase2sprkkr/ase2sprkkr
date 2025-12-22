@@ -495,7 +495,7 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
     DMAX = 0
     !      npnt=0
 
-    SHIFT(:) = MATMUL(PLAT, (/0.D0,0.D0,2*ANC/))
+    SHIFT(:) = 2.0D0 * ANC * PLAT(:, 3)
     SHIFTL = SQRT(sum(shift**2))
 
     DO IA = -N1, N1 - 1, 2
