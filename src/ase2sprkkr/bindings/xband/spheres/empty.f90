@@ -424,8 +424,8 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
     INTEGER IER, N1, N2, N3, NATB, NATOM, NPAT
     DOUBLE PRECISION RAD, SM
     DOUBLE PRECISION RES(3)
-    DOUBLE PRECISION PLAT(3, 3), BAS(3, *), S(*), S2(*), TAU(3, NPAT),SHIFT(3)
-    INTEGER IS(NPAT), ISB(NPAT)
+    DOUBLE PRECISION PLAT(3, 3), BAS(3, *), S(*), S2(*), TAU(3, NPAT),SHIFT(3),SHIFTL
+    INTEGER IS(NPAT), ISB(NPAT),MOV
     
     COMMON/IPRINT/IPRINT
     INTEGER IPRINT   
@@ -466,9 +466,9 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
                     DD = dot_product(XYZ, XYZ)
                     IF (DD .LT. DDMAX) THEN
                         NATB = NATB + 1
-                        TAU(:, NATB) = XYZ
                         IF (NATB .GT. NPAT) THEN
                             IER = -3
+                            RAD = 0.0D0
                             IF ( IPRINT > 0 ) THEN
                                 PRINT *, 'IER=', IER
                                 PRINT *, &
@@ -478,6 +478,7 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
                             END IF
                             RETURN
                         END IF
+                        TAU(:, NATB) = XYZ
                         ISB(NATB) = IS(IATOM)
                     END IF
                 END DO                   ! iatom
@@ -493,30 +494,37 @@ SUBROUTINE GETEPOS(NPAT, PLAT, BAS, NATOM, IS, TAU, NATB, ISB, S, S2, N1, &
     DMAX = 0
     !      npnt=0
 
-    SHIFT(:) = MATMUL(PLAT, (/0.D0,0.D0,ANC/))
-    
+    SHIFT(:) = MATMUL(PLAT, (/0.D0,0.D0,2*ANC/))
+    SHIFTL = SQRT(sum(shift**2))
+
     DO IA = -N1, N1 - 1, 2
         P(1) = ANA*IA
         DO IB = -N2, N2 - 1, 2
             P(2) = ANB*IB
             P(3) = -N3 * ANC
             XYZ = matmul(PLAT, P)
-
-            DO IC = -N3, N3 - 1, 2
+            IC = -N3
+            cloop: DO WHILE (IC <= N3)
                 DMIN = 1.D10
                 DO I = 1, NATB
                     DIST2 = sum((XYZ - TAU(:, I))**2)
-                    IF (DIST2 .LT. S2(ISB(I))) GOTO 20
                     DD = SQRT(DIST2) - S(ISB(I))
-                    IF (DD .LT. DMAX) GOTO 20
+                    IF (DD .LT. DMAX) THEN
+                        MOV = MAX(1, CEILING((DMAX - DD) / SHIFTL))
+                        IC = IC + 2*MOV
+                        XYZ = XYZ + MOV * SHIFT  
+                        CYCLE cloop
+                    END IF
                     DMIN = MIN(DD, DMIN)                    
                 END DO                   ! i
                 IF (DMIN .GT. DMAX) THEN
                     DMAX = DMIN
+                    P(3) = ANC*IC
                     RES(:) = P(:)
                 END IF
                 XYZ = XYZ + SHIFT
-20          END DO                        ! ic
+                IC = IC + 2
+            END DO cloop
         END DO                          ! ib
     END DO                            ! ia
     !      print*,iter,'MAX is:',DMAX,iae,ibe,ice,pae,pbe,pce
