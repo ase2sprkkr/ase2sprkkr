@@ -3,7 +3,7 @@ set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -std=legacy -finit-integer=0")
 
 # Debug-specific options
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -std=legacy -O0 -finit-local-zero -g")
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -std=legacy -O0 -finit-local-zero -g -fcheck=all")
   add_compile_options(-g)
 endif()
 
