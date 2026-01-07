@@ -171,6 +171,10 @@ class SPRKKRAtoms(Atoms):
        properties (symbols, occupancy, spacegroup_info) according to the sites. """
        self.set_sites(v)
 
+   @sites.deleter
+   def sites(self):
+       del self.arrays[SPRKKRAtoms.sites_array_name]
+
    def are_sites_inited(self):
        return SPRKKRAtoms.sites_array_name in self.arrays
 
