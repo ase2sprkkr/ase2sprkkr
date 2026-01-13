@@ -213,3 +213,9 @@ class AtomsRegion:
   @property
   def spacegroup_info(self):
       return self.atoms.spacegroup_info.for_region(self)
+
+  def copy_for_atoms(self, atoms, slice=None):
+      region = AtomsRegion(self.name, self.slice if slice is None else slice,
+                           self.cell, self.pbc, self.inherit_cell,
+                           atoms)
+      return region
