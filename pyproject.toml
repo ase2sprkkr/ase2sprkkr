@@ -55,6 +55,12 @@ Homepage = "https://ase2sprkkr.github.io/ase2sprkkr/"
 [project.entry-points."ase.plugins"]
 ase2sprkkr = "ase2sprkkr.ase.register"
 
+[project.entry-points."ase.ioformats"]
+SPRKKR = "ase2sprkkr.ase.register:SPRKKRFormat"
+
+[project.entry-points."ase.calculators"]
+SPRKKR = "ase2sprkkr.ase.register"
+
 [tool.scikit-build]
 logging.level = "DEBUG"
 ninja.make-fallback = false
