@@ -224,7 +224,7 @@ class InputParameters(ConfigurationFile):
         Default None means the directory, where the file is
       """
       directory = directory or os.path.dirname(filename)
-      return self.result_reader(directory=directory).read_from_file(filename)
+      return self.process_runner(directory=directory).read_from_file(filename).run()
 
   def executable_params(self, directory=None, ):
       """
