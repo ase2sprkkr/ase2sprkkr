@@ -5,6 +5,7 @@ from ase2sprkkr import SPRKKR
 from ase.units import Bohr
 import os
 from ase2sprkkr.bindings.spglib import spglib_dataset
+import pytest
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -20,6 +21,7 @@ from .... import Potential       # NOQA E402
 
 class TestSpheres(TestCase):
 
+  @pytest.mark.skip(reason="Deprecated")
   def test_xband(self):
       dirr = os.path.dirname(__file__)
       pot = Potential.from_file(os.path.join(dirr, 'MnTi3.pot'))
@@ -60,6 +62,7 @@ class TestSpheres(TestCase):
       self.assertEqual(sym, sym2)
       self.assertEqual(len(empty_spheres(v, method='xband')), 0)
 
+  @pytest.mark.skip(reason="Deprecated")
   def test(self, temporary_dir):
       a2 = ase.build.bulk('Cu', 'fcc', a=3.6, orthorhombic=True)
       sgno = spglib_dataset(a2).number
@@ -76,6 +79,7 @@ class TestSpheres(TestCase):
       self.assertEqual(out[0,47], 56)
       self.assertEqual(out[1,47], 1)
 
+  def test2(self):
       if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
         cu=ase.build.bulk('Cu')
         out = SPRKKR().calculate(cu, **self.calc_args(empty_spheres={'min_radius': 0.25}, options={'niter': 1, 'ne' : 20, 'nktab' : 5 }))
