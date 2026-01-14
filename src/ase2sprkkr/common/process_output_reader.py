@@ -23,6 +23,24 @@ class ProcessOutputReader:
   def __init__(self, print_output=False, read_callback=None):
       self.set_print_output(print_output)
       self.read_callback = read_callback
+      self._stopped = False
+
+  def stop_the_process(self):
+      self._stopped = True
+      self._kill()
+
+  def _kill(self):
+      if self.proc and self.proc.returncode is None:
+          self.proc.kill()      # SIGKILL on Unix, TerminateProcess on Windows
+      proc.terminate()         # SIGTERM on Unix, CTRL-BREAK-ish on Windows
+
+      try:
+          # 2) Give it time to clean up
+          run_coro_sync(asyncio.wait_for(proc.wait(), 0.1))
+          return
+      except asyncio.TimeoutError:
+          pass
+      proc.kill()          # SIGKILL / TerminateProcess
 
   async def run_subprocess(self, read_args=[]):
 
@@ -31,9 +49,15 @@ class ProcessOutputReader:
          os.chdir(self.directory)
       else:
          dr = None
+      if self._stopped:
+          raise asyncio.CancelledError()
+
       self.proc = await asyncio.create_subprocess_exec(*self.cmd,
                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                         **self.kwargs)
+      if self._stopped:
+          self._kill()
+
       if dr:
          os.chdir(dr)
 
