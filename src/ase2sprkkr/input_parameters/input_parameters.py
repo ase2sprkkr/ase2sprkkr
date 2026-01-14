@@ -96,7 +96,7 @@ class InputParameters(ConfigurationFile):
   def run_process(self, calculator, input_file, output_file, directory='.',
                   print_output=None, read_callback=None, run_async=False,
                   executable_suffix=None, executable_dir=None,
-                  mpi=None, gdb=False):
+                  mpi=None, callback=None, gdb=False):
       """
       Run the process that calculate the task specified by this input paameters
 
@@ -126,6 +126,9 @@ class InputParameters(ConfigurationFile):
         Postfix, appended to the name of the called executable (sometimes, SPRKKR executables are
         compiled so that the resulting executables has postfixies)
 
+      callback: Optional[callable]
+        A function, that will be called with the result object, when the calculation is finished.
+
       mpi: list or str or bool
         Run the task using mpi? See :func:`ase2sprkkr.config.mpi_runner` for the possible values.
 
@@ -151,7 +154,12 @@ class InputParameters(ConfigurationFile):
              executable = os.path.join(executable_dir, executable)
 
       runner = self.process_runner(calculator, print_output, read_callback, directory)
+
       try:
+        def cleanup(out):
+            input_file.close()
+            if callback:
+                callback(out)
 
         mpi = mpi_runner(mpi) if self._definition.mpi else None
         if mpi:
@@ -172,7 +180,7 @@ class InputParameters(ConfigurationFile):
              else:
                 print(f"run <{input_file.name}")
              executable = [ 'gdb' ] + executable
-        out = runner.create_process(executable, output_file, stdin = stdin, input_file=input_file.name)
+        out = runner.create_process(executable, output_file, stdin = stdin, input_file=input_file.name, callback=cleanup)
         if not run_async:
             out = out.run()
         return out
@@ -184,8 +192,6 @@ class InputParameters(ConfigurationFile):
                  'MPI with mpi=False argument of calculate method (or set ase2sprkkr.config.running.mpi = False)\n\n';
         e.strerror = add + "SPRKKR cannot be run due to the following error: \n" + e.strerror
         raise
-      finally:
-        input_file.close()
 
   def process_runner(self, calculator=None, print_output=False, read_callback=None, directory=None):
       """ Return the result readed: the class that parse the output

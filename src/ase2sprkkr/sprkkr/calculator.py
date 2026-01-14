@@ -715,6 +715,7 @@ class SPRKKR(Calculator):
                   print_output=None, read_callback:Optional[callable]=None, run_async:bool=False,
                   executable_suffix=None,
                   executable_dir=None,
+                  callback=None,
                   gdb=False):
         """
         Do the calculation, return various results.
@@ -784,7 +785,7 @@ class SPRKKR(Calculator):
                                 run_async=run_async,
                                 executable_suffix=executable_suffix,
                                 executable_dir=executable_dir,
-                                mpi=mpi, gdb=gdb
+                                mpi=mpi, callback=callback, gdb=gdb
                                )
           if input_parameters.TASK.TASK() == 'SCF' and not potential and not atoms:
               try:
@@ -810,6 +811,7 @@ class SPRKKR(Calculator):
                   options={}, task=None,
                   print_output=None, read_callback:Optional[callable]=None, run_async:bool=False,
                   executable_suffix=None,
+                  callback=None,
                   executable_dir=None,
                   gdb=False):
         """
@@ -852,6 +854,14 @@ class SPRKKR(Calculator):
         """
         # There is no need to call this
         # super().calculate(atoms, properties, system_changes)
+        def cleanup(out):
+            if callback:
+                callback(out)
+            if hasattr(out, 'energy'):
+                self.results.update({
+                    'energy' : out.energy,
+                })
+
         out = self.run(
                   atoms, input_parameters, potential,
                   input_file, potential_file, output_file,
@@ -859,15 +869,11 @@ class SPRKKR(Calculator):
                   options, task,
                   empty_spheres,
                   mpi,
-                  print_output,
-                  read_callback,
+                  print_output, read_callback, run_async,
                   executable_suffix, executable_dir,
+                  cleanup,
                   gdb
         )
-        if hasattr(out, 'energy'):
-            self.results.update({
-              'energy' : out.energy,
-            })
         return out
 
     def scf(self, *args, **kwargs):

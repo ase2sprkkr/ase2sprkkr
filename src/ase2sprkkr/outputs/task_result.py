@@ -104,15 +104,24 @@ class TaskResult:
 
 class KkrProcess:
 
-  def __init__(self, runner, output_reader, coroutine):
+  def __init__(self, runner, output_reader, coroutine, callback=None):
       self.runner = runner
       self.output_reader = output_reader
       self.coroutine = coroutine
+      self.callback = callback
 
   def run(self):
-      result, error, return_code = run_coro_sync(self.coroutine)
-      result.complete(error, return_code)
+      result = None
+      try:
+        result, error, return_code = run_coro_sync(self.coroutine)
+        result.complete(error, return_code)
+      finally:
+        if self.callback:
+            self.callback(result)
       return result
+
+  def stop_the_process(self):
+       self.output_reader.stop_the_process()
 
   async def run_async(self):
       await self.coroutine
@@ -145,15 +154,15 @@ class KkrProcessRunner:
                                input_file = input_file
                                )
 
-  def _create_process(self, coroutine, result):
+  def _create_process(self, coroutine, result,callback=None):
       """ Create an object that can run the desired process (either reading from file or running a process) """
-      return KkrProcess(self, self.reader, coroutine)
+      return KkrProcess(self, self.reader, coroutine, callback=callback)
 
-  def create_process(self, cmd, outfile, input_file=None, **kwargs):
+  def create_process(self, cmd, outfile, input_file=None, callback=None, **kwargs):
       """ Create an object that takes care of running the command and parsing the results """
       result = self._create_result(getattr(outfile, "name", None), input_file)
       coroutine = self.reader.run_async(cmd, outfile, self.directory, [result], **kwargs)
-      return self._create_process(coroutine, result)
+      return self._create_process(coroutine, result, callback=callback)
 
   def read_from_file(self, output, error=None, return_code=0, input_file=None):
       """ Creates an object that takes care of reading and parsing of the output of a sprkkr process """
