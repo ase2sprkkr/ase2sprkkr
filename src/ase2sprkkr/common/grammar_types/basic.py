@@ -377,6 +377,13 @@ class Keyword(GrammarType):
 
     super().__init__(**kwargs)
 
+  def items(self):
+      if self.choices is not None:
+          yield from self.choices.items()
+      else:
+          for i in self.keywords:
+              yield i, None
+
   def _validate(self, value, why='set'):
     return value in self.keywords or "Required one of [" + "|".join(self.keywords) + "]"
 
