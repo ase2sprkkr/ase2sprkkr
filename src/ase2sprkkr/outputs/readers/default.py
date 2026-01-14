@@ -1,7 +1,7 @@
 """ Common parent for all specialized readers and outputs and
 default reader for the tasks without specialized reader and output. """
 
-from ..task_result import TaskResult, KkrProcess
+from ..task_result import TaskResult, KkrProcessRunner
 from ..sprkkr_output_reader import SprKkrOutputReader
 
 
@@ -18,9 +18,10 @@ class DefaultOutputReader(SprKkrOutputReader):
       result.output_lines = []
       async for line in stdout:
             result.output_lines.append(line.decode('utf8').rstrip())
+      return result
 
 
-class DefaultProcess(KkrProcess):
+class DefaultProcessRunner(KkrProcessRunner):
 
   result_class = DefaultResult
   reader_class = DefaultOutputReader

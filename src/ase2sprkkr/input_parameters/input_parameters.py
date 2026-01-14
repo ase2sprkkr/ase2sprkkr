@@ -10,7 +10,7 @@ import os
 import io
 import pkgutil
 import importlib
-from ..outputs.task_result import KkrProcess
+from ..outputs.task_result import KkrProcessRunner
 from . import definitions
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
@@ -94,7 +94,8 @@ class InputParameters(ConfigurationFile):
       return mpi and self._definition.mpi
 
   def run_process(self, calculator, input_file, output_file, directory='.',
-                  print_output=None, executable_suffix=None, executable_dir=None,
+                  print_output=None, read_callback=None, run_async=False,
+                  executable_suffix=None, executable_dir=None,
                   mpi=None, gdb=False):
       """
       Run the process that calculate the task specified by this input paameters
@@ -114,6 +115,12 @@ class InputParameters(ConfigurationFile):
       print_output: bool or str
         Print the output to the stdout, too? String value 'info' prints only selected infromations
         (depending on the task runned)
+
+      read_callback: callable
+        The function will be called for each line
+
+      run_async: bool
+        Whether directly execute the process, or return the coroutine to run it
 
       executable_suffix: str or None
         Postfix, appended to the name of the called executable (sometimes, SPRKKR executables are
@@ -143,7 +150,7 @@ class InputParameters(ConfigurationFile):
           if executable_dir:
              executable = os.path.join(executable_dir, executable)
 
-      process = self.result_reader(calculator, directory=directory)
+      runner = self.process_runner(calculator, print_output, read_callback, directory)
       try:
 
         mpi = mpi_runner(mpi) if self._definition.mpi else None
@@ -165,7 +172,10 @@ class InputParameters(ConfigurationFile):
              else:
                 print(f"run <{input_file.name}")
              executable = [ 'gdb' ] + executable
-        return process.run(executable, output_file, stdin = stdin, print_output=print_output, directory=directory, input_file=input_file.name)
+        out = runner.create_process(executable, output_file, stdin = stdin, input_file=input_file.name)
+        if not run_async:
+            out = out.run()
+        return out
       except FileNotFoundError as e:
         add = 'Cannot find SPRKKR executable. Maybe, ase2sprkkr.config.executable.suffix ' \
               'variable should be set (or the SPRKKR_EXECUTABLE_SUFFIX environment variable)?\n'
@@ -177,19 +187,20 @@ class InputParameters(ConfigurationFile):
       finally:
         input_file.close()
 
-  def result_reader(self, calculator=None, directory=None):
+  def process_runner(self, calculator=None, print_output=False, read_callback=None, directory=None):
       """ Return the result readed: the class that parse the output
       of the runned task
 
-      calculator
-        Calculator, which will be attached to the resulting class
-        for ruther processing the results
+      Parameters
+      ----------
 
-      directory
-        Directory, to which will be related the relative paths
-        in the result.
-        If none, get the directory from the calculator, or the current
-        directory
+      calculator:
+        Calculator, which will be attached to the resulting class
+        for ruther processing the results.
+
+      print_output: bool or str
+        Whether to print output to the stdout.
+        'info' means only print a short summary
       """
       cls = self._definition.result_reader
 
@@ -198,8 +209,8 @@ class InputParameters(ConfigurationFile):
 
       if cls is None:
          task = self.TASK.TASK().lower()
-         cls = KkrProcess.class_for_task(task)
-      return cls(self, calculator, directory)
+         cls = KkrProcessRunner.class_for_task(task)
+      return cls(self, calculator, directory, print_output, read_callback)
 
   def read_output_from_file(self, filename, directory=None):
       """ Read output of a previously runned task from a file and parse it in a same

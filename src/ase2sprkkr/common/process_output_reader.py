@@ -20,6 +20,10 @@ class ProcessOutputReader:
 
   The descendant can redefine the routines to parse the output (or its parts).
   """
+  def __init__(self, print_output=False, read_callback=None):
+      self.set_print_output(print_output)
+      self.read_callback = read_callback
+
   async def run_subprocess(self, read_args=[]):
 
       if self.directory:
@@ -27,7 +31,7 @@ class ProcessOutputReader:
          os.chdir(self.directory)
       else:
          dr = None
-      proc = await asyncio.create_subprocess_exec(*self.cmd,
+      self.proc = await asyncio.create_subprocess_exec(*self.cmd,
                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                         **self.kwargs)
       if dr:
@@ -35,19 +39,29 @@ class ProcessOutputReader:
 
       exception = None
 
-      def replace_feed_data(stream_reader):
+      patch = self.outfile or self.print_output or self.read_callback
+
+      def process(data, kind):
+          utf8 = None
+          if self.print_output:
+              utf8 = data.decode('utf8')
+              print(utf8, end='')
+          if self.outfile:
+              self.outfile.write(data)
+          if self.read_callback:
+              if utf8 is None:
+                  utf8 = data.decode('utf8')
+              self.read_callback(utf8, kind)
+
+      def replace_feed_data(stream_reader, kind):
           nonlocal exception
           if stream_reader._buffer:
-             if self.print_output is True:
-                print(stream_reader._buffer.decode('utf8'))
-             self.outfile.write(stream_reader._buffer)
+              process(stread_reader._buffer, kind)
 
           def feed_data(data):
               nonlocal exception
               try:
-                if self.print_output is True:
-                  print(data.decode('utf8'), end='')
-                self.outfile.write(data)
+                process(data, kind)
               except Exception as e:
                 if not exception:
                     exception = e
@@ -57,14 +71,18 @@ class ProcessOutputReader:
           stream_reader.feed_data = feed_data
 
       if self.outfile:
-        replace_feed_data(proc.stdout)
-        replace_feed_data(proc.stderr)
+        replace_feed_data(self.proc.stdout, 'out')
+        replace_feed_data(self.proc.stderr, 'err')
 
-      out = await asyncio.gather(
-          self.read_output(proc.stdout, *read_args),
-          self.read_error(proc.stderr, *read_args),
-          proc.wait(),
-        )
+      try:
+        out = await asyncio.gather(
+            self.read_output(self.proc.stdout, *read_args),
+            self.read_error(self.proc.stderr, *read_args),
+            self.proc.wait(),
+          )
+      finally:
+        if self.outfile:
+           self.outfile.close()
 
       if exception:
          raise exception
@@ -103,21 +121,18 @@ class ProcessOutputReader:
          raise e
       return output, error, wait
 
-  def run(self, cmd, outfile, read_args=[], print_output=False, directory=None, **kwargs):
+  def run_async(self, cmd, outfile, directory=None, read_args=[],
+          **kwargs):
       self.cmd = cmd
+      self.outfile = outfile
+      self.directory = directory
       self.kwargs = kwargs
-      try:
-        self.outfile = outfile
-        self.print_output = print_output
-        self.directory = directory
+      return self.run_subprocess(read_args)
 
-        import logging
-        logging.getLogger("asyncio").setLevel(logging.WARNING)
-        out = run_coro_sync( self.run_subprocess, read_args )
-      finally:
-        if self.outfile:
-           self.outfile.close()
-      return out
+  def _run(self, cmd, outfile, directory=None, read_args=[],
+          **kwargs):
+      coro = self.run_async(cmd, outfile, directory, read_args, **kwargs)
+      return run_coro_sync(coro)
 
   async def read_error(self, stderr, *args):
       while True:
@@ -129,36 +144,41 @@ class ProcessOutputReader:
   async def read_output(self, stdout, *args):
       raise NotImplementedError('Please, redefine BaseProcess.read_output coroutine')
 
-  @maybeclassmethod
-  def result_from_file(self, cls, output, error=None, read_args=[], return_code=0, print_output=False):
-      if not self:
-          self = cls()
-      return self.read_from_file(output, error, read_args, return_code, print_output)
-
-  @maybeclassmethod
-  def read_from_file(self, cls, output, error=None, read_args=[], return_code=0, print_output=False):
-      """ Read the data from file."""
-      if not self:
-          self = cls()
-      loop = asyncio.new_event_loop()
+  def set_print_output(self, print_output):
       self.print_output = print_output
 
-      def out():
-          with AsyncioFileReader(output) as air:
-              task = loop.create_task(self.read_output(air, *read_args))
-              return loop.run_until_complete(task)
+  @maybeclassmethod
+  def read_from_file(self, cls, output, error=None, read_args=[], return_code=0):
+      """
+      Synchronous wrapper for reading output/error from files.
+      """
+      if not self:
+          self = cls()
 
-      def err():
+      return run_coro_sync(
+          self.read_output_file(output, error, read_args, return_code)
+      )
+
+  async def read_output_file(self, output, error=None, read_args=[], return_code=0):
+      """
+      Async version: reads output and error from files using AsyncioFileReader.
+      """
+      async def read_output_file():
+          with AsyncioFileReader(output) as air:
+              return await self.read_output(air, *read_args)
+
+      async def read_error_file():
           if not error:
               return None
           with AsyncioFileReader(error) as air:
-              task = loop.create_task(self.read_error(air, *read_args))
-              return loop.run_until_complete(task)
+              return await self.read_error(air, *read_args)
 
-      try:
-          return self.result(out(), err(), return_code)
-      finally:
-          loop.close()
+      out_result, err_result = await asyncio.gather(
+          read_output_file(),
+          read_error_file()
+      )
+
+      return self.result(out_result, err_result, return_code)
 
 
 class AsyncioFileReader:
@@ -262,36 +282,34 @@ async def readline_until(stdout, cond, can_end=True):
             return line.decode('utf8')
 
 
-def run_coro_sync(coro_func, *args):
+def run_coro_sync(coro_func):
     """
     Run an async coroutine from a synchronous context,
     even if an event loop is already running.
     `coro_func` must be an async function, not a coroutine object.
     """
-    coro = lambda: coro_func(*args)
 
+    # Is there a running event loop?
     try:
-        # Is there a running event loop?
         asyncio.get_running_loop()
-
-        # YES → must run in another thread
-        result = []
-        exc = []
-
-        def runner():
-            try:
-                result.append(asyncio.run(coro()))
-            except Exception as e:
-                exc.append(e)
-
-        t = Thread(target=runner)
-        t.start()
-        t.join()
-
-        if exc:
-            raise exc[0]
-        return result[0]
-
     except RuntimeError:
-        # NO loop running → direct run is safe
-        return asyncio.run(coro())
+        return asyncio.run(coro_func)
+
+    # YES → must run in another thread
+    result = None
+    exc = None
+
+    def runner():
+        nonlocal result, exc
+        try:
+            result = asyncio.run(coro_func)
+        except Exception as e:
+            exc = e
+
+    t = Thread(target=runner)
+    t.start()
+    t.join()
+
+    if exc:
+        raise exc
+    return result

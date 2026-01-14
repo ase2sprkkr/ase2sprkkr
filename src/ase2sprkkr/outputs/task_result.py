@@ -4,6 +4,7 @@ import re
 import importlib
 from . import readers
 from ..common.decorators import cached_property, cached_class_property
+from ..common.process_output_reader import run_coro_sync
 from ..potentials.potentials import Potential
 from ..input_parameters import input_parameters as input_parameters
 from pathlib import Path
@@ -102,6 +103,23 @@ class TaskResult:
 
 
 class KkrProcess:
+
+  def __init__(self, runner, output_reader, coroutine):
+      self.runner = runner
+      self.output_reader = output_reader
+      self.coroutine = coroutine
+
+  def run(self):
+      result, error, return_code = run_coro_sync(self.coroutine)
+      result.complete(error, return_code)
+      return result
+
+  async def run_async(self):
+      await self.coroutine
+      result.complete(error, return_code)
+      return result
+
+class KkrProcessRunner:
   """ Class, that run a process and read its output using underlined
   process reader (see :class:`ase2sprkkr.common.process_output_reader.ProcessOutputReader`)
   and return the appropriate TaskResult.
@@ -109,54 +127,53 @@ class KkrProcess:
   Descendants should define reader_class and result_class property.
   """
 
-  def __init__(self, input_parameters, calculator, directory):
+  def __init__(self, input_parameters, calculator, directory, print_output=False, read_callback=None):
       self.input_parameters = input_parameters
       """ Input parameters, that command to read the output (thus probably the ones, that
       run the process that produced the output. It is used e.g. for determining the potential file,
       which belongs to the output.
       """
       self.calculator = calculator
-      """ Calculator, that can be used for further processing of the results. """
       self.directory = directory
-      """ Directory, to wich are the relative paths in the output related. """
-      self.reader = self.reader_class()
+      """ Calculator, that can be used for further processing of the results. """
+      self.reader = self.reader_class(print_output, read_callback)
 
-  def _wraps(self, fn, output_file, input_file=None):
-      result = self.result_class(self.input_parameters, self.calculator, self.directory,
+  def _create_result(self, output_file, input_file=None):
+      """ Create an object that stores results of the KKR output parsing. """
+      return self.result_class(self.input_parameters, self.calculator, self.directory,
                                output_file = output_file,
                                input_file = input_file
                                )
-      out, error, return_code = fn(result)
-      result.complete(error, return_code)
-      return result
 
-  def run(self, cmd, outfile, print_output=False, directory=None, input_file=None, **kwargs):
-      return self._wraps(
-          lambda result: self.reader.run(cmd, outfile, [result],
-                                          print_output, directory, **kwargs),
-          output_file = getattr(outfile, "name", None),
-          input_file = input_file
-      )
+  def _create_process(self, coroutine, result):
+      """ Create an object that can run the desired process (either reading from file or running a process) """
+      return KkrProcess(self, self.reader, coroutine)
 
-  def read_from_file(self, output, error=None, return_code=0, print_output=False):
-      return self._wraps(
-          lambda result: self.reader.read_from_file(output, error, [result], return_code, print_output),
-          output_file = getattr(output, 'name', output)
-      )
+  def create_process(self, cmd, outfile, input_file=None, **kwargs):
+      """ Create an object that takes care of running the command and parsing the results """
+      result = self._create_result(getattr(outfile, "name", None), input_file)
+      coroutine = self.reader.run_async(cmd, outfile, self.directory, [result], **kwargs)
+      return self._create_process(coroutine, result)
+
+  def read_from_file(self, output, error=None, return_code=0, input_file=None):
+      """ Creates an object that takes care of reading and parsing of the output of a sprkkr process """
+      result = self._create_result(output, input_file)
+      coroutine = self.reader.read_output_file(output, error, [result], return_code)
+      return self._create_process(coroutine, result)
 
   @staticmethod
   def class_for_task(task):
        try:
           mod = importlib.import_module(f'.{task.lower()}', readers.__name__)
-          clsname = task.title() + 'Process'
+          clsname = task.title() + 'ProcessRunner'
           cls = getattr(mod, clsname)
           if not cls:
              raise Exception(f"Can not determine the class to read the results of task {task}"
                               "No {clsname} class in the module {oo.__name__}.{task}")
        except ModuleNotFoundError:
-          cls = DefaultProcess
+          cls = DefaultProcessRunner
 
        return cls
 
 
-from ..outputs.readers.default import DefaultProcess   # NOQA
+from ..outputs.readers.default import DefaultProcessRunner   # NOQA

@@ -1,6 +1,6 @@
 """ The ARPES reader and result. """
 
-from ..task_result import TaskResult, KkrProcess
+from ..task_result import TaskResult, KkrProcessRunner
 from .default import DefaultOutputReader
 from ...common.decorators import cached_property
 from ...output_files.output_files import OutputFile
@@ -26,7 +26,7 @@ class ArpesResult(TaskResult):
       return OutputFile.from_file(self.spc_filename, try_only='spc')
 
 
-class ArpesProcess(KkrProcess):
+class ArpesProcessRunner(KkrProcessRunner):
   """ ARPES task output reader currently do nothing, just have a special
   result, that allow easy acces to spc output file """
 

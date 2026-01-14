@@ -6,7 +6,7 @@ import re
 import numpy as np
 from typing import Dict, List, Optional, Tuple, Union
 
-from ..task_result import TaskResult, KkrProcess
+from ..task_result import TaskResult, KkrProcessRunner
 from .default import DefaultOutputReader
 from ...common.decorators import cached_property
 from ...output_files.output_files import OutputFile
@@ -141,7 +141,7 @@ class SpecOutputReader(DefaultOutputReader):
         return result
 
 
-class SpecProcess(KkrProcess):
+class SpecProcessRunner(KkrProcessRunner):
     """Process class for spectral function calculations."""
 
     result_class = SpecResult

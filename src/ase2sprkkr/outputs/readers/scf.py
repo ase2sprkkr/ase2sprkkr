@@ -16,7 +16,7 @@ from ...common.decorators import cached_property
 from ...sprkkr.calculator import SPRKKR
 from ...common.formats import fortran_format
 from ...common.grammar import replace_whitechars
-from ..task_result import KkrProcess
+from ..task_result import KkrProcessRunner
 from ...potentials.potentials import Potential
 
 
@@ -197,6 +197,9 @@ class ScfOutputReader(SprKkrOutputReader):
   """
   This class reads and parses the output of the SCF task of the SPR-KKR.
   """
+  def set_print_output(self, print_output):
+      self.print_info = print_output == 'info'
+      self.print_output = print_output and not self.print_info
 
   async def read_output(self, stdout, result):
         await self.read_commons(stdout, result)
@@ -220,7 +223,7 @@ class ScfOutputReader(SprKkrOutputReader):
 
             line = await readline_until(stdout,lambda line: b'SPRKKR-run for: ' in line)
             line=line.strip()
-            if first and self.print_output == 'info':
+            if first and self.print_info:
                print(line)
                first = False
             run = line.replace('SPRKKR-run for:', '')
@@ -250,7 +253,7 @@ class ScfOutputReader(SprKkrOutputReader):
             out['converged'] = line[5] == 'converged'
 
             iterations.append(scf_section.read_from_dict(out))
-            if self.print_output == 'info':
+            if self.print_info:
                error = fortran_format(out['error'], ":>12e")
                print(f"Iteration {out['iteration']:>5} error {error} "
                      f"spin moment: {out['moment']['spin']:>13.6e} "
@@ -268,9 +271,10 @@ class ScfOutputReader(SprKkrOutputReader):
 
         except EOFError:
           raise Exception('The output ends unexpectedly')
+        return result
 
 
-class ScfProcess(KkrProcess):
+class ScfProcessRunner(KkrProcessRunner):
 
   result_class = ScfResult
   reader_class = ScfOutputReader

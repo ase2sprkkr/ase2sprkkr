@@ -7,6 +7,7 @@ Changelog
 * Calculator do not longer overwrite the potential file, if it is given in constructor
 * Symmetry handling improved
 * Some fixies for plot
+* Allow async running of the process
 
 Version 3.3.4
 ------------------

@@ -712,7 +712,8 @@ class SPRKKR(Calculator):
                   options={}, task=None,
                   empty_spheres : Optional[str | bool] = None,
                   mpi : bool=None,
-                  print_output=None, executable_suffix=None,
+                  print_output=None, read_callback:Optional[callable]=None, run_async:bool=False,
+                  executable_suffix=None,
                   executable_dir=None,
                   gdb=False):
         """
@@ -725,6 +726,13 @@ class SPRKKR(Calculator):
             Print output to stdout, too.
             If print_output=='info' only a few lines per iteration will be printed.
             None means to use a default value (specified in constructor)
+
+        read_callback: callable(str,str)
+            Receives output of the called executable.
+            The second argument is either 'out' or 'err'
+
+        run_async: bool
+            If True, KkrProcess that can be runned async is returned
 
         executable_suffix: str or bool or None
             If not None, it overrides the executable_postifx, that have been specified when the
@@ -772,6 +780,8 @@ class SPRKKR(Calculator):
             out = input_parameters.run_process(self, input_file, output_file,
                                 directory=os.path.abspath('.'),
                                 print_output=print_output,
+                                read_callback=read_callback,
+                                run_async=run_async,
                                 executable_suffix=executable_suffix,
                                 executable_dir=executable_dir,
                                 mpi=mpi, gdb=gdb
@@ -798,7 +808,8 @@ class SPRKKR(Calculator):
                   empty_spheres : Optional[str | bool] = None,
                   mpi : bool=None,
                   options={}, task=None,
-                  print_output=None, executable_suffix=None,
+                  print_output=None, read_callback:Optional[callable]=None, run_async:bool=False,
+                  executable_suffix=None,
                   executable_dir=None,
                   gdb=False):
         """
@@ -849,6 +860,7 @@ class SPRKKR(Calculator):
                   empty_spheres,
                   mpi,
                   print_output,
+                  read_callback,
                   executable_suffix, executable_dir,
                   gdb
         )
