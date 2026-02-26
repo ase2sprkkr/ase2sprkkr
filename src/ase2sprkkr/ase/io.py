@@ -10,7 +10,7 @@ def read_sprkkr(fd, index=None, **kwargs):
 read_SPRKKR = read_sprkkr
 
 def write_sprkkr(fd, atoms, **kwargs):
-    pot = Potential.from_atoms(atoms)
+    pot = Potential.from_atoms(atoms[0])
     return pot.save_to_file(fd)
 
 write_SPRKKR = write_sprkkr
