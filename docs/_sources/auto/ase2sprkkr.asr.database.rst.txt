@@ -38,17 +38,41 @@ Full name: **ase2sprkkr.asr.database**
      :template: custom-module-template.rst
      :recursive:
   
+  
      app
+  
+  
      browser
+  
+  
      check
+  
+  
      clonetree
+  
+  
      duplicates
+  
+  
      fromtree
+  
+  
      key_descriptions
+  
+  
      material_fingerprint
+  
+  
      merge
+  
+  
      rmsd
+  
+  
      templates
+  
+  
      totree
+  
   
   

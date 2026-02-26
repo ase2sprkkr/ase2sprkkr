@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
@@ -92,35 +94,38 @@
 <span></span><span class="sd">&quot;&quot;&quot; Common parent for all specialized readers and outputs and</span>
 <span class="sd">default reader for the tasks without specialized reader and output. &quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">KkrProcess</span>
+<span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">KkrProcessRunner</span>
 <span class="kn">from</span> <span class="nn">..sprkkr_output_reader</span> <span class="kn">import</span> <span class="n">SprKkrOutputReader</span>
 
 
 <div class="viewcode-block" id="DefaultResult">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultResult.html#ase2sprkkr.outputs.readers.arpes.DefaultResult">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultResult.html#ase2sprkkr.outputs.readers.default.DefaultResult">[docs]</a>
 <span class="k">class</span> <span class="nc">DefaultResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
       <span class="k">pass</span></div>
 
 
 
 <div class="viewcode-block" id="DefaultOutputReader">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.arpes.DefaultOutputReader">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader">[docs]</a>
 <span class="k">class</span> <span class="nc">DefaultOutputReader</span><span class="p">(</span><span class="n">SprKkrOutputReader</span><span class="p">):</span>
 
 <div class="viewcode-block" id="DefaultOutputReader.read_output">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.arpes.DefaultOutputReader.read_output">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader.read_output">[docs]</a>
   <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
       <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_commons</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
       <span class="c1"># just consume the whole rest of output</span>
-      <span class="k">while</span> <span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">():</span>
-        <span class="k">pass</span></div>
+
+      <span class="n">result</span><span class="o">.</span><span class="n">output_lines</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">async</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">stdout</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">output_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">())</span>
+      <span class="k">return</span> <span class="n">result</span></div>
 </div>
 
 
 
-<div class="viewcode-block" id="DefaultProcess">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultProcess.html#ase2sprkkr.outputs.readers.arpes.DefaultProcess">[docs]</a>
-<span class="k">class</span> <span class="nc">DefaultProcess</span><span class="p">(</span><span class="n">KkrProcess</span><span class="p">):</span>
+<div class="viewcode-block" id="DefaultProcessRunner">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultProcessRunner.html#ase2sprkkr.outputs.readers.default.DefaultProcessRunner">[docs]</a>
+<span class="k">class</span> <span class="nc">DefaultProcessRunner</span><span class="p">(</span><span class="n">KkrProcessRunner</span><span class="p">):</span>
 
   <span class="n">result_class</span> <span class="o">=</span> <span class="n">DefaultResult</span>
   <span class="n">reader_class</span> <span class="o">=</span> <span class="n">DefaultOutputReader</span></div>

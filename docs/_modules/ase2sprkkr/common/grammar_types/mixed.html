@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
@@ -192,7 +194,7 @@
 
   <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">BaseMixed</span><span class="p">,),{</span>
     <span class="s2">&quot;string_type&quot;</span> <span class="p">:</span> <span class="n">string_type</span><span class="p">,</span>
-    <span class="s2">&quot;is_the_same_value&quot;</span> <span class="p">:</span> <span class="n">compare_numpy_values</span><span class="p">,</span>
+    <span class="s2">&quot;is_the_same_value&quot;</span> <span class="p">:</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">compare_numpy_values</span><span class="p">),</span>
     <span class="s2">&quot;types&quot;</span> <span class="p">:</span> <span class="n">base_types</span><span class="p">,</span>
     <span class="s2">&quot;_string&quot;</span> <span class="p">:</span> <span class="n">_string</span><span class="p">,</span>
     <span class="s2">&quot;__doc__&quot;</span> <span class="p">:</span> <span class="n">doc</span>

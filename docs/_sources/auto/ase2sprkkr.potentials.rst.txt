@@ -38,11 +38,21 @@ Full name: **ase2sprkkr.potentials**
      :template: custom-module-template.rst
      :recursive:
   
+  
      custom_potential_section
+  
+  
      definitions
+  
+  
      potential_definitions
+  
+  
      potential_sections
+  
+  
      potentials
-     test
+  
+  
   
   

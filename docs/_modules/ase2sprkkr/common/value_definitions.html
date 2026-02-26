@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -718,7 +720,10 @@
          <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
            <span class="k">return</span> <span class="kc">False</span>
          <span class="n">missing</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">missing_value</span><span class="p">()</span>
-         <span class="n">write_value</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span> <span class="n">missing</span> <span class="ow">and</span> <span class="n">df</span> <span class="o">==</span> <span class="n">value</span> <span class="p">)</span>
+         <span class="k">try</span><span class="p">:</span>
+             <span class="n">write_value</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span> <span class="n">missing</span> <span class="ow">and</span> <span class="n">df</span> <span class="o">==</span> <span class="n">value</span> <span class="p">)</span>
+         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span> <span class="c1">#unyt fix</span>
+             <span class="n">write_value</span> <span class="o">=</span> <span class="kc">True</span>
      <span class="k">else</span><span class="p">:</span>
         <span class="n">value</span><span class="o">=</span><span class="kc">None</span>
         <span class="n">write_value</span><span class="o">=</span><span class="kc">True</span>

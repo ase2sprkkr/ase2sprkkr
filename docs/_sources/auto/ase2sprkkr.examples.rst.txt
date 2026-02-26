@@ -38,13 +38,44 @@ Full name: **ase2sprkkr.examples**
      :template: custom-module-template.rst
      :recursive:
   
-     A1_Fe_scf_simple
-     A2_Fe_scf_input_modifications
-     A3_Fe_dos
-     A4_CPA_Example
-     A5_Al_EOS
-     A6_Cu_MSSPEC
-     A7_SrTiO3_MSSPEC
-     A8_ARPES_and_plotting
+  
+     A01_Fe_scf_simple
+  
+  
+     A02_Fe_scf_input_modifications
+  
+  
+     A03_Fe_dos
+  
+  
+     A04_CPA_Example
+  
+  
+     A05_Al_EOS
+  
+  
+     A06_Cu_MSSPEC
+  
+  
+     A07_SrTiO3_MSSPEC
+  
+  
+     A08_ARPES_and_plotting
+  
+  
+     A09_EmptySpheres
+  
+  
+     A10_DLM
+  
+  
+     A11_Torque
+  
+  
+     A12_JXC
+  
+  
+     A13_XAS
+  
   
   

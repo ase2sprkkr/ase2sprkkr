@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
 
   
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
@@ -65,12 +67,14 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">definitions</a><ul>
@@ -79,13 +83,13 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.OutputFile.html">OutputFile</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.UnknownDataValue.html">UnknownDataValue</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.bsf.html">bsf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.dij.html">dij</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.dos.html">dos</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.spc.html">spc</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.output_files.html">output_files</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.html">output_files_definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.test.html">test</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
@@ -94,7 +98,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -149,7 +152,8 @@
 </div>
 <p class="rubric">Description</p>
 <blockquote id="module-ase2sprkkr.output_files.definitions">
-<div><p>This module describe common header, that appears in the output
+<div><p>This subpackage contains definitions for known output files.
+This module itself describes the common header, that appears in the output
 files of SPRKKR</p>
 </div></blockquote>
 <p class="rubric">Classes</p>
@@ -175,10 +179,13 @@ files of SPRKKR</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.bsf.html#module-ase2sprkkr.output_files.definitions.bsf" title="ase2sprkkr.output_files.definitions.bsf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bsf</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.dos.html#module-ase2sprkkr.output_files.definitions.dos" title="ase2sprkkr.output_files.definitions.dos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dos</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.dij.html#module-ase2sprkkr.output_files.definitions.dij" title="ase2sprkkr.output_files.definitions.dij"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dij</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.spc.html#module-ase2sprkkr.output_files.definitions.spc" title="ase2sprkkr.output_files.definitions.spc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spc</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.dos.html#module-ase2sprkkr.output_files.definitions.dos" title="ase2sprkkr.output_files.definitions.dos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dos</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.spc.html#module-ase2sprkkr.output_files.definitions.spc" title="ase2sprkkr.output_files.definitions.spc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spc</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>

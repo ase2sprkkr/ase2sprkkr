@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -180,17 +182,23 @@
 <div class="viewcode-block" id="Configuration.as_dict_getter">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.options.Configuration.as_dict_getter">[docs]</a>
   <span class="nd">@staticmethod</span>
-  <span class="k">def</span> <span class="nf">as_dict_getter</span><span class="p">(</span><span class="n">only_changed</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">as_dict_getter</span><span class="p">(</span><span class="n">only_changed</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+      <span class="k">if</span> <span class="n">only_changed</span> <span class="o">==</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span>
+        <span class="n">pick_only_changed</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">is_always_added</span>
+      <span class="k">elif</span> <span class="n">only_changed</span> <span class="o">==</span> <span class="s1">&#39;basic&#39;</span><span class="p">:</span>
+        <span class="n">pick_only_changed</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">is_expert</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">only_changed</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">only_changed</span><span class="p">)</span>
+        <span class="n">pick_only_changed</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">only_changed</span>
 
       <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
           <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
           <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_generated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">generated</span><span class="p">:</span>
                <span class="k">return</span> <span class="kc">None</span>
           <span class="k">if</span> <span class="n">only_changed</span> <span class="o">==</span> <span class="s1">&#39;explicit&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_generated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">generated</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="kc">None</span>
                 <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unpack_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">)</span>
-          <span class="k">elif</span> <span class="n">only_changed</span> <span class="ow">and</span> <span class="p">(</span><span class="n">only_changed</span><span class="o">!=</span><span class="s1">&#39;basic&#39;</span> <span class="ow">or</span> <span class="n">d</span><span class="o">.</span><span class="n">is_expert</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">is_always_added</span><span class="p">:</span>
+          <span class="k">elif</span> <span class="n">pick_only_changed</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
                <span class="n">v</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_and_changed</span><span class="p">()</span>
                <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">None</span>

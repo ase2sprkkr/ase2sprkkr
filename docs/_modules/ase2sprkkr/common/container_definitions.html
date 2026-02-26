@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -151,7 +153,7 @@
                  <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">has_hidden_members</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">write_alternative_name</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_regex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">result_class</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">is_repeated</span><span class="o">=</span><span class="kc">False</span>
+                 <span class="n">is_repeated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">write_condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">       Definition of container (e.g. section of an input file).</span>
@@ -180,7 +182,8 @@
            <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="p">,</span>
            <span class="n">write_alternative_name</span> <span class="o">=</span> <span class="n">write_alternative_name</span><span class="p">,</span>
            <span class="n">name_regex</span> <span class="o">=</span> <span class="n">name_regex</span><span class="p">,</span>
-           <span class="n">result_class</span> <span class="o">=</span> <span class="n">result_class</span>
+           <span class="n">result_class</span> <span class="o">=</span> <span class="n">result_class</span><span class="p">,</span>
+           <span class="n">write_condition</span> <span class="o">=</span> <span class="n">write_condition</span>
        <span class="p">)</span>
 
        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">members</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -710,8 +713,9 @@
 <span class="sd">          If any value have been written return True, otherwise return False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">always</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">_container</span><span class="p">):</span>
-                <span class="k">return</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_condition</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">_container</span><span class="p">)</span> <span class="ow">or</span> \
+               <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">_container</span><span class="p">):</span>
+                   <span class="k">return</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_expert</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">is_changed</span><span class="p">():</span>
@@ -887,6 +891,12 @@
        <span class="n">grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\s*\n)*&#39;</span><span class="p">))</span> <span class="o">+</span> <span class="n">grammar</span>
        <span class="n">grammar</span> <span class="o">=</span> <span class="n">grammar</span><span class="o">.</span><span class="n">ignore</span><span class="p">(</span><span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">restOfLine</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">LineEnd</span><span class="p">())</span>
        <span class="k">return</span> <span class="n">grammar</span></div>
+
+
+<div class="viewcode-block" id="ConfigurationRootDefinition._generic_info">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationRootDefinition._generic_info">[docs]</a>
+   <span class="k">def</span> <span class="nf">_generic_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Configuration&quot;</span></div>
 </div>
 
 </pre></div>

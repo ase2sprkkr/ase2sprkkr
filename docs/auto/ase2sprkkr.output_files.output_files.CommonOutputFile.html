@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
 
   
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
@@ -65,12 +67,14 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.definitions.html">definitions</a></li>
@@ -82,7 +86,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.html">output_files_definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.test.html">test</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
@@ -91,7 +94,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -129,15 +131,16 @@
 <dt class="sig sig-object py" id="ase2sprkkr.output_files.output_files.CommonOutputFile">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.output_files.output_files.</span></span><span class="sig-name descname"><span class="pre">CommonOutputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/output_files/output_files.html#CommonOutputFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.output_files.output_files.CommonOutputFile" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-2a5a817895515959ae916944c7fe50591ad6b931.png" alt="Inheritance diagram of ase2sprkkr.output_files.output_files.CommonOutputFile" usemap="#inheritance130742530d" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-c8d37901526f69da479bd1d36f0c13f79bb1da30.png" alt="Inheritance diagram of ase2sprkkr.output_files.output_files.CommonOutputFile" usemap="#inheritance130742530d" class="inheritance graphviz" /></div>
 <map id="inheritance130742530d" name="inheritance130742530d">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="3,3,104,16"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="119,3,308,16"/>
-<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="712,16,826,29"/>
-<area shape="rect" id="node7" href="#ase2sprkkr.output_files.output_files.CommonOutputFile" target="_top" title="output_files.CommonOutputFile" alt="" coords="841,16,957,29"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="510,3,697,16"/>
-<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="configuration.ConfigurationSectionTrait" alt="" coords="533,28,674,41"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="323,3,495,16"/>
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="2,2,94,14"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="108,2,278,14"/>
+<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="644,14,747,26"/>
+<area shape="rect" id="node8" href="ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.output_files.OutputFile" target="_top" title="Objects of this class holds datas of an output file" alt="" coords="760,14,838,26"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="461,2,631,14"/>
+<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="configuration.ConfigurationSectionTrait" alt="" coords="482,25,609,37"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="292,2,447,14"/>
+<area shape="rect" id="node7" href="#ase2sprkkr.output_files.output_files.CommonOutputFile" target="_top" title="output_files.CommonOutputFile" alt="" coords="852,14,958,26"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -166,6 +169,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.output_files.output_files.CommonOutputFile.n_orbitals">
 <span class="sig-name descname"><span class="pre">n_orbitals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/output_files/output_files.html#CommonOutputFile.n_orbitals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.output_files.output_files.CommonOutputFile.n_orbitals" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.output_files.output_files.CommonOutputFile.definitions">
+<span class="sig-name descname"><span class="pre">definitions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'bsf':</span> <span class="pre">&lt;module</span> <span class="pre">'ase2sprkkr.output_files.definitions.bsf'</span> <span class="pre">from</span> <span class="pre">'/home/logik/skola/kkr/ase2sprkkr/src/ase2sprkkr/output_files/definitions/bsf.py'&gt;,</span> <span class="pre">'dij':</span> <span class="pre">&lt;module</span> <span class="pre">'ase2sprkkr.output_files.definitions.dij'</span> <span class="pre">from</span> <span class="pre">'/home/logik/skola/kkr/ase2sprkkr/src/ase2sprkkr/output_files/definitions/dij.py'&gt;,</span> <span class="pre">'dos':</span> <span class="pre">&lt;module</span> <span class="pre">'ase2sprkkr.output_files.definitions.dos'</span> <span class="pre">from</span> <span class="pre">'/home/logik/skola/kkr/ase2sprkkr/src/ase2sprkkr/output_files/definitions/dos.py'&gt;,</span> <span class="pre">'spc':</span> <span class="pre">&lt;module</span> <span class="pre">'ase2sprkkr.output_files.definitions.spc'</span> <span class="pre">from</span> <span class="pre">'/home/logik/skola/kkr/ase2sprkkr/src/ase2sprkkr/output_files/definitions/spc.py'&gt;}</span></em><a class="headerlink" href="#ase2sprkkr.output_files.output_files.CommonOutputFile.definitions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.output_files.output_files.CommonOutputFile.unknown_output_file_definition">
+<span class="sig-name descname"><span class="pre">unknown_output_file_definition</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;OUTPUT</span> <span class="pre">FILE</span> <span class="pre">None&gt;</span></em><a class="headerlink" href="#ase2sprkkr.output_files.output_files.CommonOutputFile.unknown_output_file_definition" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

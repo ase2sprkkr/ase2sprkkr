@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -242,13 +244,13 @@
 <span class="sd">  &gt;&gt;&gt; conf = calculator.input_parameters</span>
 <span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE = 5.</span>
 <span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE()</span>
-<span class="sd">  5.0</span>
+<span class="sd">  unyt_quantity(5., &#39;Ry&#39;)</span>
 <span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE.info</span>
 <span class="sd">  &#39;Configuration value ImE&#39;</span>
 <span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE.help()                     # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE</span>
 <span class="sd">  Configuration value ImE</span>
 <span class="sd">  &lt;BLANKLINE&gt;</span>
-<span class="sd">  ImE : Energy (&lt;Real&gt; [Ry|eV]) ≝ 0.0  (optional)</span>
+<span class="sd">  ImE : Energy (&lt;Real&gt; [Ry|eV]) ≝ 0.0 Ry (optional)</span>
 <span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE.set_dangerous(&#39;1J&#39;)</span>
 <span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE()</span>
 <span class="sd">  &#39;1J&#39;</span>
@@ -408,7 +410,7 @@
           <span class="k">else</span><span class="p">:</span>
              <span class="k">try</span><span class="p">:</span>
                  <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pack_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+             <span class="k">except</span> <span class="n">DataValidityError</span><span class="p">:</span>
                  <span class="k">if</span> <span class="ow">not</span> <span class="n">error</span><span class="o">==</span><span class="s1">&#39;ignore&#39;</span><span class="p">:</span>
                       <span class="k">raise</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">_post_set</span><span class="p">()</span>

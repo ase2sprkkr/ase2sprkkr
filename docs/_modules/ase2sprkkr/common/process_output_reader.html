@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -99,11 +101,12 @@
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
 <span class="kn">from</span> <span class="nn">.decorators</span> <span class="kn">import</span> <span class="n">maybeclassmethod</span>
 
 
 <div class="viewcode-block" id="ProcessOutputReader">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.outputs.readers.scf.ProcessOutputReader">[docs]</a>
 <span class="k">class</span> <span class="nc">ProcessOutputReader</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Class, that run a process, optionally saves all the output of the process to a file,</span>
@@ -112,8 +115,39 @@
 
 <span class="sd">  The descendant can redefine the routines to parse the output (or its parts).</span>
 <span class="sd">  &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ProcessOutputReader.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.outputs.readers.scf.ProcessOutputReader.__init__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">read_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">set_print_output</span><span class="p">(</span><span class="n">print_output</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">read_callback</span> <span class="o">=</span> <span class="n">read_callback</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_stopped</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="ProcessOutputReader.stop_the_process">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.outputs.readers.scf.ProcessOutputReader.stop_the_process">[docs]</a>
+  <span class="k">def</span> <span class="nf">stop_the_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_stopped</span> <span class="o">=</span> <span class="kc">True</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_kill</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ProcessOutputReader._kill">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.outputs.readers.scf.ProcessOutputReader._kill">[docs]</a>
+  <span class="k">def</span> <span class="nf">_kill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>      <span class="c1"># SIGKILL on Unix, TerminateProcess on Windows</span>
+      <span class="n">proc</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>         <span class="c1"># SIGTERM on Unix, CTRL-BREAK-ish on Windows</span>
+
+      <span class="k">try</span><span class="p">:</span>
+          <span class="c1"># 2) Give it time to clean up</span>
+          <span class="n">run_coro_sync</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">(),</span> <span class="mf">0.1</span><span class="p">))</span>
+          <span class="k">return</span>
+      <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">TimeoutError</span><span class="p">:</span>
+          <span class="k">pass</span>
+      <span class="n">proc</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>          <span class="c1"># SIGKILL / TerminateProcess</span></div>
+
+
 <div class="viewcode-block" id="ProcessOutputReader.run_subprocess">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader.run_subprocess">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.outputs.readers.scf.ProcessOutputReader.run_subprocess">[docs]</a>
   <span class="k">async</span> <span class="k">def</span> <span class="nf">run_subprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">read_args</span><span class="o">=</span><span class="p">[]):</span>
 
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
@@ -121,27 +155,43 @@
          <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
       <span class="k">else</span><span class="p">:</span>
          <span class="n">dr</span> <span class="o">=</span> <span class="kc">None</span>
-      <span class="n">proc</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">,</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stopped</span><span class="p">:</span>
+          <span class="k">raise</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">CancelledError</span><span class="p">()</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">proc</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">,</span>
                         <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
                         <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stopped</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_kill</span><span class="p">()</span>
+
       <span class="k">if</span> <span class="n">dr</span><span class="p">:</span>
          <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
 
       <span class="n">exception</span> <span class="o">=</span> <span class="kc">None</span>
 
-      <span class="k">def</span> <span class="nf">replace_feed_data</span><span class="p">(</span><span class="n">stream_reader</span><span class="p">):</span>
+      <span class="n">patch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_callback</span>
+
+      <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+          <span class="n">utf8</span> <span class="o">=</span> <span class="kc">None</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span><span class="p">:</span>
+              <span class="n">utf8</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+              <span class="nb">print</span><span class="p">(</span><span class="n">utf8</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="p">:</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_callback</span><span class="p">:</span>
+              <span class="k">if</span> <span class="n">utf8</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                  <span class="n">utf8</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">read_callback</span><span class="p">(</span><span class="n">utf8</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+
+      <span class="k">def</span> <span class="nf">replace_feed_data</span><span class="p">(</span><span class="n">stream_reader</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
           <span class="k">nonlocal</span> <span class="n">exception</span>
           <span class="k">if</span> <span class="n">stream_reader</span><span class="o">.</span><span class="n">_buffer</span><span class="p">:</span>
-             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">stream_reader</span><span class="o">.</span><span class="n">_buffer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
-             <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">stream_reader</span><span class="o">.</span><span class="n">_buffer</span><span class="p">)</span>
+              <span class="n">process</span><span class="p">(</span><span class="n">stread_reader</span><span class="o">.</span><span class="n">_buffer</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
 
           <span class="k">def</span> <span class="nf">feed_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
               <span class="k">nonlocal</span> <span class="n">exception</span>
               <span class="k">try</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                  <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">process</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
               <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">exception</span><span class="p">:</span>
                     <span class="n">exception</span> <span class="o">=</span> <span class="n">e</span>
@@ -151,14 +201,18 @@
           <span class="n">stream_reader</span><span class="o">.</span><span class="n">feed_data</span> <span class="o">=</span> <span class="n">feed_data</span>
 
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="p">:</span>
-        <span class="n">replace_feed_data</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
-        <span class="n">replace_feed_data</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">replace_feed_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s1">&#39;out&#39;</span><span class="p">)</span>
+        <span class="n">replace_feed_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="s1">&#39;err&#39;</span><span class="p">)</span>
 
-      <span class="n">out</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">read_output</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="o">*</span><span class="n">read_args</span><span class="p">),</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">read_error</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="o">*</span><span class="n">read_args</span><span class="p">),</span>
-          <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">(),</span>
-        <span class="p">)</span>
+      <span class="k">try</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">read_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="o">*</span><span class="n">read_args</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">read_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="o">*</span><span class="n">read_args</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">(),</span>
+          <span class="p">)</span>
+      <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
       <span class="k">if</span> <span class="n">exception</span><span class="p">:</span>
          <span class="k">raise</span> <span class="n">exception</span>
@@ -167,7 +221,7 @@
 
 
 <div class="viewcode-block" id="ProcessOutputReader.result">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader.result">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.outputs.readers.scf.ProcessOutputReader.result">[docs]</a>
   <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">wait</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; This function is for postprocessing the results.</span>
 
@@ -201,27 +255,27 @@
       <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">wait</span></div>
 
 
-<div class="viewcode-block" id="ProcessOutputReader.run">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader.run">[docs]</a>
-  <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">read_args</span><span class="o">=</span><span class="p">[],</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ProcessOutputReader.run_async">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.outputs.readers.scf.ProcessOutputReader.run_async">[docs]</a>
+  <span class="k">def</span> <span class="nf">run_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">read_args</span><span class="o">=</span><span class="p">[],</span>
+          <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span> <span class="o">=</span> <span class="n">outfile</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
-      <span class="k">try</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span> <span class="o">=</span> <span class="n">outfile</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">=</span> <span class="n">print_output</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_subprocess</span><span class="p">(</span><span class="n">read_args</span><span class="p">)</span></div>
 
-        <span class="kn">import</span> <span class="nn">logging</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;asyncio&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_subprocess</span><span class="p">(</span><span class="n">read_args</span><span class="p">)</span> <span class="p">)</span>
-      <span class="k">finally</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="p">:</span>
-           <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-      <span class="k">return</span> <span class="n">out</span></div>
+
+<div class="viewcode-block" id="ProcessOutputReader._run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.outputs.readers.scf.ProcessOutputReader._run">[docs]</a>
+  <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">read_args</span><span class="o">=</span><span class="p">[],</span>
+          <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+      <span class="n">coro</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_async</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">read_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">run_coro_sync</span><span class="p">(</span><span class="n">coro</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProcessOutputReader.read_error">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader.read_error">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.outputs.readers.scf.ProcessOutputReader.read_error">[docs]</a>
   <span class="k">async</span> <span class="k">def</span> <span class="nf">read_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
       <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
           <span class="n">line</span><span class="o">=</span><span class="k">await</span> <span class="n">stderr</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
@@ -231,52 +285,60 @@
 
 
 <div class="viewcode-block" id="ProcessOutputReader.read_output">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader.read_output">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.outputs.readers.scf.ProcessOutputReader.read_output">[docs]</a>
   <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
       <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Please, redefine BaseProcess.read_output coroutine&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ProcessOutputReader.result_from_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader.result_from_file">[docs]</a>
-  <span class="nd">@maybeclassmethod</span>
-  <span class="k">def</span> <span class="nf">result_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">read_args</span><span class="o">=</span><span class="p">[],</span> <span class="n">return_code</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">:</span>
-          <span class="bp">self</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">read_args</span><span class="p">,</span> <span class="n">return_code</span><span class="p">,</span> <span class="n">print_output</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ProcessOutputReader.set_print_output">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.outputs.readers.scf.ProcessOutputReader.set_print_output">[docs]</a>
+  <span class="k">def</span> <span class="nf">set_print_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">print_output</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">=</span> <span class="n">print_output</span></div>
 
 
 <div class="viewcode-block" id="ProcessOutputReader.read_from_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader.read_from_file">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.outputs.readers.scf.ProcessOutputReader.read_from_file">[docs]</a>
   <span class="nd">@maybeclassmethod</span>
-  <span class="k">def</span> <span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">read_args</span><span class="o">=</span><span class="p">[],</span> <span class="n">return_code</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Read the data from file.&quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">read_args</span><span class="o">=</span><span class="p">[],</span> <span class="n">return_code</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Synchronous wrapper for reading output/error from files.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">:</span>
           <span class="bp">self</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-      <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">=</span> <span class="n">print_output</span>
 
-      <span class="k">def</span> <span class="nf">out</span><span class="p">():</span>
+      <span class="k">return</span> <span class="n">run_coro_sync</span><span class="p">(</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">read_output_file</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">read_args</span><span class="p">,</span> <span class="n">return_code</span><span class="p">)</span>
+      <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProcessOutputReader.read_output_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.outputs.readers.scf.ProcessOutputReader.read_output_file">[docs]</a>
+  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">read_args</span><span class="o">=</span><span class="p">[],</span> <span class="n">return_code</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Async version: reads output and error from files using AsyncioFileReader.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output_file</span><span class="p">():</span>
           <span class="k">with</span> <span class="n">AsyncioFileReader</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="k">as</span> <span class="n">air</span><span class="p">:</span>
-              <span class="n">task</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_output</span><span class="p">(</span><span class="n">air</span><span class="p">,</span> <span class="o">*</span><span class="n">read_args</span><span class="p">))</span>
-              <span class="k">return</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+              <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_output</span><span class="p">(</span><span class="n">air</span><span class="p">,</span> <span class="o">*</span><span class="n">read_args</span><span class="p">)</span>
 
-      <span class="k">def</span> <span class="nf">err</span><span class="p">():</span>
+      <span class="k">async</span> <span class="k">def</span> <span class="nf">read_error_file</span><span class="p">():</span>
           <span class="k">if</span> <span class="ow">not</span> <span class="n">error</span><span class="p">:</span>
               <span class="k">return</span> <span class="kc">None</span>
           <span class="k">with</span> <span class="n">AsyncioFileReader</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="k">as</span> <span class="n">air</span><span class="p">:</span>
-              <span class="n">task</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_error</span><span class="p">(</span><span class="n">air</span><span class="p">,</span> <span class="o">*</span><span class="n">read_args</span><span class="p">))</span>
-              <span class="k">return</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+              <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_error</span><span class="p">(</span><span class="n">air</span><span class="p">,</span> <span class="o">*</span><span class="n">read_args</span><span class="p">)</span>
 
-      <span class="k">try</span><span class="p">:</span>
-          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">out</span><span class="p">(),</span> <span class="n">err</span><span class="p">(),</span> <span class="n">return_code</span><span class="p">)</span>
-      <span class="k">finally</span><span class="p">:</span>
-          <span class="n">loop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+      <span class="n">out_result</span><span class="p">,</span> <span class="n">err_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+          <span class="n">read_output_file</span><span class="p">(),</span>
+          <span class="n">read_error_file</span><span class="p">()</span>
+      <span class="p">)</span>
+
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">out_result</span><span class="p">,</span> <span class="n">err_result</span><span class="p">,</span> <span class="n">return_code</span><span class="p">)</span></div>
 </div>
 
 
 
 <div class="viewcode-block" id="AsyncioFileReader">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.outputs.readers.scf.AsyncioFileReader">[docs]</a>
 <span class="k">class</span> <span class="nc">AsyncioFileReader</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; File reader that mimics asyncio StreamReader.</span>
 <span class="sd">      In fact, it is synchronous, but it offers the</span>
@@ -284,7 +346,7 @@
 <span class="sd">  &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AsyncioFileReader.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.outputs.readers.scf.AsyncioFileReader.__init__">[docs]</a>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">buffersize</span><span class="o">=</span><span class="mi">8192</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># just to set it in case the open fail</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">filename</span>
@@ -292,7 +354,7 @@
 
 
 <div class="viewcode-block" id="AsyncioFileReader.close">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.close">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.outputs.readers.scf.AsyncioFileReader.close">[docs]</a>
   <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">:</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -309,13 +371,13 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 <div class="viewcode-block" id="AsyncioFileReader.readline">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.readline">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.outputs.readers.scf.AsyncioFileReader.readline">[docs]</a>
   <span class="k">async</span> <span class="k">def</span> <span class="nf">readline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="AsyncioFileReader.separator_shifts">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.separator_shifts">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.outputs.readers.scf.AsyncioFileReader.separator_shifts">[docs]</a>
   <span class="nd">@staticmethod</span>
   <span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
   <span class="k">def</span> <span class="nf">separator_shifts</span><span class="p">(</span><span class="n">sep</span><span class="p">):</span>
@@ -329,7 +391,7 @@
 
 
 <div class="viewcode-block" id="AsyncioFileReader.readuntil">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.readuntil">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.outputs.readers.scf.AsyncioFileReader.readuntil">[docs]</a>
   <span class="k">async</span> <span class="k">def</span> <span class="nf">readuntil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
       <span class="n">lsep</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
       <span class="k">if</span> <span class="n">lsep</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -377,7 +439,7 @@
 
 
 <div class="viewcode-block" id="readline">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.readline.html#ase2sprkkr.common.process_output_reader.readline">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.readline.html#ase2sprkkr.outputs.readers.scf.readline">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">readline</span><span class="p">(</span><span class="n">stdout</span><span class="p">):</span>
     <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
@@ -387,7 +449,7 @@
 
 
 <div class="viewcode-block" id="readline_until">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.readline_until.html#ase2sprkkr.common.process_output_reader.readline_until">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.readline_until.html#ase2sprkkr.outputs.readers.scf.readline_until">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">readline_until</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">cond</span><span class="p">,</span> <span class="n">can_end</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
@@ -397,6 +459,42 @@
             <span class="k">raise</span> <span class="ne">EOFError</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">cond</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">line</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="run_coro_sync">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.run_coro_sync.html#ase2sprkkr.outputs.readers.scf.run_coro_sync">[docs]</a>
+<span class="k">def</span> <span class="nf">run_coro_sync</span><span class="p">(</span><span class="n">coro_func</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run an async coroutine from a synchronous context,</span>
+<span class="sd">    even if an event loop is already running.</span>
+<span class="sd">    `coro_func` must be an async function, not a coroutine object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Is there a running event loop?</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">coro_func</span><span class="p">)</span>
+
+    <span class="c1"># YES → must run in another thread</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">exc</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">runner</span><span class="p">():</span>
+        <span class="k">nonlocal</span> <span class="n">result</span><span class="p">,</span> <span class="n">exc</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">coro_func</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">exc</span> <span class="o">=</span> <span class="n">e</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">runner</span><span class="p">)</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exc</span>
+    <span class="k">return</span> <span class="n">result</span></div>
 
 </pre></div>
 

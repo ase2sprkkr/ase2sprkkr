@@ -38,15 +38,41 @@ Full name: **ase2sprkkr.input\_parameters.definitions**
      :template: custom-module-template.rst
      :recursive:
   
+  
      arpes
+  
+  
      bsfek
+  
+  
      bsfkk
+  
+  
      dos
+  
+  
      gilbert
+  
+  
      jxc
+  
+  
      phagen
+  
+  
      scf
+  
+  
      sections
+  
+  
+     torque
+  
+  
+     xas
+  
+  
      marpes
+  
   
   

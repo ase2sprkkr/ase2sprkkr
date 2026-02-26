@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -101,6 +103,7 @@
 <span class="kn">from</span> <span class="nn">..common.grammar_types.data</span> <span class="kn">import</span> <span class="n">RestOfTheFile</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
 
 <div class="viewcode-block" id="UnknownDataValue">
@@ -123,6 +126,8 @@
 <span class="k">class</span> <span class="nc">OutputFile</span><span class="p">(</span><span class="n">ConfigurationFile</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Objects of this class holds datas of an output file &quot;&quot;&quot;</span>
 
+  <span class="n">plot_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+
   <span class="nd">@cached_class_property</span>
   <span class="k">def</span> <span class="nf">unknown_output_file_definition</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; a definition of unwnown (not yet known) output file that can hold any data in the rest</span>
@@ -144,8 +149,16 @@
       <span class="k">for</span> <span class="n">imp</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">ispackage</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">iter_modules</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="p">[</span><span class="n">path</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="n">name</span><span class="p">):</span>
            <span class="nb">__import__</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
            <span class="n">mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span><span class="p">]</span>
-           <span class="n">out</span><span class="p">[</span><span class="n">mod</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">mod</span>
+           <span class="n">ext</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="s2">&quot;extension&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">mod</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+           <span class="n">out</span><span class="p">[</span><span class="n">ext</span><span class="p">]</span> <span class="o">=</span> <span class="n">mod</span>
       <span class="k">return</span> <span class="n">out</span>
+
+<div class="viewcode-block" id="OutputFile.definition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.output_files.OutputFile.definition">[docs]</a>
+  <span class="nd">@classmethod</span>
+  <span class="k">def</span> <span class="nf">definition</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span><span class="o">.</span><span class="n">definition</span></div>
+
 
 <div class="viewcode-block" id="OutputFile.from_file">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.output_files.OutputFile.from_file">[docs]</a>
@@ -183,10 +196,12 @@
              <span class="n">fname</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
          <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
              <span class="n">first_try</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+             <span class="c1">#nektere soubory jsou typu _Dij.data</span>
+             <span class="n">special</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span> <span class="sa">r</span><span class="s2">&quot;^.+_([^/</span><span class="se">\\</span><span class="s2">]+\.[^/</span><span class="se">\\</span><span class="s2">]+)$&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+             <span class="k">if</span> <span class="n">special</span><span class="p">:</span>
+                <span class="n">first_try</span> <span class="o">=</span> <span class="p">[</span> <span class="n">special</span><span class="o">.</span><span class="n">groups</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">first_try</span> <span class="p">]</span>
          <span class="k">else</span><span class="p">:</span>
              <span class="n">first_try</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_try</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
-          <span class="n">first_try</span><span class="o">=</span><span class="p">[</span> <span class="n">first_try</span> <span class="p">]</span>
 
       <span class="n">first</span> <span class="o">=</span> <span class="kc">None</span>
       <span class="k">if</span> <span class="n">first_try</span><span class="p">:</span>
@@ -199,16 +214,26 @@
              <span class="k">return</span> <span class="n">out</span>
       <span class="k">else</span><span class="p">:</span>
          <span class="n">last</span> <span class="o">=</span> <span class="kc">None</span>
-      <span class="k">for</span> <span class="n">ext</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-          <span class="k">if</span> <span class="n">try_only</span> <span class="ow">and</span> <span class="n">ext</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">try_only</span><span class="p">:</span>
-             <span class="k">continue</span>
-          <span class="k">if</span> <span class="n">first_try</span> <span class="ow">and</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">first_try</span><span class="p">:</span>
-             <span class="k">continue</span>
-          <span class="k">try</span><span class="p">:</span>
-             <span class="n">out</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-             <span class="k">return</span> <span class="n">out</span>
-          <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-             <span class="n">last</span> <span class="o">=</span> <span class="n">e</span>
+
+      <span class="k">if</span> <span class="n">try_only</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">try_only</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
+            <span class="n">try_only</span><span class="o">=</span><span class="p">[</span> <span class="n">try_only</span> <span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">try_only</span><span class="p">:</span>
+             <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span><span class="p">:</span>
+                 <span class="k">try</span><span class="p">:</span>
+                    <span class="n">out</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">out</span>
+                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">last</span> <span class="o">=</span> <span class="n">e</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="k">for</span> <span class="n">ext</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+              <span class="k">if</span> <span class="n">first_try</span> <span class="ow">and</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">first_try</span><span class="p">:</span>
+                 <span class="k">continue</span>
+              <span class="k">try</span><span class="p">:</span>
+                 <span class="n">out</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                 <span class="k">return</span> <span class="n">out</span>
+              <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                 <span class="n">last</span> <span class="o">=</span> <span class="n">e</span>
       <span class="k">if</span> <span class="n">unknown</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
          <span class="n">unknown</span> <span class="o">=</span> <span class="n">try_only</span> <span class="ow">is</span> <span class="kc">None</span>
       <span class="k">if</span> <span class="n">unknown</span><span class="p">:</span>
@@ -216,14 +241,14 @@
               <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">unknown_output_file_definition</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
           <span class="k">except</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseBaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
               <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Can not parse file: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
-      <span class="k">raise</span> <span class="n">first</span> <span class="ow">or</span> <span class="n">last</span></div>
+      <span class="k">raise</span> <span class="n">first</span> <span class="ow">or</span> <span class="n">last</span> <span class="ow">or</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;File </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> is not recognized as any known file type&#39;</span><span class="p">)</span></div>
 </div>
 
 
 
 <div class="viewcode-block" id="CommonOutputFile">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.output_files.CommonOutputFile">[docs]</a>
-<span class="k">class</span> <span class="nc">CommonOutputFile</span><span class="p">(</span><span class="n">ConfigurationFile</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">CommonOutputFile</span><span class="p">(</span><span class="n">OutputFile</span><span class="p">):</span>
 
 <div class="viewcode-block" id="CommonOutputFile.n_atoms">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.output_files.CommonOutputFile.n_atoms">[docs]</a>
@@ -243,7 +268,7 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">type</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">type</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;TXT_T&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">type</span><span class="p">:</span>
                <span class="k">return</span> <span class="n">i</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;There is no </span><span class="si">{</span><span class="nb">type</span><span class="si">}</span><span class="s1"> atom in the output file&#39;</span><span class="p">)</span></div>
 
@@ -252,7 +277,7 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.output_files.CommonOutputFile.n_orbitals">[docs]</a>
     <span class="k">def</span> <span class="nf">n_orbitals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
         <span class="nb">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_type_index</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ORBITALS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="nb">type</span><span class="p">][</span><span class="s1">&#39;IQAT&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ORBITALS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="nb">type</span><span class="p">][</span><span class="s1">&#39;IQAT&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]][</span><span class="s1">&#39;NLQ&#39;</span><span class="p">]</span></div>
 </div>
 
 
@@ -301,7 +326,10 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.Arithmetic.html#ase2sprkkr.output_files.output_files.Arithmetic._do_arithmetic">[docs]</a>
     <span class="k">def</span> <span class="nf">_do_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Run given function for all &quot;summable/subtractable/etc... data&quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">selector</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arithmetic_values</span><span class="p">:</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arithmetic_values</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">vals</span><span class="p">):</span>
+              <span class="n">vals</span> <span class="o">=</span> <span class="n">vals</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">selector</span> <span class="ow">in</span> <span class="n">vals</span><span class="p">:</span>
             <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">val</span><span class="p">]()[</span><span class="n">selector</span><span class="p">],</span><span class="n">func</span><span class="p">)(</span><span class="n">other</span><span class="p">[</span><span class="n">val</span><span class="p">]()[</span><span class="n">selector</span><span class="p">])</span></div>
 
 

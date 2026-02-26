@@ -1,0 +1,36 @@
+KkrProcessRunner
+================
+
+
+.. currentmodule:: ase2sprkkr.outputs.task_result
+
+.. autoclass:: KkrProcessRunner
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.task_result.KkrProcessRunner
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

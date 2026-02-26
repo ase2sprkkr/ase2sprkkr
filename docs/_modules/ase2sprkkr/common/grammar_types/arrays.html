@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
@@ -586,6 +588,7 @@
                      <span class="n">header</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">free_header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                      <span class="nb">format</span> <span class="o">=</span> <span class="p">{</span><span class="nb">float</span><span class="p">:</span> <span class="s1">&#39;&gt;22.14&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">:</span> <span class="s1">&#39;&gt;16&#39;</span><span class="p">},</span> <span class="n">format_all</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                      <span class="n">numbering</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="n">GrammarType</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numbering_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numbering_format</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">free_numbering</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                      <span class="n">grouping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grouping_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grouping_format</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                      <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                      <span class="n">row_condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -593,6 +596,7 @@
                      <span class="n">named_result</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                      <span class="n">group_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group_size_format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{:&lt;12}{}</span><span class="s2">&quot;</span><span class="p">,</span>
                      <span class="n">groups_as_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">repeat_sparse</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                      <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Parameters</span>
@@ -612,6 +616,8 @@
 <span class="sd">        String argument means the label of the column.</span>
 <span class="sd">      numbering_label</span>
 <span class="sd">        The label of the numbering column (if not given in numbering).</span>
+<span class="sd">      free_numbering</span>
+<span class="sd">        If True, the numering is not required to be correct on input.</span>
 <span class="sd">      numbering_format</span>
 <span class="sd">        Format for the numering column</span>
 <span class="sd">      grouping</span>
@@ -646,10 +652,14 @@
 <span class="sd">      groups_as_list</span>
 <span class="sd">        If True - groups are contained in list</span>
 <span class="sd">        If False - groups are contained in np.ndarray</span>
-<span class="sd">        If None - True if group_size is defined (and thus if it is possible)</span>
+<span class="sd">        If None - False if the group_size is defined (and thus if it is possible to</span>
+<span class="sd">        interpret it as multidimensional array)</span>
 <span class="sd">      kwargs</span>
 <span class="sd">        Columns and their names can be assigned as kwargs, e.g.</span>
 <span class="sd">        ``column1_name = float, column2_name = int, ...``</span>
+<span class="sd">      repeat_sparse</span>
+<span class="sd">        There can be rows, that have only some columns, given as list.</span>
+<span class="sd">        Then the data will be added from the previous row.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
          <span class="n">columns</span> <span class="o">=</span> <span class="n">kwargs</span>
@@ -671,12 +681,21 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">group_size_format</span> <span class="o">=</span> <span class="n">group_size_format</span>
 
       <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="o">*</span><span class="n">columns</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">format_all</span><span class="o">=</span><span class="n">format_all</span><span class="p">,</span> <span class="n">condition</span> <span class="o">=</span> <span class="n">row_condition</span><span class="p">,</span> <span class="n">default_values</span><span class="o">=</span><span class="n">default_values</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">repeat_sparse</span><span class="p">:</span>
+         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
+            <span class="n">repeat_sparse</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">repeat_sparse</span> <span class="p">]</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">repeat_sparse_sequence</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">repeat_sparse</span><span class="p">),</span>
+                                                <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">format_all</span><span class="o">=</span><span class="n">format_all</span><span class="p">,</span>
+                                                <span class="n">condition</span> <span class="o">=</span> <span class="n">row_condition</span><span class="p">,</span> <span class="n">default_values</span><span class="o">=</span><span class="n">default_values</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">repeat_sparse</span> <span class="o">=</span> <span class="n">repeat_sparse</span>
+
       <span class="bp">self</span><span class="o">.</span><span class="n">flatten</span> <span class="o">=</span> <span class="n">flatten</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">free_header</span> <span class="o">=</span> <span class="n">free_header</span>
 
       <span class="bp">self</span><span class="o">.</span><span class="n">named_result</span> <span class="o">=</span> <span class="n">named_result</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">numbering</span> <span class="o">=</span> <span class="n">SpecialColumn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">numbering</span><span class="p">,</span> <span class="n">numbering_label</span><span class="p">,</span> <span class="n">numbering_format</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">free_numbering</span> <span class="o">=</span> <span class="n">free_numbering</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">grouping</span> <span class="o">=</span> <span class="n">SpecialColumn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grouping</span><span class="p">,</span> <span class="n">grouping_label</span><span class="p">,</span> <span class="n">grouping_format</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">groups_as_list</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grouping</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
           <span class="n">groups_as_list</span> <span class="k">if</span> <span class="n">groups_as_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="ow">not</span> <span class="n">group_size</span>
@@ -699,10 +718,13 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Table.html#ase2sprkkr.common.grammar_types.arrays.Table._grammar">[docs]</a>
   <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_name</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
       <span class="n">line</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">grammar</span><span class="p">(</span><span class="n">param_name</span><span class="p">)</span>
-      <span class="n">cols</span> <span class="o">=</span> <span class="mi">1</span>
+
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">special_columns</span><span class="p">():</span>
-          <span class="n">cols</span><span class="o">+=</span><span class="mi">1</span>
           <span class="n">line</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">add_grammar</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">repeat_sparse</span><span class="p">:</span>
+         <span class="n">line</span> <span class="o">=</span> <span class="n">line</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">repeat_sparse_sequence</span><span class="o">.</span><span class="n">grammar</span><span class="p">(</span><span class="n">param_name</span><span class="p">)</span>
+
       <span class="n">grammar</span> <span class="o">=</span> <span class="n">delimitedList</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">line_end</span><span class="p">)</span>
 
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_size</span><span class="p">:</span>
@@ -713,7 +735,7 @@
           <span class="n">grp_size</span> <span class="o">=</span> <span class="n">Unsigned</span><span class="o">.</span><span class="n">I</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="n">set_g_size</span><span class="p">)</span>
           <span class="n">grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">grp_size</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">grammar</span>
 
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">:</span>
          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">free_header</span><span class="p">:</span>
              <span class="n">fh</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">SkipTo</span><span class="p">(</span><span class="n">line_end</span><span class="p">)</span> <span class="o">+</span> <span class="n">line_end</span>
              <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_header</span><span class="p">):</span>
@@ -735,10 +757,11 @@
              <span class="n">grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">header</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">lineEnd</span><span class="p">)</span> <span class="o">+</span> <span class="n">grammar</span>
 
       <span class="k">def</span> <span class="nf">data_numbering</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-          <span class="n">numbers</span> <span class="o">=</span> <span class="n">x</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
           <span class="n">datas</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
-          <span class="k">if</span> <span class="ow">not</span> <span class="n">numbers</span> <span class="o">==</span> <span class="p">[</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]:</span>
-             <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="s1">&#39;The first column should contain row numbering&#39;</span><span class="p">)</span>
+          <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">free_numbering</span><span class="p">:</span>
+              <span class="n">should_be</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">datas</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+              <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">should_be</span><span class="p">:</span>
+                  <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="s1">&#39;The first column should contain row numbering&#39;</span><span class="p">)</span>
           <span class="k">return</span> <span class="n">tabelize</span><span class="p">(</span><span class="n">datas</span><span class="p">)</span>
 
       <span class="k">def</span> <span class="nf">data_grouping</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
@@ -806,6 +829,22 @@
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_numpy_type</span><span class="p">)</span>
 
       <span class="k">def</span> <span class="nf">tabelize</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">repeat_sparse</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+              <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repeat_sparse</span><span class="p">)</span>
+              <span class="n">vals</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+              <span class="n">prev</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>
+              <span class="n">out</span> <span class="o">=</span> <span class="p">[</span> <span class="n">prev</span> <span class="p">]</span>
+              <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">vals</span><span class="p">:</span>
+                  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="n">ln</span><span class="p">:</span>
+                      <span class="n">add</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">prev</span><span class="p">)</span>
+                      <span class="k">for</span> <span class="n">si</span><span class="p">,</span><span class="n">di</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repeat_sparse</span><span class="p">):</span>
+                          <span class="n">add</span><span class="p">[</span><span class="n">di</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="n">si</span><span class="p">]</span>
+                      <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">add</span><span class="p">))</span>
+                  <span class="k">else</span><span class="p">:</span>
+                      <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                      <span class="n">prev</span> <span class="o">=</span> <span class="n">line</span>
+              <span class="n">x</span><span class="o">=</span><span class="n">out</span>
+
           <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_numpy_type</span><span class="p">)</span>
           <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flatten</span><span class="p">:</span>
               <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>

@@ -38,14 +38,32 @@ Full name: **ase2sprkkr.asr.utils**
      :template: custom-module-template.rst
      :recursive:
   
+  
      args
+  
+  
      calculator_utils
+  
+  
      gpw2eigs
+  
+  
      kpts
+  
+  
      magnetism
+  
+  
      refinegs
+  
+  
      something
+  
+  
      symmetry
+  
+  
      utils
+  
   
   

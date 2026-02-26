@@ -1,43 +1,7 @@
-test
-====
-
-Full name: **ase2sprkkr.tools.commands.test**
-
-
-
-.. rubric:: Description
+ase2sprkkr.tools.commands.test module
+=====================================
 
 .. automodule:: ase2sprkkr.tools.commands.test
-
-   
-   
-   
-
-
-   
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-      :toctree:
-      :template: custom-base-template.rst
-   
-      parser
-      run
-   
-   
-
-
-   
-   
-   
-
-
-   
-   
-   
-
-
-  
-  
-  
+   :members:
+   :undoc-members:
+   :show-inheritance:

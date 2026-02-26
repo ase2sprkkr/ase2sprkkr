@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
 
   
@@ -22,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="create_definition" href="ase2sprkkr.output_files.definitions.dos.create_definition.html" />
-    <link rel="prev" title="BSFOutputFile" href="ase2sprkkr.output_files.definitions.bsf.BSFOutputFile.html" /> 
+    <link rel="prev" title="ARPESOutputFile" href="ase2sprkkr.output_files.definitions.dij.ARPESOutputFile.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
@@ -65,12 +67,14 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.output_files.definitions.html">definitions</a><ul class="current">
@@ -79,13 +83,13 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.OutputFile.html">OutputFile</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.UnknownDataValue.html">UnknownDataValue</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.bsf.html">bsf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.dij.html">dij</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">dos</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.spc.html">spc</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.output_files.html">output_files</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.html">output_files_definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.test.html">test</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
@@ -94,7 +98,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -130,25 +133,26 @@
 <h1>dos<a class="headerlink" href="#dos" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.output_files.definitions.dos</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-41ada441721b3415597d68e0615ce15e70ceb8f4.png" alt="Inheritance diagram of ase2sprkkr.output_files.definitions.dos.DOS, ase2sprkkr.output_files.definitions.dos.DOSDefinition, ase2sprkkr.output_files.definitions.dos.DOSOutputFile" usemap="#inheritancefd4440fc56" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-4f1ecd5b83ddc4850bd4dd02a2afa79bbf05fd7c.png" alt="Inheritance diagram of ase2sprkkr.output_files.definitions.dos.DOS, ase2sprkkr.output_files.definitions.dos.DOSDefinition, ase2sprkkr.output_files.definitions.dos.DOSOutputFile" usemap="#inheritancefd4440fc56" class="inheritance graphviz" /></div>
 <map id="inheritancefd4440fc56" name="inheritancefd4440fc56">
-<area shape="rect" id="node1" href="ase2sprkkr.output_files.output_files.Arithmetic.html#ase2sprkkr.output_files.output_files.Arithmetic" target="_top" title="Arithmetic" alt="" coords="13,109,78,127"/>
-<area shape="rect" id="node14" href="ase2sprkkr.output_files.definitions.dos.DOS.html#ase2sprkkr.output_files.definitions.dos.DOS" target="_top" title="DOS" alt="" coords="155,109,207,127"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="108,74,254,92"/>
-<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="275,74,397,92"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="7,74,85,92"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="4,4,87,22"/>
-<area shape="rect" id="node13" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="130,4,232,22"/>
-<area shape="rect" id="node5" href="ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.output_files.CommonOutputFile" target="_top" title="CommonOutputFile" alt="" coords="745,56,850,74"/>
-<area shape="rect" id="node17" href="ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile" target="_top" title="DOSOutputFile" alt="" coords="873,56,956,74"/>
-<area shape="rect" id="node6" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="606,56,700,74"/>
-<area shape="rect" id="node8" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="418,74,563,92"/>
-<area shape="rect" id="node9" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="ConfigurationSectionTrait" alt="" coords="424,39,557,57"/>
-<area shape="rect" id="node10" href="ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition" target="_top" title="The class for the configuration files (the root nodes of the configuration)." alt="" coords="584,4,722,22"/>
-<area shape="rect" id="node16" href="ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition.html#ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition" target="_top" title="This class describes the format of one" alt="" coords="743,4,852,22"/>
-<area shape="rect" id="node11" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="418,4,563,22"/>
-<area shape="rect" id="node12" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="283,4,389,22"/>
-<area shape="rect" id="node15" href="ase2sprkkr.output_files.definitions.dos.DOSDefinition.html#ase2sprkkr.output_files.definitions.dos.DOSDefinition" target="_top" title="DOSDefinition" alt="" coords="874,4,955,22"/>
+<area shape="rect" id="node1" href="ase2sprkkr.output_files.output_files.Arithmetic.html#ase2sprkkr.output_files.output_files.Arithmetic" target="_top" title="Arithmetic" alt="" coords="12,97,69,113"/>
+<area shape="rect" id="node15" href="ase2sprkkr.output_files.definitions.dos.DOS.html#ase2sprkkr.output_files.definitions.dos.DOS" target="_top" title="DOS" alt="" coords="137,97,183,113"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="96,66,224,81"/>
+<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="243,66,351,81"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="6,66,75,81"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="3,3,77,19"/>
+<area shape="rect" id="node14" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="115,3,205,19"/>
+<area shape="rect" id="node5" href="ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.output_files.CommonOutputFile" target="_top" title="CommonOutputFile" alt="" coords="771,50,864,66"/>
+<area shape="rect" id="node18" href="ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile" target="_top" title="DOSOutputFile" alt="" coords="883,50,957,66"/>
+<area shape="rect" id="node6" href="ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.output_files.OutputFile" target="_top" title="Objects of this class holds datas of an output file" alt="" coords="677,50,733,66"/>
+<area shape="rect" id="node9" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="370,66,497,81"/>
+<area shape="rect" id="node8" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="535,50,619,66"/>
+<area shape="rect" id="node10" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="ConfigurationSectionTrait" alt="" coords="375,34,492,50"/>
+<area shape="rect" id="node11" href="ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition" target="_top" title="The class for the configuration files (the root nodes of the configuration)." alt="" coords="516,3,638,19"/>
+<area shape="rect" id="node17" href="ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition.html#ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition" target="_top" title="This class describes the format of one" alt="" coords="657,3,753,19"/>
+<area shape="rect" id="node12" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="370,3,497,19"/>
+<area shape="rect" id="node13" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="250,3,344,19"/>
+<area shape="rect" id="node16" href="ase2sprkkr.output_files.definitions.dos.DOSDefinition.html#ase2sprkkr.output_files.definitions.dos.DOSDefinition" target="_top" title="DOSDefinition" alt="" coords="782,3,853,19"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -181,7 +185,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.output_files.definitions.bsf.BSFOutputFile.html" class="btn btn-neutral float-left" title="BSFOutputFile" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.output_files.definitions.dij.ARPESOutputFile.html" class="btn btn-neutral float-left" title="ARPESOutputFile" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.output_files.definitions.dos.create_definition.html" class="btn btn-neutral float-right" title="create_definition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

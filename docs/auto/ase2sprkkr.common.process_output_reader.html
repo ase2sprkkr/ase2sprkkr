@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
 
   
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
@@ -65,6 +67,7 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
@@ -92,6 +95,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">process_output_reader</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.readline.html">readline</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.readline_until.html">readline_until</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.run_coro_sync.html">run_coro_sync</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.AsyncioFileReader.html">AsyncioFileReader</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.ProcessOutputReader.html">ProcessOutputReader</a></li>
 </ul>
@@ -99,7 +103,6 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.test.html">test</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.value_definitions.html">value_definitions</a></li>
@@ -109,6 +112,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
@@ -117,7 +121,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -171,6 +174,9 @@
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.process_output_reader.readline_until.html#ase2sprkkr.common.process_output_reader.readline_until" title="ase2sprkkr.common.process_output_reader.readline_until"><code class="xref py py-obj docutils literal notranslate"><span class="pre">readline_until</span></code></a>(stdout, cond[, can_end])</p></td>
 <td><p></p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.process_output_reader.run_coro_sync.html#ase2sprkkr.common.process_output_reader.run_coro_sync" title="ase2sprkkr.common.process_output_reader.run_coro_sync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_coro_sync</span></code></a>(coro_func)</p></td>
+<td><p>Run an async coroutine from a synchronous context, even if an event loop is already running.</p></td>
+</tr>
 </tbody>
 </table>
 <p class="rubric">Classes</p>
@@ -179,7 +185,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader" title="ase2sprkkr.common.process_output_reader.AsyncioFileReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AsyncioFileReader</span></code></a>(filename[, buffersize])</p></td>
 <td><p>File reader that mimics asyncio StreamReader.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader" title="ase2sprkkr.common.process_output_reader.ProcessOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProcessOutputReader</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader" title="ase2sprkkr.common.process_output_reader.ProcessOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProcessOutputReader</span></code></a>([print_output, ...])</p></td>
 <td><p>Class, that run a process, optionally saves all the output of the process to a file, and pass the stdout and stderr of the process to its two async routines, read_error and read_output.</p></td>
 </tr>
 </tbody>

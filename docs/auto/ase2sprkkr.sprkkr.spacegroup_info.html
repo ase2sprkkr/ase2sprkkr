@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
 
   
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
@@ -65,12 +67,14 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
@@ -92,6 +96,8 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">spacegroup_info</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.site_type_copier.html">site_type_copier</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.used_site_type_copier.html">used_site_type_copier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo.html">BaseSpacegroupInfo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo.html">RegionSpacegroupInfo</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html">SpacegroupInfo</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock.html">SpacegroupInfoBlock</a></li>
 </ul>
@@ -100,12 +106,10 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.html">sprkkr_grammar_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html">structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html">sysfile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.test.html">test</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -140,10 +144,12 @@
 <h1>spacegroup_info<a class="headerlink" href="#spacegroup-info" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.sprkkr.spacegroup_info</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-1436d3bc2cba3f26191ef99b520898f4253fa91f.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo, ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock" usemap="#inheritance2070daca90" class="inheritance graphviz" /></div>
-<map id="inheritance2070daca90" name="inheritance2070daca90">
-<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo" target="_top" title="Class, that carry information about spacegroup and symmetry of a structure" alt="" coords="23,55,146,80"/>
-<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock" target="_top" title="SpacegroupInfoBlock" alt="" coords="5,5,164,31"/>
+<div class="graphviz"><img src="../_images/inheritance-1e5a0cd150b406d0fa711925e7bf69b0c3ec3d87.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo, ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo, ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo, ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock" usemap="#inheritancec9306eeacb" class="inheritance graphviz" /></div>
+<map id="inheritancec9306eeacb" name="inheritancec9306eeacb">
+<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo" target="_top" title="BaseSpacegroupInfo" alt="" coords="7,55,162,80"/>
+<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo" target="_top" title="RegionSpacegroupInfo" alt="" coords="193,29,361,55"/>
+<area shape="rect" id="node3" href="ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo" target="_top" title="Class, that carry information about spacegroup and symmetry of a structure" alt="" coords="216,79,339,104"/>
+<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock" target="_top" title="Class, for locking the update of spacegroup_info. If more operation are performed, the" alt="" coords="5,5,164,31"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -163,11 +169,17 @@
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo" title="ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSpacegroupInfo</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo" title="ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegionSpacegroupInfo</span></code></a>(spacegroup_info, region)</p></td>
+<td><p></p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo" title="ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpacegroupInfo</span></code></a>(atoms[, symmetry, dataset])</p></td>
 <td><p>Class, that carry information about spacegroup and symmetry of a structure</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock" title="ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpacegroupInfoBlock</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Class, for locking the update of spacegroup_info.</p></td>
 </tr>
 </tbody>
 </table>

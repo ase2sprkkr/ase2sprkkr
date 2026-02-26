@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -113,7 +115,7 @@
 <span class="kn">from</span> <span class="nn">.options</span> <span class="kn">import</span> <span class="n">Dummy</span><span class="p">,</span> <span class="n">DummyStub</span>
 <span class="kn">from</span> <span class="nn">.decorators</span> <span class="kn">import</span> <span class="n">cached_class_property</span>
 <span class="kn">from</span> <span class="nn">.grammar</span> <span class="kn">import</span> <span class="n">generate_grammar</span>
-<span class="kn">from</span> <span class="nn">.grammar_types.basic</span> <span class="kn">import</span> <span class="n">Separator</span>
+<span class="kn">from</span> <span class="nn">.grammar_types.basic</span> <span class="kn">import</span> <span class="n">Separator</span><span class="p">,</span> <span class="n">KeywordSeparator</span>
 <span class="kn">from</span> <span class="nn">.parsing_results</span> <span class="kn">import</span> <span class="n">Key</span><span class="p">,</span> <span class="n">ArrayKey</span><span class="p">,</span> <span class="n">DictKey</span><span class="p">,</span> <span class="n">RepeatedKey</span><span class="p">,</span> <span class="n">DefDictKey</span><span class="p">,</span> <span class="n">IgnoredKey</span>
 
 
@@ -1100,13 +1102,22 @@
        <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="k">return</span> <span class="p">{</span> <span class="n">i</span><span class="p">:</span> <span class="n">create</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
+           <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="c1">#strings are &quot;symlinks&quot;, will be resolved in the second run</span>
+                <span class="k">return</span> <span class="kc">None</span>
+           <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="p">{</span> <span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">create</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="p">}</span>
            <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
-                   <span class="n">v</span><span class="o">=</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
                 <span class="k">return</span> <span class="p">{</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">create</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">v</span> <span class="p">}</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span> <span class="p">:</span> <span class="n">convert</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="k">else</span> <span class="p">{</span> <span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
+
+       <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span> <span class="p">:</span> <span class="n">convert</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
+
+       <span class="c1">#resolve the &quot;symlinks&quot;</span>
+       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+           <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="kc">None</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">copied</span> <span class="o">=</span> <span class="kc">False</span>
+       <span class="c1">#self.copied = False</span>
 
        <span class="k">if</span> <span class="n">template</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;_SWITCH_</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1">&#39;</span>
@@ -1198,9 +1209,10 @@
    <span class="k">def</span> <span class="nf">added_to_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">remove_from_container</span><span class="p">()</span>
        <span class="k">if</span> <span class="n">container</span><span class="p">:</span>
-           <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">copied</span><span class="p">:</span>
-               <span class="bp">self</span><span class="o">.</span><span class="n">copied</span> <span class="o">=</span> <span class="kc">False</span>
-               <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:{</span> <span class="n">n</span> <span class="p">:</span> <span class="n">container</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">v</span> <span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="p">}</span>
+           <span class="c1">#copying is not implemented yet</span>
+           <span class="c1">#if self.copied:</span>
+           <span class="c1">#    self.copied = False</span>
+           <span class="c1">#    self.values = { k:{ n : container[n] for n in v } for k,v in self.values }</span>
            <span class="n">container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">add_grammar_hook</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">item_hook</span><span class="p">)</span>
            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -1238,6 +1250,8 @@
         <span class="k">if</span> <span class="n">separator_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">separator_type</span> <span class="o">=</span> <span class="n">Separator</span><span class="p">(</span><span class="n">char</span><span class="o">=</span><span class="n">separator_type</span><span class="p">,</span><span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">separator_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">separator_type</span> <span class="o">=</span> <span class="n">KeywordSeparator</span><span class="p">(</span><span class="n">separator_type</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">separator_type</span> <span class="o">=</span> <span class="n">separator_type</span></div>
 
 

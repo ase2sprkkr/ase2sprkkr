@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -135,9 +137,9 @@
                         <span class="n">pbc</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">,</span>
                         <span class="n">cell</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span>
                         <span class="n">symmetry</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-    <span class="n">empty</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="n">empty</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="o">@</span> <span class="n">empty</span><span class="o">.</span><span class="n">cell</span>
     <span class="k">if</span> <span class="n">round_zero</span><span class="p">:</span>
         <span class="n">empty</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">empty</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">empty</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="n">empty</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="o">@</span> <span class="n">empty</span><span class="o">.</span><span class="n">cell</span>
     <span class="k">return</span> <span class="n">empty</span></div>
 
     <span class="c1"># for i,radius in zip(empty.sites, res.radii):</span>

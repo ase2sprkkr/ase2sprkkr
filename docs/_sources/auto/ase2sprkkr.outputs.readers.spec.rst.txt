@@ -1,0 +1,52 @@
+spec
+====
+
+Full name: **ase2sprkkr.outputs.readers.spec**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.spec.SpecOutputReader  ase2sprkkr.outputs.readers.spec.SpecProcessRunner  ase2sprkkr.outputs.readers.spec.SpecResult 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.readers.spec
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SpecOutputReader
+      SpecProcessRunner
+      SpecResult
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

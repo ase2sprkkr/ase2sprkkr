@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
 
   
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
@@ -65,12 +67,14 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
@@ -97,12 +101,10 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.html">sprkkr_grammar_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html">structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html">sysfile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.test.html">test</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -181,6 +183,16 @@ alloys).</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.for_atom_from_ase_atoms">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">for_atom_from_ase_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.for_atom_from_ase_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.for_atom_from_ase_atoms" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i</strong> (<a class="reference internal" href="ase2sprkkr.common.grammar_types.basic.Integer.html#ase2sprkkr.common.grammar_types.basic.Integer" title="ase2sprkkr.common.grammar_types.basic.Integer"><em>Integer</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.to_occupation">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">to_occupation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">occupation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.to_occupation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.to_occupation" title="Link to this definition"></a></dt>
 <dd><p>Create an occupation object associated with the given sites object</p>
@@ -208,7 +220,7 @@ alloys).</p>
 of the underlying Atoms object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dct</strong> (<em>Dict</em><em>[</em><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.atomic_types.AtomicType" title="ase2sprkkr.sprkkr.atomic_types.AtomicType"><em>AtomicType</em></a><em> | </em><em>str</em><em>, </em><em>float</em><em>]</em>)</p>
+<dd class="field-odd"><p><strong>dct</strong> (<em>Union</em><em>[</em><em>Dict</em><em>[</em><em>Union</em><em>[</em><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType" title="ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType"><em>AtomicType</em></a><em>, </em><em>str</em><em>]</em><em>, </em><em>float</em><em>]</em><em>, </em><em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType" title="ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType"><em>AtomicType</em></a><em>, </em><em>str</em><em>]</em><em>, </em><em>float</em><em>]</em><em>]</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -295,6 +307,11 @@ with the largest occupation</p>
 <dd><p>Return the atomic number of the atom at the site.
 If there are more atoms on the site, return the “main one”.</p>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.update_primary_atomic_number">
+<span class="sig-name descname"><span class="pre">update_primary_atomic_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.update_primary_atomic_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.update_primary_atomic_number" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.primary_symbol">

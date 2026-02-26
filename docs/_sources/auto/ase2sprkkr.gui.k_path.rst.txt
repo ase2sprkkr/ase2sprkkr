@@ -1,0 +1,60 @@
+k\_path
+=======
+
+Full name: **ase2sprkkr.gui.k\_path**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.gui.k_path.Arrow3D 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.gui.k_path
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      dot_norm
+      k_path_gui
+      k_path_to_string
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Arrow3D
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

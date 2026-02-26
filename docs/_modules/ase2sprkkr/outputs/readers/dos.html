@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
@@ -91,7 +93,7 @@
   <h1>Source code for ase2sprkkr.outputs.readers.dos</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; Density of states (DOS) reader and result. &quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">KkrProcess</span>
+<span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">KkrProcessRunner</span>
 <span class="kn">from</span> <span class="nn">.default</span> <span class="kn">import</span> <span class="n">DefaultOutputReader</span>
 <span class="kn">from</span> <span class="nn">...common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
 <span class="kn">from</span> <span class="nn">...output_files.output_files</span> <span class="kn">import</span> <span class="n">OutputFile</span>
@@ -119,9 +121,9 @@
 
 
 
-<div class="viewcode-block" id="DosProcess">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.dos.DosProcess.html#ase2sprkkr.outputs.readers.dos.DosProcess">[docs]</a>
-<span class="k">class</span> <span class="nc">DosProcess</span><span class="p">(</span><span class="n">KkrProcess</span><span class="p">):</span>
+<div class="viewcode-block" id="DosProcessRunner">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.dos.DosProcessRunner.html#ase2sprkkr.outputs.readers.dos.DosProcessRunner">[docs]</a>
+<span class="k">class</span> <span class="nc">DosProcessRunner</span><span class="p">(</span><span class="n">KkrProcessRunner</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; ARPES task output reader currently do nothing, just have a special</span>
 <span class="sd">  result, that allow easy acces to spc output file &quot;&quot;&quot;</span>
 

@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -107,10 +109,6 @@
 <span class="sd">      The instances of the class can be merged to distinct the values, that are</span>
 <span class="sd">      the same according to one criterion, but distinct on the other.</span>
 
-<span class="sd">      .. testsetup::</span>
-
-<span class="sd">         np.set_printoptions(legacy=&#39;1.25&#39;)</span>
-
 <span class="sd">      .. doctest::</span>
 
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1,4,1]).mapping</span>
@@ -124,8 +122,9 @@
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
-          <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalized</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> \
+         <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalized</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
       <span class="k">else</span><span class="p">:</span>
           <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span>
       <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;UniqueValuesMapping: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
@@ -163,10 +162,6 @@
 <span class="sd">      start_from:</span>
 <span class="sd">        The indexes are by default zero-based, however they can start with</span>
 <span class="sd">        the given number (typically with 1).</span>
-
-<span class="sd">      .. testsetup::</span>
-
-<span class="sd">         np.set_printoptions(legacy=&#39;1.25&#39;)</span>
 
 <span class="sd">      ..doctest::</span>
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).indexes()</span>
@@ -362,7 +357,8 @@
 <span class="sd">         Dict ``{ equivalence_class : value }``</span>
 
 <span class="sd">      .. doctest::</span>
-
+<span class="sd">        #In old numpy the following line would fail, new numpy prints the types of scalars</span>
+<span class="sd">        &gt;&gt;&gt; if np.__version__ &gt; &#39;2.0&#39;: np.set_printoptions(legacy = &#39;1.25&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized()</span>
 <span class="sd">        (array([1, 2, 1], dtype=int32), {1: 1, 2: 2})</span>
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized(start_from=0)</span>

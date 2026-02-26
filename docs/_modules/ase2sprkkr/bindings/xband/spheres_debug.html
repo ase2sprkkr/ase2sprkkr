@@ -1,0 +1,476 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.bindings.xband.spheres_debug &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.bindings.xband.spheres_debug</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.bindings.xband.spheres_debug</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Sequence</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+<span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Bohr</span>
+
+<span class="kn">from</span> <span class="nn">...sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+<span class="kn">from</span> <span class="nn">...common.unique_values</span> <span class="kn">import</span> <span class="n">UniqueValuesMapping</span>
+
+
+<div class="viewcode-block" id="FindEmptySpheresInputs">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.html#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FindEmptySpheresInputs</span><span class="p">:</span>
+    <span class="n">max_spheres</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">min_radius_bohr</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">max_radius_bohr</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">alat_bohr</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">cell_scaled</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>  <span class="c1"># shape (3,3), C-order like in spheres.pyx</span>
+    <span class="n">positions_scaled</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>  <span class="c1"># shape (n,3)</span>
+    <span class="n">mapping</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>  <span class="c1"># shape (n,), int32</span>
+    <span class="n">n_classes</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">n_types</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">symbols4</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># len n_types, each exactly 4 chars</span>
+    <span class="n">atomic_numbers</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>  <span class="c1"># shape (n_types,), float64</span>
+    <span class="n">occupations</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>  <span class="c1"># shape (n_types,), float64</span>
+    <span class="n">type_eq_class</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>  <span class="c1"># shape (n_types,), int32</span>
+    <span class="n">mesh</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>  <span class="c1"># shape (3,), int32</span>
+    <span class="n">n_symmetry_ops</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">rotations</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span>  <span class="c1"># shape (n_symmetry_ops, 3,3)</span>
+    <span class="n">translations</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span>  <span class="c1"># shape (n_symmetry_ops, 3)</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+
+<div class="viewcode-block" id="_fmt_f64">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug._fmt_f64.html#ase2sprkkr.bindings.xband.spheres_debug._fmt_f64">[docs]</a>
+<span class="k">def</span> <span class="nf">_fmt_f64</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="c1"># Force exponent form that gfortran accepts and is stable for copy-paste.</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">:</span><span class="s2">.17e</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_fmt_i32">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug._fmt_i32.html#ase2sprkkr.bindings.xband.spheres_debug._fmt_i32">[docs]</a>
+<span class="k">def</span> <span class="nf">_fmt_i32</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="_pad4">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug._pad4.html#ase2sprkkr.bindings.xband.spheres_debug._pad4">[docs]</a>
+<span class="k">def</span> <span class="nf">_pad4</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="s2">&quot;    &quot;</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="_as_list_literal_f64">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug._as_list_literal_f64.html#ase2sprkkr.bindings.xband.spheres_debug._as_list_literal_f64">[docs]</a>
+<span class="k">def</span> <span class="nf">_as_list_literal_f64</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_as_list_literal_i32">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug._as_list_literal_i32.html#ase2sprkkr.bindings.xband.spheres_debug._as_list_literal_i32">[docs]</a>
+<span class="k">def</span> <span class="nf">_as_list_literal_i32</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_fmt_i32</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_collect_inputs">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug._collect_inputs.html#ase2sprkkr.bindings.xband.spheres_debug._collect_inputs">[docs]</a>
+<span class="k">def</span> <span class="nf">_collect_inputs</span><span class="p">(</span>
+    <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">min_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">max_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mesh</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">max_spheres</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FindEmptySpheresInputs</span><span class="p">:</span>
+    <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+
+    <span class="n">to_bohr</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">Bohr</span>
+    <span class="n">min_radius_bohr</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">min_radius</span><span class="p">)</span> <span class="o">*</span> <span class="n">to_bohr</span>
+    <span class="n">max_radius_bohr</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">max_radius</span><span class="p">)</span> <span class="o">*</span> <span class="n">to_bohr</span>
+
+    <span class="n">alat_bohr</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">get_bravais_lattice</span><span class="p">()</span><span class="o">.</span><span class="n">a</span> <span class="o">*</span> <span class="n">to_bohr</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+
+    <span class="n">es</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">spacegroup_info</span><span class="o">.</span><span class="n">equivalent_sites</span>
+    <span class="n">es</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">es</span><span class="p">)</span>
+    <span class="n">ui</span> <span class="o">=</span> <span class="n">es</span><span class="o">.</span><span class="n">unique_indexes</span><span class="p">()</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">es</span><span class="o">.</span><span class="n">normalized</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+    <span class="n">n_types</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ui</span><span class="p">)</span>
+    <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ui</span><span class="p">)</span>
+
+    <span class="n">symbols4</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">occupations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_types</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">atomic_numbers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_types</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">type_eq_class</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_types</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+    <span class="n">type_no</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">ui</span><span class="p">:</span>
+        <span class="n">site</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">typ</span><span class="p">,</span> <span class="n">occ</span> <span class="ow">in</span> <span class="n">site</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">symbols4</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_pad4</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="s2">&quot;symbol&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">typ</span><span class="p">))))</span>
+            <span class="n">occupations</span><span class="p">[</span><span class="n">type_no</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">occ</span><span class="p">)</span>
+            <span class="n">atomic_numbers</span><span class="p">[</span><span class="n">type_no</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="s2">&quot;atomic_number&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+            <span class="n">type_eq_class</span><span class="p">[</span><span class="n">type_no</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># 1-based, matches spheres.pyx</span>
+            <span class="n">type_no</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">mesh3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">mesh</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">mesh</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mesh3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mesh must be int or length-3 sequence&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="n">verbose_i</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">verbose</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">verbose_i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">ratio</span> <span class="o">=</span> <span class="n">to_bohr</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">alat_bohr</span><span class="p">)</span>
+    <span class="n">cell_scaled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">[:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">*</span> <span class="n">ratio</span>
+    <span class="n">positions_scaled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">*</span> <span class="n">ratio</span>
+
+    <span class="n">sp</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">spacegroup_info</span>
+    <span class="n">rotations</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">translations</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">n_symmetry_ops</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">sp</span> <span class="ow">and</span> <span class="n">sp</span><span class="o">.</span><span class="n">dataset</span> <span class="ow">and</span> <span class="n">sp</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">rotations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">dataset</span>
+        <span class="n">rotations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">rotations</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>  <span class="c1"># shape (nops,3,3)</span>
+        <span class="n">translations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">translations</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>  <span class="c1"># shape (nops,3)</span>
+        <span class="n">n_symmetry_ops</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rotations</span><span class="p">))</span>
+
+        <span class="c1"># Emit rotations exactly as spglib provides them (nops,3,3) but stored</span>
+        <span class="c1"># into a Fortran-declared array ROTATIONS(3,3,nops) in the same numeric</span>
+        <span class="c1"># orientation: ROTATIONS(i,j,op) = rot_py(op,i,j).</span>
+
+    <span class="k">return</span> <span class="n">FindEmptySpheresInputs</span><span class="p">(</span>
+        <span class="n">max_spheres</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">max_spheres</span><span class="p">),</span>
+        <span class="n">min_radius_bohr</span><span class="o">=</span><span class="n">min_radius_bohr</span><span class="p">,</span>
+        <span class="n">max_radius_bohr</span><span class="o">=</span><span class="n">max_radius_bohr</span><span class="p">,</span>
+        <span class="n">alat_bohr</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">alat_bohr</span><span class="p">),</span>
+        <span class="n">cell_scaled</span><span class="o">=</span><span class="n">cell_scaled</span><span class="p">,</span>
+        <span class="n">positions_scaled</span><span class="o">=</span><span class="n">positions_scaled</span><span class="p">,</span>
+        <span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span>
+        <span class="n">n_classes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">n_classes</span><span class="p">),</span>
+        <span class="n">n_types</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">n_types</span><span class="p">),</span>
+        <span class="n">symbols4</span><span class="o">=</span><span class="n">symbols4</span><span class="p">,</span>
+        <span class="n">atomic_numbers</span><span class="o">=</span><span class="n">atomic_numbers</span><span class="p">,</span>
+        <span class="n">occupations</span><span class="o">=</span><span class="n">occupations</span><span class="p">,</span>
+        <span class="n">type_eq_class</span><span class="o">=</span><span class="n">type_eq_class</span><span class="p">,</span>
+        <span class="n">mesh</span><span class="o">=</span><span class="n">mesh3</span><span class="p">,</span>
+        <span class="n">n_symmetry_ops</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">n_symmetry_ops</span><span class="p">),</span>
+        <span class="n">rotations</span><span class="o">=</span><span class="n">rotations</span><span class="p">,</span>
+        <span class="n">translations</span><span class="o">=</span><span class="n">translations</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">verbose_i</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="fortran_code_find_empty_spheres">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug.fortran_code_find_empty_spheres.html#ase2sprkkr.bindings.xband.spheres_debug.fortran_code_find_empty_spheres">[docs]</a>
+<span class="k">def</span> <span class="nf">fortran_code_find_empty_spheres</span><span class="p">(</span>
+    <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">min_radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.65</span><span class="p">,</span>
+    <span class="n">max_radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
+    <span class="n">mesh</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">max_spheres</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
+    <span class="n">program_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;repro_find_empty_spheres&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a standalone Fortran program that calls `FIND_EMPTY_SPHERES`.</span>
+
+<span class="sd">    The emitted program mirrors `spheres.pyx` data preparation:</span>
+<span class="sd">    - radii in Bohr</span>
+<span class="sd">    - `alat` in Bohr</span>
+<span class="sd">    - `CELL` and `BAS` scaled by `ratio = (1/Bohr)/alat`</span>
+<span class="sd">    - symmetry rotations/translations layout as seen by Fortran</span>
+
+<span class="sd">    It is meant for debugging crashes / wrong results by reproducing the exact call.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">inp</span> <span class="o">=</span> <span class="n">_collect_inputs</span><span class="p">(</span>
+        <span class="n">atoms</span><span class="p">,</span>
+        <span class="n">min_radius</span><span class="o">=</span><span class="n">min_radius</span><span class="p">,</span>
+        <span class="n">max_radius</span><span class="o">=</span><span class="n">max_radius</span><span class="p">,</span>
+        <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="n">max_spheres</span><span class="o">=</span><span class="n">max_spheres</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">positions_scaled</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">n_out</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">max_spheres</span>
+
+    <span class="c1"># Fortran expects NTMAX=200 in radii.f90; keep that as a conservative max.</span>
+    <span class="n">ntmax</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">n_types</span> <span class="o">&gt;</span> <span class="n">ntmax</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;n_types=</span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_types</span><span class="si">}</span><span class="s2"> exceeds NTMAX=</span><span class="si">{</span><span class="n">ntmax</span><span class="si">}</span><span class="s2"> used by FIND_EMPTY_SPHERES&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">ntmax</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;n_atoms=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> exceeds NTMAX=</span><span class="si">{</span><span class="n">ntmax</span><span class="si">}</span><span class="s2"> used by FIND_EMPTY_SPHERES&quot;</span><span class="p">)</span>
+
+    <span class="n">lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">lines</span><span class="o">.</span><span class="n">append</span>
+
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;program </span><span class="si">{</span><span class="n">program_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  implicit none&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer, parameter :: NTMAX=200&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer, parameter :: MAXDIM=1000000&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: ret&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: n_out&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: nq&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: nm&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: nsort&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: verbose&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: n_symmetry_ops&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: rmines, rmaxes, alat&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: mesh(3)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: cell(3,3)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: centres(3, MAXDIM)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: radii(MAXDIM)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: bas(3, NTMAX)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: imq(NTMAX)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: imt(NTMAX)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  character(len=4) :: txtt(NTMAX)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: z(NTMAX)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: conc(NTMAX)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: rotations(3,3,96)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: translations(3,96)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: i&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer, external :: find_empty_spheres&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  n_out = </span><span class="si">{</span><span class="n">n_out</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  nq = </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  nm = </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_classes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  nsort = </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_types</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  verbose = </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">verbose</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  rmines = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">min_radius_bohr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  rmaxes = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">max_radius_bohr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  alat = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">alat_bohr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  mesh = (/ </span><span class="si">{</span><span class="w"> </span><span class="n">_as_list_literal_i32</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="w"> </span><span class="si">}</span><span class="s2"> /)&quot;</span><span class="p">)</span>
+
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  cell(:,:) = 0d0&quot;</span><span class="p">)</span>
+    <span class="c1"># Cell rows -&gt; Fortran columns (matches spheres.pyx + Fortran column-major view)</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">cell_scaled</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">a</span><span class="p">(</span>
+            <span class="s2">&quot;  cell(1:3,</span><span class="si">{j}</span><span class="s2">) = (/ </span><span class="si">{x0}</span><span class="s2">, </span><span class="si">{x1}</span><span class="s2">, </span><span class="si">{x2}</span><span class="s2"> /)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">j</span><span class="o">=</span><span class="n">col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">x0</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="n">x1</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">x2</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  bas(:,:) = 0d0&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">positions_scaled</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">a</span><span class="p">(</span>
+            <span class="s2">&quot;  bas(1:3,</span><span class="si">{j}</span><span class="s2">) = (/ </span><span class="si">{x0}</span><span class="s2">, </span><span class="si">{x1}</span><span class="s2">, </span><span class="si">{x2}</span><span class="s2"> /)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">j</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">x0</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="n">x1</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">x2</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  imq(:) = 0&quot;</span><span class="p">)</span>
+    <span class="c1"># mapping is 1-based already</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  imq(</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">_fmt_i32</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  txtt(:) = &#39;    &#39;&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  z(:) = 0d0&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  conc(:) = 0d0&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  imt(:) = 0&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">n_types</span><span class="p">):</span>
+        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  txtt(</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">) = &#39;</span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">symbols4</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  z(</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">atomic_numbers</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  conc(</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">occupations</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  imt(</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">_fmt_i32</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">type_eq_class</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  rotations(:,:,:) = 0d0&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  translations(:,:) = 0d0&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">n_symmetry_ops</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">inp</span><span class="o">.</span><span class="n">rotations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">inp</span><span class="o">.</span><span class="n">translations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">n_symmetry_ops</span> <span class="o">&gt;</span> <span class="mi">96</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;n_symmetry_ops=</span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_symmetry_ops</span><span class="si">}</span><span class="s2"> exceeds 96 hardcoded in emitted program&quot;</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  n_symmetry_ops = </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_symmetry_ops</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">n_symmetry_ops</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">rotations</span><span class="p">[</span><span class="n">op</span><span class="p">]</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">translations</span><span class="p">[</span><span class="n">op</span><span class="p">]</span>
+            <span class="n">op</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># rotations(:, :, op+1)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+                <span class="n">a</span><span class="p">(</span>
+                    <span class="s2">&quot;  rotations(:,</span><span class="si">{j}</span><span class="s2">, </span><span class="si">{op}</span><span class="s2">) = (/ </span><span class="si">{x0}</span><span class="s2">, </span><span class="si">{x1}</span><span class="s2">, </span><span class="si">{x2}</span><span class="s2"> /)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">op</span><span class="o">=</span><span class="n">op</span><span class="p">,</span>
+                        <span class="n">j</span><span class="o">=</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="n">x0</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span>
+                        <span class="n">x1</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span>
+                        <span class="n">x2</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="n">a</span><span class="p">(</span>
+                <span class="s2">&quot;  translations(1:3,</span><span class="si">{op}</span><span class="s2">) = (/ </span><span class="si">{x0}</span><span class="s2">, </span><span class="si">{x1}</span><span class="s2">, </span><span class="si">{x2}</span><span class="s2"> /)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">op</span><span class="o">=</span><span class="n">op</span><span class="p">,</span>
+                    <span class="n">x0</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                    <span class="n">x1</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                    <span class="n">x2</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  n_symmetry_ops = -1&quot;</span><span class="p">)</span>
+
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  ret = find_empty_spheres( &amp;&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;    n_out, centres, radii, rmines, rmaxes, alat, cell, nq, bas, &amp;&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;    imq, nm, nsort, txtt, z, conc, imt, mesh, &amp;&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;    n_symmetry_ops, rotations, translations, verbose &amp;&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  )&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  print *, &#39;FIND_EMPTY_SPHERES ret=&#39;, ret&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  print *, &#39;N_OUT=&#39;, n_out&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  DO I=1,N_OUT&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;     print *, CENTRES(:,I), RADII(I)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  END DO&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;end program&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="print_find_empty_spheres_program">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug.print_find_empty_spheres_program.html#ase2sprkkr.bindings.xband.spheres_debug.print_find_empty_spheres_program">[docs]</a>
+<span class="k">def</span> <span class="nf">print_find_empty_spheres_program</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fortran_code_find_empty_spheres</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

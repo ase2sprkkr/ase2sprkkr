@@ -11,6 +11,14 @@ Full name: **ase2sprkkr**
 
    
    
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      promote_ase_atoms
+   
    
 
 
@@ -38,20 +46,50 @@ Full name: **ase2sprkkr**
      :template: custom-module-template.rst
      :recursive:
   
+  
      ase
+  
+  
      asr
+  
+  
      bindings
+  
+  
      common
+  
+  
      configuration
+  
+  
      examples
+  
+  
+     gui
+  
+  
      input_parameters
+  
+  
      output_files
+  
+  
      outputs
+  
+  
      physics
+  
+  
      potentials
+  
+  
      sprkkr
+  
+  
      tools
+  
+  
      version
-     visualise
+  
   
   

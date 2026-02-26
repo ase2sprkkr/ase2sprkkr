@@ -1,5 +1,50 @@
 Changelog
 =========
+
+Version 3.4
+-----------
+
+* Magnetization moments parse
+* Units uses unyts for better units support (retaining the unit user used)
+* Empty spheres uses spglib for symmetry (which solves some cases that have not been computed correctly )
+* ASE read/write compatibility
+* Allow to run computation inside Jupyter notebook
+* promote_ase_atoms exported
+* BSF and SCP outputs improved
+* Calculator do not longer overwrite the potential file, if it is given in constructor
+* Symmetry handling improved
+* Some fixies and enhancements for plotting
+* Allow async running of the process
+* Python 3.14 compatibility
+* MDIR option has no default value
+* SPEC task parser
+
+Version 3.3.4
+------------------
+* Sites are update according to the symbols during save
+* XAS task
+* Torque Task
+* Empty-spheres finding improved
+* MALF, MBET and MGAM options
+* BSF-SPN file added
+* K-path generating tool for BSF task
+* Layer and fermi argument to BSF plotting
+* --separate_plots argument for plotting routines
+* Uppasd task for generating Uppasd input files
+* Various fixies
+
+
+Version 3.3.3
+------------------
+* Added mesh parameter to empty spheres finding
+* Spacegroup from ASE is no longer used, since it have been deprecated
+
+Version 3.3.2
+------------------
+* Buildsystem changed to scikit-build-core (mesonpy do not support editable build at least in some setups)
+* Atoms rotating, shifting and flipping routines
+* Config file printing, value-setting etc. routines from cmdline
+
 Version 3.2.5-beta
 ------------------
 
@@ -9,7 +54,7 @@ User interface
 * Bash ase2sprkkr commandline completing
 * Faster package loading, lazy loading of some modules/data definitions
 * Task BSF improved
-* Python 3.8, pyparsing 2.x, and numpy < 1.23 support dropped
+* Python 3.7, pyparsing 2.x, and numpy < 1.23 support dropped
 * Nomad uploading proof of concept
 * Configuration file improved, help available
 * Occupancy and symmetry handling fixed
