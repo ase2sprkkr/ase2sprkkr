@@ -80,7 +80,9 @@ Full name: **{{ fullname | escape }}**
      :template: custom-module-template.rst
      :recursive:
   {% for item in modules %}
+  {% if item != 'test' and item != 'tests' and '.test.' not in item and '.tests.' not in item and not item.endswith('.test') and not item.endswith('.tests') %}
      {{ item }}
+  {% endif %}
   {%- endfor %}
   {% endif %}
   {% endblock %}

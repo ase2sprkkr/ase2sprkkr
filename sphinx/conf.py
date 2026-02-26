@@ -35,7 +35,9 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
-    'sphinx.ext.inheritance_diagram'
+    'sphinx.ext.inheritance_diagram',
+    'matplotlib.sphinxext.plot_directive',
+    'matplotlib.sphinxext.roles',
 ]
 
 autodoc_default_options = {
@@ -76,7 +78,6 @@ html_css_files = [
     'mods.css',
 ]
 
-
 def skip_member(app, what, name, obj, skip, options):
     if skip:
        return True
@@ -90,8 +91,6 @@ def skip_member(app, what, name, obj, skip, options):
            return True
        if getattr(obj, '__module__', None) is None:
            return True
-    if name == '__subclasshook__':
-       breakpoint()
     if what=='attribute' and name in ['__module__','__weakref__', '__doc__', '__dict__']:
        return True
     return False
