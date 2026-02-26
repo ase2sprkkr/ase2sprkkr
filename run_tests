@@ -1,2 +1,5 @@
 #!/bin/bash
-ase2sprkkr test $@
+set -e
+
+export PYTHONPATH="$(pwd)/src${PYTHONPATH:+:$PYTHONPATH}"
+python3 -m ase2sprkkr.tools.ase2sprkkr test "$@"
