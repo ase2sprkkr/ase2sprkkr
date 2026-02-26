@@ -113,6 +113,7 @@ class NomadApi():
     def edit_upload_metadata(self, upload_id, metadata, token=None):
         '''
         Example of new metadata:
+
         ..code-block:: text
             upload_name = 'Test_Upload_Name'
             metadata = {

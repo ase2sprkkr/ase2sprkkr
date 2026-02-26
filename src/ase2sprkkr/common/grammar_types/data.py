@@ -68,6 +68,7 @@ class RawData(GrammarType):
           If there are <n> spaces before data, pass n to this arg.
 
           If the file has the following structure:
+
           .. code-block:: text
 
              .......................................
@@ -77,6 +78,7 @@ class RawData(GrammarType):
                   ..... the rest of the ............
                   ............ second line ...
              ............
+
 
           Pass a tuple with two integers into this argument.
           The first number of tuple is the max. number of characters on a line,

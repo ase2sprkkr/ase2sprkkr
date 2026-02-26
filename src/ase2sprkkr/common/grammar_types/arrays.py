@@ -460,7 +460,7 @@ class Table(GrammarType):
         If True - groups are contained in list
         If False - groups are contained in np.ndarray
         If None - False if the group_size is defined (and thus if it is possible to
-                  interpret it as multidimensional array)
+        interpret it as multidimensional array)
       kwargs
         Columns and their names can be assigned as kwargs, e.g.
         ``column1_name = float, column2_name = int, ...``

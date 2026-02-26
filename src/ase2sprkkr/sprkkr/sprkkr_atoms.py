@@ -30,11 +30,13 @@ class SPRKKRAtoms(Atoms):
             I.e., the by-symmetry-equal atomic sites will share the same sites object.
             Default None is the same as True, however it does not change the symmetry
             of the already promoted obj passed into the routine.
+
            update_info:
             If True, always update spacegroup info
             If False, never
             If None, update it, if it seems to be inited, since it can be messed up by the
                      Atoms-manipulating routines
+
        """
        if obj is None:
           return None
