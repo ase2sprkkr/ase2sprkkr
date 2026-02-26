@@ -96,7 +96,7 @@ class TaskResult:
       with open(file, "rb") as f:
           raw_out = f.read()
           matches = cls._match_task_regex.search(raw_out.decode('utf8'))
-          process = KkrProcess.class_for_task(matches[1])
+          process = KkrProcessRunner.class_for_task(matches[1])
           process = process(None, None, os.path.dirname(file))
           f.seek(0)
           return process.read_from_file(f)
