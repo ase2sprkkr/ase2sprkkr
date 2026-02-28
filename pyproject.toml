@@ -66,7 +66,6 @@ logging.level = "DEBUG"
 ninja.make-fallback = false
 cmake.version = ">=3.15"
 build.verbose = true
-
 wheel.packages = ["src/ase2sprkkr"]
 sdist.exclude = [
 	"**/*",
@@ -108,4 +107,9 @@ wheel.exclude = [
 	"**/*.f",
 	"**/*.fi",
 	"CMakeLists.txt",
+]
+
+[tool.pytest.ini_options]
+markers = [
+	"slow: long-running test (typically over about 1 second)",
 ]
