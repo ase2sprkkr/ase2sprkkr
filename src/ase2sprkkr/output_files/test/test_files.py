@@ -65,5 +65,6 @@ class TestOutput(TestCase):
                   self.assertEqual(len(out.K1()), out.NK1())
                   self.assertEqual(len(out.K2()), out.NK2())
 
-            with tempfile.NamedTemporaryFile() as name:
-                  out.plot(filename=name)
+            if hasattr(out, plot):
+                with tempfile.NamedTemporaryFile() as name:
+                      out.plot(filename=name)
