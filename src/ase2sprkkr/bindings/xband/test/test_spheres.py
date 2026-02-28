@@ -79,6 +79,7 @@ class TestSpheres(TestCase):
       self.assertEqual(out[0,47], 56)
       self.assertEqual(out[1,47], 1)
 
+  @pytest.mark.slow
   def test2(self):
       if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
         cu=ase.build.bulk('Cu')

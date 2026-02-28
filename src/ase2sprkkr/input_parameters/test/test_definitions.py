@@ -66,6 +66,7 @@ class TestDefinitions(TestCase):
               ip2 = df.read_from_string(ip.to_string())
               self.assertEqual(ip.to_dict(), ip2.to_dict())
 
+  @pytest.mark.slow
   def test_definitions(self):
       path = os.path.join(os.path.dirname(__file__), '../examples')
 

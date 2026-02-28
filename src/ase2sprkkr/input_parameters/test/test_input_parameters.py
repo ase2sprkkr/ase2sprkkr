@@ -154,6 +154,7 @@ class TestInputParameters(TestCase):
     self.assertEqual(id.to_string(), "")
     #
 
+  @pytest.mark.slow
   def test_input_parameters_definition(self):
     input_parameters_def = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
