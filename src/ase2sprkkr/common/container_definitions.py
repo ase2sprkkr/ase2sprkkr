@@ -257,9 +257,9 @@ class ContainerDefinition(RealItemDefinition):
         arguments = self._get_init_args_for_copy(add, remove, defaults, **kwargs)
         return self.__class__(**arguments)
 
-    def _get_init_args_for_copy(self, add=[], items=None, remove=[], defaults={}, **kwargs):
+    def _get_init_args_for_copy(self, add=[], remove=[], defaults={}, **kwargs):
         """ Get the args to copy the container."""
-
+        breakpoint()
         members = dict( ( (k,i.copy()) for k,i in self._members.items() ) )
         for i in remove:
             del members[i]
