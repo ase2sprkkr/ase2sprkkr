@@ -12,7 +12,7 @@ e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 
 import pyparsing as pp
 import inspect
-from typing import Dict, Union
+from typing import Dict, Union, Any
 import itertools
 from . import backward_compatibility  # NOQA
 from enum import Enum, nonmember
@@ -267,9 +267,10 @@ class BaseDefinition:
   def description(self, *args, **kwargs):
        return "This object is not intended for a direct use."
 
-  def _get_copy_args(self)->Dict[str, str]:
+  def _get_init_args_mapping_for_copy(self)->Dict[str, str]:
        """
-       Compute the dictionary that defines the attributes to create a copy of this object.
+       Compute the dictionary that defines the attributes to create a copy of this object
+       using the constructor.
 
        Returns
        -------
@@ -284,10 +285,15 @@ class BaseDefinition:
                                        for v in args if v not in self._copy_excluded_args }
        return self.__class__._copy_args
 
+  def _get_init_args_for_copy(self, **kwargs)->Dict[str, Any]:
+      """ Compute the dictionary-kwargs to create copy"""
+      out = { k: getattr(self, v) for k,v in self._get_init_args_mapping_for_copy().items() }
+      out.update(kwargs)
+      return out
+
   def copy(self, **kwargs):
-     default = { k: getattr(self, v) for k,v in self._get_copy_args().items() }
-     default.update(kwargs)
-     return self.__class__(**default)
+     arguments = self._get_init_args_for_copy(**kwargs)
+     return self.__class__(**arguments)
 
   def create_object(self, container=None):
      """ Creates Section/Option/.... object (whose properties I define) """

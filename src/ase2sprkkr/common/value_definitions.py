@@ -3,7 +3,7 @@ from .options import Option, DangerousValue
 from .grammar_types import GrammarType, type_from_type, type_from_value, Array, QString
 
 import builtins
-from typing import Union, Dict
+from typing import Union, Dict, Any
 import numpy as np
 import pyparsing as pp
 from .warnings import warnings, DataValidityError
@@ -53,6 +53,9 @@ class ValueDefinition(RealItemDefinition):
                write_alternative_name:bool=False,
                write_condition=None, condition=None,
                result_class=None,
+               delimiter=None,
+               delimiter_grammar=None,
+               indent=None,
                ):
     """
     Definition of a configuration value.
@@ -163,6 +166,9 @@ class ValueDefinition(RealItemDefinition):
 
     result_class
        Redefine the class that holds data for this option/section
+
+    delimiter
+       If not None, use the specified name_value_delimiter instead of common one
     """
     if default_value_from_container:
        default_value = lambda o: default_value_from_container(o._container)
@@ -225,6 +231,9 @@ class ValueDefinition(RealItemDefinition):
     if is_optional is None:
        is_optional = is_required is False
 
+    if indent:
+        name_format = indent + (name_format or '{}')
+
     super().__init__(
          name = name,
          written_name = written_name,
@@ -247,6 +256,13 @@ class ValueDefinition(RealItemDefinition):
 
     if self.is_repeated.is_numbered and not self.name_in_grammar:
        raise ValueError('Repeated numbered values have to have its name in the grammar')
+
+    if delimiter is not None:
+        if delimiter_grammar is None:
+            self.grammar_of_delimiter = pp.Suppress(delimiter)
+        self.name_value_delimiter = delimiter
+    if delimiter_grammar is not None:
+        self.grammar_of_delimiter = pp.Suppress(delimiter_grammar)
 
   configuration_type_name = 'OPTION'
 
@@ -602,9 +618,9 @@ class ValueDefinition(RealItemDefinition):
   def can_be_repeated(self):
       return bool(self.is_repeated)
 
-  def _get_copy_args(self)->Dict[str, str]:
+  def _get_init_args_for_copy(self, **kwargs)->Dict[str, Any]:
        """
-       Compute the dictionary that defines the attributes to create a copy of this object.
+       Compute the values for creating the copy.
 
        Returns
        -------
@@ -612,15 +628,19 @@ class ValueDefinition(RealItemDefinition):
           The returning dictionary has this structure:
           { name of the argument of the __init__ function : name of the object attribute }
        """
-       out = super()._get_copy_args()
+       out = super()._get_init_args_for_copy(**kwargs)
        if self.is_fixed:
            out['fixed_value'] = out['default_value']
+       if 'name_value_delimiter' in self.__dict__:
+           out['delimiter'] = self.name_value_delimiter
+       if 'grammar_of_delimiter' in self.__dict__:
+           out['delimiter_grammar'] = self.delimiter_grammar
        return out
 
-  _copy_excluded_args = RealItemDefinition._copy_excluded_args + ['fixed_value', 'result_is_visible', 'default_value_from_container']
+  _copy_excluded_args = RealItemDefinition._copy_excluded_args + ['fixed_value', 'result_is_visible', 'default_value_from_container', 'delimiter', 'delimiter_grammar', 'indent']
 
   def copy_value(self, value, all_values=False):
-      """ Creates copy of the value
+      """ Creates the copy of the value
 
       Parameters
       ----------

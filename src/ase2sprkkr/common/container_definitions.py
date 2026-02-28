@@ -247,19 +247,29 @@ class ContainerDefinition(RealItemDefinition):
         del self._members[name]
         return self
 
-    def copy(self, args=[], items=[], remove=[], defaults={}, **kwargs):
-        """ Copy the section with the contained values modified by the arguments."""
+    def copy(self, add=[], remove=[], defaults={}, **kwargs):
+        """ Get the args to copy the container.
+            The method is just repeated to add named argumets.
+
+            Parameters
+            ----------
+        """
+        arguments = self._get_init_args_for_copy(add, remove, defaults, **kwargs)
+        return self.__class__(**arguments)
+
+    def _get_init_args_for_copy(self, add=[], items=None, remove=[], defaults={}, **kwargs):
+        """ Get the args to copy the container."""
+
         members = dict( ( (k,i.copy()) for k,i in self._members.items() ) )
         for i in remove:
             del members[i]
-        members.update(self._dict_from_named_values(args, items))
+        members.update(self._dict_from_named_values(add))
         for i,v in defaults.items():
             members[i].default_value = members[i].type.convert(v)
 
-        default = { k: getattr(self, v) for k,v in self._get_copy_args().items() }
-        default.update(kwargs)
-        default['members'] = members
-        return self.__class__(**default)
+        out = super()._get_init_args_for_copy(**kwargs)
+        out['members'] = members
+        return out
 
     def copy_member(self, name) -> BaseDefinition:
         """ Copy a member, allowing to redefine its properties.
