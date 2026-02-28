@@ -1,0 +1,39 @@
+name: Code Quality Scan
+
+# Trigger on pushes, pull requests, and weekly schedule
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - feature/*    # add any branch patterns you want
+  pull_request:
+    branches:
+      - master
+      - develop
+  schedule:
+    - cron: '0 12 * * 0' # weekly scan every Sunday at 12:00 UTC
+
+jobs:
+  codeql:
+    name: Analyze code
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Initialize CodeQL
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: python        # add other languages if needed: javascript, java, cpp, etc.
+          # You can select additional queries, e.g., security + code quality
+          queries: >
+            security-and-quality
+            # custom queries can be added here
+
+      # 3. Perform CodeQL analysis
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
