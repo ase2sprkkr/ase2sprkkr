@@ -50,7 +50,7 @@ class TestGrammar(TestCase):
       # try:
         g = type.grammar()
         try:
-          out = g.parseString(str(val), True)
+          out = g.parse_string(str(val), True)
           assert len(out) == 1
           out = out[0]
           self.assertEqual(out, res, "{} should be {} and is {} for type {}".format(val, res, out, type.__class__.__name__))
@@ -64,7 +64,7 @@ class TestGrammar(TestCase):
               assert type.validate(val)
           return
         assert type.validate(out)
-        out = g.parseString(val, True)
+        out = g.parse_string(val, True)
         assert len(out) == 1
         out = out[0]
         self.assertEqual(out, res, "{} should be {} and is {} for type {} after input and output".format(val, res, out, type.__class__.__name__))

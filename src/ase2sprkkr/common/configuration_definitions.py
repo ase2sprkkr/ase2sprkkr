@@ -552,19 +552,19 @@ class RealItemDefinition(BaseDefinition):
             if self.name_regex:
                 reg = pp.Regex(self.name_regex)
                 if self.do_not_skip_whitespaces_before_name:
-                   reg.leaveWhitespace()
+                   reg.leave_whitespace()
                 names=[pp.Regex(self.name_regex)]
             else:
                 names = self.all_names_in_grammar()
                 keyword = pp.CaselessLiteral if self.is_repeated.is_numbered else pp.CaselessKeyword
                 if self.do_not_skip_whitespaces_before_name:
-                   names = [ keyword(i).leaveWhitespace() for i in names ]
+                   names = [ keyword(i).leave_whitespace() for i in names ]
                 else:
                    names = [ keyword(i) for i in names ]
             if len(names) > 1:
                 name = pp.Or(names)
                 if self.do_not_skip_whitespaces_before_name:
-                    names=names.leaveWhitespace()
+                    names=names.leave_whitespace()
             else:
                 name = names[0]
             if self.is_repeated:
@@ -575,9 +575,9 @@ class RealItemDefinition(BaseDefinition):
                     else:
                       name += idx
                     name+= pp.WordEnd(pp.alphanums + "_")
-            name.setParseAction(lambda x: self.is_repeated.key_type(self.name, *x.asList()[1:]))
+            name.set_parse_action(lambda x: self.is_repeated.key_type(self.name, *x.asList()[1:]))
         else:
-            name = pp.Empty().setParseAction(lambda x: self.name)
+            name = pp.Empty().set_parse_action(lambda x: self.name)
 
         return name
 
@@ -603,10 +603,10 @@ class RealItemDefinition(BaseDefinition):
               name += delimiter
            out = name - expr
         else:
-           name = pp.Empty().setParseAction(lambda x: self.name)
+           name = pp.Empty().set_parse_action(lambda x: self.name)
            out = name + expr
         if has_value:
-            return out.setParseAction(lambda x: tuple(x))
+            return out.set_parse_action(lambda x: tuple(x))
         else:
             return out.suppress()
 
@@ -727,7 +727,7 @@ class Gather:
             x = x.asList()
             return x[ln:]
 
-        out.setParseAction(discard_names)
+        out.set_parse_action(discard_names)
         return out
 
     def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=''):
@@ -882,10 +882,10 @@ class Switch(ControlDefinition):
        f = pp.Forward()
        if definition.name in self.values.get(None, {}):
            f <<= grammar
-           f.setName(f"<IF* ndef THEN {str(grammar)}>")
+           f.set_name(f"<IF* ndef THEN {str(grammar)}>")
        else:
            f <<= self.empty
-           f.setName(f"<IF* False THEN {str(grammar)}")
+           f.set_name(f"<IF* False THEN {str(grammar)}")
        self._grammars[definition.name] = (grammar, f)
        return f
 
@@ -899,7 +899,7 @@ class Switch(ControlDefinition):
                if tpl:
                   f = tpl[1]
                   f <<= tpl[0]
-                  f.setName(f"<IF True THEN {str(tpl[0])}>")
+                  f.set_name(f"<IF True THEN {str(tpl[0])}>")
                elif i.output_definition.has_grammar():
                   raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
 
@@ -907,17 +907,17 @@ class Switch(ControlDefinition):
                tpl = grammars.get(i.name, None)
                if tpl:
                   f = tpl[1]
-                  f.setName(f"<IF False THEN {str(tpl[0])}>")
+                  f.set_name(f"<IF False THEN {str(tpl[0])}>")
                   f <<= self.empty
                elif i.output_definition.has_grammar():
                   raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
 
        if not self.container.force_order:
-            return grammar
-       return grammar.addParseAction(lambda x: choose(x[0][1]) and x)
+           return grammar
+       return grammar.add_parse_action(lambda x: choose(x[0][1]) and x)
 
    def remove_from_container(self):
-     if self.container:
+       if self.container:
            self.container[self.item].remove_grammar_hook(self.item_hook)
            for i in self.values.values():
                for j in i.values():

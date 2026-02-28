@@ -21,27 +21,27 @@ def generate_grammar():
           old = pe.DEFAULT_WHITE_CHARS
       if hasattr(pp.Keyword, "DEFAULT_KEYWORD_CHARS"):
           kchars = pp.Keyword.DEFAULT_KEYWORD_CHARS + '-'
-      pe.setDefaultWhitespaceChars(' \t\r')
+      pe.set_default_whitespace_chars(' \t\r')
       yield
     finally:
       if old is not None:
-        pe.setDefaultWhitespaceChars(old)
+        pe.set_default_whitespace_chars(old)
       if kchars is not None:
         pp.Keyword.DEFAULT_KEYWORD_CHARS = kchars
 
 
 def replace_whitechars(expr):
     expr = expr.copy()
-    expr.setWhitespaceChars(' \t\r')
+    expr.set_whitespace_chars(' \t\r')
     return expr
 
 
 with generate_grammar():
-  optional_line_end = pp.Suppress(pp.LineEnd() | pp.WordStart() ).setName(' ')
+  optional_line_end = pp.Suppress(pp.LineEnd() | pp.WordStart() ).set_name(' ')
   """ Grammar for an optinal newline """
-  line_end = pp.Suppress(pp.LineEnd()).setName('\n')
+  line_end = pp.Suppress(pp.LineEnd()).set_name('\n')
   """ Grammar for a required newline """
-  end_of_file = (pp.Regex(r'[\s]*') + pp.StringEnd()).suppress().setName('<EOF>')
+  end_of_file = (pp.Regex(r'[\s]*') + pp.StringEnd()).suppress().set_name('<EOF>')
   """ Grammar for an end of file (ending whitespaces are allowed) """
 
   optional_quote = pp.Optional("'").suppress()
@@ -55,7 +55,7 @@ def separator_pattern(char):
 @cache
 def separator_grammar(char):
   """ Pattern for separating sections in an input file """
-  separator = pp.Regex(separator_pattern(char)).setName(f"{char*10}[{char*4}....]").suppress()
+  separator = pp.Regex(separator_pattern(char)).set_name(f"{char*10}[{char*4}....]").suppress()
   return separator
 
 
@@ -64,7 +64,7 @@ def delimitedList(expr, delim):
   return expr + pp.ZeroOrMore(delim + expr)
 
 
-def addConditionEx(self, condition, message):
+def add_condition_ex(self, condition, message):
   """ Add check condition to the pyparsing ParseElement,
   that, if it failed, raise a parse exception with a given message. """
 
@@ -75,11 +75,11 @@ def addConditionEx(self, condition, message):
       if not isinstance(m, str):
          m = m(tocs)
       raise pp.ParseException(s, loc, m)
-  self.addParseAction(check_condition)
+  self.add_parse_action(check_condition)
   return self
 
 
-def addParseActionEx(self, pa, message = None):
+def add_parse_action_ex(self, pa, message = None):
   """
   Add parse action to a given pyparsing ParseElemenet,
   that, if it raise an exception, fail with a given message
@@ -95,7 +95,7 @@ def addParseActionEx(self, pa, message = None):
            msg = str(e)
         raise pp.ParseException(s, loc, msg).with_traceback(e.__traceback__) from e
 
-  self.addParseAction(parse_action)
+  self.add_parse_action(parse_action)
 
 
 class White(pp.White):
@@ -107,7 +107,7 @@ class White(pp.White):
 
   def __init__(self, white):
       super().__init__(white)
-      self.setWhitespaceChars('')
+      self.set_whitespace_chars('')
 
 
 class SkipToRegex(pp.Token):
@@ -143,5 +143,5 @@ class SkipToRegex(pp.Token):
        raise pp.ParseException(instr, loc, "Pattern {self.pattern} not found", self)
 
 
-pp.ParserElement.addConditionEx = addConditionEx
-pp.ParserElement.addParseActionEx = addParseActionEx
+pp.ParserElement.add_condition_ex = add_condition_ex
+pp.ParserElement.add_parse_action_ex = add_parse_action_ex

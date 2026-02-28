@@ -59,7 +59,7 @@ class SectionString(GrammarType):
 
       @cached_class_property
       def grammar_of_delimiter():
-          return pp.Regex(SectionString.delimiter_pattern).setName('*' * 79 + '<newline>').suppress()
+          return pp.Regex(SectionString.delimiter_pattern).set_name('*' * 79 + '<newline>').suppress()
 
       @cached_class_property
       def _grammar():

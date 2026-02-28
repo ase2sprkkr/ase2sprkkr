@@ -65,18 +65,18 @@ class Array(GrammarType):
       grammar = self.type.grammar()
       grammar = delimitedList(grammar, self.delimiter)
       self._set_convert_action(grammar)
-      grammar.setName(self.grammar_name())
+      grammar.set_name(self.grammar_name())
 
     self._grammar = grammar
 
   def _set_convert_action(self, grammar):
     if self.as_list:
       if callable(self.as_list):
-        grammar = grammar.setParseAction(lambda x: self.as_list(x.asList()))
+        grammar = grammar.set_parse_action(lambda x: self.as_list(x.asList()))
       else:
-        grammar = grammar.setParseAction(lambda x: [x.asList()])
+        grammar = grammar.set_parse_action(lambda x: [x.asList()])
     else:
-      grammar.setParseAction(lambda x: self.convert(x.asList()))
+      grammar.set_parse_action(lambda x: self.convert(x.asList()))
 
   def __str__(self):
     if self.min_length == self.max_length:
@@ -192,7 +192,7 @@ class Array(GrammarType):
 class SetOf(Array):
   """ Set of values of the same type. E.g. {1,2,3} """
 
-  delimiter = pp.Suppress(pp.Literal(',') | pp.Literal(';') | White(' \t')).setName('[,; ]')
+  delimiter = pp.Suppress(pp.Literal(',') | pp.Literal(';') | White(' \t')).set_name('[,; ]')
   delimiter_str = ','
 
   @add_to_signature(Array.__init__)
@@ -202,7 +202,7 @@ class SetOf(Array):
     super().__init__(type, *args, **kwargs)
 
   def transform_grammar(self, grammar, param_name=False):
-    return grammar | self.type.grammar(param_name).copy().addParseAction(lambda x: np.atleast_1d(x.asList()))
+    return grammar | self.type.grammar(param_name).copy().add_parse_action(lambda x: np.atleast_1d(x.asList()))
 
   def copy_value(self, value):
       return copy.deepcopy(value)
@@ -270,13 +270,13 @@ class Sequence(GrammarType):
       def grm(type):
           g = type.grammar(param_name)
           if self.default_values and type.default_value is not None:
-             g = g | pp.Empty().setParseAction(lambda x: type.default_value)
+             g = g | pp.Empty().set_parse_action(lambda x: type.default_value)
           return g
 
       grammars = [grm(i) for i in self.types]
-      grammar = pp.And(grammars).setParseAction(lambda x: self.value_constructor(*x))
+      grammar = pp.And(grammars).set_parse_action(lambda x: self.value_constructor(*x))
       if self.allowed_values is not None:
-         grammar.addConditionEx(lambda x: x[0] in self.allowed_values, lambda x: f'{x[0]} is not in the list of allowed values')
+         grammar.add_condition_ex(lambda x: x[0] in self.allowed_values, lambda x: f'{x[0]} is not in the list of allowed values')
       return grammar
 
   def _validate(self, value, why='set'):
@@ -533,14 +533,14 @@ class Table(GrammarType):
           def set_g_size(x):
               grp_size.group_size = x[0]
 
-          grp_size = Unsigned.I.grammar().copy().setParseAction(set_g_size)
+          grp_size = Unsigned.I.grammar().copy().set_parse_action(set_g_size)
           grammar = pp.Suppress(pp.CaselessKeyword(self.group_size) + grp_size + "\n") + grammar
 
       if self.header:
          if self.free_header:
              fh = pp.SkipTo(line_end) + line_end
              if callable(self.free_header):
-               fh.addConditionEx(lambda x: self.free_header(x[0]),
+               fh.add_condition_ex(lambda x: self.free_header(x[0]),
                                     lambda x: f"This is not an allowed header for table {param_name}: {x[0]}" )
              grammar = pp.Suppress(fh) + grammar
          else:
@@ -653,13 +653,13 @@ class Table(GrammarType):
 
       if self.numbering:
           if self.grouping:
-              grammar.addParseAction(data_numbering_grouping)
+                grammar.add_parse_action(data_numbering_grouping)
           else:
-              grammar.addParseAction(data_numbering)
+                grammar.add_parse_action(data_numbering)
       elif self.grouping:
-          grammar.addParseAction(data_grouping)
+              grammar.add_parse_action(data_grouping)
       else:
-          grammar.addParseAction(tabelize)
+              grammar.add_parse_action(tabelize)
 
       return grammar
 

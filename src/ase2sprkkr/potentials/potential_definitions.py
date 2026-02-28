@@ -26,7 +26,7 @@ class PotValueDefinition(ConfigurationValueDefinition):
   """
   @cached_class_property
   def grammar_of_delimiter():
-    return pp.Empty().setName(' ')
+    return pp.Empty().set_name(' ')
 
   prefix = ''
   name_value_delimiter = '\t'

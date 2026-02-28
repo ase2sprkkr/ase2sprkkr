@@ -446,12 +446,12 @@ class ValueDefinition(RealItemDefinition):
              return x
           message="The value of {} is {} and it should be {}".format(self.name, x[0], self.default_value)
           raise pp.ParseException(s,loc,message, body)
-      body=body.copy().addParseAction(check_fixed)
+      body=body.copy().add_parse_action(check_fixed)
 
     if allow_dangerous and hasattr(self, 'type_of_dangerous'):
         danger = pp.Forward()
         danger << self.type_of_dangerous.grammar(self.name + '_dangerous')
-        danger.addParseAction(lambda x: DangerousValue(x[0], self.type_of_dangerous, False))
+        danger.add_parse_action(lambda x: DangerousValue(x[0], self.type_of_dangerous, False))
         body = body ^ danger
 
     if delimiter:
@@ -459,7 +459,7 @@ class ValueDefinition(RealItemDefinition):
 
     optional, df, _ = type.missing_value()
     if optional:
-      body = pp.Optional(body).setParseAction( lambda x: x or df )
+      body = pp.Optional(body).set_parse_action( lambda x: x or df )
     return body
 
   @property
@@ -492,7 +492,7 @@ class ValueDefinition(RealItemDefinition):
 
     out = self._tuple_with_my_name(body, has_value=self.type.has_value,
                                          name_in_grammar=name_in_grammar)
-    out.setName(nbody)
+    out.set_name(nbody)
     return out
 
   def get_value(self, option=None):

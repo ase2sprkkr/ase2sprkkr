@@ -42,7 +42,7 @@ class TestInputParameters(TestCase):
   def parse(self, text, grammar):
         if not isinstance(grammar, pp.ParserElement):
            grammar = grammar()
-        return grammar.parseString(text, True)
+        return grammar.parse_string(text, True)
 
   def assertNotValid(self, text, grammar=None):
       self.assertRaises(pp.ParseBaseException, lambda: self.parse(text, grammar))
@@ -51,9 +51,9 @@ class TestInputParameters(TestCase):
      grammar = cd.InputParametersDefinition.grammar_of_delimiter()
      grammar = 'a' + grammar + 'b'
      for w in ['a b','a\n b','a\n\n b','a\n \n b','a \n\n b', 'a\n\n\n b']:
-         self.assertRaises(pp.ParseException, lambda: grammar.parseString(w, True))
+         self.assertRaises(pp.ParseException, lambda: grammar.parse_string(w, True))
      for w in ['a\nb','a \nb','a\n  \nb','a  \n \nb','a \n\t\nb', 'a\n\n\nb']:
-         self.assertEqual(['a','b'], grammar.parseString(w, True).asList())
+         self.assertEqual(['a','b'], grammar.parse_string(w, True).asList())
 #
 
   def test_custom_value(self):
@@ -85,7 +85,7 @@ class TestInputParameters(TestCase):
      assertNotValid = partial(self.assertNotValid, grammar=lambda: cv)
 
      def assertParseDangerous(text,result):
-         out = cv.parseString(text, True)[0]
+         out = cv.parse_string(text, True)[0]
          assert out[0] == result[0]
          self.assertEqual(out[1].value, result[1])
 

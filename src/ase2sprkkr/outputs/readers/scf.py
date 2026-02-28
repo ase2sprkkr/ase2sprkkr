@@ -22,7 +22,7 @@ from ...potentials.potentials import Potential
 
 class RealOrStars(Real):
   """ A real value, where ``****`` means ``NaN`` """
-  _grammar = Real._grammar | replace_whitechars(pp.Word('*')).setParseAction(lambda x: float('NaN'))
+  _grammar = Real._grammar | replace_whitechars(pp.Word('*')).set_parse_action(lambda x: float('NaN'))
 
 
 class ScfResult(TaskResult):

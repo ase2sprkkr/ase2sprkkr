@@ -76,9 +76,9 @@ boolean = pp.Keyword('True').set_parse_action(lambda x: True) |\
 
 forward = pp.Forward()
 token = pp.pyparsing_common.number | pp.Word(pp.alphanums + '-_@#$!/[]') | forward | string | boolean
-tupl = pp.Literal('(').suppress() + pp.delimited_list( token, delim = ',' ).set_parse_action(lambda x: tuple(x)) + pp.Literal(')').suppress()
+tupl = pp.Literal('(').suppress() + pp.DelimitedList( token, delim = ',' ).set_parse_action(lambda x: tuple(x)) + pp.Literal(')').suppress()
 dict_token = ((pp.pyparsing_common.number | pp.Word(pp.alphanums + '-_@#$!/[]')) + pp.Literal(':').suppress() + token).set_parse_action(lambda x: (x[0],x[1]) )
-dicti = pp.Literal('{').suppress() + pp.delimited_list( dict_token, delim = ':').set_parse_action(lambda x: dict(x.as_list())) + pp.Literal('}').suppress()
+dicti = pp.Literal('{').suppress() + pp.DelimitedList( dict_token, delim = ':').set_parse_action(lambda x: dict(x.as_list())) + pp.Literal('}').suppress()
 forward << ( dicti | tupl )
 
 

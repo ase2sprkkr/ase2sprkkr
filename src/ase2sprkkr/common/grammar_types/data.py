@@ -18,7 +18,7 @@ class RestOfTheFile(GrammarType):
     datatype = str
     datatype_name = 'string'
 
-    _grammar = pp.Regex('.*$', re.M | re.S).setParseAction(lambda x:x[0])
+    _grammar = pp.Regex('.*$', re.M | re.S).set_parse_action(lambda x:x[0])
     _grammar.skipWhitespace=False
 
     def grammar_name(self):
@@ -111,10 +111,10 @@ class RawData(GrammarType):
         super().__init__(*args, **kwargs)
 
     def _n_lines_grammar(self, lines):
-         """ return a grammar for n lines of text """
-         out=pp.Regex(f"([^\n]*\n){{{lines-1}}}[^\n]*(?=\n|$)", re.S)
-         out.leaveWhitespace()
-         return out
+        """ return a grammar for n lines of text """
+        out = pp.Regex(f"([^\n]*\n){{{lines-1}}}[^\n]*(?=\n|$)", re.S)
+        out.leave_whitespace()
+        return out
 
     def _grammar(self, param_name=False):
         if self.lines:
@@ -127,7 +127,7 @@ class RawData(GrammarType):
                 out=SkipToRegex(self.ends_with, include_pattern=self.include_ends_with)
             else:
                 out=pp.SkipTo(pp.Suppress(self.ends_with), include=self.include_ends_with)
-                out.setParseAction(lambda x: x[0])
+                out.set_parse_action(lambda x: x[0])
         else:
             out = RestOfTheFile._grammar.copy()
 
@@ -143,7 +143,7 @@ class RawData(GrammarType):
             return v
 
         if self.indented or self.line_length:
-            out.addParseAction(parse)
+            out.add_parse_action(parse)
         return out
 
     def _string(self, val):
@@ -186,7 +186,7 @@ class RawData(GrammarType):
            def paction(parsed):
                self.forward << self._n_lines_grammar(parsed[0][1])
                return parsed
-           hook = lambda grammar: grammar.addParseAction(paction)
+           hook = lambda grammar: grammar.add_parse_action(paction)
            obj.add_grammar_hook(hook)
            self.remove_forward = lambda: obj.remove_grammar_hook(hook)
         else:
@@ -278,9 +278,7 @@ class NumpyArray(RawData):
                 v.shape=self.shape
              return v
 
-         grammar.addParseAction(
-             parse
-         )
+         grammar.add_parse_action(parse)
          return grammar
 
     def copy_value(self, value):

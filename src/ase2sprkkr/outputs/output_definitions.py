@@ -34,7 +34,7 @@ class OutputValueEqualDefinition(OutputValueDefinition):
 
   @cached_class_property
   def grammar_of_delimiter():
-    return pp.Suppress("=").setName('=')
+    return pp.Suppress("=").set_name('=')
 
 
 class OutputNonameValueDefinition(OutputValueDefinition):

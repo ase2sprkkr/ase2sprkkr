@@ -10,15 +10,8 @@ from .parsing_results import dict_from_parsed
 import pyparsing as pp
 from typing import Union
 from collections.abc import Iterable
-import inspect
 import re
 from io import StringIO
-
-# This serves just for dealing with various pyparsing versions
-_parse_all_name = 'parse_all' if \
-  'parse_all' in inspect.getfullargspec(pp.Or.parseString).args \
-  else 'parseAll'
-
 
 class ContainerDefinition(RealItemDefinition):
     """ Base class for a definition (of contained data, format, etc)
@@ -326,14 +319,14 @@ class ContainerDefinition(RealItemDefinition):
 
            def set_loc(loc, toks):
                init.location = loc
-           init.setParseAction(set_loc)
+           init.set_parse_action(set_loc)
 
-           first = pp.Empty().addCondition(lambda loc, toks: loc == init.location)
+           first = pp.Empty().add_condition(lambda loc, toks: loc == init.location)
            if custom_value:
-              cvs = pp.ZeroOrMore(custom_value + delimiter).setName('<custom...>')
-              after = delimiter + cvs
+               cvs = pp.ZeroOrMore(custom_value + delimiter).set_name('<custom...>')
+               after = delimiter + cvs
            else:
-              after = pp.Forward() << delimiter
+                after = pp.Forward() << delimiter
            after.addCondition(lambda loc, toks: loc != init.location)
            inter_cvs = (first | after).setName('<?DELIM>')
            inter = (first | delimiter.copy().addCondition(lambda loc, toks: loc != init.location))
@@ -372,7 +365,7 @@ class ContainerDefinition(RealItemDefinition):
            if first:
                values = first + pp.Optional(delimiter + values)
 
-       values.setParseAction(lambda x: dict_from_parsed(x.asList()))
+       values.set_parse_action(lambda x: dict_from_parsed(x.asList()))
 
        if self.validate:
           def _validate(s, loc, value):
@@ -383,13 +376,15 @@ class ContainerDefinition(RealItemDefinition):
                    is_ok = f'Validation of parsed data of {self.name} section failed'
                 raise pp.ParseException(s, loc, is_ok)
               return value
-          values.addParseAction(_validate)
+          values.add_parse_action(_validate)
+
        if self.is_repeated:
           rdelim = delimiter
           if self.repeated_delimiter:
               rdelim = rdelim + pp.Literal(self.repeated_delimiter)
-          values = pp.delimitedList(values, rdelim)
-          values.addParseAction(lambda x: [x.asList()])
+          values = pp.delimited_list(values, rdelim)
+          values.add_parse_action(lambda x: [x.asList()])
+
        return values
 
     def _allow_duplicates_of(self, name):
@@ -403,7 +398,7 @@ class ContainerDefinition(RealItemDefinition):
        delimiter = self.grammar_of_delimiter
        values = self._grammar_of_values(allow_dangerous, delimiter)
        out = self._tuple_with_my_name(values, delimiter)
-       out.setName(self.name)
+       out.set_name(self.name)
        return out
 
     @classmethod
@@ -419,13 +414,13 @@ class ContainerDefinition(RealItemDefinition):
 
     @classmethod
     def custom_member_grammar(cls, name_condition=None):
-       """ Grammar for the custom - unknown - child """
-       name = pp.Word(cls.custom_name_characters).setParseAction(lambda x: x[0].strip())
-       if name_condition:
-          name.add_condition(name_condition)
-       out = (name + cls.delimited_custom_value_grammar()).setParseAction(lambda x: tuple(x))
-       out.setName(cls.custom_value_name)
-       return out
+        """ Grammar for the custom - unknown - child """
+        name = pp.Word(cls.custom_name_characters).set_parse_action(lambda x: x[0].strip())
+        if name_condition:
+            name.add_condition(name_condition)
+        out = (name + cls.delimited_custom_value_grammar()).set_parse_action(lambda x: tuple(x))
+        out.set_name(cls.custom_value_name)
+        return out
 
     def all_member_names(self):
         for i in self:
@@ -452,13 +447,13 @@ class ContainerDefinition(RealItemDefinition):
     def parse_file(self, file, return_value_only=True, allow_dangerous=False):
        """ Parse the file, return the parsed data as dictionary """
        grammar = self.grammar(allow_dangerous)
-       out = grammar.parseFile(file, **{ _parse_all_name: True } )
+       out = grammar.parse_file(file, parse_all = True)
        return self.parse_return(out, return_value_only)
 
     def parse(self, string, whole_string=True, return_value_only=True, allow_dangerous=False):
        """ Parse the string, return the parsed data as dictionary """
        grammar = self.grammar(allow_dangerous)
-       out = grammar.parseString(string, **{ _parse_all_name: whole_string } )
+       out = grammar.parse_string(string, parse_all = True )
        return self.parse_return(out, return_value_only)
 
     def parse_return(self, val, return_value_only:bool=True):
@@ -504,7 +499,7 @@ class ContainerDefinition(RealItemDefinition):
     def validate(self, container, why:str='save'):
         self.validate_warning(container)
         for i in self.members():
-            if i.validate_section and i.allowed(container):
+          if i.validate_section and i.allowed(container):
                 i.validate_section(container)
         return True
 
@@ -603,7 +598,7 @@ class SectionDefinition(ContainerDefinition):
         out = cls.child_class.grammar_of_delimiter + gt.grammar()
         optional, df, _ = gt.missing_value()
         if optional:
-           out = out | pp.Empty().setParseAction(lambda x: df)
+           out = out | pp.Empty().set_parse_action(lambda x: df)
         return out
 
    def _generic_info(self):
