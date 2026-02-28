@@ -454,7 +454,7 @@ class RealItemDefinition(BaseDefinition):
       else:
          name = next(iter(self.alternative_names)) if self.write_alternative_name else self.name
       if self.name_format:
-         return "{:{}}".format(name, self.name_format)
+         return self.name_format.format(name)
       return name
 
    def has_name(self, name, lower_case=False):

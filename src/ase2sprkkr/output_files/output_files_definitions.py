@@ -45,7 +45,7 @@ class OutputFileDefinition(ConfigurationFileDefinition):
   force_order = True
   """ The order of items in potential file is fixed """
 
-  value_name_format = '<12'
+  value_name_format = '{:<12}'
 
   child_class = OutputFileValueDefinition
   """ standard child class """
