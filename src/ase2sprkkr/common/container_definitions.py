@@ -327,9 +327,9 @@ class ContainerDefinition(RealItemDefinition):
                after = delimiter + cvs
            else:
                 after = pp.Forward() << delimiter
-           after.addCondition(lambda loc, toks: loc != init.location)
-           inter_cvs = (first | after).setName('<?DELIM>')
-           inter = (first | delimiter.copy().addCondition(lambda loc, toks: loc != init.location))
+           after.add_condition(lambda loc, toks: loc != init.location)
+           inter_cvs = (first | after).set_name('<?DELIM>')
+           inter = (first | delimiter.copy().add_condition(lambda loc, toks: loc != init.location))
 
            def sequence():
                for head,g in repeated_grammars():
@@ -382,7 +382,7 @@ class ContainerDefinition(RealItemDefinition):
           rdelim = delimiter
           if self.repeated_delimiter:
               rdelim = rdelim + pp.Literal(self.repeated_delimiter)
-          values = pp.delimited_list(values, rdelim)
+          values = pp.DelimitedList(values, rdelim)
           values.add_parse_action(lambda x: [x.asList()])
 
        return values
