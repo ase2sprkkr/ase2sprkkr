@@ -73,6 +73,7 @@ sdist.exclude = [
 	"**/*.sw?",
 	"**/.pytest_cache",
 	"**/.pytest_cache/**",
+	"src/ase2sprkkr/bindings/xband/debug_tools/*",
 ]
 sdist.include = [
 	"src/ase2sprkkr/input_parameters/examples/*.in",
@@ -108,6 +109,7 @@ wheel.exclude = [
 	"**/*.f",
 	"**/*.fi",
 	"CMakeLists.txt",
+	"src/ase2sprkkr/bindings/xband/debug_tools/*",
 ]
 
 [tool.pytest.ini_options]
