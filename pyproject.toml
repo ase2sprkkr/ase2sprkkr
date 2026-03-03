@@ -1,7 +1,7 @@
 [build-system]
 build-backend = "scikit_build_core.build"
 requires = [
-    "scikit-build-core==0.12.1",
+    "scikit-build-core==0.11.5",
     "cython",
 		"numpy"
 ]
@@ -12,7 +12,7 @@ ase2sprkkr = "ase2sprkkr.tools.ase2sprkkr:run"
 
 [project]
 name = "ase2sprkkr"
-version = "3.4.1"
+version = "3.4.2"
 requires-python = ">=3.8"
 authors = [
   { name = "Matyáš Novák", email = "novakmat@fzu.cz" },
@@ -90,6 +90,7 @@ sdist.include = [
 	"src/ase2sprkkr/**/*.py",
 	"src/ase2sprkkr/**/*.pyx",
 	"src/ase2sprkkr/**/*.f",
+	"src/ase2sprkkr/**/*.f90",
 	"src/ase2sprkkr/**/*.fi",
 	"src/ase2sprkkr/**/*.h",
 	"src/**/CMakeLists.txt",
@@ -106,6 +107,7 @@ wheel.exclude = [
 	"**/*.pyx",
 	"**/*.h",
 	"**/*.f",
+	"**/*.f90",
 	"**/*.fi",
 	"CMakeLists.txt",
 	"src/ase2sprkkr/bindings/xband/debug_tools/*",
