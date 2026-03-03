@@ -29,7 +29,7 @@ dependencies = [
     "asr",
     "spglib",
     "pyparsing>=3.0",
-    "mendeleev @ git+https://github.com/ase2sprkkr/mendeleev.git@c394145",
+    "mendeleev",
     "platformdirs",
     "packaging",
     "cython",
