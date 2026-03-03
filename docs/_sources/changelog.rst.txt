@@ -18,6 +18,7 @@ Version 3.4
 * Python 3.14 compatibility
 * MDIR option has no default value
 * SPEC task parser
+* Dij output file parser
 
 Version 3.3.4
 ------------------

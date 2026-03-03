@@ -41,8 +41,8 @@ Full name: **ase2sprkkr.common.grammar**
       :toctree:
       :template: custom-base-template.rst
    
-      addConditionEx
-      addParseActionEx
+      add_condition_ex
+      add_parse_action_ex
       delimitedList
       generate_grammar
       replace_whitechars

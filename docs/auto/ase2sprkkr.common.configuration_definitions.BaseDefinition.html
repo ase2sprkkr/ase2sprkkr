@@ -435,9 +435,10 @@ constructor)</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition._get_copy_args">
-<span class="sig-name descname"><span class="pre">_get_copy_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition._get_copy_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition._get_copy_args" title="Link to this definition"></a></dt>
-<dd><p>Compute the dictionary that defines the attributes to create a copy of this object.</p>
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition._get_init_args_mapping_for_copy">
+<span class="sig-name descname"><span class="pre">_get_init_args_mapping_for_copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition._get_init_args_mapping_for_copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition._get_init_args_mapping_for_copy" title="Link to this definition"></a></dt>
+<dd><p>Compute the dictionary that defines the attributes to create a copy of this object
+using the constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>copy</strong> – The returning dictionary has this structure:
@@ -445,6 +446,17 @@ constructor)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition._get_init_args_for_copy">
+<span class="sig-name descname"><span class="pre">_get_init_args_for_copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition._get_init_args_for_copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition._get_init_args_for_copy" title="Link to this definition"></a></dt>
+<dd><p>Compute the dictionary-kwargs to create copy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Dict</em>[str, <em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>

@@ -96,7 +96,7 @@
 <span class="kn">from</span> <span class="nn">.grammar_types</span> <span class="kn">import</span> <span class="n">GrammarType</span><span class="p">,</span> <span class="n">type_from_type</span><span class="p">,</span> <span class="n">type_from_value</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">QString</span>
 
 <span class="kn">import</span> <span class="nn">builtins</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 <span class="kn">from</span> <span class="nn">.warnings</span> <span class="kn">import</span> <span class="n">warnings</span><span class="p">,</span> <span class="n">DataValidityError</span>
@@ -159,6 +159,9 @@
                <span class="n">write_alternative_name</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                <span class="n">write_condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">result_class</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">delimiter_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Definition of a configuration value.</span>
@@ -269,6 +272,9 @@
 
 <span class="sd">    result_class</span>
 <span class="sd">       Redefine the class that holds data for this option/section</span>
+
+<span class="sd">    delimiter</span>
+<span class="sd">       If not None, use the specified name_value_delimiter instead of common one</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">default_value_from_container</span><span class="p">:</span>
        <span class="n">default_value</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">default_value_from_container</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">_container</span><span class="p">)</span>
@@ -331,6 +337,9 @@
     <span class="k">if</span> <span class="n">is_optional</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
        <span class="n">is_optional</span> <span class="o">=</span> <span class="n">is_required</span> <span class="ow">is</span> <span class="kc">False</span>
 
+    <span class="k">if</span> <span class="n">indent</span><span class="p">:</span>
+        <span class="n">name_format</span> <span class="o">=</span> <span class="n">indent</span> <span class="o">+</span> <span class="p">(</span><span class="n">name_format</span> <span class="ow">or</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="p">)</span>
+
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
          <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">,</span>
          <span class="n">written_name</span> <span class="o">=</span> <span class="n">written_name</span><span class="p">,</span>
@@ -352,7 +361,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name_in_grammar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name_in_grammar</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_numbered</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_in_grammar</span><span class="p">:</span>
-       <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Repeated numbered values have to have its name in the grammar&#39;</span><span class="p">)</span></div>
+       <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Repeated numbered values have to have its name in the grammar&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">delimiter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">delimiter_grammar</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grammar_of_delimiter</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">delimiter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_value_delimiter</span> <span class="o">=</span> <span class="n">delimiter</span>
+    <span class="k">if</span> <span class="n">delimiter_grammar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grammar_of_delimiter</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">delimiter_grammar</span><span class="p">)</span></div>
 
 
   <span class="n">configuration_type_name</span> <span class="o">=</span> <span class="s1">&#39;OPTION&#39;</span>
@@ -563,12 +579,12 @@
              <span class="k">return</span> <span class="n">x</span>
           <span class="n">message</span><span class="o">=</span><span class="s2">&quot;The value of </span><span class="si">{}</span><span class="s2"> is </span><span class="si">{}</span><span class="s2"> and it should be </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span><span class="p">)</span>
           <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">loc</span><span class="p">,</span><span class="n">message</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
-      <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="n">check_fixed</span><span class="p">)</span>
+      <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">add_parse_action</span><span class="p">(</span><span class="n">check_fixed</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">allow_dangerous</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;type_of_dangerous&#39;</span><span class="p">):</span>
         <span class="n">danger</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Forward</span><span class="p">()</span>
         <span class="n">danger</span> <span class="o">&lt;&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_of_dangerous</span><span class="o">.</span><span class="n">grammar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_dangerous&#39;</span><span class="p">)</span>
-        <span class="n">danger</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">DangerousValue</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_of_dangerous</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+        <span class="n">danger</span><span class="o">.</span><span class="n">add_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">DangerousValue</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_of_dangerous</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
         <span class="n">body</span> <span class="o">=</span> <span class="n">body</span> <span class="o">^</span> <span class="n">danger</span>
 
     <span class="k">if</span> <span class="n">delimiter</span><span class="p">:</span>
@@ -576,7 +592,7 @@
 
     <span class="n">optional</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">missing_value</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">optional</span><span class="p">:</span>
-      <span class="n">body</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">body</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">or</span> <span class="n">df</span> <span class="p">)</span>
+      <span class="n">body</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">body</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">or</span> <span class="n">df</span> <span class="p">)</span>
     <span class="k">return</span> <span class="n">body</span></div>
 
 
@@ -612,7 +628,7 @@
 
     <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuple_with_my_name</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">has_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">has_value</span><span class="p">,</span>
                                          <span class="n">name_in_grammar</span><span class="o">=</span><span class="n">name_in_grammar</span><span class="p">)</span>
-    <span class="n">out</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="n">nbody</span><span class="p">)</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="n">nbody</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
 
 
@@ -760,11 +776,11 @@
   <span class="k">def</span> <span class="nf">can_be_repeated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ValueDefinition._get_copy_args">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.sprkkr.configuration.ValueDefinition._get_copy_args">[docs]</a>
-  <span class="k">def</span> <span class="nf">_get_copy_args</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="ValueDefinition._get_init_args_for_copy">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.sprkkr.configuration.ValueDefinition._get_init_args_for_copy">[docs]</a>
+  <span class="k">def</span> <span class="nf">_get_init_args_for_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">       Compute the dictionary that defines the attributes to create a copy of this object.</span>
+<span class="sd">       Compute the values for creating the copy.</span>
 
 <span class="sd">       Returns</span>
 <span class="sd">       -------</span>
@@ -772,18 +788,22 @@
 <span class="sd">          The returning dictionary has this structure:</span>
 <span class="sd">          { name of the argument of the __init__ function : name of the object attribute }</span>
 <span class="sd">       &quot;&quot;&quot;</span>
-       <span class="n">out</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_get_copy_args</span><span class="p">()</span>
+       <span class="n">out</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_get_init_args_for_copy</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fixed</span><span class="p">:</span>
            <span class="n">out</span><span class="p">[</span><span class="s1">&#39;fixed_value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;default_value&#39;</span><span class="p">]</span>
+       <span class="k">if</span> <span class="s1">&#39;name_value_delimiter&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+           <span class="n">out</span><span class="p">[</span><span class="s1">&#39;delimiter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_value_delimiter</span>
+       <span class="k">if</span> <span class="s1">&#39;grammar_of_delimiter&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+           <span class="n">out</span><span class="p">[</span><span class="s1">&#39;delimiter_grammar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delimiter_grammar</span>
        <span class="k">return</span> <span class="n">out</span></div>
 
 
-  <span class="n">_copy_excluded_args</span> <span class="o">=</span> <span class="n">RealItemDefinition</span><span class="o">.</span><span class="n">_copy_excluded_args</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;fixed_value&#39;</span><span class="p">,</span> <span class="s1">&#39;result_is_visible&#39;</span><span class="p">,</span> <span class="s1">&#39;default_value_from_container&#39;</span><span class="p">]</span>
+  <span class="n">_copy_excluded_args</span> <span class="o">=</span> <span class="n">RealItemDefinition</span><span class="o">.</span><span class="n">_copy_excluded_args</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;fixed_value&#39;</span><span class="p">,</span> <span class="s1">&#39;result_is_visible&#39;</span><span class="p">,</span> <span class="s1">&#39;default_value_from_container&#39;</span><span class="p">,</span> <span class="s1">&#39;delimiter&#39;</span><span class="p">,</span> <span class="s1">&#39;delimiter_grammar&#39;</span><span class="p">,</span> <span class="s1">&#39;indent&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="ValueDefinition.copy_value">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.sprkkr.configuration.ValueDefinition.copy_value">[docs]</a>
   <span class="k">def</span> <span class="nf">copy_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">all_values</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Creates copy of the value</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Creates the copy of the value</span>
 
 <span class="sd">      Parameters</span>
 <span class="sd">      ----------</span>

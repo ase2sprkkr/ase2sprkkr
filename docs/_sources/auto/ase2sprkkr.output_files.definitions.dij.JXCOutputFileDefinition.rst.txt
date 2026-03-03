@@ -1,15 +1,15 @@
-ARPESDefinition
-===============
+JXCOutputFileDefinition
+=======================
 
 
 .. currentmodule:: ase2sprkkr.output_files.definitions.dij
 
-.. autoclass:: ARPESDefinition
+.. autoclass:: JXCOutputFileDefinition
    :members:
    :inherited-members:
 
    .. rubric:: Class hierarchy
-   .. inheritance-diagram:: ase2sprkkr.output_files.definitions.dij.ARPESDefinition
+   .. inheritance-diagram:: ase2sprkkr.output_files.definitions.dij.JXCOutputFileDefinition
       :parts: 2
 
    |
