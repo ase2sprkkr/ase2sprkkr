@@ -68,6 +68,12 @@ class OutputFileDefinition(ConfigurationFileDefinition):
       return out
 
 
+  @property
+  def extension(self):
+      mod = self.__class__.__module__
+      return mod.__name__.rsplit('.',1)[1]
+
+
 @cache
 def output_file_header():
     """ Return the members of the common output file header, up to

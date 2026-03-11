@@ -47,14 +47,14 @@ class OutputFile(ConfigurationFile):
       name = name.rsplit('.',1)[0] + '.definitions.'
       for imp, module, ispackage in pkgutil.iter_modules(path=[path], prefix=name):
            __import__(module)
-           mod = sys.modules[module]
-           ext = getattr(mod, "extension", None) or mod.__name__.rsplit('.',1)[1]
-           out[ext] = mod
+           mod = sys.modules[module].definition
+           ext = mod.extension
+           out[mod.extension] = mod
       return out
 
   @classmethod
   def definition(cls, self):
-      return cls.definitions[self].definition
+      return cls.definitions[self]
 
   @classmethod
   def from_file(cls, filename, first_try=None, try_only=None, unknown=None):
@@ -115,7 +115,7 @@ class OutputFile(ConfigurationFile):
         for i in try_only:
              if i in cls.definitions:
                  try:
-                    out = cls.definitions[i].definition.read_from_file(filename)
+                    out = cls.definitions[i].read_from_file(filename)
                     return out
                  except Exception as e:
                     last = e
@@ -124,7 +124,7 @@ class OutputFile(ConfigurationFile):
               if first_try and ext in first_try:
                  continue
               try:
-                 out = i.definition.read_from_file(filename)
+                 out = i.read_from_file(filename)
                  return out
               except Exception as e:
                  last = e

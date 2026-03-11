@@ -12,8 +12,6 @@ from ...common.configuration_definitions import SeparatorDefinition
 #from ...gui.plot import change_default_kwargs, colormesh, Multiplot
 import matplotlib.pyplot as plt
 
-extension = 'dat'
-
 class JXCOutputFile(CommonOutputFile):
     pass
 
@@ -64,6 +62,8 @@ def create_definition():
             ('DZ', float),
         ]), name_in_grammar=False)
     ], info='Dzyaloshinski-Moriya couplings Dij')
+
+    definition.__dict__['extension'] = 'dat'
 
     return definition
 
