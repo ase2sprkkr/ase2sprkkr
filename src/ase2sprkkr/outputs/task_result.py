@@ -14,13 +14,21 @@ class TaskResult:
   """ A base class for a result of a runned task (kkrscf executable) """
   def __init__(self, input_parameters, calculator, directory,
                      output_file=None, input_file=None):
+
+      def file_name(f):
+          if isinstance(f, str):
+              return f
+          if hasattr(f, 'name'):
+              return f.name
+          return f
+
       self._input_parameters = input_parameters
       self._calculator = calculator
       self.output_file = output_file
       self.files={}
       if output_file:
           self.files['output'] = output_file
-      self.directory = directory or os.path.dirname(self.files.get('output') or '') or os.getcwd()
+      self.directory = directory or os.path.dirname(file_name(self.files.get('output')) or '') or os.getcwd()
       self.directory = os.path.realpath(self.directory)
       self.input_file = input_file
 
@@ -168,7 +176,7 @@ class KkrProcessRunner:
       """ Creates an object that takes care of reading and parsing of the output of a sprkkr process """
       result = self._create_result(output, input_file)
       coroutine = self.reader.read_output_file(output, error, [result], return_code)
-      return self._create_process(coroutine, result)
+      return self._create_process(coroutine, result).run()
 
   @staticmethod
   def class_for_task(task):
