@@ -226,3 +226,13 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             DataValidityError.warn(f"Non-optional section {self._definition.name} has no value to save")
         for o in self.values():
             o._validate(why)
+
+    def values_of(self, name):
+        ln = len(self)
+        if not ln:
+            return np.empty((0,))
+        return np.fromiter(
+            (i[name]() for i in self),
+            count = ln,
+            dtype = self[0][name].__class__
+            )
