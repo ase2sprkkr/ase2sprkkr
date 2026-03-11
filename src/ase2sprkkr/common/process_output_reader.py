@@ -230,6 +230,13 @@ class AsyncioFileReader:
   def __exit__(self, type, value, traceback):
       self.close()
 
+  async def __aiter__(self):
+      while (line:=self.file.readline()) != b'':
+          yield line
+
+  def __anext__(self):
+      return self.readline()
+
   async def readline(self):
       return self.file.readline()
 
