@@ -91,9 +91,11 @@ class ContainerDefinition(RealItemDefinition):
 
        self.has_hidden_members = has_hidden_members
        if force_order is not None:
-          self.force_order = force_order
+           self.force_order = force_order
        self.repeated_delimiter = is_repeated if isinstance(is_repeated, str) else None
-       self.is_repeated = self.Repeated.REPEATED_SECTION if is_repeated else self.Repeated.NO
+       if not isinstance(is_repeated, self.Repeated):
+           is_repeated = self.Repeated.LIST_SECTION if is_repeated else self.Repeated.NO
+       self.is_repeated = is_repeated
 
     configuration_type_name = 'SECTION'
     """ Name of the container type in the runtime documentation """

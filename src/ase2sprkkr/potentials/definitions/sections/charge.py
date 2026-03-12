@@ -2,7 +2,7 @@ from ...potential_definitions import PotSectionDefinition, \
                                    PotValueDefinition
 from ...potential_sections import PotentialSection as PotSection, AtomicTypePotentialSection
 from ....common.grammar_types import NumpyArray, RawData
-from ....common.configuration_definitions import SeparatorDefinition
+from ....common.configuration_definitions import SeparatorDefinition, BaseDefinition
 import re
 
 
@@ -35,7 +35,7 @@ class ChargeSectionDefinition(PotSectionDefinition):
           ),
           SeparatorDefinition('=', length=79)
       ]
-      super().__init__(name, members, has_hidden_members=True, is_repeated=True, is_optional=True)
+      super().__init__(name, members, has_hidden_members=True, is_repeated=BaseDefinition.Repeated.DICT_SECTION, is_optional=True)
 
   result_class = ChargeSection
   repeated_class = ChargesSection

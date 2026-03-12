@@ -153,8 +153,10 @@ class BaseDefinition:
       # Values can be repeated, the result is array of values
       ARRAY = (Type.ARRAY, RepeatedKey)
       # Values can be repeated, the result is array of values
-      REPEATED_SECTION = (Type.ARRAY, Key.NONE, Numbering.NO, False)
-      # Repeated sections has no header, and their repetition solves themselves
+      LIST_SECTION = (Type.LIST, Key.NONE, Numbering.NO, False)
+      # Repeated sections has no header, and they solves their repetition themselves
+      DICT_SECTION = (Type.DICT, Key.NONE, Numbering.NO, False)
+      # with access like dict. However - how the keys are stored id the result? Maybe broken
       NUMBERED = (Type.ARRAY, ArrayKey, Numbering.YES)
       # Values are given in form "{NAME}{INDEX}", the result is array of values
       DICT = (Type.DICT, DictKey, Numbering.YES)
