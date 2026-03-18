@@ -118,6 +118,7 @@ class Length(InheritingValueModifier):
        return len(val)
 
    def validate_section(self, section, why='set', length=False):
+       ii = None
        for i in self._length_of:
             if section.is_dangerous(i):
                 continue
@@ -128,7 +129,10 @@ class Length(InheritingValueModifier):
                 length = ln
                 ii=i
             elif length != ln:
-                DataValidityError.warn(f"Lengths of {ii} and {i} should not differ")
+                if ii is None:
+                    DataValidityError.warn(f"Lengths of {i} should be {length}")
+                else:
+                    DataValidityError.warn(f"Lengths of {ii} and {i} should not differ")
 
    def validate_parse(self, data, ln):
        err = []
