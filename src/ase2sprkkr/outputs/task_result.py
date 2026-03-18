@@ -7,7 +7,74 @@ from ..common.decorators import cached_property, cached_class_property
 from ..common.process_output_reader import run_coro_sync
 from ..potentials.potentials import Potential
 from ..input_parameters import input_parameters as input_parameters
+from ..output_files.output_files import OutputFile
 from pathlib import Path
+import os
+import platform
+import subprocess
+import shutil
+
+class ResultValue:
+
+  def __init__(self, name, value):
+      self.name = name
+      self._value = value
+
+  def __call__(self):
+      return self._value
+
+  def value_label(self):
+      return self._value
+
+  def actions(self):
+      return []
+
+class OutputFileResultValue:
+
+  def __init__(self, name, type, filename):
+      self.name = name
+      self.type = type
+      self.filename = filename
+
+  def __call__(self):
+      return OutputFile.from_file(self.filename, try_only=self.type)
+
+  def definition(self):
+      return OutputFile.definitions[self.type]
+
+  def value_label(self):
+      return f'<{self.type} file>'
+
+  def actions(self):
+      out = [ 'open', 'save' ]
+      if self.definition().result_class.can_be_plotted():
+          out.append('plot')
+      return out
+
+  def save(self, parent=None):
+      try:
+        from PyQT6.QtWidgets import QFileDialog
+      except ImportError:
+        raise Exception("PyQt6 is required for saving the output file")
+
+      file_path, _ = QFileDialog.getSaveFileName(
+          parent,
+          "Save File",
+          "",
+          f" (*.{self.definition().extension});;All Files (*)"
+      )
+      shutil.copy(self.filename(), file_path);
+
+  def plot(self, parent=None):
+      self().plot()
+
+  def open(self, parent=None):
+      if platform.system() == "Windows":
+          os.startfile(self.filename)
+      elif platform.system() == "Darwin":  # macOS
+          subprocess.run(["open", self.filename])
+      else:  # Linux
+          subprocess.run(["xdg-open", self.filename])
 
 
 class TaskResult:
@@ -100,15 +167,21 @@ class TaskResult:
 
   @classmethod
   def from_file(cls, file):
-
-      with open(file, "rb") as f:
-          raw_out = f.read()
-          matches = cls._match_task_regex.search(raw_out.decode('utf8'))
-          process = KkrProcessRunner.class_for_task(matches[1])
+      def read_output_for(task):
+          process = KkrProcessRunner.class_for_task(task)
           process = process(None, None, os.path.dirname(file))
           f.seek(0)
           return process.read_from_file(f)
 
+      with open(file, "rb") as f:
+          raw_out = f.read()
+          matches = cls._match_task_regex.search(raw_out.decode('utf8'))
+          out = read_output_for(matches[1])
+          if matches[1] == 'NONE':
+              if 'DOS' in out.files:
+                    with open(file, "rb") as f:
+                        out = read_output_for('DOS')
+          return out
 
 class KkrProcess:
 

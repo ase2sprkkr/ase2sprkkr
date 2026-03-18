@@ -1,12 +1,16 @@
 """ Common parent for all specialized readers and outputs and
 default reader for the tasks without specialized reader and output. """
 
-from ..task_result import TaskResult, KkrProcessRunner
+from ..task_result import TaskResult, KkrProcessRunner, OutputFileResultValue
 from ..sprkkr_output_reader import SprKkrOutputReader
+from ...common.decorators import cached_property
 
 
 class DefaultResult(TaskResult):
-      pass
+
+  @cached_property
+  def output_values(self):
+      return {}
 
 
 class DefaultOutputReader(SprKkrOutputReader):

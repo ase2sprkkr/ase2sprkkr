@@ -23,7 +23,13 @@ class ArpesResult(TaskResult):
   @cached_property
   def spc(self):
       """ The new (output) potential - that contains the converged charge density etc. """
-      return OutputFile.from_file(self.spc_filename, try_only='spc')
+      return self.output_values['spc']()
+
+  @property
+  def output_values(self):
+    return {
+        'spc': OutputFileResultValue('Spectroscopy', 'spc', self.spc_filename)
+        }
 
 
 class ArpesProcessRunner(KkrProcessRunner):

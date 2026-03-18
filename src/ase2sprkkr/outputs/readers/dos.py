@@ -1,6 +1,6 @@
 """ Density of states (DOS) reader and result. """
 
-from ..task_result import TaskResult, KkrProcessRunner
+from ..task_result import TaskResult, KkrProcessRunner, OutputFileResultValue
 from .default import DefaultOutputReader
 from ...common.decorators import cached_property
 from ...output_files.output_files import OutputFile
@@ -22,7 +22,14 @@ class DosResult(TaskResult):
   @cached_property
   def dos(self):
       """ The new (output) potential - that contains the converged charge density etc. """
-      return OutputFile.from_file(self.dos_filename, try_only='dos')
+      return self.output_values['dos'].output_file()
+
+  @cached_property
+  def output_values(self):
+    return {
+        'dos': OutputFileResultValue('Density of states', 'dos', self.dos_filename)
+        }
+
 
 
 class DosProcessRunner(KkrProcessRunner):
