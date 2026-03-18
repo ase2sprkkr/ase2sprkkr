@@ -2,6 +2,7 @@ from .configuration_containers import BaseConfigurationContainer
 from typing import Union, Any, Dict
 from .warnings import DataValidityError
 from .configuration_definitions import BaseDefinition
+import numpy as np
 
 class RepeatedConfigurationContainer(BaseConfigurationContainer):
     """ A container for configuration (problem-definition) options and/or sections.
@@ -266,7 +267,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         if not ln:
             return np.empty((0,))
         return np.fromiter(
-            (i[name]() for i in self),
+            (self[i][name]() for i in self),
             count = ln,
-            dtype = self[0][name].__class__
+            dtype = self[0][name]._definition.type.numpy_dtype()[0]
             )
