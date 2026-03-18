@@ -65,7 +65,7 @@ def aperiodic_times(atoms:ase.Atoms,
         mlt[i] = inum
         natoms = atoms * mlt
         fnum=num - inum
-        if fnum>0:
+        if fnum > 0 and not np.isclose(fnum, 0):
            pos=atoms.get_scaled_positions(False)
            if direction > 0:
                add = atoms[pos[:,i] < fnum].copy()
@@ -77,8 +77,8 @@ def aperiodic_times(atoms:ase.Atoms,
                add += natoms
                natoms = add
                natoms.positions+= atoms.cell[i] * fnum
+           natoms.pbc[i]=False
         natoms.cell[i] = atoms.cell[i] * num
-        natoms.pbc[i]=False
         atoms = natoms
     return atoms
 
