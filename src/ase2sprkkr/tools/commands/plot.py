@@ -20,7 +20,7 @@ def description():
     from ...output_files.output_files import OutputFile
     out = 'The type of the file is guessed from the content of the file and from the extension. The currently supported files are: \n'
     defs = OutputFile.definitions.items()
-    out += '\n'.join(map(lambda x: f"    {x[0].upper()}: {x[1].definition.info()}", defs))
+    out += '\n'.join(map(lambda x: f"    {x[0].upper()}: {x[1].info()}", defs))
     return out
 
 

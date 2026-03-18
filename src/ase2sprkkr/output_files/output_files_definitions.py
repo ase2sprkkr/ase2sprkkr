@@ -71,7 +71,7 @@ class OutputFileDefinition(ConfigurationFileDefinition):
   @property
   def extension(self):
       mod = self.__class__.__module__
-      return mod.__name__.rsplit('.',1)[1]
+      return mod.rsplit('.',1)[1]
 
 
 @cache
