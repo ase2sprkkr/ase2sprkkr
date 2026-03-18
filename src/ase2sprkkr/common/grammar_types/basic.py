@@ -162,7 +162,18 @@ class IntBool(BaseBool):
 
 class Real(Number):
   """ A real value """
-  _grammar = replace_whitechars(ppc.fnumber).set_parse_action(lambda x: float(x[0]))
+
+  # Physical unit keywords that old xband-generated files sometimes append
+  # to numeric fields (e.g. "EMINEV=-1.25 eV").  The unit is silently
+  # discarded so that all float-typed parameters parse correctly regardless
+  # of whether the suffix is present.
+  _unit_kw = pp.MatchFirst([
+      pp.CaselessKeyword('eV'), pp.CaselessKeyword('Ry'),
+      pp.CaselessKeyword('meV'), pp.CaselessKeyword('Ha'),
+  ])
+  _grammar = (
+      replace_whitechars(ppc.fnumber) + pp.Suppress(pp.Optional(_unit_kw))
+  ).set_parse_action(lambda x: float(x[0]))
 
   def grammar_name(self):
     return '<float>'
