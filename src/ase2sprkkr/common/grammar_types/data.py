@@ -273,7 +273,11 @@ class NumpyArray(RawData):
              else:
                 v=np.genfromtxt( io.StringIO(v), delimiter=self.delimiter, dtype=self.dtype )
              if self.shape:
-                v.shape=self.shape
+                # np.genfromtxt squeezes a single-row block to 1D, e.g. shape
+                # (N,) instead of (1, N).  atleast_2d restores the row
+                # dimension before reshape so that e.g. shape=(2,-1) always
+                # yields (2, N//2) rather than reinterpreting a flat 1D array.
+                v=np.atleast_2d(v).reshape(self.shape)
              return v
 
          grammar.addParseAction(
