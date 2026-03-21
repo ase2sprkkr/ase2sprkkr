@@ -209,7 +209,8 @@ class NumpyArray(RawData):
 
     @add_to_signature(GrammarType.__init__)
     def __init__(self, *args, delimiter=None, shape=None, written_shape=None,
-                              item_format='% .18e', dtype=None, no_newline_at_end=True,
+                              item_format='% .18e', dtype=None, dtypes=None,
+                              no_newline_at_end=True,
                               **kwargs):
         """
         Parameters
@@ -231,6 +232,9 @@ class NumpyArray(RawData):
         dtype
           Type of the resulting data. Pass ``'line'`` to get array of whole lines
 
+        dtypes
+          More dtypes can be given. Then, the first, that match the data, is used
+
         **kwargs
           Any other arguments are passed to the :meth:`GrammarType constructor<GrammarType.__init__>`
         """
@@ -240,7 +244,15 @@ class NumpyArray(RawData):
         self.item_format=item_format
         self.shape=shape
         self.no_newline_at_end=no_newline_at_end
-        self.dtype=dtype
+        if dtypes is None:
+            if dtype == 'line':
+                dtypes = dtype
+            else:
+                dtypes = [ dtype ]
+        else:
+            if dtype is not None:
+                raise ValueError("Use either dtype or dtypes, but not both")
+        self.dtypes=dtypes
         super().__init__(*args, **kwargs)
 
     def _validate(self, value, why='set'):
@@ -270,10 +282,20 @@ class NumpyArray(RawData):
 
          def parse(v):
              v=v[0]
-             if self.dtype=='line':
+             if self.dtypes=='line':
                 v=np.array([ i.rstrip() for i in v.split('\n')], dtype=object)
              else:
-                v=np.genfromtxt( io.StringIO(v), delimiter=self.delimiter, dtype=self.dtype )
+                last_error = None
+                for dt in self.dtypes:
+                    try:
+                        v=np.genfromtxt( io.StringIO(v), delimiter=self.delimiter, dtype=dt )
+                        break
+                    except Exception as last_error:
+                        pass
+                else:
+                    if not last_error:
+                        raise ValueError("No dtype specified")
+                    raise last_error
              if self.shape:
                 v.shape=self.shape
              return v
