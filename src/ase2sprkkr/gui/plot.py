@@ -293,7 +293,10 @@ class Multiplot:
                   fname = re.sub(r'[<>:"/\\|?*\x00-\x1f\x7f ]', '_', name)
                   fname = re.sub(r"_+", '_', fname)
 
-              filename = append_before_ext(filename, '_' + fname)
+              if '{name}' in filename:
+                  filename = filename.replace('{name}', fname)
+              else:
+                  filename = append_before_ext(filename, '_' + fname)
 
           with single_plot(filename, self.show if self.separate_plots=='each' else False,
                            name, self.dpi, self.latex, self.figsize) as axis:
