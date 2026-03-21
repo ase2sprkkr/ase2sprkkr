@@ -671,6 +671,7 @@ class RootConfigurationContainer(ConfigurationContainer):
       if clear_first:
          self.clear(True)
       self.set(values, unknown='add')
+      self._filename = getattr(file, 'name', file if isinstance(file, str) else None)
 
   def find(self, name, unknown='find', is_option=True, lower_case=True, first=True):
       """ Find a configuration value of a given name in the owned sections """
