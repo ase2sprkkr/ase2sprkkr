@@ -2,11 +2,13 @@
 files of SPRKKR """
 
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationValue
+from ..potentials.potentials import Potential
 import pyparsing as pp
 import numpy as np
 import pkgutil
 import sys
-from ..common.decorators import cached_class_property
+from pathlib import Path
+from ..common.decorators import cached_class_property, cached_property
 from ..common.grammar_types.data import RestOfTheFile
 import io
 import os
@@ -27,9 +29,64 @@ class OutputFile(ConfigurationFile):
 
   plot_parameters = {}
 
+  def __init__(self, definition=None, container=None):
+      super().__init__(definition, container)
+      self._potential = None
+      self._potential_filename = None
+
   @classmethod
   def can_be_plotted(cls):
       return callable(getattr(cls, "plot", None))
+
+  def set_potential_filename(self, potential_filename):
+      self.__dict__['potential_filename'] = potential_filename
+      self.__dict__.pop('potential', None)
+
+  @cached_property
+  def potential_filename(self):
+      if not getattr(self, '_filename', None):
+          raise ValueError('The output file has no filename. Set the potential filename manually.')
+
+      path = Path(self._filename)
+      directory = path.parent
+      stem = path.stem
+
+      while True:
+          for suffix in ('.pot_new', '.pot'):
+              candidate = Path(directory) / (stem + suffix)
+              if candidate.is_file():
+                  return str(candidate)
+          stem=stem.rsplit('_', 1)  # split off the last part of the filename
+          if len(stem) == 1:
+              break
+          stem = stem[0]
+
+      raise ValueError(f'No potential file found for {self._filename}. Set it manually using set_potential_filename().')
+
+  @potential_filename.setter
+  def potential_filename(self, value):
+      self.set_potential_filename(value)
+
+  @cached_property
+  def potential(self):
+      return Potential.from_file(self.potential_filename)
+
+
+  @potential.setter
+  def potential(self, value):
+      if isinstance(value, Potential):
+          self.__dict__ ['potential'] = value
+          if hasattr(value, "_filename"):
+              self.__dict__ ['potential_filename'] = value._filename
+          else:
+              self.__dict__.pop('potential_filename', None)
+      else:
+          self.__dict__ ['potential_filename'] = value
+          self.__dict__.pop('potential', None)
+
+  @property
+  def atoms(self):
+      return self.potential.atoms
 
   @cached_class_property
   def unknown_output_file_definition(cls):
