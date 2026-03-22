@@ -95,6 +95,7 @@ def finish_plot(filename:Optional[str]=None, show:Optional[bool]=None, dpi=600):
      """
      Show the plot and/or save it to the given file
      """
+     plt.tight_layout()
      if show is None:
         show=filename is None
      if show:
@@ -229,7 +230,6 @@ class Multiplot:
           self.figure, self.axes = plt.subplots(figsize=figsize, nrows=layout[0], ncols=layout[1])
           adj = {} #{'left': 0.12, 'right': 0.95, 'bottom': 0.17, 'top': 0.90, 'hspace': 0.75, 'wspace': 0.5}
           adj.update(adjust)
-          plt.tight_layout()
           if adjust:
             plt.subplots_adjust(**adjust)
           self.free_axes = self.axes.ravel(order='F' if not updown_layout else 'C')
