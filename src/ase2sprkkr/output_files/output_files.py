@@ -150,7 +150,10 @@ class OutputFile(ConfigurationFile):
          if hasattr(filename, 'name'):
              fname = filename.name
          if isinstance(filename, str):
-             first_try = fname.rsplit('.',1)[1].lower()
+             try:
+                 first_try = fname.rsplit('.',1)[1].lower()
+             except IndexError:
+                 first_try = None
              #nektere soubory jsou typu _Dij.data
              special = re.match( r"^.+_([^/\\]+\.[^/\\]+)$", filename)
              if special:
