@@ -12,13 +12,13 @@ class BsfResult(TaskResult):
 
   @cached_property
   def bsf_filename(self):
-      """ New (output) potential file name """
+      """ Bloch spectral functions file name """
       return self.path_to('Bloch-SF')
 
   @cached_property
   def bsf(self):
-      """ The new (output) potential - that contains the converged charge density etc. """
-      self.output_values['bsf'].output_file()
+      """ The computed Bloch spectral functions. """
+      return self.output_values['bsf']()
 
   @cached_property
   def output_values(self):

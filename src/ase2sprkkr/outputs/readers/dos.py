@@ -13,7 +13,7 @@ class DosResult(TaskResult):
 
   @cached_property
   def dos_filename(self):
-      """ New (output) potential file name """
+      """ Density of states file name """
       fname = self.input_parameters.CONTROL.DATASET() + '_DOS.dos'
       if self.directory:
          fname = os.path.join(self.directory, fname)
@@ -21,8 +21,8 @@ class DosResult(TaskResult):
 
   @cached_property
   def dos(self):
-      """ The new (output) potential - that contains the converged charge density etc. """
-      return self.output_values['dos'].output_file()
+      """ The computed density of states. """
+      return self.output_values['dos']()
 
   @cached_property
   def output_values(self):
