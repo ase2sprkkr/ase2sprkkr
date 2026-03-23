@@ -1,6 +1,6 @@
 """ The ARPES reader and result. """
 
-from ..task_result import TaskResult, KkrProcessRunner
+from ..task_result import TaskResult, KkrProcessRunner, OutputFileResultValue
 from .default import DefaultOutputReader
 from ...common.decorators import cached_property
 from ...output_files.output_files import OutputFile
