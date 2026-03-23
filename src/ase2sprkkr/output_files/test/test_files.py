@@ -166,7 +166,7 @@ class TestOutput(TestCase):
          self.assertEqual(out.it_labels, {1: 'Fe_1', 2: 'Ni', 3: 'Fe_2'})
 
   def test_dij_plot_accepts_axis_argument(self):
-     filename = Path(dirname(dirname(dirname(__file__)))) / 'examples' / 'A12_JXC' / 'Fe_JXC_DMIVEC_Dij.dat'
+     filename = Path(dirname(dirname(__file__))) / 'examples' / 'SrTiO3_JXC_XCPLTEN_Dij.dat'
      out = OutputFile.from_file(str(filename), unknown=False)
 
      with tempfile.NamedTemporaryFile() as name:
