@@ -1,6 +1,9 @@
 Changelog
 =========
 
+* JXC output parsed
+* JXC output files plotting
+
 Version 3.4
 -----------
 
