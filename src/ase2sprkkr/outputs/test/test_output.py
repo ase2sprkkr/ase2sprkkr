@@ -1,7 +1,7 @@
 import os
 import unyt
 from ..readers.scf import ScfOutputReader, ScfResult, atomic_types_definition
-from ..readers.jxc import JxcOutputReader, JxcResult
+from ..readers.jxc import JxcProcessRunner
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -42,12 +42,12 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
           self.assertEqual(out.iterations[-1].converged(), True)
 
   def test_jxc(self):
-      path = os.path.join(
+      path = os.path.realpath(os.path.join(
               os.path.dirname(__file__),
-              '..', 'examples', 'Fe_jxc.out'
-      )
-      out = JxcResult(None, None, None)
-      out = JxcOutputReader.read_from_file(path, read_args = [out])
-      assert out.dmi
-      assert out.jxc
-      assert out.dij
+              '..', 'examples'
+      ))
+      result = JxcProcessRunner.read_from_file('Fe_jxc.out', directory=path)
+      assert result.jxc_filename == os.path.join(path, 'Fe_JXC_XCPLTEN_Jij.dat')
+      assert result.dij_filename == os.path.join(path, 'Fe_JXC_XCPLTEN_Dij.dat')
+      assert result.dmi_filename == os.path.join(path, 'Fe_JXC_DMIVEC_Dij.dat')
+

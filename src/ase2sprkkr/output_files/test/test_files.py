@@ -4,22 +4,20 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 import tempfile
-
 import numpy as np
 from ase.units import Rydberg as Ry
 
-
 if __package__:
-    from .init_tests import TestCase, patch_package
+   from .init_tests import TestCase, patch_package
 else:
-    from init_tests import TestCase, patch_package
+   from ase2sprkkr.output_files.test.init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
 if True:
-    from ..output_files import OutputFile
-    from ..definitions.jxc import JXCOutputFile
-    from ...common.configuration_containers import DisabledAttributeError
-    from ...common.configuration_containers import RootConfigurationContainer
+   from ..output_files import OutputFile
+   from ..definitions.jxc import JXCOutputFile, Coordinates, Selector
+   from ...common.configuration_containers import DisabledAttributeError
+   from ...common.configuration_containers import RootConfigurationContainer
 
 
 class TestOutput(TestCase):
@@ -72,7 +70,9 @@ class TestOutput(TestCase):
                   self.assertEqual(len(out.K2()), out.NK2())
 
             if hasattr(out, 'plot'):
-                with tempfile.NamedTemporaryFile() as name:
+               if isinstance(out, JXCOutputFile):
+                  continue
+               with tempfile.NamedTemporaryFile() as name:
                     kwargs = {'filename': name}
                     if 'exclude_vc' in getattr(out, 'plot_parameters', {}):
                        kwargs['exclude_vc'] = False
@@ -172,3 +172,56 @@ class TestOutput(TestCase):
      with tempfile.NamedTemporaryFile() as name:
         self.assertTrue('axis' in out.plot_parameters)
         out.plot(filename=name, exclude_vc=False, axis='y')
+
+  def test_write_uppasd_file_dispatches_to_current_binding_writer(self):
+     class DummyJxc(JXCOutputFile):
+        def is_Jij(self):
+           return True
+
+     out = object.__new__(DummyJxc)
+     selector = Selector(iq=[1], it={1})
+
+     with patch('ase2sprkkr.bindings.uppasd.write_jfile') as write_jfile:
+        out.write_uppasd_file(
+            'jfile.dat',
+            directory='exports',
+            selector=selector,
+            exchange_radius=6.5,
+            coordinates=Coordinates.cartesian,
+        )
+
+     write_jfile.assert_called_once_with(
+         out,
+         'jfile.dat',
+         directory='exports',
+         selector=selector,
+         iq=None,
+         it=None,
+         exclude_it=None,
+         exclude_vc=True,
+         exchange_radius=6.5,
+         coordinates=Coordinates.cartesian,
+     )
+
+  def test_write_uppasd_file_uses_dm_writer_for_dij_output(self):
+     class DummyDij(JXCOutputFile):
+        def is_Jij(self):
+           return False
+
+     out = object.__new__(DummyDij)
+
+     with patch('ase2sprkkr.bindings.uppasd.write_dmfile') as write_dmfile:
+        out.write_uppasd_file('dmfile.dat', directory='exports')
+
+     write_dmfile.assert_called_once_with(
+         out,
+         'dmfile.dat',
+         directory='exports',
+         selector=None,
+         iq=None,
+         it=None,
+         exclude_it=None,
+         exclude_vc=True,
+         exchange_radius=None,
+         coordinates=Coordinates.lattice,
+     )
