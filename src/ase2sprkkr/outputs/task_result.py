@@ -3,7 +3,7 @@ import os
 import re
 import importlib
 from . import readers
-from ..common.decorators import cached_property, cached_class_property
+from ..common.decorators import cached_property, cached_class_property, maybeclassmethod
 from ..common.process_output_reader import run_coro_sync
 from ..potentials.potentials import Potential
 from ..input_parameters import input_parameters as input_parameters
@@ -81,7 +81,18 @@ class TaskResult:
   """ A base class for a result of a runned task (kkrscf executable) """
   def __init__(self, input_parameters, calculator, directory,
                      output_file=None, input_file=None):
+      self._input_parameters = input_parameters
+      self._calculator = calculator
+      self.files={}
 
+      self.output_file = output_file
+      if output_file:
+          self.files['output'] = output_file
+      self._directory = os.path.realpath(directory) if directory else None
+      self.input_file = input_file
+
+  @cached_property
+  def directory(self):
       def file_name(f):
           if isinstance(f, str):
               return f
@@ -89,15 +100,7 @@ class TaskResult:
               return f.name
           return f
 
-      self._input_parameters = input_parameters
-      self._calculator = calculator
-      self.output_file = output_file
-      self.files={}
-      if output_file:
-          self.files['output'] = output_file
-      self.directory = directory or os.path.dirname(file_name(self.files.get('output')) or '') or os.getcwd()
-      self.directory = os.path.realpath(self.directory)
-      self.input_file = input_file
+      return self._directory or os.path.dirname(file_name(self.files.get('output')) or '') or os.getcwd()
 
   def path_to(self, file):
       """ return full path to a given file
@@ -185,21 +188,21 @@ class TaskResult:
 
 class KkrProcess:
 
-  def __init__(self, runner, output_reader, coroutine, callback=None):
+  def __init__(self, runner, output_reader, coroutine, result, callback=None):
       self.runner = runner
       self.output_reader = output_reader
       self.coroutine = coroutine
+      self.result = result
       self.callback = callback
 
   def run(self):
-      result = None
       try:
         result, error, return_code = run_coro_sync(self.coroutine)
-        result.complete(error, return_code)
+        self.result.complete(error, return_code)
       finally:
         if self.callback:
             self.callback(result)
-      return result
+      return self.result
 
   def stop_the_process(self):
        self.output_reader.stop_the_process()
@@ -237,16 +240,22 @@ class KkrProcessRunner:
 
   def _create_process(self, coroutine, result,callback=None):
       """ Create an object that can run the desired process (either reading from file or running a process) """
-      return KkrProcess(self, self.reader, coroutine, callback=callback)
+      return KkrProcess(self, self.reader, coroutine, result, callback=callback)
 
   def create_process(self, cmd, outfile, input_file=None, callback=None, **kwargs):
       """ Create an object that takes care of running the command and parsing the results """
       result = self._create_result(getattr(outfile, "name", None), input_file)
       coroutine = self.reader.run_async(cmd, outfile, self.directory, [result], **kwargs)
-      return self._create_process(coroutine, result, callback=callback)
+      return self._create_process(coroutine, result, result, callback=callback)
 
-  def read_from_file(self, output, error=None, return_code=0, input_file=None):
+  @maybeclassmethod
+  def read_from_file(self, cls, output, error=None, return_code=0, input_file=None, directory=None):
       """ Creates an object that takes care of reading and parsing of the output of a sprkkr process """
+      if self is None:
+          self = cls(None, None, directory or os.path.dirname(output))
+      if directory:
+          output = os.path.join(directory, output) if output else None
+
       result = self._create_result(output, input_file)
       coroutine = self.reader.read_output_file(output, error, [result], return_code)
       return self._create_process(coroutine, result).run()
