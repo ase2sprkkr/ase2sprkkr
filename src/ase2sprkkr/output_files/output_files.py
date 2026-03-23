@@ -145,17 +145,21 @@ class OutputFile(ConfigurationFile):
         recognized.
         None means True if try_only is None, False otherwise.
       """
+      fname = filename
+      if hasattr(filename, 'name'):
+          fname = filename.name
+      elif isinstance(filename, str):
+          if not os.path.exists(filename):
+              raise ValueError(f"File {filename} to be read does not exists")
+
       if first_try is None and not try_only:
-         fname = filename
-         if hasattr(filename, 'name'):
-             fname = filename.name
-         if isinstance(filename, str):
+         if isinstance(fname, str):
              try:
                  first_try = fname.rsplit('.',1)[1].lower()
              except IndexError:
                  first_try = None
              #nektere soubory jsou typu _Dij.data
-             special = re.match( r"^.+_([^/\\]+\.[^/\\]+)$", filename)
+             special = re.match( r"^.+_([^/\\]+\.[^/\\]+)$", fname)
              if special:
                 first_try = [ special.groups(1)[0], first_try ]
          else:
