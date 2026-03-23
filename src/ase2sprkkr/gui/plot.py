@@ -232,7 +232,7 @@ class Multiplot:
           adj.update(adjust)
           if adjust:
             plt.subplots_adjust(**adjust)
-          self.free_axes = self.axes.ravel(order='F' if not updown_layout else 'C')
+          self.free_axes = np.atleast_1d(self.axes).ravel(order='C' if not updown_layout else 'F')
           self.free_axes = [ i for i in self.free_axes[::-1] ]
 
       self.specific_kwargs = { k:v for k,v in kwargs.items() if str(k).isnumeric() }
