@@ -17,7 +17,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 if True:
     from ..output_files import OutputFile
-    from ..definitions.dij import JXCOutputFile
+    from ..definitions.jxc import JXCOutputFile
     from ...common.configuration_containers import DisabledAttributeError
     from ...common.configuration_containers import RootConfigurationContainer
 

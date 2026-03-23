@@ -11,7 +11,7 @@ from ase import Atoms
 from ..commands import uppasd
 from ...bindings import uppasd as uppasd_bindings
 from ...output_files.output_files import OutputFile
-from ...output_files.definitions.dij import Selector
+from ...output_files.definitions.jxc import Selector
 from ...potentials.potentials import Potential
 
 

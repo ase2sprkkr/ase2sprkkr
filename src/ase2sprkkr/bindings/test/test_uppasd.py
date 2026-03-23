@@ -12,7 +12,7 @@ from ase import Atoms
 
 from .. import uppasd as uppasd_bindings
 from ..uppasd import DMFILE_FORMAT, JFILE_FORMAT, MOMFILE_FORMAT, POSFILE_FORMAT, write_dmfile, write_jfile, write_mom_file, write_pos_file
-from ...output_files.definitions.dij import Coordinates, JXCOutputFile, Selector
+from ...output_files.definitions.jxc import Coordinates, JXCOutputFile, Selector
 
 
 class FakeMoments:

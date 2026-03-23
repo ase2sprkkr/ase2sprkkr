@@ -5,7 +5,7 @@ import warnings
 import numpy as np
 from ase import Atoms
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
-from ..output_files.definitions.dij import JXCOutputFile, Coordinates
+from ..output_files.definitions.jxc import JXCOutputFile, Coordinates
 
 POSFILE_FORMAT = "{:5.0f} {:5.0f} {: 4.10f} {: 4.10f} {: 4.10f}\n"
 MOMFILE_FORMAT = "{:5.0f} {:5.0f} {: 4.10f} {: 4.10f} {: 4.10f} {: 4.10f}\n"

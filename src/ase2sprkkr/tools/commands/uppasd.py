@@ -48,7 +48,7 @@ def run(args):
 
     from ...bindings.uppasd import Coordinates, write_dmfile, write_jfile, write_mom_file, write_pos_file  # NOQA
     from ...output_files.output_files import OutputFile  # NOQA
-    from ...output_files.definitions.dij import JXCOutputFile  # NOQA
+    from ...output_files.definitions.jxc import JXCOutputFile  # NOQA
     from ...potentials.potentials import Potential  # NOQA
 
     def _load_jxc_output(filename, potential):
