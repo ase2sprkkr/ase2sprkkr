@@ -307,7 +307,7 @@ async def readline_until(stdout, cond, can_end=True):
         line = await stdout.readline()
         if not line:
             if can_end:
-                return ''
+                return None
             raise EOFError()
         if cond(line):
             return line.decode('utf8')
