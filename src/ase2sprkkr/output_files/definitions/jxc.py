@@ -307,15 +307,20 @@ class JXCOutputFile(OutputFile):
                         )
         return True
 
-    def write_uppasd_file(self, file_name,
+    def write_uppasd_file(self, file_name=None, directory=None,
                           selector=None,
                           it=None, iq=None, exclude_it=None, exclude_vc=True, exchange_radius=None,
                           coordinates: Coordinates = Coordinates.lattice):
+        """ Write Jij or Dij data to file in format suitable for UppAsd programm.
+        If the filename is not given, the standard name for the given file type
+        will be used.
+        """
+
         if self.is_Jij():
             from ...bindings.uppasd import write_jfile as write
         else:
             from ...bindings.uppasd import write_dmfile as write
-        write(self, file_name,
+        write(self, file_name, directory=directory,
             selector=selector,
             iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc,  exchange_radius=exchange_radius, coordinates=coordinates)
 

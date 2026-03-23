@@ -16,13 +16,18 @@ COORDINATE_FIELDS = {
     Coordinates.lattice: ("N1", "N2", "N3"),
 }
 
-def write_jfile(jxc_ouput_file:JXCOutputFile, jfile_name='jfile.dat',
+def write_jfile(jxc_ouput_file:JXCOutputFile, file_name='jfile.dat', directory=None,
                 selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True, exchange_radius=None,
                 coordinates: Coordinates = Coordinates.lattice):
     coordinate_fields = COORDINATE_FIELDS[coordinates]
     rows = jxc_ouput_file.filtered_data(selector=selector, iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc, exchange_radius=exchange_radius)
 
-    with Path(jfile_name).open("w") as jfile:
+    if directory:
+        file_path = Path(directory) / file_name
+    else:
+        file_path = Path(file_name)
+
+    with file_path.open("w") as jfile:
         for row in rows:
             jfile.write(JFILE_FORMAT.format(
                 row["IQ"],
@@ -36,13 +41,18 @@ def write_jfile(jxc_ouput_file:JXCOutputFile, jfile_name='jfile.dat',
     return True
 
 
-def write_dmfile(jxc_ouput_file:JXCOutputFile, dmfile_name='dmfile.dat',
+def write_dmfile(jxc_ouput_file:JXCOutputFile, file_name='dmfile.dat', directory=None,
                  selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True, exchange_radius=None,
                  coordinates: Coordinates = Coordinates.lattice):
     coordinate_fields = COORDINATE_FIELDS[coordinates]
     rows = jxc_ouput_file.filtered_data(selector=selector, iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc, exchange_radius=exchange_radius)
 
-    with Path(dmfile_name).open("w") as dmfile:
+    if directory:
+        file_path = Path(directory) / file_name
+    else:
+        file_path = Path(file_name)
+
+    with file_path.open("w") as dmfile:
         for row in rows:
             dmfile.write(DMFILE_FORMAT.format(
                 row["IQ"],
@@ -58,7 +68,7 @@ def write_dmfile(jxc_ouput_file:JXCOutputFile, dmfile_name='dmfile.dat',
     return True
 
 
-def write_pos_file(atoms: Atoms, posfile_name='posfile.dat',
+def write_pos_file(atoms: Atoms, file_name='posfile.dat', directory=None,
                    selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True,
                    jxc_ouput_file: Optional[JXCOutputFile] = None
                    ):
@@ -73,7 +83,12 @@ def write_pos_file(atoms: Atoms, posfile_name='posfile.dat',
         return False
     site_types = {}
 
-    with Path(posfile_name).open("w") as posfile:
+    if directory:
+        file_path = Path(directory) / file_name
+    else:
+        file_path = Path(file_name)
+
+    with file_path.open("w") as posfile:
         for iq in selected_iqs:
             index = iq - 1
             site = atoms.sites[index]
@@ -93,7 +108,7 @@ def write_pos_file(atoms: Atoms, posfile_name='posfile.dat',
     return True
 
 
-def write_mom_file(atoms: Atoms, momfile_name='momfile.dat',
+def write_mom_file(atoms: Atoms, file_name='momfile.dat', directory=None,
                    selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True,
                    jxc_ouput_file: Optional[JXCOutputFile] = None):
     atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
@@ -137,7 +152,12 @@ def write_mom_file(atoms: Atoms, momfile_name='momfile.dat',
     if not out:
         return False
 
-    with Path(momfile_name).open("w") as momfile:
+    if directory:
+        file_path = Path(directory) / file_name
+    else:
+        file_path = Path(file_name)
+
+    with file_path.open("w") as momfile:
         for atomic_type, iqs in out.items():
             moment = atomic_type.moments.spin_moment
             for iq in iqs:
