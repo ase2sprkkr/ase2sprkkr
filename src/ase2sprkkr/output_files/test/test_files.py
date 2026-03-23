@@ -1,19 +1,25 @@
 from os import listdir
 from os.path import dirname, join as path_join, isfile
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
+import tempfile
+
 import numpy as np
 from ase.units import Rydberg as Ry
-import tempfile
 
 
 if __package__:
-   from .init_tests import TestCase, patch_package
+    from .init_tests import TestCase, patch_package
 else:
-   from init_tests import TestCase, patch_package
+    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
 if True:
     from ..output_files import OutputFile
+    from ..definitions.dij import JXCOutputFile
     from ...common.configuration_containers import DisabledAttributeError
+    from ...common.configuration_containers import RootConfigurationContainer
 
 
 class TestOutput(TestCase):
@@ -67,4 +73,102 @@ class TestOutput(TestCase):
 
             if hasattr(out, 'plot'):
                 with tempfile.NamedTemporaryFile() as name:
-                      out.plot(filename=name)
+                    kwargs = {'filename': name}
+                    if 'exclude_vc' in getattr(out, 'plot_parameters', {}):
+                       kwargs['exclude_vc'] = False
+                    out.plot(**kwargs)
+
+  def test_guess_potential_filename_and_manual_override(self):
+   with tempfile.TemporaryDirectory() as directory:
+      directory = Path(directory)
+      output = directory / 'Fe_JXC_XCPLTEN_Jij.dat'
+      output.write_text('unused')
+      guessed = directory / 'Fe.pot'
+      guessed.write_text('dummy')
+
+      class DummyDefinition:
+         @staticmethod
+         def parse_file(file, allow_dangerous=False):
+            return {'parsed': True}
+
+      class DummyOutput(OutputFile):
+         def clear(self, deep):
+              object.__setattr__(self, 'cleared', deep)
+
+         def set(self, values, unknown='add'):
+              object.__setattr__(self, 'set_values', (values, unknown))
+
+      out = object.__new__(DummyOutput)
+      object.__setattr__(out, '_definition', DummyDefinition())
+      object.__setattr__(out, '_filename', None)
+      object.__setattr__(out, '_potential', None)
+      object.__setattr__(out, '_potential_filename', None)
+      object.__setattr__(out, 'cleared', False)
+      object.__setattr__(out, 'set_values', None)
+      RootConfigurationContainer.read_from_file(out, str(output))
+
+      self.assertEqual(Path(out._filename).name, 'Fe_JXC_XCPLTEN_Jij.dat')
+      self.assertEqual(Path(out.potential_filename).name, 'Fe.pot')
+      self.assertTrue(out.cleared)
+      self.assertEqual(out.set_values, ({'parsed': True}, 'add'))
+
+      out.set_potential_filename(directory / 'manual.pot_new')
+      self.assertEqual(Path(out.potential_filename).name, 'manual.pot_new')
+
+  def test_potential_property_accepts_filename_or_potential(self):
+      with tempfile.TemporaryDirectory() as directory:
+        directory = Path(directory)
+        output = directory / 'Fe_JXC_XCPLTEN_Jij.dat'
+        output.write_text('unused')
+        guessed = directory / 'Fe.pot'
+        guessed.write_text('dummy')
+
+        class DummyOutput(OutputFile):
+             pass
+
+        out = object.__new__(DummyOutput)
+        object.__setattr__(out, '_definition', None)
+        object.__setattr__(out, '_filename', str(output))
+        object.__setattr__(out, '_potential', None)
+        object.__setattr__(out, '_potential_filename', None)
+
+        with patch('ase2sprkkr.output_files.output_files.Potential.from_file', return_value='loaded') as loader:
+           self.assertEqual(out.potential, 'loaded')
+           loader.assert_called_once_with(str(guessed))
+
+        class FakePotential:
+           def __init__(self, filename):
+              self._filename = filename
+              self.atoms = 'atoms'
+
+        with patch('ase2sprkkr.output_files.output_files.Potential', FakePotential):
+           fake_potential = FakePotential(str(directory / 'explicit.pot'))
+           out.potential = fake_potential
+           self.assertEqual(out.potential, fake_potential)
+           self.assertEqual(out.atoms, 'atoms')
+           self.assertEqual(Path(out.potential_filename).name, 'explicit.pot')
+
+  def test_jxc_labels_are_taken_from_atoms(self):
+         class FakeAtomicType:
+            def __init__(self, symbol):
+                self.symbol = symbol
+
+         type_fe_1 = FakeAtomicType('Fe')
+         type_ni = FakeAtomicType('Ni')
+         type_fe_2 = FakeAtomicType('Fe')
+         atoms = SimpleNamespace(sites=[
+            SimpleNamespace(occupation={type_fe_1: 1.0}),
+            SimpleNamespace(occupation={type_ni: 1.0}),
+            SimpleNamespace(occupation={type_fe_2: 1.0}),
+         ])
+
+         out = JXCOutputFile.from_atoms(atoms)
+         self.assertEqual(out.it_labels, {1: 'Fe_1', 2: 'Ni', 3: 'Fe_2'})
+
+  def test_dij_plot_accepts_axis_argument(self):
+     filename = Path(dirname(dirname(dirname(__file__)))) / 'examples' / 'A12_JXC' / 'Fe_JXC_DMIVEC_Dij.dat'
+     out = OutputFile.from_file(str(filename), unknown=False)
+
+     with tempfile.NamedTemporaryFile() as name:
+        self.assertTrue('axis' in out.plot_parameters)
+        out.plot(filename=name, exclude_vc=False, axis='y')
