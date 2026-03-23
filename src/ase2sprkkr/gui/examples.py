@@ -73,7 +73,7 @@ class Example:
         source = self.source()
         # Parse the AST
         try:
-            tree = ast.parse(source)
+            tree = ast.parse(source, filename=str(self.main_script))
             # Return the module-level docstring
             return ast.get_docstring(tree)
         except SyntaxError:
