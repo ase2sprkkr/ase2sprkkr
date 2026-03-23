@@ -1,3 +1,4 @@
+""" X-ray absorption spectroscopy (XAS) """
 import sys
 
 def main():
@@ -13,7 +14,7 @@ def main():
     print("Setting up input parameters...")
     calculator.input_parameters = 'xas'
     calculator.input_parameters.CONTROL.DATASET = 'Fe'
-    calculator.input_parameters.TASK.IT = 1  
+    calculator.input_parameters.TASK.IT = 1
     calculator.input_parameters.TASK.FRAMETET= 90.0
     calculator.input_parameters.TASK.FRAMEPHI = 45.0
     current_dir = os.getcwd()

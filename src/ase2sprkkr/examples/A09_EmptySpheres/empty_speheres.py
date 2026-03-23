@@ -1,3 +1,5 @@
+""" Adding of empty spheres into the structure """
+
 def main():
 
     from ase.build import bulk

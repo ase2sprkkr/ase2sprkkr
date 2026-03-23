@@ -1,37 +1,39 @@
-# Script demonstrating how to set up a disordered local moment (DLM) calculation
-# using bcc Fe as the test case.
-#
-# Such calculations are used to describe the paramagnetic state of materials,
-# where local magnetic moments on atoms persist, but where the net magnetisation
-# of the material is zero on account of thermally induced spin fluctuations. The 
-# CPA is used to average over possible orientations of magnetic moment. Above the Curie
-# temperature, all orientations of magnetic moment are equally probably, and the
-# probability distribution of orientations of magnetic moments is uniform on the sphere. 
-# In the absence of spin-orbit coupling, the CPA condition for a full average (using 
-# an angular integral) over the sphere with uniform probability distribution can be shown 
-# to be mathematically equivalent to the CPA condition for a 50:50 Ising 'alloy' of 'up' 
-# and 'down' magnetic moments. (Note that this equality does not strictly hold in the 
-# case where spin-orbit effects are present, as in a fully relativistic calculation.)
-#
-# A DLM calculation should be iterated to self-consistency to check whether the local
-# moments 'collapse' (as frequently happens for elements like Cr, Ni) or whether they
-# are self-sustaining (as is typical for Fe, Co).
-#
-# Once you have run this script and iterated to self-consistency, if you run
-# `tail Fe.pot_new`
-# you should find that, although the net magnetisation of the calculation is zero,
-# the two Fe atoms have equal and opposite magnetic moments, each of magnitude
-# approximately 2.16 \mu_B. This confirms that the local moments are self-sustaining,
-# and that bcc Fe is a 'good' local moment system.
-#
-# Some appropriate references for the disordered local moment (DLM) picture are:
-# - A. J. Pindor et al., J. Phys. F: Met. Phys. 13, 979 (1983)
-# - J. B. Staunton et al., J. Magn. Magn. Mater. 45, 15-22 (1984)
-# - B. L. Gyorffy et al., J. Phys. F: Met. Phys. 15, 1337 (1985)
-#
-# Author: Christopher D. Woodgate, University of Bristol, 2025
-#
-# Email: christopher.woodgate@bristol.ac.uk
+r"""
+Script demonstrating how to set up a disordered local moment (DLM) calculation using bcc Fe as the test case.
+
+Such calculations are used to describe the paramagnetic state of materials,
+where local magnetic moments on atoms persist, but where the net magnetisation
+of the material is zero on account of thermally induced spin fluctuations. The
+CPA is used to average over possible orientations of magnetic moment. Above the Curie
+temperature, all orientations of magnetic moment are equally probably, and the
+probability distribution of orientations of magnetic moments is uniform on the sphere.
+In the absence of spin-orbit coupling, the CPA condition for a full average (using
+an angular integral) over the sphere with uniform probability distribution can be shown
+to be mathematically equivalent to the CPA condition for a 50:50 Ising 'alloy' of 'up'
+and 'down' magnetic moments. (Note that this equality does not strictly hold in the
+case where spin-orbit effects are present, as in a fully relativistic calculation.)
+
+A DLM calculation should be iterated to self-consistency to check whether the local
+moments 'collapse' (as frequently happens for elements like Cr, Ni) or whether they
+are self-sustaining (as is typical for Fe, Co).
+
+Once you have run this script and iterated to self-consistency, if you run
+`tail Fe.pot_new`
+you should find that, although the net magnetisation of the calculation is zero,
+the two Fe atoms have equal and opposite magnetic moments, each of magnitude
+approximately 2.16 \mu_B. This confirms that the local moments are self-sustaining,
+and that bcc Fe is a 'good' local moment system.
+
+Some appropriate references for the disordered local moment (DLM) picture are:
+ - A. J. Pindor et al., J. Phys. F: Met. Phys. 13, 979 (1983)
+ - J. B. Staunton et al., J. Magn. Magn. Mater. 45, 15-22 (1984)
+ - B. L. Gyorffy et al., J. Phys. F: Met. Phys. 15, 1337 (1985)
+
+Author: Christopher D. Woodgate, University of Bristol, 2025
+
+Email: christopher.woodgate@bristol.ac.uk
+"""
+
 def main():
 
     import numpy as np
@@ -51,7 +53,7 @@ def main():
     # with the same chemical symbol and this behaviour is not permitted in a Python dictionary
     # Instead, we use a list.
     atoms.sites[0].occupation.set([('Fe', 0.5), ('Fe',0.5)])
-    
+
     # Now we set up the ASE calculator
     calculator = SPRKKR(atoms=atoms,mpi=['mpirun','-np','4'])
 
