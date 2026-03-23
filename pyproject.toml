@@ -25,7 +25,7 @@ description = "Wrapper/calculator for SPRKKR to be used within ASE (Atomic Simul
 license-files = ["LICENCE"]
 
 dependencies = [
-    "ase",
+    "ase>=3.22.0",
     "asr",
     "spglib",
     "pyparsing>=3.0",
