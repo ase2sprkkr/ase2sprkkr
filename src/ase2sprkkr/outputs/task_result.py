@@ -244,7 +244,13 @@ class KkrOutputReader:
       )
 
   def _create_process(self, coroutine, result, callback=None):
-      """ Create an object that can run the desired process (either reading from file or running a process) """
+      """ Create an object that can run the desired process (either reading from file or running a process)
+
+      Returns
+      -------
+      KkrProcess
+          An object that can run the process and return the result.
+      """
       return KkrProcess(self, self.parser, coroutine, result, callback=callback)
 
   def create_process(self, cmd, outfile, input_file=None, callback=None, **kwargs):
