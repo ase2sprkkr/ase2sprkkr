@@ -64,7 +64,7 @@ class JxcResult(TaskResult):
         }
 
         return {
-            key: OutputFileResultValue(name, key, getattr(self, f'{key}_filename'))
+            key: OutputFileResultValue(name, 'jxc', getattr(self, f'{key}_filename'))
             for key, name in files.items()
             if key in self.files
         }
@@ -100,6 +100,7 @@ class JxcOutputReader(SprKkrOutputReader):
             else:
                 breakpoint()
                 warnings.warn(f'Unexpected line in JXC output: {line}')
+
 
 class JxcProcessRunner(KkrProcessRunner):
 
