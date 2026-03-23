@@ -50,4 +50,4 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
       assert result.jxc_filename == os.path.join(path, 'Fe_JXC_XCPLTEN_Jij.dat')
       assert result.dij_filename == os.path.join(path, 'Fe_JXC_XCPLTEN_Dij.dat')
       assert result.dmi_filename == os.path.join(path, 'Fe_JXC_DMIVEC_Dij.dat')
-
+      assert result.mean_field_curie_temperature == 763.4

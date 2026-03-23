@@ -87,19 +87,34 @@ class JxcOutputParser(SprKkrOutputParser):
      async def read_output(self, stdout, result):
         await self.read_commons(stdout, result)
 
-        pattern = re.compile(r'\s*results written to file:(.+_(XCPLTEN_Jij|XCPLTEN_Dij|DMIVEC_Dij)\.dat)\s*')
-        file_types = {'XCPLTEN_Jij': 'jxc', 'XCPLTEN_Dij': 'dij', 'DMIVEC_Dij': 'dmi'}
+        pattern = re.compile(rb'\s*(?:(?:' + rb')|(?:'.join([
+            rb'(?P<file>results written to file:(?P<file_name>.+_(?P<file_type>XCPLTEN_Jij|XCPLTEN_Dij|DMIVEC_Dij)\.dat|.*))',
+            rb'Curie temperature within mean field approximation  T_C =\s*(?P<curie_temp>[0-9.]+) K',
+        ])+rb'))\s*')
+        file_types = {b'XCPLTEN_Jij': 'jxc', b'XCPLTEN_Dij': 'dij', b'DMIVEC_Dij': 'dmi'}
 
+        match = None
+        def important(line):
+            nonlocal match
+            match = pattern.match(line)
+            return match
+
+        result.mean_field_curie_temperature = None
         while True:
-            line = await readline_until(stdout, lambda line: line.startswith(b'          results written to file:'))
+            line = await readline_until(stdout, important)
             if line is None:
                 break
-            match = pattern.match(line)
-            if match:
-                result.files[file_types[match.group(2)]] = match.group(1)
-            else:
-                breakpoint()
-                warnings.warn(f'Unexpected line in JXC output: {line}')
+            if match.group("file"):
+                file_type = file_types.get(match.group("file_type"), None)
+                if file_type is not None:
+                    result.files[file_type] = match.group("file_name").decode('utf8')
+                else:
+                    warnings.warn(f'Unexpected file type in JXC output: {line}')
+            if match.group("curie_temp"):
+                result.mean_field_curie_temperature = float(match.group("curie_temp"))
+
+        if result.mean_field_curie_temperature is None:
+            warnings.warn('Curie temperature not found in JXC output')
 
 
 class JxcOutputReader(KkrOutputReader):
