@@ -1,7 +1,7 @@
 """ The Bloch spectral functions (BSF) reader and result."""
 
-from ..task_result import TaskResult, KkrProcessRunner, OutputFileResultValue
-from .default import DefaultOutputReader
+from ..task_result import TaskResult, KkrOutputReader, OutputFileResultValue
+from .default import DefaultOutputParser
 from ...common.decorators import cached_property
 from ...output_files.output_files import OutputFile
 
@@ -26,9 +26,9 @@ class BsfResult(TaskResult):
         'bsf': OutputFileResultValue('Bloch spectral function', 'bsf', self.bsf_filename)
         }
 
-class BsfProcessRunner(KkrProcessRunner):
-  """ ARPES task output reader currently do nothing, just have a special
+class BsfOutputReader(KkrOutputReader):
+  """ BSF task has no special parser, it just has a special
   result, that allow easy acces to BSF output file """
 
   result_class = BsfResult
-  reader_class = DefaultOutputReader
+  parser_class = DefaultOutputParser

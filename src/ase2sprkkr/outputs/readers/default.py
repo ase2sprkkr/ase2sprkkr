@@ -1,8 +1,8 @@
 """ Common parent for all specialized readers and outputs and
 default reader for the tasks without specialized reader and output. """
 
-from ..task_result import TaskResult, KkrProcessRunner, OutputFileResultValue
-from ..sprkkr_output_reader import SprKkrOutputReader
+from ..task_result import TaskResult, KkrOutputReader, OutputFileResultValue
+from ..sprkkr_output_reader import SprKkrOutputParser
 from ...common.decorators import cached_property
 
 
@@ -13,7 +13,7 @@ class DefaultResult(TaskResult):
       return {}
 
 
-class DefaultOutputReader(SprKkrOutputReader):
+class DefaultOutputParser(SprKkrOutputParser):
 
   async def read_output(self, stdout, result):
       await self.read_commons(stdout, result)
@@ -25,7 +25,7 @@ class DefaultOutputReader(SprKkrOutputReader):
       return result
 
 
-class DefaultProcessRunner(KkrProcessRunner):
+class DefaultOutputReader(KkrOutputReader):
 
-  result_class = DefaultResult
-  reader_class = DefaultOutputReader
+      result_class = DefaultResult
+      parser_class = DefaultOutputParser

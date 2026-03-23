@@ -12,7 +12,7 @@ from threading import Thread
 from .decorators import maybeclassmethod
 
 
-class ProcessOutputReader:
+class ProcessOutputParser:
   """
   Class, that run a process, optionally saves all the output of the process to a file,
   and pass the stdout and stderr of the process to its two async routines, read_error
@@ -166,7 +166,7 @@ class ProcessOutputReader:
           print(line.decode('utf8'))
 
   async def read_output(self, stdout, *args):
-      raise NotImplementedError('Please, redefine BaseProcess.read_output coroutine')
+      raise NotImplementedError('Please, redefine ProcessOuputParser.read_output coroutine')
 
   def set_print_output(self, print_output):
       self.print_output = print_output

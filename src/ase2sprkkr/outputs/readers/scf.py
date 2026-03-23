@@ -11,12 +11,12 @@ from ..output_definitions import OutputSectionDefinition as Section, \
 from ...common.grammar_types import Table, integer, string, Real, RealWithUnits,String, Sequence, Array
 from ..task_result import TaskResult, ResultValue
 from ...common.process_output_reader import readline, readline_until
-from ..sprkkr_output_reader import SprKkrOutputReader
+from ..sprkkr_output_reader import SprKkrOutputParser
 from ...common.decorators import cached_property
 from ...sprkkr.calculator import SPRKKR
 from ...common.formats import fortran_format
 from ...common.grammar import replace_whitechars
-from ..task_result import KkrProcessRunner
+from ..task_result import KkrOutputReader
 from ...potentials.potentials import Potential
 
 
@@ -250,7 +250,7 @@ scf_section = Section('iteration', [
 
 del PV
 
-class ScfOutputReader(SprKkrOutputReader):
+class ScfOutputParser(SprKkrOutputParser):
   """
   This class reads and parses the output of the SCF task of the SPR-KKR.
   """
@@ -329,10 +329,9 @@ class ScfOutputReader(SprKkrOutputReader):
 
         except EOFError:
           raise Exception('The output ends unexpectedly')
-        return result
 
 
-class ScfProcessRunner(KkrProcessRunner):
+class ScfOutputReader(KkrOutputReader):
 
   result_class = ScfResult
-  reader_class = ScfOutputReader
+  parser_class = ScfOutputParser

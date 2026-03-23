@@ -1,10 +1,10 @@
-from ..common.process_output_reader import ProcessOutputReader, readline_until
+from ..common.process_output_reader import ProcessOutputParser, readline_until
 import os
 import datetime
 import re
 
 
-class SprKkrOutputReader(ProcessOutputReader):
+class SprKkrOutputParser(ProcessOutputParser):
 
     async def read_commons(self, stdout, result):
         out = await self.parse_files(stdout, result)

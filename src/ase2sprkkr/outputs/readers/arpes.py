@@ -1,7 +1,7 @@
 """ The ARPES reader and result. """
 
-from ..task_result import TaskResult, KkrProcessRunner, OutputFileResultValue
-from .default import DefaultOutputReader
+from ..task_result import TaskResult, KkrOutputReader, OutputFileResultValue
+from .default import DefaultOutputParser
 from ...common.decorators import cached_property
 import os
 
@@ -31,9 +31,9 @@ class ArpesResult(TaskResult):
         }
 
 
-class ArpesProcessRunner(KkrProcessRunner):
-  """ ARPES task have no special reader, it just have a special
+class ArpesOutputReader(KkrOutputReader):
+  """ ARPES task has no special parser, it just has a special
   result, that allow easy acces to spc output file """
 
   result_class = ArpesResult
-  reader_class = DefaultOutputReader
+  parser_class = DefaultOutputParser

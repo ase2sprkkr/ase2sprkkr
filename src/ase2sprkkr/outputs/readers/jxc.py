@@ -2,8 +2,8 @@
 import warnings
 import re
 
-from ..task_result import TaskResult, KkrProcessRunner, OutputFileResultValue
-from .default import SprKkrOutputReader
+from ..task_result import TaskResult, KkrOutputReader, OutputFileResultValue
+from ..sprkkr_output_reader import SprKkrOutputParser
 from ...common.decorators import cached_property
 from ...bindings.uppasd import write_pos_file, write_mom_file
 from ...common.process_output_reader import readline_until
@@ -82,7 +82,7 @@ class JxcResult(TaskResult):
         write_mom_file(self.atoms, jxc_ouput_file=output_file, directory=directory)
 
 
-class JxcOutputReader(SprKkrOutputReader):
+class JxcOutputParser(SprKkrOutputParser):
 
      async def read_output(self, stdout, result):
         await self.read_commons(stdout, result)
@@ -102,7 +102,7 @@ class JxcOutputReader(SprKkrOutputReader):
                 warnings.warn(f'Unexpected line in JXC output: {line}')
 
 
-class JxcProcessRunner(KkrProcessRunner):
+class JxcOutputReader(KkrOutputReader):
 
     result_class = JxcResult
-    reader_class = JxcOutputReader
+    parser_class = JxcOutputParser

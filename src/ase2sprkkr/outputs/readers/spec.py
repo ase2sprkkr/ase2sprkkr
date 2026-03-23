@@ -6,8 +6,8 @@ import re
 import numpy as np
 from typing import Dict, List, Optional, Tuple, Union
 
-from ..task_result import TaskResult, KkrProcessRunner
-from .default import DefaultOutputReader
+from ..task_result import TaskResult, KkrOutputReader
+from .default import DefaultOutputParser
 from ...common.decorators import cached_property
 from ...output_files.output_files import OutputFile
 
@@ -127,7 +127,7 @@ class SpecResult(TaskResult):
         return self._file_content
 
 
-class SpecOutputReader(DefaultOutputReader):
+class SpecOutputParser(DefaultOutputParser):
     """Reader for spec.out files."""
 
     async def read_output(self, stdout, result):
@@ -141,8 +141,8 @@ class SpecOutputReader(DefaultOutputReader):
         return result
 
 
-class SpecProcessRunner(KkrProcessRunner):
+class SpecOutputReader(KkrOutputReader):
     """Process class for spectral function calculations."""
 
     result_class = SpecResult
-    reader_class = SpecOutputReader
+    parser_class = SpecOutputParser

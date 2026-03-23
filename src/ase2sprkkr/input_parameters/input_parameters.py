@@ -10,7 +10,7 @@ import os
 import io
 import pkgutil
 import importlib
-from ..outputs.task_result import KkrProcessRunner
+from ..outputs.task_result import KkrOutputReader
 from . import definitions
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
@@ -135,7 +135,7 @@ class InputParameters(ConfigurationFile):
       Return
       ------
       out: mixed
-        The result of ase2sprkkr.common.process_output_reader.ProcessOutputReader.run() method: the
+        The result of ase2sprkkr.common.process_output_reader.ProcessOutputParser.run() method: the
         parsed output of the runned task.
 
       """
@@ -215,7 +215,7 @@ class InputParameters(ConfigurationFile):
 
       if cls is None:
          task = self.TASK.TASK().lower()
-         cls = KkrProcessRunner.class_for_task(task)
+         cls = KkrOutputReader.class_for_task(task)
       return cls(self, calculator, directory, print_output, read_callback)
 
   def read_output_from_file(self, filename, directory=None):

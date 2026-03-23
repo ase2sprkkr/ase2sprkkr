@@ -1,7 +1,7 @@
 """ Density of states (DOS) reader and result. """
 
-from ..task_result import TaskResult, KkrProcessRunner, OutputFileResultValue
-from .default import DefaultOutputReader
+from ..task_result import TaskResult, KkrOutputReader, OutputFileResultValue
+from .default import DefaultOutputParser
 from ...common.decorators import cached_property
 from ...output_files.output_files import OutputFile
 import os
@@ -32,9 +32,9 @@ class DosResult(TaskResult):
 
 
 
-class DosProcessRunner(KkrProcessRunner):
-  """ ARPES task output reader currently do nothing, just have a special
+class DosOutputReader(KkrOutputReader):
+  """ DOS task has no special parser, it just has a special
   result, that allow easy acces to spc output file """
 
   result_class = DosResult
-  reader_class = DefaultOutputReader
+  parser_class = DefaultOutputParser

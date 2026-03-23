@@ -171,7 +171,7 @@ class TaskResult:
   @classmethod
   def from_file(cls, file):
       def read_output_for(task):
-          process = KkrProcessRunner.class_for_task(task)
+          process = KkrOutputReader.class_for_task(task)
           process = process(None, None, os.path.dirname(file))
           f.seek(0)
           return process.read_from_file(f)
@@ -188,14 +188,15 @@ class TaskResult:
 
 class KkrProcess:
 
-  def __init__(self, runner, output_reader, coroutine, result, callback=None):
-      self.runner = runner
-      self.output_reader = output_reader
+  def __init__(self, reader, output_parser, coroutine, result, callback=None):
+      self.reader = reader
+      self.output_parser = output_parser
       self.coroutine = coroutine
       self.result = result
       self.callback = callback
 
   def run(self):
+      result = self.result
       try:
         result, error, return_code = run_coro_sync(self.coroutine)
         self.result.complete(error, return_code)
@@ -205,19 +206,20 @@ class KkrProcess:
       return self.result
 
   def stop_the_process(self):
-       self.output_reader.stop_the_process()
+       self.output_parser.stop_the_process()
 
   async def run_async(self):
-      await self.coroutine
-      result.complete(error, return_code)
-      return result
+      result, error, return_code = await self.coroutine
+      self.result.complete(error, return_code)
+      return self.result
 
-class KkrProcessRunner:
-  """ Class, that run a process and read its output using underlined
-  process reader (see :class:`ase2sprkkr.common.process_output_reader.ProcessOutputReader`)
+
+class KkrOutputReader:
+  """ Class, that runs a process and reads its output using the underlying
+  output parser (see :class:`ase2sprkkr.common.process_output_reader.ProcessOutputParser`)
   and return the appropriate TaskResult.
 
-  Descendants should define reader_class and result_class property.
+  Descendants should define parser_class and result_class property.
   """
 
   def __init__(self, input_parameters, calculator, directory, print_output=False, read_callback=None):
@@ -229,24 +231,27 @@ class KkrProcessRunner:
       self.calculator = calculator
       self.directory = directory
       """ Calculator, that can be used for further processing of the results. """
-      self.reader = self.reader_class(print_output, read_callback)
+      self.parser = self.parser_class(print_output, read_callback)
 
   def _create_result(self, output_file, input_file=None):
       """ Create an object that stores results of the KKR output parsing. """
-      return self.result_class(self.input_parameters, self.calculator, self.directory,
-                               output_file = output_file,
-                               input_file = input_file
-                               )
+      return self.result_class(
+          self.input_parameters,
+          self.calculator,
+          self.directory,
+          output_file=output_file,
+          input_file=input_file,
+      )
 
-  def _create_process(self, coroutine, result,callback=None):
+  def _create_process(self, coroutine, result, callback=None):
       """ Create an object that can run the desired process (either reading from file or running a process) """
-      return KkrProcess(self, self.reader, coroutine, result, callback=callback)
+      return KkrProcess(self, self.parser, coroutine, result, callback=callback)
 
   def create_process(self, cmd, outfile, input_file=None, callback=None, **kwargs):
       """ Create an object that takes care of running the command and parsing the results """
       result = self._create_result(getattr(outfile, "name", None), input_file)
-      coroutine = self.reader.run_async(cmd, outfile, self.directory, [result], **kwargs)
-      return self._create_process(coroutine, result, result, callback=callback)
+      coroutine = self.parser.run_async(cmd, outfile, self.directory, [result], **kwargs)
+      return self._create_process(coroutine, result, callback=callback)
 
   @maybeclassmethod
   def read_from_file(self, cls, output, error=None, return_code=0, input_file=None, directory=None):
@@ -257,22 +262,22 @@ class KkrProcessRunner:
           output = os.path.join(directory, output) if output else None
 
       result = self._create_result(output, input_file)
-      coroutine = self.reader.read_output_file(output, error, [result], return_code)
+      coroutine = self.parser.read_output_file(output, error, [result], return_code)
       return self._create_process(coroutine, result).run()
 
   @staticmethod
   def class_for_task(task):
        try:
           mod = importlib.import_module(f'.{task.lower()}', readers.__name__)
-          clsname = task.title() + 'ProcessRunner'
+          clsname = task.title() + 'OutputReader'
           cls = getattr(mod, clsname)
           if not cls:
              raise Exception(f"Can not determine the class to read the results of task {task}"
                               "No {clsname} class in the module {oo.__name__}.{task}")
        except ModuleNotFoundError:
-          cls = DefaultProcessRunner
+          cls = DefaultOutputReader
 
        return cls
 
 
-from ..outputs.readers.default import DefaultProcessRunner   # NOQA
+from ..outputs.readers.default import DefaultOutputReader   # NOQA
