@@ -303,9 +303,10 @@ class Multiplot:
                yield axis
       else:
           try:
-              yield self.free_axes.pop()
+              axis = self.free_axes.pop()
           except IndexError:
               raise StopIteration()
+          yield axis
       self.index += 1
 
   def __iter__(self):
