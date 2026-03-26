@@ -297,7 +297,16 @@ class NumpyArray(RawData):
                         raise ValueError("No dtype specified")
                     raise last_error
              if self.shape:
-                v.shape=self.shape
+                try:
+                    v.shape=self.shape
+                except ValueError:
+                    # Shape mismatch — e.g. shape=(2,-1) but NSPIN=1 data has
+                    # only 1 spin channel. Infer actual first-dim from data size.
+                    shape = list(self.shape)
+                    fixed_dims = [s for s in shape if s != -1]
+                    if len(fixed_dims) == 1 and v.size % fixed_dims[0] != 0:
+                        shape[0] = 1
+                    v = v.reshape(shape)
              return v
 
          grammar.add_parse_action(parse)
