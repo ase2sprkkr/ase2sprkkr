@@ -7,18 +7,16 @@ from ..input_parameters_definitions import \
     InputSectionDefinition as Section
 from ...sprkkr.sprkkr_grammar_types import Site
 
-_KSPACE_KEYS = ('KA', 'K1', 'K2', 'K3', 'K4',
-                'NK1', 'NK2', 'NK3', 'NK4',
-                'BETA1', 'BETA2', 'ROTAXIS')
-
 def _kspace_mode(o):
     """Return True if any k-space or rotation scan parameter is explicitly set."""
-    for key in _KSPACE_KEYS:
-        try:
-            if o[key]() is not None:
-                return True
-        except Exception:
-            pass
+    pattern = re.compile(r'^(K|NK)\\d+$')  # Matches K1, K2, ..., NK1, NK2, ...
+    for key in o.keys():
+        if pattern.match(key):
+            try:
+                if o[key]() is not None:
+                    return True
+            except Exception:
+                pass
     return False
 
 
@@ -107,15 +105,8 @@ input_parameters = lambda: InputParameters(
           is_optional=lambda o: _kspace_mode(o),
           info='Number of angular values for a rotation in azimuth coordinate.'),
         V('KA', Range(float), info='Scattering in momentum space', is_required=False),
-        V('K1', Range(float), info='Translating vector of the scattering in momentum space', is_required=False),
-        V('NK1', int, info='Number of momentum steps for the integration', is_required=False),
-        V('K2', Range(float), info='Translating vector 2 of the scattering in momentum space', is_required=False),
-        V('NK2', int, info='Number of momentum steps 2 for the integration', is_required=False),
-        V('K3', Range(float), info='Translating vector 3 of the scattering in momentum space', is_required=False),
-        V('NK3', int, info='Number of momentum steps 3 for the integration', is_required=False),
-        V('K4', Range(float), info='Translating vector 4 of the scattering in momentum space', is_required=False),
-        V('NK4', int, info='Number of momentum steps 4 for the integration', is_required=False),
-
+        V('K', Range(float), is_repeated='NUMBERED', info='Translating vector of the scattering in momentum space (e.g., K1, K2, ...)', is_required=False),
+        V('NK', int, is_repeated='NUMBERED', info='Number of momentum steps for the integration (e.g., NK1, NK2, ...)', is_required=False),
         V('POL_E', DefKeyword('PZ')),
         V('SPOL', int, is_required=False),
         V('PSPIN', SetOf(float, length=3), is_required=False),
