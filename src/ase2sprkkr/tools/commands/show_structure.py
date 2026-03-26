@@ -62,7 +62,7 @@ def run(args):
       def ase_view(atoms):
           view(atoms, scale_radii=args.scale_radii)
 
-      if args.visualise_potential or (len(tmps)==2 and not structure_filename):
+      if args.visualise_potential or len(tmps)==2:
           ase_view(pot_atoms)
       pot_atoms.write(ciffpotfile, format = outformat)
 
