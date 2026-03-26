@@ -157,7 +157,7 @@ def structure_file_to_atoms(filename, potential:Potential, n_bulk:int=2, vacuum_
   cell=cell*alat
   cell[2,2]= cell[2,2]+vacuum_height #add XX AA of vacuum region
   structure.set_cell(cell)
-  structure.set_pbc([True,True,True])
+  structure.set_pbc([True,True,False])  # z is non-periodic: slab + vacuum
   #Add atom into the Atoms
   num_atoms = 0
   for layer in layers.values():

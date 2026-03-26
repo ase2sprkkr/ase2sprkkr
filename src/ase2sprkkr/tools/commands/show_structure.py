@@ -70,6 +70,8 @@ def run(args):
       if structure_filename:
           # Extract data from structure file
           structure = structure_file_to_atoms(args.input, potential, n_bulk=args.nbulk, vacuum_height = args.vacuum_height)
+          # z is non-periodic (slab + vacuum) — prevent the viewer repeating in z
+          structure.set_pbc([True, True, False])
           # Visualise the structure or write out to the file
           structure.write(ciffile, format = outformat)
 
