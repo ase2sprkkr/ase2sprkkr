@@ -1,4 +1,5 @@
 """ ARPES task input parameters definition """
+import re
 from ...common.grammar_types import SetOf, DefKeyword, Keyword, Range, Array, flag
 from .sections import CONTROL, TAU, ENERGY, SITES
 from ..input_parameters_definitions import \
@@ -8,15 +9,14 @@ from ..input_parameters_definitions import \
 from ...sprkkr.sprkkr_grammar_types import Site
 
 def _kspace_mode(o):
-    """Return True if any k-space or rotation scan parameter is explicitly set."""
-    pattern = re.compile(r'^(K|NK)\\d+$')  # Matches K1, K2, ..., NK1, NK2, ...
-    for key in o.keys():
-        if pattern.match(key):
-            try:
-                if o[key]() is not None:
-                    return True
-            except Exception:
-                pass
+    """Return True if any k-space scan parameter (KA, K1…, NK1…) is set."""
+    for attr in ('KA', 'K', 'NK', 'BETA1', 'BETA2', 'ROTAXIS'):
+        try:
+            v = getattr(o, attr)()
+            if v is not None:
+                return True
+        except Exception:
+            pass
     return False
 
 
