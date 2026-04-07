@@ -29,19 +29,22 @@ help='Open SPR-KKR output files in a Python shell or Jupyter notebook'
 def parser(parser):
     parser.add_argument('-o', '--output', help='SPR-KKR output file name (see the supported files above).', action='append', default=[])
     parser.add_argument('-j', '--jupyter', help='Open Jupyter notebook.', action="store_true")
+    parser.add_argument('-D', '--pdb', help='Run the command inside pdb', action="store_true")
     parser.add_argument('-e', '--example', help='Open and run the example given by number. The example files will be copied to the directory given by -d or to a temp directory.', action="store", type=int)
     parser.add_argument('-d', '--directory', help='Directory, where to copy the example. Use "." for the current directory.')
     parser.add_argument('-s', '--save', help='Save the script/Jupyter notebook.', action="store", type=str)
     parser.add_argument('-r', '--run', help='Execute the notebook before saving and opening Jupyter notebook.', action="store", type=str)
 
 def run(args):
-  from ...gui.shell import Python, JupyterLab
+  from ...gui.shell import Python, JupyterLab, Pdb
   import tempfile
   import contextlib
 
   if args.jupyter:
     shell = JupyterLab
     kwargs = { 'run': args.run }
+  elif args.pdb:
+    shell = Pdb
   else:
     shell = Python
   kwargs = {}
