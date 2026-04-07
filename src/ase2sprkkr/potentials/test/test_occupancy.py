@@ -1,7 +1,7 @@
 import ase
 import ase2sprkkr
 from ase.build import bulk
-
+from pytest import fixture
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -16,7 +16,7 @@ if True:
 
 class TestOccupancy(TestCase):
 
-    def test(self):
+    def test(self, temporary_dir):
 
         print('ASE version:', ase.__version__)
         print('ASE2SPRKKR version:', ase2sprkkr.__version__)
@@ -38,4 +38,5 @@ class TestOccupancy(TestCase):
         }
 
         calculator=SPRKKR(atoms=atoms)
-        calculator.save_input(input_file='Cu.inp', potential_file='Cu.pot', options=scf_opts)
+        breakpoint()
+        calculator.save_input(input_file='Cu.inp', potential_file='Cu.pot', options=scf_opts, directory=temporary_dir)
