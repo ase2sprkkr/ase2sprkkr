@@ -77,7 +77,7 @@ class TestCase:
       with tempfile.TemporaryDirectory() as d:
           TestCase._calc_args['directory'] = d
           self.dirname = d
-          yield
+          yield d
           TestCase._calc_args['directory'] = False
           del self.dirname
 
