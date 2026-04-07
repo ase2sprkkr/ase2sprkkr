@@ -219,3 +219,6 @@ class AtomsRegion:
                            self.cell, self.pbc, self.inherit_cell,
                            atoms)
       return region
+
+  def __repr__(self):
+      return f"<AtomsRegion {self.name}>"
