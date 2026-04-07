@@ -1,11 +1,11 @@
 """ Example of an ARPES calculation and plotting its results. """
 
-import numpy as np
-from ase.atoms import Atoms
-from ase2sprkkr import SPRKKR
-
-
 def main():
+
+    import numpy as np
+    from ase.atoms import Atoms
+    from ase2sprkkr import SPRKKR
+
     a=Atoms(symbols='H',cell=np.array([(1.,0,0),(0,1,0),(0,0,1)]))
     a.pbc=True
     xx=SPRKKR(atoms=a)
