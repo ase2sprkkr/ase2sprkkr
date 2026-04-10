@@ -185,11 +185,20 @@ def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=Fal
    else:
        colormap = colormap or 'BuPu'
        if norm == 'log':
-           norm=LogNorm(vmin=1e-8, vmax=vmax)
+           if vmin is None:
+               if vmax is not None and vmax > 0.:
+                  vmin = min(1e-8, vmax)
+               else:
+                  vmin = 1e-8
+           if vmax is not None and vmax < vmin:
+               vmax = vmin
+           norm=LogNorm(vmin=vmin, vmax=vmax)
            vmax = None
+           vmin = None
        elif norm=='lin':
            norm=Normalize(vmin=0. if mode == 'from_zero' else None, vmax=vmax)
            vmax = None
+           vmin = None
 
    axis.set_xlim(auto_range(xrange, x))
    axis.set_ylim(auto_range(yrange, y))
