@@ -26,7 +26,7 @@ def main():
 
     # Direct reading of earlier calculated output files
     from ase2sprkkr import OutputFile
-    of2=OutputFile.from_file('H_arpes_ARPES_data.spc')
+    of2=OutputFile.from_file('H_ARPES_ARPES_data.spc')
     of2.ENERGY()
 
     # One can do calculations with SPC files
