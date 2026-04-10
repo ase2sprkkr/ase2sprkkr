@@ -141,7 +141,7 @@ def plotting_function(func):
            if callback:
              callback(axis)
         else:
-           with single_plot(func, filename=filename, show=show, dpi=dpi, latex=latex, figsize=figsize) as axis:
+           with single_plot(filename=filename, show=show, dpi=dpi, latex=latex, figsize=figsize) as axis:
                 func(*args, axis=axis, **kwargs)
                 if callback:
                     callback(axis)
