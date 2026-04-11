@@ -1,20 +1,20 @@
 from ..output_files_definitions import OutputFileValueDefinition as V, create_output_file_definition, OutputFileDefinition,Separator, BlankSeparator, OutputFileSectionDefinition
 from typing import Optional
 import numpy as np
+import matplotlib.colors as mcolors
+from functools import lru_cache
+import warnings
+from ase.units import Rydberg
+from ase2sprkkr.physics.broadening import create_lorentz_broadener, create_gaussian_broadener, compute_wlortab
+from scipy.interpolate import interp1d
 
 from ..output_files import Arithmetic, CommonOutputFile
 from ...common.grammar_types import Array, NumpyArray, Keyword, Char, Table, \
                                     Sequence, Complex, Real
 from ...common.generated_configuration_definitions import GeneratedValueDefinition
-from ...common.configuration_definitions import KeywordSeparator, SeparatorDefinition
-from ase2sprkkr.common.decorators import cached_property, add_to_signature
-import matplotlib.colors as mcolors
-from functools import lru_cache
-import warnings
-from ase.units import Rydberg
-from ...gui.plot import Multiplot, plotting_function, set_up_common_plot
-from ase2sprkkr.physics.broadening import create_lorentz_broadener, create_gaussian_broadener
-from scipy.interpolate import interp1d
+from ...common.configuration_definitions import KeywordSeparator, SeparatorDefinition, BaseDefinition
+from ...gui.plot import Multiplot, plotting_function, set_up_common_plot, single_plot
+from ...common.decorators import cached_property, add_to_signature
 
 class RATOutputFile(CommonOutputFile):
 
@@ -28,7 +28,7 @@ class RATOutputFile(CommonOutputFile):
     def energies(self, group=0):
         """ Energies in Ev relative to E-Fermi."""
         efermi = self.EFERMI()
-        return np.array([(i.ENERGY()[0].real - efermi) * Rydberg for i in self.GROUPS[0].DATA])
+        return np.array([(i.ENERGY()[0].real - efermi) * Rydberg for i in self.GROUPS[group].DATA.values()])
 
     def order(self):
         """ Order of the energie dataset."""
@@ -85,26 +85,27 @@ class RATOutputFile(CommonOutputFile):
         import mendeleev
         return mendeleev.element(self.TYPES[self.GROUPS[0].IT()-1]['TXT_T'])
 
-    def lorentz_width(self):
+    def lorentz_width(self, source='campbell-papp'):
         from ase2sprkkr.physics.core_hole_width import core_hole_width
         atomic_number=self.mendeleev.atomic_number
         nc = self.GROUPS[0].NCXRAY()
         lc = self.GROUPS[0].LCXRAY()
         return \
-            core_hole_width(atomic_number, nc, lc, 1), \
-            core_hole_width(atomic_number, nc, lc, 2)
+            core_hole_width(atomic_number, nc, lc, 1, source), \
+            core_hole_width(atomic_number, nc, lc, 2, source)
 
-    def broadener(self, energies, gauss_width, lorentz_width, n_valence=None):
+    def broadener(self, energies, gauss_width, lorentz_width, n_valence=None, core_hole_width='campbell-papp'):
         if lorentz_width is None:
-            lorentz_width = self.lorentz_width()
+            lorentz_width = self.lorentz_width(source=core_hole_width)
         if n_valence is None:
             n_valence = self.mendeleev.nvalence()
         if isinstance(lorentz_width, float):
-            lorentz = [ lorentz ]
+            lorentz_width = [ lorentz_width ]
 
+        wlortab = compute_wlortab(energies, n_valence)
         lorentz = [
             None if w < 0.001 and n_valence > 0 else
-            create_lorentz_broadener(energies, w) for w in lorentz_width
+            create_lorentz_broadener(energies, w, wlortab=wlortab) for w in lorentz_width
         ]
         if len(lorentz) == 1:
             lorentz*=2
@@ -115,8 +116,6 @@ class RATOutputFile(CommonOutputFile):
             gauss = None
 
         def broaden(data, k):
-            nonlocal energies
-            d=data.copy()
             if lorentz[k]:
                 data=lorentz[k](data)
             if gauss:
@@ -135,15 +134,25 @@ class RATOutputFile(CommonOutputFile):
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=800,
              separate_plots=False,
              interpolate_to_fermi=True, interpolation_threshold=1e-4,
-             zero_below=True, zero_below_num=50, zero_below_energy=340,
+             zero_below=True, zero_below_num=50, zero_below_energy=25,
              no_core_splitting=False, merge_all=None, updown_layout=True,
-             gauss_width=0.1, lorentz_width=None, n_valence=None,
+             gauss_width=0.1, lorentz_width=None, n_valence=None, core_hole_width='campbell-papp',
              **kwargs):
+       """
+       Parameters
+       ----------
+       core_hole_width:str
+          'campbell-papp' - XBAND 8.3 behavior
+                            J. L. Campbell & T. Papp, At. Data Nucl. Data Tables 77, 1 (2001)
+          'fuggle-inglesfield' - XBAND 6.3 behavior
+                            J. C. Fuggle & J. E. Inglesfield, Topics in Applied Physics
+       """
+
 
        data = self.generate_data(interpolate_to_fermi, interpolation_threshold,
              zero_below, zero_below_num, zero_below_energy,
              no_core_splitting, merge_all,
-             gauss_width, lorentz_width, n_valence)
+             gauss_width, lorentz_width, n_valence, core_hole_width)
 
        num = data['POLARIZATION'].shape[0];   #1 or 2
        if 'SPIN' in data:
@@ -163,13 +172,14 @@ class RATOutputFile(CommonOutputFile):
                        **kwargs) as mp:
             self.POLARIZATION.plot(_inside_plot=mp, **kwargs)
             self.DIFFERENCE.plot(_inside_plot=mp, **kwargs)
-            self.SPIN.plot(_inside_plot=mp, **kwargs)
-            self.ORBIT.plot(_inside_plot=mp, **kwargs)
+            if 'SPIN' in data:
+                self.SPIN.plot(_inside_plot=mp, **kwargs)
+                self.ORBIT.plot(_inside_plot=mp, **kwargs)
 
     def generate_data(self, interpolate_to_fermi=True, interpolation_threshold=1e-4,
-             zero_below=True, zero_below_num=50, zero_below_energy=340,
+             zero_below=True, zero_below_num=50, zero_below_energy=25,
              no_core_splitting=False, merge_all=None,
-             gauss_width=0.0, lorentz_width=None, n_valence=None):
+             gauss_width=0.0, lorentz_width=None, n_valence=None, core_hole_width='campbell-papp'):
 
         """ core energies """
         ktypes, type_map = self.core_state_types
@@ -204,8 +214,13 @@ class RATOutputFile(CommonOutputFile):
         if fidx<=0 or fidx>=len(senergies):
             raise ValueError('Fermi energy not in the range of energies')
 
+        if abs(senergies[fidx]) < abs(senergies[fidx-1]):
+            nef = fidx
+        else:
+            nef = fidx - 1
+
         if interpolate_to_fermi != False:
-            if senergies[fidx] < interpolation_threshold or senergies[fidx-1] > -interpolation_threshold:
+            if abs(senergies[nef]) < interpolation_threshold:
                 interpolate_to_fermi = False
 
         def make_slice(order):
@@ -218,17 +233,19 @@ class RATOutputFile(CommonOutputFile):
 
         if zero_below or interpolate_to_fermi:
             if interpolate_to_fermi:
-                upper_half_idx_source = upper_half_idx = int(fidx-1)
+                upper_half_idx_source = upper_half_idx = nef
                 #weights for interpolation to fermi
-                x1,x2 = senergies[fidx-1], senergies[fidx]
+                if ((nef == 0) or (senergies[nef] <= 0.0)) and (nef < len(senergies) - 1):
+                    interp_idx = nef + 1
+                else:
+                    interp_idx = nef - 1
+                x1,x2 = senergies[nef], senergies[interp_idx]
                 df = x2 - x1
-                w1,w2 = x2/df, x1/df
+                w1,w2 = -x2/df, x1/df
                 my_fermi = 0.
             else:
-                if senergies[fidx] > -senergies[fidx-1]:
-                    fidx -= 1
-                upper_half_idx_source = upper_half_idx = fidx
-                my_fermi = senergies[fidx]
+                upper_half_idx_source = upper_half_idx = nef
+                my_fermi = senergies[nef]
             if zero_below:
                 senergies = np.concatenate([
                               abs(zero_below_energy) * (np.linspace(-1., 0., zero_below_num, endpoint=False)**3),
@@ -237,10 +254,12 @@ class RATOutputFile(CommonOutputFile):
                 upper_half_idx = zero_below_num
 
             if interpolate_to_fermi:
-                 senergies[upper_half_idx_en] = 0
+                 senergies[upper_half_idx] = 0
             low_order = make_slice(order[:fidx])
             high_order = make_slice(order[upper_half_idx_source:])
         else:
+            upper_half_idx_source = upper_half_idx = nef
+            my_fermi = senergies[nef]
             low_order = make_slice(order)
             high_order = False
 
@@ -259,19 +278,19 @@ class RATOutputFile(CommonOutputFile):
             And finally, the middle fermi-energy point set as interpolation.
             """
             source = np.empty(source_shape)
-            for i,g in enumerate(self.GROUPS):
-                for j,d in enumerate(g.DATA):
+            for i,g in enumerate(self.GROUPS.values()):
+                for j,d in enumerate(g.DATA.values()):
                   source[j,i,] = d.DATA[name].real.reshape((-1,n_pol))
+            source = source[order]
 
             out = np.empty(shape)
             if zero_below:
-                out[:zero_below_num] = 0.
+                out[:upper_half_idx] = 0.
+                out[upper_half_idx:] = source[upper_half_idx_source:]
             else:
-                out[:fidx] = source[low_order]
-            if high_order:
-                out[upper_half_idx:] = source[high_order]
+                out[:] = source
                 if interpolate_to_fermi:
-                    out[upper_half_idx,i,j] = w1*out[upper_half_idx] + w2*out[upper_half_idx+1]
+                    out[upper_half_idx] = w1 * source[nef] + w2 * source[interp_idx]
             return out
 
         rd = read_rdt('ABSRTA')
@@ -285,13 +304,14 @@ class RATOutputFile(CommonOutputFile):
             rt=rt[:,:,:,1:]
             n_pol=2
 
-        broaden = self.broadener(senergies, gauss_width, lorentz_width, n_valence)
+        broaden = self.broadener(senergies, gauss_width, lorentz_width, n_valence, core_hole_width)
         borders = [0, border, n_states]
         for i in range(n_ktypes):
-            broaden(rd[:,:,borders[i]:borders[i+1]], i)
+            rd[:,:,borders[i]:borders[i+1]] = broaden(rd[:,:,borders[i]:borders[i+1]], i)
+            rt[:,:,borders[i]:borders[i+1]] = broaden(rt[:,:,borders[i]:borders[i+1]], i)
 
         if merge_all is None:
-            merge_all = e_core_avg[0] - e_core_avg[-1] > senergies[-1] - senergies[0]
+            merge_all = abs(e_core_avg[0] - e_core_avg[-1]) < (senergies[-1] - senergies[0])
         if n_ktypes <= 1 or no_core_splitting:
             merge_all = False
 
@@ -299,15 +319,27 @@ class RATOutputFile(CommonOutputFile):
         Výpočet SD
         """
 
-        def shift_by_e_core_avg_diff(data, energies=senergies, borders=borders, out=None):
+        def shift_by_e_core_avg_diff(data, energies=senergies, borders=borders, out=None, clip=False):
+            """Shift each (i,j,p) spectrum by (e_core_avg[k] - e_core[i,j]).
+
+            If ``clip`` is True then values corresponding to targets below the
+            original energy grid are set to 0.0 and values above are set to the
+            last value of the original spectrum (matching the behaviour in the
+            original merge_all branch).
+            """
             if out is None:
-                out = np.empty_like(rd)
+                out = np.empty((len(energies),) + data.shape[1:])
             for i in range(e_core.shape[0]):
-              for k in range(n_ktypes):
-                for j in range(borders[k], borders[k+1]):
-                  de = e_core_avg[k] - e_core[i,j]
-                  for p in range(n_pol):
-                    out[:,i,j,p] = interp1d(senergies, data[:,i,j,p], kind='cubic', fill_value="extrapolate")(energies-de)
+                for k in range(n_ktypes):
+                    for j in range(borders[k], borders[k+1]):
+                        de = e_core_avg[k] - e_core[i,j]
+                        shifted = energies - de
+                        for p in range(n_pol):
+                            interp = interp1d(senergies, data[:,i,j,p], kind='cubic', fill_value="extrapolate")
+                            out[:,i,j,p] = interp(shifted)
+                            if clip:
+                                out[shifted < senergies[0], i, j, p] = 0.0
+                                out[shifted > senergies[-1], i, j, p] = data[-1, i, j, p]
             return out
 
         sd = shift_by_e_core_avg_diff(rd)
@@ -316,58 +348,48 @@ class RATOutputFile(CommonOutputFile):
             ad = sd.copy()
             at = shift_by_e_core_avg_diff(rt)
         else:
-            ie = np.searchsorted(senergies, dcormin)
+            ie = np.searchsorted(senergies, dcormin, side='right')
             if ie >= len(senergies):
                 raise ValueError("No E(i) > Dcormin found")
-            shifted_energies = np.concatenate(
+            shifted_energies = np.concatenate((
                 senergies[:ie],
-                senergies[fidx:]-my_fermi + dcormin
-            )
-            #use the same kref for all
-            ref_order = np.argsort(e_core_avg) # [0] = e_bot, [-1] = e_ref
-            if ref_order[-1]==0:
-                bord = [0,0,n_states]
-                avg = e_cor_avg[1]
-            else:
-                bord = [0,n_states,0]
-                avg = e_cor_avg[0]
+                senergies[upper_half_idx:]-my_fermi + dcormin
+            ))
+            kref = np.argmax(e_core_avg)
+            avg = e_core_avg[kref]
 
             df = avg - e_core
-            ebot = shifted_energies[0] + np.max(df)
-            etop = shifted_energies[-1] + np.min(df)
+            ebot = senergies[0] + np.max(df)
+            etop = senergies[-1] + np.min(df)
 
-            iebot = np.search_sorted(shifted_energies, ebot)
-            ietop = np.search_sorted(shifted_energies, etop)
+            full_shape=(len(shifted_energies),) + rd.shape[1:]
+            ad = np.empty(full_shape)
+            at = np.empty(full_shape)
+            # Use the helper to perform the per-state shifts and apply
+            # boundary clipping so behaviour matches the previous loop.
+            ad = shift_by_e_core_avg_diff(rd, energies=shifted_energies, borders=borders, out=ad, clip=True)
+            at = shift_by_e_core_avg_diff(rt, energies=shifted_energies, borders=borders, out=at, clip=True)
+
+            iebot = np.searchsorted(shifted_energies, ebot, side='right')
+            ietop = np.searchsorted(shifted_energies, etop, side='left')
             shifted_energies = shifted_energies[iebot:ietop]
-
-            new_shape=(len(shifted_energies),) + rd.shape[1:]
-            ad = np.empty(new_shape)
-            at = np.empty(new_shape)
-            start = np.search_sorted(shifted_energies, senergies[0])
-            end = np.search_sorted(shifted_energies, senergies[-1])
-
-            ad[:start] = 0
-            at[:start] = 0
-            shift_by_e_core_avg_diff(rd, shifted_energies[start:end], bord, out=ad[start:end])
-            shift_by_e_core_avg_diff(rt, shifted_energies[start:end], bord, out=at[start:end])
-            ad[end:] = rd[-1, None, :,:]
-            at[end:] = rd[-1, None, :,:]
-
+            ad = ad[iebot:ietop]
+            at = at[iebot:ietop]
             senergies = shifted_energies
 
         # ------ combine spectra with common KAPPA for core state
-        shape = rd.shape[:2] + (n_ktypes, n_pol)
+        shape = ad.shape[:2] + (n_ktypes, n_pol)
         rd = np.empty(shape)
         rt = np.empty(shape)
         for i in range(n_ktypes):
             rd[:,:,i]  = ad[:,:,borders[i]:borders[i+1]].sum(axis=2)
             rt[:,:,i]  = at[:,:,borders[i]:borders[i+1]].sum(axis=2)
 
-        index = [i.IT()-1 for i in self.GROUPS]
+        index = [i.IT()-1 for i in self.GROUPS.values()]
 
         concealment = np.asarray(self.TYPES()['CONC']).ravel()[index]
         nqt = np.asarray(self.TYPES()['NAT']).ravel()[index]
-        weight = (concealment * nqt)[None]
+        weight = (concealment * nqt)[None, :, None, None]
 
         def sum_groups(data):
             data *= weight
@@ -392,7 +414,7 @@ class RATOutputFile(CommonOutputFile):
         if n_ktypes > 1:
             _sd = np.empty(shape)
             for i in range(n_ktypes):
-                _sd[:,:,i]  = sd[:,:,borders[i]:borders[i+1]].sum(axis=2)
+                _sd[:,:,i]  = ad[:,:,borders[i]:borders[i+1]].sum(axis=2)
             sd = sum_groups(_sd)  #now (energy, ktype, n_pol) shape
 
             yd = 0.5*( sd[:,:,1] - sd[:,:,0])
@@ -478,14 +500,14 @@ def generate_data_calling_function(fn):
          interpolate_to_fermi=True, interpolation_threshold=1e-4,
          zero_below=True, zero_below_num=50, zero_below_energy=340,
          no_core_splitting=False, merge_all=None,
-         gauss_width=0.0, lorentz_width=None, n_valence=None,
+         gauss_width=0.0, lorentz_width=None, n_valence=None, core_hole_width='campbell-papp',
          *args, **kwargs):
 
        if not _inside_plot:
-            option._container.generate_data(interpolate_to_ferm, interpolation_threshold,
+          option._container.generate_data(interpolate_to_fermi, interpolation_threshold,
                  zero_below, zero_below_num, zero_below_energy,
                  no_core_splitting, merge_all,
-                 gauss_width, lorentz_width, n_valence)
+                 gauss_width, lorentz_width, n_valence, core_hole_width)
 
        fn(option, *args, _inside_plot=_inside_plot, **kwargs)
 
@@ -555,8 +577,8 @@ def create_definition():
         BlankSeparator(),
         SeparatorDefinition(KeywordSeparator('CORE STATES :')),
         BlankSeparator(),
-        V('NCST', int, written_name = 'NCST:', indentation=' '),
-        V('NKPCOR', Array(int), written_name = 'NKPCOR:', indentation=' '),
+        V('NCST', int, written_name = 'NCST:', indent=' '),
+        V('NKPCOR', Array(int), written_name = 'NKPCOR:', indent=' '),
         BlankSeparator(),
         V('CORE_STATES', Table({'ICST': int, 'N':int, 'L':int,
                          'KAP': int, 'MUE': Array(int, delimiter='/'),
@@ -566,8 +588,8 @@ def create_definition():
                           repeat_sparse=['IKM', 'NORM']
                           ), name_in_grammar=False),
         BlankSeparator(),
-        V('N_ENERGIES', int, written_name='number of energies', indentation=' '),
-        V('IFMT', Array(int, length=2), written_name='output format IFMT', indentation=' '),
+        V('N_ENERGIES', int, written_name='number of energies', indent=' '),
+        V('IFMT', Array(int, length=2), written_name='output format IFMT', indent=' '),
         V('VUC', float),
         BlankSeparator(),
         OutputFileSectionDefinition('DATA', [
@@ -580,7 +602,7 @@ def create_definition():
                           groups_as_list=False
                           ),
                   name_in_grammar= False)
-        ], name_in_grammar=False, is_repeated='\n')
+        ], name_in_grammar=False, repeated_delimiter='\n', is_repeated=BaseDefinition.Repeated.LIST_SECTION)
       ], is_repeated=True, name_in_grammar=False),
     ],
     name='RAT', cls=RATDefinition, info='Result of a X-ray spectroscopy'

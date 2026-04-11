@@ -1,9 +1,72 @@
 import numpy as np
 
-# The data for all shells is now organized in a single dictionary.
-# The keys are tuples (NC, LC, IK) for direct access.
-# For shells where IK is not relevant (LC=0), we use IK=1 as a consistent key.
-core_hole_width_data = {
+# The data for all shells is organized in dictionaries keyed by (NC, LC, IK).
+# For shells where IK is not relevant (LC=0), IK=1 is used as a consistent key.
+#
+# Two datasets are available:
+#   'campbell-papp'      — J. L. Campbell & T. Papp, At. Data Nucl. Data Tables 77, 1 (2001)
+#   'fuggle-inglesfield' — J. C. Fuggle & J. E. Inglesfield, Topics in Applied Physics
+#                          vol. 69, Springer (1992), Appendix B; as used in xband/wcorehole.f.
+#                          Only K and L shells are tabulated; M and higher return 0.
+
+# Fuggle & Inglesfield (1992) dataset — from xband 6.3 wcorehole.f
+core_hole_width_data_fuggle_inglesfield = {
+    (1, 0, 1): np.array([ # K-shell
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.24,
+        0.30, 0.36, 0.42, 0.48, 0.53, 0.59, 0.64, 0.68, 0.74, 0.81,
+        0.86, 0.94, 1.01, 1.08, 1.16, 1.25, 1.33, 1.44, 1.55, 1.67,
+        1.82, 1.96, 2.14, 2.33, 2.52, 2.75, 2.99, 3.25, 3.52, 3.84,
+        4.14, 4.52, 4.91, 5.33, 5.77, 6.24, 6.75, 7.28, 7.91, 8.49,
+        9.19, 9.89, 10.60, 11.40, 12.30, 13.20, 14.10, 15.10, 16.20, 17.30,
+        18.50, 19.70, 21.00, 22.30, 23.90, 25.20, 26.80, 28.40, 30.10, 31.90,
+        33.70, 35.70, 37.70, 39.90, 24.10, 44.40, 46.80, 49.30, 52.00, 54.60,
+        57.40, 60.40, 63.40, 66.60, 69.80, 73.30, 76.80, 80.40, 84.10, 88.00,
+        91.90, 96.10, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00
+    ]),
+    (2, 0, 1): np.array([ # L1-shell
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.10,
+        0.20, 0.40, 0.70, 1.03, 1.26, 1.49, 1.20, 1.03, 1.40, 1.83,
+        2.21, 2.34, 2.41, 2.54, 2.62, 2.76, 2.79, 2.89, 3.06, 3.28,
+        2.80, 3.53, 3.79, 3.94, 4.11, 4.28, 4.44, 4.67, 4.71, 4.78,
+        4.94, 4.25, 4.36, 4.58, 4.73, 4.93, 4.88, 4.87, 5.00, 2.97,
+        3.13, 3.32, 3.46, 3.64, 3.78, 3.92, 4.06, 4.21, 4.34, 4.52,
+        4.67, 4.80, 4.91, 5.05, 5.19, 5.25, 5.33, 5.43, 5.47, 5.53,
+        5.54, 5.63, 5.58, 5.61, 6.18, 7.25, 8.30, 9.39, 10.50, 11.30,
+        12.00, 12.20, 12.40, 12.60, 12.80, 13.10, 13.30, 13.40, 13.60, 13.70,
+        14.30, 14.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00
+    ]),
+    (2, 1, 1): np.array([ # L2-shell
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.02, 0.03, 0.05, 0.08, 0.13, 0.15, 0.17,
+        0.19, 0.24, 0.26, 0.29, 0.34, 0.37, 0.43, 0.52, 0.62, 0.72,
+        0.83, 0.95, 1.03, 1.13, 1.21, 1.31, 1.43, 1.54, 1.65, 1.78,
+        1.87, 1.97, 2.08, 2.23, 2.35, 2.43, 2.57, 2.62, 2.72, 2.84,
+        3.00, 3.12, 3.25, 3.40, 3.51, 3.57, 3.68, 3.80, 3.89, 3.97,
+        4.06, 4.15, 4.23, 4.32, 4.43, 4.55, 4.66, 4.73, 4.79, 4.82,
+        4.92, 5.02, 5.15, 5.33, 5.48, 5.59, 5.69, 5.86, 6.00, 6.17,
+        6.32, 6.48, 6.67, 6.83, 7.01, 7.20, 7.47, 7.68, 7.95, 8.18,
+        8.75, 9.32, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00
+    ]),
+    (2, 1, 2): np.array([ # L3-shell
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.02, 0.03, 0.05, 0.09, 0.13, 0.16, 0.17,
+        0.19, 0.10, 0.20, 0.20, 0.20, 0.20, 0.30, 0.30, 0.40, 0.66,
+        0.76, 0.82, 0.94, 1.00, 1.08, 1.17, 1.27, 1.39, 1.50, 1.57,
+        1.66, 1.78, 1.91, 2.00, 2.13, 2.25, 2.40, 2.50, 2.65, 2.75,
+        2.87, 2.95, 3.08, 3.13, 3.25, 3.32, 3.41, 3.48, 3.60, 3.65,
+        3.75, 3.86, 3.91, 4.01, 4.12, 4.17, 4.26, 4.35, 4.48, 4.60,
+        4.68, 4.80, 4.88, 4.98, 5.04, 5.16, 5.25, 5.31, 5.41, 5.50,
+        5.65, 5.81, 5.98, 6.13, 6.29, 6.41, 6.65, 6.82, 6.98, 7.13,
+        7.33, 7.43, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00
+    ]),
+}
+
+# Campbell & Papp (2001) dataset — the default, covers K through N7 shells
+core_hole_width_data_campbell_papp = {
     (1, 0, 1): np.array([ # K-shell, (NC=1, LC=0)
         0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.24,
         0.28, 0.33, 0.37, 0.43, 0.47, 0.52, 0.57, 0.66, 0.71, 0.77,
@@ -216,7 +279,17 @@ core_hole_width_data = {
     # They are omitted here as per the original source code's data section.
 }
 
-def core_hole_width(Z, NC, LC, IK):
+# Backward-compatible alias
+core_hole_width_data = core_hole_width_data_campbell_papp
+
+_CORE_HOLE_WIDTH_SOURCES = {
+    'campbell-papp': core_hole_width_data_campbell_papp,
+    'fuggle-inglesfield': core_hole_width_data_fuggle_inglesfield,
+    'xband6': core_hole_width_data_fuggle_inglesfield,
+    'xband8': core_hole_width_data_campbell_papp,
+}
+
+def core_hole_width(Z, NC, LC, IK, source='campbell-papp'):
     """
     Calculates the Lorentzian core-hole life time (width) in [eV] based on
     atomic number and quantum numbers of the core shell.
@@ -225,16 +298,15 @@ def core_hole_width(Z, NC, LC, IK):
     function. It uses a dictionary lookup with a key derived from the quantum
     numbers to avoid a long if/else chain.
 
-    Data is from:
-    - J. L. Campbell & T. Papp, Atomic Data and Nuclear Data Tables 77, 1-56 (2001)
-    - J.C. Fuggle & J.E. Inglesfield, Topics in Applied Physics vol. 69 (1992)
-
     Args:
         Z (int): Atomic number (1-104).
         NC (int): Principal quantum number of core shell.
         LC (int): Angular momentum quantum number of core shell.
         IK (int): Selects SOC-split subshell (1: j=l-1/2, 2: j=l+1/2).
                   For shells without SOC splitting (LC=0), this is not used.
+        source (str): Dataset to use. One of 'campbell-papp' (default, Campbell &
+                      Papp 2001, covers K–N7) or 'fuggle-inglesfield' (Fuggle &
+                      Inglesfield 1992, K and L shells only; returns 0 for higher).
 
     Returns:
         float: Lorentzian core-hole width in eV.
@@ -244,15 +316,23 @@ def core_hole_width(Z, NC, LC, IK):
     if Z < 1 or Z > 104:
         raise ValueError(f"Error in core_hole_width: Z={Z} is out of the valid range [1, 104].")
 
+    dataset = _CORE_HOLE_WIDTH_SOURCES.get(source)
+    if dataset is None:
+        raise ValueError(f"Unknown core-hole width source '{source}'. "
+                         f"Valid options are: {list(_CORE_HOLE_WIDTH_SOURCES)}")
+
     # Fortran uses 1-based indexing for arrays, so we convert the atomic number Z.
     z_index = Z - 1
 
     # Construct a key tuple to directly look up the data array.
     key_tuple = (NC, LC, IK if LC > 0 else 1)
 
-    try:
-        # Attempt to get the correct data array using the key.
-        return core_hole_width_data[key_tuple][z_index]
+    arr = dataset.get(key_tuple)
+    if arr is None:
+        # Shell not tabulated in this dataset (e.g. M/N shells in fuggle-inglesfield)
+        return 0.0
 
-    except (KeyError, IndexError, ValueError) as e:
+    try:
+        return arr[z_index]
+    except (IndexError, ValueError):
         raise ValueError(f"Unknown data for lorentzian core hole for Z={Z}, NC={NC}, LC={LC}, IK={IK}")

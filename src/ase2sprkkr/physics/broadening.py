@@ -246,11 +246,7 @@ def create_gaussian_broadener(
     return broaden
 
 
-
-
-
-
-def create_lorentz_broadener(x_orig, gamma, wlortab=None, nelag=5):
+def create_lorentz_broadener(x_orig, gamma, wlortab=None, nelag=5, ylag=True):
     """
     Lorentz broadening matrix L for uneven grid x_orig with optional energy-dependent width.
 
@@ -263,12 +259,16 @@ def create_lorentz_broadener(x_orig, gamma, wlortab=None, nelag=5):
     wlortab : array_like, shape (N,), optional
         Energy-dependent correction to gamma
     nelag : int
-        Number of low-energy tail intervals
+        Number of grid points available for YLAG extrapolation (Fortran NELAG=5)
+    ylag : bool, optional
+        If True (default), extrapolate F below x[0] for the low-energy tail using
+        linear Lagrange interpolation of the first two grid points, matching Fortran
+        VECLORBRD/YLAG (N1=2).  If False, assume constant F = F[x[0]] below x[0].
 
     Returns
     -------
-    L : ndarray, shape (N, N)
-        Broadening matrix such that F_broadened = L @ F0
+    callable
+        Function ``broaden_y(y)`` that applies the precomputed broadening matrix.
     """
     x = np.asarray(x_orig)
     N = len(x)
@@ -278,14 +278,31 @@ def create_lorentz_broadener(x_orig, gamma, wlortab=None, nelag=5):
     wlortab = np.asarray(wlortab)
 
     L = np.zeros((N, N), dtype=float)
-    de = max(np.diff(x).min(), 0.5)
+    de = max(x[1] - x[0], 0.5)  # Fortran: DE = MAX(E(2)-E(1), 0.5)
 
-    # --- Low-energy tail (vektorizovaně) ---
-    x1_low = x[0] - np.arange(1, nelag+1)[:, None]*de   # shape (nelag,1)
-    x2_low = x1_low + de                                 # shape (nelag,1)
+    # --- Low-energy tail: 4 intervals below x[0], matching Fortran DO J=1,4 ---
+    j_arr = np.arange(1, 5)[:, None]                # shape (4,1)
+    x1_low = x[0] - j_arr * de                      # shape (4,1)
+    x2_low = x1_low + de                             # shape (4,1)
     G_low = gamma + wlortab[0]
     W_low = (np.arctan((x2_low - x[None,:])/G_low) - np.arctan((x1_low - x[None,:])/G_low)) / np.pi
-    L[:,0] += W_low.sum(axis=0)
+    # W_low shape: (4, N)
+
+    if ylag and N >= 2:
+        # YLAG with N1=2: linear extrapolation using x[0] and x[1].
+        # For interval j the Fortran evaluates F at X1=x[0]-j*de and X2=x[0]-(j-1)*de,
+        # then accumulates W*(F(X1)+F(X2)).
+        # Decomposed into the L matrix:
+        #   F(X) = F[0]*(x[1]-X)/dx01 + F[1]*(X-x[0])/dx01
+        # so F(X1)+F(X2) = F[0]*(2+(2j-1)*de/dx01) + F[1]*(-(2j-1)*de/dx01)
+        dx01 = x[1] - x[0]
+        total_coef0 = 2 + (2*j_arr - 1) * de / dx01  # shape (4, 1)
+        total_coef1 = -(2*j_arr - 1) * de / dx01      # shape (4, 1)
+        L[:, 0] += (W_low * total_coef0).sum(axis=0)
+        L[:, 1] += (W_low * total_coef1).sum(axis=0)
+    else:
+        # Constant extrapolation: F(X) = F[x[0]] for all X < x[0]
+        L[:, 0] += W_low.sum(axis=0)
 
     # --- Main contribution ---
     x_edges_left = x[:-1]
@@ -317,4 +334,76 @@ def create_lorentz_broadener(x_orig, gamma, wlortab=None, nelag=5):
     return broaden_y
 
 
+def compute_wlortab(energies, n_valence):
+    """
+    Compute energy-dependent Lorentz broadening correction WLORTAB(E) as in
+    Fortran INILORBRD (xband plotrxas).
 
+    The total Lorentz half-width at energy E is: G(E) = G0 + WLORTAB(E).
+
+    Parameters
+    ----------
+    energies : array_like
+        Energy grid (eV), relative to E_Fermi.
+    n_valence : int
+        Number of valence electrons.  Special case: n_valence == 11 is
+        treated as n_valence == 1 (matching Fortran logic).
+        Returns zeros if n_valence is outside [1, 11].
+
+    Returns
+    -------
+    wlortab : ndarray, shape (len(energies),)
+    """
+    # Polynomial coefficients from INILORBRD (Fortran)
+    CF1  = np.array([ 0.001766920594, -0.184509337930,  0.409983271398,
+                      0.067459351773, -0.610733613427,  0.451717419499,
+                     -0.124878965835,  0.014987644299, -0.000661473792])
+    CF11 = np.array([ 0.048696144050, -0.537083543337,  0.492816604919,
+                      0.398174247185, -0.444398434205,  0.238062954735,
+                     -0.061552896506,  0.007317769806, -0.000324445515])
+
+    nval = 1 if n_valence == 11 else n_valence
+    if nval < 1 or nval > 10:
+        return np.zeros(len(energies))
+
+    w1  = (11 - nval) / 10.0
+    w11 = (nval - 1)  / 10.0
+    CFZ = w1 * CF1 + w11 * CF11
+
+    energies = np.asarray(energies, dtype=float)
+    wlortab = np.zeros(len(energies))
+
+    mask = energies > 2.5
+    if mask.any():
+        loge = np.log(energies[mask])
+        pwrs = np.cumprod(np.outer(loge, np.ones(len(CFZ)-1)), axis=1)
+        pwrs = np.hstack([np.ones((pwrs.shape[0],1)), pwrs])
+        wlortab[mask] = pwrs @ CFZ
+
+    # For 0 < E <= 2.5 eV: Fortran uses YLAG(N=2, i.e. linear) from (0,0) to (2.5, poly(2.5))
+    # This is a simple linear ramp: wlortab(E) = wlortab(2.5) * E / 2.5
+    # First, evaluate poly(2.5) by linearly interpolating (N=2 YLAG) the already-filled wlortab
+    # at E=2.5 using the two nearest grid points.
+    # For simplicity (dense grid), just evaluate the polynomial directly at 2.5.
+    idx25 = np.searchsorted(energies, 2.5, side='right')
+    idx25 = np.clip(idx25, 1, len(energies) - 1)
+    # linear interpolation of the polynomial wlortab between the two surrounding grid points
+    e_lo, e_hi = energies[idx25 - 1], energies[idx25]
+    if e_hi > e_lo:
+        t = (2.5 - e_lo) / (e_hi - e_lo)
+        y25 = (1 - t) * wlortab[idx25 - 1] + t * wlortab[idx25]
+    else:
+        y25 = wlortab[idx25]
+
+    mask_low = (energies > 0) & (energies <= 2.5)
+    if mask_low.any():
+        # Linear from (0, 0) to (2.5, y25)
+        wlortab[mask_low] = y25 * energies[mask_low] / 2.5
+
+    # Clamp to minimum 0.0001 (Fortran: MAX(0.0001, WLORTAB(I)) for all I)
+    wlortab = np.maximum(0.0001, wlortab)
+    # Points at E <= 0 stay 0 (Fortran sets to 0.0 before clamping,
+    # but clamping makes them 0.0001; keep 0 to match the G=G0 behaviour for the zero-signal region)
+    wlortab[energies <= 0] = 0.0
+
+    return wlortab
