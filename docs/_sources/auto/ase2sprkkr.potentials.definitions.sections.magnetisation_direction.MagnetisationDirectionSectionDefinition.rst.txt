@@ -1,0 +1,36 @@
+MagnetisationDirectionSectionDefinition
+=======================================
+
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.magnetisation_direction
+
+.. autoclass:: MagnetisationDirectionSectionDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.magnetisation_direction.MagnetisationDirectionSectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

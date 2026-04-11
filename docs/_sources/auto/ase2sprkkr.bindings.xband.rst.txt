@@ -38,8 +38,15 @@ Full name: **ase2sprkkr.bindings.xband**
      :template: custom-module-template.rst
      :recursive:
   
+  
+     spheres_debug
+  
+  
+  
      spheres
+  
+  
      symmetry
-     tests
+  
   
   

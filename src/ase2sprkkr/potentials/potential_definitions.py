@@ -26,7 +26,7 @@ class PotValueDefinition(ConfigurationValueDefinition):
   """
   @cached_class_property
   def grammar_of_delimiter():
-    return pp.Empty().setName(' ')
+    return pp.Empty().set_name(' ')
 
   prefix = ''
   name_value_delimiter = '\t'
@@ -53,7 +53,7 @@ class PotSectionDefinition(ConfigurationSectionDefinition):
   force_order = True
   """ The order of items in potential file is fixed """
 
-  value_name_format = '<12'
+  value_name_format = '{:<12}'
 
   child_class = PotValueDefinition
   """ standard child class """

@@ -32,6 +32,7 @@ Full name: **ase2sprkkr.common.process\_output\_reader**
    
       readline
       readline_until
+      run_coro_sync
    
    
 

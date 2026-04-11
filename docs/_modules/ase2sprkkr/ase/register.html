@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -104,12 +106,18 @@
         <span class="kn">from</span> <span class="nn">ase.calculators.calculator</span> <span class="kn">import</span> <span class="n">register_calculator_class</span>
         <span class="kn">from</span> <span class="nn">..sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>  <span class="c1"># NOQA: E402</span>
         <span class="n">registered</span><span class="o">=</span><span class="kc">True</span>
-        <span class="n">register_calculator_class</span><span class="p">(</span><span class="s1">&#39;sprkkr&#39;</span><span class="p">,</span> <span class="n">SPRKKR</span><span class="p">)</span></div>
-
+        <span class="n">register_calculator_class</span><span class="p">(</span><span class="s1">&#39;sprkkr&#39;</span><span class="p">,</span> <span class="n">SPRKKR</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">.io</span> <span class="kn">import</span> <span class="n">read_sprkkr</span><span class="p">,</span> <span class="n">write_sprkkr</span>
+        <span class="kn">from</span> <span class="nn">ase.utils.plugins</span> <span class="kn">import</span> <span class="n">ExternalIOFormat</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;SPRKKRFormat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ExternalIOFormat</span><span class="p">(</span>
+           <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;SPRKKR potential file&quot;</span><span class="p">,</span>
+           <span class="n">module</span><span class="o">=</span><span class="s2">&quot;ase2sprkkr.ase.io&quot;</span><span class="p">,</span>
+           <span class="n">code</span><span class="o">=</span><span class="s2">&quot;+F&quot;</span><span class="p">,</span>             <span class="c1"># read &amp; write, file-based</span>
+           <span class="n">ext</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;pot&quot;</span><span class="p">,</span> <span class="s2">&quot;pot_new&quot;</span><span class="p">],</span>
+         <span class="p">)</span></div>
 
 
 <span class="k">try</span><span class="p">:</span>
-
 <div class="viewcode-block" id="ase_register">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.register.ase_register.html#ase2sprkkr.ase.register.ase_register">[docs]</a>
     <span class="k">def</span> <span class="nf">ase_register</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -128,7 +136,6 @@
         <span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ase2sprkkr.SPRKKR&#39;</span><span class="p">)</span>
         <span class="n">rio</span><span class="p">(</span><span class="s1">&#39;ase2sprkkr.ase.io&#39;</span><span class="p">,</span> <span class="s1">&#39;SPRKKR potential file&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;1F&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sprkkr&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s1">&#39;pot&#39;</span><span class="p">)</span></div>
-
 
 
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>

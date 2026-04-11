@@ -1,3 +1,6 @@
+""" Calculates the exchange coupling parameters Jij of the Heisenberg model and
+Dzyaloshinskii-Moriya interaction. """
+
 import sys
 
 def main():
@@ -12,6 +15,8 @@ def main():
     # Set input parameters
     print("Setting up input parameters...")
     calculator.input_parameters = 'jxc'
+    calculator.input_parameters.TASK.add('DMI', True)
+
     calculator.input_parameters.CONTROL.DATASET = 'Fe'
     #calculator.input_parameters.MODE.MDIR = [1.0, 0.0, 0.0]  # Using floats instead of integers
     #calculator.input_parameters.MODE.MALF = 0.0

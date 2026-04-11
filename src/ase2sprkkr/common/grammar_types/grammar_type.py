@@ -1,13 +1,14 @@
 """ Basic types for GrammarTypes and usefull functions """
 import copy
+import unyt
 from typing import Union, Any, Callable, Optional, Type, Dict, List
 import functools
 from collections.abc import Hashable
 import numpy as np
 import pyparsing as pp
 import inspect
-from .. import grammar_types
 
+from .. import grammar_types
 from ..decorators import cached_class_property, cache, \
                          add_called_class_as_argument, cached_property
 from ..alternative_types import normalize_type, allowed_types
@@ -175,9 +176,9 @@ class GrammarType:
     if self.prefix or self.postfix:
        with generate_grammar():
         if self.prefix:
-           grammar = pp.Literal(self.prefix.strip()).suppress().setName(self.prefix) + grammar
+           grammar = pp.Literal(self.prefix.strip()).suppress().set_name(self.prefix) + grammar
         if self.postfix:
-           grammar += pp.Literal(self.postfix.strip()).suppress().setName(self.postfix)
+           grammar += pp.Literal(self.postfix.strip()).suppress().set_name(self.postfix)
         grammar = self.transform_grammar(grammar, param_name)
 
     if self.has_value:
@@ -188,7 +189,7 @@ class GrammarType:
              raise pp.ParseException(s, loc, str(e) + '\nValidating of the parsed value failed') from e
            return x
 
-       grammar.addParseAction(validate)
+       grammar.add_parse_action(validate)
     grammar.grammar_type = self
     return grammar
 
@@ -196,7 +197,7 @@ class GrammarType:
     """
     Parse the string, return the obtained value.
     """
-    return self.grammar().parseString(str, whole_string)[0]
+    return self.grammar().parse_string(str, whole_string)[0]
 
   async def parse_from_stream(self, stream, up_to, start=None, whole_string=True):
     result = await stream.readuntil(up_to)
@@ -207,7 +208,7 @@ class GrammarType:
 
   def grammar_name(self):
     """ Human readable expression of the grammar. By default,
-        this is what is set by grammar.setName, however, sometimes
+        this is what is set by grammar.set_name, however, sometimes
         is desirable to set even shorter string """
     if not isinstance(self.grammar, pp.ParserElement):
        return self.__class__.__name__
@@ -367,6 +368,7 @@ class GrammarType:
     additional_description
       The additional description (e.g. possible choices) of the type. Multiline string.
     """
+
     out = self._description
     if prefix and out:
        out = out.replace('\n', '\n' + prefix)
@@ -514,11 +516,11 @@ def type_from_value(value, type_map={}):
 
   type_from_set_map = grammar_types.type_from_set_map
 
-  if isinstance(value, recognized_set_types):
+  if isinstance(value, recognized_set_types) and not isinstance(value, unyt.unyt_quantity):
      return type_from_set_map[normalize_type(value[0].__class__)] if len(value) else grammar_types.Integer.I
   if isinstance(value, str):
      try:
-        grammar_types.String._grammar.parseString(value, True)
+        grammar_types.String._grammar.parse_string(value, True)
         return grammar_types.String.I
      except Exception:
         return grammar_types.QString.I

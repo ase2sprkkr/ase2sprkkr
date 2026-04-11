@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.sprkkr.spacegroup\_info**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo  ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock 
+.. inheritance-diagram::  ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo  ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo  ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo  ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock 
       :parts: 1
 
 |
@@ -44,6 +44,8 @@ Full name: **ase2sprkkr.sprkkr.spacegroup\_info**
       :toctree:
       :template: custom-class-template.rst
    
+      BaseSpacegroupInfo
+      RegionSpacegroupInfo
       SpacegroupInfo
       SpacegroupInfoBlock
    

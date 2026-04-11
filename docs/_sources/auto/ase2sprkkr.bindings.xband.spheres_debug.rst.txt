@@ -1,0 +1,65 @@
+spheres\_debug
+==============
+
+Full name: **ase2sprkkr.bindings.xband.spheres\_debug**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings.xband.spheres_debug
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _as_list_literal_f64
+      _as_list_literal_i32
+      _collect_inputs
+      _fmt_f64
+      _fmt_i32
+      _pad4
+      fortran_code_find_empty_spheres
+      print_find_empty_spheres_program
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      FindEmptySpheresInputs
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

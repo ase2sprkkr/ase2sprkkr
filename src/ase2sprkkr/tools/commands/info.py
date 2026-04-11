@@ -124,7 +124,6 @@ def run(args):
         if filter is not True:
             filter = filter.lower()
         for ext, i in OutputFile.definitions.items():
-            i = i.definition
             if filter is not True and (
                 (filter not in ext.lower()) or
                 (filter not in i.name.lower())

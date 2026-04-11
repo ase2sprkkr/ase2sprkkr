@@ -12,10 +12,16 @@ def register():
         from ..sprkkr.calculator import SPRKKR  # NOQA: E402
         registered=True
         register_calculator_class('sprkkr', SPRKKR)
-
+        from .io import read_sprkkr, write_sprkkr
+        from ase.utils.plugins import ExternalIOFormat
+        globals()['SPRKKRFormat'] = ExternalIOFormat(
+           desc="SPRKKR potential file",
+           module="ase2sprkkr.ase.io",
+           code="+F",             # read & write, file-based
+           ext=["pot", "pot_new"],
+         )
 
 try:
-
     def ase_register(plugin=None):
         global registered
         if registered:
@@ -32,7 +38,6 @@ try:
         rc('ase2sprkkr.SPRKKR')
         rio('ase2sprkkr.ase.io', 'SPRKKR potential file',
                             '1F', name='sprkkr', ext='pot')
-
 
 except ImportError:
 

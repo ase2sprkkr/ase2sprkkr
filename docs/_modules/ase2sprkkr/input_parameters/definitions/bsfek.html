@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
@@ -98,8 +100,12 @@
 <span class="kn">from</span> <span class="nn">...common.generated_configuration_definitions</span> <span class="kn">import</span> <span class="n">Length</span>
 <span class="kn">from</span> <span class="nn">...common.configuration_definitions</span> <span class="kn">import</span> <span class="n">if_not_defined</span>
 
-<span class="n">input_parameters</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">InputParameters</span><span class="p">(</span>
-    <span class="s1">&#39;bsfek&#39;</span><span class="p">,</span> <span class="p">[</span>
+<div class="viewcode-block" id="input_parameters">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsfek.input_parameters.html#ase2sprkkr.input_parameters.definitions.bsfek.input_parameters">[docs]</a>
+<span class="k">def</span> <span class="nf">input_parameters</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; BSF - Bloch-spectral-function task input-parameters definition&quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="p">(</span>
+        <span class="s1">&#39;bsfek&#39;</span><span class="p">,</span> <span class="p">[</span>
           <span class="n">CONTROL</span><span class="p">(</span><span class="s1">&#39;BSF&#39;</span><span class="p">),</span>
           <span class="n">TAU</span><span class="p">,</span>
           <span class="n">TASK</span><span class="p">(</span><span class="s1">&#39;BSF&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">([</span>
@@ -159,8 +165,21 @@
     <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;kkrgen&#39;</span><span class="p">,</span>
     <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">info</span><span class="o">=</span><span class="s2">&quot;BSFEK - Bloch spectral functions in the E-K plane&quot;</span>
-<span class="p">)</span>
-<span class="sd">&quot;&quot;&quot; JXC -JXC task input parameters definition&quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">BSFEKTaskSection</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;TASK&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">result_class</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">k_path_gui</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+            <span class="kn">from</span> <span class="nn">ase2sprkkr.gui.k_path</span> <span class="kn">import</span> <span class="n">k_path_gui</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">k_path_gui</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">out</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">KPATH</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+
+    <span class="n">out</span><span class="p">[</span><span class="s1">&#39;TASK&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">result_class</span> <span class="o">=</span> <span class="n">BSFEKTaskSection</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
 
 <span class="c1"># TODO - AKI scripts to generate KA/KE</span>
 </pre></div>

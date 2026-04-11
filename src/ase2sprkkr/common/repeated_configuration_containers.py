@@ -1,35 +1,54 @@
 from .configuration_containers import BaseConfigurationContainer
-from typing import Union, Any, List
+from typing import Union, Any, Dict
 from .warnings import DataValidityError
-
+from .configuration_definitions import BaseDefinition
+import numpy as np
 
 class RepeatedConfigurationContainer(BaseConfigurationContainer):
-    """ A group, that can be repeated """
+    """ A container for configuration (problem-definition) options and/or sections.
+
+    Options in the configuration (problem-definition) files are grouped to
+    sections, sections are then grouped in a configuration file object.
+    This is a base class for these containers.
+    """
 
     def __init__(self, definition, container=None):
-         """ Create the container and its members, according to the definition """
-         super().__init__(definition, container)
-         """
-         The members of the container, in a form of ``{obj.name : obj}``
-         """
-         self._values = []
+        """ Create the container and its members, according to the definition """
+        super().__init__(definition, container)
+        """
+        The members of the container, in a form of ``{obj.name : obj}``
+        """
+        self._values = [] if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION else {}
 
     def __getitem__(self, name):
-         """
-         The members of the container are accesible using ``container["member name"]`` notation.
-         """
-         return self._values[name]
+        """
+        The members of the container are accesible using ``container["member name"]`` notation.
+        """
+        return self._values[name]
 
     def __len__(self):
-         return len(self._values)
+        return len(self._values)
 
     def __bool__(self):
-         return True
+        return True
 
-    def add(self):
-         out=self._definition.create_object(self, repeated=False)
-         self._values.append(out)
-         return out
+    def add(self, id=None):
+        out=self._definition.create_object(self, repeated=False)
+        if (id is None) != (self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION):
+            raise ValueError("Non-none Id for repeated list is allowed"
+                             "only for dict-like repeated containers")
+        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
+            self._values.append(out)
+        else:
+            self._values[id]=out
+        return out
+
+    def __contains__(self, name):
+        """ The check for existence of a member with the given name."""
+        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
+            ln = len(self._values)
+            return isinstance(name, int) and abs(name) < len(self) or name == -ln
+        return name in self._values
 
     def clear(self, do_not_check_required=False, call_hooks=True, generated=None):
         """
@@ -50,7 +69,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         generated: bool
           If True
         """
-        self._values = []
+        self._values = [] if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION else {}
 
     def get(self, name=None, unknown='find'):
         """
@@ -75,8 +94,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
            return self.as_dict()
         if '.' in name:
            section, name = name.split('.')
-           return self._values[int(section)].get(name)
-        name = int(name)
+           return self._values[section].get(name)
         if name in self._values:
            val = self._values[name]
         else:
@@ -85,10 +103,10 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
            raise ValueError(f"No {name} member of {self}")
         return val.get()
 
-    def set(self, values:Union[List,None]={}, value=None, *, unknown='find', error=None, **kwargs):
+    def set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
         self._set(values, value, unknown=unknown, error=error, **kwargs)
 
-    def _set(self, values:Union[List,None]={}, value=None, *, unknown='find', error=None, **kwargs):
+    def _set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
         """
         Set the value(s) of parameter(s). Usage:
 
@@ -115,21 +133,51 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         **kwargs: dict
           The values to be set (an alternative syntax as syntactical sugar)
         """
-        self._values = []
+        def st(child, value):
+            child.set(value, unknown=unknown, error=error, **kwargs)
 
-        if values:
+        if values.__class__ is str:
+            if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
+                values = [value]
+            else:
+                values = { values : value }
+        elif value is not None:
+           raise ValueError("If value argument of Container.set method is given,"
+           " the values have to be string name of the value")
+
+        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
+            self._values = []
             for v in values:
-               self.add().set(v)
+                st(self.add(), v)
+            return
+
+        try:
+            items = values.items()
+        except AttributeError:
+            items = enumerate(values)
+
+        for k,v in items:
+           if not k in self._values:
+               st(self.add(k), v)
+           else:
+               st(self._values[k], v)
 
     def __iter__(self):
         """ Iterate over all members of the container """
-        yield from self._values
+        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
+            yield from range(len(self))
+        else:
+            yield from self._values.keys()
 
     def items(self):
-        yield from enumerate(self._values)
+        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
+            return enumerate(self._values)
+        return self._values.items()
 
     def values(self):
-        yield from self._values
+        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
+            return self._values
+        return self._values.values()
 
     def _as_dict(self, only_changed:Union[bool,str]='basic', generated:bool=False, copy=False):
         """
@@ -148,10 +196,20 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         generated: bool
           Add generated values
         """
-        out = [
-            v.as_dict(only_changed, generated, copy)
-            for v in self._values
-        ]
+        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
+            out = [ v.as_dict(only_changed, generated, copy) for v in self ]
+            if out[-1] != None:
+              for i in range(len(out)-1, 0,-1):
+                  if out[i] != None:
+                      out = out[:i+1]
+                  else:
+                      out = None
+        else:
+            out = {}
+            for k,v in self.items():
+                value = v.as_dict(only_changed, generated, copy)
+                if value is not None:
+                    out[k] = value
         return out or None
 
     def is_changed(self):
@@ -161,10 +219,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         return False
 
     def __repr__(self):
-        return super().__repr__+'[]'
-
-    def ITEMS(self):
-        return self._values
+        return super().__repr__()+'[]'
 
     def _save_to_file(self, file, always=False, name_in_grammar=None, delimiter='')->bool:
         """ Save the content of the container to the file (according to the definition)
@@ -206,3 +261,13 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             DataValidityError.warn(f"Non-optional section {self._definition.name} has no value to save")
         for o in self.values():
             o._validate(why)
+
+    def values_of(self, name):
+        ln = len(self)
+        if not ln:
+            return np.empty((0,))
+        return np.fromiter(
+            (self[i][name]() for i in self),
+            count = ln,
+            dtype = self[0][name]._definition.type.numpy_dtype()[0]
+            )

@@ -95,6 +95,7 @@ def finish_plot(filename:Optional[str]=None, show:Optional[bool]=None, dpi=600):
      """
      Show the plot and/or save it to the given file
      """
+     plt.tight_layout()
      if show is None:
         show=filename is None
      if show:
@@ -140,7 +141,7 @@ def plotting_function(func):
            if callback:
              callback(axis)
         else:
-           with single_plot(func, filename=filename, show=show, dpi=dpi, latex=latex, figsize=figsize) as axis:
+           with single_plot(filename=filename, show=show, dpi=dpi, latex=latex, figsize=figsize) as axis:
                 func(*args, axis=axis, **kwargs)
                 if callback:
                     callback(axis)
@@ -184,11 +185,20 @@ def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=Fal
    else:
        colormap = colormap or 'BuPu'
        if norm == 'log':
-           norm=LogNorm(vmin=1e-8, vmax=vmax)
+           if vmin is None:
+               if vmax is not None and vmax > 0.:
+                  vmin = min(1e-8, vmax)
+               else:
+                  vmin = 1e-8
+           if vmax is not None and vmax < vmin:
+               vmax = vmin
+           norm=LogNorm(vmin=vmin, vmax=vmax)
            vmax = None
+           vmin = None
        elif norm=='lin':
            norm=Normalize(vmin=0. if mode == 'from_zero' else None, vmax=vmax)
            vmax = None
+           vmin = None
 
    axis.set_xlim(auto_range(xrange, x))
    axis.set_ylim(auto_range(yrange, y))
@@ -227,10 +237,11 @@ class Multiplot:
           self.figure = None
       else:
           self.figure, self.axes = plt.subplots(figsize=figsize, nrows=layout[0], ncols=layout[1])
-          adj = {'left': 0.12, 'right': 0.95, 'bottom': 0.17, 'top': 0.90, 'hspace': 0.75, 'wspace': 0.5}
+          adj = {} #{'left': 0.12, 'right': 0.95, 'bottom': 0.17, 'top': 0.90, 'hspace': 0.75, 'wspace': 0.5}
           adj.update(adjust)
-          plt.subplots_adjust(**adjust)
-          self.free_axes = self.axes.ravel(order='F' if not updown_layout else 'C')
+          if adjust:
+            plt.subplots_adjust(**adjust)
+          self.free_axes = np.atleast_1d(self.axes).ravel(order='C' if not updown_layout else 'F')
           self.free_axes = [ i for i in self.free_axes[::-1] ]
 
       self.specific_kwargs = { k:v for k,v in kwargs.items() if str(k).isnumeric() }
@@ -291,16 +302,20 @@ class Multiplot:
                   fname = re.sub(r'[<>:"/\\|?*\x00-\x1f\x7f ]', '_', name)
                   fname = re.sub(r"_+", '_', fname)
 
-              filename = append_before_ext(filename, '_' + fname)
+              if '{name}' in filename:
+                  filename = filename.replace('{name}', fname)
+              else:
+                  filename = append_before_ext(filename, '_' + fname)
 
           with single_plot(filename, self.show if self.separate_plots=='each' else False,
                            name, self.dpi, self.latex, self.figsize) as axis:
                yield axis
       else:
           try:
-              yield self.free_axes.pop()
+              axis = self.free_axes.pop()
           except IndexError:
               raise StopIteration()
+          yield axis
       self.index += 1
 
   def __iter__(self):

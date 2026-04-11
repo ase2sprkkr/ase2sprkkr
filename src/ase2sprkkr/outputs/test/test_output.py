@@ -1,5 +1,7 @@
 import os
-from ..readers.scf import ScfOutputReader, ScfResult, atomic_types_definition
+import unyt
+from ..readers.scf import ScfOutputParser, ScfResult, atomic_types_definition
+from ..readers.jxc import JxcOutputReader
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -29,7 +31,7 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
       )
 
       # read_from_file is both method and class_method
-      for reader in ScfOutputReader, ScfOutputReader():
+      for reader in ScfOutputParser, ScfOutputParser():
 
           out = ScfResult(None, None, None)
           reader.read_from_file(path, read_args = [out])
@@ -38,3 +40,14 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
           self.assertEqual(len(out.iterations[-1]['atomic_types']), 2)
           self.assertEqual(out.iterations[0].converged(), False)
           self.assertEqual(out.iterations[-1].converged(), True)
+
+  def test_jxc(self):
+      path = os.path.realpath(os.path.join(
+              os.path.dirname(__file__),
+              '..', 'examples'
+      ))
+      result = JxcOutputReader.read_from_file('Fe_jxc.out', directory=path)
+      assert result.jxc_filename == os.path.join(path, 'Fe_JXC_XCPLTEN_Jij.dat')
+      assert result.dij_filename == os.path.join(path, 'Fe_JXC_XCPLTEN_Dij.dat')
+      assert result.dmi_filename == os.path.join(path, 'Fe_JXC_DMIVEC_Dij.dat')
+      assert result.mean_field_curie_temperature == 763.4

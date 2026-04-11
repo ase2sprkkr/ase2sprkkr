@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="_static/mods.css?v=26f6988d" />
 
   
@@ -21,7 +22,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Some examples of ase2sprkkr" href="examples.html" />
+    <link rel="next" title="Authors" href="authors.html" />
     <link rel="prev" title="ASE2SPR-KKR’s philosophy for the developers" href="philosophy.html" /> 
 </head>
 
@@ -50,6 +51,10 @@
 <li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-4">Version 3.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-3-4">Version 3.3.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-3-3">Version 3.3.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-3-2">Version 3.3.2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-3-2-5-beta">Version 3.2.5-beta</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#user-interface">User interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#for-developers">For developers</a></li>
@@ -90,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#version-1-0-6">Version 1.0.6</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
@@ -133,6 +139,57 @@
              
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
+<section id="version-3-4">
+<h2>Version 3.4<a class="headerlink" href="#version-3-4" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Magnetization moments parse</p></li>
+<li><p>Units uses unyts for better units support (retaining the unit user used)</p></li>
+<li><p>Empty spheres uses spglib for symmetry (which solves some cases that have not been computed correctly )</p></li>
+<li><p>ASE read/write compatibility</p></li>
+<li><p>Allow to run computation inside Jupyter notebook</p></li>
+<li><p>promote_ase_atoms exported</p></li>
+<li><p>BSF and SCP outputs improved</p></li>
+<li><p>Calculator do not longer overwrite the potential file, if it is given in constructor</p></li>
+<li><p>Symmetry handling improved</p></li>
+<li><p>Some fixies and enhancements for plotting</p></li>
+<li><p>Allow async running of the process</p></li>
+<li><p>Python 3.14 compatibility</p></li>
+<li><p>MDIR option has no default value</p></li>
+<li><p>SPEC task parser</p></li>
+<li><p>Dij output file parser</p></li>
+</ul>
+</section>
+<section id="version-3-3-4">
+<h2>Version 3.3.4<a class="headerlink" href="#version-3-3-4" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Sites are update according to the symbols during save</p></li>
+<li><p>XAS task</p></li>
+<li><p>Torque Task</p></li>
+<li><p>Empty-spheres finding improved</p></li>
+<li><p>MALF, MBET and MGAM options</p></li>
+<li><p>BSF-SPN file added</p></li>
+<li><p>K-path generating tool for BSF task</p></li>
+<li><p>Layer and fermi argument to BSF plotting</p></li>
+<li><p>–separate_plots argument for plotting routines</p></li>
+<li><p>Uppasd task for generating Uppasd input files</p></li>
+<li><p>Various fixies</p></li>
+</ul>
+</section>
+<section id="version-3-3-3">
+<h2>Version 3.3.3<a class="headerlink" href="#version-3-3-3" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Added mesh parameter to empty spheres finding</p></li>
+<li><p>Spacegroup from ASE is no longer used, since it have been deprecated</p></li>
+</ul>
+</section>
+<section id="version-3-3-2">
+<h2>Version 3.3.2<a class="headerlink" href="#version-3-3-2" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Buildsystem changed to scikit-build-core (mesonpy do not support editable build at least in some setups)</p></li>
+<li><p>Atoms rotating, shifting and flipping routines</p></li>
+<li><p>Config file printing, value-setting etc. routines from cmdline</p></li>
+</ul>
+</section>
 <section id="version-3-2-5-beta">
 <h2>Version 3.2.5-beta<a class="headerlink" href="#version-3-2-5-beta" title="Link to this heading"></a></h2>
 <section id="user-interface">
@@ -142,7 +199,7 @@
 <li><p>Bash ase2sprkkr commandline completing</p></li>
 <li><p>Faster package loading, lazy loading of some modules/data definitions</p></li>
 <li><p>Task BSF improved</p></li>
-<li><p>Python 3.8, pyparsing 2.x, and numpy &lt; 1.23 support dropped</p></li>
+<li><p>Python 3.7, pyparsing 2.x, and numpy &lt; 1.23 support dropped</p></li>
 <li><p>Nomad uploading proof of concept</p></li>
 <li><p>Configuration file improved, help available</p></li>
 <li><p>Occupancy and symmetry handling fixed</p></li>
@@ -374,7 +431,7 @@ values are outputed only if they differ from the defaults.</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="philosophy.html" class="btn btn-neutral float-left" title="ASE2SPR-KKR’s philosophy for the developers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="examples.html" class="btn btn-neutral float-right" title="Some examples of ase2sprkkr" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="authors.html" class="btn btn-neutral float-right" title="Authors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

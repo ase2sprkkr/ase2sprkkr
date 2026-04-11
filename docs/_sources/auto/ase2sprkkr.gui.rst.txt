@@ -1,0 +1,54 @@
+gui
+===
+
+Full name: **ase2sprkkr.gui**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.gui
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     examples
+  
+  
+     k_path
+  
+  
+     plot
+  
+  
+     shell
+  
+  
+  

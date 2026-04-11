@@ -49,7 +49,9 @@ def load_user_preferences():
 
 @cache
 def find_default_mpi_runner():
-   for r in [ 'mpirun', 'mpirun.opmpirun', 'mpirun.mpich' ]:
+   if os.environ.get('SLURM_NODELIST') and shutil.which('srun'):
+       return [ 'srun' ]
+   for r in [ 'mpirun', 'mpirun.opmpirun', 'mpirun.mpich', 'mpiexec' ]:
        if shutil.which(r):
            return [ r ]
    return False

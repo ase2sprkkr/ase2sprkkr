@@ -144,9 +144,7 @@ class SPRKKR(Calculator):
         if kwargs:
             print(f"Warning - unknown arguments in the SPRKKR calculator: {kwargs}")
 
-        if potential and not isinstance(potential, bool):
-           if isinstance(potential, str):
-               potential = Potential.from_file(potential, atoms = atoms)
+        if potential and not isinstance(potential, (bool, str)):
            if atoms:
                raise ValueError('You can not specify both atoms and potential. '
                                 'If you specify one of them, the other will be generated from it.')
@@ -300,6 +298,8 @@ class SPRKKR(Calculator):
        if self._atoms is None:
           if not self._potential or isinstance(self._potential, (bool, str)):
              return None
+          if isinstance(self._potential, str):
+             potential = Potential.from_file(potential, atoms = atoms)
           self._atoms = self._potential.atoms
        return self._atoms
 
@@ -307,8 +307,11 @@ class SPRKKR(Calculator):
     def atoms(self, atoms):
        atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
        self._atoms = atoms
-       if self._potential and self._potential is not True:
-          self._potential.atoms = atoms
+       if self._potential:
+          if isinstance(self._potential, str):
+              self._potential = None
+          elif self._potential is not True:
+              self._potential.atoms = atoms
 
     def _advance_counter(self):
         """ Advance counter for generating filenames with %c counter placeholder """
@@ -709,8 +712,10 @@ class SPRKKR(Calculator):
                   options={}, task=None,
                   empty_spheres : Optional[str | bool] = None,
                   mpi : bool=None,
-                  print_output=None, executable_suffix=None,
+                  print_output=None, read_callback:Optional[callable]=None, run_async:bool=False,
+                  executable_suffix=None,
                   executable_dir=None,
+                  callback=None,
                   gdb=False):
         """
         Do the calculation, return various results.
@@ -722,6 +727,13 @@ class SPRKKR(Calculator):
             Print output to stdout, too.
             If print_output=='info' only a few lines per iteration will be printed.
             None means to use a default value (specified in constructor)
+
+        read_callback: callable(str,str)
+            Receives output of the called executable.
+            The second argument is either 'out' or 'err'
+
+        run_async: bool
+            If True, KkrProcess that can be runned async is returned
 
         executable_suffix: str or bool or None
             If not None, it overrides the executable_postifx, that have been specified when the
@@ -769,9 +781,11 @@ class SPRKKR(Calculator):
             out = input_parameters.run_process(self, input_file, output_file,
                                 directory=os.path.abspath('.'),
                                 print_output=print_output,
+                                read_callback=read_callback,
+                                run_async=run_async,
                                 executable_suffix=executable_suffix,
                                 executable_dir=executable_dir,
-                                mpi=mpi, gdb=gdb
+                                mpi=mpi, callback=callback, gdb=gdb
                                )
           if input_parameters.TASK.TASK() == 'SCF' and not potential and not atoms:
               try:
@@ -795,7 +809,9 @@ class SPRKKR(Calculator):
                   empty_spheres : Optional[str | bool] = None,
                   mpi : bool=None,
                   options={}, task=None,
-                  print_output=None, executable_suffix=None,
+                  print_output=None, read_callback:Optional[callable]=None, run_async:bool=False,
+                  executable_suffix=None,
+                  callback=None,
                   executable_dir=None,
                   gdb=False):
         """
@@ -838,6 +854,14 @@ class SPRKKR(Calculator):
         """
         # There is no need to call this
         # super().calculate(atoms, properties, system_changes)
+        def cleanup(out):
+            if callback:
+                callback(out)
+            if hasattr(out, 'energy'):
+                self.results.update({
+                    'energy' : out.energy,
+                })
+
         out = self.run(
                   atoms, input_parameters, potential,
                   input_file, potential_file, output_file,
@@ -845,14 +869,11 @@ class SPRKKR(Calculator):
                   options, task,
                   empty_spheres,
                   mpi,
-                  print_output,
+                  print_output, read_callback, run_async,
                   executable_suffix, executable_dir,
+                  cleanup,
                   gdb
         )
-        if hasattr(out, 'energy'):
-            self.results.update({
-              'energy' : out.energy,
-            })
         return out
 
     def scf(self, *args, **kwargs):
@@ -894,9 +915,9 @@ class SPRKKR(Calculator):
           self.potential = Potential.from_file(self.potential)
         return self.potential
 
-    def change_task(self, task):
+    def change_task(self, task, retain_values=False):
         """ Just a shortcut to ``input_parameters.change_task`` """
-        self.input_parameters.change_task(task)
+        self.input_parameters.change_task(task, retain_values)
 
 
 class FilenameTemplator:

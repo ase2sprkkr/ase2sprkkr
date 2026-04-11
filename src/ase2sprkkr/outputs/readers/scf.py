@@ -2,27 +2,85 @@
 
 import pyparsing as pp
 import numpy as np
-from ase.units import Rydberg
+import unyt
 
 from ..output_definitions import OutputSectionDefinition as Section, \
                                  OutputValueDefinition as V, \
                                  OutputValueEqualDefinition as VE, \
                                  OutputNonameValueDefinition as VN
 from ...common.grammar_types import Table, integer, string, Real, RealWithUnits,String, Sequence, Array
-from ..task_result import TaskResult
+from ..task_result import TaskResult, ResultValue
 from ...common.process_output_reader import readline, readline_until
-from ..sprkkr_output_reader import SprKkrOutputReader
+from ..sprkkr_output_reader import SprKkrOutputParser
 from ...common.decorators import cached_property
 from ...sprkkr.calculator import SPRKKR
 from ...common.formats import fortran_format
 from ...common.grammar import replace_whitechars
-from ..task_result import KkrProcess
+from ..task_result import KkrOutputReader
 from ...potentials.potentials import Potential
+
+
+class IterationValue(ResultValue):
+
+  def __init__(self, name, value, plot):
+      super().__init__(name, value)
+      self._plot = plot
+
+  def plot(self):
+      self._plot()
+
+  def actions(self):
+      return [ 'plot' ]
+
+
+class DataValue(ResultValue):
+
+  def value_label(self):
+      return ("<data...>")
+
+  def actions(self):
+      return [ 'data' ]
+
+  def data(self):
+      return self._value
+
+def plot_iterations(iterations, what=['error', ('energy','ETOT'), ('energy', 'EMIN')], filename=None, logscale = None, **kwargs):
+
+    import matplotlib.pyplot as pyplot
+
+    if logscale is None:
+        logscale = { 'error' }
+    if not isinstance(what, list):
+        what = [what]
+
+    fig, axs = pyplot.subplots(len(what), sharex=True, squeeze=False)
+    iterations_ids = iterations.values_of('iteration')
+    for name, ax in zip(what, axs.ravel()):
+      data = iterations.values_of(name)
+      if name in logscale:
+         ax.set_yscale("log")
+      kwargs.update({
+          'ls' : None,
+          'mfc': None,
+          'mew': 2,
+          'ms' : 6
+      })
+      ax.plot(iterations_ids, data, '+', **kwargs)
+      ax.set_ylabel(iterations[0][name]._definition.name)
+    axs[-1,0].set_xlabel('Iteration')
+
+    fig.tight_layout()
+    if filename:
+      fig.savefig(filename)
+    else:
+      pyplot.show()
+
+
 
 
 class RealOrStars(Real):
   """ A real value, where ``****`` means ``NaN`` """
-  _grammar = Real._grammar | replace_whitechars(pp.Word('*')).setParseAction(lambda x: float('NaN'))
+  _grammar = Real._grammar | replace_whitechars(pp.Word('*')).set_parse_action(lambda x: float('NaN'))
 
 
 class ScfResult(TaskResult):
@@ -55,7 +113,10 @@ class ScfResult(TaskResult):
   @property
   def energy(self):
       """ Total energy of the last iteration """
-      return self.last_iteration.energy.ETOT()
+      try:
+          return self.last_iteration.energy.ETOT()
+      except Exception as e:
+          raise AttributeError("No iteration has been finished") from e
 
   @property
   def converged(self):
@@ -82,11 +143,7 @@ class ScfResult(TaskResult):
       if not name in self.iterations[0]:
          raise KeyError(f"No such iteration value: {name}")
 
-      return np.fromiter(
-              (i[name]() for i in self.iterations),
-              count = len(self.iterations),
-              dtype = self.iterations[0][name].__class__
-            )
+      return self.iterations.values_of(name)
 
   @property
   def last_iteration(self):
@@ -99,7 +156,18 @@ class ScfResult(TaskResult):
   def energies(self):
       return self.last_iteration.energy()
 
-  def plot(self, what=['error', ('energy','ETOT'), ('energy', 'EMIN')], filename=None, logscale = set(['err']), **kwargs):
+
+  @cached_property
+  def output_values(self):
+      return {
+          'converged' : ResultValue('Converged', str(self.last_iteration.converged()) ),
+          'iterations': ResultValue('Number of iterations', len(self.iterations) ),
+          'fermi energy': IterationValue('Fermi energy', self.last_iteration.energy.EF(), lambda: self.plot(('energy','EF'))),
+          'error': IterationValue('Error', self.last_iteration.error(), lambda: self.plot('error')),
+          'data': DataValue('Data', self),
+      }
+
+  def plot(self, what=['error', ('energy','ETOT'), ('energy', 'EMIN')], filename=None, logscale = None, **kwargs):
       """ Plot the development of the given value(s) during iterations.
 
       Parameters
@@ -117,30 +185,7 @@ class ScfResult(TaskResult):
       **kwargs: dict
         All other arguments are passed to the matplotlib Axes.plot function
       """
-      import matplotlib.pyplot as pyplot
-
-      fig, axs = pyplot.subplots(len(what), sharex=True)
-      iterations = self.iteration_values('iteration')
-      for name, ax in zip(what, axs):
-        data = self.iteration_values(name)
-        if name in logscale:
-           ax.set_yscale("log")
-        kwargs.update({
-            'ls' : None,
-            'mfc': None,
-            'mew': 2,
-            'ms' : 6
-        })
-        ax.plot(iterations, data, '+', **kwargs)
-        ax.set_ylabel(name)
-
-      ax.set_xlabel('Iteration')
-      fig.tight_layout()
-      if filename:
-        fig.savefig(filename)
-      else:
-        pyplot.show()
-
+      return plot_iterations(self.iterations, what, filename, logscale, **kwargs)
 
 """
 This definition parses the part of the output file that contains the datas
@@ -164,10 +209,21 @@ atomic_types_definition = Section('atoms', [
       'B_val_desc': String(default_value = ''),
       'B_core' : Real(default_value = float('NaN'), nan=r'\*+')
     }, free_header=True, default_values=True)),
-  V('E_band', RealWithUnits(units = {'[Ry]' : Rydberg }), is_required=False),
+  V('E_band', RealWithUnits(units = {'[Ry]' : unyt.Ry }), is_required=False),
   V('dipole moment', Sequence(int, Array(float, length=3)), is_required=False)
 ])
 
+
+class PlottableValue(V):
+
+    def enrich(self, option):
+        def plot(options, **kwargs):
+            c = option._container._container
+            plot_iterations(option._container._container, self.get_path[len(c.get_path):], **kwargs)
+        option.plot = lambda **kwargs: plot(option, **kwargs)
+        super().enrich(option)
+
+PV = PlottableValue
 
 """
 This definition is not used for parsing, but just for the data returned
@@ -176,32 +232,36 @@ from the reader.
 scf_section = Section('iteration', [
   V('system_name', str),
   V('iteration', int, info='Number of the iteration.'),
-  V('error', float),
+  PV('error', float),
   V('converged', bool, info='True, if the SCF cycle converged this iteration.'),
   Section('moment', [
-    V('spin', float),
-    V('orbital', float)
+    PV('spin', float),
+    PV('orbital', float)
   ]),
   Section('energy' , [
-    V('EF', float, info='Fermi energy', alternative_names='fermi'),
-    V('ETOT', float, info='Total energy', alternative_names='total'),
-    V('EMIN', float, info='Bottom of energy contour for band states', alternative_names='band_states_min'),
-    V('ESCBOT', float, info='Lower limit for semi-core states', alternative_names='semi_core_min', is_required=False),
-    V('ECTOP', float, info='Upper limit for core states', alternative_names='core_max', is_required=False)
+    PV('EF', float, info='Fermi energy', alternative_names='fermi'),
+    PV('ETOT', float, info='Total energy', alternative_names='total'),
+    PV('EMIN', float, info='Bottom of energy contour for band states', alternative_names='band_states_min'),
+    PV('ESCBOT', float, info='Lower limit for semi-core states', alternative_names='semi_core_min', is_required=False),
+    PV('ECTOP', float, info='Upper limit for core states', alternative_names='core_max', is_required=False)
   ]),
   Section('atomic_types', atomic_types_definition.members(), is_repeated=True)
-])
+], is_repeated=True)
 
+del PV
 
-class ScfOutputReader(SprKkrOutputReader):
+class ScfOutputParser(SprKkrOutputParser):
   """
   This class reads and parses the output of the SCF task of the SPR-KKR.
   """
+  def set_print_output(self, print_output):
+      self.print_info = print_output == 'info'
+      self.print_output = print_output and not self.print_info
 
   async def read_output(self, stdout, result):
         await self.read_commons(stdout, result)
         result.files['converged'] = result.files['potential'] + '_new'
-        iterations = []
+        iterations = scf_section.create_object()
         try:
           first = True
           while True:
@@ -220,7 +280,7 @@ class ScfOutputReader(SprKkrOutputReader):
 
             line = await readline_until(stdout,lambda line: b'SPRKKR-run for: ' in line)
             line=line.strip()
-            if first and self.print_output == 'info':
+            if first and self.print_info:
                print(line)
                first = False
             run = line.replace('SPRKKR-run for:', '')
@@ -246,11 +306,12 @@ class ScfOutputReader(SprKkrOutputReader):
             out['moment'] = {'spin' : float(items[10]),
                              'orbital' : float(items[11]) }
             line = (await readline(stdout)).split()
-            out['energy']['ETOT'] = float(line[1]) * Rydberg
+            out['energy']['ETOT'] = float((float(line[1]) * unyt.Ry).to(unyt.eV))
             out['converged'] = line[5] == 'converged'
+            section = iterations.add()
+            section.set(out)
 
-            iterations.append(scf_section.read_from_dict(out))
-            if self.print_output == 'info':
+            if self.print_info:
                error = fortran_format(out['error'], ":>12e")
                print(f"Iteration {out['iteration']:>5} error {error} "
                      f"spin moment: {out['moment']['spin']:>13.6e} "
@@ -270,7 +331,7 @@ class ScfOutputReader(SprKkrOutputReader):
           raise Exception('The output ends unexpectedly')
 
 
-class ScfProcess(KkrProcess):
+class ScfOutputReader(KkrOutputReader):
 
   result_class = ScfResult
-  reader_class = ScfOutputReader
+  parser_class = ScfOutputParser

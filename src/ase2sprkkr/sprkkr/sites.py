@@ -291,6 +291,7 @@ class Site:
   def __init__(self, site_type):
       assert isinstance(site_type, SiteType)
       self._site_type = None
+      self.magnetisation = np.zeros(2)
       self.site_type = site_type
 
   def __del__(self):
@@ -323,12 +324,17 @@ class Site:
 
   @site_type.setter
   def site_type(self, site_type):
-      if self._site_type:
-          self._site_type.unregister(self)
+      st = self._site_type
+      if site_type == st:
+          return
       self._site_type = site_type
+      if st:
+          st.unregister(self)
+          si = self.site_type.atoms.spacegroup_info
+          si.update_spacegroup_kinds(invalidate_spacegroup=True)
+
       if site_type:
           self._site_type.register(self)
-
   @property
   def has_symmetry(self):
       return self._site_type.has_symmetry

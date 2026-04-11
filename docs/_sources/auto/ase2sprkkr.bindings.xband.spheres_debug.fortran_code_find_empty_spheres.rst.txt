@@ -1,0 +1,8 @@
+fortran\_code\_find\_empty\_spheres
+===================================
+
+Full name: **ase2sprkkr.bindings.xband.spheres\_debug.fortran\_code\_find\_empty\_spheres**
+
+.. currentmodule:: ase2sprkkr.bindings.xband.spheres_debug
+
+.. autofunction:: fortran_code_find_empty_spheres

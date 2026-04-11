@@ -1,7 +1,7 @@
 """ Density of states (DOS) reader and result. """
 
-from ..task_result import TaskResult, KkrProcess
-from .default import DefaultOutputReader
+from ..task_result import TaskResult, KkrOutputReader, OutputFileResultValue
+from .default import DefaultOutputParser
 from ...common.decorators import cached_property
 from ...output_files.output_files import OutputFile
 import os
@@ -13,7 +13,7 @@ class DosResult(TaskResult):
 
   @cached_property
   def dos_filename(self):
-      """ New (output) potential file name """
+      """ Density of states file name """
       fname = self.input_parameters.CONTROL.DATASET() + '_DOS.dos'
       if self.directory:
          fname = os.path.join(self.directory, fname)
@@ -21,13 +21,20 @@ class DosResult(TaskResult):
 
   @cached_property
   def dos(self):
-      """ The new (output) potential - that contains the converged charge density etc. """
-      return OutputFile.from_file(self.dos_filename, try_only='dos')
+      """ The computed density of states. """
+      return self.output_values['dos']()
+
+  @cached_property
+  def output_values(self):
+    return {
+        'dos': OutputFileResultValue('Density of states', 'dos', self.dos_filename)
+        }
 
 
-class DosProcess(KkrProcess):
-  """ ARPES task output reader currently do nothing, just have a special
+
+class DosOutputReader(KkrOutputReader):
+  """ DOS task has no special parser, it just has a special
   result, that allow easy acces to spc output file """
 
   result_class = DosResult
-  reader_class = DefaultOutputReader
+  parser_class = DefaultOutputParser

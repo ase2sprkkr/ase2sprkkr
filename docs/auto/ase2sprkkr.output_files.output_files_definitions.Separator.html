@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
 
   
@@ -21,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="test" href="ase2sprkkr.output_files.test.html" />
+    <link rel="next" title="outputs" href="ase2sprkkr.outputs.html" />
     <link rel="prev" title="OutputFileValueDefinition" href="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.html" /> 
 </head>
 
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
@@ -65,12 +67,14 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.definitions.html">definitions</a></li>
@@ -84,7 +88,6 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Separator</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.test.html">test</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
@@ -93,7 +96,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -131,7 +133,6 @@
 <dt class="sig sig-object py" id="ase2sprkkr.output_files.output_files_definitions.Separator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.output_files.output_files_definitions.</span></span><span class="sig-name descname"><span class="pre">Separator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">separator_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/output_files/output_files_definitions.html#Separator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.output_files.output_files_definitions.Separator" title="Link to this definition"></a></dt>
 <dd><p>A special (hidden) value, that appears in a output file header</p>
-<p>The separator is a blank line</p>
 <p class="rubric">Class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-ffe31a3b761936309ab05591f61157de557e7031.png" alt="Inheritance diagram of ase2sprkkr.output_files.output_files_definitions.Separator" usemap="#inheritance2e9369a5df" class="inheritance graphviz" /></div>
 <map id="inheritance2e9369a5df" name="inheritance2e9369a5df">
@@ -162,7 +163,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.html" class="btn btn-neutral float-left" title="OutputFileValueDefinition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.output_files.test.html" class="btn btn-neutral float-right" title="test" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.outputs.html" class="btn btn-neutral float-right" title="outputs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

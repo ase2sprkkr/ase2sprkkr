@@ -16,7 +16,7 @@ class OutputFileValueDefinition(ConfigurationValueDefinition):
   a header of an output file """
   @cached_class_property
   def grammar_of_delimiter():
-    return pp.Empty().setName(' ')
+    return pp.Empty().set_name(' ')
 
   prefix = " "
   name_value_delimiter = '\t'
@@ -30,7 +30,7 @@ class OutputFileSection(ConfigurationSection):
 
 class OutputFileSectionDefinition(ConfigurationSectionDefinition):
   delimiter = '\n'
-  grammar_of_delimiter = pp.Suppress('\n').setWhitespaceChars(' \r\t')
+  grammar_of_delimiter = pp.Suppress('\n').set_whitespace_chars(' \r\t')
   custom_class = None
   force_order = True
 
@@ -58,7 +58,7 @@ class OutputFileDefinition(ConfigurationFileDefinition):
   force_order = True
   """ The order of items in an output file is fixed """
 
-  value_name_format = '<12'
+  value_name_format = '{:<12}'
 
   child_class = OutputFileValueDefinition
   """ standard child class """
@@ -79,6 +79,12 @@ class OutputFileDefinition(ConfigurationFileDefinition):
   def add_ignored(self, out):
       """ In the output files, do not ignore doublecrossed lines """
       return out
+
+
+  @property
+  def extension(self):
+      mod = self.__class__.__module__
+      return mod.rsplit('.',1)[1]
 
 
 @cache

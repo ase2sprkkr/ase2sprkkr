@@ -105,9 +105,9 @@ class AtomsRegion:
 
       If the pbc has None items, these are replace with parent atoms pbc values
       """
-      pbc = np.array(self.incomplete_pbc)
+      pbc = np.array(self.incomplete_pbc, dtype=bool)
       if self.atoms is not None:
-          for i,v in enumerate(pbc):
+          for i,v in enumerate(self.incomplete_pbc):
               if v is None:
                   pbc[i] = self.atoms.pbc[i]
       return pbc
@@ -182,6 +182,7 @@ class AtomsRegion:
                   return False
       return True
 
+  @property
   def sites(self):
       return self.atoms.sites[self.slice]
 
@@ -208,3 +209,16 @@ class AtomsRegion:
 
   def get_scaled_positions(self):
       return self.atoms.get_scaled_positions()[self.slice]
+
+  @property
+  def spacegroup_info(self):
+      return self.atoms.spacegroup_info.for_region(self)
+
+  def copy_for_atoms(self, atoms, slice=None):
+      region = AtomsRegion(self.name, self.slice if slice is None else slice,
+                           self.cell, self.pbc, self.inherit_cell,
+                           atoms)
+      return region
+
+  def __repr__(self):
+      return f"<AtomsRegion {self.name}>"

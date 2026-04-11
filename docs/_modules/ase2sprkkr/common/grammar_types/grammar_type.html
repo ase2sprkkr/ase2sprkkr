@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
@@ -91,14 +93,15 @@
   <h1>Source code for ase2sprkkr.common.grammar_types.grammar_type</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; Basic types for GrammarTypes and usefull functions &quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">unyt</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Hashable</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">grammar_types</span>
 
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">grammar_types</span>
 <span class="kn">from</span> <span class="nn">..decorators</span> <span class="kn">import</span> <span class="n">cached_class_property</span><span class="p">,</span> <span class="n">cache</span><span class="p">,</span> \
                          <span class="n">add_called_class_as_argument</span><span class="p">,</span> <span class="n">cached_property</span>
 <span class="kn">from</span> <span class="nn">..alternative_types</span> <span class="kn">import</span> <span class="n">normalize_type</span><span class="p">,</span> <span class="n">allowed_types</span>
@@ -274,12 +277,12 @@
        <span class="n">grammar</span> <span class="o">=</span> <span class="n">grammar</span><span class="p">(</span><span class="n">param_name</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">postfix</span><span class="p">:</span>
-       <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">:</span>
-           <span class="n">grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="n">grammar</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">postfix</span><span class="p">:</span>
-           <span class="n">grammar</span> <span class="o">+=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">postfix</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">postfix</span><span class="p">)</span>
-        <span class="n">grammar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_grammar</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">:</span>
+                 <span class="n">grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="n">grammar</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">postfix</span><span class="p">:</span>
+                 <span class="n">grammar</span> <span class="o">+=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">postfix</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">postfix</span><span class="p">)</span>
+            <span class="n">grammar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_grammar</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_value</span><span class="p">:</span>
        <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
@@ -289,7 +292,7 @@
              <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Validating of the parsed value failed&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
            <span class="k">return</span> <span class="n">x</span>
 
-       <span class="n">grammar</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="n">validate</span><span class="p">)</span>
+       <span class="n">grammar</span><span class="o">.</span><span class="n">add_parse_action</span><span class="p">(</span><span class="n">validate</span><span class="p">)</span>
     <span class="n">grammar</span><span class="o">.</span><span class="n">grammar_type</span> <span class="o">=</span> <span class="bp">self</span>
     <span class="k">return</span> <span class="n">grammar</span></div>
 
@@ -300,7 +303,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parse the string, return the obtained value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">whole_string</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span><span class="o">.</span><span class="n">parse_string</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">whole_string</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="GrammarType.parse_from_stream">
@@ -317,7 +320,7 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.potentials.custom_potential_section.GrammarType.grammar_name">[docs]</a>
   <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Human readable expression of the grammar. By default,</span>
-<span class="sd">        this is what is set by grammar.setName, however, sometimes</span>
+<span class="sd">        this is what is set by grammar.set_name, however, sometimes</span>
 <span class="sd">        is desirable to set even shorter string &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="p">,</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParserElement</span><span class="p">):</span>
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
@@ -700,11 +703,11 @@
 
   <span class="n">type_from_set_map</span> <span class="o">=</span> <span class="n">grammar_types</span><span class="o">.</span><span class="n">type_from_set_map</span>
 
-  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">recognized_set_types</span><span class="p">):</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">recognized_set_types</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unyt</span><span class="o">.</span><span class="n">unyt_quantity</span><span class="p">):</span>
      <span class="k">return</span> <span class="n">type_from_set_map</span><span class="p">[</span><span class="n">normalize_type</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">else</span> <span class="n">grammar_types</span><span class="o">.</span><span class="n">Integer</span><span class="o">.</span><span class="n">I</span>
   <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
      <span class="k">try</span><span class="p">:</span>
-        <span class="n">grammar_types</span><span class="o">.</span><span class="n">String</span><span class="o">.</span><span class="n">_grammar</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">grammar_types</span><span class="o">.</span><span class="n">String</span><span class="o">.</span><span class="n">_grammar</span><span class="o">.</span><span class="n">parse_string</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">grammar_types</span><span class="o">.</span><span class="n">String</span><span class="o">.</span><span class="n">I</span>
      <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">grammar_types</span><span class="o">.</span><span class="n">QString</span><span class="o">.</span><span class="n">I</span>

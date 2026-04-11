@@ -17,7 +17,7 @@ from ..common.decorators import cached_class_property, cache
 from .input_parameters import InputParameters, InputSection
 
 with generate_grammar():
-  section_line_ends = pp.ZeroOrMore(pp.ZeroOrMore(pp.LineEnd().setWhitespaceChars('')) + pp.White(' \t'))
+    section_line_ends = pp.ZeroOrMore(pp.ZeroOrMore(pp.LineEnd().set_whitespace_chars('')) + pp.White(' \t'))
 
 
 class InputValueDefinition(ConfigurationValueDefinition):
@@ -25,7 +25,7 @@ class InputValueDefinition(ConfigurationValueDefinition):
   a task configuration """
   @cached_class_property
   def grammar_of_delimiter():
-    return pp.Suppress("=").setName('=')
+      return pp.Suppress("=").set_name('=')
 
   prefix = "\t"
   name_value_delimiter = '='
@@ -83,9 +83,9 @@ class InputParametersDefinition(ConfigurationFileDefinition):
   @cached_class_property
   def grammar_of_delimiter():
       def ws(x):
-          return x.setWhitespaceChars('')
+          return x.set_whitespace_chars('')
       out = (pp.Optional(section_line_ends) + pp.OneOrMore(ws(pp.LineEnd())) + pp.FollowedBy(ws(pp.Regex(r'[^\s]'))) ).suppress()
-      out.setName('<newline><printable>')
+      out.set_name('<newline><printable>')
       return out
 
   @classmethod
@@ -94,7 +94,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
       value = cls.child_class.custom_member_grammar()
       delim = cls.child_class.grammar_of_delimiter()
       return delimitedList(value, delim).\
-            setParseAction(lambda x: dict_from_parsed(x.asList()))
+          set_parse_action(lambda x: dict_from_parsed(x.asList()))
 
   def _generic_info(self):
       return f"Input parameters for task {self.name}"
@@ -114,7 +114,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
       mpi: bool
         Whether to run MPI version of the executable
 
-      result_reader: common.process_output_reader.ProcessOutputReader
+      result_reader: common.process_output_reader.ProcessOutputParser
         Class, that runs the process and read the results. Default NONE
         means, that the class is determined from the TASK name
         (see InputParameters.result_reader)

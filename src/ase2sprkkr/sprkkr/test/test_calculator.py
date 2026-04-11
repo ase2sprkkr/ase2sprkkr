@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 from ase import Atoms
 import numpy as np
+import pytest
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -26,6 +27,7 @@ def _fast_atoms(b, jrws=20,r1=2e-6):
 
 class TestCalculator(TestCase):
 
+ @pytest.mark.slow
  def test_2D(self, temporary_dir):
      a=Atoms(symbols="C", positions=[[0,0,0]], cell=[[1,0,0],[0,1,0], [0,0,1]], pbc=[1,1,1])
      b=semiinfinite_system(a, repeat=2)
@@ -45,6 +47,7 @@ class TestCalculator(TestCase):
      self.assertTrue(bool(re.search('NKTAB3D=', out.input_parameters.to_string())))
      self.assertFalse(bool(re.match('NKTAB=', out.input_parameters.to_string())))
 
+ @pytest.mark.slow
  def test_calculator(self, temporary_dir):
      here = lambda x: os.path.join(self.dirname, x)
 
@@ -68,10 +71,10 @@ class TestCalculator(TestCase):
      self.assertEqual(calculator.get('NE'),11111)
      self.assertEqual(calculator.input_parameters.ENERGY.NE(),11111)
      self.assertEqual(calculator.input_parameters.TASK.TASK(), 'SCF')
-     calculator.change_task('DOS')
+     calculator.change_task('DOS', retain_values=True)
      self.assertEqual(calculator.input_parameters.TASK.TASK(), 'DOS')
      self.assertEqual(calculator.input_parameters.get('NE'), 11111)
-     calculator.input_parameters.change_task('JXC')
+     calculator.input_parameters.change_task('JXC', retain_values=True)
      self.assertEqual(calculator.input_parameters.TASK.TASK(), 'JXC')
      self.assertEqual(calculator.input_parameters.get('NE'), 11111)
      calculator.input_parameters = 'PHAGEN'
@@ -113,6 +116,7 @@ class TestCalculator(TestCase):
      calculator.save_input(input_parameters = inp_file, potential = pot_file)
      assert_change(True, False)
 
+ @pytest.mark.slow
  def test_run(self, temporary_dir):
      if not self.run_sprkkr():
          return

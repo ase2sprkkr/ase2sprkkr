@@ -36,15 +36,15 @@ NLMTOP-POT         4
          1   1 -2.34816691089662E-01
          1   2  0.00000000000000E+00to je konec"""
 
-    cmg.parseString(sec, True)
-    self.assertTrue(cmg.parseString(sec + '\n')[0][1].endswith('to je konec'))
+    cmg.parse_string(sec, True)
+    self.assertTrue(cmg.parse_string(sec + '\n')[0][1].endswith('to je konec'))
 
     with generate_grammar():
       cmgs = delimitedList(cmg, SectionString.grammar_of_delimiter())
-    out = cmgs.parseString(sec + "\n************************\n" + sec, True)
+    out = cmgs.parse_string(sec + "\n************************\n" + sec, True)
     self.assertEqual(2, len(out))
 
-    out = cmgs.parseString(sec +
+    out = cmgs.parse_string(sec +
                           "\n************************\n" +
                           sec + "     \n****************************       \n   \n" +
                           sec + sec,

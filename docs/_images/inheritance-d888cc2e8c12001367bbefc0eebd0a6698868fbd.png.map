@@ -1,0 +1,6 @@
+<map id="inheritance0018b3d681" name="inheritance0018b3d681">
+<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.bsf.BsfProcessRunner.html#ase2sprkkr.outputs.readers.bsf.BsfProcessRunner" target="_top" title="ARPES task output reader currently do nothing, just have a special" alt="" coords="175,55,313,80"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrProcessRunner.html#ase2sprkkr.outputs.task_result.KkrProcessRunner" target="_top" title="Class, that run a process and read its output using underlined" alt="" coords="5,55,145,80"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.bsf.BsfResult.html#ase2sprkkr.outputs.readers.bsf.BsfResult" target="_top" title="BSF result provides access to the computed Bloch spectral functions in the" alt="" coords="202,5,286,31"/>
+<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="29,5,121,31"/>
+</map>

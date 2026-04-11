@@ -1,0 +1,6 @@
+<map id="inheritance39e4429ee2" name="inheritance39e4429ee2">
+<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.arpes.ArpesProcessRunner.html#ase2sprkkr.outputs.readers.arpes.ArpesProcessRunner" target="_top" title="ARPES task output reader currently do nothing, just have a special" alt="" coords="175,55,329,80"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrProcessRunner.html#ase2sprkkr.outputs.task_result.KkrProcessRunner" target="_top" title="Class, that run a process and read its output using underlined" alt="" coords="5,55,145,80"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.arpes.ArpesResult.html#ase2sprkkr.outputs.readers.arpes.ArpesResult" target="_top" title="ARPES result provides acces to the generated SPC output file" alt="" coords="202,5,302,31"/>
+<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="29,5,121,31"/>
+</map>

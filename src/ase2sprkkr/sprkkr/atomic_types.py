@@ -96,6 +96,7 @@ class AtomicType:
         self._charge = None
         self._moments = None
         self._mesh = mesh
+        self.magnetisation = np.zeros(3)
 
         self._check_n_electrons()
 

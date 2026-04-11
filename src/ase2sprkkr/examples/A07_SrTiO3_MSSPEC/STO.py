@@ -5,15 +5,17 @@ photoelectron diffraction.
 Call with ``msspec`` and/or ``sprkkr`` commandline argument.
 """
 
-from ase.lattice.tetragonal import SimpleTetragonalFactory
-from ase.visualize import view
-from ase2sprkkr import SPRKKR
-import numpy as np
-import sys
-import glob
 
+def main():
 
-def main(args):
+    from ase.lattice.tetragonal import SimpleTetragonalFactory
+    from ase.visualize import view
+    from ase2sprkkr import SPRKKR
+    import numpy as np
+    import sys
+    import glob
+
+    args = sys.argv
 
     # Define a Perovskite Factory class
     class PerovskiteFactory(SimpleTetragonalFactory):
@@ -135,4 +137,4 @@ def main(args):
 # Just run the script only when directly called from command line
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()

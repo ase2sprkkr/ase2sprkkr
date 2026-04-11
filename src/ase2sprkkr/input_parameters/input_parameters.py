@@ -10,7 +10,7 @@ import os
 import io
 import pkgutil
 import importlib
-from ..outputs.task_result import KkrProcess
+from ..outputs.task_result import KkrOutputReader
 from . import definitions
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
@@ -94,8 +94,9 @@ class InputParameters(ConfigurationFile):
       return mpi and self._definition.mpi
 
   def run_process(self, calculator, input_file, output_file, directory='.',
-                  print_output=None, executable_suffix=None, executable_dir=None,
-                  mpi=None, gdb=False):
+                  print_output=None, read_callback=None, run_async=False,
+                  executable_suffix=None, executable_dir=None,
+                  mpi=None, callback=None, gdb=False):
       """
       Run the process that calculate the task specified by this input paameters
 
@@ -115,9 +116,18 @@ class InputParameters(ConfigurationFile):
         Print the output to the stdout, too? String value 'info' prints only selected infromations
         (depending on the task runned)
 
+      read_callback: callable
+        The function will be called for each line
+
+      run_async: bool
+        Whether directly execute the process, or return the coroutine to run it
+
       executable_suffix: str or None
         Postfix, appended to the name of the called executable (sometimes, SPRKKR executables are
         compiled so that the resulting executables has postfixies)
+
+      callback: Optional[callable]
+        A function, that will be called with the result object, when the calculation is finished.
 
       mpi: list or str or bool
         Run the task using mpi? See :func:`ase2sprkkr.config.mpi_runner` for the possible values.
@@ -125,7 +135,7 @@ class InputParameters(ConfigurationFile):
       Return
       ------
       out: mixed
-        The result of ase2sprkkr.common.process_output_reader.ProcessOutputReader.run() method: the
+        The result of ase2sprkkr.common.process_output_reader.ProcessOutputParser.run() method: the
         parsed output of the runned task.
 
       """
@@ -143,8 +153,13 @@ class InputParameters(ConfigurationFile):
           if executable_dir:
              executable = os.path.join(executable_dir, executable)
 
-      process = self.result_reader(calculator, directory=directory)
+      runner = self.process_runner(calculator, print_output, read_callback, directory)
+
       try:
+        def cleanup(out):
+            input_file.close()
+            if callback:
+                callback(out)
 
         mpi = mpi_runner(mpi) if self._definition.mpi else None
         if mpi:
@@ -165,7 +180,10 @@ class InputParameters(ConfigurationFile):
              else:
                 print(f"run <{input_file.name}")
              executable = [ 'gdb' ] + executable
-        return process.run(executable, output_file, stdin = stdin, print_output=print_output, directory=directory, input_file=input_file.name)
+        out = runner.create_process(executable, output_file, stdin = stdin, input_file=input_file.name, callback=cleanup)
+        if not run_async:
+            out = out.run()
+        return out
       except FileNotFoundError as e:
         add = 'Cannot find SPRKKR executable. Maybe, ase2sprkkr.config.executable.suffix ' \
               'variable should be set (or the SPRKKR_EXECUTABLE_SUFFIX environment variable)?\n'
@@ -174,22 +192,21 @@ class InputParameters(ConfigurationFile):
                  'MPI with mpi=False argument of calculate method (or set ase2sprkkr.config.running.mpi = False)\n\n';
         e.strerror = add + "SPRKKR cannot be run due to the following error: \n" + e.strerror
         raise
-      finally:
-        input_file.close()
 
-  def result_reader(self, calculator=None, directory=None):
+  def process_runner(self, calculator=None, print_output=False, read_callback=None, directory=None):
       """ Return the result readed: the class that parse the output
       of the runned task
 
-      calculator
-        Calculator, which will be attached to the resulting class
-        for ruther processing the results
+      Parameters
+      ----------
 
-      directory
-        Directory, to which will be related the relative paths
-        in the result.
-        If none, get the directory from the calculator, or the current
-        directory
+      calculator:
+        Calculator, which will be attached to the resulting class
+        for ruther processing the results.
+
+      print_output: bool or str
+        Whether to print output to the stdout.
+        'info' means only print a short summary
       """
       cls = self._definition.result_reader
 
@@ -198,8 +215,8 @@ class InputParameters(ConfigurationFile):
 
       if cls is None:
          task = self.TASK.TASK().lower()
-         cls = KkrProcess.class_for_task(task)
-      return cls(self, calculator, directory)
+         cls = KkrOutputReader.class_for_task(task)
+      return cls(self, calculator, directory, print_output, read_callback)
 
   def read_output_from_file(self, filename, directory=None):
       """ Read output of a previously runned task from a file and parse it in a same
@@ -213,7 +230,7 @@ class InputParameters(ConfigurationFile):
         Default None means the directory, where the file is
       """
       directory = directory or os.path.dirname(filename)
-      return self.result_reader(directory=directory).read_from_file(filename)
+      return self.process_runner(directory=directory).read_from_file(filename)
 
   def executable_params(self, directory=None, ):
       """
@@ -352,14 +369,16 @@ class InputParameters(ConfigurationFile):
       out = out + ' for task ' + d.name.upper()
       return out
 
-  def change_task(self, task):
+  def change_task(self, task, retain_values=False):
       """ Change the task to the given task. Retain the value of the options,
       that are present in the new task.
       """
-      vals = self.to_dict()
+      if retain_values:
+          vals = self.to_dict(only_changed=True)
       self._definition = self.definition(task)
       self._init_members_from_the_definition()
-      self.set(vals, unknown = 'ignore', error='ignore')
+      if retain_values:
+          self.set(vals, unknown = 'ignore', error='ignore')
 
   def save_to_file(self, file, atoms=None, *, validate='save'):
       if self._definition.save_hook:

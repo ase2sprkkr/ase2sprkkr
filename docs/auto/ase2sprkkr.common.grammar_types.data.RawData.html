@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
 
   
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
@@ -65,6 +67,7 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
@@ -104,7 +107,6 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.test.html">test</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.value_definitions.html">value_definitions</a></li>
@@ -114,6 +116,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
@@ -122,7 +125,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -193,18 +195,17 @@
 <li><p><strong>lines</strong> – Number of lines to read. Can be given as string - then
 the value of the given option determines the number of lines.</p></li>
 <li><p><strong>indented</strong> – <p>If there are &lt;n&gt; spaces before data, pass n to this arg.</p>
-<p>If the file has the following structure:
-.. code-block:: text</p>
 <blockquote>
-<div><blockquote>
-<div><p>….rest of the splitted line…..
-….rest of the splitted line.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>……. The second line…………….</dt><dd><p>….. the rest of the …………
-………… second line …</p>
-</dd>
-</dl>
+<div><p>If the file has the following structure:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.......................................
+     ....rest of the splitted line.....
+     ....rest of the splitted line.
+....... The second line................
+     ..... the rest of the ............
+     ............ second line ...
+............
+</pre></div>
+</div>
 </div></blockquote>
 <p>Pass a tuple with two integers into this argument.
 The first number of tuple is the max. number of characters on a line,
@@ -212,11 +213,6 @@ longer lines will be splitted.
 The second number is the number of spaces placed on the begining of the
 new lines created by splitting the old.</p>
 </p></li>
-<li><p><strong>line_length</strong> – Wrap the lines longer than a given number</p></li>
-<li><p><strong>ends_with</strong> (<em>str</em><em> | </em><em>Pattern</em>) – The data ends with a given string.</p></li>
-<li><p><strong>ends_with_str</strong> – If ends_with is regex, print this on end of the data</p></li>
-<li><p><strong>include_ends_with</strong> – Include the ending delimiter to the data.</p></li>
-<li><p><strong>**kwargs</strong> – Any other arguments are passed to the <code class="xref py py-meth docutils literal notranslate"><span class="pre">GrammarType</span> <span class="pre">constructor</span></code></p></li>
 <li><p><strong>prefix</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
 <li><p><strong>postfix</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
 <li><p><strong>format</strong> (<em>str</em>)</p></li>
@@ -224,7 +220,20 @@ new lines created by splitting the old.</p>
 <li><p><strong>default_value</strong> (<em>Any</em>)</p></li>
 <li><p><strong>condition</strong> (<em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>bool</em><em> | </em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
 <li><p><strong>after_convert</strong> (<em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>ends_with</strong> (<em>str</em><em> | </em><em>Pattern</em>)</p></li>
 </ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>line_length</dt><dd><p>Wrap the lines longer than a given number</p>
+</dd>
+<dt>ends_with</dt><dd><p>The data ends with a given string.</p>
+</dd>
+<dt>ends_with_str</dt><dd><p>If ends_with is regex, print this on end of the data</p>
+</dd>
+<dt>include_ends_with</dt><dd><p>Include the ending delimiter to the data.</p>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs</dt><dd><p>Any other arguments are passed to the <code class="xref py py-meth docutils literal notranslate"><span class="pre">GrammarType</span> <span class="pre">constructor</span></code></p>
 </dd>
 </dl>
 </dd></dl>

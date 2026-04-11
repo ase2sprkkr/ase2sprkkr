@@ -2,7 +2,7 @@ import warnings
 import pyparsing
 import numpy as np
 import datetime
-from ase.units import Rydberg
+import unyt
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -50,7 +50,7 @@ class TestGrammar(TestCase):
       # try:
         g = type.grammar()
         try:
-          out = g.parseString(str(val), True)
+          out = g.parse_string(str(val), True)
           assert len(out) == 1
           out = out[0]
           self.assertEqual(out, res, "{} should be {} and is {} for type {}".format(val, res, out, type.__class__.__name__))
@@ -64,7 +64,7 @@ class TestGrammar(TestCase):
               assert type.validate(val)
           return
         assert type.validate(out)
-        out = g.parseString(val, True)
+        out = g.parse_string(val, True)
         assert len(out) == 1
         out = out[0]
         self.assertEqual(out, res, "{} should be {} and is {} for type {} after input and output".format(val, res, out, type.__class__.__name__))
@@ -189,15 +189,15 @@ class TestGrammar(TestCase):
 
     type = gt.Energy()
     for val, res in [
-         ('1', 1.0),
+         ('1', 1.0 * unyt.Ry),
          ('Ry', Error),
-         ('1 Ry',1.0),
-         ('1 eV', 1.0 / Rydberg),
+         ('1 Ry', 1.0 * unyt.Ry),
+         ('1 eV', 1.0 * unyt.eV),
                     ]:
          test(val, res)
     for v in ['aaaa', (1,2,3)]:
         test_invalid(v)
-    for v,r in [(1, 1.0),(15, 15.0)]:
+    for v,r in [(1, 1.0 * unyt.Ry),(15, 15.0 * unyt.Ry)]:
         test_warning(v,r)
 
     type = gt.SetOf(int)

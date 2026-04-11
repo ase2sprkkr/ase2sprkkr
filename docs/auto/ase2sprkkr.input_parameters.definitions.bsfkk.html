@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
 
   
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
@@ -65,12 +67,14 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.html">definitions</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.arpes.html">arpes</a></li>
@@ -82,12 +86,13 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.phagen.html">phagen</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.scf.html">scf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sections.html">sections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.torque.html">torque</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.xas.html">xas</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.marpes.html">marpes</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.test.html">test</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
@@ -97,7 +102,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -133,7 +137,7 @@
 <h1>bsfkk<a class="headerlink" href="#bsfkk" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.input_parameters.definitions.bsfkk</strong></p>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.input_parameters.definitions.bsfkk">DOS task input parameters definition</p>
+<p id="module-ase2sprkkr.input_parameters.definitions.bsfkk">bsfkk task input parameters definition</p>
 <p><strong>Description of the sections and parameters</strong></p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>BSFKK - Bloch spectral functions in the K-K plane
 
@@ -160,16 +164,19 @@ INPUT PARAMETERS bsfkk contains:
 
         PRINT : Integer ≝ 0  (optional)   Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output.
         NONMAG : Flag ≝ False             Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation.
+        NOHFF : Flag ≝ False              Set this flag, if you want to include hyper fine field calculation. This leads to a slower calculation.
+        NOSYM : Flag ≝ False              Set this flag, if you want to supress all symetry consideration. This leads to a slower calculation.
 
 
 
         SECTION TAU contains:
     -------------------------
-        BZINT : AnyOf(POINTS,WEYL) ≝ POINTS
+        BZINT : AnyOf(POINTS,WEYL,CLUSTER)  (optional)
 
             Possible values:
               POINTS    special points method
               WEYL      Weyl method
+              CLUSTER   Cluster method
 
 
             The Weyl method (BZINT=WEYL) is a point sampling method using more or less ran-
@@ -206,7 +213,6 @@ INPUT PARAMETERS bsfkk contains:
         SECTION TASK contains:
     --------------------------
         TASK : FixedValue(BSF) ≝ BSF
-        NK : Integer ≝ 300                total number of k-points
         NK1 : Integer  (optional)         number of k-points along k1
         NK2 : Integer  (optional)         number of k-points along k2
         K1 : Array(of Real of length 3)  (optional)  ﬁrst k-vector to span a two-dimensional region in k-space.
@@ -218,7 +224,7 @@ INPUT PARAMETERS bsfkk contains:
     ----------------------------
         GRID : Array(of Integer) ≝ [3]    Type of the grid for the energy-mesh
         NE : Array(of Integer) ≝ [1]      Number of points in energy-mesh
-        ImE : Energy (&lt;Real&gt; [Ry|eV]) ≝ 0.001  (optional)
+        ImE : Energy (&lt;Real&gt; [Ry|eV]) ≝ 0.001 Ry  (optional)
         EMIN : Real  (optional)           the energy to compute the BSF
         EMINEV : Real  (optional)         EMIN, given in eV with respect to the Fermi level
 
@@ -245,7 +251,10 @@ INPUT PARAMETERS bsfkk contains:
                 Using this option you can switch on the spin polarization and relativistic mode. If its not set (or set to FREL), the full relativity mode is used.
 
             LLOYD : Flag ≝ False          Use LLoyd formula for scattering operator. It can improve the accuracy of the Fermi energy.
-            MDIR : Array(of Real of length 3) ≝ [1. 0. 0.]  (optional, add non-default, array)  Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.
+            MDIR : Array(of Real of length 3)  (optional, add non-default, array)  Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.
+            MALF : Real  (optional)       the (first) angle characterizing the orientation  of the magnetic moment direction n.
+            MBET : Real  (optional)       the (second) angle characterizing the orientation of the magnetic moment direction n.
+            MGAM : Real  (optional)       the (third) angle characterizing the orientation of the magnetic moment direction n.
             C : Real ≝ 1.0  (optional, add non-default, array)  Scale the speed of light for a given atom type.
             SOC : Real ≝ 1.0  (optional, add non-default, array)  Scale the strength of the spin-orbit coupling for atom type.
 
@@ -257,21 +266,14 @@ INPUT PARAMETERS bsfkk contains:
             RMAX : Real  (optional)       Convergency radius in real space
             GMAX : Real  (optional)       Convergency radius in reciprocal space
 
-            The calculation of the ~k-dependent KKR structure constant matrix G(~k, E) is controlled by
-            three convergence parameters. ETA determines the relative weight of the real and reciprocal
-            space lattice sums, that are determined by the convergence radii RMAX and GMAX, respec-
-            tively. These convergence parameters have to be optimised anew if the lattice structure, the
-            lattice parameter or the energy or ~k-range used is changed. This is done by the program if
-            no values are applied via the input file. In some cases, in particular if one works at high
-            energies, it might be necessery to set the convergence by hand. For this purpose one can start
-            from the values set by kkrgen or kkrscf (see the output file).
+            The calculation of the ~k-dependent KKR structure constant matrix G(~k, E) is controlled by three convergence parameters. ETA determines the relative weight of the real and reciprocal space lattice sums, that are determined by the convergence radii RMAX and GMAX, respectively. These convergence parameters have to be optimised anew if the lattice structure, the lattice parameter or the energy or ~k-range used is changed. This is done by the program if no values are applied via the input file. In some cases, in particular if one works at high energies, it might be necessery to set the convergence by hand. For this purpose one can start from the values set by kkrgen or kkrscf (see the output file).
 </pre></div>
 </div>
 <p class="rubric">Module Attributes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsfkk.input_parameters.html#ase2sprkkr.input_parameters.definitions.bsfkk.input_parameters" title="ase2sprkkr.input_parameters.definitions.bsfkk.input_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_parameters</span></code></a>()</p></td>
-<td><p>JXC -JXC task input parameters definition</p></td>
+<td><p>BSFKK - Bloch spectral functions in the K-K plane task input parameters definition</p></td>
 </tr>
 </tbody>
 </table>
@@ -279,7 +281,7 @@ INPUT PARAMETERS bsfkk contains:
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsfkk.input_parameters.html#ase2sprkkr.input_parameters.definitions.bsfkk.input_parameters" title="ase2sprkkr.input_parameters.definitions.bsfkk.input_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_parameters</span></code></a>()</p></td>
-<td><p>JXC -JXC task input parameters definition</p></td>
+<td><p>BSFKK - Bloch spectral functions in the K-K plane task input parameters definition</p></td>
 </tr>
 </tbody>
 </table>

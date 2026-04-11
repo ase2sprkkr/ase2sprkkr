@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -103,7 +105,7 @@
 
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">backward_compatibility</span>  <span class="c1"># NOQA</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">nonmember</span>
@@ -113,7 +115,7 @@
 <span class="kn">from</span> <span class="nn">.options</span> <span class="kn">import</span> <span class="n">Dummy</span><span class="p">,</span> <span class="n">DummyStub</span>
 <span class="kn">from</span> <span class="nn">.decorators</span> <span class="kn">import</span> <span class="n">cached_class_property</span>
 <span class="kn">from</span> <span class="nn">.grammar</span> <span class="kn">import</span> <span class="n">generate_grammar</span>
-<span class="kn">from</span> <span class="nn">.grammar_types.basic</span> <span class="kn">import</span> <span class="n">Separator</span>
+<span class="kn">from</span> <span class="nn">.grammar_types.basic</span> <span class="kn">import</span> <span class="n">Separator</span><span class="p">,</span> <span class="n">KeywordSeparator</span>
 <span class="kn">from</span> <span class="nn">.parsing_results</span> <span class="kn">import</span> <span class="n">Key</span><span class="p">,</span> <span class="n">ArrayKey</span><span class="p">,</span> <span class="n">DictKey</span><span class="p">,</span> <span class="n">RepeatedKey</span><span class="p">,</span> <span class="n">DefDictKey</span><span class="p">,</span> <span class="n">IgnoredKey</span>
 
 
@@ -417,11 +419,12 @@
        <span class="k">return</span> <span class="s2">&quot;This object is not intended for a direct use.&quot;</span></div>
 
 
-<div class="viewcode-block" id="BaseDefinition._get_copy_args">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition._get_copy_args">[docs]</a>
-  <span class="k">def</span> <span class="nf">_get_copy_args</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="BaseDefinition._get_init_args_mapping_for_copy">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition._get_init_args_mapping_for_copy">[docs]</a>
+  <span class="k">def</span> <span class="nf">_get_init_args_mapping_for_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">       Compute the dictionary that defines the attributes to create a copy of this object.</span>
+<span class="sd">       Compute the dictionary that defines the attributes to create a copy of this object</span>
+<span class="sd">       using the constructor.</span>
 
 <span class="sd">       Returns</span>
 <span class="sd">       -------</span>
@@ -437,12 +440,20 @@
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_copy_args</span></div>
 
 
+<div class="viewcode-block" id="BaseDefinition._get_init_args_for_copy">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition._get_init_args_for_copy">[docs]</a>
+  <span class="k">def</span> <span class="nf">_get_init_args_for_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Compute the dictionary-kwargs to create copy&quot;&quot;&quot;</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_init_args_mapping_for_copy</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
+      <span class="n">out</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">out</span></div>
+
+
 <div class="viewcode-block" id="BaseDefinition.copy">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.copy">[docs]</a>
   <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-     <span class="n">default</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_copy_args</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
-     <span class="n">default</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
-     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="o">**</span><span class="n">default</span><span class="p">)</span></div>
+     <span class="n">arguments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_init_args_for_copy</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="BaseDefinition.create_object">
@@ -625,7 +636,7 @@
       <span class="k">else</span><span class="p">:</span>
          <span class="n">name</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alternative_names</span><span class="p">))</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_alternative_name</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_format</span><span class="p">:</span>
-         <span class="k">return</span> <span class="s2">&quot;{:</span><span class="si">{}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_format</span><span class="p">)</span>
+         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
       <span class="k">return</span> <span class="n">name</span>
 
 <div class="viewcode-block" id="RealItemDefinition.has_name">
@@ -737,19 +748,19 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_regex</span><span class="p">:</span>
                 <span class="n">reg</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name_regex</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_not_skip_whitespaces_before_name</span><span class="p">:</span>
-                   <span class="n">reg</span><span class="o">.</span><span class="n">leaveWhitespace</span><span class="p">()</span>
+                   <span class="n">reg</span><span class="o">.</span><span class="n">leave_whitespace</span><span class="p">()</span>
                 <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name_regex</span><span class="p">)]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_names_in_grammar</span><span class="p">()</span>
                 <span class="n">keyword</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessLiteral</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">is_numbered</span> <span class="k">else</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_not_skip_whitespaces_before_name</span><span class="p">:</span>
-                   <span class="n">names</span> <span class="o">=</span> <span class="p">[</span> <span class="n">keyword</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">leaveWhitespace</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span> <span class="p">]</span>
+                   <span class="n">names</span> <span class="o">=</span> <span class="p">[</span> <span class="n">keyword</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">leave_whitespace</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span> <span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span> <span class="n">keyword</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span> <span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_not_skip_whitespaces_before_name</span><span class="p">:</span>
-                    <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="o">.</span><span class="n">leaveWhitespace</span><span class="p">()</span>
+                    <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="o">.</span><span class="n">leave_whitespace</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="p">:</span>
@@ -760,9 +771,9 @@
                     <span class="k">else</span><span class="p">:</span>
                       <span class="n">name</span> <span class="o">+=</span> <span class="n">idx</span>
                     <span class="n">name</span><span class="o">+=</span> <span class="n">pp</span><span class="o">.</span><span class="n">WordEnd</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">alphanums</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
-            <span class="n">name</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">key_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">asList</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]))</span>
+            <span class="n">name</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="o">.</span><span class="n">key_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">asList</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">name</span></div>
 
@@ -791,10 +802,10 @@
               <span class="n">name</span> <span class="o">+=</span> <span class="n">delimiter</span>
            <span class="n">out</span> <span class="o">=</span> <span class="n">name</span> <span class="o">-</span> <span class="n">expr</span>
         <span class="k">else</span><span class="p">:</span>
-           <span class="n">name</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+           <span class="n">name</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
            <span class="n">out</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="n">expr</span>
         <span class="k">if</span> <span class="n">has_value</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span></div>
 
@@ -966,7 +977,7 @@
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">asList</span><span class="p">()</span>
             <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="n">ln</span><span class="p">:]</span>
 
-        <span class="n">out</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="n">discard_names</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="n">discard_names</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
 
@@ -1100,13 +1111,22 @@
        <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="k">return</span> <span class="p">{</span> <span class="n">i</span><span class="p">:</span> <span class="n">create</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
+           <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="c1">#strings are &quot;symlinks&quot;, will be resolved in the second run</span>
+                <span class="k">return</span> <span class="kc">None</span>
+           <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="p">{</span> <span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">create</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="p">}</span>
            <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
-                   <span class="n">v</span><span class="o">=</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
                 <span class="k">return</span> <span class="p">{</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">create</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">v</span> <span class="p">}</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span> <span class="p">:</span> <span class="n">convert</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="k">else</span> <span class="p">{</span> <span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
+
+       <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span> <span class="p">:</span> <span class="n">convert</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
+
+       <span class="c1">#resolve the &quot;symlinks&quot;</span>
+       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+           <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="kc">None</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">copied</span> <span class="o">=</span> <span class="kc">False</span>
+       <span class="c1">#self.copied = False</span>
 
        <span class="k">if</span> <span class="n">template</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;_SWITCH_</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1">&#39;</span>
@@ -1145,10 +1165,10 @@
        <span class="n">f</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Forward</span><span class="p">()</span>
        <span class="k">if</span> <span class="n">definition</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">{}):</span>
            <span class="n">f</span> <span class="o">&lt;&lt;=</span> <span class="n">grammar</span>
-           <span class="n">f</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF* ndef THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
+           <span class="n">f</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF* ndef THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
        <span class="k">else</span><span class="p">:</span>
            <span class="n">f</span> <span class="o">&lt;&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty</span>
-           <span class="n">f</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF* False THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+           <span class="n">f</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF* False THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">_grammars</span><span class="p">[</span><span class="n">definition</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
        <span class="k">return</span> <span class="n">f</span></div>
 
@@ -1165,7 +1185,7 @@
                <span class="k">if</span> <span class="n">tpl</span><span class="p">:</span>
                   <span class="n">f</span> <span class="o">=</span> <span class="n">tpl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                   <span class="n">f</span> <span class="o">&lt;&lt;=</span> <span class="n">tpl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                  <span class="n">f</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF True THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">tpl</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
+                  <span class="n">f</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF True THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">tpl</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
                <span class="k">elif</span> <span class="n">i</span><span class="o">.</span><span class="n">output_definition</span><span class="o">.</span><span class="n">has_grammar</span><span class="p">():</span>
                   <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;In Switch, the item </span><span class="si">{</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> for case </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> was not prepared&quot;</span><span class="p">)</span>
 
@@ -1173,20 +1193,20 @@
                <span class="n">tpl</span> <span class="o">=</span> <span class="n">grammars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                <span class="k">if</span> <span class="n">tpl</span><span class="p">:</span>
                   <span class="n">f</span> <span class="o">=</span> <span class="n">tpl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                  <span class="n">f</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF False THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">tpl</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
+                  <span class="n">f</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;IF False THEN </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">tpl</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
                   <span class="n">f</span> <span class="o">&lt;&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty</span>
                <span class="k">elif</span> <span class="n">i</span><span class="o">.</span><span class="n">output_definition</span><span class="o">.</span><span class="n">has_grammar</span><span class="p">():</span>
                   <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;In Switch, the item </span><span class="si">{</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> for case </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> was not prepared&quot;</span><span class="p">)</span>
 
        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">force_order</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">grammar</span>
-       <span class="k">return</span> <span class="n">grammar</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">choose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="n">x</span><span class="p">)</span></div>
+           <span class="k">return</span> <span class="n">grammar</span>
+       <span class="k">return</span> <span class="n">grammar</span><span class="o">.</span><span class="n">add_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">choose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="n">x</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Switch.remove_from_container">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.remove_from_container">[docs]</a>
    <span class="k">def</span> <span class="nf">remove_from_container</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">:</span>
+       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">:</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">remove_grammar_hook</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">item_hook</span><span class="p">)</span>
            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -1198,9 +1218,10 @@
    <span class="k">def</span> <span class="nf">added_to_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">remove_from_container</span><span class="p">()</span>
        <span class="k">if</span> <span class="n">container</span><span class="p">:</span>
-           <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">copied</span><span class="p">:</span>
-               <span class="bp">self</span><span class="o">.</span><span class="n">copied</span> <span class="o">=</span> <span class="kc">False</span>
-               <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:{</span> <span class="n">n</span> <span class="p">:</span> <span class="n">container</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">v</span> <span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="p">}</span>
+           <span class="c1">#copying is not implemented yet</span>
+           <span class="c1">#if self.copied:</span>
+           <span class="c1">#    self.copied = False</span>
+           <span class="c1">#    self.values = { k:{ n : container[n] for n in v } for k,v in self.values }</span>
            <span class="n">container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">add_grammar_hook</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">item_hook</span><span class="p">)</span>
            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -1238,6 +1259,8 @@
         <span class="k">if</span> <span class="n">separator_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">separator_type</span> <span class="o">=</span> <span class="n">Separator</span><span class="p">(</span><span class="n">char</span><span class="o">=</span><span class="n">separator_type</span><span class="p">,</span><span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">separator_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">separator_type</span> <span class="o">=</span> <span class="n">KeywordSeparator</span><span class="p">(</span><span class="n">separator_type</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">separator_type</span> <span class="o">=</span> <span class="n">separator_type</span></div>
 
 

@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -239,9 +241,7 @@
         <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning - unknown arguments in the SPRKKR calculator: </span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">potential</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
-           <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-               <span class="n">potential</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">potential</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
            <span class="k">if</span> <span class="n">atoms</span><span class="p">:</span>
                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You can not specify both atoms and potential. &#39;</span>
                                 <span class="s1">&#39;If you specify one of them, the other will be generated from it.&#39;</span><span class="p">)</span>
@@ -402,6 +402,8 @@
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
           <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="p">,</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
              <span class="k">return</span> <span class="kc">None</span>
+          <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+             <span class="n">potential</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">)</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="o">.</span><span class="n">atoms</span>
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span>
 
@@ -409,8 +411,11 @@
     <span class="k">def</span> <span class="nf">atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
        <span class="n">atoms</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="o">=</span> <span class="n">atoms</span>
-       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
+       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="p">:</span>
+          <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="kc">None</span>
+          <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
 
 <div class="viewcode-block" id="SPRKKR._advance_counter">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR._advance_counter">[docs]</a>
@@ -822,8 +827,10 @@
                   <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">empty_spheres</span> <span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                   <span class="n">mpi</span> <span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                  <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">executable_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">read_callback</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">callable</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">run_async</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">executable_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">executable_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">gdb</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Do the calculation, return various results.</span>
@@ -835,6 +842,13 @@
 <span class="sd">            Print output to stdout, too.</span>
 <span class="sd">            If print_output==&#39;info&#39; only a few lines per iteration will be printed.</span>
 <span class="sd">            None means to use a default value (specified in constructor)</span>
+
+<span class="sd">        read_callback: callable(str,str)</span>
+<span class="sd">            Receives output of the called executable.</span>
+<span class="sd">            The second argument is either &#39;out&#39; or &#39;err&#39;</span>
+
+<span class="sd">        run_async: bool</span>
+<span class="sd">            If True, KkrProcess that can be runned async is returned</span>
 
 <span class="sd">        executable_suffix: str or bool or None</span>
 <span class="sd">            If not None, it overrides the executable_postifx, that have been specified when the</span>
@@ -882,14 +896,16 @@
             <span class="n">out</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
                                 <span class="n">directory</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span>
                                 <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">,</span>
+                                <span class="n">read_callback</span><span class="o">=</span><span class="n">read_callback</span><span class="p">,</span>
+                                <span class="n">run_async</span><span class="o">=</span><span class="n">run_async</span><span class="p">,</span>
                                 <span class="n">executable_suffix</span><span class="o">=</span><span class="n">executable_suffix</span><span class="p">,</span>
                                 <span class="n">executable_dir</span><span class="o">=</span><span class="n">executable_dir</span><span class="p">,</span>
-                                <span class="n">mpi</span><span class="o">=</span><span class="n">mpi</span><span class="p">,</span> <span class="n">gdb</span><span class="o">=</span><span class="n">gdb</span>
+                                <span class="n">mpi</span><span class="o">=</span><span class="n">mpi</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">gdb</span><span class="o">=</span><span class="n">gdb</span>
                                <span class="p">)</span>
           <span class="k">if</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">TASK</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;SCF&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">potential</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">atoms</span><span class="p">:</span>
               <span class="k">try</span><span class="p">:</span>
                   <span class="n">pot</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">potential</span>
-              <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+              <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">FileNotFoundError</span><span class="p">):</span>
                   <span class="n">pot</span> <span class="o">=</span> <span class="kc">None</span>
               <span class="k">if</span> <span class="n">pot</span><span class="p">:</span>
                   <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">pot</span>
@@ -914,7 +930,9 @@
                   <span class="n">empty_spheres</span> <span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                   <span class="n">mpi</span> <span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                  <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">executable_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">read_callback</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">callable</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">run_async</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">executable_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">executable_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">gdb</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -957,6 +975,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># There is no need to call this</span>
         <span class="c1"># super().calculate(atoms, properties, system_changes)</span>
+        <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="n">out</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
+                <span class="n">callback</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="s1">&#39;energy&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                    <span class="s1">&#39;energy&#39;</span> <span class="p">:</span> <span class="n">out</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span>
+                <span class="p">})</span>
+
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
                   <span class="n">atoms</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span>
                   <span class="n">input_file</span><span class="p">,</span> <span class="n">potential_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
@@ -964,14 +990,11 @@
                   <span class="n">options</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span>
                   <span class="n">empty_spheres</span><span class="p">,</span>
                   <span class="n">mpi</span><span class="p">,</span>
-                  <span class="n">print_output</span><span class="p">,</span>
+                  <span class="n">print_output</span><span class="p">,</span> <span class="n">read_callback</span><span class="p">,</span> <span class="n">run_async</span><span class="p">,</span>
                   <span class="n">executable_suffix</span><span class="p">,</span> <span class="n">executable_dir</span><span class="p">,</span>
+                  <span class="n">cleanup</span><span class="p">,</span>
                   <span class="n">gdb</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="s1">&#39;energy&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-              <span class="s1">&#39;energy&#39;</span> <span class="p">:</span> <span class="n">out</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span>
-            <span class="p">})</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
 
@@ -1037,9 +1060,9 @@
 
 <div class="viewcode-block" id="SPRKKR.change_task">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.change_task">[docs]</a>
-    <span class="k">def</span> <span class="nf">change_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">change_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">retain_values</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Just a shortcut to ``input_parameters.change_task`` &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">change_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">change_task</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">retain_values</span><span class="p">)</span></div>
 </div>
 
 

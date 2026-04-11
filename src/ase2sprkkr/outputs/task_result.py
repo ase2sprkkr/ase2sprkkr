@@ -3,10 +3,78 @@ import os
 import re
 import importlib
 from . import readers
-from ..common.decorators import cached_property, cached_class_property
+from ..common.decorators import cached_property, cached_class_property, maybeclassmethod
+from ..common.process_output_reader import run_coro_sync
 from ..potentials.potentials import Potential
 from ..input_parameters import input_parameters as input_parameters
+from ..output_files.output_files import OutputFile
 from pathlib import Path
+import os
+import platform
+import subprocess
+import shutil
+
+class ResultValue:
+
+  def __init__(self, name, value):
+      self.name = name
+      self._value = value
+
+  def __call__(self):
+      return self._value
+
+  def value_label(self):
+      return self._value
+
+  def actions(self):
+      return []
+
+class OutputFileResultValue:
+
+  def __init__(self, name, type, filename):
+      self.name = name
+      self.type = type
+      self.filename = filename
+
+  def __call__(self):
+      return OutputFile.from_file(self.filename, try_only=self.type)
+
+  def definition(self):
+      return OutputFile.definitions[self.type]
+
+  def value_label(self):
+      return f'<{self.type} file>'
+
+  def actions(self):
+      out = [ 'open', 'save' ]
+      if self.definition().result_class.can_be_plotted():
+          out.append('plot')
+      return out
+
+  def save(self, parent=None):
+      try:
+        from PyQT6.QtWidgets import QFileDialog
+      except ImportError:
+        raise Exception("PyQt6 is required for saving the output file")
+
+      file_path, _ = QFileDialog.getSaveFileName(
+          parent,
+          "Save File",
+          "",
+          f" (*.{self.definition().extension});;All Files (*)"
+      )
+      shutil.copy(self.filename(), file_path);
+
+  def plot(self, parent=None):
+      self().plot()
+
+  def open(self, parent=None):
+      if platform.system() == "Windows":
+          os.startfile(self.filename)
+      elif platform.system() == "Darwin":  # macOS
+          subprocess.run(["open", self.filename])
+      else:  # Linux
+          subprocess.run(["xdg-open", self.filename])
 
 
 class TaskResult:
@@ -15,13 +83,24 @@ class TaskResult:
                      output_file=None, input_file=None):
       self._input_parameters = input_parameters
       self._calculator = calculator
-      self.output_file = output_file
       self.files={}
+
+      self.output_file = output_file
       if output_file:
           self.files['output'] = output_file
-      self.directory = directory or os.path.dirname(self.files.get('output') or '') or os.getcwd()
-      self.directory = os.path.realpath(self.directory)
+      self._directory = os.path.realpath(directory) if directory else None
       self.input_file = input_file
+
+  @cached_property
+  def directory(self):
+      def file_name(f):
+          if isinstance(f, str):
+              return f
+          if hasattr(f, 'name'):
+              return f.name
+          return f
+
+      return self._directory or os.path.dirname(file_name(self.files.get('output')) or '') or os.getcwd()
 
   def path_to(self, file):
       """ return full path to a given file
@@ -91,72 +170,120 @@ class TaskResult:
 
   @classmethod
   def from_file(cls, file):
-
-      with open(file, "rb") as f:
-          raw_out = f.read()
-          matches = cls._match_task_regex.search(raw_out.decode('utf8'))
-          process = KkrProcess.class_for_task(matches[1])
+      def read_output_for(task):
+          process = KkrOutputReader.class_for_task(task)
           process = process(None, None, os.path.dirname(file))
           f.seek(0)
           return process.read_from_file(f)
 
+      with open(file, "rb") as f:
+          raw_out = f.read()
+          matches = cls._match_task_regex.search(raw_out.decode('utf8'))
+          out = read_output_for(matches[1])
+          if matches[1] == 'NONE':
+              if 'DOS' in out.files:
+                    with open(file, "rb") as f:
+                        out = read_output_for('DOS')
+          return out
 
 class KkrProcess:
-  """ Class, that run a process and read its output using underlined
-  process reader (see :class:`ase2sprkkr.common.process_output_reader.ProcessOutputReader`)
+
+  def __init__(self, reader, output_parser, coroutine, result, callback=None):
+      self.reader = reader
+      self.output_parser = output_parser
+      self.coroutine = coroutine
+      self.result = result
+      self.callback = callback
+
+  def run(self):
+      result = self.result
+      try:
+        result, error, return_code = run_coro_sync(self.coroutine)
+        self.result.complete(error, return_code)
+      finally:
+        if self.callback:
+            self.callback(result)
+      return self.result
+
+  def stop_the_process(self):
+       self.output_parser.stop_the_process()
+
+  async def run_async(self):
+      result, error, return_code = await self.coroutine
+      self.result.complete(error, return_code)
+      return self.result
+
+
+class KkrOutputReader:
+  """ Class, that runs a process and reads its output using the underlying
+  output parser (see :class:`ase2sprkkr.common.process_output_reader.ProcessOutputParser`)
   and return the appropriate TaskResult.
 
-  Descendants should define reader_class and result_class property.
+  Descendants should define parser_class and result_class property.
   """
 
-  def __init__(self, input_parameters, calculator, directory):
+  def __init__(self, input_parameters, calculator, directory, print_output=False, read_callback=None):
       self.input_parameters = input_parameters
       """ Input parameters, that command to read the output (thus probably the ones, that
       run the process that produced the output. It is used e.g. for determining the potential file,
       which belongs to the output.
       """
       self.calculator = calculator
-      """ Calculator, that can be used for further processing of the results. """
       self.directory = directory
-      """ Directory, to wich are the relative paths in the output related. """
-      self.reader = self.reader_class()
+      """ Calculator, that can be used for further processing of the results. """
+      self.parser = self.parser_class(print_output, read_callback)
 
-  def _wraps(self, fn, output_file, input_file=None):
-      result = self.result_class(self.input_parameters, self.calculator, self.directory,
-                               output_file = output_file,
-                               input_file = input_file
-                               )
-      out, error, return_code = fn(result)
-      result.complete(error, return_code)
-      return result
-
-  def run(self, cmd, outfile, print_output=False, directory=None, input_file=None, **kwargs):
-      return self._wraps(
-          lambda result: self.reader.run(cmd, outfile, [result],
-                                          print_output, directory, **kwargs),
-          output_file = getattr(outfile, "name", None),
-          input_file = input_file
+  def _create_result(self, output_file, input_file=None):
+      """ Create an object that stores results of the KKR output parsing. """
+      return self.result_class(
+          self.input_parameters,
+          self.calculator,
+          self.directory,
+          output_file=output_file,
+          input_file=input_file,
       )
 
-  def read_from_file(self, output, error=None, return_code=0, print_output=False):
-      return self._wraps(
-          lambda result: self.reader.read_from_file(output, error, [result], return_code, print_output),
-          output_file = getattr(output, 'name', output)
-      )
+  def _create_process(self, coroutine, result, callback=None):
+      """ Create an object that can run the desired process (either reading from file or running a process)
+
+      Returns
+      -------
+      KkrProcess
+          An object that can run the process and return the result.
+      """
+      return KkrProcess(self, self.parser, coroutine, result, callback=callback)
+
+  def create_process(self, cmd, outfile, input_file=None, callback=None, **kwargs):
+      """ Create an object that takes care of running the command and parsing the results """
+      result = self._create_result(getattr(outfile, "name", None), input_file)
+      coroutine = self.parser.run_async(cmd, outfile, self.directory, [result], **kwargs)
+      return self._create_process(coroutine, result, callback=callback)
+
+  @maybeclassmethod
+  def read_from_file(self, cls, output, error=None, return_code=0, input_file=None, directory=None):
+      """ Creates an object that takes care of reading and parsing of the output of a sprkkr process """
+      if self is None:
+          self = cls(None, None, directory or os.path.dirname(output))
+      if directory:
+          output = os.path.join(directory, output) if output else None
+
+      result = self._create_result(output, input_file)
+      coroutine = self.parser.read_output_file(output, error, [result], return_code)
+      return self._create_process(coroutine, result).run()
 
   @staticmethod
   def class_for_task(task):
        try:
           mod = importlib.import_module(f'.{task.lower()}', readers.__name__)
-          clsname = task.title() + 'Process'
+          clsname = task.title() + 'OutputReader'
           cls = getattr(mod, clsname)
           if not cls:
              raise Exception(f"Can not determine the class to read the results of task {task}"
                               "No {clsname} class in the module {oo.__name__}.{task}")
        except ModuleNotFoundError:
-          cls = DefaultProcess
+          cls = DefaultOutputReader
 
        return cls
 
 
-from ..outputs.readers.default import DefaultProcess   # NOQA
+from ..outputs.readers.default import DefaultOutputReader   # NOQA

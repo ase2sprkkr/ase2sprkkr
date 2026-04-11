@@ -1,0 +1,213 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.examples.A10_DLM.bcc_Fe_dlm &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.examples.A10_DLM.bcc_Fe_dlm</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.examples.A10_DLM.bcc_Fe_dlm</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Script demonstrating how to set up a disordered local moment (DLM) calculation</span>
+<span class="c1"># using bcc Fe as the test case.</span>
+<span class="c1">#</span>
+<span class="c1"># Such calculations are used to describe the paramagnetic state of materials,</span>
+<span class="c1"># where local magnetic moments on atoms persist, but where the net magnetisation</span>
+<span class="c1"># of the material is zero on account of thermally induced spin fluctuations. The </span>
+<span class="c1"># CPA is used to average over possible orientations of magnetic moment. Above the Curie</span>
+<span class="c1"># temperature, all orientations of magnetic moment are equally probably, and the</span>
+<span class="c1"># probability distribution of orientations of magnetic moments is uniform on the sphere. </span>
+<span class="c1"># In the absence of spin-orbit coupling, the CPA condition for a full average (using </span>
+<span class="c1"># an angular integral) over the sphere with uniform probability distribution can be shown </span>
+<span class="c1"># to be mathematically equivalent to the CPA condition for a 50:50 Ising &#39;alloy&#39; of &#39;up&#39; </span>
+<span class="c1"># and &#39;down&#39; magnetic moments. (Note that this equality does not strictly hold in the </span>
+<span class="c1"># case where spin-orbit effects are present, as in a fully relativistic calculation.)</span>
+<span class="c1">#</span>
+<span class="c1"># A DLM calculation should be iterated to self-consistency to check whether the local</span>
+<span class="c1"># moments &#39;collapse&#39; (as frequently happens for elements like Cr, Ni) or whether they</span>
+<span class="c1"># are self-sustaining (as is typical for Fe, Co).</span>
+<span class="c1">#</span>
+<span class="c1"># Once you have run this script and iterated to self-consistency, if you run</span>
+<span class="c1"># `tail Fe.pot_new`</span>
+<span class="c1"># you should find that, although the net magnetisation of the calculation is zero,</span>
+<span class="c1"># the two Fe atoms have equal and opposite magnetic moments, each of magnitude</span>
+<span class="c1"># approximately 2.16 \mu_B. This confirms that the local moments are self-sustaining,</span>
+<span class="c1"># and that bcc Fe is a &#39;good&#39; local moment system.</span>
+<span class="c1">#</span>
+<span class="c1"># Some appropriate references for the disordered local moment (DLM) picture are:</span>
+<span class="c1"># - A. J. Pindor et al., J. Phys. F: Met. Phys. 13, 979 (1983)</span>
+<span class="c1"># - J. B. Staunton et al., J. Magn. Magn. Mater. 45, 15-22 (1984)</span>
+<span class="c1"># - B. L. Gyorffy et al., J. Phys. F: Met. Phys. 15, 1337 (1985)</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Christopher D. Woodgate, University of Bristol, 2025</span>
+<span class="c1">#</span>
+<span class="c1"># Email: christopher.woodgate@bristol.ac.uk</span>
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A10_DLM.bcc_Fe_dlm.main.html#ase2sprkkr.examples.A10_DLM.bcc_Fe_dlm.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+    <span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
+    <span class="kn">from</span> <span class="nn">ase2sprkkr.sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
+    <span class="kn">from</span> <span class="nn">ase2sprkkr.sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+
+    <span class="c1"># BCC Fe has a_lat = 2.87 \AA</span>
+    <span class="n">a_lat</span> <span class="o">=</span> <span class="mf">2.87</span>
+    <span class="n">atom</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;Fe&#39;</span><span class="p">,</span> <span class="s1">&#39;bcc&#39;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a_lat</span><span class="p">)</span>
+
+    <span class="c1"># Now set up the &#39;alloy&#39;</span>
+    <span class="n">atoms</span><span class="o">=</span><span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+    <span class="c1"># We cannot use a Python dictionary here, as we need an alloy of two elements</span>
+    <span class="c1"># with the same chemical symbol and this behaviour is not permitted in a Python dictionary</span>
+    <span class="c1"># Instead, we use a list.</span>
+    <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">set</span><span class="p">([(</span><span class="s1">&#39;Fe&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Fe&#39;</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)])</span>
+    
+    <span class="c1"># Now we set up the ASE calculator</span>
+    <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span><span class="n">mpi</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mpirun&#39;</span><span class="p">,</span><span class="s1">&#39;-np&#39;</span><span class="p">,</span><span class="s1">&#39;4&#39;</span><span class="p">])</span>
+
+    <span class="c1"># NOTE: we need to specify initial magnetic moments, up and down, on the two Fe atoms</span>
+    <span class="c1"># NOTE: These are in units of \mu_B</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">MSPIN</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.3</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.3</span><span class="p">]</span>
+
+    <span class="c1"># And other necessary parameters</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NKTAB</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span> <span class="c1"># Control k-point sampling</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">VXC</span><span class="o">=</span><span class="s1">&#39;VWN&#39;</span><span class="p">)</span> <span class="c1"># VWN LDA XC functional</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">MODE</span><span class="o">=</span><span class="s1">&#39;SP-SREL&#39;</span><span class="p">)</span> <span class="c1"># Scalar relativistic mode for the DLM physics</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NL</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># l_max=3 means 4 l-channels</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NE</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span> <span class="c1"># 32-point semicircular energy contour</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">GRID</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># Semicircular energy contour</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">MIX</span> <span class="o">=</span> <span class="mf">0.05</span> <span class="c1"># Gentle mixing paramter to ensure convergence</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">TOL</span> <span class="o">=</span> <span class="mf">1e-7</span> <span class="c1"># Tight tolerance on SCF cycle</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">NITER</span> <span class="o">=</span> <span class="mi">1000</span> <span class="c1"># Allow for lots of iterations if needed</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">ImE</span> <span class="o">=</span> <span class="mf">0.00</span> <span class="c1"># Distance of closest approach to real axis</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CPA</span><span class="o">.</span><span class="n">NITER</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># Allow for a lot of CPA iterations if needed</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CPA</span><span class="o">.</span><span class="n">TOL</span> <span class="o">=</span> <span class="mf">1e-8</span> <span class="c1"># Tight CPA tol to go with tight SCF tol</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">USEVMATT</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># I like to use the Mattheiss construction for the potential</span>
+
+    <span class="c1"># Run the calculator</span>
+    <span class="n">out</span><span class="o">=</span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">][</span><span class="s1">&#39;EF&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;error&#39;</span><span class="p">]())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
+
+
+<span class="c1"># If we run this script, execute &#39;main&#39;</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

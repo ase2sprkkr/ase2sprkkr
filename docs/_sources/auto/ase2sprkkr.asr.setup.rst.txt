@@ -38,14 +38,32 @@ Full name: **ase2sprkkr.asr.setup**
      :template: custom-module-template.rst
      :recursive:
   
+  
      decorate
+  
+  
      defects
+  
+  
      displacements
+  
+  
      magnetize
+  
+  
      materials
+  
+  
      params
+  
+  
      scanparams
+  
+  
      strains
+  
+  
      symmetrize
+  
   
   

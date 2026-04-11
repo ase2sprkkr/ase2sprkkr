@@ -4,7 +4,7 @@ install:
 	pip install .
 
 editable_install:
-	pip install --no-deps --no-build-isolation --editable .
+	pip install -C cmake.build-type=Debug --no-deps --editable .
 
 ei: editable_install
 
@@ -17,7 +17,10 @@ test:
 doc: doc-gather doc-build doc-readme
 
 doc-gather: doc-clean
-	(cd sphinx ; sphinx-apidoc -feM -o ./auto ../src/ase2sprkkr */test/)
+	(cd sphinx ; sphinx-apidoc -feM -o ./auto ../src/ase2sprkkr \
+	"../src/ase2sprkkr/*/test" \
+	"../src/ase2sprkkr/*/test/*" \
+	)
 
 doc-clean:
 	rm -rf sphinx/auto/*

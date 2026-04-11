@@ -1,0 +1,52 @@
+magnetisation\_direction
+========================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.magnetisation\_direction**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.magnetisation_direction.MagnetisationDirectionSection  ase2sprkkr.potentials.definitions.sections.magnetisation_direction.MagnetisationDirectionSectionDefinition  ase2sprkkr.potentials.definitions.sections.magnetisation_direction.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions.sections.magnetisation_direction
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      MagnetisationDirectionSection
+      MagnetisationDirectionSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

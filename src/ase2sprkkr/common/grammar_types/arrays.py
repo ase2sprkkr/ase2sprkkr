@@ -73,7 +73,7 @@ class Array(GrammarType):
 
       grammar = self.type.grammar()
       if self.write_length:
-          grammar = pp.Word(pp.nums).setParseAction(lambda t: int(t[0])) + \
+          grammar = pp.Word(pp.nums).set_parse_action(lambda t: int(t[0])) + \
                     pp.ZeroOrMore(self.delimiter + grammar)
 
           def check(x):
@@ -81,7 +81,7 @@ class Array(GrammarType):
                   raise ValueError("Wrong number of list items")
               return x[1:]
 
-          grammar.setParseAction(check)
+          grammar.set_parse_action(check)
       elif self.min_length and self.min_length == self.max_length:
           if self.delimiter:
               g2 = self.delimiter + grammar
@@ -92,18 +92,18 @@ class Array(GrammarType):
           grammar = delimitedList(grammar, self.delimiter)
 
       self._set_convert_action(grammar)
-      grammar.setName(self.grammar_name())
+      grammar.set_name(self.grammar_name())
 
     self._grammar = grammar
 
   def _set_convert_action(self, grammar):
     if self.as_list:
       if callable(self.as_list):
-        grammar = grammar.addParseAction(lambda x: self.as_list(x.asList()))
+        grammar = grammar.add_parse_action(lambda x: self.as_list(x.asList()))
       else:
-        grammar = grammar.addParseAction(lambda x: [x.asList()])
+        grammar = grammar.add_parse_action(lambda x: [x.asList()])
     else:
-      grammar.addParseAction(lambda x: self.convert(x.asList()))
+      grammar.add_parse_action(lambda x: self.convert(x.asList()))
 
   def __str__(self):
     if self.min_length == self.max_length:
@@ -222,7 +222,7 @@ class Array(GrammarType):
 class SetOf(Array):
   """ Set of values of the same type. E.g. {1,2,3} """
 
-  delimiter = pp.Suppress(pp.Literal(',') | pp.Literal(';') | White(' \t')).setName('[,; ]')
+  delimiter = pp.Suppress(pp.Literal(',') | pp.Literal(';') | White(' \t')).set_name('[,; ]')
   delimiter_str = ','
 
   @add_to_signature(Array.__init__)
@@ -232,7 +232,7 @@ class SetOf(Array):
     super().__init__(type, *args, **kwargs)
 
   def transform_grammar(self, grammar, param_name=False):
-    return grammar | self.type.grammar(param_name).copy().addParseAction(lambda x: np.atleast_1d(x.asList()))
+    return grammar | self.type.grammar(param_name).copy().add_parse_action(lambda x: np.atleast_1d(x.asList()))
 
   def copy_value(self, value):
       return copy.deepcopy(value)
@@ -244,7 +244,7 @@ class Complex(TypedGrammarType):
   @add_to_signature(TypedGrammarType.__init__)
   def __init__(self, delimiter='', **kwargs):
     self.data =  Array(Real.I, length=2, delimiter=delimiter, **kwargs)
-    self._grammar = self.data.grammar().setParseAction(lambda x: complex(*x[0]))
+    self._grammar = self.data.grammar().set_parse_action(lambda x: complex(*x[0]))
     super().__init__()
 
   def convert(self, value):
@@ -306,13 +306,13 @@ class Sequence(GrammarType):
       def grm(type):
           g = type.grammar(param_name)
           if self.default_values and type.default_value is not None:
-             g = g | pp.Empty().setParseAction(lambda x: type.default_value)
+             g = g | pp.Empty().set_parse_action(lambda x: type.default_value)
           return g
 
       grammars = [grm(i) for i in self.types]
-      grammar = pp.And(grammars).setParseAction(lambda x: self.value_constructor(*x))
+      grammar = pp.And(grammars).set_parse_action(lambda x: self.value_constructor(*x))
       if self.allowed_values is not None:
-         grammar.addConditionEx(lambda x: x[0] in self.allowed_values, lambda x: f'{x[0]} is not in the list of allowed values')
+         grammar.add_condition_ex(lambda x: x[0] in self.allowed_values, lambda x: f'{x[0]} is not in the list of allowed values')
       return grammar
 
   def _validate(self, value, why='set'):
@@ -431,6 +431,7 @@ class Table(GrammarType):
                      header:Optional[bool]=None, free_header=False,
                      format = {float: '>22.14', None: '>16'}, format_all=True,
                      numbering:Union[str,bool,GrammarType]=None, numbering_label=None, numbering_format=True,
+                     free_numbering:bool=False,
                      grouping=False, grouping_label=None, grouping_format=True,
                      prefix=None, postfix=None, length=None,
                      row_condition=None, flatten=False,
@@ -458,6 +459,8 @@ class Table(GrammarType):
         String argument means the label of the column.
       numbering_label
         The label of the numbering column (if not given in numbering).
+      free_numbering
+        If True, the numering is not required to be correct on input.
       numbering_format
         Format for the numering column
       grouping
@@ -535,6 +538,7 @@ class Table(GrammarType):
       self.named_result = named_result
       self.length = length
       self.numbering = SpecialColumn(self, numbering, numbering_label, numbering_format)
+      self.free_numbering = free_numbering
       self.grouping = SpecialColumn(self, grouping, grouping_label, grouping_format)
       self.groups_as_list = bool(self.grouping) and (
           groups_as_list if groups_as_list is not None else not group_size
@@ -562,14 +566,14 @@ class Table(GrammarType):
           def set_g_size(x):
               grp_size.group_size = x[0]
 
-          grp_size = Unsigned.I.grammar().copy().setParseAction(set_g_size)
+          grp_size = Unsigned.I.grammar().copy().set_parse_action(set_g_size)
           grammar = pp.Suppress(pp.CaselessKeyword(self.group_size) + grp_size + "\n") + grammar
 
       if self.header:
          if self.free_header:
              fh = pp.SkipTo(line_end) + line_end
              if callable(self.free_header):
-               fh.addConditionEx(lambda x: self.free_header(x[0]),
+               fh.add_condition_ex(lambda x: self.free_header(x[0]),
                                     lambda x: f"This is not an allowed header for table {param_name}: {x[0]}" )
              grammar = pp.Suppress(fh) + grammar
          else:
@@ -587,10 +591,11 @@ class Table(GrammarType):
              grammar = pp.Suppress(header + pp.lineEnd) + grammar
 
       def data_numbering(s, loc, x):
-          numbers = x[::2]
           datas = x[1::2]
-          if not numbers == [*range(1, len(numbers) + 1)]:
-             raise pp.ParseException(s, loc, 'The first column should contain row numbering')
+          if not self.free_numbering:
+              should_be = [*range(1, len(datas) + 1)]
+              if not x[::2] == should_be:
+                  raise pp.ParseException(s, loc, 'The first column should contain row numbering')
           return tabelize(datas)
 
       def data_grouping(s, loc, data):
@@ -681,13 +686,13 @@ class Table(GrammarType):
 
       if self.numbering:
           if self.grouping:
-              grammar.addParseAction(data_numbering_grouping)
+              grammar.add_parse_action(data_numbering_grouping)
           else:
-              grammar.addParseAction(data_numbering)
+              grammar.add_parse_action(data_numbering)
       elif self.grouping:
-          grammar.addParseAction(data_grouping)
+          grammar.add_parse_action(data_grouping)
       else:
-          grammar.addParseAction(tabelize)
+          grammar.add_parse_action(tabelize)
 
       return grammar
 

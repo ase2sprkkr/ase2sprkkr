@@ -1,0 +1,43 @@
+shell
+=====
+
+Full name: **ase2sprkkr.tools.commands.shell**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.tools.commands.shell
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      parser
+      run
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

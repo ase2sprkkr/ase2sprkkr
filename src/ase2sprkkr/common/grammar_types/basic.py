@@ -2,10 +2,13 @@
 
 from ase.units import Rydberg
 import datetime
+import numbers
 import pyparsing as pp
 from typing import Optional
 import numpy as np
 import re
+import unyt
+from unyt.array import unyt_quantity
 
 from ..decorators import add_to_signature, cached_property
 from ..grammar import generate_grammar, separator_grammar, \
@@ -79,7 +82,7 @@ class FixedPointNumber(Number):
 class Unsigned(FixedPointNumber):
   """ Unsigned integer (zero is possible) """
 
-  _grammar = replace_whitechars(ppc.integer).setParseAction(lambda x:int(x[0]))
+  _grammar = replace_whitechars(ppc.integer).set_parse_action(lambda x:int(x[0]))
 
   @add_to_parent_validation
   def _validate(self, value, why='set'):
@@ -112,7 +115,7 @@ class ObjectNumber(Unsigned):
 class Integer(FixedPointNumber):
   """ Signed integer """
 
-  _grammar = replace_whitechars(ppc.signed_integer).setParseAction(lambda x:int(x[0]))
+  _grammar = replace_whitechars(ppc.signed_integer).set_parse_action(lambda x:int(x[0]))
 
   def grammar_name(self):
     return '<int>'
@@ -126,7 +129,7 @@ class BaseBool(TypedGrammarType):
 
 class Bool(BaseBool):
   """ A bool type, whose value is represented by a letter (T or F) """
-  _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).setParseAction( lambda x: x[0].upper() == 'T' )
+  _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).set_parse_action( lambda x: x[0].upper() == 'T' )
 
   def grammar_name(self):
     return '<T|F>'
@@ -139,7 +142,7 @@ class Boolean(BaseBool):
   """ A bool type, whose value is represented by a letter (T or F) """
   _items = [ 'True', 'False', '1', '0', 'yes', 'no' ]
   _grammar =  pp.Or([pp.CaselessKeyword(i) for i in _items]).\
-                   setParseAction( lambda x: x[0].lower() in ('true','yes','1') )
+                   set_parse_action( lambda x: x[0].lower() in ('true','yes','1') )
 
   def grammar_name(self):
     return '<True|False|0|1|yes|no>'
@@ -150,8 +153,8 @@ class Boolean(BaseBool):
 
 class IntBool(BaseBool):
   """ A bool type, whose value is represented by a letter (1 or 0) """
-  _grammar = (pp.CaselessKeyword('1') | pp.CaselessKeyword('0')).setParseAction( lambda x: x[0] == '1' )
-  _rev_grammar = _grammar.copy().setParseAction( lambda x: x[0] == '0' )
+  _grammar = (pp.CaselessKeyword('1') | pp.CaselessKeyword('0')).set_parse_action( lambda x: x[0] == '1' )
+  _rev_grammar = _grammar.copy().set_parse_action( lambda x: x[0] == '0' )
 
   @add_to_signature(TypedGrammarType.__init__)
   def __init__(self, reversed=False, *args, **kwargs):
@@ -173,7 +176,7 @@ class IntBool(BaseBool):
 
 class Real(Number):
   """ A real value """
-  _grammar = replace_whitechars(ppc.fnumber).setParseAction(lambda x: float(x[0]))
+  _grammar = replace_whitechars(ppc.fnumber).set_parse_action(lambda x: float(x[0]))
 
   def grammar_name(self):
     return '<float>'
@@ -203,7 +206,7 @@ class Real(Number):
 class Date(Number):
   """ A date value of the form 'DD.MM.YYYY' """
 
-  _grammar = pp.Regex(r'(?P<d>\d{2}).(?P<m>\d{2}).(?P<y>\d{4})').setParseAction(lambda x: datetime.date(int(x['y']), int(x['m']), int(x['d'])))
+  _grammar = pp.Regex(r'(?P<d>\d{2}).(?P<m>\d{2}).(?P<y>\d{4})').set_parse_action(lambda x: datetime.date(int(x['y']), int(x['m']), int(x['d'])))
 
   def grammar_name(self):
     return '<dd.mm.yyyy>'
@@ -223,15 +226,22 @@ class BaseRealWithUnits(Real):
   grammar_cache = {}
   """ The grammar for units is cached """
 
+  @cached_property
+  def unit_strings(self):
+    return { str(v):k for k,v in self.units.items() }
+
   def _grammar_units(self, units):
     i = id(units)
     if not i in self.grammar_cache:
-      units = pp.Or(
-        (pp.Empty() if v is None else pp.CaselessKeyword(v))
-        .setParseAction(lambda x,*args, u=u: u) for v,u in units.items()
-      )
+      def unit_defs():
+          for i in self.units:
+              yield pp.CaselessKeyword(i), i
+          if self.default_unit:
+              yield pp.Empty(), self.default_unit
+
+      units = ( g.set_parse_action(lambda x,*args,unit=unit: unit) for g, unit in unit_defs() )
       out = Real.I.grammar() + pp.Or(units)
-      out.setParseAction(lambda x: x[0] * x[1])
+      out.set_parse_action(lambda x: x[0] * self.units[x[1]])
       self.grammar_cache[i] = out
       return out
     return self.grammar_cache[i]
@@ -239,8 +249,33 @@ class BaseRealWithUnits(Real):
   def _grammar(self, param_name):
     return self._grammar_units(self.units)
 
+  def convert(self, value):
+    if isinstance(value, unyt_quantity):
+        return value
+    if isinstance(value, tuple) and len(value) == 2 and value[1] in self.units:
+        return super().convert(value[0]) * self.units[value[1]]
+    if self.default_unit and isinstance(value, numbers.Real):
+        return super().convert(value) * self.units[self.default_unit]
+    return value
+
   def _validate(self, value, why='set'):
-    return isinstance(value, float) or "A float value required"
+    if not isinstance(value, unyt_quantity):
+        if isinstance(value, tuple) and len(value) == 2 and not value[1] in self.units:
+            return f"Given unit {value[1]} is not allowed, allowed are: {','.join(self.units.keys())}"
+        return "Real with units have to be given as tuple containing " \
+               "a float (the value) and a string (the units), or as "\
+               "Unyt.unit_object.Unit object with propper units."
+    if not str(value.units) in self.unit_strings:
+           return f"Invalid unit {value.units}, allowed are {','.join(self.unit_strings.keys())}"
+    return True
+
+  def _string(self, value):
+      if self.default_unit:
+          value = value.to(self.units[self.default_unit])
+      val = super()._string(value.value)
+      if not self.default_unit:
+          val += " " + self.unit_strings[str(value.units)]
+      return val
 
   def grammar_name(self):
     return '<float>[{}]'.format("|".join(('' if i is None else i for i in self.units)))
@@ -251,8 +286,9 @@ class BaseRealWithUnits(Real):
 class RealWithUnits(BaseRealWithUnits):
   """ A float value with user-defined units """
 
-  def __init__(self, *args, units, **kwargs):
+  def __init__(self, *args, units, default_unit=False, **kwargs):
      self.units = units
+     self.default_unit = default_unit
      super().__init__(*args, **kwargs)
 
 
@@ -260,10 +296,12 @@ class Energy(BaseRealWithUnits):
   """ The grammar type for energy. The default units are Rydberg, one can specify eV. """
 
   units = {
-      'Ry' : 1.,
-      'eV' : 1. / Rydberg,
-      None : 1.,
+      'Ry' : unyt.Ry,
+      'eV' : unyt.eV
   }
+
+  default_unit = 'Ry'
+
   """ The allowed units and their conversion factors """
 
   def __str__(self):
@@ -280,7 +318,7 @@ class BaseString(TypedGrammarType):
   def _validate(self, value, why='set'):
     if not why=='parse':
       try:
-        self._grammar.parseString(value, True)
+        self._grammar.parse_string(value, True)
       except pp.ParseException as e:
         return f"Forbidden character '{e.line[e.col-1]}' in the string"
     return True
@@ -288,14 +326,14 @@ class BaseString(TypedGrammarType):
 
 class String(BaseString):
   """ Just a string (without whitespaces and few special chars) """
-  _grammar = pp.Word(pp.printables,excludeChars=",;{}").setParseAction(lambda x:x[0])
+  _grammar = pp.Word(pp.printables,exclude_chars=",;{}").set_parse_action(lambda x:x[0])
 
   def grammar_name(self):
     return '<str>'
 
 class AlwaysQString(BaseString):
   """ Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes. """
-  _grammar = (pp.Word(pp.printables, excludeChars="\",;{}") | pp.QuotedString('"')).setParseAction(lambda x:x[0])
+  _grammar = (pp.Word(pp.printables, exclude_chars="\",;{}") | pp.QuotedString('"')).set_parse_action(lambda x:x[0])
 
   def _validate(self, value, why='set'):
     if not value.__class__ is str:
@@ -350,9 +388,16 @@ class Keyword(GrammarType):
 
     self.keywords = [ self.transform(i) for i in keywords ]
     with generate_grammar():
-      self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(str(i)) for i in self.keywords)).setParseAction(lambda x: self.transform(x[0])) + optional_quote
+      self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(str(i)) for i in self.keywords)).set_parse_action(lambda x: self.transform(x[0])) + optional_quote
 
     super().__init__(**kwargs)
+
+  def items(self):
+      if self.choices is not None:
+          yield from self.choices.items()
+      else:
+          for i in self.keywords:
+              yield i, None
 
   def _validate(self, value, why='set'):
     return value in self.keywords or "Required one of [" + "|".join(self.keywords) + "]"
@@ -404,7 +449,7 @@ class Flag(BaseBool):
   A boolean value, which is True, if a name of the value appears in the input file.
   The resulting type of a Flag value is bool """
 
-  _grammar = pp.Empty().setParseAction(lambda x: True)
+  _grammar = pp.Empty().set_parse_action(lambda x: True)
 
   def grammar_name(self):
       return None
@@ -436,7 +481,7 @@ class KeywordSeparator(BasicSeparator):
 
   @cached_property
   def _grammar(self):
-      return pp.Keyword(self.keyword.strip())
+      return pp.Keyword(self.keyword.strip(' \t'))
 
   def _grammar_name(self):
       return self.keyword
@@ -469,7 +514,7 @@ class Separator(BasicSeparator):
 class BlankSeparator(BasicSeparator):
   """ Special class for a blank separator. In fact (with a delimiter) it is a blank line.
   """
-  _grammar = pp.Empty().setParseAction(lambda x: [None])
+  _grammar = pp.Empty().set_parse_action(lambda x: [None])
 
   def _grammar_name(self):
       return ''

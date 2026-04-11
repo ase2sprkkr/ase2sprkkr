@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
@@ -111,7 +113,7 @@
     <span class="n">datatype</span> <span class="o">=</span> <span class="nb">str</span>
     <span class="n">datatype_name</span> <span class="o">=</span> <span class="s1">&#39;string&#39;</span>
 
-    <span class="n">_grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;.*$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">S</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">_grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;.*$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">S</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">_grammar</span><span class="o">.</span><span class="n">skipWhitespace</span><span class="o">=</span><span class="kc">False</span>
 
 <div class="viewcode-block" id="RestOfTheFile.grammar_name">
@@ -178,6 +180,7 @@
 <span class="sd">          If there are &lt;n&gt; spaces before data, pass n to this arg.</span>
 
 <span class="sd">          If the file has the following structure:</span>
+
 <span class="sd">          .. code-block:: text</span>
 
 <span class="sd">             .......................................</span>
@@ -187,6 +190,7 @@
 <span class="sd">                  ..... the rest of the ............</span>
 <span class="sd">                  ............ second line ...</span>
 <span class="sd">             ............</span>
+
 
 <span class="sd">          Pass a tuple with two integers into this argument.</span>
 <span class="sd">          The first number of tuple is the max. number of characters on a line,</span>
@@ -222,10 +226,10 @@
 <div class="viewcode-block" id="RawData._n_lines_grammar">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.data.RawData.html#ase2sprkkr.common.grammar_types.data.RawData._n_lines_grammar">[docs]</a>
     <span class="k">def</span> <span class="nf">_n_lines_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
-<span class="w">         </span><span class="sd">&quot;&quot;&quot; return a grammar for n lines of text &quot;&quot;&quot;</span>
-         <span class="n">out</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;([^</span><span class="se">\n</span><span class="s2">]*</span><span class="se">\n</span><span class="s2">)</span><span class="se">{{</span><span class="si">{</span><span class="n">lines</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="se">}}</span><span class="s2">[^</span><span class="se">\n</span><span class="s2">]*(?=</span><span class="se">\n</span><span class="s2">|$)&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
-         <span class="n">out</span><span class="o">.</span><span class="n">leaveWhitespace</span><span class="p">()</span>
-         <span class="k">return</span> <span class="n">out</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; return a grammar for n lines of text &quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;([^</span><span class="se">\n</span><span class="s2">]*</span><span class="se">\n</span><span class="s2">)</span><span class="se">{{</span><span class="si">{</span><span class="n">lines</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="se">}}</span><span class="s2">[^</span><span class="se">\n</span><span class="s2">]*(?=</span><span class="se">\n</span><span class="s2">|$)&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">leave_whitespace</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">out</span></div>
 
 
 <div class="viewcode-block" id="RawData._grammar">
@@ -241,7 +245,7 @@
                 <span class="n">out</span><span class="o">=</span><span class="n">SkipToRegex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ends_with</span><span class="p">,</span> <span class="n">include_pattern</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">include_ends_with</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">out</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">SkipTo</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ends_with</span><span class="p">),</span> <span class="n">include</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">include_ends_with</span><span class="p">)</span>
-                <span class="n">out</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">out</span> <span class="o">=</span> <span class="n">RestOfTheFile</span><span class="o">.</span><span class="n">_grammar</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
@@ -257,7 +261,7 @@
             <span class="k">return</span> <span class="n">v</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">indented</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_length</span><span class="p">:</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="n">parse</span><span class="p">)</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">add_parse_action</span><span class="p">(</span><span class="n">parse</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
 
@@ -306,7 +310,7 @@
            <span class="k">def</span> <span class="nf">paction</span><span class="p">(</span><span class="n">parsed</span><span class="p">):</span>
                <span class="bp">self</span><span class="o">.</span><span class="n">forward</span> <span class="o">&lt;&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_lines_grammar</span><span class="p">(</span><span class="n">parsed</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
                <span class="k">return</span> <span class="n">parsed</span>
-           <span class="n">hook</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">grammar</span><span class="p">:</span> <span class="n">grammar</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="n">paction</span><span class="p">)</span>
+           <span class="n">hook</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">grammar</span><span class="p">:</span> <span class="n">grammar</span><span class="o">.</span><span class="n">add_parse_action</span><span class="p">(</span><span class="n">paction</span><span class="p">)</span>
            <span class="n">obj</span><span class="o">.</span><span class="n">add_grammar_hook</span><span class="p">(</span><span class="n">hook</span><span class="p">)</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">remove_forward</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">remove_grammar_hook</span><span class="p">(</span><span class="n">hook</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -419,9 +423,7 @@
                 <span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span>
              <span class="k">return</span> <span class="n">v</span>
 
-         <span class="n">grammar</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span>
-             <span class="n">parse</span>
-         <span class="p">)</span>
+         <span class="n">grammar</span><span class="o">.</span><span class="n">add_parse_action</span><span class="p">(</span><span class="n">parse</span><span class="p">)</span>
          <span class="k">return</span> <span class="n">grammar</span></div>
 
 

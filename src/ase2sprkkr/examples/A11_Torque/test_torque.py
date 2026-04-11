@@ -1,3 +1,5 @@
+""" Magnetic torque calculations. """
+
 def main():
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     import os

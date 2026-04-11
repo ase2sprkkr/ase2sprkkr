@@ -34,7 +34,98 @@ def used_site_type_copier(atoms):
     return copy
 
 
-class SpacegroupInfo:
+class BaseSpacegroupInfo:
+
+    def spacegroup_number(self) -> Optional[int]:
+        """
+        Returns
+        -------
+        spacegroup
+          Spacegroup number or None, if there is no spacegroup.
+        """
+        dataset = self.dataset
+        return dataset.number if dataset else None
+
+    @property
+    def dataset(self)->Optional[Dict]:
+        """ Return SpgLib dataset containing informations about symmetry,
+        spacegroup, equivalence of sites etc... """
+        if self._dataset is None:
+            self.recompute()
+        return self._dataset
+
+    def kto_kyda_table(self, symprec=1e-5):
+        """
+        Build KTO_KYDA-style table, that maps the atoms before-after symmetry operations.
+
+        Parameters
+        ----------
+        atoms: ase.Atoms
+          The atoms object
+
+        Returns
+        -------
+        table: (len(rotations), len(atoms) ) np.ndarray of
+            If table[i,j] = k, then the i-th symmetry operation maps the j-th atom
+            into k-th atom
+        """
+
+        atoms = self.for_atoms
+        frac = atoms.get_scaled_positions(wrap=True)   # (nat, 3), fractional
+        types = np.empty(len(atoms), dtype=object)     # species
+        if not self.dataset or self.dataset.rotations is None:
+            return None
+        rotations = self.dataset.rotations
+        translations = self.dataset.translations
+        sites = atoms.sites
+        for i in range(len(types)):
+            types[i] = atoms.sites[i].site_type
+        B = atoms.cell.array                           # 3x3 (row-vectors); frac @ B → Cartesian
+
+        table = -np.ones((len(rotations), len(sites)), dtype=int)
+
+        # group atoms by species to avoid cross-species matches
+        byType = {}
+        for i, typ in enumerate(types):
+            byType.setdefault(typ, []).append(i)
+        byType = {typ: np.array(idxs, int) for typ, idxs in byType.items()}
+        pos_byType = {typ: frac[idxs] for typ, idxs in byType.items()}
+
+
+        for g in range(len(rotations)):
+            rot = rotations[g]
+            trn = translations[g]
+            # Apply op in fractional coordinates (row-vectors → use rot.T)
+            Xp = (frac @ rot.T + trn) % 1.0
+
+            for i in range(len(atoms)):
+                typ = types[i]
+                idxs = byType[typ]
+                cand = pos_byType[typ]                 # candidate positions (the same species)
+                d = Xp[i] - cand
+                d -= np.rint(d)                        # wrap to nearest lattice image in frac
+                d_cart = d @ B                         # compare in Cartesian space
+                jloc = np.argmin(np.linalg.norm(d_cart, axis=1))
+                if np.linalg.norm(d_cart[jloc]) <= symprec + 1e-12:
+                    table[g, i] = idxs[jloc]
+                else:
+                    raise RuntimeError(
+                        f"No match for op {g} atom {i} within tolerance; "
+                        "consider increasing symprec or standardizing the cell."
+                    )
+        return table
+
+class RegionSpacegroupInfo(BaseSpacegroupInfo):
+
+    def __init__(self, spacegroup_info, region):
+        self.info = spacegroup_info
+        self._dataset = None
+        self.for_atoms = region
+
+    def recompute(self):
+        self._dataset.recompute()
+
+class SpacegroupInfo(BaseSpacegroupInfo):
     """ Class, that carry information about spacegroup and symmetry of a structure """
 
     def __init__(self, atoms: sprkkr_atoms.SPRKKRAtoms,
@@ -59,11 +150,22 @@ class SpacegroupInfo:
         self._dataset = dataset
         self.symmetry = symmetry
         self._block = None
+        self._regions = {}
+
+    @property
+    def for_atoms(self):
+        return self.atoms
 
     def to_dict(self):
         return {'dataset': self._dataset, 'symmetry': self.symmetry }
 
-    """ ASE require this form of name"""
+    def info_for_region(self, region):
+        name = region.name
+        if not name in self._regions:
+            self._regions[name] = RegionSpacegroupInfo(self, region)
+        return self._regions[name]
+
+    """ ASE requires this form of name"""
     todict = to_dict
 
     def copy_for(self, atoms):
@@ -89,8 +191,10 @@ class SpacegroupInfo:
                   return False
         return True
 
-    def update_spacegroup_kinds(self, if_required=False):
+    def update_spacegroup_kinds(self, if_required=False, invalidate_spacegroup=False):
         """ Update the occupancy info and spagroup_kinds array """
+        if invalidate_spacegroup:
+            self._dataset = None
         if if_required and not self.check_spacegroup_kinds():
             return
         sgi = np.empty(len(self.atoms), dtype=int)
@@ -115,23 +219,6 @@ class SpacegroupInfo:
     def __str__(self):
         return self.__repr__()
 
-    def spacegroup_number(self) -> Optional[int]:
-        """
-        Returns
-        -------
-        spacegroup
-          Spacegroup number or None, if there is no spacegroup.
-        """
-        dataset = self.dataset
-        return dataset.number if dataset else None
-
-    @property
-    def dataset(self)->Optional[Dict]:
-        """ Return SpgLib dataset containing informations about symmetry,
-        spacegroup, equivalence of sites etc... """
-        if self._dataset is None:
-            self.recompute()
-        return self._dataset
 
     @property
     def equivalent_sites(self)->np.ndarray:
@@ -219,13 +306,13 @@ class SpacegroupInfo:
                 for i in range(len(region)):
                     stype = create(to_global[i])
                     set_site(ssites, i, stype)
-
-            if region is atoms:
-                self._dataset = dataset
+            return dataset
 
        for r in atoms.regions.values():
-           solve_region(r, r.slice)
-       solve_region(atoms, slice(None))
+           dataset = solve_region(r, r.slice)
+           self.info_for_region(r)._dataset = dataset
+       dataset=solve_region(atoms, slice(None))
+       self._dataset = dataset
        atoms.set_sites(sites, True, update=update_info)
        return self
 
@@ -243,6 +330,8 @@ class SpacegroupInfo:
 
 
 class SpacegroupInfoBlock:
+    """ Class, for locking the update of spacegroup_info. If more operation are performed, the
+    update is performed after the all operations are done. """
 
     def __init__(self):
         self.init=False

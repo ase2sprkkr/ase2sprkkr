@@ -30,11 +30,13 @@ class SPRKKRAtoms(Atoms):
             I.e., the by-symmetry-equal atomic sites will share the same sites object.
             Default None is the same as True, however it does not change the symmetry
             of the already promoted obj passed into the routine.
+
            update_info:
             If True, always update spacegroup info
             If False, never
             If None, update it, if it seems to be inited, since it can be messed up by the
                      Atoms-manipulating routines
+
        """
        if obj is None:
           return None
@@ -170,6 +172,10 @@ class SPRKKRAtoms(Atoms):
        """ Set the sites property and updatei/clear all the other dependent
        properties (symbols, occupancy, spacegroup_info) according to the sites. """
        self.set_sites(v)
+
+   @sites.deleter
+   def sites(self):
+       del self.arrays[SPRKKRAtoms.sites_array_name]
 
    def are_sites_inited(self):
        return SPRKKRAtoms.sites_array_name in self.arrays

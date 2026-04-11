@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -96,6 +98,7 @@
 <span class="kn">from</span> <span class="nn">.radial</span> <span class="kn">import</span> <span class="n">RadialPotential</span><span class="p">,</span> <span class="n">RadialCharge</span>
 <span class="kn">from</span> <span class="nn">.moments</span> <span class="kn">import</span> <span class="n">Moments</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
 <div class="viewcode-block" id="AtomicType">
@@ -159,14 +162,14 @@
 
 <span class="sd">        n_electrons: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)):</span>
            <span class="k">if</span> <span class="n">atomic_number</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">atomic_number</span> <span class="o">!=</span> <span class="n">symbol</span><span class="p">:</span>
               <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of electrons in symbol (</span><span class="si">{</span><span class="n">symbol</span><span class="si">}</span><span class="s1">) and atomic_number (</span><span class="si">{</span><span class="n">atomic_number</span><span class="si">}</span><span class="s1">) differ&#39;</span><span class="p">)</span>
-           <span class="n">atomic_number</span> <span class="o">=</span> <span class="n">symbol</span>
+           <span class="n">atomic_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
            <span class="n">symbol</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
            <span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span>
-           <span class="n">atomic_number</span> <span class="o">=</span> <span class="n">atomic_number</span>
+           <span class="n">atomic_number</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">atomic_number</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">atomic_number</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">atomic_number</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">symbol</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown atomic type&quot;</span><span class="p">)</span>
@@ -193,6 +196,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_charge</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_moments</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span> <span class="o">=</span> <span class="n">mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">magnetisation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_n_electrons</span><span class="p">()</span></div>
 
@@ -237,23 +241,28 @@
     <span class="k">def</span> <span class="nf">_clear_symbol_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
           <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">mendeleev</span>
-        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
           <span class="k">pass</span>
 
         <span class="k">try</span><span class="p">:</span>
           <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">atomic_number</span>
-        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
           <span class="k">pass</span>
 
         <span class="k">try</span><span class="p">:</span>
           <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span>
-        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-          <span class="k">pass</span></div>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
+          <span class="k">pass</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_core</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_semicore</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_valence</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_electrons</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
     <span class="nd">@atomic_number</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">atomic_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_atomic_number</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_atomic_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_symbol_cache</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mendeleev</span><span class="o">.</span><span class="n">symbol</span> <span class="k">if</span> <span class="n">v</span> <span class="k">else</span> <span class="s1">&#39;Vc&#39;</span>
 
@@ -267,6 +276,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_atomic_number</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_symbol_cache</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_atomic_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mendeleev</span><span class="o">.</span><span class="n">atomic_number</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Vc&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_electrons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

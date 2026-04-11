@@ -1,7 +1,7 @@
 [build-system]
 build-backend = "scikit_build_core.build"
 requires = [
-    "scikit-build-core",
+    "scikit-build-core==0.11.5",
     "cython",
 		"numpy"
 ]
@@ -12,33 +12,42 @@ ase2sprkkr = "ase2sprkkr.tools.ase2sprkkr:run"
 
 [project]
 name = "ase2sprkkr"
-version = "3.3.4"
-requires-python = ">= 3.8"
-dependencies = [
-  "ase",
-  "asr",
-  "spglib",
-  "pyparsing>=3.0",
-  "mendeleev",
-  "platformdirs",
-  "packaging",
-  "cython",
-  "setuptools",
-  "pint",
-  "pytest",
-  'pyyaml',
-  'requests',
-  'argcomplete',
-  'numpy'
-]
+version = "3.4.2"
+requires-python = ">=3.8"
 authors = [
   { name = "Matyáš Novák", email = "novakmat@fzu.cz" },
   { name = "Jano Minár" },
+  { name = "Ridha Eddhib" },
   { email = "ase2sprkkr@ntc.zcu.cz" }
 ]
 readme = "README.md"
 description = "Wrapper/calculator for SPRKKR to be used within ASE (Atomic Simulation Environment)"
 license-files = ["LICENCE"]
+
+dependencies = [
+    "ase>=3.22.0",
+    "asr",
+    "spglib",
+    "pyparsing>=3.0",
+    "mendeleev",
+    "platformdirs",
+    "packaging",
+    "cython",
+    "setuptools",
+    "unyts",
+    "pytest",
+    "pyyaml",
+    "requests",
+    "argcomplete",
+    "unyt",
+    "nbformat",
+    "nbconvert",
+    "jupyterlab",
+    "phonopy<2.22; python_version < '3.9'",
+    "numpy<2.0; python_version < '3.10'",
+    "numpy>=2.1; python_version >= '3.10'",
+    "networkx<3.3; python_version >= '3.14'",
+]
 
 [project.urls]
 Homepage = "https://ase2sprkkr.github.io/ase2sprkkr/"
@@ -46,18 +55,24 @@ Homepage = "https://ase2sprkkr.github.io/ase2sprkkr/"
 [project.entry-points."ase.plugins"]
 ase2sprkkr = "ase2sprkkr.ase.register"
 
+[project.entry-points."ase.ioformats"]
+SPRKKR = "ase2sprkkr.ase.register:SPRKKRFormat"
+
+[project.entry-points."ase.calculators"]
+SPRKKR = "ase2sprkkr.ase.register"
+
 [tool.scikit-build]
 logging.level = "DEBUG"
 ninja.make-fallback = false
 cmake.version = ">=3.15"
 build.verbose = true
-
 wheel.packages = ["src/ase2sprkkr"]
 sdist.exclude = [
 	"**/*",
 	"**/*.sw?",
 	"**/.pytest_cache",
 	"**/.pytest_cache/**",
+	"src/ase2sprkkr/bindings/xband/debug_tools/*",
 ]
 sdist.include = [
 	"src/ase2sprkkr/input_parameters/examples/*.in",
@@ -75,6 +90,7 @@ sdist.include = [
 	"src/ase2sprkkr/**/*.py",
 	"src/ase2sprkkr/**/*.pyx",
 	"src/ase2sprkkr/**/*.f",
+	"src/ase2sprkkr/**/*.f90",
 	"src/ase2sprkkr/**/*.fi",
 	"src/ase2sprkkr/**/*.h",
 	"src/**/CMakeLists.txt",
@@ -91,6 +107,13 @@ wheel.exclude = [
 	"**/*.pyx",
 	"**/*.h",
 	"**/*.f",
+	"**/*.f90",
 	"**/*.fi",
 	"CMakeLists.txt",
+	"src/ase2sprkkr/bindings/xband/debug_tools/*",
+]
+
+[tool.pytest.ini_options]
+markers = [
+	"slow: long-running test (typically over about 1 second)",
 ]

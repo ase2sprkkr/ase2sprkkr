@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
@@ -111,16 +113,17 @@
 
 
 <div class="viewcode-block" id="parser">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.test.parser.html#ase2sprkkr.tools.commands.test.parser">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.test.html#ase2sprkkr.tools.commands.test.parser">[docs]</a>
 <span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;pytest_arguments&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Arguments for pytest.&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">REMAINDER</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--no-kkr&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Do not run SPRKKR executables, just test the interface only.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_false&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--pp&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Pyparsing verbose stacktrace.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span></div>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--pp&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Pyparsing verbose stacktrace.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--fast&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Run only tests not marked as slow.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="run">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.test.run.html#ase2sprkkr.tools.commands.test.run">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.test.html#ase2sprkkr.tools.commands.test.run">[docs]</a>
 <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">pytest</span>
     <span class="kn">import</span> <span class="nn">os</span>
@@ -134,8 +137,11 @@
     <span class="k">if</span> <span class="n">pytest</span><span class="o">.</span><span class="n">version_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pytest version &gt;= 6.0 is required. Please install it with pip install --upgrade &#39;pytest&gt;=6&#39;&quot;</span><span class="p">)</span>
         <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;pytest&#39;</span><span class="p">,</span> <span class="s1">&#39;--doctest-modules&#39;</span><span class="p">,</span> <span class="s1">&#39;--rootdir&#39;</span><span class="p">,</span> <span class="n">root_path</span><span class="p">,</span> <span class="n">a2s_path</span> <span class="p">]</span> <span class="o">+</span>
-                   <span class="n">args</span><span class="o">.</span><span class="n">pytest_arguments</span><span class="p">)</span>
+    <span class="n">pytest_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;pytest&#39;</span><span class="p">,</span> <span class="s1">&#39;--doctest-modules&#39;</span><span class="p">,</span> <span class="s1">&#39;--rootdir&#39;</span><span class="p">,</span> <span class="n">root_path</span><span class="p">,</span> <span class="n">a2s_path</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">fast</span><span class="p">:</span>
+        <span class="n">pytest_args</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;not slow&#39;</span><span class="p">]</span>
+    <span class="n">pytest_args</span> <span class="o">+=</span> <span class="n">args</span><span class="o">.</span><span class="n">pytest_arguments</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">pytest_args</span><span class="p">)</span>
     <span class="n">exit</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">returncode</span><span class="p">)</span></div>
 
 

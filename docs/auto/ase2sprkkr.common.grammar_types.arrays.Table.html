@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
 
   
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
@@ -65,6 +67,7 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
@@ -104,7 +107,6 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.test.html">test</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.value_definitions.html">value_definitions</a></li>
@@ -114,6 +116,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
@@ -122,7 +125,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -159,7 +161,7 @@
 <h1>Table<a class="headerlink" href="#table" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.arrays.Table">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.arrays.</span></span><span class="sig-name descname"><span class="pre">Table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">free_header=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format={&lt;class</span> <span class="pre">'float'&gt;:</span> <span class="pre">'&gt;22.14'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">None:</span> <span class="pre">'&gt;16'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_all=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_format=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping_label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping_format=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_condition=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_values=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">named_result=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_size=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_size_format='{:&lt;12}{}'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups_as_list=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/arrays.html#Table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.arrays.Table" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.arrays.</span></span><span class="sig-name descname"><span class="pre">Table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">free_header=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format={&lt;class</span> <span class="pre">'float'&gt;:</span> <span class="pre">'&gt;22.14'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">None:</span> <span class="pre">'&gt;16'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_all=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_format=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">free_numbering=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping_label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping_format=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_condition=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_values=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">named_result=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_size=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_size_format='{:&lt;12}{}'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups_as_list=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat_sparse=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/arrays.html#Table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.arrays.Table" title="Link to this definition"></a></dt>
 <dd><p>Table, optionaly with named columns, e.g.</p>
 <blockquote>
 <div><p>::text</p>
@@ -186,12 +188,13 @@
 <li><p><strong>columns</strong> (<em>List</em><em>[</em><a class="reference internal" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" title="ase2sprkkr.common.grammar_types.grammar_type.GrammarType"><em>GrammarType</em></a><em>]</em>)</p></li>
 <li><p><strong>header</strong> (<em>bool</em><em> | </em><em>None</em>)</p></li>
 <li><p><strong>numbering</strong> (<em>str</em><em> | </em><em>bool</em><em> | </em><a class="reference internal" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" title="ase2sprkkr.common.grammar_types.grammar_type.GrammarType"><em>GrammarType</em></a>)</p></li>
+<li><p><strong>free_numbering</strong> (<em>bool</em>)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.arrays.Table.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">free_header=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format={&lt;class</span> <span class="pre">'float'&gt;:</span> <span class="pre">'&gt;22.14'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">None:</span> <span class="pre">'&gt;16'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_all=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_format=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping_label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping_format=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_condition=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_values=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">named_result=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_size=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_size_format='{:&lt;12}{}'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups_as_list=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/arrays.html#Table.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.arrays.Table.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">free_header=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format={&lt;class</span> <span class="pre">'float'&gt;:</span> <span class="pre">'&gt;22.14'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">None:</span> <span class="pre">'&gt;16'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_all=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_format=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">free_numbering=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping_label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping_format=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_condition=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_values=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">named_result=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_size=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_size_format='{:&lt;12}{}'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups_as_list=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat_sparse=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/arrays.html#Table.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.arrays.Table.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -203,6 +206,7 @@
 <li><p><strong>numbering</strong> (<em>str</em><em> | </em><em>bool</em><em> | </em><a class="reference internal" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" title="ase2sprkkr.common.grammar_types.grammar_type.GrammarType"><em>GrammarType</em></a>) – There will be one extra column on the begining of the table, with numbering starting from one.
 String argument means the label of the column.</p></li>
 <li><p><strong>numbering_label</strong> – The label of the numbering column (if not given in numbering).</p></li>
+<li><p><strong>free_numbering</strong> (<em>bool</em>) – If True, the numering is not required to be correct on input.</p></li>
 <li><p><strong>numbering_format</strong> – Format for the numering column</p></li>
 <li><p><strong>grouping</strong> – If True, the data are not one table, but list of tables.
 Numbering then numbers the tables, not the rows of the tables.
@@ -224,9 +228,12 @@ The value is the number of rows, which all subtables are required to have.</p></
 <li><p><strong>group_size_format</strong> – Format for the group_size line.</p></li>
 <li><p><strong>groups_as_list</strong> – If True - groups are contained in list
 If False - groups are contained in np.ndarray
-If None - True if group_size is defined (and thus if it is possible)</p></li>
+If None - False if the group_size is defined (and thus if it is possible to
+interpret it as multidimensional array)</p></li>
 <li><p><strong>kwargs</strong> – Columns and their names can be assigned as kwargs, e.g.
 <code class="docutils literal notranslate"><span class="pre">column1_name</span> <span class="pre">=</span> <span class="pre">float,</span> <span class="pre">column2_name</span> <span class="pre">=</span> <span class="pre">int,</span> <span class="pre">...</span></code></p></li>
+<li><p><strong>repeat_sparse</strong> – There can be rows, that have only some columns, given as list.
+Then the data will be added from the previous row.</p></li>
 </ul>
 </dd>
 </dl>
@@ -306,7 +313,7 @@ with the dtype of the table</p>
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.arrays.Table.grammar_name">
 <span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/arrays.html#Table.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.arrays.Table.grammar_name" title="Link to this definition"></a></dt>
 <dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
+this is what is set by grammar.set_name, however, sometimes
 is desirable to set even shorter string</p>
 </dd></dl>
 

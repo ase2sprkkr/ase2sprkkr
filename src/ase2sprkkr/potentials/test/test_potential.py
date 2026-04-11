@@ -3,6 +3,7 @@ import io
 from ase.spacegroup import crystal
 from datetime import datetime
 import numpy as np
+import pytest
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -50,6 +51,7 @@ class TestPotential(TestCase):
     self.assertEqual(a2.positions, a1.positions)
     self.assertEqual(str(a2.symbols), str(a1.symbols))
 
+  @pytest.mark.slow
   def test_2D(self, temporary_dir):
     path = os.path.join(os.path.dirname(__file__), '..','examples','GeTe.pot')
     p=Potential.from_file(path)
@@ -58,6 +60,7 @@ class TestPotential(TestCase):
     else:
         SPRKKR().save_input(potential=p, **self.calc_args(options={'NITER':1}, TYPE='save_input'))
 
+  @pytest.mark.slow
   def test_potential_data(self, temporary_dir):
     path = os.path.join(os.path.dirname(__file__), '..','examples','FePt.new.pot')
     p=Potential.from_file(path)
@@ -99,7 +102,7 @@ class TestPotential(TestCase):
 
   def test_sequence(self):
     p = Potential()
-    self.assertEqual(7, p.HEADER.FORMAT.VERSION)
+    self.assertEqual(9, p.HEADER.FORMAT.VERSION)
     p.HEADER.FORMAT.VERSION=5
     self.assertEqual(5, p.HEADER.FORMAT.VERSION)
     p.HEADER.FORMAT[0] = 8

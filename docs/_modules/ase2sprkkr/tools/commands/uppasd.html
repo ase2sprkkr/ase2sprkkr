@@ -1,0 +1,742 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.tools.commands.uppasd &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.tools.commands.uppasd</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.tools.commands.uppasd</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Convert SPRKKR output to UppASD input files and plots the computed Jij (experimental)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">__package__</span><span class="p">:</span>
+  <span class="n">__package__</span> <span class="o">=</span> <span class="s1">&#39;ase2sprkkr.tools.commands&#39;</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+<span class="kn">from</span> <span class="nn">...common.tools</span> <span class="kn">import</span> <span class="n">main</span>  <span class="c1"># NOQA</span>
+
+<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Convert SPRKKR output to UppASD input files and plots the computed Jij (experimental)&#39;</span>
+<span class="n">description</span><span class="o">=</span><span class="s1">&#39;Given .pot, .jxc and .dmi file, plot the Jij values.&#39;</span>
+
+<div class="viewcode-block" id="parser">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.parser.html#ase2sprkkr.tools.commands.uppasd.parser">[docs]</a>
+<span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="c1"># File arguments</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--pot-file&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Input potential file (.pot_new)&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-j&#39;</span><span class="p">,</span> <span class="s1">&#39;--jxc-file&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Input exchange interaction file (_XCPLTEN_Jij.dat)&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dmi-file&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Input DMI file (_DMIVEC_Dij.dat)&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Output control</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output-dir&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output directory for files&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="s1">&#39;--no-write&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Skip writing output files&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Plotting options</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--plot&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Generate exchange interaction plots&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--no-plot&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Skip generating plots&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--exchange-radius&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum distance for exchange interactions&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Processing options</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--maptype&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Mapping type for coordinates (1: Cartesian, 2: Lattice)&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exclude&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Vc&#39;</span><span class="p">],</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Element types to exclude&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--font-size&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">28</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Font size for plots&#39;</span><span class="p">)</span></div>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span> <span class="k">as</span> <span class="n">cm</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<div class="viewcode-block" id="PotentialFileReader">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.PotentialFileReader.html#ase2sprkkr.tools.commands.uppasd.PotentialFileReader">[docs]</a>
+<span class="k">class</span> <span class="nc">PotentialFileReader</span><span class="p">:</span>
+<div class="viewcode-block" id="PotentialFileReader.__init__">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.PotentialFileReader.html#ase2sprkkr.tools.commands.uppasd.PotentialFileReader.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compound</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_nq</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_nt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">icl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">itoq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trim_labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spin_mom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span></div>
+
+
+<div class="viewcode-block" id="PotentialFileReader.file_length">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.PotentialFileReader.html#ase2sprkkr.tools.commands.uppasd.PotentialFileReader.file_length">[docs]</a>
+    <span class="k">def</span> <span class="nf">file_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+                <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="PotentialFileReader.read_potential_file">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.PotentialFileReader.html#ase2sprkkr.tools.commands.uppasd.PotentialFileReader.read_potential_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_potential_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Potential file not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">file_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_length</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="n">pot_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">)</span>
+
+        <span class="c1"># First pass: get basic dimensions</span>
+        <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">file_size</span><span class="p">):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">pot_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NQ&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_nq</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NT&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_nt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># Reset and read all data</span>
+        <span class="n">pot_file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">file_size</span><span class="p">):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">pot_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;SYSTEM&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">compound</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_system_info</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NQ&#39;</span><span class="p">:</span>
+                <span class="c1"># Already got this, just skip</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;QBAS(X)&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">iq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_base_vec</span><span class="p">(</span><span class="n">pot_file</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_nq</span><span class="p">,</span> <span class="n">ln</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;IREFQ&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">icl</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">itoq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_irefq_info</span><span class="p">(</span><span class="n">pot_file</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_nq</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;TXT_T&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">trim_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_txt_t_info</span><span class="p">(</span><span class="n">pot_file</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_nt</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;MOMENTS&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">spin_mom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_moments_info</span><span class="p">(</span><span class="n">pot_file</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">ln</span><span class="p">,</span> <span class="n">file_size</span><span class="p">)</span>
+
+        <span class="n">pot_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_nq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_nt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">iq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">icl</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">itoq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trim_labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spin_mom</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="PotentialFileReader.process_system_info">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.PotentialFileReader.html#ase2sprkkr.tools.commands.uppasd.PotentialFileReader.process_system_info">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_system_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">compound</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*************Creating input files of </span><span class="si">{</span><span class="n">compound</span><span class="si">}</span><span class="s2"> for UppASD simulations*************&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">compound</span></div>
+
+
+<div class="viewcode-block" id="PotentialFileReader.process_base_vec">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.PotentialFileReader.html#ase2sprkkr.tools.commands.uppasd.PotentialFileReader.process_base_vec">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_base_vec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pot_file</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">num_nq</span><span class="p">,</span> <span class="n">ln</span><span class="p">):</span>
+        <span class="n">iq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nq</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_nq</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_nq</span><span class="p">):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">pot_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="n">base_data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">base_data</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">base_data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">iq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">base_data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">base_data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">base_data</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">base_data</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">iq</span><span class="p">,</span> <span class="n">pos</span></div>
+
+
+<div class="viewcode-block" id="PotentialFileReader.process_irefq_info">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.PotentialFileReader.html#ase2sprkkr.tools.commands.uppasd.PotentialFileReader.process_irefq_info">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_irefq_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pot_file</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">num_nq</span><span class="p">):</span>
+        <span class="n">icl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nq</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+        <span class="n">itoq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nq</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+        <span class="n">conc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nq</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_nq</span><span class="p">):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">pot_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="n">base_data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">base_data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">icl</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">base_data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">itoq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">base_data</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+            <span class="n">conc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">base_data</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">icl</span><span class="p">,</span> <span class="n">itoq</span><span class="p">,</span> <span class="n">conc</span></div>
+
+
+<div class="viewcode-block" id="PotentialFileReader.process_txt_t_info">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.PotentialFileReader.html#ase2sprkkr.tools.commands.uppasd.PotentialFileReader.process_txt_t_info">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_txt_t_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pot_file</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">num_nt</span><span class="p">):</span>
+        <span class="n">data_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">num_nt</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;object&#39;</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">trim_labels</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_nt</span><span class="p">):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">pot_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="n">txt_t_data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">txt_t_data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">data_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">txt_t_data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;$</span><span class="si">{</span><span class="n">data_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">)</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">data_labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ind</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">trim_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_labels</span><span class="p">[</span><span class="n">i</span><span class="p">])[:</span><span class="n">ind</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">trim_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">data_labels</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">trim_labels</span></div>
+
+
+<div class="viewcode-block" id="PotentialFileReader.process_moments_info">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.PotentialFileReader.html#ase2sprkkr.tools.commands.uppasd.PotentialFileReader.process_moments_info">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_moments_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pot_file</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">ln</span><span class="p">,</span> <span class="n">file_size</span><span class="p">):</span>
+        <span class="n">spin_mom</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">reading_moments</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Continue from current position</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ln</span><span class="p">,</span> <span class="n">file_size</span><span class="p">):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">pot_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;MOMENTS&#39;</span><span class="p">:</span>
+                <span class="n">reading_moments</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">reading_moments</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;TYPE&#39;</span><span class="p">:</span>
+                <span class="c1"># Read the next line which contains the moment data</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">pot_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">data</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">spin_mom</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">spin_mom</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="JXCProcessor">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.JXCProcessor.html#ase2sprkkr.tools.commands.uppasd.JXCProcessor">[docs]</a>
+<span class="k">class</span> <span class="nc">JXCProcessor</span><span class="p">:</span>
+<div class="viewcode-block" id="JXCProcessor.__init__">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.JXCProcessor.html#ase2sprkkr.tools.commands.uppasd.JXCProcessor.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maptype</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">maptype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jfile_format</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:5.0f}</span><span class="s2">  </span><span class="si">{:5.0f}</span><span class="s2">  </span><span class="si">{: 4.10f}</span><span class="s2">  </span><span class="si">{: 4.10f}</span><span class="s2">  </span><span class="si">{: 4.10f}</span><span class="s2">  </span><span class="si">{: 4.8f}</span><span class="s2">  </span><span class="si">{:4.10f}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dmfile_format</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:5.0f}</span><span class="s2">  </span><span class="si">{:5.0f}</span><span class="s2">  </span><span class="si">{: 4.10f}</span><span class="s2">  </span><span class="si">{: 4.10f}</span><span class="s2">  </span><span class="si">{: 4.10f}</span><span class="s2">  </span><span class="si">{: 4.8f}</span><span class="s2">  </span><span class="si">{: 4.8f}</span><span class="s2">  </span><span class="si">{: 4.8f}</span><span class="s2">  </span><span class="si">{:4.10f}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Data attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">itype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isite</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jsite</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bond_type1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bond_type2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mod_ij</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Jij_meV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Dij_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Dij_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Dij_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span></div>
+
+
+<div class="viewcode-block" id="JXCProcessor.file_length">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.JXCProcessor.html#ase2sprkkr.tools.commands.uppasd.JXCProcessor.file_length">[docs]</a>
+    <span class="k">def</span> <span class="nf">file_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+                <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="JXCProcessor.process_JXC_file">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.JXCProcessor.html#ase2sprkkr.tools.commands.uppasd.JXCProcessor.process_JXC_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_JXC_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;JXC file not found: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">JXCFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="n">file_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_length</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">lines</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">file_size</span><span class="p">):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">JXCFile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;IT&#39;</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">JXCFile</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+                <span class="n">non_zero_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">10</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">bond_type1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bond_type1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">7</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bond_type1</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">8</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bond_type1</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">9</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">bond_type2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bond_type2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bond_type2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">5</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bond_type2</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">6</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">itype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">isite</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">jtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">jsite</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mod_ij</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">Jij_meV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">11</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="n">JXCFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="JXCProcessor.process_DMI_file">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.JXCProcessor.html#ase2sprkkr.tools.commands.uppasd.JXCProcessor.process_DMI_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_DMI_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process Dzyaloshinskii-Moriya interaction file&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No DMI file found: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">DMIFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="n">file_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_length</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">lines</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">file_size</span><span class="p">):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">DMIFile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;IT&#39;</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DMIFile</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+                <span class="n">non_zero_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">10</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">Dij_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">11</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">Dij_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">12</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">Dij_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">non_zero_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">13</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="n">DMIFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">DMIFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="JXCProcessor.write_jfile">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.JXCProcessor.html#ase2sprkkr.tools.commands.uppasd.JXCProcessor.write_jfile">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_jfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jfile_name</span><span class="p">,</span> <span class="n">exclude_list</span><span class="p">,</span> <span class="n">trim_labels</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">itype</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No JXC data to write&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">jfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">jfile_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">itype</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">trim_labels</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">itype</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_list</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                    <span class="n">trim_labels</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">jtype</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_list</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">maptype</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">jfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jfile_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">isite</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">jsite</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">bond_type1</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_type1</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">bond_type1</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">Jij_meV</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">mod_ij</span><span class="p">[</span><span class="n">ii</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">jfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jfile_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">isite</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">jsite</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">bond_type2</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_type2</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">bond_type2</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">Jij_meV</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">mod_ij</span><span class="p">[</span><span class="n">ii</span><span class="p">]))</span>
+        <span class="n">jfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="JXCProcessor.write_dmfile">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.JXCProcessor.html#ase2sprkkr.tools.commands.uppasd.JXCProcessor.write_dmfile">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_dmfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dmfile_name</span><span class="p">,</span> <span class="n">exclude_list</span><span class="p">,</span> <span class="n">trim_labels</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Dij_x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No DMI data to write&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">dmfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">dmfile_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">itype</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">trim_labels</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">itype</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_list</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                    <span class="n">trim_labels</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">jtype</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_list</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">maptype</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">dmfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dmfile_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">isite</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">jsite</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span>
+                                                           <span class="bp">self</span><span class="o">.</span><span class="n">bond_type1</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_type1</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                                           <span class="bp">self</span><span class="o">.</span><span class="n">bond_type1</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                                                           <span class="bp">self</span><span class="o">.</span><span class="n">Dij_x</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dij_y</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dij_z</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span>
+                                                           <span class="bp">self</span><span class="o">.</span><span class="n">mod_ij</span><span class="p">[</span><span class="n">ii</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">dmfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dmfile_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">isite</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">jsite</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span>
+                                                           <span class="bp">self</span><span class="o">.</span><span class="n">bond_type2</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_type2</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                                           <span class="bp">self</span><span class="o">.</span><span class="n">bond_type2</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                                                           <span class="bp">self</span><span class="o">.</span><span class="n">Dij_x</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dij_y</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">Dij_z</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span>
+                                                           <span class="bp">self</span><span class="o">.</span><span class="n">mod_ij</span><span class="p">[</span><span class="n">ii</span><span class="p">]))</span>
+        <span class="n">dmfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Plotter">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.Plotter.html#ase2sprkkr.tools.commands.uppasd.Plotter">[docs]</a>
+<span class="k">class</span> <span class="nc">Plotter</span><span class="p">:</span>
+<div class="viewcode-block" id="Plotter.__init__">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.Plotter.html#ase2sprkkr.tools.commands.uppasd.Plotter.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">28</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">font_size</span> <span class="o">=</span> <span class="n">font_size</span></div>
+
+
+<div class="viewcode-block" id="Plotter.plot_exchange_interactions">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.Plotter.html#ase2sprkkr.tools.commands.uppasd.Plotter.plot_exchange_interactions">[docs]</a>
+    <span class="k">def</span> <span class="nf">plot_exchange_interactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">processor</span><span class="p">,</span> <span class="n">num_nt</span><span class="p">,</span> <span class="n">trim_labels</span><span class="p">,</span> <span class="n">spin_mom</span><span class="p">,</span> <span class="n">exclude_list</span><span class="p">,</span>
+                                 <span class="n">exchange_radius</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot exchange interactions as function of distance&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">processor</span><span class="o">.</span><span class="n">Jij_meV</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No exchange data to plot&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">with</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rc_context</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="p">{</span>
+          <span class="s2">&quot;text.usetex&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+          <span class="s2">&quot;font.family&quot;</span><span class="p">:</span> <span class="s1">&#39;serif&#39;</span>
+        <span class="p">}):</span>
+
+            <span class="c1"># Apply distance cutoff</span>
+            <span class="n">ind_cut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">processor</span><span class="o">.</span><span class="n">mod_ij</span> <span class="o">&lt;=</span> <span class="n">exchange_radius</span><span class="p">)</span>
+            <span class="n">mod_ij</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">mod_ij</span><span class="p">[</span><span class="n">ind_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="n">Jij_meV</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">Jij_meV</span><span class="p">[</span><span class="n">ind_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">/</span> <span class="mf">13.6</span>  <span class="c1"># Convert to mRy</span>
+            <span class="n">itype</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">itype</span><span class="p">[</span><span class="n">ind_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># Convert to 0-based indexing</span>
+            <span class="n">jtype</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">jtype</span><span class="p">[</span><span class="n">ind_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">bond_type1</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">bond_type1</span><span class="p">[</span><span class="n">ind_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">:]</span>
+
+            <span class="n">colors</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">Paired</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">num_nt</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span>
+
+            <span class="n">plots_created</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_nt</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">trim_labels</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_list</span><span class="p">:</span>
+                    <span class="n">i_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">itype</span> <span class="o">==</span> <span class="n">ii</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">i_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+                    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+                    <span class="k">for</span> <span class="n">jj</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_nt</span><span class="p">):</span>
+                        <span class="n">j_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">jtype</span><span class="p">[</span><span class="n">i_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">==</span> <span class="n">jj</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">j_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="k">continue</span>
+
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spin_mom</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">ii</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">spin_mom</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">jj</span><span class="p">:</span>
+                            <span class="n">sign_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">spin_mom</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span>
+                            <span class="n">sign_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">spin_mom</span><span class="p">[</span><span class="n">jj</span><span class="p">])</span>
+                            <span class="n">sign_ij</span> <span class="o">=</span> <span class="n">sign_i</span> <span class="o">*</span> <span class="n">sign_j</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">sign_ij</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+                        <span class="k">if</span> <span class="n">trim_labels</span><span class="p">[</span><span class="n">jj</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_list</span><span class="p">:</span>
+                            <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mod_ij</span><span class="p">[</span><span class="n">i_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">j_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]],</span> <span class="n">sign_ij</span> <span class="o">*</span> <span class="n">Jij_meV</span><span class="p">[</span><span class="n">i_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">j_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]],</span>
+                                    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">counter</span><span class="p">],</span>
+                                    <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;$</span><span class="si">{</span><span class="n">trim_labels</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span><span class="si">}</span><span class="s1">$-$</span><span class="si">{</span><span class="n">trim_labels</span><span class="p">[</span><span class="n">jj</span><span class="p">]</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">)</span>
+                            <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">mod_ij</span><span class="p">[</span><span class="n">i_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">j_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]],</span> <span class="n">sign_ij</span> <span class="o">*</span> <span class="n">Jij_meV</span><span class="p">[</span><span class="n">i_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">j_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]],</span>
+                                      <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">counter</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+
+                    <span class="c1"># Plotting options</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">Jij_meV</span><span class="p">[</span><span class="n">i_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">extremum</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Jij_meV</span><span class="p">[</span><span class="n">i_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]])),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Jij_meV</span><span class="p">[</span><span class="n">i_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]])))</span> <span class="o">*</span> <span class="mf">1.10</span>
+
+                        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font_size</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$J_</span><span class="si">{ij}</span><span class="s1">$ [mRy]&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font_size</span><span class="p">)</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$r_</span><span class="si">{ij}</span><span class="s1">/a_</span><span class="si">{lat}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font_size</span><span class="p">)</span>
+
+                        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font_size</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font_size</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="n">extremum</span><span class="p">,</span> <span class="n">extremum</span><span class="p">)</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+                        <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">]:</span>
+                            <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+                        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                        <span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mf">18.5</span><span class="p">,</span> <span class="mf">10.5</span><span class="p">)</span>
+                        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Jij_</span><span class="si">{</span><span class="n">trim_labels</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span><span class="si">}</span><span class="s1">.pdf&#39;</span><span class="p">)</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+                        <span class="n">plots_created</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created plot: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">plots_created</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="write_pos_file">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.write_pos_file.html#ase2sprkkr.tools.commands.uppasd.write_pos_file">[docs]</a>
+<span class="k">def</span> <span class="nf">write_pos_file</span><span class="p">(</span><span class="n">trim_labels</span><span class="p">,</span> <span class="n">exclude_list</span><span class="p">,</span> <span class="n">num_nt</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">num_nq</span><span class="p">,</span> <span class="n">icl</span><span class="p">,</span> <span class="n">iq</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">conc</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="s1">&#39;posfile.dat&#39;</span><span class="p">):</span>
+    <span class="n">posfile_format</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:5.0f}</span><span class="s2"> </span><span class="si">{:5.0f}</span><span class="s2"> </span><span class="si">{: 4.10f}</span><span class="s2"> </span><span class="si">{: 4.10f}</span><span class="s2"> </span><span class="si">{: 4.10f}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="n">posfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">atoms_written</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_nq</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">trim_labels</span><span class="p">[</span><span class="n">icl</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_list</span><span class="p">:</span>
+            <span class="n">posfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">posfile_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iq</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">icl</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
+            <span class="n">atoms_written</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">posfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Written </span><span class="si">{</span><span class="n">atoms_written</span><span class="si">}</span><span class="s2"> atoms to </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">atoms_written</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="write_mom_file">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.write_mom_file.html#ase2sprkkr.tools.commands.uppasd.write_mom_file">[docs]</a>
+<span class="k">def</span> <span class="nf">write_mom_file</span><span class="p">(</span><span class="n">trim_labels</span><span class="p">,</span> <span class="n">exclude_list</span><span class="p">,</span> <span class="n">num_nt</span><span class="p">,</span> <span class="n">spin_mom</span><span class="p">,</span> <span class="n">icl</span><span class="p">,</span> <span class="n">iq</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="s1">&#39;momfile.dat&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spin_mom</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: spin_mom array is empty. No MOMENTS information to write.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">momfile_format</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:5.0f}</span><span class="s2"> </span><span class="si">{:5.0f}</span><span class="s2"> </span><span class="si">{: 4.10f}</span><span class="s2"> </span><span class="si">{: 4.10f}</span><span class="s2"> </span><span class="si">{: 4.10f}</span><span class="s2"> </span><span class="si">{: 4.10f}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="n">momfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">moments_written</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_nt</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">trim_labels</span><span class="p">)</span> <span class="ow">and</span> <span class="n">trim_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_list</span><span class="p">:</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">icl</span> <span class="o">==</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+                <span class="n">momfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">momfile_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iq</span><span class="p">[</span><span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">]],</span> <span class="mi">1</span><span class="p">,</span> <span class="n">spin_mom</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="n">moments_written</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">momfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Written </span><span class="si">{</span><span class="n">moments_written</span><span class="si">}</span><span class="s2"> moments to </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">moments_written</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+
+
+
+
+<div class="viewcode-block" id="find_files_by_pattern">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.find_files_by_pattern.html#ase2sprkkr.tools.commands.uppasd.find_files_by_pattern">[docs]</a>
+<span class="k">def</span> <span class="nf">find_files_by_pattern</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find files by pattern if not explicitly provided&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">pot_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pot_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.pot_new&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pot_files</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">pot_file</span> <span class="o">=</span> <span class="n">pot_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">jxc_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jxc_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*_XCPLTEN_Jij.dat&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">jxc_files</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">jxc_file</span> <span class="o">=</span> <span class="n">jxc_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dmi_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dmi_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*_DMIVEC_Dij.dat&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dmi_files</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">dmi_file</span> <span class="o">=</span> <span class="n">dmi_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">args</span></div>
+
+
+
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.run.html#ase2sprkkr.tools.commands.uppasd.run">[docs]</a>
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">find_files_by_pattern</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="c1"># Create output directory if it doesn&#39;t exist</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Read potential file</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">pot_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: No potential file found!&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">PotentialFileReader</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">pot_file</span><span class="p">)</span>
+        <span class="n">compound</span><span class="p">,</span> <span class="n">num_nq</span><span class="p">,</span> <span class="n">num_nt</span><span class="p">,</span> <span class="n">iq</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">icl</span><span class="p">,</span> <span class="n">itoq</span><span class="p">,</span> <span class="n">conc</span><span class="p">,</span> <span class="n">data_labels</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">trim_labels</span><span class="p">,</span> <span class="n">spin_mom</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read_potential_file</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Compound: </span><span class="si">{</span><span class="n">compound</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of atoms: </span><span class="si">{</span><span class="n">num_nq</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of types: </span><span class="si">{</span><span class="n">num_nt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Spin moments: </span><span class="si">{</span><span class="n">spin_mom</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Write position and moment files unless disabled</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">no_write</span><span class="p">:</span>
+            <span class="n">pos_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;posfile.dat&#39;</span><span class="p">)</span>
+            <span class="n">mom_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;momfile.dat&#39;</span><span class="p">)</span>
+
+            <span class="n">write_pos_file</span><span class="p">(</span><span class="n">trim_labels</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">exclude</span><span class="p">,</span> <span class="n">num_nt</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">num_nq</span><span class="p">,</span> <span class="n">icl</span><span class="p">,</span> <span class="n">iq</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">conc</span><span class="p">,</span> <span class="n">pos_file</span><span class="p">)</span>
+            <span class="n">write_mom_file</span><span class="p">(</span><span class="n">trim_labels</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">exclude</span><span class="p">,</span> <span class="n">num_nt</span><span class="p">,</span> <span class="n">spin_mom</span><span class="p">,</span> <span class="n">icl</span><span class="p">,</span> <span class="n">iq</span><span class="p">,</span> <span class="n">mom_file</span><span class="p">)</span>
+
+        <span class="c1"># Process exchange interactions if file provided</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">jxc_file</span><span class="p">:</span>
+            <span class="n">processor</span> <span class="o">=</span> <span class="n">JXCProcessor</span><span class="p">(</span><span class="n">maptype</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">maptype</span><span class="p">)</span>
+            <span class="n">processor</span><span class="o">.</span><span class="n">process_JXC_file</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">jxc_file</span><span class="p">)</span>
+
+            <span class="c1"># Write exchange file unless disabled</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">no_write</span><span class="p">:</span>
+                <span class="n">j_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;jfile.dat&#39;</span><span class="p">)</span>
+                <span class="n">processor</span><span class="o">.</span><span class="n">write_jfile</span><span class="p">(</span><span class="n">j_file</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">exclude</span><span class="p">,</span> <span class="n">trim_labels</span><span class="p">)</span>
+
+            <span class="c1"># Process DMI if available</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dmi_file</span><span class="p">:</span>
+                <span class="n">has_dmi</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process_DMI_file</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">dmi_file</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">has_dmi</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">no_write</span><span class="p">:</span>
+                    <span class="n">dm_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;dmfile.dat&#39;</span><span class="p">)</span>
+                    <span class="n">processor</span><span class="o">.</span><span class="n">write_dmfile</span><span class="p">(</span><span class="n">dm_file</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">exclude</span><span class="p">,</span> <span class="n">trim_labels</span><span class="p">)</span>
+
+            <span class="c1"># Plot exchange interactions if requested</span>
+            <span class="n">should_plot</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">plot</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">no_plot</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">plot</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">should_plot</span><span class="p">:</span>
+                <span class="n">plotter</span> <span class="o">=</span> <span class="n">Plotter</span><span class="p">(</span><span class="n">font_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">font_size</span><span class="p">)</span>
+                <span class="n">plotter</span><span class="o">.</span><span class="n">plot_exchange_interactions</span><span class="p">(</span><span class="n">processor</span><span class="p">,</span> <span class="n">num_nt</span><span class="p">,</span> <span class="n">trim_labels</span><span class="p">,</span> <span class="n">spin_mom</span><span class="p">,</span>
+                                                 <span class="n">args</span><span class="o">.</span><span class="n">exclude</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">exchange_radius</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No JXC file found - skipping exchange processing&quot;</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

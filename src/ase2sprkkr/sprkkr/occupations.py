@@ -20,6 +20,16 @@ class Occupation:
   """ A bit hack for correct function of mesh property during the initialization """
 
   @staticmethod
+  def for_atom_from_ase_atoms(atoms, i:Integer):
+       if 'spacegroup_kinds' in atoms.arrays and 'occupancy' in atoms.arrays:
+           occ = atoms.arrays['occupancy'].get(atoms.arrays['spacegroup_kinds'][i], None)
+       else:
+           occ = None
+       if not occ:
+           occ = { atoms.symbols[i] : 1.0 }
+       return Occupation(occ)
+
+  @staticmethod
   def to_occupation(occupation, site):
       """ Create an occupation object associated with the given sites object """
       if not isinstance(occupation, Occupation):

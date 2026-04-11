@@ -20,7 +20,7 @@ def description():
     from ...output_files.output_files import OutputFile
     out = 'The type of the file is guessed from the content of the file and from the extension. The currently supported files are: \n'
     defs = OutputFile.definitions.items()
-    out += '\n'.join(map(lambda x: f"    {x[0].upper()}: {x[1].definition.info()}", defs))
+    out += '\n'.join(map(lambda x: f"    {x[0].upper()}: {x[1].info()}", defs))
     return out
 
 
@@ -85,9 +85,11 @@ def run(args):
       except KeyError:
          raise ValueError(f"There is no value named '{name.upper()}' in the output file.")
       if not hasattr(val, 'plot'):
-         raise ValueError(f"Value '{name.upper()}' do not know, how it should be plotted.")
+         raise ValueError(f"Value '{name.upper()}' does not know, how it should be plotted.")
       val.plot(**kwargs)
   else:
+    if not hasattr(of, 'plot'):
+         raise ValueError(f"File '{of}' does not know, how it should be plotted.")
     of.plot(**kwargs)
 
 

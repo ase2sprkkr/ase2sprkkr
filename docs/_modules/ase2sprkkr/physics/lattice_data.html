@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
@@ -93,10 +95,41 @@
 <span class="sd">This module contains various crystalographics classifications,</span>
 <span class="sd">and the LatticeData object, that provides various informations about a lattice.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">ase.spacegroup</span> <span class="kn">import</span> <span class="n">get_spacegroup</span>
+<span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ase2sprkkr.bindings.spglib</span> <span class="kn">import</span> <span class="n">spglib_dataset</span>
 <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Bohr</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">linear_sum_assignment</span>
+
+<div class="viewcode-block" id="reorder_matrix">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.reorder_matrix.html#ase2sprkkr.physics.lattice_data.reorder_matrix">[docs]</a>
+<span class="k">def</span> <span class="nf">reorder_matrix</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+    <span class="c1"># normalize vectors (rows)</span>
+    <span class="n">src_norm</span> <span class="o">=</span> <span class="n">source</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">tgt_norm</span> <span class="o">=</span> <span class="n">target</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># compute similarity matrix (cosine similarity)</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">tgt_norm</span> <span class="o">@</span> <span class="n">src_norm</span><span class="o">.</span><span class="n">T</span>   <span class="c1"># shape (3,3)</span>
+    <span class="c1"># convert to cost matrix (maximize similarity -&gt; minimize negative similarity)</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="o">-</span><span class="n">sim</span>
+    <span class="c1"># Hungarian algorithm</span>
+    <span class="n">row_ind</span><span class="p">,</span> <span class="n">col_ind</span> <span class="o">=</span> <span class="n">linear_sum_assignment</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+
+    <span class="c1"># reorder target rows to best match source</span>
+    <span class="n">reordered</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="n">row_ind</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">col_ind</span><span class="p">)]]</span>
+    <span class="k">return</span> <span class="n">reordered</span></div>
+
+
+<span class="c1"># Example</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="Pearson">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson">[docs]</a>
@@ -146,7 +179,7 @@
         <span class="n">Pearson</span><span class="p">(</span><span class="s1">&#39;mP&#39;</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;monoclinic&#39;</span><span class="p">,</span>  <span class="s1">&#39;primitive&#39;</span><span class="p">,</span>      <span class="s1">&#39;2/m&#39;</span><span class="p">,</span>    <span class="s1">&#39;C_2h&#39;</span><span class="p">),</span>
         <span class="n">Pearson</span><span class="p">(</span><span class="s1">&#39;mS&#39;</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;monoclinic&#39;</span><span class="p">,</span>  <span class="s1">&#39;primitive&#39;</span><span class="p">,</span>      <span class="s1">&#39;2/m&#39;</span><span class="p">,</span>    <span class="s1">&#39;C_2h&#39;</span><span class="p">),</span>
         <span class="n">Pearson</span><span class="p">(</span><span class="s1">&#39;oP&#39;</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;orthorombic&#39;</span><span class="p">,</span> <span class="s1">&#39;primitive&#39;</span><span class="p">,</span>      <span class="s1">&#39;mmm&#39;</span><span class="p">,</span>    <span class="s1">&#39;D_2h&#39;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s1">&#39;oS&#39;</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;orthorombic&#39;</span><span class="p">,</span> <span class="s1">&#39;body-centered&#39;</span><span class="p">,</span>  <span class="s1">&#39;mmm&#39;</span><span class="p">,</span>    <span class="s1">&#39;D_2h&#39;</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s1">&#39;oS&#39;</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;orthorombic&#39;</span><span class="p">,</span> <span class="s1">&#39;base-centered&#39;</span><span class="p">,</span>  <span class="s1">&#39;mmm&#39;</span><span class="p">,</span>    <span class="s1">&#39;D_2h&#39;</span><span class="p">),</span>
         <span class="n">Pearson</span><span class="p">(</span><span class="s1">&#39;oI&#39;</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;orthorombic&#39;</span><span class="p">,</span> <span class="s1">&#39;body-centered&#39;</span><span class="p">,</span>  <span class="s1">&#39;mmm&#39;</span><span class="p">,</span>    <span class="s1">&#39;D_2h&#39;</span><span class="p">),</span>
         <span class="n">Pearson</span><span class="p">(</span><span class="s1">&#39;oF&#39;</span><span class="p">,</span>  <span class="mi">7</span><span class="p">,</span> <span class="s1">&#39;orthorombic&#39;</span><span class="p">,</span> <span class="s1">&#39;face-centered&#39;</span><span class="p">,</span>  <span class="s1">&#39;mmm&#39;</span><span class="p">,</span>    <span class="s1">&#39;D_2h&#39;</span><span class="p">),</span>
         <span class="n">Pearson</span><span class="p">(</span><span class="s1">&#39;tP&#39;</span><span class="p">,</span>  <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;tetragonal&#39;</span><span class="p">,</span>  <span class="s1">&#39;primitive&#39;</span><span class="p">,</span>      <span class="s1">&#39;4/mmm&#39;</span><span class="p">,</span>  <span class="s1">&#39;D_4h&#39;</span><span class="p">),</span>
@@ -403,19 +436,18 @@
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
       <span class="n">cell</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_cell</span><span class="p">()</span>
       <span class="n">bl</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">get_bravais_lattice</span><span class="p">()</span>
-      <span class="n">sg</span> <span class="o">=</span> <span class="n">get_spacegroup</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+      <span class="n">sg</span> <span class="o">=</span> <span class="n">spglib_dataset</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
       <span class="n">ps</span> <span class="o">=</span> <span class="n">bl</span><span class="o">.</span><span class="n">pearson_symbol</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">pearson</span> <span class="o">=</span> <span class="n">Pearson</span><span class="o">.</span><span class="n">from_symbol</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
 
       <span class="bp">self</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="mi">0</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">sgno</span><span class="o">=</span><span class="n">sg</span><span class="o">.</span><span class="n">no</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">apno</span><span class="o">=</span><span class="n">international_numbers_to_AP</span><span class="p">[</span><span class="n">sg</span><span class="o">.</span><span class="n">no</span><span class="p">]</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">sgno</span><span class="o">=</span><span class="n">sg</span><span class="o">.</span><span class="n">number</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">apno</span><span class="o">=</span><span class="n">international_numbers_to_AP</span><span class="p">[</span><span class="n">sg</span><span class="o">.</span><span class="n">number</span><span class="p">]</span>
 
       <span class="bp">self</span><span class="o">.</span><span class="n">bravais</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">get_bravais_lattice</span><span class="p">()</span>
 
       <span class="bp">self</span><span class="o">.</span><span class="n">boa</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">cellpar</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">cell</span><span class="o">.</span><span class="n">cellpar</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">coa</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">cellpar</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">cell</span><span class="o">.</span><span class="n">cellpar</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">rbas</span> <span class="o">=</span> <span class="n">sg</span><span class="o">.</span><span class="n">scaled_primitive_cell</span>
 
       <span class="bp">self</span><span class="o">.</span><span class="n">alat</span> <span class="o">=</span> <span class="n">bl</span><span class="o">.</span><span class="n">a</span> <span class="o">/</span> <span class="n">Bohr</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">blat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">boa</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alat</span>
@@ -423,8 +455,17 @@
 
       <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">cellpar</span><span class="p">()[</span><span class="mi">3</span><span class="p">]</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">cellpar</span><span class="p">()[</span><span class="mi">4</span><span class="p">]</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">cellpar</span><span class="p">()[</span><span class="mi">5</span><span class="p">]</span></div>
+      <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">cellpar</span><span class="p">()[</span><span class="mi">5</span><span class="p">]</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">sg</span> <span class="o">=</span> <span class="n">sg</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">cell</span> <span class="o">=</span> <span class="n">cell</span></div>
 
+
+  <span class="nd">@cached_property</span>
+  <span class="k">def</span> <span class="nf">rbas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="c1">#self.rbas = sg.scaled_primitive_cell</span>
+      <span class="n">sg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sg</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">sg</span><span class="o">.</span><span class="n">primitive_lattice</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">sg</span><span class="o">.</span><span class="n">std_lattice</span><span class="p">))</span>
+      <span class="k">return</span> <span class="n">reorder_matrix</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">bravais_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

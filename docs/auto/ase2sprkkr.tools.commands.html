@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
 
   
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
@@ -65,12 +67,14 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
@@ -81,21 +85,21 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.tools.ase2sprkkr.html">ase2sprkkr</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">commands</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.config.html">config</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.examples.html">examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.example.html">example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.info.html">info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.k_path.html">k_path</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.nomad.html">nomad</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.plot.html">plot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.shell.html">shell</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.show_structure.html">show_structure</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.test.html">test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.uppasd.html">uppasd</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.tools.shared.html">shared</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.tools.test.html">test</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -134,28 +138,34 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config.html#module-ase2sprkkr.tools.commands.config" title="ase2sprkkr.tools.commands.config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config</span></code></a></p></td>
-<td><p>This command just run the tests</p></td>
+<td><p>Tool to configuration of ASE2SPRKKR</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.examples.html#module-ase2sprkkr.tools.commands.examples" title="ase2sprkkr.tools.commands.examples"><code class="xref py py-obj docutils literal notranslate"><span class="pre">examples</span></code></a></p></td>
-<td><p>This command just run the tests</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.example.html#module-ase2sprkkr.tools.commands.example" title="ase2sprkkr.tools.commands.example"><code class="xref py py-obj docutils literal notranslate"><span class="pre">example</span></code></a></p></td>
+<td><p>This command just show the path to the examples</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.info.html#module-ase2sprkkr.tools.commands.info" title="ase2sprkkr.tools.commands.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a></p></td>
-<td><p>This is a sctipt to visualise in_struct.inp files.</p></td>
+<td><p>Show known OutputFiles, description of InputParameters and so on.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.nomad.html#module-ase2sprkkr.tools.commands.nomad" title="ase2sprkkr.tools.commands.nomad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nomad</span></code></a></p></td>
-<td><p>This is a sctipt to visualise in_struct.inp files.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.k_path.html#module-ase2sprkkr.tools.commands.k_path" title="ase2sprkkr.tools.commands.k_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">k_path</span></code></a></p></td>
+<td><p>GUI for specifiing BSF k-points PATH</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.plot.html#module-ase2sprkkr.tools.commands.plot" title="ase2sprkkr.tools.commands.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a></p></td>
-<td><p>This is a sctipt to visualise in_struct.inp files.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.nomad.html#module-ase2sprkkr.tools.commands.nomad" title="ase2sprkkr.tools.commands.nomad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nomad</span></code></a></p></td>
+<td><p>This is a script to upload to NOMAD repository.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.run.html#module-ase2sprkkr.tools.commands.run" title="ase2sprkkr.tools.commands.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a></p></td>
-<td><p>This is a sctipt to visualise in_struct.inp files.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.plot.html#module-ase2sprkkr.tools.commands.plot" title="ase2sprkkr.tools.commands.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a></p></td>
+<td><p>Plotting the values in SPRKKR output files</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.run.html#module-ase2sprkkr.tools.commands.run" title="ase2sprkkr.tools.commands.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a></p></td>
+<td><p>This is a script to run calculation from commandline.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.shell.html#module-ase2sprkkr.tools.commands.shell" title="ase2sprkkr.tools.commands.shell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shell</span></code></a></p></td>
+<td><p>Opening the ASE2SPRKKR output files and/or scripts in the shell or Jupyter notebook</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.show_structure.html#module-ase2sprkkr.tools.commands.show_structure" title="ase2sprkkr.tools.commands.show_structure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_structure</span></code></a></p></td>
-<td><p>This is a sctipt to visualise potential or in_struct.inp files.</p></td>
+<td><p>This is a script to visualise potential or in_struct.inp files.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.test.html#module-ase2sprkkr.tools.commands.test" title="ase2sprkkr.tools.commands.test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test</span></code></a></p></td>
-<td><p>This command just run the tests</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.uppasd.html#module-ase2sprkkr.tools.commands.uppasd" title="ase2sprkkr.tools.commands.uppasd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uppasd</span></code></a></p></td>
+<td><p>Convert SPRKKR output to UppASD input files and plots the computed Jij (experimental)</p></td>
 </tr>
 </tbody>
 </table>

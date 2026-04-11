@@ -12,7 +12,7 @@ e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 
 import pyparsing as pp
 import inspect
-from typing import Dict, Union
+from typing import Dict, Union, Any
 import itertools
 from . import backward_compatibility  # NOQA
 from enum import Enum, nonmember
@@ -153,8 +153,10 @@ class BaseDefinition:
       # Values can be repeated, the result is array of values
       ARRAY = (Type.ARRAY, RepeatedKey)
       # Values can be repeated, the result is array of values
-      REPEATED_SECTION = (Type.ARRAY, Key.NONE, Numbering.NO, False)
-      # Repeated sections has no header, and their repetition solves themselves
+      LIST_SECTION = (Type.LIST, Key.NONE, Numbering.NO, False)
+      # Repeated sections has no header, and they solves their repetition themselves
+      DICT_SECTION = (Type.DICT, Key.NONE, Numbering.NO, False)
+      # with access like dict. However - how the keys are stored id the result? Maybe broken
       NUMBERED = (Type.ARRAY, ArrayKey, Numbering.YES)
       # Values are given in form "{NAME}{INDEX}", the result is array of values
       DICT = (Type.DICT, DictKey, Numbering.YES)
@@ -267,9 +269,10 @@ class BaseDefinition:
   def description(self, *args, **kwargs):
        return "This object is not intended for a direct use."
 
-  def _get_copy_args(self)->Dict[str, str]:
+  def _get_init_args_mapping_for_copy(self)->Dict[str, str]:
        """
-       Compute the dictionary that defines the attributes to create a copy of this object.
+       Compute the dictionary that defines the attributes to create a copy of this object
+       using the constructor.
 
        Returns
        -------
@@ -284,10 +287,15 @@ class BaseDefinition:
                                        for v in args if v not in self._copy_excluded_args }
        return self.__class__._copy_args
 
+  def _get_init_args_for_copy(self, **kwargs)->Dict[str, Any]:
+      """ Compute the dictionary-kwargs to create copy"""
+      out = { k: getattr(self, v) for k,v in self._get_init_args_mapping_for_copy().items() }
+      out.update(kwargs)
+      return out
+
   def copy(self, **kwargs):
-     default = { k: getattr(self, v) for k,v in self._get_copy_args().items() }
-     default.update(kwargs)
-     return self.__class__(**default)
+     arguments = self._get_init_args_for_copy(**kwargs)
+     return self.__class__(**arguments)
 
   def create_object(self, container=None):
      """ Creates Section/Option/.... object (whose properties I define) """
@@ -461,7 +469,7 @@ class RealItemDefinition(BaseDefinition):
       else:
          name = next(iter(self.alternative_names)) if self.write_alternative_name else self.name
       if self.name_format:
-         return "{:{}}".format(name, self.name_format)
+         return self.name_format.format(name)
       return name
 
    def has_name(self, name, lower_case=False):
@@ -553,19 +561,19 @@ class RealItemDefinition(BaseDefinition):
             if self.name_regex:
                 reg = pp.Regex(self.name_regex)
                 if self.do_not_skip_whitespaces_before_name:
-                   reg.leaveWhitespace()
+                   reg.leave_whitespace()
                 names=[pp.Regex(self.name_regex)]
             else:
                 names = self.all_names_in_grammar()
                 keyword = pp.CaselessLiteral if self.is_repeated.is_numbered else pp.CaselessKeyword
                 if self.do_not_skip_whitespaces_before_name:
-                   names = [ keyword(i).leaveWhitespace() for i in names ]
+                   names = [ keyword(i).leave_whitespace() for i in names ]
                 else:
                    names = [ keyword(i) for i in names ]
             if len(names) > 1:
                 name = pp.Or(names)
                 if self.do_not_skip_whitespaces_before_name:
-                    names=names.leaveWhitespace()
+                    names=names.leave_whitespace()
             else:
                 name = names[0]
             if self.is_repeated:
@@ -576,9 +584,9 @@ class RealItemDefinition(BaseDefinition):
                     else:
                       name += idx
                     name+= pp.WordEnd(pp.alphanums + "_")
-            name.setParseAction(lambda x: self.is_repeated.key_type(self.name, *x.asList()[1:]))
+            name.set_parse_action(lambda x: self.is_repeated.key_type(self.name, *x.asList()[1:]))
         else:
-            name = pp.Empty().setParseAction(lambda x: self.name)
+            name = pp.Empty().set_parse_action(lambda x: self.name)
 
         return name
 
@@ -604,10 +612,10 @@ class RealItemDefinition(BaseDefinition):
               name += delimiter
            out = name - expr
         else:
-           name = pp.Empty().setParseAction(lambda x: self.name)
+           name = pp.Empty().set_parse_action(lambda x: self.name)
            out = name + expr
         if has_value:
-            return out.setParseAction(lambda x: tuple(x))
+            return out.set_parse_action(lambda x: tuple(x))
         else:
             return out.suppress()
 
@@ -728,7 +736,7 @@ class Gather:
             x = x.asList()
             return x[ln:]
 
-        out.setParseAction(discard_names)
+        out.set_parse_action(discard_names)
         return out
 
     def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=''):
@@ -883,10 +891,10 @@ class Switch(ControlDefinition):
        f = pp.Forward()
        if definition.name in self.values.get(None, {}):
            f <<= grammar
-           f.setName(f"<IF* ndef THEN {str(grammar)}>")
+           f.set_name(f"<IF* ndef THEN {str(grammar)}>")
        else:
            f <<= self.empty
-           f.setName(f"<IF* False THEN {str(grammar)}")
+           f.set_name(f"<IF* False THEN {str(grammar)}")
        self._grammars[definition.name] = (grammar, f)
        return f
 
@@ -900,7 +908,7 @@ class Switch(ControlDefinition):
                if tpl:
                   f = tpl[1]
                   f <<= tpl[0]
-                  f.setName(f"<IF True THEN {str(tpl[0])}>")
+                  f.set_name(f"<IF True THEN {str(tpl[0])}>")
                elif i.output_definition.has_grammar():
                   raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
 
@@ -908,17 +916,17 @@ class Switch(ControlDefinition):
                tpl = grammars.get(i.name, None)
                if tpl:
                   f = tpl[1]
-                  f.setName(f"<IF False THEN {str(tpl[0])}>")
+                  f.set_name(f"<IF False THEN {str(tpl[0])}>")
                   f <<= self.empty
                elif i.output_definition.has_grammar():
                   raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
 
        if not self.container.force_order:
-            return grammar
-       return grammar.addParseAction(lambda x: choose(x[0][1]) and x)
+           return grammar
+       return grammar.add_parse_action(lambda x: choose(x[0][1]) and x)
 
    def remove_from_container(self):
-     if self.container:
+       if self.container:
            self.container[self.item].remove_grammar_hook(self.item_hook)
            for i in self.values.values():
                for j in i.values():

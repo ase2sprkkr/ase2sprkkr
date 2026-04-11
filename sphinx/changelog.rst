@@ -1,6 +1,28 @@
 Changelog
 =========
 
+* JXC output parsed
+* JXC output files plotting
+
+Version 3.4
+-----------
+
+* Magnetization moments parse
+* Units uses unyts for better units support (retaining the unit user used)
+* Empty spheres uses spglib for symmetry (which solves some cases that have not been computed correctly )
+* ASE read/write compatibility
+* Allow to run computation inside Jupyter notebook
+* promote_ase_atoms exported
+* BSF and SCP outputs improved
+* Calculator do not longer overwrite the potential file, if it is given in constructor
+* Symmetry handling improved
+* Some fixies and enhancements for plotting
+* Allow async running of the process
+* Python 3.14 compatibility
+* MDIR option has no default value
+* SPEC task parser
+* Dij output file parser
+
 Version 3.3.4
 ------------------
 * Sites are update according to the symbols during save

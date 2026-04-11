@@ -9,18 +9,21 @@ import sys
 import pkgutil
 import importlib
 from pathlib import Path
+import os
 
-if not __package__:
-    path = str(Path(__file__).resolve().parents[1])
-    sys.path.append(path)
-    import os
-    spec = importlib.util.spec_from_file_location("ase2sprkkr", os.path.join(path, '__init__.py'))
-    ase2sprkkr = importlib.util.module_from_spec(spec)
-    sys.modules["ase2sprkkr"] = ase2sprkkr
-    spec.loader.exec_module(ase2sprkkr)
-    __package__ = 'ase2sprkkr.tools'
 
-import ase2sprkkr.tools.commands as commands # NOQA
+def fix_package():
+    global __package__
+
+    if not __package__:
+        path = str(Path(__file__).resolve().parents[1])
+        sys.path.append(path)
+        spec = importlib.util.spec_from_file_location("ase2sprkkr", os.path.join(path, '__init__.py'))
+        ase2sprkkr = importlib.util.module_from_spec(spec)
+        sys.modules["ase2sprkkr"] = ase2sprkkr
+        spec.loader.exec_module(ase2sprkkr)
+        __package__ = 'ase2sprkkr.tools'
+
 
 
 def run():
@@ -34,8 +37,13 @@ def run():
   parser.add_argument('--version', '-v', help='Print the version of ASE2SPRKKR.', action='store_true')
   parser.add_argument('--debug', '-G', help='Raise a debugger on an unhandled exception.', action='store_true')
   parser.add_argument('--profile', '-P', help='Run a python profiler on the command.', action='store_true')
+  #parser.add_argument('--no-user-profile', '-U', help='Do not load the user profile file.', action='store_true')
 
   subs = parser.add_subparsers( dest = 'ase2sprkkr_command', description='Run ase2sprkkr <subcommand> -h for futhrer info')
+
+  # os.environ['ASE2SPRKKR_NO_USER_PROFILE'] = '1'
+  fix_package()
+  import ase2sprkkr.tools.commands as commands # NOQA
 
   names = (i for i in pkgutil.iter_modules(commands.__path__))
   im = importlib.import_module

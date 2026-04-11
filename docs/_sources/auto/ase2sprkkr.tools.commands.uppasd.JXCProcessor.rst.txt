@@ -1,0 +1,36 @@
+JXCProcessor
+============
+
+
+.. currentmodule:: ase2sprkkr.tools.commands.uppasd
+
+.. autoclass:: JXCProcessor
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.tools.commands.uppasd.JXCProcessor
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

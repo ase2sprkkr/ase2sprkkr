@@ -73,8 +73,9 @@ def _nktab_value(option):
 
 
 TAU = TauSection('TAU',[
-      V('BZINT', DefKeyword({'POINTS' : 'special points method',
-                             'WEYL' : 'Weyl method'},
+      V('BZINT', Keyword({'POINTS' : 'special points method',
+                          'WEYL' : 'Weyl method',
+                          'CLUSTER': 'Cluster method'},
                              description=
 """
 The Weyl method (BZINT=WEYL) is a point sampling method using more or less ran-
@@ -85,7 +86,7 @@ The special point method (BZINT=POINTS) uses a regular k-point grid with NKTAB
 points. It is the standard method and gives a good compromise concerning accuracy
 and efficiency. For BZINT=POINTS the parameter NKTAB will be adjusted to allow a
 regular mesh.
-"""), is_required=True,
+"""), is_required=False, default_value = lambda c: None if c._container.CLUSTER() or c._container.MOL() else 'POINTS',
                              info='The mode of BZ-integration used for calculation of the scattering '
                                   ' path operator τ'),
       V('NKTAB', 250, info='Number of points for the special points method', is_optional=True,
@@ -232,28 +233,28 @@ STRCONST = Section('STRCONST', [
         V('RMAX', float, is_optional=True, info='Convergency radius in real space'),
         V('GMAX', float, is_optional=True, info='Convergency radius in reciprocal space'),
       ], is_expert=True, is_optional=True, info=
-      """The calculation of the ~k-dependent KKR structure constant matrix G(~k, E) is controlled by
-three convergence parameters. ETA determines the relative weight of the real and reciprocal
-space lattice sums, that are determined by the convergence radii RMAX and GMAX, respec-
-tively. These convergence parameters have to be optimised anew if the lattice structure, the
-lattice parameter or the energy or ~k-range used is changed. This is done by the program if
-no values are applied via the input file. In some cases, in particular if one works at high
-energies, it might be necessery to set the convergence by hand. For this purpose one can start
-from the values set by kkrgen or kkrscf (see the output file)."""
+      "The calculation of the ~k-dependent KKR structure constant matrix G(~k, E) is controlled by "
+      "three convergence parameters. ETA determines the relative weight of the real and reciprocal "
+      "space lattice sums, that are determined by the convergence radii RMAX and GMAX, respectively. "
+      "These convergence parameters have to be optimised anew if the lattice structure, the "
+      "lattice parameter or the energy or ~k-range used is changed. This is done by the program if "
+      "no values are applied via the input file. In some cases, in particular if one works at high "
+      "energies, it might be necessery to set the convergence by hand. For this purpose one can start "
+      "from the values set by kkrgen or kkrscf (see the output file)."
 )
 """The definition of the STRCONST section of the task input file """
 
 SITES = Section('SITES', [
       V('NL', [3], info='Angula momentum cutoff (the first discarded l-space)', description=
-""" The KKR-method is a minimum basis set method. This means that the angular-momentum
-expansion can be chosen according to the atomic properties of the atomic types. For tran-
-sition metals it is therefore normally sufficient to have a maximum l-value of 2 (NL = 3).
-For systems with many atoms per unit cell it is in principle possible to set the l-expansion
-according to the atom types on the lattice sites. For US having the NaCl-structure one could
-choose NL = 4 for the U-site and NL = 2 for the S-site. At the moment this possibility, that
-would save storage and computer time, is not supported by all subroutines. For this rea-
-son a common l-expansion cutoff is used, that is fixed by the highest that occurs. For US
-this implies that NL = 4 is used for all sites.""")
+"The KKR-method is a minimum basis set method. This means that the angular-momentum "
+"expansion can be chosen according to the atomic properties of the atomic types. For transition "
+"metals it is therefore normally sufficient to have a maximum l-value of 2 (NL = 3). "
+"For systems with many atoms per unit cell it is in principle possible to set the l-expansion "
+"according to the atom types on the lattice sites. For US having the NaCl-structure one could "
+"choose NL = 4 for the U-site and NL = 2 for the S-site. At the moment this possibility, that "
+"would save storage and computer time, is not supported by all subroutines. For this reason "
+"a common l-expansion cutoff is used, that is fixed by the highest that occurs. For US "
+"this implies that NL = 4 is used for all sites.")
   ])
 """The definition of the SITES section of the task input file """
 
@@ -277,7 +278,7 @@ MODE = Section('MODE', [
                 is_required=False, name_in_grammar=False,
                 info='Using this option you can switch on the spin polarization and relativistic mode. If it''s not set (or set to ''FREL''), the ''full'' relativity mode is used.'),
     V('LLOYD', False, info='Use LLoyd formula for scattering operator. It can improve the accuracy of the Fermi energy.'),
-    V('MDIR', SetOf(float, length=3), [1.,0.,0.], is_required=False, info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.",
+    V('MDIR', SetOf(float, length=3), is_required=False, info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.",
                                       is_repeated='DEFAULTDICT', is_always_added=False ),
     V('MALF',float , is_required=False, info="the (first) angle characterizing the orientation  of the magnetic moment direction n.", description='If it is not set, angle of MDIR is used'),
     V('MBET',float , is_required=False, info="the (second) angle characterizing the orientation of the magnetic moment direction n.", description='If it is not set, angle of MDIR is used'),
@@ -285,7 +286,9 @@ MODE = Section('MODE', [
     V('C', 1.0, info='Scale the speed of light for a given atom type.', is_repeated='DEFAULTDICT', is_required=False, is_always_added=False),
     V('SOC', 1.0, info='Scale the strength of the spin-orbit coupling for atom type.', is_repeated='DEFAULTDICT', is_required=False, is_always_added=False),
   ], is_expert=True, is_optional=True, info=
-      """This section contains options that describe, how to consider relativity and/or spin. If the MODE is not specified otherwise the programs of the SPRKKR-package assume that a magnetic system should be treated in a fully relativistic way. By setting the parameter SP-SREL a slightly faster scalar relativistic calculation can be done instead for a magnetic system.""",
+      "This section contains options that describe, how to consider relativity and/or spin. If the MODE is not specified otherwise the programs of the SPRKKR-package "
+      "assume that a magnetic system should be treated in a fully relativistic way. By setting the parameter SP-SREL a slightly faster scalar relativistic calculation "
+      "can be done instead for a magnetic system.",
 )
 """MODE Section definition"""
 

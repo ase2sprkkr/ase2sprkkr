@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
 
   
@@ -47,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
@@ -93,7 +95,7 @@
 
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Rydberg</span>
+<span class="kn">import</span> <span class="nn">unyt</span>
 
 <span class="kn">from</span> <span class="nn">..output_definitions</span> <span class="kn">import</span> <span class="n">OutputSectionDefinition</span> <span class="k">as</span> <span class="n">Section</span><span class="p">,</span> \
                                  <span class="n">OutputValueDefinition</span> <span class="k">as</span> <span class="n">V</span><span class="p">,</span> \
@@ -107,7 +109,7 @@
 <span class="kn">from</span> <span class="nn">...sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
 <span class="kn">from</span> <span class="nn">...common.formats</span> <span class="kn">import</span> <span class="n">fortran_format</span>
 <span class="kn">from</span> <span class="nn">...common.grammar</span> <span class="kn">import</span> <span class="n">replace_whitechars</span>
-<span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">KkrProcess</span>
+<span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">KkrProcessRunner</span>
 <span class="kn">from</span> <span class="nn">...potentials.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
 
 
@@ -115,7 +117,7 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars">[docs]</a>
 <span class="k">class</span> <span class="nc">RealOrStars</span><span class="p">(</span><span class="n">Real</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; A real value, where ``****`` means ``NaN`` &quot;&quot;&quot;</span>
-  <span class="n">_grammar</span> <span class="o">=</span> <span class="n">Real</span><span class="o">.</span><span class="n">_grammar</span> <span class="o">|</span> <span class="n">replace_whitechars</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;NaN&#39;</span><span class="p">))</span></div>
+  <span class="n">_grammar</span> <span class="o">=</span> <span class="n">Real</span><span class="o">.</span><span class="n">_grammar</span> <span class="o">|</span> <span class="n">replace_whitechars</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;NaN&#39;</span><span class="p">))</span></div>
 
 
 
@@ -267,7 +269,7 @@
       <span class="s1">&#39;B_val_desc&#39;</span><span class="p">:</span> <span class="n">String</span><span class="p">(</span><span class="n">default_value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
       <span class="s1">&#39;B_core&#39;</span> <span class="p">:</span> <span class="n">Real</span><span class="p">(</span><span class="n">default_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;NaN&#39;</span><span class="p">),</span> <span class="n">nan</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\*+&#39;</span><span class="p">)</span>
     <span class="p">},</span> <span class="n">free_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
-  <span class="n">V</span><span class="p">(</span><span class="s1">&#39;E_band&#39;</span><span class="p">,</span> <span class="n">RealWithUnits</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;[Ry]&#39;</span> <span class="p">:</span> <span class="n">Rydberg</span> <span class="p">}),</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+  <span class="n">V</span><span class="p">(</span><span class="s1">&#39;E_band&#39;</span><span class="p">,</span> <span class="n">RealWithUnits</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;[Ry]&#39;</span> <span class="p">:</span> <span class="n">unyt</span><span class="o">.</span><span class="n">Ry</span> <span class="p">}),</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
   <span class="n">V</span><span class="p">(</span><span class="s1">&#39;dipole moment&#39;</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">)),</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="p">])</span>
 
@@ -302,6 +304,12 @@
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  This class reads and parses the output of the SCF task of the SPR-KKR.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ScfOutputReader.set_print_output">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader.set_print_output">[docs]</a>
+  <span class="k">def</span> <span class="nf">set_print_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">print_output</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">print_info</span> <span class="o">=</span> <span class="n">print_output</span> <span class="o">==</span> <span class="s1">&#39;info&#39;</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">=</span> <span class="n">print_output</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_info</span></div>
+
 
 <div class="viewcode-block" id="ScfOutputReader.read_output">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output">[docs]</a>
@@ -327,7 +335,7 @@
 
             <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readline_until</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;SPRKKR-run for: &#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
             <span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">first</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">==</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">first</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_info</span><span class="p">:</span>
                <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
                <span class="n">first</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="n">run</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;SPRKKR-run for:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
@@ -353,11 +361,11 @@
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;spin&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">10</span><span class="p">]),</span>
                              <span class="s1">&#39;orbital&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">11</span><span class="p">])</span> <span class="p">}</span>
             <span class="n">line</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="n">readline</span><span class="p">(</span><span class="n">stdout</span><span class="p">))</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-            <span class="n">out</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">][</span><span class="s1">&#39;ETOT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">Rydberg</span>
+            <span class="n">out</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">][</span><span class="s1">&#39;ETOT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">unyt</span><span class="o">.</span><span class="n">Ry</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">unyt</span><span class="o">.</span><span class="n">eV</span><span class="p">))</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;converged&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;converged&#39;</span>
 
             <span class="n">iterations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scf_section</span><span class="o">.</span><span class="n">read_from_dict</span><span class="p">(</span><span class="n">out</span><span class="p">))</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">==</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_info</span><span class="p">:</span>
                <span class="n">error</span> <span class="o">=</span> <span class="n">fortran_format</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">],</span> <span class="s2">&quot;:&gt;12e&quot;</span><span class="p">)</span>
                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;iteration&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2"> error </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2"> &quot;</span>
                      <span class="sa">f</span><span class="s2">&quot;spin moment: </span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">][</span><span class="s1">&#39;spin&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;13.6e</span><span class="si">}</span><span class="s2"> &quot;</span>
@@ -374,14 +382,15 @@
           <span class="n">result</span><span class="o">.</span><span class="n">iterations</span> <span class="o">=</span> <span class="n">iterations</span>
 
         <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
-          <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;The output ends unexpectedly&#39;</span><span class="p">)</span></div>
+          <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;The output ends unexpectedly&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 </div>
 
 
 
-<div class="viewcode-block" id="ScfProcess">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfProcess.html#ase2sprkkr.outputs.readers.scf.ScfProcess">[docs]</a>
-<span class="k">class</span> <span class="nc">ScfProcess</span><span class="p">(</span><span class="n">KkrProcess</span><span class="p">):</span>
+<div class="viewcode-block" id="ScfProcessRunner">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfProcessRunner.html#ase2sprkkr.outputs.readers.scf.ScfProcessRunner">[docs]</a>
+<span class="k">class</span> <span class="nc">ScfProcessRunner</span><span class="p">(</span><span class="n">KkrProcessRunner</span><span class="p">):</span>
 
   <span class="n">result_class</span> <span class="o">=</span> <span class="n">ScfResult</span>
   <span class="n">reader_class</span> <span class="o">=</span> <span class="n">ScfOutputReader</span></div>

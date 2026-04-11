@@ -2,11 +2,13 @@
 files of SPRKKR """
 
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationValue
+from ..potentials.potentials import Potential
 import pyparsing as pp
 import numpy as np
 import pkgutil
 import sys
-from ..common.decorators import cached_class_property
+from pathlib import Path
+from ..common.decorators import cached_class_property, cached_property
 from ..common.grammar_types.data import RestOfTheFile
 import io
 import os
@@ -26,6 +28,65 @@ class OutputFile(ConfigurationFile):
   """ Objects of this class holds datas of an output file """
 
   plot_parameters = {}
+
+  def __init__(self, definition=None, container=None):
+      super().__init__(definition, container)
+      self._potential = None
+      self._potential_filename = None
+
+  @classmethod
+  def can_be_plotted(cls):
+      return callable(getattr(cls, "plot", None))
+
+  def set_potential_filename(self, potential_filename):
+      self.__dict__['potential_filename'] = potential_filename
+      self.__dict__.pop('potential', None)
+
+  @cached_property
+  def potential_filename(self):
+      if not getattr(self, '_filename', None):
+          raise ValueError('The output file has no filename. Set the potential filename manually.')
+
+      path = Path(self._filename)
+      directory = path.parent
+      stem = path.stem
+
+      while True:
+          for suffix in ('.pot_new', '.pot'):
+              candidate = Path(directory) / (stem + suffix)
+              if candidate.is_file():
+                  return str(candidate)
+          stem=stem.rsplit('_', 1)  # split off the last part of the filename
+          if len(stem) == 1:
+              break
+          stem = stem[0]
+
+      raise ValueError(f'No potential file found for {self._filename}. Set it manually using set_potential_filename().')
+
+  @potential_filename.setter
+  def potential_filename(self, value):
+      self.set_potential_filename(value)
+
+  @cached_property
+  def potential(self):
+      return Potential.from_file(self.potential_filename)
+
+
+  @potential.setter
+  def potential(self, value):
+      if isinstance(value, Potential):
+          self.__dict__ ['potential'] = value
+          if hasattr(value, "_filename"):
+              self.__dict__ ['potential_filename'] = value._filename
+          else:
+              self.__dict__.pop('potential_filename', None)
+      else:
+          self.__dict__ ['potential_filename'] = value
+          self.__dict__.pop('potential', None)
+
+  @property
+  def atoms(self):
+      return self.potential.atoms
 
   @cached_class_property
   def unknown_output_file_definition(cls):
@@ -47,10 +108,14 @@ class OutputFile(ConfigurationFile):
       name = name.rsplit('.',1)[0] + '.definitions.'
       for imp, module, ispackage in pkgutil.iter_modules(path=[path], prefix=name):
            __import__(module)
-           mod = sys.modules[module]
-           ext = getattr(mod, "extension", None) or mod.__name__.rsplit('.',1)[1]
-           out[ext] = mod
+           mod = sys.modules[module].definition
+           ext = mod.extension
+           out[mod.extension] = mod
       return out
+
+  @classmethod
+  def definition(cls, self):
+      return cls.definitions[self]
 
   @classmethod
   def from_file(cls, filename, first_try=None, try_only=None, unknown=None):
@@ -80,20 +145,25 @@ class OutputFile(ConfigurationFile):
         recognized.
         None means True if try_only is None, False otherwise.
       """
+      fname = filename
+      if hasattr(filename, 'name'):
+          fname = filename.name
+      elif isinstance(filename, str):
+          if not os.path.exists(filename):
+              raise ValueError(f"File {filename} to be read does not exists")
+
       if first_try is None and not try_only:
-         fname = filename
-         if hasattr(filename, 'name'):
-             fname = filename.name
-         if isinstance(filename, str):
-             first_try = fname.rsplit('.',1)[1].lower()
+         if isinstance(fname, str):
+             try:
+                 first_try = fname.rsplit('.',1)[1].lower()
+             except IndexError:
+                 first_try = None
              #nektere soubory jsou typu _Dij.data
-             special = re.match( r"^.+_([^/\\]+\.[^/\\]+)$", filename)
+             special = re.match( r"^.+_([^/\\]+\.[^/\\]+)$", fname)
              if special:
                 first_try = [ special.groups(1)[0], first_try ]
          else:
              first_try = ''
-      if isinstance(first_try,str):
-          first_try=[ first_try ]
 
       first = None
       if first_try:
@@ -108,10 +178,12 @@ class OutputFile(ConfigurationFile):
          last = None
 
       if try_only:
-         for i in try_only:
+        if isinstance(try_only,str):
+            try_only=[ try_only ]
+        for i in try_only:
              if i in cls.definitions:
                  try:
-                    out = cls.definitions[i].definition.read_from_file(filename)
+                    out = cls.definitions[i].read_from_file(filename)
                     return out
                  except Exception as e:
                     last = e
@@ -120,7 +192,7 @@ class OutputFile(ConfigurationFile):
               if first_try and ext in first_try:
                  continue
               try:
-                 out = i.definition.read_from_file(filename)
+                 out = i.read_from_file(filename)
                  return out
               except Exception as e:
                  last = e
@@ -131,7 +203,7 @@ class OutputFile(ConfigurationFile):
               return cls.unknown_output_file_definition.read_from_file(filename)
           except pp.ParseBaseException as e:
               raise Exception(f'Can not parse file: {filename}') from e
-      raise first or last or ValueError(f'File is not recognized as any known file type')
+      raise first or last or ValueError(f'File {filename} is not recognized as any known file type')
 
 
 class CommonOutputFile(OutputFile):
@@ -192,7 +264,10 @@ class Arithmetic:
 
     def _do_arithmetic(self, func, other):
         """ Run given function for all "summable/subtractable/etc... data"""
-        for val, selector in self._arithmetic_values:
+        vals = self._arithmetic_values
+        if callable(vals):
+              vals = vals()
+        for val, selector in vals:
             getattr(self[val]()[selector],func)(other[val]()[selector])
 
     def __iadd__(self, other):
