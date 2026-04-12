@@ -112,7 +112,7 @@ class AtomicTypePotentialSection(PotentialSectionTrait, RepeatedConfigurationSec
 
     def _update_atoms(self, atoms, read_io_data):
         if len(self):
-            for i, section in enumerate(self):
+            for i, section in self.items():
                 self.read_data(read_io_data['types'][i], section)
 
     def _depends_on(self):

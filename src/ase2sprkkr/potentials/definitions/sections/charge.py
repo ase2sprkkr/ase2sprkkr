@@ -35,7 +35,7 @@ class ChargeSectionDefinition(PotSectionDefinition):
           ),
           SeparatorDefinition('=', length=79)
       ]
-      super().__init__(name, members, has_hidden_members=True, is_repeated=BaseDefinition.Repeated.DICT_SECTION, is_optional=True)
+      super().__init__(name, members, has_hidden_members=True, is_repeated=BaseDefinition.Repeated.LIST_SECTION, is_optional=True)
 
   result_class = ChargeSection
   repeated_class = ChargesSection
