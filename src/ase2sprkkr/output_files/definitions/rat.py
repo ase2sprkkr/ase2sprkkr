@@ -86,26 +86,35 @@ class RATOutputFile(CommonOutputFile):
         return mendeleev.element(self.TYPES[self.GROUPS[0].IT()-1]['TXT_T'])
 
     def lorentz_width(self, source='campbell-papp'):
+        """
+        Return tuple of Lorentz widths (for the two possible KAP types).
+        The `source` argument is forwarded to the core_hole_width lookup.
+        """
         from ase2sprkkr.physics.core_hole_width import core_hole_width
-        atomic_number=self.mendeleev.atomic_number
+        atomic_number = self.mendeleev.atomic_number
         nc = self.GROUPS[0].NCXRAY()
         lc = self.GROUPS[0].LCXRAY()
-        return \
-            core_hole_width(atomic_number, nc, lc, 1, source), \
-            core_hole_width(atomic_number, nc, lc, 2, source)
+        return (
+            core_hole_width(atomic_number, nc, lc, 1, source=source),
+            core_hole_width(atomic_number, nc, lc, 2, source=source),
+        )
 
-    def broadener(self, energies, gauss_width, lorentz_width, n_valence=None, core_hole_width='campbell-papp'):
+    def broadener(self, energies, gauss_width, lorentz_width, n_valence=None, wlortab=None):
         if lorentz_width is None:
-            lorentz_width = self.lorentz_width(source=core_hole_width)
+            lorentz_width = self.lorentz_width()
         if n_valence is None:
             n_valence = self.mendeleev.nvalence()
-        if isinstance(lorentz_width, float):
-            lorentz_width = [ lorentz_width ]
+        # Accept Python floats and NumPy scalar floats here
+        if np.isscalar(lorentz_width):
+            lorentz_width = [ float(lorentz_width) ]
 
-        wlortab = compute_wlortab(energies, n_valence)
+        # Allow user to pass a precomputed wlortab array; otherwise compute from n_valence
+        if wlortab is None:
+            wlortab = compute_wlortab(energies, n_valence)
+
         lorentz = [
             None if w < 0.001 and n_valence > 0 else
-            create_lorentz_broadener(energies, w, wlortab=wlortab) for w in lorentz_width
+            create_lorentz_broadener(energies, w, wlortab) for w in lorentz_width
         ]
         if len(lorentz) == 1:
             lorentz*=2
@@ -136,18 +145,9 @@ class RATOutputFile(CommonOutputFile):
              interpolate_to_fermi=True, interpolation_threshold=1e-4,
              zero_below=True, zero_below_num=50, zero_below_energy=25,
              no_core_splitting=False, merge_all=None, updown_layout=True,
-             gauss_width=0.1, lorentz_width=None, n_valence=None, core_hole_width='campbell-papp',
+             gauss_width=0.1, lorentz_width=None, n_valence=None,
+             core_hole_width='campbell-papp',
              **kwargs):
-       """
-       Parameters
-       ----------
-       core_hole_width:str
-          'campbell-papp' - XBAND 8.3 behavior
-                            J. L. Campbell & T. Papp, At. Data Nucl. Data Tables 77, 1 (2001)
-          'fuggle-inglesfield' - XBAND 6.3 behavior
-                            J. C. Fuggle & J. E. Inglesfield, Topics in Applied Physics
-       """
-
 
        data = self.generate_data(interpolate_to_fermi, interpolation_threshold,
              zero_below, zero_below_num, zero_below_energy,
@@ -170,7 +170,7 @@ class RATOutputFile(CommonOutputFile):
                        filename=filename, show=show, dpi=dpi, updown_layout=updown_layout, separate_plots=separate_plots,
                        adjust={'left':0.12, 'right':0.95, 'bottom':0.17, 'top':0.90, 'hspace':0.75, 'wspace':0.5},
                        **kwargs) as mp:
-            self.POLARIZATION.plot(_inside_plot=mp, **kwargs)
+            self.POLARIZATION.plot(_inside_plot=mp,  **kwargs)
             self.DIFFERENCE.plot(_inside_plot=mp, **kwargs)
             if 'SPIN' in data:
                 self.SPIN.plot(_inside_plot=mp, **kwargs)
@@ -179,7 +179,8 @@ class RATOutputFile(CommonOutputFile):
     def generate_data(self, interpolate_to_fermi=True, interpolation_threshold=1e-4,
              zero_below=True, zero_below_num=50, zero_below_energy=25,
              no_core_splitting=False, merge_all=None,
-             gauss_width=0.0, lorentz_width=None, n_valence=None, core_hole_width='campbell-papp'):
+             gauss_width=0.0, lorentz_width=None, n_valence=None,
+             core_hole_width='campbell-papp'):
 
         """ core energies """
         ktypes, type_map = self.core_state_types
@@ -258,8 +259,6 @@ class RATOutputFile(CommonOutputFile):
             low_order = make_slice(order[:fidx])
             high_order = make_slice(order[upper_half_idx_source:])
         else:
-            upper_half_idx_source = upper_half_idx = nef
-            my_fermi = senergies[nef]
             low_order = make_slice(order)
             high_order = False
 
@@ -304,7 +303,11 @@ class RATOutputFile(CommonOutputFile):
             rt=rt[:,:,:,1:]
             n_pol=2
 
-        broaden = self.broadener(senergies, gauss_width, lorentz_width, n_valence, core_hole_width)
+        # If caller didn't provide explicit lorentz_width, compute using requested dataset
+        if lorentz_width is None:
+            lorentz_width = self.lorentz_width(core_hole_width)
+
+        broaden = self.broadener(senergies, gauss_width, lorentz_width, n_valence)
         borders = [0, border, n_states]
         for i in range(n_ktypes):
             rd[:,:,borders[i]:borders[i+1]] = broaden(rd[:,:,borders[i]:borders[i+1]], i)
@@ -319,35 +322,47 @@ class RATOutputFile(CommonOutputFile):
         Výpočet SD
         """
 
-        def shift_by_e_core_avg_diff(data, energies=senergies, borders=borders, out=None, clip=False):
-            """Shift each (i,j,p) spectrum by (e_core_avg[k] - e_core[i,j]).
-
-            If ``clip`` is True then values corresponding to targets below the
-            original energy grid are set to 0.0 and values above are set to the
-            last value of the original spectrum (matching the behaviour in the
-            original merge_all branch).
+        def shift_by_e_core_avg_diff(data, energies=senergies, borders=borders, out=None, ref_avg=None, clip=False):
             """
+            Interpolate `data` shifted by core-energy differences onto `energies`.
+
+            Parameters
+            - data: array shaped (len(senergies), groups, states, n_pol)
+            - energies: target energy grid where the shifted spectra are evaluated
+            - borders: grouping borders as used elsewhere in this function
+            - out: optional pre-allocated output array; if None a new array is created
+            - out: optional pre-allocated output array; if None a new array is created.
+
+            Returns the output array (the same object passed as `out` when provided).
+            """
+            # determine evaluation grid and output view
+            N = len(energies)
             if out is None:
-                out = np.empty((len(energies),) + data.shape[1:])
+                out = np.empty((N,) + data.shape[1:])
+
+            eval_energies = energies
+            out_view = out
+
             for i in range(e_core.shape[0]):
                 for k in range(n_ktypes):
                     for j in range(borders[k], borders[k+1]):
-                        de = e_core_avg[k] - e_core[i,j]
-                        shifted = energies - de
+                        if ref_avg is None:
+                            de = e_core_avg[k] - e_core[i, j]
+                        else:
+                            de = ref_avg - e_core[i, j]
+                        shifted = eval_energies - de
                         for p in range(n_pol):
-                            interp = interp1d(senergies, data[:,i,j,p], kind='cubic', fill_value="extrapolate")
-                            out[:,i,j,p] = interp(shifted)
+                            f = interp1d(senergies, data[:, i, j, p], kind='cubic', fill_value="extrapolate")
+                            out_view[:, i, j, p] = f(shifted)
+                            # values corresponding to evaluation points outside source grid
                             if clip:
-                                out[shifted < senergies[0], i, j, p] = 0.0
-                                out[shifted > senergies[-1], i, j, p] = data[-1, i, j, p]
+                                out_view[shifted < senergies[0], i, j, p] = 0.0
+                                out_view[shifted > senergies[-1], i, j, p] = data[-1, i, j, p]
+
             return out
 
-        sd = shift_by_e_core_avg_diff(rd)
 
-        if not merge_all:
-            ad = sd.copy()
-            at = shift_by_e_core_avg_diff(rt)
-        else:
+        if merge_all:
             ie = np.searchsorted(senergies, dcormin, side='right')
             if ie >= len(senergies):
                 raise ValueError("No E(i) > Dcormin found")
@@ -358,32 +373,37 @@ class RATOutputFile(CommonOutputFile):
             kref = np.argmax(e_core_avg)
             avg = e_core_avg[kref]
 
+            # Use shift_by_e_core_avg_diff to fill ad/at on the merged energy grid
+            # pass ref_avg so all states are shifted to the same reference (kref)
+            ad = shift_by_e_core_avg_diff(rd, energies=shifted_energies, borders=borders, ref_avg=avg, clip=True)
+            at = shift_by_e_core_avg_diff(rt, energies=shifted_energies, borders=borders, ref_avg=avg, clip=True)
+
             df = avg - e_core
-            ebot = senergies[0] + np.max(df)
-            etop = senergies[-1] + np.min(df)
-
-            full_shape=(len(shifted_energies),) + rd.shape[1:]
-            ad = np.empty(full_shape)
-            at = np.empty(full_shape)
-            # Use the helper to perform the per-state shifts and apply
-            # boundary clipping so behaviour matches the previous loop.
-            ad = shift_by_e_core_avg_diff(rd, energies=shifted_energies, borders=borders, out=ad, clip=True)
-            at = shift_by_e_core_avg_diff(rt, energies=shifted_energies, borders=borders, out=at, clip=True)
-
+            ebot = shifted_energies[0] + np.max(df)
             iebot = np.searchsorted(shifted_energies, ebot, side='right')
+            etop = senergies[-1] + np.min(df)
             ietop = np.searchsorted(shifted_energies, etop, side='left')
             shifted_energies = shifted_energies[iebot:ietop]
+
             ad = ad[iebot:ietop]
             at = at[iebot:ietop]
+            # Recompute per-ktype `sd` on the merged energy grid (preserve per-ktype shifts)
+            sd = shift_by_e_core_avg_diff(rd, energies=shifted_energies, borders=borders, clip=True)
             senergies = shifted_energies
+        else:
+            sd = shift_by_e_core_avg_diff(rd)
+            ad = sd.copy()
+            at = shift_by_e_core_avg_diff(rt)
+
+
 
         # ------ combine spectra with common KAPPA for core state
         shape = ad.shape[:2] + (n_ktypes, n_pol)
         rd = np.empty(shape)
         rt = np.empty(shape)
         for i in range(n_ktypes):
-            rd[:,:,i]  = ad[:,:,borders[i]:borders[i+1]].sum(axis=2)
-            rt[:,:,i]  = at[:,:,borders[i]:borders[i+1]].sum(axis=2)
+            rd[:,:,i] = ad[:,:,borders[i]:borders[i+1]].sum(axis=2)
+            rt[:,:,i] = at[:,:,borders[i]:borders[i+1]].sum(axis=2)
 
         index = [i.IT()-1 for i in self.GROUPS.values()]
 
@@ -414,7 +434,7 @@ class RATOutputFile(CommonOutputFile):
         if n_ktypes > 1:
             _sd = np.empty(shape)
             for i in range(n_ktypes):
-                _sd[:,:,i]  = ad[:,:,borders[i]:borders[i+1]].sum(axis=2)
+                _sd[:,:,i]  = sd[:,:,borders[i]:borders[i+1]].sum(axis=2)
             sd = sum_groups(_sd)  #now (energy, ktype, n_pol) shape
 
             yd = 0.5*( sd[:,:,1] - sd[:,:,0])
@@ -497,19 +517,21 @@ def generate_data_calling_function(fn):
 
     @add_to_signature(fn)
     def wrapped(option, _inside_plot=False,
-         interpolate_to_fermi=True, interpolation_threshold=1e-4,
-         zero_below=True, zero_below_num=50, zero_below_energy=340,
-         no_core_splitting=False, merge_all=None,
-         gauss_width=0.0, lorentz_width=None, n_valence=None, core_hole_width='campbell-papp',
-         *args, **kwargs):
+                interpolate_to_fermi=True, interpolation_threshold=1e-4,
+                zero_below=True, zero_below_num=50, zero_below_energy=25,
+                no_core_splitting=False, merge_all=None,
+                gauss_width=0.0, lorentz_width=None, n_valence=None,
+                core_hole_width='campbell-papp',
+                *args, **kwargs):
 
-       if not _inside_plot:
-          option._container.generate_data(interpolate_to_fermi, interpolation_threshold,
-                 zero_below, zero_below_num, zero_below_energy,
-                 no_core_splitting, merge_all,
-                 gauss_width, lorentz_width, n_valence, core_hole_width)
+        if not _inside_plot:
+            option._container.generate_data(interpolate_to_fermi, interpolation_threshold,
+                                            zero_below, zero_below_num, zero_below_energy,
+                                            no_core_splitting, merge_all,
+                                            gauss_width, lorentz_width, n_valence,
+                                            core_hole_width)
 
-       fn(option, *args, _inside_plot=_inside_plot, **kwargs)
+        fn(option, *args, _inside_plot=_inside_plot, **kwargs)
 
     return wrapped
 
