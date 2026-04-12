@@ -10,6 +10,8 @@ from ase import Atoms
 from ..common.unique_values import UniqueValuesMapping
 from ..sprkkr.occupations import Occupation
 
+if hasattr(spglib, "set_error_handling"):
+    spglib.set_error_handling(False)
 
 def spglib_dataset_wrapper(dataset):
     """ Backward compatibility """
