@@ -202,7 +202,7 @@ class KkrProcess:
         self.result.complete(error, return_code)
       finally:
         if self.callback:
-            self.callback(result)
+            self.callback(self.result)
       return self.result
 
   def stop_the_process(self):
