@@ -231,9 +231,6 @@ class ValueDefinition(RealItemDefinition):
     if is_optional is None:
        is_optional = is_required is False
 
-    if indent:
-        name_format = indent + (name_format or '{}')
-
     super().__init__(
          name = name,
          written_name = written_name,

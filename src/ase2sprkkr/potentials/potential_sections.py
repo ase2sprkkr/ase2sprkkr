@@ -107,13 +107,13 @@ class AtomicTypePotentialSection(PotentialSectionTrait, RepeatedConfigurationSec
              return
 
         for typ, i in write_io_data.types.unique_items():
-            section = self.add(i)
+            section = self.add()
             self.write_data(typ, section, i)
 
     def _update_atoms(self, atoms, read_io_data):
         if len(self):
-            for i in self:
-                self.read_data(read_io_data['types'][i], self[i])
+            for i, section in self.items():
+                self.read_data(read_io_data['types'][i], section)
 
     def _depends_on(self):
         return 'TYPES'

@@ -46,7 +46,7 @@ class ContainerDefinition(RealItemDefinition):
                  is_optional=False, is_hidden=False, is_expert=False,
                  has_hidden_members=False, name_in_grammar=None, force_order=None,
                  write_alternative_name:bool=False, name_regex=False, result_class=None,
-                 is_repeated=False, write_condition=None,
+                 is_repeated=False, repeated_delimiter=None, write_condition=None,
                  ):
        """
        Definition of container (e.g. section of an input file).
@@ -92,9 +92,9 @@ class ContainerDefinition(RealItemDefinition):
        self.has_hidden_members = has_hidden_members
        if force_order is not None:
            self.force_order = force_order
-       self.repeated_delimiter = is_repeated if isinstance(is_repeated, str) else None
+       self.repeated_delimiter = is_repeated if isinstance(is_repeated, str) else repeated_delimiter
        if not isinstance(is_repeated, self.Repeated):
-           is_repeated = self.Repeated.LIST_SECTION if is_repeated else self.Repeated.NO
+           is_repeated = self.Repeated.LIST_SECTION if is_repeated or repeated_delimiter else self.Repeated.NO
        self.is_repeated = is_repeated
 
     configuration_type_name = 'SECTION'

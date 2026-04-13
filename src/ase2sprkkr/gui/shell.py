@@ -62,7 +62,7 @@ def format_as_python_shell(code_str: str) -> str:
     """
     Format Python code as it would appear in a Python shell.
     Prepend >>> to new statements and ... to continuation lines.
-    
+
     Handles multi-line blocks like classes, functions, loops, and conditionals.
     """
     lines = code_str.splitlines()
@@ -100,7 +100,7 @@ def format_as_python_shell(code_str: str) -> str:
 class Shell:
     """ A base class for ASE2SPRKKR interactive computation using ase2sprkkr tool"""
 
-    """ The prefix code, do it always """
+    """ Prefix code, do it always """
     initialization = [
     """from ase2sprkkr import (
         SPRKKRAtoms,
@@ -136,13 +136,15 @@ class Shell:
         content = split_top_level_chunks(content)
         self.code += content
 
-
-class Python(Shell):
-    """ Run the given code in a Python shell """
-
+class CommandlineShell(Shell):
+    """ Run the given code in a commandline shell """
     def save(self, filename):
         with open(filename, "w") as f:
             f.write("\n\n".join(self.code))
+
+
+class Python(CommandlineShell):
+    """ Run the given code in a Python shell """
 
     def open(self, temp=False):
 
@@ -155,6 +157,31 @@ class Python(Shell):
                 exec(cmd, globals(), local_ns)
                 print("\n")
             code.interact(local=local_ns)
+
+
+class Pdb(CommandlineShell):
+    """ Run the given code in a Python shell """
+    def open(self, temp=False):
+
+        import pdb
+        import linecache
+
+        print("\n Opening pdb session...\n")
+
+        source = "\n".join(self.code)
+        filename = "<user_code>"
+
+        lines = source.splitlines(keepends=True)
+        linecache.cache[filename] = (
+            len(source),   # size
+            None,          # mtime (None is fine)
+            lines,         # list of lines WITH newline chars
+            filename,
+        )
+        code = compile(source, filename, "exec")
+
+        pdb.runctx(code, {}, {})
+
 
 if nbformat is None:
   JupyterLab = None

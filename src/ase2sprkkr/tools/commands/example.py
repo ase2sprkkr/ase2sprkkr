@@ -15,17 +15,20 @@ sys.path.append(root_path)
 from ...common.tools import main  # NOQA
 
 help="Show path to the examples, or example itself, or copy a given example."
-description = "See also the 'shell -e' subcommand for interactivelly running the example"
+description = "See also the 'shell -e' subcommand for running examples interactivelly"
 
 def parser(parser):
     parser.add_argument('example', type=int, nargs='?', help='The number of the example to print. If ommited')
     parser.add_argument('-c', '--copy', help='Copy the example to a given dir', type=str)
     parser.add_argument('-p', '--path', help='Print a path to the example(s)', action='store_true')
+    parser.add_argument('-s', '--script', help='Print a path to the example main script', action='store_true')
 
 def run(args):
     from ase2sprkkr.gui import examples
 
     if not args.example:
+        if args.script:
+            raise ValueError("The --script argument requires to specify the example number.")
         if not args.path:
             print("Examples dir: ", end='')
         print(examples.examples_dir())
@@ -47,6 +50,9 @@ def run(args):
         show = False
     if args.path:
         print(example.dir)
+        show = False
+    if args.script:
+        print(example.main_script)
         show = False
     if show:
         print(example.source())

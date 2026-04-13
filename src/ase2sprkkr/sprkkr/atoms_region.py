@@ -105,9 +105,9 @@ class AtomsRegion:
 
       If the pbc has None items, these are replace with parent atoms pbc values
       """
-      pbc = np.array(self.incomplete_pbc)
+      pbc = np.array(self.incomplete_pbc, dtype=bool)
       if self.atoms is not None:
-          for i,v in enumerate(pbc):
+          for i,v in enumerate(self.incomplete_pbc):
               if v is None:
                   pbc[i] = self.atoms.pbc[i]
       return pbc
@@ -219,3 +219,6 @@ class AtomsRegion:
                            self.cell, self.pbc, self.inherit_cell,
                            atoms)
       return region
+
+  def __repr__(self):
+      return f"<AtomsRegion {self.name}>"

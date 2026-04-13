@@ -174,12 +174,12 @@ class GrammarType:
        grammar = grammar(param_name)
 
     if self.prefix or self.postfix:
-        with generate_grammar():
-            if self.prefix:
-                 grammar = pp.Literal(self.prefix).suppress().set_name(self.prefix) + grammar
-            if self.postfix:
-                 grammar += pp.Literal(self.postfix).suppress().set_name(self.postfix)
-            grammar = self.transform_grammar(grammar, param_name)
+       with generate_grammar():
+        if self.prefix:
+           grammar = pp.Literal(self.prefix.strip()).suppress().set_name(self.prefix) + grammar
+        if self.postfix:
+           grammar += pp.Literal(self.postfix.strip()).suppress().set_name(self.postfix)
+        grammar = self.transform_grammar(grammar, param_name)
 
     if self.has_value:
        def validate(s, loc, x):
@@ -368,6 +368,7 @@ class GrammarType:
     additional_description
       The additional description (e.g. possible choices) of the type. Multiline string.
     """
+
     out = self._description
     if prefix and out:
        out = out.replace('\n', '\n' + prefix)

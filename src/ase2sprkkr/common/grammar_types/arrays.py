@@ -24,8 +24,8 @@ class Array(GrammarType):
 
   def __init__(self, type, default_value=None,
                length=None, max_length=None, min_length=None,
-               as_list=False, format=None,
-               **kwargs):
+               write_length=False, as_list=False, format=None,
+               delimiter=None, **kwargs):
     """
     Parameters
     ----------
@@ -44,6 +44,9 @@ class Array(GrammarType):
     max_length
       The maximal allowed length of the list.
 
+    write_length
+      Write length of the array as the first element.
+
     as_list
       Type of the value array. True means List, False means np.ndarray, or custom type (e.g. tuple)
       can be provided. However, the value can be set using tuple or list anyway.
@@ -61,9 +64,33 @@ class Array(GrammarType):
     super().__init__(default_value=default_value, **kwargs)
     self.min_length = min_length or length
     self.max_length = max_length or length
+    self.write_length = write_length
+
     with generate_grammar():
+      if delimiter is not None:
+        self.delimiter_str = delimiter
+        self.delimiter = pp.Suppress(delimiter)
+
       grammar = self.type.grammar()
-      grammar = delimitedList(grammar, self.delimiter)
+      if self.write_length:
+          grammar = pp.Word(pp.nums).set_parse_action(lambda t: int(t[0])) + \
+                    pp.ZeroOrMore(self.delimiter + grammar)
+
+          def check(x):
+              if len(x) != x[0] + 1:
+                  raise ValueError("Wrong number of list items")
+              return x[1:]
+
+          grammar.set_parse_action(check)
+      elif self.min_length and self.min_length == self.max_length:
+          if self.delimiter:
+              g2 = self.delimiter + grammar
+              grammar = grammar + g2 * (self.max_length - 1)
+          else:
+              grammar = grammar * self.max_length
+      else:
+          grammar = delimitedList(grammar, self.delimiter)
+
       self._set_convert_action(grammar)
       grammar.set_name(self.grammar_name())
 
@@ -72,11 +99,11 @@ class Array(GrammarType):
   def _set_convert_action(self, grammar):
     if self.as_list:
       if callable(self.as_list):
-        grammar = grammar.set_parse_action(lambda x: self.as_list(x.asList()))
+        grammar = grammar.add_parse_action(lambda x: self.as_list(x.asList()))
       else:
-        grammar = grammar.set_parse_action(lambda x: [x.asList()])
+        grammar = grammar.add_parse_action(lambda x: [x.asList()])
     else:
-      grammar.set_parse_action(lambda x: self.convert(x.asList()))
+      grammar.add_parse_action(lambda x: self.convert(x.asList()))
 
   def __str__(self):
     if self.min_length == self.max_length:
@@ -102,8 +129,11 @@ class Array(GrammarType):
 
   def _string(self, val):
     it = iter(val)
-    i = next(it)
-    out = self.type.string(i)
+    if self.write_length:
+      out = str(len(val))
+    else:
+      i = next(it)
+      out = self.type.string(i)
     for i in it:
        out += self.delimiter_str
        out += self.type.string(i)
@@ -208,13 +238,14 @@ class SetOf(Array):
       return copy.deepcopy(value)
 
 
-class Complex(SetOf, TypedGrammarType):
-  array_access = False
+class Complex(TypedGrammarType):
   numpy_type = complex
 
-  @add_to_signature(SetOf.__init__)
-  def __init__(self, *args, **kwargs):
-    super().__init__(Real.I, *args, as_list=complex, length=2, **kwargs)
+  @add_to_signature(TypedGrammarType.__init__)
+  def __init__(self, delimiter='', **kwargs):
+    self.data =  Array(Real.I, length=2, delimiter=delimiter, **kwargs)
+    self._grammar = self.data.grammar().set_parse_action(lambda x: complex(*x[0]))
+    super().__init__()
 
   def convert(self, value):
     return complex(value)
@@ -224,6 +255,11 @@ class Complex(SetOf, TypedGrammarType):
 
   def _grammar_name(self):
     return '{complex (as 2 reals)}'
+
+  def transform_grammar(self, grammar, param_name=False):
+    if self.just_one:
+        return super().transform_grammar(grammar, param_name)
+    return grammar
 
   def _string(self, val):
     return real._string(val.real) + ' ' + real._string(val.imag)
@@ -428,7 +464,7 @@ class Table(GrammarType):
       numbering_format
         Format for the numering column
       grouping
-        If True, the data are not one table, but list of tables.
+        If True, the data are not one table, but a list of tables.
         Numbering then numbers the tables, not the rows of the tables.
         There will be one extra column which numbers rows within the table.
       grouping_label
@@ -460,7 +496,7 @@ class Table(GrammarType):
         If True - groups are contained in list
         If False - groups are contained in np.ndarray
         If None - False if the group_size is defined (and thus if it is possible to
-        interpret it as multidimensional array)
+                  interpret it as multidimensional array)
       kwargs
         Columns and their names can be assigned as kwargs, e.g.
         ``column1_name = float, column2_name = int, ...``
@@ -507,9 +543,6 @@ class Table(GrammarType):
       self.groups_as_list = bool(self.grouping) and (
           groups_as_list if groups_as_list is not None else not group_size
       )
-      if self.grouping and not self.groups_as_list and not group_size:
-          raise ValueError("Groups have to be returned as list, if there is not fixed number"
-              " of items in a group")
 
   def special_columns(self):
       if self.grouping:
@@ -653,13 +686,13 @@ class Table(GrammarType):
 
       if self.numbering:
           if self.grouping:
-                grammar.add_parse_action(data_numbering_grouping)
+              grammar.add_parse_action(data_numbering_grouping)
           else:
-                grammar.add_parse_action(data_numbering)
+              grammar.add_parse_action(data_numbering)
       elif self.grouping:
-              grammar.add_parse_action(data_grouping)
+          grammar.add_parse_action(data_grouping)
       else:
-              grammar.add_parse_action(tabelize)
+          grammar.add_parse_action(tabelize)
 
       return grammar
 

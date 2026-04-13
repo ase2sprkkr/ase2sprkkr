@@ -1,5 +1,6 @@
 """ Common GrammarTypes as numbers, strings etc. """
 
+from ase.units import Rydberg
 import datetime
 import numbers
 import pyparsing as pp
@@ -15,6 +16,19 @@ from ..grammar import generate_grammar, separator_grammar, \
 from .grammar_type import TypedGrammarType, GrammarType, add_to_parent_validation
 
 ppc = pp.pyparsing_common
+
+class Char(TypedGrammarType):
+
+  datatype = str
+
+  @add_to_parent_validation
+  def _validate(self, value, why='set'):
+      return len(value) == 1 or "Char has to have length one"
+
+  def grammar_name(self):
+      return "<char>"
+
+  _grammar = pp.Word(pp.printables, exact=1)
 
 
 class Number(TypedGrammarType):
@@ -303,6 +317,7 @@ class Energy(BaseRealWithUnits):
 
   def __str__(self):
       return "Energy (<Real> [Ry|eV])"
+
 
 class BaseString(TypedGrammarType):
   """ Base type for string grammar types """
