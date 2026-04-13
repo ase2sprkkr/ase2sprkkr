@@ -111,7 +111,16 @@ def mpi_runner(mpi):
             return find_default_mpi_runner()
         return [ mpi ]
     if isinstance(mpi, int):
-       return find_default_mpi_runner() + ['-np', str(mpi)]
+        runner = find_default_mpi_runner()
+        exe = runner[0] if isinstance(runner, list) else runner
+
+        if 'srun' in exe:
+            return runner + [
+                '--cpu-bind=none',
+                '-n', str(mpi)
+            ]
+        else:
+            return runner + ['-np', str(mpi)]
     return mpi
 
 
