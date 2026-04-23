@@ -212,10 +212,12 @@ class RATOutputFile(CommonOutputFile):
 
         """ replace energies below e-fermi and add e-fermi energy """
         fidx = np.searchsorted(senergies, 0.)
-        if fidx<=0 or fidx>=len(senergies):
+        if fidx >= len(senergies):
             raise ValueError('Fermi energy not in the range of energies')
 
-        if abs(senergies[fidx]) < abs(senergies[fidx-1]):
+        if fidx == 0:
+            nef = 0
+        elif abs(senergies[fidx]) < abs(senergies[fidx-1]):
             nef = fidx
         else:
             nef = fidx - 1
