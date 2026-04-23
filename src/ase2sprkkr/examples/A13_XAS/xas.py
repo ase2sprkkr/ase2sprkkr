@@ -17,7 +17,6 @@ def main():
     calculator.input_parameters.TASK.IT = 1
     calculator.input_parameters.TASK.FRAMETET= 90.0
     calculator.input_parameters.TASK.FRAMEPHI = 45.0
-    current_dir = os.getcwd()
 
     try:
         potential_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Fe.pot_new')
