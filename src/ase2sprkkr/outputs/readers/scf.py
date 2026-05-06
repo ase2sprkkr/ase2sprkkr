@@ -1,5 +1,6 @@
 """ SCF (selfconsisten cycle) reader and result. """
 
+import re
 import pyparsing as pp
 import numpy as np
 import unyt
@@ -233,6 +234,8 @@ scf_section = Section('iteration', [
   V('system_name', str),
   V('iteration', int, info='Number of the iteration.'),
   PV('error', float),
+  V('b_error', float, is_required=False, info='RMS error of the exchange-correlation B-field at this iteration.'),
+  V('duration', float, is_required=False, info='Execution time of this iteration in seconds.'),
   V('converged', bool, info='True, if the SCF cycle converged this iteration.'),
   Section('moment', [
     PV('spin', float),
@@ -264,6 +267,8 @@ class ScfOutputParser(SprKkrOutputParser):
         iterations = scf_section.create_object()
         try:
           first = True
+          _err_or_time = re.compile(rb'execution time for last iteration| ERR.*EF')
+
           while True:
             out = {}
             line = await readline_until(stdout,lambda line: b'EMIN   = ' in line)
@@ -297,14 +302,25 @@ class ScfOutputParser(SprKkrOutputParser):
               if not 'E=' in line:
                 break
             out['atomic_types'] = atoms
-
-            line = await readline_until(stdout,lambda line: b' ERR' in line and b'EF' in line)
+            duration = None
+            while True:
+                line = await readline_until(stdout, _err_or_time.search)
+                if b'execution time for last iteration' in line:
+                    try:
+                        duration = float(line.split()[-2])
+                    except (ValueError, IndexError):
+                        pass
+                else:
+                    break
             items = line.split()
             out['iteration'] = int(items[0])
             out['error']=float(items[2])
+            out['b_error'] = float(items[3])
             out['energy']['EF']=float(items[5])
             out['moment'] = {'spin' : float(items[10]),
                              'orbital' : float(items[11]) }
+            if duration is not None:
+                out['duration'] = duration
             line = (await readline(stdout)).split()
             out['energy']['ETOT'] = float((float(line[1]) * unyt.Ry).to(unyt.eV))
             out['converged'] = line[5] == 'converged'
