@@ -115,11 +115,20 @@ class Example:
         # Dedent the body
         return textwrap.dedent(body)
 
-def list_of_examples():
+    def satisfy_regex(self, regex):
+        re.compile(regex)
+        return regex.search(self.name) or regex.search(self.source())
+
+def list_of_examples(regex=None):
     """
     Return list of tuples: (subdir_name, docstring of example_main_script)
     """
     base_dir = examples_dir()
     pattern = re.compile(r"^A\d{2}_")  # matches A{number*2}_
-    return [ Example(d) for d in base_dir.iterdir()
+    out = [ Example(d) for d in base_dir.iterdir()
              if d.is_dir() and pattern.match(d.name) ]
+    if regex:
+        re.compile(a)
+        out2 = [ i if i.satisfy_regex(regex) ]
+
+    return out

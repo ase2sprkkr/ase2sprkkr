@@ -16,12 +16,14 @@ from ...common.tools import main  # NOQA
 
 help="Show path to the examples, or example itself, or copy a given example."
 description = "See also the 'shell -e' subcommand for running examples interactivelly"
+aliases = ['examples']
 
 def parser(parser):
     parser.add_argument('example', type=int, nargs='?', help='The number of the example to print. If ommited')
     parser.add_argument('-c', '--copy', help='Copy the example to a given dir', type=str)
     parser.add_argument('-p', '--path', help='Print a path to the example(s)', action='store_true')
     parser.add_argument('-s', '--script', help='Print a path to the example main script', action='store_true')
+    parser.add_argument('-g', '--grep', help='Find an example according to the given regex', type=str)
 
 def run(args):
     from ase2sprkkr.gui import examples
@@ -36,7 +38,7 @@ def run(args):
             return
         print("")
 
-        exs = examples.list_of_examples()
+        exs = examples.list_of_examples(regex = args.grep)
         print(f"{'NAME':<30} {'SCRIPT':<20} DESCRIPTION")
         for e in exs:
             print(f"{e.name:<30} {e.main_script.name:<20} {e.short_docstring or ''}")
