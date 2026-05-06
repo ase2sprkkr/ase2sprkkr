@@ -171,7 +171,7 @@ class TaskResult:
   @classmethod
   def from_file(cls, file):
       def read_output_for(task):
-          process = KkrOutputReader.class_for_task(task)
+          process = KkrOutputReader.class_for_task(task or '')
           process = process(None, None, os.path.dirname(file))
           f.seek(0)
           return process.read_from_file(f)
@@ -179,8 +179,8 @@ class TaskResult:
       with open(file, "rb") as f:
           raw_out = f.read()
           matches = cls._match_task_regex.search(raw_out.decode('utf8'))
-          out = read_output_for(matches[1])
-          if matches[1] == 'NONE':
+          out = read_output_for(matches[1] if matches is not None else None)
+          if not matches or matches[1] == 'NONE':
               if 'DOS' in out.files:
                     with open(file, "rb") as f:
                         out = read_output_for('DOS')
@@ -273,6 +273,8 @@ class KkrOutputReader:
 
   @staticmethod
   def class_for_task(task):
+       if not task:
+          return DefaultOutputReader
        try:
           mod = importlib.import_module(f'.{task.lower()}', readers.__name__)
           clsname = task.title() + 'OutputReader'
