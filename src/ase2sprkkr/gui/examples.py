@@ -129,6 +129,6 @@ def list_of_examples(regex=None):
              if d.is_dir() and pattern.match(d.name) ]
     if regex:
         re.compile(a)
-        out2 = [ i if i.satisfy_regex(regex) ]
+        out2 = [ i for i in out if i.satisfy_regex(regex) ]
 
     return out
