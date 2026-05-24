@@ -35,7 +35,7 @@ def parser(parser):
         else:
             return slice(out[0]-1, out[1])
 
-    parser.add_argument('output', help='SPR-KKR output file name (see the supported files above).')
+    parser.add_argument('output', help='SPR-KKR output file name (see the supported files above).', nargs="+")
     parser.add_argument('-o','--output_filename', dest='filename', type=str, help='The plot will be saved to a file with given name, instead of showing it on the screen. If more values are given (see -v), their name will be added to the filename.', default=None, required=False)
     parser.add_argument('-v','--value', dest='value', type=str, help='Only the value of the given name will be plotted (option can be repeated)', action='append', default=[], required=False)
 
@@ -59,38 +59,63 @@ def parser(parser):
 
 def run(args, global_args):
   from ...output_files.output_files import OutputFile
+  from pathlib import Path
   kwargs = vars(args)
 
-  of = OutputFile.from_file(args.output)
-  for x in [ 'layer' ]:
-      if x in kwargs and not x in of.plot_parameters:
-          raise ValueError(f"Argument '--{x}' is not valid for {of}")
-
+  outputs = args.output
   del kwargs['output']
-
   value = args.value
   del kwargs['value']
-
-  kwargs = { k:v for k,v in kwargs.items() if v is not None }
+  filename = kwargs['filename']
+  del kwargs['filename']
   kwargs.update(dict(kwargs['args']))
   del kwargs['args']
+  kwargs = { k:v for k,v in kwargs.items() if v is not None }
 
-  if value:
-    fn = kwargs.get('filename', None)
-    for name in value:
-      if fn is not None and len(value) > 1:
-         kwargs['filename'] = append_id_to_filename(fn, name)
-      try:
-         val = of[name.upper()]
-      except KeyError:
-         raise ValueError(f"There is no value named '{name.upper()}' in the output file.")
-      if not hasattr(val, 'plot'):
-         raise ValueError(f"Value '{name.upper()}' does not know, how it should be plotted.")
-      val.plot(**kwargs)
-  else:
-    if not hasattr(of, 'plot'):
-         raise ValueError(f"File '{of}' does not know, how it should be plotted.")
-    of.plot(**kwargs)
+  error = None
+
+  for output in outputs:
+
+      def plot(what, **kw):
+          nonlocal error
+          try:
+            what.plot(**kw)
+          except Exception as e:
+            if global_args['debug']:
+                raise
+            print(f"File {kw.get('filename') or output} can not be plotted due to: \n {e} ")
+            error = 1
+
+      of = OutputFile.from_file(output)
+      for x in [ 'layer' ]:
+          if x in kwargs and not x in of.plot_parameters:
+              raise ValueError(f"Argument '--{x}' is not valid for {of}")
+
+      if filename:
+          if len(outputs):
+              fn = f"{filename}_{Path(output).stem}"
+          else:
+              fn = filename
+      else:
+          fn = None
+
+      if value:
+        for name in value:
+          if fn is not None and len(value) > 1:
+             kwargs['filename'] = append_id_to_filename(fn, name)
+          try:
+             val = of[name.upper()]
+          except KeyError:
+             raise ValueError(f"There is no value named '{name.upper()}' in the output file.")
+          if not hasattr(val, 'plot'):
+             raise ValueError(f"Value '{name.upper()}' does not know, how it should be plotted.")
+          plot(val, **kwargs)
+      else:
+        if not hasattr(of, 'plot'):
+             raise ValueError(f"File '{of}' does not know, how it should be plotted.")
+        plot(of, filename = fn, **kwargs)
+
+  return error
 
 
 if __name__ == "__main__":
