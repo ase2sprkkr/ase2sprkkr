@@ -25,13 +25,14 @@ class BSFOutputFile(CommonOutputFile, Arithmetic):
 
     def plot(self, layout=(2,2), figsize=(10,6), latex=None,
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
-             layer=None, separate_plots=False, **kwargs
+             layer=None, separate_plots=False, layout_kind = 'constrained',
+             **kwargs
              ):
 
             with Multiplot(layout=layout, figsize=figsize, latex=latex,
                          filename=filename, show=show, dpi=dpi,
                          separate_plots=separate_plots,
-                         adjust={'left':0.12, 'right': 0.95,'bottom': 0.17, 'top':0.90, 'hspace': 0.75, 'wspace':0.5 },
+                         layout_kind = layout_kind,
                          **kwargs) as mp:
 
                 if self.KEYWORD() in ['BSF-SPN', 'BSF-SPOL']:

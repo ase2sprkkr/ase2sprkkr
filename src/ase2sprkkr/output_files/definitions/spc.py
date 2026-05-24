@@ -15,11 +15,12 @@ class ARPESOutputFile(CommonOutputFile, Arithmetic):
 
     def plot(self, layout=(2,2), figsize=(10,6), latex=None,
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=800,
-             separate_plots=False,
+             separate_plots=False, layout_kind='constrained',
              **kwargs
              ):
         with Multiplot(layout=layout, figsize=figsize, latex=latex,
                        filename=filename, show=show, dpi=dpi, separate_plots=separate_plots,
+                       layout_kind = layout_kind,
                        **kwargs) as mp:
             mp.plot(self.TOTAL)
             mp.plot(self.UP)

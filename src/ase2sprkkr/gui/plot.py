@@ -88,20 +88,31 @@ def single_plot(filename:Optional[str]=None, show:Optional[bool]=None, window_ti
           fig.canvas.manager.set_window_title(window_title)
       plt.subplots_adjust(left=0.15,right=0.95,bottom=0.17,top=0.93)
       yield ax
-      finish_plot(filename, show, dpi)
+      finish_plot(fig, filename, show, dpi)
 
 
-def finish_plot(filename:Optional[str]=None, show:Optional[bool]=None, dpi=600):
+def finish_plot(fig, filename:Optional[str]=None, show:Optional[bool]=None, dpi=600, layout=False):
      """
      Show the plot and/or save it to the given file
      """
-     plt.tight_layout()
+     if layout == 'tight':
+        plt.tight_layout()
      if show is None:
         show=filename is None
-     if show:
-        plt.show()
      if filename:
         plt.savefig(filename, dpi=dpi)
+
+     if layout == 'constrained':
+        fig.set_constrained_layout_pads(
+           w_pad=0.1,   # horizontal outer padding
+           h_pad=0.1,   # vertical outer padding
+           wspace=0.05,
+           hspace=0.05
+        )
+     if show:
+        plt.show()
+
+
 
 
 def auto_range(rng, data):
@@ -223,24 +234,27 @@ class Multiplot:
 
   def __init__(self, layout, figsize=(6,4), latex=None, updown_layout=False,
                filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
-               separate_plots=False, adjust={},
+               separate_plots=False, layout_kind='constrained',
                **kwargs):
       self.separate_plots = separate_plots
       self.filename = filename
       self.show = show
       self.dpi = dpi
       self.latex = latex
+      self.layout_kind = layout_kind  #'constrained', 'tight', 'adjust', {dict for adjust}
 
       if separate_plots:
           self.figsize = figsize
           self.number = layout[0] * layout[1]
           self.figure = None
       else:
-          self.figure, self.axes = plt.subplots(figsize=figsize, nrows=layout[0], ncols=layout[1])
-          adj = {} #{'left': 0.12, 'right': 0.95, 'bottom': 0.17, 'top': 0.90, 'hspace': 0.75, 'wspace': 0.5}
-          adj.update(adjust)
-          if adjust:
-            plt.subplots_adjust(**adjust)
+          self.figure, self.axes = plt.subplots(figsize=figsize, nrows=layout[0], ncols=layout[1], constrained_layout=layout_kind == 'constrained')
+          if layout_kind == 'adjust' or isinstance(layout_kind, dict):
+            adj = {'left': 0.12, 'right': 0.95, 'bottom': 0.17, 'top': 0.90, 'hspace': 0.75, 'wspace': 0.4}
+            if isinstance(layout_kind, dict):
+                adj.update(self.layout_kind)
+            plt.subplots_adjust(**adj)
+
           self.free_axes = np.atleast_1d(self.axes).ravel(order='C' if not updown_layout else 'F')
           self.free_axes = [ i for i in self.free_axes[::-1] ]
 
@@ -261,7 +275,7 @@ class Multiplot:
       if not self.separate_plots:
           for i in self.free_axes:
               i.set_visible(False)
-          finish_plot(self.filename, self.show, self.dpi)
+          finish_plot(self.figure, self.filename, self.show, self.dpi, layout = self.layout_kind)
           return self.context.__exit__(type, value, traceback)
       else:
           if self.separate_plots!='show':

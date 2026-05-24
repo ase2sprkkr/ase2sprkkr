@@ -212,7 +212,8 @@ class JXCOutputFile(OutputFile):
              selector=None,
              iq=None, it=None, exclude_it=None, exclude_vc=True, exchange_radius=4.0,
              font_size=10, axis='all',
-             separate_plots=False, **kwargs):
+             separate_plots=False, layout_kind = 'constrained',
+             **kwargs):
 
         def _resolve_layout(count, values):
             if isinstance(layout, int):
@@ -286,7 +287,7 @@ class JXCOutputFile(OutputFile):
 
         with Multiplot(layout=layout, figsize=figsize, latex=latex,
                            filename=filename, show=show, dpi=dpi,
-                           separate_plots=separate_plots,
+                           separate_plots=separate_plots, layout_kind=layout_kind,
                            **kwargs) as mp:
 
                 for type_index in type_indexes:

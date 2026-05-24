@@ -146,7 +146,7 @@ class RATOutputFile(CommonOutputFile):
              zero_below=True, zero_below_num=50, zero_below_energy=25,
              no_core_splitting=False, merge_all=None, updown_layout=True,
              gauss_width=0.1, lorentz_width=None, n_valence=None,
-             core_hole_width='campbell-papp',
+             core_hole_width='campbell-papp', layout_kind='constrained',
              **kwargs):
 
        data = self.generate_data(interpolate_to_fermi, interpolation_threshold,
@@ -168,7 +168,7 @@ class RATOutputFile(CommonOutputFile):
 
        with Multiplot(layout=layout, figsize=figsize, latex=latex,
                        filename=filename, show=show, dpi=dpi, updown_layout=updown_layout, separate_plots=separate_plots,
-                       adjust={'left':0.12, 'right':0.95, 'bottom':0.17, 'top':0.90, 'hspace':0.75, 'wspace':0.5},
+                       layout_kind=layout_kind,
                        **kwargs) as mp:
             self.POLARIZATION.plot(_inside_plot=mp,  **kwargs)
             self.DIFFERENCE.plot(_inside_plot=mp, **kwargs)
