@@ -55,6 +55,7 @@ def run():
       name = name.replace('_', '-')
       sub = subs.add_parser( name,
                              help=m.help,
+                             aliases = getattr(m, "aliases", []),
                              formatter_class=argparse.RawDescriptionHelpFormatter,
                             description = m.help + '\n' + m.description )
       if hasattr(m, 'unknowns'):
@@ -64,6 +65,7 @@ def run():
   argcomplete.autocomplete(parser)
 
   args, remainder = parser.parse_known_args()
+
   if remainder:
       where = unknowns.get(args.ase2sprkkr_command, None)
       if where is None:

@@ -11,6 +11,7 @@ sys.path.append(str(Path(__file__).resolve().parents[3]))
 
 help='Visualise potential (and possibly in_struct.inp) files.'
 description='You can either use ase visualisation tools or export it to cif file'
+aliases= ['view']
 
 
 def parser(parser):
