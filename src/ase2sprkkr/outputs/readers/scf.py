@@ -305,7 +305,7 @@ class ScfOutputParser(SprKkrOutputParser):
             duration = None
             while True:
                 line = await readline_until(stdout, _err_or_time.search)
-                if b'execution time for last iteration' in line:
+                if 'execution time for last iteration' in line:
                     try:
                         duration = float(line.split()[-2])
                     except (ValueError, IndexError):
