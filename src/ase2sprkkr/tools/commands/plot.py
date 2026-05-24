@@ -57,7 +57,7 @@ def parser(parser):
     group.add_argument('--fermi', help='Draw a line at Fermi energy. Optional float specifies line width.', nargs='?', const=True, type=float,
                        default=argparse.SUPPRESS, required=False)
 
-def run(args):
+def run(args, global_args):
   from ...output_files.output_files import OutputFile
   kwargs = vars(args)
 

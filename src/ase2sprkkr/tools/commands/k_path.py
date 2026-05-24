@@ -23,7 +23,7 @@ def parser(parser):
     parser.add_argument('-v', '--verbose', help='Verbose.', action='store_true', default=False)
 
 
-def run(args):
+def run(args, global_args):
     from ase2sprkkr import Potential
     from ase2sprkkr.gui.k_path import k_path_gui, k_path_to_string
     kpath = k_path_gui(Potential.from_file(args.potential).atoms, verbose=args.verbose)

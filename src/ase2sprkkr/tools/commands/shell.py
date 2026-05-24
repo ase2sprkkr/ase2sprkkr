@@ -35,7 +35,7 @@ def parser(parser):
     parser.add_argument('-s', '--save', help='Save the script/Jupyter notebook.', action="store", type=str)
     parser.add_argument('-r', '--run', help='Execute the notebook before saving and opening Jupyter notebook.', action="store", type=str)
 
-def run(args):
+def run(args, global_args):
   from ...gui.shell import Python, JupyterLab, Pdb
   import tempfile
   import contextlib

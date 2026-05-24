@@ -117,7 +117,7 @@ def zipp(args):
     gather_files(args.output_files, args.zip)
 
 
-def run(args):
+def run(args, global_args):
 
     global api
 

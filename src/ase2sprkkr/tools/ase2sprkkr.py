@@ -78,8 +78,11 @@ def run():
   if args.debug:
       from ase2sprkkr.common.debug import add_debug_hook
       add_debug_hook()
-  del args.debug
-  del args.profile
+
+  global_args = {}
+  for i in [ 'debug', 'profile' ]:
+      global_args[i] = getattr(args, i)
+      delattr(args, i)
 
   if args.version:
       import ase2sprkkr.version
@@ -94,7 +97,7 @@ def run():
   else:
       action = modules[ args.ase2sprkkr_command.replace('-','_') ].run
       del args.ase2sprkkr_command
-      action(args)
+      action(args, global_args)
 
 
 if __name__ == "__main__":

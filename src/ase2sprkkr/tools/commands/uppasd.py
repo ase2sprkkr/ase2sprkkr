@@ -43,7 +43,7 @@ def parser(parser):
     parser.add_argument('-f', '--font-size', type=int, default=14,
                         help='Font size for plots')
 
-def run(args):
+def run(args, global_args):
     import glob
 
     from ...bindings.uppasd import Coordinates, write_dmfile, write_jfile, write_mom_file, write_pos_file  # NOQA

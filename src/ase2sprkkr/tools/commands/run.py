@@ -32,7 +32,7 @@ def parser(parser):
     parser.add_argument('options', nargs='*', help='Input parameters in the form <name>=<value>.', type=parse_named_option)
 
 
-def run(args):
+def run(args, global_args):
     from ... import SPRKKR, Potential  # NOQA
     import pyparsing
     import sys

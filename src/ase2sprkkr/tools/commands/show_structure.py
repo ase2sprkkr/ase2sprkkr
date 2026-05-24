@@ -29,7 +29,7 @@ def parser(parser):
   parser.add_argument('-b','--nbulk',type=int,help='Repetition of bulk unit (default=2)',default=2,required=False)
 
 
-def run(args):
+def run(args, global_args):
   from ...potentials.potentials import Potential          # NOQA
   from ...sprkkr.structure import structure_file_to_atoms # NOQA
   from ...ase.visualise import view                       # NOQA

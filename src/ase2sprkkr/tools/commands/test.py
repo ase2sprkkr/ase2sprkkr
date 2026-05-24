@@ -26,7 +26,7 @@ def parser(parser):
     parser.add_argument('--fast', help='Run only tests not marked as slow.', action='store_true')
 
 
-def run(args):
+def run(args, global_args):
     import pytest
     import os
     import subprocess

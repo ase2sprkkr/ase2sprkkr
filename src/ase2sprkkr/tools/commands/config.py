@@ -61,7 +61,7 @@ from ase2sprkkr.configuration import config
 """
 
 
-def run(args):
+def run(args, global_args):
     import os
     import pyparsing
     from ...configuration import user_preferences_file, config

@@ -47,7 +47,7 @@ def parser(parser):
     parser.add_argument('--verbose', '-v', help='Give a more verbose info. It is set automatically, if the output is limited.', action=action, default=None)
 
 
-def run(args):
+def run(args, global_args):
 
     print("ASE2SPRKKR\n"
           "==========\n"
