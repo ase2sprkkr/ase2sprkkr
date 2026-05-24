@@ -74,6 +74,9 @@ class AtomicType:
         if atomic_number is None and symbol is None:
            raise ValueError("Unknown atomic type")
 
+        if '_' in symbol:
+            symbol = symbol.split('_',1)[0]
+
         if symbol == 'Vc' or atomic_number == 0 or \
            (symbol == 'X' and atomic_number is None):
            self._symbol = 'Vc'
