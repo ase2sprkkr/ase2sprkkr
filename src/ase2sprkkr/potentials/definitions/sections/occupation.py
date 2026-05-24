@@ -42,6 +42,9 @@ class OccupationSection(PotentialSection):
       tags = {}
 
       read_io_data.site_types = []
+
+      occ_dict = {}
+
       def site(i, d):
           ind = unique[i]
           if not ind in tags:
@@ -54,11 +57,14 @@ class OccupationSection(PotentialSection):
                          mesh = mesh)
              tags[ind] = site
              read_io_data.site_types.append(site.site_type)
+             occ_dict[str(ind)] = occ.to_dict()
              return site
           else:
              return Site(tags[ind].site_type)
       sites = np.array([ site(i,d) for i,d in enumerate(data()) ])
       atoms.set_sites(sites, sg_info)
+      atoms.arrays['spacegroup_kinds'] = unique
+      atoms.info['occupancy'] = occ_dict
 
 
 class OccupationSectionDefinition(PotSectionDefinition):
