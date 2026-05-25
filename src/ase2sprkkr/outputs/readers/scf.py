@@ -155,8 +155,7 @@ class ScfResult(TaskResult):
 
   @property
   def energies(self):
-      return self.last_iteration.energy()
-
+      return self.last_iteration.energy
 
   @cached_property
   def output_values(self):
