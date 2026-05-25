@@ -560,7 +560,7 @@ class RealItemDefinition(BaseDefinition):
             if len(names) > 1:
                 name = pp.Or(names)
                 if self.do_not_skip_whitespaces_before_name:
-                    names=names.leave_whitespace()
+                    name=name.leave_whitespace()
             else:
                 name = names[0]
             if self.is_repeated:

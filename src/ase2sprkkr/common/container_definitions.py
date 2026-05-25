@@ -42,7 +42,7 @@ class ContainerDefinition(RealItemDefinition):
     dir_common_attributes = True
     """ In dir listing, show the common 'object' attributes """
 
-    def __init__(self, name, members=[], info=None, description=None,
+    def __init__(self, name, members=[], written_name=None, info=None, description=None,
                  is_optional=False, is_hidden=False, is_expert=False,
                  has_hidden_members=False, name_in_grammar=None, force_order=None,
                  name_regex=False, result_class=None,
@@ -66,6 +66,7 @@ class ContainerDefinition(RealItemDefinition):
 
        super().__init__(
            name = name,
+           written_name = written_name,
            is_optional = is_optional,
            is_hidden = is_hidden,
            is_expert = is_expert,
