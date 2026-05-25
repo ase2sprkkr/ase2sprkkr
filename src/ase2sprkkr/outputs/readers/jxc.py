@@ -69,17 +69,18 @@ class JxcResult(TaskResult):
             if key in self.files
         }
 
-    def write_uppasd_files(self, directory=None):
+    def write_uppasd_files(self, directory=None, jxc_file_name='jfile.dat', dmi_file_name='dmfile.dat', pos_file_name='posfile.dat', mom_file_name='momfile.dat'):
         """ Write the computed exchange couplings, exchange tensors and Dzyaloshinski-Moriya vectors
         to UppASD input files in the specified directory. """
         output_file = None
-        for key in ['jxc', 'dmi']:
+        for key  in ['jxc', 'dmi']:
             if key in self.files:
                 output_file = self.output_values[key]()
-                output_file.write_uppasd_file(directory=directory)
+                file_name = locals()[key + '_file_name']
+                output_file.write_uppasd_file(file_name=file_name, directory=directory)
 
-        write_pos_file(self.atoms, jxc_ouput_file=output_file, directory=directory)
-        write_mom_file(self.atoms, jxc_ouput_file=output_file, directory=directory)
+        write_pos_file(self.atoms, pos_file_name, jxc_ouput_file=output_file, directory=directory)
+        write_mom_file(self.atoms, mom_file_name, jxc_ouput_file=output_file, directory=directory)
 
 
 class JxcOutputParser(SprKkrOutputParser):
