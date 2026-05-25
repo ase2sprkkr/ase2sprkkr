@@ -5,7 +5,7 @@ import re
 from ..task_result import TaskResult, KkrOutputReader, OutputFileResultValue
 from ..sprkkr_output_reader import SprKkrOutputParser
 from ...common.decorators import cached_property
-from ...bindings.uppasd import write_pos_file, write_mom_file
+from ...bindings.uppasd import write_pos_file, write_mom_file, write_inpsd_file
 from ...common.process_output_reader import readline_until
 
 
@@ -69,18 +69,47 @@ class JxcResult(TaskResult):
             if key in self.files
         }
 
-    def write_uppasd_files(self, directory=None, jxc_file_name='jfile.dat', dmi_file_name='dmfile.dat', pos_file_name='posfile.dat', mom_file_name='momfile.dat'):
+    def write_uppasd_files(self, directory=None,
+                           jxc_file='jfile.dat', dmi_file='dmfile.dat', pos_file='posfile.dat', mom_file='momfile.dat',
+                           inpsd_file='inpsd.dat',
+                           **kwargs
+                           ):
         """ Write the computed exchange couplings, exchange tensors and Dzyaloshinski-Moriya vectors
         to UppASD input files in the specified directory. """
         output_file = None
+        args = {'dmi' : 'biqdm', 'jxc' : 'exchange' }
         for key  in ['jxc', 'dmi']:
             if key in self.files:
+                file_name = locals()[key + '_file']
+                if file_name is False:
+                    continue
                 output_file = self.output_values[key]()
-                file_name = locals()[key + '_file_name']
                 output_file.write_uppasd_file(file_name=file_name, directory=directory)
+                argname = args[key]
+                if argname in kwargs:
+                    warning.warn(f"Option `{argname}` already present in the kwargs. I have no place to wrute the name of {key} file into inpsd.dat")
+                else:
+                    kwargs[argname] = file_name
 
-        write_pos_file(self.atoms, pos_file_name, jxc_ouput_file=output_file, directory=directory)
-        write_mom_file(self.atoms, mom_file_name, jxc_ouput_file=output_file, directory=directory)
+        if pos_file is not False:
+            write_pos_file(self.atoms, pos_file, jxc_ouput_file=output_file, directory=directory)
+        if mom_file is not False:
+            write_mom_file(self.atoms, mom_file, jxc_ouput_file=output_file, directory=directory)
+        if inpsd_file is not False:
+            write_inpsd_file(self.atoms, posfile=pos_file, momfile=mom_file, **kwargs)
+
+    def run_uppasd(self, executable='uppasd', directory=None,
+                         jxc_file='jfile.dat', dmi_file='dmfile.dat', pos_file='posfile.dat', mom_file='momfile.dat',
+                         inpsd_file='inpsd.dat',
+                         **kwargs):
+        self.write_uppasd_files(
+            **{k: v for k, v in locals().items() if k not in ("self", "kwargs", "executable")},
+            **kwargs
+        )
+        import subprocess
+        from ...common.directory import Directory
+        with Directory(directory).chdir():
+            subprocess.run([executable])
 
 
 class JxcOutputParser(SprKkrOutputParser):

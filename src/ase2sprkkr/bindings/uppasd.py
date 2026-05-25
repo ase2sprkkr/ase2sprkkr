@@ -16,12 +16,51 @@ COORDINATE_FIELDS = {
     Coordinates.lattice: ("N1", "N2", "N3"),
 }
 
-def write_jfile(jxc_ouput_file:JXCOutputFile, file_name='jfile.dat', directory=None,
+def write_inpsd_file(atoms:Atoms, file_name=None, directory=None, id=None, sym=0,
+                     ncell=None, **kwargs):
+    file_name = file_name or 'inpsd.dat'
+    if directory:
+        file_path = Path(directory) / file_name
+    else:
+        file_path = Path(file_name)
+
+    bc = [ 'P' if i else '0' for i in atoms.pbc ]
+    bc = '            '.join(bc)
+    cell = ''
+    for row in atoms.cell.array:
+        cell += "    {:>14.10f} {:>14.10f} {:>14.10f}\n".format(*row)
+    if isinstance(ncell, int):
+        ncell = (ncell, ncell, ncell)
+    if ncell is not None:
+        ncell = f"ncell {ncell[0]:<13} {ncell[1]:<13} {ncell[2]:<13}   System size"
+    else:
+        ncell = ''
+
+    def formated(v):
+        if isinstance(v, (bool, np.bool)):
+            return 'Y' if v else 'N'
+        return str(v)
+
+    with file_path.open("w") as infile:
+        infile.write(
+f"""
+simid {id or str(atoms.symbols)}
+{ncell}
+BC    {bc}  Boundary conditions (0=vacuum, P=periodic)
+cell  {cell[6:]}
+Sym   {sym}    Symmetry of exchange bonding vectors (0 for no, 1 for cubic, 2 for 2d cubic, 3 for hexagonal)
+
+"""     )
+        for k,v in kwargs.items():
+            infile.write(f"{k:<14} {formated(v)}\n")
+
+def write_jfile(jxc_ouput_file:JXCOutputFile, file_name=None, directory=None,
                 selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True, exchange_radius=None,
                 coordinates: Coordinates = Coordinates.lattice):
     coordinate_fields = COORDINATE_FIELDS[coordinates]
     rows = jxc_ouput_file.filtered_data(selector=selector, iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc, exchange_radius=exchange_radius)
 
+    file_name = file_name or 'jfile.dat'
     if directory:
         file_path = Path(directory) / file_name
     else:
