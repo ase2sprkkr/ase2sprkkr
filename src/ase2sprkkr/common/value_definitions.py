@@ -43,14 +43,13 @@ class ValueDefinition(RealItemDefinition):
 
   def __init__(self, name, type=None, default_value=None,
                default_value_from_container=None,
-               written_name=None, alternative_names=None,
+               written_name=None,
                fixed_value=None, init_by_default=False,
                result_is_visible=False, info=None, description=None,
                is_stored=None, is_hidden=False, is_optional=None, is_required=None,
                is_expert=False, is_repeated:Union[bool,str,RealItemDefinition.Repeated]=False,
                is_always_added:bool=None,
                name_in_grammar=None, name_format=None, expert=None,
-               write_alternative_name:bool=False,
                write_condition=None, condition=None,
                result_class=None,
                delimiter=None,
@@ -62,7 +61,7 @@ class ValueDefinition(RealItemDefinition):
 
     Parameters
     ----------
-    name: str
+    name: str | Tuple(str)
       Name of the configuration value
 
     type: Optional[GrammarType|mixed]
@@ -78,9 +77,6 @@ class ValueDefinition(RealItemDefinition):
 
     written_name: str
       Name of the configuration value in the input file
-
-    alternative_names: str or [str]
-      Value can have an alternative name (that alternativelly denotes the value)
 
     fixed_value: mixed
       If it is given, this option have a fixed_value value (provided by this parameter),
@@ -150,9 +146,6 @@ class ValueDefinition(RealItemDefinition):
       If not None, set ``is_expert`` to True, ``default_value`` to the given value and
       ``required`` to False. Note, that also ``type`` can be determined from such given
       ``default_value``.
-
-    write_alternative_name
-       Wheter use the name or the (first) alternative name in the output.
 
     write_condition
        If defined, write the value, only if write_condition(the option) is True.
@@ -234,14 +227,12 @@ class ValueDefinition(RealItemDefinition):
     super().__init__(
          name = name,
          written_name = written_name,
-         alternative_names = alternative_names,
          is_optional = is_optional,
          is_hidden = is_hidden,
          is_expert = is_expert,
          name_in_grammar = name_in_grammar,
          info=info,
          description = description,
-         write_alternative_name = write_alternative_name,
          name_format = name_format,
          write_condition = write_condition,
          condition = condition,

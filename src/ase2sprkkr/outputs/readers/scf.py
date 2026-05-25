@@ -242,11 +242,11 @@ scf_section = Section('iteration', [
     PV('orbital', float)
   ]),
   Section('energy' , [
-    PV('EF', float, info='Fermi energy', alternative_names='fermi'),
-    PV('ETOT', float, info='Total energy', alternative_names='total'),
-    PV('EMIN', float, info='Bottom of energy contour for band states', alternative_names='band_states_min'),
-    PV('ESCBOT', float, info='Lower limit for semi-core states', alternative_names='semi_core_min', is_required=False),
-    PV('ECTOP', float, info='Upper limit for core states', alternative_names='core_max', is_required=False)
+    PV(('EF', 'fermi'), float, info='Fermi energy'),
+    PV(('ETOT','total'), float, info='Total energy'),
+    PV(('EMIN', 'band_states_min'), float, info='Bottom of energy contour for band states'),
+    PV(('ESCBOT','semi_core_min'), float, info='Lower limit for semi-core states', is_required=False),
+    PV(('ECTOP', 'core_max'), float, info='Upper limit for core states', is_required=False)
   ]),
   Section('atomic_types', atomic_types_definition.members(), is_repeated=True)
 ], is_repeated=True)

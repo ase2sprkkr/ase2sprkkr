@@ -16,7 +16,7 @@ from ...gui.plot import colormesh, Multiplot
 
 class BSFOutputFile(CommonOutputFile, Arithmetic):
 
-    plot_parameters = { 'layer', 'fermi', 'seperate_plots' }
+    plot_parameters = { 'sites', 'fermi', 'seperate_plots' }
 
     """
     Output file for Bloch spectral functions
@@ -75,29 +75,34 @@ def create_definition():
 
     def plot(title, colormap='bwr', negative=True):
 
-        def plot(option, colormap=colormap, layer=None, fermi=None, **kwargs):
+        def plot(option, colormap=colormap, sites=None, fermi=None, **kwargs):
           c = option._container
           mesh = c.MESH()
           data = option()
           if fermi is True:
                fermi = 0.5
 
-          def check_layer(layer):
+          def check_sites(site):
               limit = data.shape[0]
-              if layer < 0 or layer >= limit:
-                  raise ValueError(f"Layer number should be between {1} and {limit}.")
+              if site < 0 or site >= limit:
+                  raise ValueError(f"Site number should be between {0} and {limit - 1}.")
 
-          if layer is None:
-              data = data.sum(axis = 0)
-          elif isinstance(layer, int):
-              check_layer(layer)
-              data = data[layer]
+          if isinstance(sites, int):
+              check_sites(sites)
+              data = data[sites]
           else:
-              check_layer(layer.start)
-              check_layer(layer.stop)
-              if layer.start >= layer.stop:
-                  raise ValueError(f"Empty layer range.")
-              data = data[layer].sum(axis = 0)
+              if isinstance(sites, list):
+                  for i in sites:
+                      check_sites(i)
+              elif isinstance(sites, slice):
+                  check_sites(sites.start)
+                  check_sites(sites.stop)
+                  if sites.start >= sites.stop:
+                      raise ValueError(f"Empty sites range.")
+              elif not isinstance(sites, None):
+                  raise ValueError(f"I can not filter sites by {sites}.")
+
+              data = data[sites].sum(axis = 0)
 
           if negative:
             vmax = max(np.abs(np.max(data)), np.abs(np.min(data)))

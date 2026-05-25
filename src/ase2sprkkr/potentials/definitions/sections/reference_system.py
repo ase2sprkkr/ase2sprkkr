@@ -16,15 +16,14 @@ class ReferenceSystemSection(UniqueListSection):
 class ReferenceSystemSectionDefinition(PotSectionDefinition):
 
   def __init__(self, name='REFERENCE SYSTEM',
-                     alternative_names='REFERENCE SYSTEM FOR TIGHT BINDING MODE',
-                     write_alternative_name=True,
+                     written_name='REFERENCE SYSTEM FOR TIGHT BINDING MODE',
                      **kwargs):
       V = PotValueDefinition
       members = [
           V('NREF', int),
           V('DATA', Table({'VREF': float, 'RMTREF' :float}, numbering='IREF')),
       ]
-      super().__init__(name, members, has_hidden_members=True, alternative_names = alternative_names)
+      super().__init__(name, members, has_hidden_members=True, written_name = written_name)
 
   def validate(self, values, why='set'):
       return values['NREF'] == len(values['DATA']) or \

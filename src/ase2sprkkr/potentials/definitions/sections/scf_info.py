@@ -53,7 +53,7 @@ class ScfInfoSectionDefinition(PotSectionDefinition):
         V('SCFSTATUS', DefKeyword('START', 'CONVERGED', 'ITR-BULK', 'ITR-R-BULK', 'ITR-L-BULK', 'ITR-I-ZONE', 'ITR')),
         V('FULLPOT', False),
         V('BREITINT', False),
-        V('NONMAG', False, alternative_names='NOMAG'),
+        V(('NONMAG','NOMAG'), False),
         V('ORBPOL', str, 'NONE'),
         V('EXTFIELD', False),
         V('BLCOUPL', False),

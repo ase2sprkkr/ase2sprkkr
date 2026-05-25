@@ -17,10 +17,11 @@ import itertools
 from . import backward_compatibility  # NOQA
 from enum import Enum, nonmember
 import numpy as np
+import re
 
 from .warnings import DataValidityWarning
 from .options import Dummy, DummyStub
-from .decorators import cached_class_property
+from .decorators import cached_class_property, cached_property
 from .grammar import generate_grammar
 from .grammar_types.basic import Separator, KeywordSeparator
 from .parsing_results import Key, ArrayKey, DictKey, RepeatedKey, DefDictKey, IgnoredKey
@@ -177,6 +178,14 @@ class BaseDefinition:
 
   is_repeated = Repeated.NO
   """ By default, the configuration items are not repeated """
+
+  def interactive_names(self):
+      for i in self.all_names:
+          yield re.sub(r'[()]','', re.sub(r'[-\s.]','_',i))
+
+  @property
+  def all_names(self):
+      yield name
 
   @property
   def real_name(self):
@@ -356,11 +365,10 @@ class RealItemDefinition(BaseDefinition):
    """
    info_in_data_description = False
 
-   def __init__(self, name, written_name=None, alternative_names=None,
+   def __init__(self, name, written_name=None,
                 is_optional=False, is_hidden=False, is_expert=False,
                 name_in_grammar=None, name_format=None,
                 info=None, description=None,
-                write_alternative_name:bool=False,
                 name_regex=None,
                 condition=None, write_condition=None,
                 result_class=None, warning_condition=None,
@@ -369,17 +377,11 @@ class RealItemDefinition(BaseDefinition):
        """
        Parameters
        ----------
-        name: str
+        name: str | Tuple(str)
           Name of the value/section
 
         written_name: str or None
           Name to write to the input file. Default None means use the name.
-
-        alternative_names: str or [str]
-          Alternative names that can denotes the value. If no written_name is given,
-          the first alternative_names is used for the output. However, contrary to
-          written_name, such way still allow to parse the name during parsing as
-          the name of the value.
 
         is_optional: boolean
           If True, this section/value can be missing in the .pot/task file
@@ -407,9 +409,6 @@ class RealItemDefinition(BaseDefinition):
         description: str
            The additional informations for the users.
 
-        write_alternative_name
-           Wheter use the name or the (first) alternative name in the output.
-
         write_condition
            If defined, write the value, only if write_condition(the option) is True.
 
@@ -426,24 +425,18 @@ class RealItemDefinition(BaseDefinition):
         warning_condition
            If this lambda returns a non-none during validation, a warning will be issued.
        """
-       super().__init__(name, is_optional, condition)
-       self.written_name = written_name
-       """ The name of the option/section """
-       if isinstance(alternative_names, str):
-           alternative_names = [ alternative_names ]
-       self.alternative_names = alternative_names
-       if alternative_names:
-           self.alternative_names_lcase = [ i.lower() for i in alternative_names ]
+       if isinstance(name, (tuple, list)):
+           self.all_names = name
+           name = name[0]
        else:
-           self.alternative_names_lcase = self.alternative_names
+           self.all_names = ( name, )
+       super().__init__(name, is_optional, condition)
+
+       self.written_name = written_name or self.name
+       """ The name of the option/section """
        self.name_regex = name_regex
-       """ Alternative names of the option/section. The option/section can
-       be "denoted" in the configuration file by either by its name or any
-       of the alternative names.
-       """
        self.is_expert = is_expert
        self.is_hidden = is_hidden
-       self.write_alternative_name = write_alternative_name
        self.write_condition = write_condition or (lambda x: True)
        self.name_in_grammar = self.__class__.name_in_grammar \
                                if name_in_grammar is None else name_in_grammar
@@ -457,6 +450,12 @@ class RealItemDefinition(BaseDefinition):
        self.name_format = name_format
        self.plot=plot
 
+   all_names = None     # remove the property
+
+   @cached_property
+   def lower_case_names(self):
+       return [ i.lower() for i in self.all_names ]
+
    def enrich(self, option):
        if self.plot:
          option.plot = lambda **kwargs: self.plot(option, **kwargs)
@@ -464,21 +463,13 @@ class RealItemDefinition(BaseDefinition):
 
    @property
    def formated_name(self):
-      if self.written_name:
-         name = self.written_name
-      else:
-         name = next(iter(self.alternative_names)) if self.write_alternative_name else self.name
-      if self.name_format:
-         return self.name_format.format(name)
-      return name
+       name = self.written_name
+       if self.name_format:
+           return self.name_format.format(name)
+       return name
 
    def has_name(self, name, lower_case=False):
-       if super().has_name(name, lower_case):
-           return True
-       if self.alternative_names:
-         if name in (self.alternative_names_lcase if lower_case else self.alternative_names):
-           return True
-       return False
+       return name in self.lower_case_names if lower_case else self.all_names
 
    def validate_warning(self, value):
        if self.warning_condition:
@@ -491,11 +482,7 @@ class RealItemDefinition(BaseDefinition):
            return
        if self.written_name:
            yield self.written_name
-       else:
-           yield self.name
-       if self.alternative_names:
-           for i in self.alternative_names:
-               yield i
+       yield from self.all_names
 
    def allow_duplication(self):
        """ Can be the item repeated in the output file """

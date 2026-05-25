@@ -185,7 +185,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
       #    d = member._defintion
       #    return not d.condtion or d.condition(self)
 
-      members = ( k.name for i,k in self._interactive_members.items() )
+      members = (i for i in self._interactive_members.keys() )
       if self._definition.dir_common_attributes:
           members = itertools.chain( members, super().__dir__())
       return members
@@ -419,13 +419,19 @@ class ConfigurationContainer(BaseConfigurationContainer):
          raise KeyError("No custom member with name {} to remove".format(name))
       member = self._members[name]
       del self._members[name]
-      iname = self._interactive_member_name(name)
-      if iname in self._interactive_members and \
-           self._interactive_members[iname] is member:
-                del self._interactive_members[iname]
-      for i in name.lower(), iname.lower():
-          if i in self._lowercase_members and self._lowercase_members[i] is member:
-                del self._lowercase_members[i]
+
+      iname = name.lower()
+      if self._lowercase_members(iname) is member:
+          del self._lowercase_members[iname]
+
+      df = member._definition
+      if not df.is_hidden:
+          for iname in df.interactive_names():
+              if self._interactive_members.get(iname) is member:
+                  del self._interactive_members[iname]
+                  iname = iname.lower()
+                  if self._lowercase_members(iname) is member:
+                      del self._lowercase_members[iname]
 
   def __iter__(self):
       """ Iterate over all members of the container """
@@ -482,15 +488,6 @@ class ConfigurationContainer(BaseConfigurationContainer):
              continue
           yield from i._find_members(name, is_option, lower)
 
-  @staticmethod
-  def _interactive_member_name(name):
-      """ Create a sanitized name from a member-name.
-
-      The sanitized names are keys in ``interactive_members`` array, and thus
-      the members are accesible by ``<container>.<member>`` notation.
-      """
-      return re.sub(r'[()]','', re.sub(r'[-\s.]','_',name))
-
   def _add(self, member):
       name = member.name
       self._members[name] = member
@@ -499,13 +496,15 @@ class ConfigurationContainer(BaseConfigurationContainer):
       if not lname in self._lowercase_members:
           self._lowercase_members[lname] = member
 
-      if not member._definition.is_hidden:
-          iname = self._interactive_member_name(name)
-          if not iname in self._interactive_members:
-              self._interactive_members[iname] = member
-              iname = iname.lower()
-              if not iname in self._lowercase_members:
-                  self._lowercase_members[iname] = member
+      df = member._definition
+
+      if not df.is_hidden:
+          for iname in df.interactive_names():
+              if not iname in self._interactive_members:
+                  self._interactive_members[iname] = member
+                  iname = iname.lower()
+                  if not iname in self._lowercase_members:
+                      self._lowercase_members[iname] = member
 
   def is_changed(self):
       for i in self._values():

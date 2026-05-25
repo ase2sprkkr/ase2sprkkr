@@ -52,7 +52,7 @@ def parser(parser):
     group.add_argument('--separate_plots', help='Plot each value from file in a separate window or/and file.', action='store_true', required=False)
 
     group = parser.add_argument_group('BSF specific options')
-    group.add_argument('--layer', help='Select a layer for plotting. Either number or two comma delimited numbers from,to. Numbering starts from 1. ', type=parse_layer,
+    group.add_argument('--sites', help='Select a site to plot (for BSF). Either number or two comma delimited numbers from,to. Numbering starts from 1. ', type=parse_layer,
                        default=argparse.SUPPRESS, required=False)
     group.add_argument('--fermi', help='Draw a line at Fermi energy. Optional float specifies line width.', nargs='?', const=True, type=float,
                        default=argparse.SUPPRESS, required=False)

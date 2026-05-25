@@ -29,9 +29,8 @@ class MomentsSectionDefinition(PotSectionDefinition):
           SeparatorDefinition('=', length=79)
       ]
       super().__init__(name, members, has_hidden_members=True, is_repeated=BaseDefinition.Repeated.LIST_SECTION, is_optional=True,
-                       alternative_names='MOMENTS        QEL  NOS  SMT  OMT  HFF',
+                       written_name='MOMENTS        QEL  NOS  SMT  OMT  HFF',
                        name_regex=re.compile(r'MOMENTS(?:(?: *[A-Z]{3}){5})'),
-                       write_alternative_name=True,
                        )
 
   result_class = MomentSection
