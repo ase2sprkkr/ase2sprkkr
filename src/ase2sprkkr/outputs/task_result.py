@@ -179,8 +179,13 @@ class TaskResult:
       with open(file, "rb") as f:
           raw_out = f.read()
           matches = cls._match_task_regex.search(raw_out.decode('utf8'))
-          out = read_output_for(matches[1] if matches is not None else None)
-          if not matches or matches[1] == 'NONE':
+          typ = matches[1] if matches and matches[1] != 'NONE' else None
+          if typ is None:
+              if b'Components of Dzyaloshinski-Moriya vector Dij' in raw_out:
+                   typ = 'jxc'
+
+          out = read_output_for(typ)
+          if typ is None:
               if 'DOS' in out.files:
                     with open(file, "rb") as f:
                         out = read_output_for('DOS')
