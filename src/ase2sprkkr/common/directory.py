@@ -4,12 +4,13 @@ import os
 
 class Directory:
 
-    def new(dir, default):
+    @classmethod
+    def new(dir, default='.'):
         if isinstance(dir, Directory):
             return dir
         return Directory(dir, default)
 
-    def __init__(self, dir, default):
+    def __init__(self, dir, default='.'):
         if dir is None:
            dir = default
         if dir is None:
