@@ -3,6 +3,10 @@ Unlike ``ase2sprkkr.sprkkr.build``, this module contains generic
 routines, possible usable with plain ASE (with any calculator).
 """
 
+from fractions import Fraction
+from math import gcd, lcm
+import numbers
+
 import numpy as np
 import ase
 from typing import List, Union, Optional, Tuple
@@ -40,7 +44,7 @@ def aperiodic_times(atoms:ase.Atoms,
      given axis. Otherwise, the partial cell
 
     """
-    if isinstance(times, (int, float)):
+    if isinstance(times, numbers.Real):
        if axis is None:
           times = np.ones(3) * times
        else:
@@ -254,6 +258,98 @@ def stack(atomses:List[ase.Atoms],
     out.cell[axis] = origin
     return out
 
+
+def _surface_basis(cell, indices, tol=1e-10):
+   indices = np.asarray(indices)
+   if indices.shape != (3,) or not indices.any():
+      raise ValueError(f'{indices} is an invalid surface type')
+   if not np.allclose(indices, np.rint(indices), atol=tol):
+      raise ValueError(f'{indices} is an invalid surface type')
+
+   indices = np.rint(indices).astype(int)
+   h, k, l = indices
+   h0, k0, l0 = (indices == 0)
+
+   if h0 and k0 or h0 and l0 or k0 and l0:
+      if not h0:
+         c1, c2, c3 = [(0, 1, 0), (0, 0, 1), (1, 0, 0)]
+      if not k0:
+         c1, c2, c3 = [(0, 0, 1), (1, 0, 0), (0, 1, 0)]
+      if not l0:
+         c1, c2, c3 = [(1, 0, 0), (0, 1, 0), (0, 0, 1)]
+   else:
+      p, q = _ext_gcd(k, l)
+      a1, a2, a3 = np.asarray(cell)
+
+      k1 = np.dot(p * (k * a1 - h * a2) + q * (l * a1 - h * a3),
+               l * a2 - k * a3)
+      k2 = np.dot(l * (k * a1 - h * a2) - k * (l * a1 - h * a3),
+               l * a2 - k * a3)
+
+      if abs(k2) > tol:
+         i = -int(round(k1 / k2))
+         p, q = p + i * l, q - i * k
+
+      a, b = _ext_gcd(p * k + q * l, h)
+
+      c1 = (p * k + q * l, -p * h, -q * h)
+      c2 = np.array((0, l, -k)) // abs(gcd(l, k))
+      c3 = (b, a * p, a * q)
+
+   return np.array([c1, c2, c3], dtype=float)
+
+
+def _ext_gcd(a, b):
+   if b == 0:
+      return 1, 0
+   if a % b == 0:
+      return 0, 1
+   x, y = _ext_gcd(b, a % b)
+   return y, x - y * (a // b)
+
+
+def _fractional_inplane_period(shift:np.ndarray,
+                               tol:float=1e-10,
+                               max_denominator:int=256) -> Optional[int]:
+   period = 1
+   for value in np.asarray(shift, dtype=float):
+      fraction = value - np.floor(value)
+      if np.isclose(fraction, 0.0, atol=tol) or np.isclose(fraction, 1.0, atol=tol):
+         continue
+      rational = Fraction(fraction).limit_denominator(max_denominator)
+      if abs(float(rational) - fraction) > tol:
+         return None
+      period = lcm(period, rational.denominator)
+   return period
+
+
+def _minimal_surface_layers(atoms:ase.Atoms,
+                     hkl:Tuple[float],
+                     tol:float=1e-10,
+                     max_layers:int=256) -> int:
+   basis = _surface_basis(atoms.cell, hkl, tol=tol)
+   cell = np.dot(basis, np.asarray(atoms.cell))
+   a1, a2, a3 = cell
+
+   metric = np.array([
+      [np.dot(a1, a1), np.dot(a1, a2)],
+      [np.dot(a2, a1), np.dot(a2, a2)]
+   ])
+   rhs = np.array([np.dot(a1, a3), np.dot(a2, a3)])
+   shift = np.linalg.solve(metric, rhs)
+
+   period = _fractional_inplane_period(shift, tol=tol, max_denominator=max_layers)
+   if period is not None:
+      return period
+
+   for layers in range(1, max_layers + 1):
+      if np.allclose(layers * shift, np.rint(layers * shift), atol=tol):
+         return layers
+
+   raise ValueError(
+      f'Unable to determine a periodic slab thickness for Miller indices {tuple(hkl)}.'
+   )
+
 def rotate(atoms:ase.Atoms,
            hkl:Tuple[float]):
     """
@@ -267,7 +363,8 @@ def rotate(atoms:ase.Atoms,
       Miller indices. The atoms will be rotated so that the last axis will be perpendicular
       to the plane and the other will be parallel.
     """
-    return surface(atoms, hkl, 1, periodic=True)
+    layers = _minimal_surface_layers(atoms, hkl)
+    return surface(atoms, np.rint(hkl).astype(int), layers, periodic=True)
 
 
 def shift(atoms:ase.Atoms, shift:Optional[Union[float,int,tuple,list,np.ndarray]], axis=2, wrap=True):

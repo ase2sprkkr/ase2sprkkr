@@ -15,7 +15,7 @@ from typing import Union, Tuple, Optional,Dict
 
 def semiinfinite_system(atoms:Atoms, repeat:Union[Tuple[Real,Real],Real], atoms2:Atoms=None,
                         hkl:Optional[Tuple[Real]]=None, hkl2:Optional[Tuple[Real]]=None,
-                        axis:int=2):
+                        axis:int=2, site_on_the_top: Optional[int]=None, eps=1e-6):
     """ Build a semiinfinite system from one or two 3D periodic systems.
 
     If two systems are given, they have to have identical the first two
@@ -49,9 +49,13 @@ def semiinfinite_system(atoms:Atoms, repeat:Union[Tuple[Real,Real],Real], atoms2
 
     axis
       Along which axis build the system.
+
+    site_on_the_top
+      If given, the fractional part of the left atom will se set that the given atom will be
+      On the top.
     """
 
-    if isinstance(repeat, (int, float)):
+    if isinstance(repeat, Real):
        repeat=(repeat, math.floor(repeat) + math.ceil(repeat) - repeat)
 
     if hkl is not None:
@@ -62,6 +66,20 @@ def semiinfinite_system(atoms:Atoms, repeat:Union[Tuple[Real,Real],Real], atoms2
     else:
        atoms1 = atoms
 
+    if site_on_the_top is not None:
+        coors = atoms.get_scaled_positions(wrap=True)
+        zcoors = coors[:, axis]
+        pos = zcoors[site_on_the_top]
+
+        # Zjištění cílové pozice v závislosti na neceločíselném repeat
+        rep = repeat[0] if isinstance(repeat[0], Real) else repeat[0][axis]
+        shift = (rep % 1) - eps - pos
+
+        if abs(shift) > eps:
+            coors[:, axis] += shift
+            coors[:, axis] %= 1.0
+            atoms1.positions = atoms.cell @ coors
+
     if atoms2 is None:
        atoms2 = vacuum_like(atoms1 if hkl2 is None else atoms)
     if hkl2 is not None:
@@ -70,8 +88,8 @@ def semiinfinite_system(atoms:Atoms, repeat:Union[Tuple[Real,Real],Real], atoms2
                           "please use ase2sprkkr.ase.buil.rotate() before calling "
                           "the function")
 
-    catoms2 = aperiodic_times(atoms2, repeat[1], axis=axis, direction=-1)
     catoms = aperiodic_times(atoms1, repeat[0], axis=axis)
+    catoms2 = aperiodic_times(atoms2, repeat[1], axis=axis, direction=-1)
     catoms = _stack([catoms, catoms2], axis=axis)
 
     out = stack( {'left': atoms1,

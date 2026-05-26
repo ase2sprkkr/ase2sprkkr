@@ -7,7 +7,7 @@ else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-from ..build import aperiodic_times, stack  # NOQA: E402
+from ..build import aperiodic_times, stack, rotate, _minimal_surface_layers  # NOQA: E402
 
 
 class TestBuild(TestCase):
@@ -54,3 +54,19 @@ class TestBuild(TestCase):
         a2.positions = a2.positions + 1
         self.assertEqual(str(stack([atoms, a2],axis=2).symbols),'LiClKN')
         self.assertEqual(stack([atoms, a2],axis=2).positions,np.concatenate([atoms.positions,a2.positions + atoms.cell[2]]))
+
+    def test_minimal_surface_layers(self):
+        atoms = bulk('Cu', 'fcc', cubic=True)
+
+        self.assertEqual(_minimal_surface_layers(atoms, (1, 0, 0)), 1)
+        self.assertEqual(_minimal_surface_layers(atoms, (1, 1, 0)), 2)
+        self.assertEqual(_minimal_surface_layers(atoms, (1, 1, 1)), 3)
+
+    def test_rotate_fcc_au_111(self):
+        atoms = bulk('Au', 'fcc', cubic=True)
+        rotated = rotate(atoms, (1, 1, 1))
+
+        self.assertEqual(_minimal_surface_layers(atoms, (1, 1, 1)), 3)
+        self.assertEqual(rotated.pbc, np.asarray([True, True, True]))
+        self.assertEqual(len(rotated), 3 * len(atoms))
+        self.assertEqual(np.unique(rotated.get_tags()), np.array([1, 2, 3]))
