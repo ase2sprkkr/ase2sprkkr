@@ -12,47 +12,58 @@ help = 'Convert SPRKKR output to UppASD input files and plots the computed Jij (
 description = 'Given .pot, .jxc and .dmi file, plot the Jij values.'
 
 def parser(parser):
-    parser.add_argument('-p', '--pot-file', type=str, default=None,
+    group = parser.add_argument_group("Input files")
+    group.add_argument('outfile', type=str, default=None,
+                        help='Output file name of a JXC computation (if it is given, other files can be found automatically)')
+    group.add_argument('-p', '--pot-file', type=str, default=None,
                         help='Input potential file (.pot or .pot_new)')
-    parser.add_argument('-j', '--jxc-file', type=str, default=None,
+    group.add_argument('-j', '--jxc-file', type=str, default=None,
                         help='Input exchange interaction file (_XCPLTEN_Jij.dat)')
-    parser.add_argument('-d', '--dmi-file', type=str, default=None,
+    group.add_argument('-d', '--dmi-file', type=str, default=None,
                         help='Input DMI file (_DMIVEC_Dij.dat)')
-    parser.add_argument('-o', '--output-dir', type=str, default='.',
+
+    group = parser.add_argument_group("Geerating uppasd files")
+    group.add_argument('-o', '--output-dir', type=str, default='.',
                         help='Output directory for files')
-    parser.add_argument('-n', '--no-write', action='store_true',
+    group.add_argument('-u', '--inpsd', action='store_true', default=None,
+                        help='Write inpsd input file stub')
+    group.add_argument('-n', '--no-write', action='store_true',
                         help='Skip writing output files')
-    parser.add_argument('--plot', action='store_true',
+
+    group = parser.add_argument_group("Plotting")
+    group.add_argument('--plot', action='store_true',
                         help='Generate exchange interaction plots')
-    parser.add_argument('--no-plot', action='store_true',
+    group.add_argument('--no-plot', action='store_true',
                         help='Skip generating plots')
-    parser.add_argument('--separate-plots', action='store_true',
+    group.add_argument('--separate-plots', action='store_true',
                         help='Generate one plot file per site type')
-    parser.add_argument('--axis', type=str, choices=('all', 'x', 'y', 'z'), default='all',
+    group.add_argument('--axis', type=str, choices=('all', 'x', 'y', 'z'), default='all',
                         help='DMI component to plot: all, x, y, or z')
-    parser.add_argument('-r', '--exchange-radius', type=float, default=4.0,
+    group.add_argument('-r', '--exchange-radius', type=float, default=4.0,
                         help='Maximum distance for exchange interaction plots')
-    parser.add_argument('-c', '--cartesian', action='store_const', dest='coordinates', default="lattice",
+    group.add_argument('-c', '--cartesian', action='store_const', dest='coordinates', default="lattice",
                         const="cartesian", help='Use cartesian coordinates for interaction instead of lattice ones')
-    parser.add_argument('-e', '--exclude', type=str, nargs='*', default=None,
-                        help='Comma-separated site selectors to exclude')
-    parser.add_argument('-i', '--include', type=str, nargs='*', default=None,
-                        help='Comma-separated site selectors to include')
-    parser.add_argument('--include-vacuum', action='store_true',
-                        help='Include vacuum sites in selector matching and exported outputs')
-    parser.add_argument('-f', '--font-size', type=int, default=14,
+    group.add_argument('-f', '--font-size', type=int, default=14,
                         help='Font size for plots')
+
+    group = parser.add_argument_group("Filtering")
+    group.add_argument('-e', '--exclude', type=str, nargs='*', default=None,
+                        help='Comma-separated site selectors to exclude')
+    group.add_argument('-i', '--include', type=str, nargs='*', default=None,
+                        help='Comma-separated site selectors to include')
+    group.add_argument('--include-vacuum', action='store_true',
+                        help='Include vacuum sites in selector matching and exported outputs')
 
 def run(args, global_args):
     import glob
 
-    from ...bindings.uppasd import Coordinates, write_dmfile, write_jfile, write_mom_file, write_pos_file  # NOQA
+    from ...bindings.uppasd import Coordinates, write_dmfile, write_jfile, write_mom_file, write_pos_file, write_inpsd_file  # NOQA
     from ...output_files.output_files import OutputFile  # NOQA
     from ...output_files.definitions.jxc import JXCOutputFile  # NOQA
     from ...potentials.potentials import Potential  # NOQA
 
     def _load_jxc_output(filename, potential):
-        output = OutputFile.from_file(filename, try_only='JXC', unknown=False)
+        output = OutputFile.from_file(filename, try_only='jxc', unknown=False)
         output.potential = potential
         return output
 
@@ -84,7 +95,10 @@ def run(args, global_args):
 
     def find_files_by_pattern(args):
         if args.pot_file is None:
-            pot_files = glob.glob('*.pot_new')
+            if result is not None and result.potential_filename:
+                pot_files = [ result.potential_filename ]
+            else:
+                pot_files = glob.glob('*.pot_new')
             if pot_files:
                 args.pot_file = pot_files[0]
             else:
@@ -93,16 +107,36 @@ def run(args, global_args):
                     args.pot_file = pot_files[0]
 
         if args.jxc_file is None:
-            jxc_files = glob.glob('*_XCPLTEN_Jij.dat')
+            if result is not None:
+                try:
+                    jxc_files = [ result.jxc_filename ]
+                except AttributeError:
+                    jxc_files = None
+            else:
+                jxc_files = glob.glob('*_XCPLTEN_Jij.dat')
             if jxc_files:
                 args.jxc_file = jxc_files[0]
 
         if args.dmi_file is None:
-            dmi_files = glob.glob('*_DMIVEC_Dij.dat')
+            if result is not None:
+                try:
+                    dmi_files = [ result.dmi_filename ]
+                except AttributeError:
+                    dmi_files = None
+            else:
+                dmi_files = glob.glob('*_DMIVEC_Dij.dat')
             if dmi_files:
                 args.dmi_file = dmi_files[0]
 
         return args
+
+    if args.outfile:
+        from ase2sprkkr import TaskResult
+        result = TaskResult.from_file(args.outfile)
+        if result.__class__.__name__ != 'JxcResult':
+            raise ValueError('Given output file is not an output of a JXC calculation')
+    else:
+        result = None
 
     args = find_files_by_pattern(args)
     output_dir = Path(args.output_dir)
@@ -164,6 +198,11 @@ def run(args, global_args):
                     selector=selector,
                 ):
                 print('Warning: no selected site type has moments. Skipping momfile.dat.')
+            if args.inpsd:
+                write_inpsd_file(
+                    atoms,
+                    directory = output_dir,
+                )
 
         if args.plot and not args.no_plot and jxc_output is not None:
             _plot_exchange_interactions(
@@ -190,6 +229,8 @@ def run(args, global_args):
         print(f'Error: {exc}')
         sys.exit(1)
     except Exception as exc:
+        if global_args['debug']:
+            raise
         print(f'Unexpected error: {exc}')
         sys.exit(1)
 
