@@ -225,7 +225,6 @@ class AtomsRegion:
 
   def __getstate__(self):
       state = self.__dict__.copy()
-      breakpoint()
       for i in ['arrays']:
           if i in state:
               del state[i]
