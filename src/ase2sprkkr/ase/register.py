@@ -14,7 +14,6 @@ def register():
 
         registered = True
         register_calculator_class("sprkkr", SPRKKR)
-        from .io import read_sprkkr, write_sprkkr
         from ase.utils.plugins import ExternalIOFormat
 
         globals()["SPRKKRFormat"] = ExternalIOFormat(
@@ -37,7 +36,7 @@ try:
             rio = plugin.register_io_format
         else:
             from ase.plugins.register import (
-                register_io_format as fio,
+                register_io_format as rio,
                 register_calculator as rc,
             )
 
