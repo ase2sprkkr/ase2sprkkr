@@ -1,4 +1,5 @@
-""" Definitions of radial meshes used by SPR-KKR. """
+"""Definitions of radial meshes used by SPR-KKR."""
+
 import copy
 import numpy as np
 import math
@@ -6,53 +7,54 @@ from ..common.decorators import cached_class_property
 
 
 class Mesh:
-  """
-  A base class for SPR-KKR radial meshes.
-  """
-  @staticmethod
-  def default():
-      """ SPR-KKR computes the mesh itself, if zeros are given """
-      return ExponentialMesh(1e-6,2e-2,0,0.,721, 0.)
+    """
+    A base class for SPR-KKR radial meshes.
+    """
 
-  def interpolate(self, coors, value):
-      """ Interpolate values in the given coors to the mesh coors.
-      """
-      return self.interpolator(self.coors, value)(coors)
+    @staticmethod
+    def default():
+        """SPR-KKR computes the mesh itself, if zeros are given"""
+        return ExponentialMesh(1e-6, 2e-2, 0, 0.0, 721, 0.0)
 
-  def interpolator(self, values):
-      return self.interpolator_for_coors(self.coors, values)
+    def interpolate(self, coors, value):
+        """Interpolate values in the given coors to the mesh coors."""
+        return self.interpolator(self.coors, value)(coors)
 
-  @cached_class_property
-  def CubicSpline():
-      from scipy.interpolate import CubicSpline
-      return CubicSpline
+    def interpolator(self, values):
+        return self.interpolator_for_coors(self.coors, values)
 
-  @classmethod
-  def interpolator_for_coors(cls, coors, values):
-      v1 = abs(values[0])
-      v2 = abs(values[-1])
+    @cached_class_property
+    def CubicSpline():
+        from scipy.interpolate import CubicSpline
 
-      if v1 == 0.:
-          r_method = False
-      elif v2 == 0.:
-          r_method = True
-      else:
-          c1 = coors[0]
-          c2 = coors[-1]
-          d = (v1 - v2)
-          dr = (v1 * c1 - v2 * c2)
-          r_method = abs(d) > abs(dr)
+        return CubicSpline
 
-      if r_method:
-          spl = cls.CubicSpline(coors, values * coors, extrapolate=True)
-          return lambda x: spl(x) / x
+    @classmethod
+    def interpolator_for_coors(cls, coors, values):
+        v1 = abs(values[0])
+        v2 = abs(values[-1])
 
-      return cls.CubicSpline(coors, values)
+        if v1 == 0.0:
+            r_method = False
+        elif v2 == 0.0:
+            r_method = True
+        else:
+            c1 = coors[0]
+            c2 = coors[-1]
+            d = v1 - v2
+            dr = v1 * c1 - v2 * c2
+            r_method = abs(d) > abs(dr)
+
+        if r_method:
+            spl = cls.CubicSpline(coors, values * coors, extrapolate=True)
+            return lambda x: spl(x) / x
+
+        return cls.CubicSpline(coors, values)
 
 
 def _clearing_property(name):
 
-    attr = '_' + name
+    attr = "_" + name
 
     def reader(self):
         return getattr(self, attr)
@@ -67,92 +69,92 @@ def _clearing_property(name):
 
 
 class FullpotMesh:
-  """ Data describing mesh for a full potential """
+    """Data describing mesh for a full potential"""
 
-  def __init__(self, jrns, jrcri, jrcut):
-      self.jrns = jrns
-      self.jrcri = jrcri
-      self.jrcut = jrcut
+    def __init__(self, jrns, jrcri, jrcut):
+        self.jrns = jrns
+        self.jrcri = jrcri
+        self.jrcut = jrcut
 
-  def to_tuple(self):
-      return self.jrns, self.jrcri, len(self.jrcut), self.jrcut
+    def to_tuple(self):
+        return self.jrns, self.jrcri, len(self.jrcut), self.jrcut
 
-  @classmethod
-  def from_tuple(cls, data):
-      return cls(data[0], data[1], data[3])
+    @classmethod
+    def from_tuple(cls, data):
+        return cls(data[0], data[1], data[3])
 
 
 class ExponentialMesh(Mesh):
-  """
-  Radial mesh definition for an atomic site.
-  """
+    """
+    Radial mesh definition for an atomic site.
+    """
 
-  def __init__(self, r1, dx, jrmt, rmt, jrws, rws):
-      """
-      Parameters
-      ----------
-      r1 : float
-        First mesh item
+    def __init__(self, r1, dx, jrmt, rmt, jrws, rws):
+        """
+        Parameters
+        ----------
+        r1 : float
+          First mesh item
 
-      dx : float
-        Multiplier: r_n = r_{n-1} * dx
+        dx : float
+          Multiplier: r_n = r_{n-1} * dx
 
-      jrmt: int
+        jrmt: int
 
-      rmt: float
+        rmt: float
 
-      jrws: int
+        jrws: int
 
-      rws: float
-      """
-      self._r1 = r1
-      self._dx = dx
-      self._jrmt = jrmt
-      self._rmt = rmt
-      self._jrws = jrws
-      self._rws = rws
-      self._coors = None
-      self.fullpot = None
+        rws: float
+        """
+        self._r1 = r1
+        self._dx = dx
+        self._jrmt = jrmt
+        self._rmt = rmt
+        self._jrws = jrws
+        self._rws = rws
+        self._coors = None
+        self.fullpot = None
 
-  r1 = _clearing_property('r1')
-  dx = _clearing_property('dx')
-  jrmt = _clearing_property('jrmt')
-  rmt = _clearing_property('rmt')
-  jrws = _clearing_property('jrws')
-  rws = _clearing_property('rws')
+    r1 = _clearing_property("r1")
+    dx = _clearing_property("dx")
+    jrmt = _clearing_property("jrmt")
+    rmt = _clearing_property("rmt")
+    jrws = _clearing_property("jrws")
+    rws = _clearing_property("rws")
 
-  def __len__(self):
-      return self.jrws
+    def __len__(self):
+        return self.jrws
 
-  def __bool__(self):
-      return True
+    def __bool__(self):
+        return True
 
-  def __getitem__(self, i):
-      return self.coors[i]
+    def __getitem__(self, i):
+        return self.coors[i]
 
-  def _clear(self):
-      self._coors = None
+    def _clear(self):
+        self._coors = None
 
-  @property
-  def coors(self):
-      if self._coors is None:
-          self._coors = np.empty(self.jrws)
-          self._coors[0] = r = self.r1
-          dx = math.exp(self.dx)
-          for i in range(1, self.jrws):
-              self._coors[i] = r = r * dx
-      return self._coors
+    @property
+    def coors(self):
+        if self._coors is None:
+            self._coors = np.empty(self.jrws)
+            self._coors[0] = r = self.r1
+            dx = math.exp(self.dx)
+            for i in range(1, self.jrws):
+                self._coors[i] = r = r * dx
+        return self._coors
 
-  def to_tuple(self):
-      return (self.r1, self.dx, self.jrmt, self.rmt, self.jrws, self.rws)
+    def to_tuple(self):
+        return (self.r1, self.dx, self.jrmt, self.rmt, self.jrws, self.rws)
 
-  def copy(self):
-      copy.copy(self)
+    def copy(self):
+        copy.copy(self)
 
-  def set_fullpot(self, data):
-      self.fullpot = FullpotMesh.from_tuple(data)
+    def set_fullpot(self, data):
+        self.fullpot = FullpotMesh.from_tuple(data)
 
-  def fullpot_tuple(self):
-      if self.fullpot:
-          return self.fullpot.to_tuple()
-      return None
+    def fullpot_tuple(self):
+        if self.fullpot:
+            return self.fullpot.to_tuple()
+        return None

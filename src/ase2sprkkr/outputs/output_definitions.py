@@ -15,59 +15,59 @@ from ..common.decorators import cached_class_property
 
 
 class OutputValueDefinition(ValueDefinition):
-  """ Value in an output file, of a form 'NAME   VALUE' """
+    """Value in an output file, of a form 'NAME   VALUE'"""
 
-  @cached_class_property
-  def grammar_of_delimiter():
-    return pp.WordStart()
+    @cached_class_property
+    def grammar_of_delimiter():
+        return pp.WordStart()
 
-  prefix = ''
+    prefix = ""
 
-  def __init__(self, *args, is_required=True, **kwargs):
-      super().__init__(*args, is_required=is_required, **kwargs)
+    def __init__(self, *args, is_required=True, **kwargs):
+        super().__init__(*args, is_required=is_required, **kwargs)
 
 
 class OutputValueEqualDefinition(OutputValueDefinition):
-  """ Value in an output file, of a form 'NAME=VALUE' (spaces possible) """
+    """Value in an output file, of a form 'NAME=VALUE' (spaces possible)"""
 
-  name_value_delimiter = '='
+    name_value_delimiter = "="
 
-  @cached_class_property
-  def grammar_of_delimiter():
-    return pp.Suppress("=").set_name('=')
+    @cached_class_property
+    def grammar_of_delimiter():
+        return pp.Suppress("=").set_name("=")
 
 
 class OutputNonameValueDefinition(OutputValueDefinition):
-  """ Value in an output file, that has no name, there is just the value
-  (identified by its position after some other known stuff)
-  """
+    """Value in an output file, that has no name, there is just the value
+    (identified by its position after some other known stuff)
+    """
 
-  name_in_grammar = False
+    name_in_grammar = False
 
-  def __init__(self, *args, is_required=True, **kwargs):
-      super().__init__(*args, is_required=is_required, **kwargs)
+    def __init__(self, *args, is_required=True, **kwargs):
+        super().__init__(*args, is_required=is_required, **kwargs)
 
 
 class OutputSectionDefinition(SectionDefinition):
-  """ This class describes the format of one
-  value of a standard potential section """
+    """This class describes the format of one
+    value of a standard potential section"""
 
-  force_order = True
-  """ The order of items in output file is fixed """
+    force_order = True
+    """ The order of items in output file is fixed """
 
-  name_in_grammar = False
-  """ Parsed parts of the output have no names, they are identified by its positions """
+    name_in_grammar = False
+    """ Parsed parts of the output have no names, they are identified by its positions """
 
-  child_class = OutputValueDefinition
-  """ standard child class """
+    child_class = OutputValueDefinition
+    """ standard child class """
 
-  custom_class = None
-  """ There is no custom class in the output, only known parts of the file are parsed """
+    custom_class = None
+    """ There is no custom class in the output, only known parts of the file are parsed """
 
-  delimiter = '\n'
-  """ options are delimited by newline in ouptut. """
+    delimiter = "\n"
+    """ options are delimited by newline in ouptut. """
 
-  @cached_class_property
-  def grammar_of_delimiter():
-      out = (pp.Optional(line_end) + pp.WordStart()).suppress()
-      return out
+    @cached_class_property
+    def grammar_of_delimiter():
+        out = (pp.Optional(line_end) + pp.WordStart()).suppress()
+        return out

@@ -16,11 +16,12 @@ class DataValidityWarning(UserWarning):
 
     @classmethod
     def warn(cls, out):
-        """ Yield the warning """
-        warnings.warn(cls(out),stacklevel=2)
+        """Yield the warning"""
+        warnings.warn(cls(out), stacklevel=2)
 
 
 class DataValidityError(DataValidityWarning):
-    """ Errors of this class will be considered to be 'Errors'.
-    The current action will be interrupted. """
+    """Errors of this class will be considered to be 'Errors'.
+    The current action will be interrupted."""
+
     pass

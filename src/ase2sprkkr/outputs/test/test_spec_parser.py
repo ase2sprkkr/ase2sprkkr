@@ -3,21 +3,19 @@ from ase2sprkkr.outputs.readers.spec import SpecResult
 import numpy as np
 
 if __package__:
-   from .init_tests import TestCase, patch_package
+    from .init_tests import TestCase, patch_package
 else:
-   from init_tests import TestCase, patch_package
+    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
 
 class TestSpecResult(TestCase):
-
-  def test_result(self):
+    def test_result(self):
         # Create a test class that inherits from SpecResult
         class TestSpecResult(SpecResult):
             def __init__(self, content):
                 self._file_content = content
                 self.output_file = None  # Needed by parent class
-
 
         # Sample content that matches the format of spec.out
         test_content = """
@@ -49,16 +47,44 @@ stookes-vector    of the photonfield  0.10000E+01  100.000%    0.000%    0.000%
 
         # Test the properties
         # print("Testing potential_barrier:")
-        self.assertEqual(out.potential_barrier,
-{'ibar': 1, 'epsx': 0.005, 'zparup': [0.0, -1.0, 1.0], 'zpardn': [0.0, -1.0, 1.0], 'bparp': [1.34, -2.0, 1.018]})
-        self.assertEqual(out.lattice_constants, {'a': 4.62983});
-        self.assertEqual(out.basis_vectors['real'],
-              np.asarray( [[4.62983, 0.     ],[-2.31492,  4.00955]] )
+        self.assertEqual(
+            out.potential_barrier,
+            {
+                "ibar": 1,
+                "epsx": 0.005,
+                "zparup": [0.0, -1.0, 1.0],
+                "zpardn": [0.0, -1.0, 1.0],
+                "bparp": [1.34, -2.0, 1.018],
+            },
         )
-        self.assertEqual(out.basis_vectors['reciprocal'],
-              np.asarray( [[1.35711, 0.78353], [0.     , 1.56706]] )
+        self.assertEqual(out.lattice_constants, {"a": 4.62983})
+        self.assertEqual(
+            out.basis_vectors["real"], np.asarray([[4.62983, 0.0], [-2.31492, 4.00955]])
         )
-        self.assertEqual(out.spectral_data,
-            np.asarray([[ 1.8937e+00, -9.6825e-02,  6.1567e-08, -3.9380e-04,  3.0771e-08, 3.0795e-08],
-                       [ 1.9000e+00, -9.6825e-02,  5.7837e-08, -4.2368e-04,  2.8906e-08, 2.8931e-08]])
+        self.assertEqual(
+            out.basis_vectors["reciprocal"],
+            np.asarray([[1.35711, 0.78353], [0.0, 1.56706]]),
+        )
+        self.assertEqual(
+            out.spectral_data,
+            np.asarray(
+                [
+                    [
+                        1.8937e00,
+                        -9.6825e-02,
+                        6.1567e-08,
+                        -3.9380e-04,
+                        3.0771e-08,
+                        3.0795e-08,
+                    ],
+                    [
+                        1.9000e00,
+                        -9.6825e-02,
+                        5.7837e-08,
+                        -4.2368e-04,
+                        2.8906e-08,
+                        2.8931e-08,
+                    ],
+                ]
+            ),
         )

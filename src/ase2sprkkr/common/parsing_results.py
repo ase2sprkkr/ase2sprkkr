@@ -2,17 +2,17 @@ import pyparsing as pp
 
 
 class Result:
-    """ When data are parsed, some (repeated) options can yield
-    special keys, results in agregating """
+    """When data are parsed, some (repeated) options can yield
+    special keys, results in agregating"""
 
     def result(self):
         return self.value
 
 
 class Key:
-    """ A base class for items, that have to be treated in a special way """
+    """A base class for items, that have to be treated in a special way"""
 
-    NONE = lambda x:x
+    NONE = lambda x: x
     """ The regular items has no special key """
 
     def __init__(self, key):
@@ -31,7 +31,7 @@ class Key:
 
 
 class IgnoredKey(Key):
-    """ This key is totaly and silently ignored. Use it
+    """This key is totaly and silently ignored. Use it
     for the keys, that should be written, but not read.
     """
 
@@ -40,15 +40,16 @@ class IgnoredKey(Key):
 
 
 class ValidateKey(Key):
-    """ This key is totaly and silently ignored. Use it
+    """This key is totaly and silently ignored. Use it
     for the keys, that should be written, but not read.
     """
+
     def add(self, too, val):
         too.checks.append(val)
 
 
 class SubKey(Key):
-    """ A base class for items that have subkeys """
+    """A base class for items that have subkeys"""
 
     def __init__(self, key, sub):
         self.key = key
@@ -59,29 +60,24 @@ class SubKey(Key):
 
 
 class DictKey(SubKey):
-
     class ResultClass(Result):
-
         def __init__(self):
             self.value = {}
 
     def add(self, too, value):
-        out=self.get(too)
+        out = self.get(too)
         if self.sub in out.value:
-             raise pp.ParseException(f"Duplicate key {self.sub} in {self.key}")
+            raise pp.ParseException(f"Duplicate key {self.sub} in {self.key}")
         out.value[self.sub] = value
 
 
 class DefDictKey(DictKey):
-
     def convert(self, sub):
-        return sub if sub == 'def' else int(sub)
+        return sub if sub == "def" else int(sub)
 
 
 class ArrayKey(SubKey):
-
     class ResultClass(Result):
-
         NOT_SET = object()
 
         def __init__(self):
@@ -95,19 +91,17 @@ class ArrayKey(SubKey):
         ln = len(out.value)
         i = self.sub - 1
         if ln < i:
-            out.value+=[out.NOT_SET] * (i - ln + 1)
+            out.value += [out.NOT_SET] * (i - ln + 1)
         if ln == i:
             out.value.append(val)
         else:
             if out.value[i] is not out.NOT_SET:
                 raise pp.ParseException(f"Duplicate key {self.sub} in {self.key}")
-            out.value[i]=val
+            out.value[i] = val
 
 
 class RepeatedKey(Key):
-
     class ResultClass(Result):
-
         def __init__(self):
             self.value = []
 
@@ -116,19 +110,19 @@ class RepeatedKey(Key):
 
 
 class Values(dict):
-    """ Result of dict_from_parsed: dictionary with list of checks on the parsed values."""
+    """Result of dict_from_parsed: dictionary with list of checks on the parsed values."""
+
     def __init__(self):
         super().__init__()
         self.checks = []
         self.process = []
 
     def to_dict(self):
-        return { i: j.to_dict() if isinstance(j, Values) else j
-                    for i,j in self.items() }
+        return {i: j.to_dict() if isinstance(j, Values) else j for i, j in self.items()}
 
 
 def dict_from_parsed(values):
-    """ Create a dictionary from the arguments.
+    """Create a dictionary from the arguments.
     From duplicate arguments create numpy arrays.
     Moreover, if there is key of type (a,b), it will be transformed to subdictionary.
     Such a keys do not allow duplicates.
@@ -155,26 +149,28 @@ def dict_from_parsed(values):
 
     for k, v in values:
         try:
-           add(k, v)
+            add(k, v)
         except Exception as e:
-           errors.append(e)
+            errors.append(e)
 
     for key in out.process:
         out[key] = out[key].result()
 
     for i in out.checks:
-         try:
-           i(out)
-         except Exception as e:
-           errors.append(e)
+        try:
+            i(out)
+        except Exception as e:
+            errors.append(e)
 
     if duplicates:
         duplicates = ", ".join((i.upper() for i in duplicates))
-        errors.append(pp.ParseException(f"There are duplicate items named {duplicates}"))
+        errors.append(
+            pp.ParseException(f"There are duplicate items named {duplicates}")
+        )
 
     if errors:
         if len(errors) == 1:
             raise errors[0]
-        errors = '\n'.join((str(e) for e in errors))
+        errors = "\n".join((str(e) for e in errors))
         raise pp.ParseException(f"There are errors in data: {errors}")
     return out

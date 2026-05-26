@@ -3,19 +3,21 @@ import importlib
 import signal
 import contextlib
 
-_pool=None
+_pool = None
 
 import multiprocessing as mp
+
 mp.set_start_method("spawn", force=True)
+
 
 @contextlib.contextmanager
 def ignore_signal(num):
     old = signal.getsignal(num)
     signal.signal(num, signal.SIG_IGN)
     try:
-      yield
+        yield
     finally:
-      signal.signal(num, old)
+        signal.signal(num, old)
 
 
 def _call_function(name, module, args, kwargs):
@@ -28,7 +30,7 @@ def in_subprocess(lmbda, module=None, *args, **kwargs):
     global _pool
 
     if not _pool:
-       _pool = ProcessPoolExecutor(max_workers=1)
+        _pool = ProcessPoolExecutor(max_workers=1)
     try:
         with ignore_signal(signal.SIGCHLD):
             if module:

@@ -2,22 +2,24 @@ from __future__ import annotations
 import numpy as np
 import scipy
 from typing import Optional, Sequence, Tuple, Union
+
 try:
     import scipy.sparse as sp
 except Exception:
     sp = None  # sparse support optional
 
+
 def create_gaussian_broadener(
-        x_in: Sequence[float],
-        sigma: Optional[Union[float, Sequence[float]]] = None,
-        x_out: Optional[Sequence[float]] = None,
-        fwhm: Optional[Union[float, Sequence[float]]] = None,
-        n_sigma: float = 6.0,
-        method: str = "auto",
-        return_sparse: bool = True,
-        include_dx: bool = True,
-        discrete_normalize: bool = True,
-        ) -> callable:
+    x_in: Sequence[float],
+    sigma: Optional[Union[float, Sequence[float]]] = None,
+    x_out: Optional[Sequence[float]] = None,
+    fwhm: Optional[Union[float, Sequence[float]]] = None,
+    n_sigma: float = 6.0,
+    method: str = "auto",
+    return_sparse: bool = True,
+    include_dx: bool = True,
+    discrete_normalize: bool = True,
+) -> callable:
 
     def _ensure_1d_array(arr, name: str) -> np.ndarray:
         a = np.asarray(arr)
@@ -25,10 +27,8 @@ def create_gaussian_broadener(
             raise ValueError(f"{name} must be a 1D array-like")
         return a.astype(float)
 
-
     def _fwhm_to_sigma(fwhm: float) -> float:
         return fwhm / (2.0 * np.sqrt(2.0 * np.log(2.0)))
-
 
     def _compute_bin_widths(x: np.ndarray) -> np.ndarray:
         """
@@ -48,9 +48,9 @@ def create_gaussian_broadener(
             raise ValueError("x must be strictly increasing.")
         return dx
 
-
-    def gaussian_weight_matrix(
-    ) -> Tuple[Union[np.ndarray, "sp.csr_matrix"], np.ndarray]:
+    def gaussian_weight_matrix() -> Tuple[
+        Union[np.ndarray, "sp.csr_matrix"], np.ndarray
+    ]:
         """
         Build weight matrix W such that y_out = W @ y_in (if include_dx=True).
 
@@ -117,9 +117,9 @@ def create_gaussian_broadener(
 
         # Dense: build K then optionally renormalize columns w.r.t. dx_out
         if method_use == "dense":
-            Xout = xout_sorted[:, None]    # (M,1)
-            Xin = x_sorted[None, :]        # (1,N)
-            Sigma = sigma_vals[None, :]    # (1,N)
+            Xout = xout_sorted[:, None]  # (M,1)
+            Xin = x_sorted[None, :]  # (1,N)
+            Sigma = sigma_vals[None, :]  # (1,N)
             with np.errstate(divide="ignore", invalid="ignore"):
                 diff = (Xout - Xin) / Sigma
                 K = np.exp(-0.5 * diff * diff) / (np.sqrt(2.0 * np.pi) * Sigma)
@@ -148,7 +148,9 @@ def create_gaussian_broadener(
                     xi = x_sorted[col]
                     j = np.searchsorted(xout_sorted, xi)
                     j = np.clip(j, 0, M - 1)
-                    if j > 0 and abs(xout_sorted[j - 1] - xi) <= abs(xout_sorted[j] - xi):
+                    if j > 0 and abs(xout_sorted[j - 1] - xi) <= abs(
+                        xout_sorted[j] - xi
+                    ):
                         j -= 1
                     # zero the column and place delta mass:
                     W_sorted[:, col] = 0.0
@@ -176,14 +178,18 @@ def create_gaussian_broadener(
                     # delta -> nearest output row
                     j = np.searchsorted(xout_sorted, xi)
                     j = np.clip(j, 0, M - 1)
-                    if j > 0 and abs(xout_sorted[j - 1] - xi) <= abs(xout_sorted[j] - xi):
+                    if j > 0 and abs(xout_sorted[j - 1] - xi) <= abs(
+                        xout_sorted[j] - xi
+                    ):
                         j -= 1
-                    rows.append(j); cols.append(i)
+                    rows.append(j)
+                    cols.append(i)
                     data.append(dxi if include_dx else 1.0)
                     continue
 
                 cutoff = n_sigma * si
-                xmin = xi - cutoff; xmax = xi + cutoff
+                xmin = xi - cutoff
+                xmax = xi + cutoff
                 j0 = np.searchsorted(xout_sorted, xmin, side="left")
                 j1 = np.searchsorted(xout_sorted, xmax, side="right")
                 if j0 >= j1:
@@ -240,7 +246,7 @@ def create_gaussian_broadener(
         y_broadened : ndarray, shape (NV, Nx_orig)
             Broadened functions
         """
-        out=W @ y_orig.reshape(y_orig.shape[:1]+(-1,) )
+        out = W @ y_orig.reshape(y_orig.shape[:1] + (-1,))
         return out.reshape(y_orig.shape)
 
     return broaden
@@ -281,11 +287,14 @@ def create_lorentz_broadener(x_orig, gamma, wlortab=None, nelag=5, ylag=True):
     de = max(x[1] - x[0], 0.5)  # Fortran: DE = MAX(E(2)-E(1), 0.5)
 
     # --- Low-energy tail: 4 intervals below x[0], matching Fortran DO J=1,4 ---
-    j_arr = np.arange(1, 5)[:, None]                # shape (4,1)
-    x1_low = x[0] - j_arr * de                      # shape (4,1)
-    x2_low = x1_low + de                             # shape (4,1)
+    j_arr = np.arange(1, 5)[:, None]  # shape (4,1)
+    x1_low = x[0] - j_arr * de  # shape (4,1)
+    x2_low = x1_low + de  # shape (4,1)
     G_low = gamma + wlortab[0]
-    W_low = (np.arctan((x2_low - x[None,:])/G_low) - np.arctan((x1_low - x[None,:])/G_low)) / np.pi
+    W_low = (
+        np.arctan((x2_low - x[None, :]) / G_low)
+        - np.arctan((x1_low - x[None, :]) / G_low)
+    ) / np.pi
     # W_low shape: (4, N)
 
     if ylag and N >= 2:
@@ -296,8 +305,8 @@ def create_lorentz_broadener(x_orig, gamma, wlortab=None, nelag=5, ylag=True):
         #   F(X) = F[0]*(x[1]-X)/dx01 + F[1]*(X-x[0])/dx01
         # so F(X1)+F(X2) = F[0]*(2+(2j-1)*de/dx01) + F[1]*(-(2j-1)*de/dx01)
         dx01 = x[1] - x[0]
-        total_coef0 = 2 + (2*j_arr - 1) * de / dx01  # shape (4, 1)
-        total_coef1 = -(2*j_arr - 1) * de / dx01      # shape (4, 1)
+        total_coef0 = 2 + (2 * j_arr - 1) * de / dx01  # shape (4, 1)
+        total_coef1 = -(2 * j_arr - 1) * de / dx01  # shape (4, 1)
         L[:, 0] += (W_low * total_coef0).sum(axis=0)
         L[:, 1] += (W_low * total_coef1).sum(axis=0)
     else:
@@ -307,29 +316,32 @@ def create_lorentz_broadener(x_orig, gamma, wlortab=None, nelag=5, ylag=True):
     # --- Main contribution ---
     x_edges_left = x[:-1]
     x_edges_right = x[1:]
-    G_main = gamma + 0.5*(wlortab[:-1] + wlortab[1:])
+    G_main = gamma + 0.5 * (wlortab[:-1] + wlortab[1:])
 
-    atan_right = np.arctan((x_edges_right[:, None] - x[None,:])/G_main[:, None])
-    atan_left  = np.arctan((x_edges_left[:, None]  - x[None,:])/G_main[:, None])
-    W_main = (atan_right - atan_left)/np.pi
+    atan_right = np.arctan((x_edges_right[:, None] - x[None, :]) / G_main[:, None])
+    atan_left = np.arctan((x_edges_left[:, None] - x[None, :]) / G_main[:, None])
+    W_main = (atan_right - atan_left) / np.pi
 
     # Trapezoid split: half to left, half to right
     L[:, :-1] += W_main.T / 2
     L[:, 1:] += W_main.T / 2
 
     # --- High-energy tail (vektorizovaně) ---
-    x1_high = x[-1] + np.arange(0, 4)[:, None]*de
+    x1_high = x[-1] + np.arange(0, 4)[:, None] * de
     x2_high = x1_high + de
     G_high = gamma + wlortab[-1]
-    W_high = (np.arctan((x2_high - x[None,:])/G_high) - np.arctan((x1_high - x[None,:])/G_high)) / np.pi
-    L[:,-1] += W_high.sum(axis=0)
+    W_high = (
+        np.arctan((x2_high - x[None, :]) / G_high)
+        - np.arctan((x1_high - x[None, :]) / G_high)
+    ) / np.pi
+    L[:, -1] += W_high.sum(axis=0)
 
     def broaden_y(y_orig):
         """
         Applies the precomputed Lorentzian broadening to y_orig using matrix multiplication.
         This nested function has access to the precomputed weight_matrix.
         """
-        return np.dot(L, y_orig.reshape(y_orig.shape[:1]+(-1,) )).reshape(y_orig.shape)
+        return np.dot(L, y_orig.reshape(y_orig.shape[:1] + (-1,))).reshape(y_orig.shape)
 
     return broaden_y
 
@@ -355,19 +367,39 @@ def compute_wlortab(energies, n_valence):
     wlortab : ndarray, shape (len(energies),)
     """
     # Polynomial coefficients from INILORBRD (Fortran)
-    CF1  = np.array([ 0.001766920594, -0.184509337930,  0.409983271398,
-                      0.067459351773, -0.610733613427,  0.451717419499,
-                     -0.124878965835,  0.014987644299, -0.000661473792])
-    CF11 = np.array([ 0.048696144050, -0.537083543337,  0.492816604919,
-                      0.398174247185, -0.444398434205,  0.238062954735,
-                     -0.061552896506,  0.007317769806, -0.000324445515])
+    CF1 = np.array(
+        [
+            0.001766920594,
+            -0.184509337930,
+            0.409983271398,
+            0.067459351773,
+            -0.610733613427,
+            0.451717419499,
+            -0.124878965835,
+            0.014987644299,
+            -0.000661473792,
+        ]
+    )
+    CF11 = np.array(
+        [
+            0.048696144050,
+            -0.537083543337,
+            0.492816604919,
+            0.398174247185,
+            -0.444398434205,
+            0.238062954735,
+            -0.061552896506,
+            0.007317769806,
+            -0.000324445515,
+        ]
+    )
 
     nval = 1 if n_valence == 11 else n_valence
     if nval < 1 or nval > 10:
         return np.zeros(len(energies))
 
-    w1  = (11 - nval) / 10.0
-    w11 = (nval - 1)  / 10.0
+    w1 = (11 - nval) / 10.0
+    w11 = (nval - 1) / 10.0
     CFZ = w1 * CF1 + w11 * CF11
 
     energies = np.asarray(energies, dtype=float)
@@ -376,8 +408,8 @@ def compute_wlortab(energies, n_valence):
     mask = energies > 2.5
     if mask.any():
         loge = np.log(energies[mask])
-        pwrs = np.cumprod(np.outer(loge, np.ones(len(CFZ)-1)), axis=1)
-        pwrs = np.hstack([np.ones((pwrs.shape[0],1)), pwrs])
+        pwrs = np.cumprod(np.outer(loge, np.ones(len(CFZ) - 1)), axis=1)
+        pwrs = np.hstack([np.ones((pwrs.shape[0], 1)), pwrs])
         wlortab[mask] = pwrs @ CFZ
 
     # For 0 < E <= 2.5 eV: Fortran uses YLAG(N=2, i.e. linear) from (0,0) to (2.5, poly(2.5))
@@ -385,7 +417,7 @@ def compute_wlortab(energies, n_valence):
     # First, evaluate poly(2.5) by linearly interpolating (N=2 YLAG) the already-filled wlortab
     # at E=2.5 using the two nearest grid points.
     # For simplicity (dense grid), just evaluate the polynomial directly at 2.5.
-    idx25 = np.searchsorted(energies, 2.5, side='right')
+    idx25 = np.searchsorted(energies, 2.5, side="right")
     idx25 = np.clip(idx25, 1, len(energies) - 1)
     # linear interpolation of the polynomial wlortab between the two surrounding grid points
     e_lo, e_hi = energies[idx25 - 1], energies[idx25]

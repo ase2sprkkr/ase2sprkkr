@@ -2,7 +2,7 @@ from .decorators import cached_property
 
 
 class LazyString:
-    """ Lazy string is a string, evaluated only by demand """
+    """Lazy string is a string, evaluated only by demand"""
 
     def __init__(self, value):
         self._value = value
@@ -18,8 +18,8 @@ class LazyString:
         return LazyString(lambda: self.value + other)
 
     def __iadd__(self, other):
-        if 'value' in self.__dict__:
-            del self.__dict__['value']
+        if "value" in self.__dict__:
+            del self.__dict__["value"]
         self.value = lambda: self.value + other
 
     def __radd__(self, other):

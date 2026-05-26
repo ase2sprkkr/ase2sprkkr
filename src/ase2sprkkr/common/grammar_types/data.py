@@ -1,4 +1,4 @@
-""" This module contains special GrammarTypes used for large data in output files """
+"""This module contains special GrammarTypes used for large data in output files"""
 
 from .grammar_type import GrammarType, compare_numpy_values
 from ..decorators import add_to_signature, cached_property
@@ -13,49 +13,54 @@ from typing import Union
 
 
 class RestOfTheFile(GrammarType):
-    """ Match anything up to the end of the file """
+    """Match anything up to the end of the file"""
 
     datatype = str
-    datatype_name = 'string'
+    datatype_name = "string"
 
-    _grammar = pp.Regex('.*$', re.M | re.S).set_parse_action(lambda x:x[0])
-    _grammar.skipWhitespace=False
+    _grammar = pp.Regex(".*$", re.M | re.S).set_parse_action(lambda x: x[0])
+    _grammar.skipWhitespace = False
 
     def grammar_name(self):
-      return '<the rest of the file>'
+        return "<the rest of the file>"
 
 
 class Prefixed(GrammarType):
-    """ This value consists from a few lines, each prefixed with a given prefix """
+    """This value consists from a few lines, each prefixed with a given prefix"""
 
     @add_to_signature(GrammarType.__init__, prepend=True)
     def __init__(self, data_prefix, allow_empty=True, *args, **kwargs):
         self.data_prefix = data_prefix
-        self.allow_empty=allow_empty
+        self.allow_empty = allow_empty
         super().__init__(*args, **kwargs)
 
     @cached_property
     def _grammar(self):
         pref = re.escape(self.data_prefix)
-        out = f'({pref}[^\n]*)(\n{pref}[^\n]*)*'
+        out = f"({pref}[^\n]*)(\n{pref}[^\n]*)*"
         if self.allow_empty:
-            out=f'({out})?'
+            out = f"({out})?"
         return pp.Regex(out)
 
     def _string(self, value):
-        return re.replace('^|\n',f'{self.data_prefix}\\1', value)
+        return re.replace("^|\n", f"{self.data_prefix}\\1", value)
 
 
 class RawData(GrammarType):
-    """ Match anything up to the end of the file or to the given delimiter """
+    """Match anything up to the end of the file or to the given delimiter"""
 
     @add_to_signature(GrammarType.__init__)
-    def __init__(self, *args, lines=None, indented=False,
-                              line_length=None,
-                              ends_with:Union[str,re.Pattern]=None,
-                              ends_with_str=None,
-                              include_ends_with=False,
-                              **kwargs):
+    def __init__(
+        self,
+        *args,
+        lines=None,
+        indented=False,
+        line_length=None,
+        ends_with: Union[str, re.Pattern] = None,
+        ends_with_str=None,
+        include_ends_with=False,
+        **kwargs,
+    ):
         """
         Parameters
         ----------
@@ -103,43 +108,51 @@ class RawData(GrammarType):
         """
         self.ends_with = ends_with
         self.ends_with_str = self.ends_with if ends_with_str is None else ends_with_str
-        self.indented=' ' * indented if isinstance(indented, int) else indented
-        self.lines=lines
+        self.indented = " " * indented if isinstance(indented, int) else indented
+        self.lines = lines
         self.line_length = line_length
         self.include_ends_with = include_ends_with
-        self.remove_forward=None
+        self.remove_forward = None
         super().__init__(*args, **kwargs)
 
     def _n_lines_grammar(self, lines):
-        """ return a grammar for n lines of text """
-        out = pp.Regex(f"([^\n]*\n){{{lines-1}}}[^\n]*(?=\n|$)", re.S)
+        """return a grammar for n lines of text"""
+        out = pp.Regex(f"([^\n]*\n){{{lines - 1}}}[^\n]*(?=\n|$)", re.S)
         out.leave_whitespace()
         return out
 
     def _grammar(self, param_name=False):
         if self.lines:
             if isinstance(self.lines, int):
-               out = self._n_lines_grammar(self.lines)
+                out = self._n_lines_grammar(self.lines)
             else:
-               out = self.forward
+                out = self.forward
         elif self.ends_with:
             if isinstance(self.ends_with, re.Pattern):
-                out=SkipToRegex(self.ends_with, include_pattern=self.include_ends_with)
+                out = SkipToRegex(
+                    self.ends_with, include_pattern=self.include_ends_with
+                )
             else:
-                out=pp.SkipTo(pp.Suppress(self.ends_with), include=self.include_ends_with)
+                out = pp.SkipTo(
+                    pp.Suppress(self.ends_with), include=self.include_ends_with
+                )
                 out.set_parse_action(lambda x: x[0])
         else:
             out = RestOfTheFile._grammar.copy()
 
         def parse(v):
-            v=v[0]
+            v = v[0]
             if self.indented:
                 if isinstance(self.indented, tuple):
-                  v=v.replace('\n' + ' ' * self.indented[1], '')
+                    v = v.replace("\n" + " " * self.indented[1], "")
                 else:
-                  v=re.sub(f'(^|\n){self.indented}',r'\1', v)
+                    v = re.sub(f"(^|\n){self.indented}", r"\1", v)
             if self.line_length:
-                v=re.sub(f'([^\n]{{{self.line_length}}}[^{self.written_delimiter}\n]*)\n',f'\\1{self.written_delimiter}', v)
+                v = re.sub(
+                    f"([^\n]{{{self.line_length}}}[^{self.written_delimiter}\n]*)\n",
+                    f"\\1{self.written_delimiter}",
+                    v,
+                )
             return v
 
         if self.indented or self.line_length:
@@ -149,69 +162,83 @@ class RawData(GrammarType):
     def _string(self, val):
         out = str(val)
         if self.line_length:
-            out=re.sub(f'([^\n]{{{self.line_length}}}[^{self.written_delimiter}\n]*){self.written_delimiter}','\\1\n', out)
+            out = re.sub(
+                f"([^\n]{{{self.line_length}}}[^{self.written_delimiter}\n]*){self.written_delimiter}",
+                "\\1\n",
+                out,
+            )
 
         indented = self.indented
         if indented:
-          if isinstance(indented, tuple):
-            first = indented[0]
-            nexts = first - indented[1]
-            prefix = ' ' * indented[1]
+            if isinstance(indented, tuple):
+                first = indented[0]
+                nexts = first - indented[1]
+                prefix = " " * indented[1]
 
-            def g():
-                for i in out.split('\n'):
-                    yield i[:first]
-                    s=first
-                    ln=len(i)
-                    while s<ln:
-                      e=s + nexts
-                      yield prefix + i[s:e]
-                      s=e
-            out = '\n'.join(g())
-          else:
-            out=re.sub('(^|\n(?!$))',r'\1' + indented, out)
+                def g():
+                    for i in out.split("\n"):
+                        yield i[:first]
+                        s = first
+                        ln = len(i)
+                        while s < ln:
+                            e = s + nexts
+                            yield prefix + i[s:e]
+                            s = e
+
+                out = "\n".join(g())
+            else:
+                out = re.sub("(^|\n(?!$))", r"\1" + indented, out)
         if self.ends_with_str and self.include_ends_with:
-            out+=self.ends_with_str
+            out += self.ends_with_str
         return out
 
     def added_to_container(self, container):
         if not self.lines or isinstance(self.lines, int):
             return
         if self.remove_forward:
-           self.remove_forward
+            self.remove_forward
         if container:
-           self.forward=pp.Forward()
-           obj = container[self.lines]
+            self.forward = pp.Forward()
+            obj = container[self.lines]
 
-           def paction(parsed):
-               self.forward << self._n_lines_grammar(parsed[0][1])
-               return parsed
-           hook = lambda grammar: grammar.add_parse_action(paction)
-           obj.add_grammar_hook(hook)
-           self.remove_forward = lambda: obj.remove_grammar_hook(hook)
+            def paction(parsed):
+                self.forward << self._n_lines_grammar(parsed[0][1])
+                return parsed
+
+            hook = lambda grammar: grammar.add_parse_action(paction)
+            obj.add_grammar_hook(hook)
+            self.remove_forward = lambda: obj.remove_grammar_hook(hook)
         else:
-           self.remove_forward=None
+            self.remove_forward = None
         super().added_to_container(container)
 
     def __del__(self):
         if self.remove_forward:
-           self.remove_forward
-        self.remove_forward=None
+            self.remove_forward
+        self.remove_forward = None
 
     def convert(self, val):
         return str(val)
 
 
 class NumpyArray(RawData):
-    """ Match anything up to the end of the file or to the given delimiter, as numpy array """
+    """Match anything up to the end of the file or to the given delimiter, as numpy array"""
 
     array_access = True
 
     @add_to_signature(GrammarType.__init__)
-    def __init__(self, *args, delimiter=None, shape=None, written_shape=None,
-                              item_format='% .18e', dtype=None, dtypes=None,
-                              no_newline_at_end=True,
-                              **kwargs):
+    def __init__(
+        self,
+        *args,
+        delimiter=None,
+        shape=None,
+        written_shape=None,
+        item_format="% .18e",
+        dtype=None,
+        dtypes=None,
+        no_newline_at_end=True,
+        **kwargs,
+    ):
         """
         Parameters
         ----------
@@ -238,57 +265,59 @@ class NumpyArray(RawData):
         **kwargs
           Any other arguments are passed to the :meth:`GrammarType constructor<GrammarType.__init__>`
         """
-        self.delimiter=delimiter
-        self.written_delimiter = delimiter or ' '
-        self.written_shape=written_shape
-        self.item_format=item_format
-        self.shape=shape
-        self.no_newline_at_end=no_newline_at_end
+        self.delimiter = delimiter
+        self.written_delimiter = delimiter or " "
+        self.written_shape = written_shape
+        self.item_format = item_format
+        self.shape = shape
+        self.no_newline_at_end = no_newline_at_end
         if dtypes is None:
-            if dtype == 'line':
+            if dtype == "line":
                 dtypes = dtype
             else:
-                dtypes = [ dtype ]
+                dtypes = [dtype]
         else:
             if dtype is not None:
                 raise ValueError("Use either dtype or dtypes, but not both")
-        self.dtypes=dtypes
+        self.dtypes = dtypes
         super().__init__(*args, **kwargs)
 
-    def _validate(self, value, why='set'):
-       return isinstance(value, np.ndarray)
+    def _validate(self, value, why="set"):
+        return isinstance(value, np.ndarray)
 
     def convert(self, value):
-       return np.asarray(value)
+        return np.asarray(value)
 
     def _string(self, value):
-       out = io.StringIO()
-       delimiter = self.delimiter
-       if isinstance(delimiter, int):
-           delimiter = ''
-       if self.written_shape:
-          value=value.reshape(self.written_shape)
-       np.savetxt(out, value, delimiter=self.written_delimiter, fmt=self.item_format)
-       if self.no_newline_at_end:
-           out.seek(out.tell() - 1 , os.SEEK_SET)
-           out.truncate()
-       out=out.getvalue()
-       return super()._string(out)
+        out = io.StringIO()
+        delimiter = self.delimiter
+        if isinstance(delimiter, int):
+            delimiter = ""
+        if self.written_shape:
+            value = value.reshape(self.written_shape)
+        np.savetxt(out, value, delimiter=self.written_delimiter, fmt=self.item_format)
+        if self.no_newline_at_end:
+            out.seek(out.tell() - 1, os.SEEK_SET)
+            out.truncate()
+        out = out.getvalue()
+        return super()._string(out)
 
     is_the_same_value = staticmethod(compare_numpy_values)
 
     def _grammar(self, param_name=False):
-         grammar = super()._grammar(param_name)
+        grammar = super()._grammar(param_name)
 
-         def parse(v):
-             v=v[0]
-             if self.dtypes=='line':
-                v=np.array([ i.rstrip() for i in v.split('\n')], dtype=object)
-             else:
+        def parse(v):
+            v = v[0]
+            if self.dtypes == "line":
+                v = np.array([i.rstrip() for i in v.split("\n")], dtype=object)
+            else:
                 last_error = None
                 for dt in self.dtypes:
                     try:
-                        v=np.genfromtxt( io.StringIO(v), delimiter=self.delimiter, dtype=dt )
+                        v = np.genfromtxt(
+                            io.StringIO(v), delimiter=self.delimiter, dtype=dt
+                        )
                         break
                     except Exception as last_error:
                         pass
@@ -296,12 +325,12 @@ class NumpyArray(RawData):
                     if not last_error:
                         raise ValueError("No dtype specified")
                     raise last_error
-             if self.shape:
-                v.shape=self.shape
-             return v
+            if self.shape:
+                v.shape = self.shape
+            return v
 
-         grammar.add_parse_action(parse)
-         return grammar
+        grammar.add_parse_action(parse)
+        return grammar
 
     def copy_value(self, value):
-         return copy.deepcopy(value)
+        return copy.deepcopy(value)

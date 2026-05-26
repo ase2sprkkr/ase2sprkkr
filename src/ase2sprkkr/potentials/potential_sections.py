@@ -1,4 +1,4 @@
-""" A potential file for SPRKKR is divided to sections. In this module,
+"""A potential file for SPRKKR is divided to sections. In this module,
 there are a generic classes for these sections.
 """
 
@@ -9,10 +9,10 @@ from ..common.warnings import DataValidityWarning
 
 
 class PotentialSectionTrait:
-    """ A trait class for a section in a potential """
+    """A trait class for a section in a potential"""
 
-    def _set_from_atoms(self, atoms:SPRKKRAtoms, write_io_data:WriteIoData):
-        """ This function should be called before potential file writing to set the propper values to the section.
+    def _set_from_atoms(self, atoms: SPRKKRAtoms, write_io_data: WriteIoData):
+        """This function should be called before potential file writing to set the propper values to the section.
 
         Parameters
         ----------
@@ -24,7 +24,7 @@ class PotentialSectionTrait:
         """
         pass
 
-    def _update_atoms(self, atoms:SPRKKRAtoms, read_io_data:ReadIoData):
+    def _update_atoms(self, atoms: SPRKKRAtoms, read_io_data: ReadIoData):
         """
         This function should be called after potential file reading to set the values of Atoms object to the ones from the readed file.
 
@@ -44,7 +44,7 @@ class PotentialSectionTrait:
         return None
 
     def _depends_on(self):
-        """ The order of processing of sections during reading can be different than the order during a write. So, if the function should not be processed before given named sections, name then.
+        """The order of processing of sections during reading can be different than the order during a write. So, if the function should not be processed before given named sections, name then.
 
         Return
         ------
@@ -58,19 +58,19 @@ class PotentialSectionTrait:
 
 
 class PotentialSection(PotentialSectionTrait, ConfigurationSection):
-    """ A base class for all potential sections """
+    """A base class for all potential sections"""
 
 
 class RepeatedPotentialSection(PotentialSectionTrait, RepeatedConfigurationSection):
-    """ A base class for all repeated sections in potentials """
+    """A base class for all repeated sections in potentials"""
 
 
 class AtomicTypePotentialSection(PotentialSectionTrait, RepeatedConfigurationSection):
-    """ A section containing the data of atomic types """
+    """A section containing the data of atomic types"""
 
     @property
     def property_label(self):
-        """ Name of the in the section stored property used in the error string. """
+        """Name of the in the section stored property used in the error string."""
         return self.property_name
 
     def _has_data(self, typ):
@@ -92,19 +92,25 @@ class AtomicTypePotentialSection(PotentialSectionTrait, RepeatedConfigurationSec
 
         for typ, i in write_io_data.types.unique_items():
             if getattr(typ, self.property_name) is None:
-                notfound=True
+                notfound = True
             else:
                 found = True
 
         if notfound:
             if found:
-                DataValidityWarning.warn(f'Not all the atomic types have the {self.property_label} set')
+                DataValidityWarning.warn(
+                    f"Not all the atomic types have the {self.property_label} set"
+                )
             elif converged:
-                DataValidityWarning.warn(f'The atomic types have not the {self.property_label} set, but the computation is set to converged.')
+                DataValidityWarning.warn(
+                    f"The atomic types have not the {self.property_label} set, but the computation is set to converged."
+                )
             return
         elif not converged:
-             DataValidityWarning.warn(f'The atomic types have the {self.property_label} set, but the computation will start from scratch.')
-             return
+            DataValidityWarning.warn(
+                f"The atomic types have the {self.property_label} set, but the computation will start from scratch."
+            )
+            return
 
         for typ, i in write_io_data.types.unique_items():
             section = self.add()
@@ -113,33 +119,33 @@ class AtomicTypePotentialSection(PotentialSectionTrait, RepeatedConfigurationSec
     def _update_atoms(self, atoms, read_io_data):
         if len(self):
             for i, section in self.items():
-                self.read_data(read_io_data['types'][i], section)
+                self.read_data(read_io_data["types"][i], section)
 
     def _depends_on(self):
-        return 'TYPES'
+        return "TYPES"
 
 
 class UniqueListSection(PotentialSection):
-    """ The section, whose data is list of something,
-        e.g. of meshes, reference systems etc. The properties
-        _value_name and _value_class has to be redefined in the descendants.
+    """The section, whose data is list of something,
+    e.g. of meshes, reference systems etc. The properties
+    _value_name and _value_class has to be redefined in the descendants.
 
-        The list of sections object (with numbering of the (unique)
-        objects) is stored to io_data during reading/writing to be used
-        by the other sections.
+    The list of sections object (with numbering of the (unique)
+    objects) is stored to io_data during reading/writing to be used
+    by the other sections.
 
-        :cvar str _value_name: The name of the property of write_io_data to store the list of data
-        :cvar type  _value_class:  The class, that should be created from the list of data
+    :cvar str _value_name: The name of the property of write_io_data to store the list of data
+    :cvar type  _value_class:  The class, that should be created from the list of data
 
     """
 
-    _value_name : str = None
+    _value_name: str = None
     """ The name of the property of write_io_data to store the list of data """
 
-    _value_class : type = None
+    _value_class: type = None
     """ The class, that should be created from the list of data """
 
-    def _set_from_atoms(self, atoms:SPRKKRAtoms, write_io_data: WriteIoData):
+    def _set_from_atoms(self, atoms: SPRKKRAtoms, write_io_data: WriteIoData):
         """
         Set the values of the section from the write_io_data.
 
@@ -147,9 +153,9 @@ class UniqueListSection(PotentialSection):
 
         """
         ul = getattr(write_io_data, self._value_name)
-        self['DATA'].set([ i.to_tuple() for i in ul.iter_unique()])
+        self["DATA"].set([i.to_tuple() for i in ul.iter_unique()])
 
-    def _update_atoms(self, atoms:SPRKKRAtoms, read_io_data: ReadIoData):
+    def _update_atoms(self, atoms: SPRKKRAtoms, read_io_data: ReadIoData):
         """
         Update a ReadIoData object accordingly the data in the section:
         set its _value_name to list of self_value_class.from_tuple(<data>)
@@ -157,28 +163,28 @@ class UniqueListSection(PotentialSection):
         :meta public:
 
         """
-        creator = getattr(self._value_class, 'from_tuple', self._value_class)
-        read_io_data[self._value_name] = [creator(*i) for i in self['DATA']()]
+        creator = getattr(self._value_class, "from_tuple", self._value_class)
+        read_io_data[self._value_name] = [creator(*i) for i in self["DATA"]()]
 
 
 class ASEArraySection(PotentialSection):
-    """ A section, that get and set the given ASE array (see ASE documentation of the
-        Atoms class), e.g. magnetization direction.
-        The name of the array is given by the section definition in the property array_name
+    """A section, that get and set the given ASE array (see ASE documentation of the
+    Atoms class), e.g. magnetization direction.
+    The name of the array is given by the section definition in the property array_name
     """
 
     def has_any_value(self):
-        """ Are there data in the section?"""
-        return self['DATA']() is not None
+        """Are there data in the section?"""
+        return self["DATA"]() is not None
 
     def _depends_on(self):
-        """ These sections can be processed after that the Atoms object
+        """These sections can be processed after that the Atoms object
             is created.
 
         :meta public:
 
         """
-        return super()._depends_on() + ['SITES']
+        return super()._depends_on() + ["SITES"]
 
     def _set_from_atoms(self, atoms: SPRKKRAtoms, _):
         """
@@ -187,22 +193,22 @@ class ASEArraySection(PotentialSection):
 
         :meta public:
         """
-        data = self['DATA']
+        data = self["DATA"]
         try:
-          value = atoms.get_array(self._definition.array_name)
+            value = atoms.get_array(self._definition.array_name)
         except KeyError:
-          if self._definition.is_optional:
-             value = None
-          else:
-             value = data._definition.type.zero_data(len(atoms.positions))
+            if self._definition.is_optional:
+                value = None
+            else:
+                value = data._definition.type.zero_data(len(atoms.positions))
         data.set(value)
 
-    def _update_atoms(self, atoms:SPRKKRAtoms, _):
+    def _update_atoms(self, atoms: SPRKKRAtoms, _):
         """
         Set the array accordingly to the readed data
 
         :meta public:
         """
 
-        value = self['DATA']()
+        value = self["DATA"]()
         atoms.set_array(self._definition.array_name, value)

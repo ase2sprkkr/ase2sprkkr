@@ -1,5 +1,4 @@
-from ...potential_definitions import PotSectionDefinition, \
-                                   PotValueDefinition
+from ...potential_definitions import PotSectionDefinition, PotValueDefinition
 from ...potential_sections import PotentialSection
 
 from ....common.grammar_types import Array, Table
@@ -8,55 +7,75 @@ import numpy as np
 
 
 def _sections_sites_basscale_after_convert(_, value):
-    return np.ones((3)) if np.all(value == 0.) else value
+    return np.ones((3)) if np.all(value == 0.0) else value
 
 
 def _sections_sites_basscale_condition(value):
-    return True if np.all(value != 0.) else "BASSCALE values should not be zero (with the exception that [0,0,0] is considered as valid and replaced by [1,1,1]"
+    return (
+        True
+        if np.all(value != 0.0)
+        else "BASSCALE values should not be zero (with the exception that [0,0,0] is considered as valid and replaced by [1,1,1]"
+    )
 
 
 class SitesSection(PotentialSection):
-  """ This section retrieves the atomic positions and
-      it creates (during reading) the ASE Atoms object """
+    """This section retrieves the atomic positions and
+    it creates (during reading) the ASE Atoms object"""
 
-  def _depends_on(self):
-      return ['LATTICE']
+    def _depends_on(self):
+        return ["LATTICE"]
 
-  def _set_from_atoms(self, atoms, write_io_data):
-      self['SCALED_ATOMIC_POSITIONS'].set(
-          atoms.positions[write_io_data['sites_order']] / ( write_io_data['lattice.alat'] * self['BASSCALE']())
-      )
+    def _set_from_atoms(self, atoms, write_io_data):
+        self["SCALED_ATOMIC_POSITIONS"].set(
+            atoms.positions[write_io_data["sites_order"]]
+            / (write_io_data["lattice.alat"] * self["BASSCALE"]())
+        )
 
-  def _update_atoms(self, atoms, read_io_data):
-      positions = self['SCALED_ATOMIC_POSITIONS']() * \
-            (read_io_data['lattice.alat'] * self['BASSCALE']())
-      try:
-         if atoms:
-            atoms.set_positions(positions)
-            return
-      except ValueError:
-         pass
-      atoms = SPRKKRAtoms(positions = positions, potential = self._container)
-      read_io_data.update_atoms(atoms)
-      return atoms
+    def _update_atoms(self, atoms, read_io_data):
+        positions = self["SCALED_ATOMIC_POSITIONS"]() * (
+            read_io_data["lattice.alat"] * self["BASSCALE"]()
+        )
+        try:
+            if atoms:
+                atoms.set_positions(positions)
+                return
+        except ValueError:
+            pass
+        atoms = SPRKKRAtoms(positions=positions, potential=self._container)
+        read_io_data.update_atoms(atoms)
+        return atoms
 
 
 class SitesSectionDefinition(PotSectionDefinition):
+    def __init__(self, name="SITES", **kwargs):
+        V = PotValueDefinition
+        members = [
+            V("CARTESIAN", bool, fixed_value=True),
+            # V('BASSCALE', Array(float, length=3), fixed_value=[1.,1.,1.]),
+            V(
+                "BASSCALE",
+                default_value=[1.0, 1.0, 1.0],
+                type=Array(
+                    float,
+                    length=3,
+                    after_convert=_sections_sites_basscale_after_convert,
+                    condition=_sections_sites_basscale_condition,
+                ),
+            ),
+            V(
+                "SCALED_ATOMIC_POSITIONS",
+                Table(
+                    {"QBAS(X)": float, "QBAS(Y)": float, "QBAS(Z)": float},
+                    numbering="IQ",
+                    free_header=True,
+                    format=">22.14f",
+                    numbering_format=">5",
+                ),
+            ),
+        ]
+        super().__init__(name, members, has_hidden_members=True)
 
-  def __init__(self, name='SITES', **kwargs):
-      V = PotValueDefinition
-      members = [
-          V('CARTESIAN', bool, fixed_value=True),
-          # V('BASSCALE', Array(float, length=3), fixed_value=[1.,1.,1.]),
-          V('BASSCALE', default_value=[1.,1.,1.], type=Array(float, length=3,
-              after_convert = _sections_sites_basscale_after_convert,
-              condition = _sections_sites_basscale_condition
-          )),
-          V('SCALED_ATOMIC_POSITIONS', Table({'QBAS(X)': float, 'QBAS(Y)' : float, 'QBAS(Z)': float}, numbering='IQ',free_header=True, format='>22.14f', numbering_format='>5')),
-      ]
-      super().__init__(name, members, has_hidden_members=True)
-
-  result_class = SitesSection
+    result_class = SitesSection
 
 
 section = SitesSectionDefinition

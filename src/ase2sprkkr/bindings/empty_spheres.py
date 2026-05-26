@@ -3,18 +3,17 @@ from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 import numpy as np
 
 
-class EmptySpheresResult(namedtuple('EmptySpheresResult', 'positions radii')):
-
+class EmptySpheresResult(namedtuple("EmptySpheresResult", "positions radii")):
     def __len__(self):
         return len(self.radii)
 
 
-def empty_spheres(atoms, method='auto', **kwargs):
-    """ Returns centres of empty spheres to add """
-    if method == 'auto':
+def empty_spheres(atoms, method="auto", **kwargs):
+    """Returns centres of empty spheres to add"""
+    if method == "auto":
         if es_finder.is_enabled:
-            method = 'es_finder'
-    if method == 'es_finder':
+            method = "es_finder"
+    if method == "es_finder":
         return es_finder.empty_spheres(atoms, **kwargs)
     else:
         return spheres.empty_spheres(atoms, **kwargs)
@@ -29,13 +28,15 @@ def empty_spheres_atoms(atoms, round_zero=True, **kwargs):
     res = empty_spheres(atoms, **kwargs)
     num = len(res.radii)
     if num == 0:
-       return None
+        return None
 
-    empty = SPRKKRAtoms(symbols='X' * len(res.radii),
-                        positions=res.positions,
-                        pbc = atoms.pbc,
-                        cell = atoms.cell,
-                        symmetry = False)
+    empty = SPRKKRAtoms(
+        symbols="X" * len(res.radii),
+        positions=res.positions,
+        pbc=atoms.pbc,
+        cell=atoms.cell,
+        symmetry=False,
+    )
     if round_zero:
         empty.positions[np.abs(empty.positions) < 1e-15] = 0
     empty.positions = empty.get_scaled_positions(True) @ empty.cell
@@ -50,9 +51,9 @@ def add_empty_spheres(atoms, *, copy=False, **kwargs):
     if empty:
         if copy:
             atoms = atoms.copy()
-        atoms+= empty
+        atoms += empty
     return atoms
 
 
-from . import es_finder                   # NOQA
+from . import es_finder  # NOQA
 from .xband import spheres  # NOQA

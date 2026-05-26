@@ -1,4 +1,7 @@
-from ..output_files_definitions import OutputFileValueDefinition as V, OutputFileDefinition
+from ..output_files_definitions import (
+    OutputFileValueDefinition as V,
+    OutputFileDefinition,
+)
 from typing import Optional
 import numpy as np
 import re
@@ -10,10 +13,20 @@ from collections import namedtuple
 
 from ..output_files import OutputFile
 from ...common.decorators import cached_property, cached_class_property
-from ...common.grammar_types import RawData, Table, Integer, Real, \
-                                    Array, Sequence, String, LineString, NumpyArray
+from ...common.grammar_types import (
+    RawData,
+    Table,
+    Integer,
+    Real,
+    Array,
+    Sequence,
+    String,
+    LineString,
+    NumpyArray,
+)
 from ...common.configuration_definitions import SeparatorDefinition
 from ...gui.plot import Multiplot
+
 
 class Coordinates(Enum):
     cartesian = "cartesian"
@@ -22,9 +35,18 @@ class Coordinates(Enum):
 
 Selector = namedtuple("Selector", ["iq", "it"])
 
-class JXCOutputFile(OutputFile):
 
-    plot_parameters = {'exchange_radius', 'iq', 'it', 'exclude_it', 'exclude_vc', 'font_size', 'axis', 'separate_plots'}
+class JXCOutputFile(OutputFile):
+    plot_parameters = {
+        "exchange_radius",
+        "iq",
+        "it",
+        "exclude_it",
+        "exclude_vc",
+        "font_size",
+        "axis",
+        "separate_plots",
+    }
 
     def is_Jij(self):
         return len(self.DATA().dtype.names) == 15
@@ -34,15 +56,13 @@ class JXCOutputFile(OutputFile):
 
     @cached_property
     def iqs(self):
-        return {
-            i[0]: { d[0]: (d[1], d[2]) for d in i[2] }  for i in self.OCCUPATION()
-        }
+        return {i[0]: {d[0]: (d[1], d[2]) for d in i[2]} for i in self.OCCUPATION()}
 
     @cached_property
     def it_labels(self):
         def generator():
             for i in self.iqs.values():
-                for it, (label, occ) in  i.items():
+                for it, (label, occ) in i.items():
                     yield it, label
 
         return dict(generator())
@@ -51,7 +71,7 @@ class JXCOutputFile(OutputFile):
         return self.iqs[iq].keys()
 
     def it_to_iqs(self, it):
-        return { iq for iq, types in self.iqs.items() if it in types }
+        return {iq for iq, types in self.iqs.items() if it in types}
 
     @cached_property
     def labels_to_it(self):
@@ -61,22 +81,30 @@ class JXCOutputFile(OutputFile):
         try:
             return self.labels_to_it[label]
         except KeyError as exc:
-            raise ValueError(f"Unknown type label '{label}'. Valid labels are: {', '.join(self.labels_to_it.keys())}") from exc
+            raise ValueError(
+                f"Unknown type label '{label}'. Valid labels are: {', '.join(self.labels_to_it.keys())}"
+            ) from exc
 
-    def element_to_its(self, label:str):
-        return [ it for it, l in self.it_labels.items() if l.startswith(label) and (l == label or l[len(label)] == '_') ]
+    def element_to_its(self, label: str):
+        return [
+            it
+            for it, l in self.it_labels.items()
+            if l.startswith(label) and (l == label or l[len(label)] == "_")
+        ]
 
     @cached_class_property
     def _it_selector_regex():
-        return re.compile(r'\s*([A-Z][a-z]*(_(\d+)))?\s*')
+        return re.compile(r"\s*([A-Z][a-z]*(_(\d+)))?\s*")
 
-    def create_selector(self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True):
+    def create_selector(
+        self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True
+    ):
         if selector is not None:
             return selector
 
         def parse_list(values):
             if isinstance(values, str):
-                return values.split(',')
+                return values.split(",")
             if isinstance(values, int):
                 return [values]
             return values
@@ -106,7 +134,7 @@ class JXCOutputFile(OutputFile):
                 else:
                     its = self.element_to_its(match.group(1))
                     if not its:
-                        raise ValueError(f'Selector {v} does not match any atomic type')
+                        raise ValueError(f"Selector {v} does not match any atomic type")
                     out.update(its)
             return out
 
@@ -115,16 +143,18 @@ class JXCOutputFile(OutputFile):
                 return ...
             values = parse_list(values)
             try:
-                return [ int(v) for v in values ]
+                return [int(v) for v in values]
             except:
-                raise ValueError(f"Invalid IQ selector: {values}. Must be (a comma-separated) list of integers.")
+                raise ValueError(
+                    f"Invalid IQ selector: {values}. Must be (a comma-separated) list of integers."
+                )
 
         iq = parse_iq(iq)
         it = parse_it(it)
         exclude_it = parse_it(exclude_it)
 
         if exclude_vc:
-            exclude_vc = set(self.element_to_its('Vc'))
+            exclude_vc = set(self.element_to_its("Vc"))
             if exclude_it is ...:
                 exclude_it = exclude_vc
             else:
@@ -137,9 +167,13 @@ class JXCOutputFile(OutputFile):
             it = it - exclude_it
         return Selector(iq, it)
 
-    def it_selector(self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True):
+    def it_selector(
+        self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True
+    ):
         if selector is None:
-            selector = self.create_selector(iq=iq, it=it, exclude_vc=exclude_vc, exclude_it=exclude_it)
+            selector = self.create_selector(
+                iq=iq, it=it, exclude_vc=exclude_vc, exclude_it=exclude_it
+            )
         iq, it = selector
         out = ...
         if iq is not ...:
@@ -148,18 +182,36 @@ class JXCOutputFile(OutputFile):
             out = it if out is ... else set(out).intersection(it)
         return out
 
-    def iq_selector(self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True):
+    def iq_selector(
+        self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True
+    ):
         if selector is None:
-            selector = self.create_selector(iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc)
+            selector = self.create_selector(
+                iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc
+            )
         iq, it = selector
 
         out = self.it_selector(selector=selector)
         if out is ...:
             return ...
-        return set().union(* (self.it_to_iqs(it) for it in out) )
+        return set().union(*(self.it_to_iqs(it) for it in out))
 
-    def filtered_data(self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True, exchange_radius=4.0):
-        its = self.it_selector(selector=selector, iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc)
+    def filtered_data(
+        self,
+        selector=None,
+        iq=None,
+        it=None,
+        exclude_it=None,
+        exclude_vc=True,
+        exchange_radius=4.0,
+    ):
+        its = self.it_selector(
+            selector=selector,
+            iq=iq,
+            it=it,
+            exclude_it=exclude_it,
+            exclude_vc=exclude_vc,
+        )
         data = self.DATA()
 
         if its is ...:
@@ -171,9 +223,9 @@ class JXCOutputFile(OutputFile):
 
         if exchange_radius is not None:
             if mask is not None:
-                mask &= data['DR'] <= exchange_radius
+                mask &= data["DR"] <= exchange_radius
             else:
-                mask = data['DR'] <= exchange_radius
+                mask = data["DR"] <= exchange_radius
 
         if mask is not None:
             data = data[mask]
@@ -187,7 +239,7 @@ class JXCOutputFile(OutputFile):
                 if atomic_type in atomic_types:
                     continue
                 atomic_types.add(atomic_type)
-                moment = getattr(atomic_type.moments, 'spin_moment', None)
+                moment = getattr(atomic_type.moments, "spin_moment", None)
                 if moment is None:
                     return None
                 moments.append(moment)
@@ -196,24 +248,42 @@ class JXCOutputFile(OutputFile):
     @staticmethod
     def _dij_components(component_axis):
         components = {
-            'x': (['DX'], ['x']),
-            'y': (['DY'], ['y']),
-            'z': (['DZ'], ['z']),
-            'all': (['DX', 'DY', 'DZ'], ['x', 'y', 'z']),
+            "x": (["DX"], ["x"]),
+            "y": (["DY"], ["y"]),
+            "z": (["DZ"], ["z"]),
+            "all": (["DX", "DY", "DZ"], ["x", "y", "z"]),
         }
-        component_axis = { 0: 'x', 1: 'y', 2: 'z', None: 'all' }.get(component_axis, component_axis)
+        component_axis = {0: "x", 1: "y", 2: "z", None: "all"}.get(
+            component_axis, component_axis
+        )
         try:
             return components[component_axis]
         except KeyError as exc:
-            raise ValueError(f"Invalid DMI axis '{component_axis}'. Use one of: all, x, y, z.") from exc
+            raise ValueError(
+                f"Invalid DMI axis '{component_axis}'. Use one of: all, x, y, z."
+            ) from exc
 
-    def plot(self, layout=2, figsize=None, latex=None,
-             filename:Optional[str]=None, show:Optional[bool]=None, dpi=300, label_spacing=0.3,
-             selector=None,
-             iq=None, it=None, exclude_it=None, exclude_vc=True, exchange_radius=4.0,
-             font_size=10, axis='all',
-             separate_plots=False, layout_kind = 'constrained',
-             **kwargs):
+    def plot(
+        self,
+        layout=2,
+        figsize=None,
+        latex=None,
+        filename: Optional[str] = None,
+        show: Optional[bool] = None,
+        dpi=300,
+        label_spacing=0.3,
+        selector=None,
+        iq=None,
+        it=None,
+        exclude_it=None,
+        exclude_vc=True,
+        exchange_radius=4.0,
+        font_size=10,
+        axis="all",
+        separate_plots=False,
+        layout_kind="constrained",
+        **kwargs,
+    ):
 
         def _resolve_layout(count, values):
             if isinstance(layout, int):
@@ -226,35 +296,48 @@ class JXCOutputFile(OutputFile):
 
         labels = self.it_labels
 
-        data = self.filtered_data(selector=selector, iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc, exchange_radius=exchange_radius)
+        data = self.filtered_data(
+            selector=selector,
+            iq=iq,
+            it=it,
+            exclude_it=exclude_it,
+            exclude_vc=exclude_vc,
+            exchange_radius=exchange_radius,
+        )
         type_indexes = sorted(set(labels.keys()))
         if not type_indexes or not len(data):
             return False
         is_jij = self.is_Jij()
-        x = data['DR']
+        x = data["DR"]
 
         if is_jij:
-            label = lambda partner_index: f'${labels[type_index]}$-${labels[partner_index]}$'
-            value_label = lambda: r'$J_{ij}$'
-            name = lambda: f'Jij_{labels[type_index]}'
-            y = data[['JXX']]
+            label = lambda partner_index: (
+                f"${labels[type_index]}$-${labels[partner_index]}$"
+            )
+            value_label = lambda: r"$J_{ij}$"
+            name = lambda: f"Jij_{labels[type_index]}"
+            y = data[["JXX"]]
 
             spin_mom = self._spin_moments()
             if spin_mom is None:
                 warnings.warn("Spin moments not found.")
             elif len(spin_mom) != self.NT():
-                warnings.warn("Spin moments count does not match number of types - the potential do not matches the Jij data.")
+                warnings.warn(
+                    "Spin moments count does not match number of types - the potential do not matches the Jij data."
+                )
                 spin_mom = None
 
         else:
             index, axis_labels = self._dij_components(axis)
-            label = lambda partner_index: f'{labels[type_index]}-{labels[partner_index]}' #$_{axis_labels[colindex]}$'
-            value_label = lambda: rf'$D_{{ij}}^{{{axis_labels[colindex]}}}$'
-            name = lambda: f'Dij_{labels[type_index]}'
+            label = lambda partner_index: (
+                f"{labels[type_index]}-{labels[partner_index]}"
+            )  # $_{axis_labels[colindex]}$'
+            value_label = lambda: rf"$D_{{ij}}^{{{axis_labels[colindex]}}}$"
+            name = lambda: f"Dij_{labels[type_index]}"
             y = data[index]
             spin_mom = None
 
-        extremum = max( ( np.abs(y[col]).max() for col in y.dtype.names ) )
+        extremum = max((np.abs(y[col]).max() for col in y.dtype.names))
         extremum += max(0.1, extremum * 0.1)
         colorspace = cm.Paired(np.linspace(0, 1, 2 * self.NT() + 2))
 
@@ -265,54 +348,81 @@ class JXCOutputFile(OutputFile):
             for partner_index in type_indexes:
                 mask = other == partner_index
                 if not np.any(mask):
-                        continue
+                    continue
                 xxx = xx[mask]
                 yyy = col[mask]
                 if spin_mom is not None:
-                    sign_ij = np.sign(spin_mom[type_index-1]) * np.sign(spin_mom[partner_index-1])
-                    yyy*=sign_ij
-                #cycle over DX,DY,DZ (or just plot one line for all other cases)
+                    sign_ij = np.sign(spin_mom[type_index - 1]) * np.sign(
+                        spin_mom[partner_index - 1]
+                    )
+                    yyy *= sign_ij
+                # cycle over DX,DY,DZ (or just plot one line for all other cases)
                 color = next(colors)
-                axis.plot(xxx, yyy, alpha=0.75, lw=2.0, color=color, label=label(partner_index))
-                axis.scatter(xxx, yyy, color=color, alpha=0.75, s=45, lw=1.0, edgecolor='black')
-            axis.set_xlabel(r'$r_{ij}/a_{\mathrm{lat}}$', fontsize=font_size)
-            axis.set_ylabel(value_label() + r' $[meV]$', fontsize=font_size)
-            axis.tick_params(axis='x', colors='black', labelsize=font_size)
-            axis.tick_params(axis='y', colors='black', labelsize=font_size)
-            axis.axhline(0, color='black', linestyle='--')
+                axis.plot(
+                    xxx,
+                    yyy,
+                    alpha=0.75,
+                    lw=2.0,
+                    color=color,
+                    label=label(partner_index),
+                )
+                axis.scatter(
+                    xxx, yyy, color=color, alpha=0.75, s=45, lw=1.0, edgecolor="black"
+                )
+            axis.set_xlabel(r"$r_{ij}/a_{\mathrm{lat}}$", fontsize=font_size)
+            axis.set_ylabel(value_label() + r" $[meV]$", fontsize=font_size)
+            axis.tick_params(axis="x", colors="black", labelsize=font_size)
+            axis.tick_params(axis="y", colors="black", labelsize=font_size)
+            axis.axhline(0, color="black", linestyle="--")
             if label_spacing:
-                axis.legend(fontsize=font_size - 2, loc='best', labelspacing=label_spacing)
+                axis.legend(
+                    fontsize=font_size - 2, loc="best", labelspacing=label_spacing
+                )
             axis.grid(False)
             axis.set_ylim(-extremum, extremum)
 
-        with Multiplot(layout=layout, figsize=figsize, latex=latex,
-                           filename=filename, show=show, dpi=dpi,
-                           separate_plots=separate_plots, layout_kind=layout_kind,
-                           **kwargs) as mp:
+        with Multiplot(
+            layout=layout,
+            figsize=figsize,
+            latex=latex,
+            filename=filename,
+            show=show,
+            dpi=dpi,
+            separate_plots=separate_plots,
+            layout_kind=layout_kind,
+            **kwargs,
+        ) as mp:
+            for type_index in type_indexes:
+                mask = data["IT"] == type_index
+                if not np.any(mask):
+                    continue
+                xx = x[mask]
+                yy = y[mask]
+                other = data["JT"][mask]
 
-                for type_index in type_indexes:
-                    mask = data['IT'] == type_index
-                    if not np.any(mask):
-                        continue
-                    xx = x[mask]
-                    yy = y[mask]
-                    other = data['JT'][mask]
+                for colindex, cname in enumerate(y.dtype.names):
+                    col = yy[cname]
 
-                    for colindex, cname in enumerate(y.dtype.names):
-                        col = yy[cname]
-
-                        mp.plot(
-                            self,
-                            name=name(),
-                            plot_function=plot,
-                        )
+                    mp.plot(
+                        self,
+                        name=name(),
+                        plot_function=plot,
+                    )
         return True
 
-    def write_uppasd_file(self, file_name=None, directory=None,
-                          selector=None,
-                          it=None, iq=None, exclude_it=None, exclude_vc=True, exchange_radius=None,
-                          coordinates: Coordinates = Coordinates.lattice):
-        """ Write Jij or Dij data to file in format suitable for UppAsd programm.
+    def write_uppasd_file(
+        self,
+        file_name=None,
+        directory=None,
+        selector=None,
+        it=None,
+        iq=None,
+        exclude_it=None,
+        exclude_vc=True,
+        exchange_radius=None,
+        coordinates: Coordinates = Coordinates.lattice,
+    ):
+        """Write Jij or Dij data to file in format suitable for UppAsd programm.
         If the filename is not given, the standard name for the given file type
         will be used.
         """
@@ -321,17 +431,25 @@ class JXCOutputFile(OutputFile):
             from ...bindings.uppasd import write_jfile as write
         else:
             from ...bindings.uppasd import write_dmfile as write
-        write(self, file_name, directory=directory,
+        write(
+            self,
+            file_name,
+            directory=directory,
             selector=selector,
-            iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc,  exchange_radius=exchange_radius, coordinates=coordinates)
-
-
+            iq=iq,
+            it=it,
+            exclude_it=exclude_it,
+            exclude_vc=exclude_vc,
+            exchange_radius=exchange_radius,
+            coordinates=coordinates,
+        )
 
     @classmethod
-    def from_atoms(cls, atoms, data = None):
+    def from_atoms(cls, atoms, data=None):
         out = cls(definition=definition)
 
         its = {}
+
         def it(atomic_type):
             if atomic_type in its:
                 return its[atomic_type]
@@ -346,19 +464,28 @@ class JXCOutputFile(OutputFile):
             for atomic_type in site.occupation:
                 if atomic_type.symbol in first:
                     if not atomic_type.symbol in duplicates:
-                        duplicates[atomic_type.symbol] =  { first[atomic_type.symbol] : 1}
-                    duplicates[atomic_type.symbol][atomic_type] = len(duplicates[atomic_type.symbol]) + 1
+                        duplicates[atomic_type.symbol] = {first[atomic_type.symbol]: 1}
+                    duplicates[atomic_type.symbol][atomic_type] = (
+                        len(duplicates[atomic_type.symbol]) + 1
+                    )
                 else:
                     first[atomic_type.symbol] = atomic_type
 
         def label(atomic_type):
             dups = duplicates.get(atomic_type.symbol, None)
             if dups is not None:
-                return f'{atomic_type.symbol}_{dups[atomic_type]}'
+                return f"{atomic_type.symbol}_{dups[atomic_type]}"
             return atomic_type.symbol
 
         out.OCCUPATION = [
-            ( i + 1, len(site.occupation),  [  ( it(atomic_type), label(atomic_type), occ) for atomic_type, occ in site.occupation.items() ] )
+            (
+                i + 1,
+                len(site.occupation),
+                [
+                    (it(atomic_type), label(atomic_type), occ)
+                    for atomic_type, occ in site.occupation.items()
+                ],
+            )
             for i, site in enumerate(atoms.sites)
         ]
 
@@ -368,37 +495,45 @@ class JXCOutputFile(OutputFile):
         return out
 
 
-
 class JXCOutputFileDefinition(OutputFileDefinition):
     result_class = JXCOutputFile
 
+
 import pyparsing as pp
+
 pp.ParserElement.verbose_stacktrace = True
+
 
 def create_definition():
 
     def table_header(c):
         if c.is_Jij():
-          return 'IT   IQ   JT    JQ   N1 N2 N3    DRX    DRY    DRZ     DR      J_xx [meV]     J_yy [meV]      J_xy [meV]     J_yx [meV]'
+            return "IT   IQ   JT    JQ   N1 N2 N3    DRX    DRY    DRZ     DR      J_xx [meV]     J_yy [meV]      J_xy [meV]     J_yx [meV]"
         else:
-          return 'IT   IQ   JT    JQ   N1 N2 N3    DRX    DRY    DRZ     DR       DX_ij [meV]    DY_ij [meV]    DZ_ij [meV]'
+            return "IT   IQ   JT    JQ   N1 N2 N3    DRX    DRY    DRZ     DR       DX_ij [meV]    DY_ij [meV]    DZ_ij [meV]"
 
     shared_dtype = [
-            ('IT', int),
-            ('IQ', int),
-            ('JT', int),
-            ('JQ', int),
-            ('N1', int),
-            ('N2', int),
-            ('N3', int),
-            ('DRX', float),
-            ('DRY', float),
-            ('DRZ', float),
-            ('DR', float),
+        ("IT", int),
+        ("IQ", int),
+        ("JT", int),
+        ("JQ", int),
+        ("N1", int),
+        ("N2", int),
+        ("N3", int),
+        ("DRX", float),
+        ("DRY", float),
+        ("DRZ", float),
+        ("DR", float),
     ]
 
-    definition = JXCOutputFileDefinition('JXC', [
-      V('HEADER', RawData(ends_with=re.compile('\n[ \t]*number of sites'), default_value="""
+    definition = JXCOutputFileDefinition(
+        "JXC",
+        [
+            V(
+                "HEADER",
+                RawData(
+                    ends_with=re.compile("\n[ \t]*number of sites"),
+                    default_value="""
 
  *******************************************************************************
                                    <XCPLTENSOR>:
@@ -406,35 +541,75 @@ def create_definition():
                       according to Phys. Rev. B 79, 045209 (2009)
  *******************************************************************************
 
-"""), name_in_grammar=False),
-      V('NQ', int, written_name="number of sites   NQ", delimiter=' = ', delimiter_grammar='='),#, indent=10*" "),
-      V('NT', int, written_name="number of types   NT", delimiter=' = ', delimiter_grammar='=', indent=10*" "),
-      SeparatorDefinition('                              site occupation:'),
-      V('OCCUPATION', Table(IQ=Integer(prefix="IQ = ", format="{:>3}"), NOQ=int,
-                            DATA=Array(Sequence(int,
-                                       String(prefix='-', format='{:>10}'),
-                                       Real(prefix='x = ', format='{:6.3f}')),
-                                       prefix='IT:'),
-                            header=False
-                            )),
-      V('TABLE_HEADER', LineString(), default_value_from_container=table_header,
-        is_hidden=True, name_in_grammar=False),
-      V('DATA', NumpyArray(dtypes=[
-            shared_dtype + [
-                ('JXX', float),
-                ('JYY', float),
-                ('JXY', float),
-                ('JYX', float),
-            ],
-            shared_dtype + [
-                ('DX', float),
-                ('DY', float),
-                ('DZ', float),
-            ],
-        ]), name_in_grammar=False)
-    ], info='Dzyaloshinski-Moriya couplings Dij or Jij')
+""",
+                ),
+                name_in_grammar=False,
+            ),
+            V(
+                "NQ",
+                int,
+                written_name="number of sites   NQ",
+                delimiter=" = ",
+                delimiter_grammar="=",
+            ),  # , indent=10*" "),
+            V(
+                "NT",
+                int,
+                written_name="number of types   NT",
+                delimiter=" = ",
+                delimiter_grammar="=",
+                indent=10 * " ",
+            ),
+            SeparatorDefinition("                              site occupation:"),
+            V(
+                "OCCUPATION",
+                Table(
+                    IQ=Integer(prefix="IQ = ", format="{:>3}"),
+                    NOQ=int,
+                    DATA=Array(
+                        Sequence(
+                            int,
+                            String(prefix="-", format="{:>10}"),
+                            Real(prefix="x = ", format="{:6.3f}"),
+                        ),
+                        prefix="IT:",
+                    ),
+                    header=False,
+                ),
+            ),
+            V(
+                "TABLE_HEADER",
+                LineString(),
+                default_value_from_container=table_header,
+                is_hidden=True,
+                name_in_grammar=False,
+            ),
+            V(
+                "DATA",
+                NumpyArray(
+                    dtypes=[
+                        shared_dtype
+                        + [
+                            ("JXX", float),
+                            ("JYY", float),
+                            ("JXY", float),
+                            ("JYX", float),
+                        ],
+                        shared_dtype
+                        + [
+                            ("DX", float),
+                            ("DY", float),
+                            ("DZ", float),
+                        ],
+                    ]
+                ),
+                name_in_grammar=False,
+            ),
+        ],
+        info="Dzyaloshinski-Moriya couplings Dij or Jij",
+    )
 
-    definition.__dict__['extension'] = 'dat'
+    definition.__dict__["extension"] = "dat"
 
     return definition
 

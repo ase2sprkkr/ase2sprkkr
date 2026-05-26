@@ -3,24 +3,27 @@ import os
 import tempfile
 
 if __package__:
-   from .init_tests import TestCase, patch_package
+    from .init_tests import TestCase, patch_package
 else:
-   from init_tests import TestCase, patch_package
+    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
 from ..sysfile import sysfile_content, write_sysfile  # NOQA: E402
 
 
 class TestSysfile(TestCase):
-
     def test(self):
         a = 4.6
         c = 2.95
-        atoms = crystal(['Ti', 'O'], basis=[(0, 0, 0), (0.3, 0.3, 0.0)],
-                    spacegroup=136, cellpar=[a, a, c, 90, 90, 90])
+        atoms = crystal(
+            ["Ti", "O"],
+            basis=[(0, 0, 0), (0.3, 0.3, 0.0)],
+            spacegroup=136,
+            cellpar=[a, a, c, 90, 90, 90],
+        )
         # atoms = bulk('Ag')
-        x=sysfile_content(atoms)
-        y="""
+        x = sysfile_content(atoms)
+        y = """
 system data-file created by python ase2sprkkr
 <unknown>
 xband-version
@@ -65,7 +68,7 @@ number of atom types NT
   1  22        Ti    2 1.000  1  2
   2   8         O    4 1.000  3  4  5  6
         """
-        sanitize = lambda x: "\n".join(map(lambda x: x.strip(), x.strip().split('\n')))
-        self.assertEqual(sanitize(x),sanitize(y))
-        if os.name != 'nt':
-           write_sysfile(atoms, tempfile.NamedTemporaryFile().name)
+        sanitize = lambda x: "\n".join(map(lambda x: x.strip(), x.strip().split("\n")))
+        self.assertEqual(sanitize(x), sanitize(y))
+        if os.name != "nt":
+            write_sysfile(atoms, tempfile.NamedTemporaryFile().name)

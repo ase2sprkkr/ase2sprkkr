@@ -1,7 +1,8 @@
 import copy
 
+
 class Moments:
-    #QEL  NOS  SPN  ORB  HFI
+    # QEL  NOS  SPN  ORB  HFI
     def __init__(self, qel, nos, smt, omt, hff):
         self.qel = qel
         self.nos = nos
@@ -14,7 +15,7 @@ class Moments:
         return self.smt
 
     def as_tuple(self):
-        return (self.qel, self. nos, self. smt, self. omt, self. hff)
+        return (self.qel, self.nos, self.smt, self.omt, self.hff)
 
     def copy(self):
         return copy.copy(self)

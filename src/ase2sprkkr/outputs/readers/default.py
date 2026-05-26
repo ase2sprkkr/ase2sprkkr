@@ -1,5 +1,5 @@
-""" Common parent for all specialized readers and outputs and
-default reader for the tasks without specialized reader and output. """
+"""Common parent for all specialized readers and outputs and
+default reader for the tasks without specialized reader and output."""
 
 from ..task_result import TaskResult, KkrOutputReader, OutputFileResultValue
 from ..sprkkr_output_reader import SprKkrOutputParser
@@ -7,25 +7,22 @@ from ...common.decorators import cached_property
 
 
 class DefaultResult(TaskResult):
-
-  @cached_property
-  def output_values(self):
-      return {}
+    @cached_property
+    def output_values(self):
+        return {}
 
 
 class DefaultOutputParser(SprKkrOutputParser):
+    async def read_output(self, stdout, result):
+        await self.read_commons(stdout, result)
+        # just consume the whole rest of output
 
-  async def read_output(self, stdout, result):
-      await self.read_commons(stdout, result)
-      # just consume the whole rest of output
-
-      result.output_lines = []
-      async for line in stdout:
-            result.output_lines.append(line.decode('utf8').rstrip())
-      return result
+        result.output_lines = []
+        async for line in stdout:
+            result.output_lines.append(line.decode("utf8").rstrip())
+        return result
 
 
 class DefaultOutputReader(KkrOutputReader):
-
-      result_class = DefaultResult
-      parser_class = DefaultOutputParser
+    result_class = DefaultResult
+    parser_class = DefaultOutputParser

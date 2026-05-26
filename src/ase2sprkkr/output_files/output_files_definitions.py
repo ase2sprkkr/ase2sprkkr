@@ -1,128 +1,153 @@
-from ..sprkkr.configuration import ConfigurationValueDefinition, \
-                                   ConfigurationFileDefinition, \
-                                   ConfigurationSectionDefinition, \
-                                   ConfigurationSection
+from ..sprkkr.configuration import (
+    ConfigurationValueDefinition,
+    ConfigurationFileDefinition,
+    ConfigurationSectionDefinition,
+    ConfigurationSection,
+)
 
 from ..common.configuration_definitions import SeparatorDefinition
 from ..common.decorators import cached_class_property, cache
-from ..common.grammar_types import unsigned, Array, Table, Keyword, GrammarType, \
-                                     pot_mixed, line_string, line_end, Separator as SeparatorType, BlankSeparator as BlankSeparatorType
+from ..common.grammar_types import (
+    unsigned,
+    Array,
+    Table,
+    Keyword,
+    GrammarType,
+    pot_mixed,
+    line_string,
+    line_end,
+    Separator as SeparatorType,
+    BlankSeparator as BlankSeparatorType,
+)
 import pyparsing as pp
 from .output_files import OutputFile
 
 
 class OutputFileValueDefinition(ConfigurationValueDefinition):
-  """ This class describes the format of one value of
-  a header of an output file """
-  @cached_class_property
-  def grammar_of_delimiter():
-    return pp.Empty().set_name(' ')
+    """This class describes the format of one value of
+    a header of an output file"""
 
-  prefix = " "
-  name_value_delimiter = '\t'
+    @cached_class_property
+    def grammar_of_delimiter():
+        return pp.Empty().set_name(" ")
 
-  type_from_type_map = { str: line_string }
-  type_of_dangerous = pot_mixed
+    prefix = " "
+    name_value_delimiter = "\t"
+
+    type_from_type_map = {str: line_string}
+    type_of_dangerous = pot_mixed
 
 
 class OutputFileSection(ConfigurationSection):
-  pass
+    pass
+
 
 class OutputFileSectionDefinition(ConfigurationSectionDefinition):
-  delimiter = '\n'
-  grammar_of_delimiter = pp.Suppress('\n').set_whitespace_chars(' \r\t')
-  custom_class = None
-  force_order = True
+    delimiter = "\n"
+    grammar_of_delimiter = pp.Suppress("\n").set_whitespace_chars(" \r\t")
+    custom_class = None
+    force_order = True
 
 
 class BlankSeparator(SeparatorDefinition):
-  """
-  A special (hidden) value, that appears in a output file header
+    """
+    A special (hidden) value, that appears in a output file header
 
-  The separator is a blank line
-  """
-  separator_type = BlankSeparatorType()
+    The separator is a blank line
+    """
+
+    separator_type = BlankSeparatorType()
 
 
 class Separator(SeparatorDefinition):
-  """
-  A special (hidden) value, that appears in a output file header
-  """
-  separator_type = SeparatorType(char='#', length=80)
+    """
+    A special (hidden) value, that appears in a output file header
+    """
+
+    separator_type = SeparatorType(char="#", length=80)
 
 
 class OutputFileDefinition(ConfigurationFileDefinition):
-  """ This class describes the format of one
-  value of a standard potential section """
+    """This class describes the format of one
+    value of a standard potential section"""
 
-  force_order = True
-  """ The order of items in an output file is fixed """
+    force_order = True
+    """ The order of items in an output file is fixed """
 
-  value_name_format = '{:<12}'
+    value_name_format = "{:<12}"
 
-  child_class = OutputFileValueDefinition
-  """ standard child class """
+    child_class = OutputFileValueDefinition
+    """ standard child class """
 
-  custom_class = None
-  """ No custom members in the output files """
+    custom_class = None
+    """ No custom members in the output files """
 
-  delimiter = '\n'
-  """ options are delimited by newline in ouptut. """
+    delimiter = "\n"
+    """ options are delimited by newline in ouptut. """
 
-  grammar_of_delimiter = line_end
-  """ section are delimited by newlines """
+    grammar_of_delimiter = line_end
+    """ section are delimited by newlines """
 
-  result_class = OutputFile
+    result_class = OutputFile
 
-  configuration_type_name = 'OUTPUT FILE'
+    configuration_type_name = "OUTPUT FILE"
 
-  def add_ignored(self, out):
-      """ In the output files, do not ignore doublecrossed lines """
-      return out
+    def add_ignored(self, out):
+        """In the output files, do not ignore doublecrossed lines"""
+        return out
 
-
-  @property
-  def extension(self):
-      mod = self.__class__.__module__
-      return mod.rsplit('.',1)[1]
+    @property
+    def extension(self):
+        mod = self.__class__.__module__
+        return mod.rsplit(".", 1)[1]
 
 
 @cache
 def output_file_header():
-    """ Return the members of the common output file header, up to
+    """Return the members of the common output file header, up to
     the first ``KEYWORD`` value (which differs for each output file)"""
     V = OutputFileValueDefinition
     return [
-      V('TITLE', str, info='Name of the calculation'),
-      V('SYSTEM', str, info='Description of the calculated system'),
-      V('NQ_EFF', int, info='Number of atomic sites'),
-      V('NT_EFF', int, info='Number of types of atoms'),
-      BlankSeparator(),
-      V('NE', int),
-      V('IREL', int),
-      V('EFERMI', float, info='Fermi energy'),
-      V('INFO', str),
-      BlankSeparator(),
-      V('ORBITALS', Table({'IQ': int, 'NLQ' : unsigned}, named_result=True), name_in_grammar = False),
-      V('TYPES', Table({'IT': int, 'TXT_T': str, 'CONC': float, 'NAT': int, 'IQAT': Array(int)}), name_in_grammar=False),
+        V("TITLE", str, info="Name of the calculation"),
+        V("SYSTEM", str, info="Description of the calculated system"),
+        V("NQ_EFF", int, info="Number of atomic sites"),
+        V("NT_EFF", int, info="Number of types of atoms"),
+        BlankSeparator(),
+        V("NE", int),
+        V("IREL", int),
+        V("EFERMI", float, info="Fermi energy"),
+        V("INFO", str),
+        BlankSeparator(),
+        V(
+            "ORBITALS",
+            Table({"IQ": int, "NLQ": unsigned}, named_result=True),
+            name_in_grammar=False,
+        ),
+        V(
+            "TYPES",
+            Table(
+                {"IT": int, "TXT_T": str, "CONC": float, "NAT": int, "IQAT": Array(int)}
+            ),
+            name_in_grammar=False,
+        ),
     ]
 
 
-def create_output_file_definition(keyword, add, name=None,
-                                  cls=OutputFileDefinition,
-                                  **kwargs):
-    """ Create a definition of an output file. One should supply the additional values
+def create_output_file_definition(
+    keyword, add, name=None, cls=OutputFileDefinition, **kwargs
+):
+    """Create a definition of an output file. One should supply the additional values
     containing the actual data.
     """
     V = OutputFileValueDefinition
     if isinstance(keyword, str):
         if name is None:
-           name = keyword
-        keyword = V('KEYWORD', Keyword(keyword) )
+            name = keyword
+        keyword = V("KEYWORD", Keyword(keyword))
     elif isinstance(keyword, GrammarType):
-        keyword = V('KEYWORD', keyword )
-    fields = [ keyword ]
-    fields.extend( output_file_header() )
+        keyword = V("KEYWORD", keyword)
+    fields = [keyword]
+    fields.extend(output_file_header())
     if add:
-       fields.extend(add)
-    return cls(f'{name}', fields, **kwargs)
+        fields.extend(add)
+    return cls(f"{name}", fields, **kwargs)

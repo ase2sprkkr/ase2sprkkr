@@ -1,4 +1,4 @@
-""" Function related to ASE2SPRKKR examples """
+"""Function related to ASE2SPRKKR examples"""
 
 from pathlib import Path
 import ast
@@ -9,15 +9,16 @@ import shutil
 from ase2sprkkr.common.decorators import cached_property
 import ase2sprkkr
 
+
 def examples_dir():
-    """ Base dir for all examples """
+    """Base dir for all examples"""
     return Path(ase2sprkkr.__file__).parent / "examples"
 
-class Example:
 
+class Example:
     @staticmethod
-    def by_number(example:int):
-        """ Directory for the given example """
+    def by_number(example: int):
+        """Directory for the given example"""
         # Find the matching example directory
         prefix = f"A{example:02d}_"
         for d in examples_dir().iterdir():
@@ -45,7 +46,7 @@ class Example:
         # Copy contents of example dir → destination
         for item in self.dir.iterdir():
             dst = dest_dir / item.name
-            if item.name.startswith('__'):
+            if item.name.startswith("__"):
                 continue
             if item.is_dir():
                 shutil.copytree(item, dst, dirs_exist_ok=True)
@@ -58,7 +59,7 @@ class Example:
 
     @cached_property
     def main_script(self):
-        """ Find Python script inside example directory (excluding __init__.py).
+        """Find Python script inside example directory (excluding __init__.py).
         Now we suspose, that the first such one is the main.
         """
         for p in self.dir.glob("*.py"):
@@ -83,14 +84,15 @@ class Example:
     def short_docstring(self):
 
         def first_sentence(text: str) -> str:
-            match = re.match(r'^\s*([^.]*\.)', text)
+            match = re.match(r"^\s*([^.]*\.)", text)
             if match:
                 return match.group(1)
             return text.strip()
+
         if self.docstring is None:
             return None
         out = first_sentence(self.docstring)
-        out = re.sub(r'\s*\n\s*', ' ', out)
+        out = re.sub(r"\s*\n\s*", " ", out)
         return out
 
     def source(self):
@@ -99,8 +101,8 @@ class Example:
     def body_of_main(self):
         pattern = re.compile(
             r"^def\s+main\s*\([^)]*\)\s*:\s*\n"  # match 'def main(...):'
-            r"((?:[ \t]+.*\n|\n)+)",                # capture indented block
-            re.MULTILINE
+            r"((?:[ \t]+.*\n|\n)+)",  # capture indented block
+            re.MULTILINE,
         )
         code = self.source()
 
@@ -119,16 +121,18 @@ class Example:
         re.compile(regex)
         return regex.search(self.name) or regex.search(self.source())
 
+
 def list_of_examples(regex=None):
     """
     Return list of tuples: (subdir_name, docstring of example_main_script)
     """
     base_dir = examples_dir()
     pattern = re.compile(r"^A\d{2}_")  # matches A{number*2}_
-    out = [ Example(d) for d in base_dir.iterdir()
-             if d.is_dir() and pattern.match(d.name) ]
+    out = [
+        Example(d) for d in base_dir.iterdir() if d.is_dir() and pattern.match(d.name)
+    ]
     if regex:
         re.compile(a)
-        out2 = [ i for i in out if i.satisfy_regex(regex) ]
+        out2 = [i for i in out if i.satisfy_regex(regex)]
 
     return out

@@ -1,4 +1,4 @@
-""" Atomic could be placed at the atomic site. """
+"""Atomic could be placed at the atomic site."""
 
 from ..common.decorators import cached_property
 import copy
@@ -9,7 +9,7 @@ import numpy as np
 
 
 class AtomicType:
-    """ Atomic type represent a type of atom, that could be placed at the atomic site.
+    """Atomic type represent a type of atom, that could be placed at the atomic site.
 
     It can be either a real chemical element, or vacuum pseudoelement.
     It also determine the number of electrons and valence electrons.
@@ -26,16 +26,27 @@ class AtomicType:
     @cached_property
     def mendeleev(self):
         if self.atomic_number == 0:
-           raise Exception("Vaccuum (pseudo)atom is not in Mendeleev package database")
+            raise Exception("Vaccuum (pseudo)atom is not in Mendeleev package database")
         if not AtomicType._mendeleev_module:
-          try:
-            import mendeleev
-          except ImportError as e:
-            raise ImportError("Cannot import Mendeleev package to guess the atomic type properties") from e
-          AtomicType._mendeleev_module = mendeleev
+            try:
+                import mendeleev
+            except ImportError as e:
+                raise ImportError(
+                    "Cannot import Mendeleev package to guess the atomic type properties"
+                ) from e
+            AtomicType._mendeleev_module = mendeleev
         return AtomicType._mendeleev_module.element(self.atomic_number or self.symbol)
 
-    def __init__(self, symbol, atomic_number=None, n_core=None, n_valence=None, n_semicore=None, n_electrons=None, mesh=None):
+    def __init__(
+        self,
+        symbol,
+        atomic_number=None,
+        n_core=None,
+        n_valence=None,
+        n_semicore=None,
+        n_electrons=None,
+        mesh=None,
+    ):
         """
         Parameters
         ----------
@@ -63,32 +74,41 @@ class AtomicType:
         n_electrons: int
         """
         if isinstance(symbol, (int, np.int64)):
-           if atomic_number is not None and atomic_number != symbol:
-              raise ValueError(f'Number of electrons in symbol ({symbol}) and atomic_number ({atomic_number}) differ')
-           atomic_number = int(symbol)
-           symbol = None
+            if atomic_number is not None and atomic_number != symbol:
+                raise ValueError(
+                    f"Number of electrons in symbol ({symbol}) and atomic_number ({atomic_number}) differ"
+                )
+            atomic_number = int(symbol)
+            symbol = None
         else:
-           symbol = symbol
-           atomic_number = None if atomic_number is None else int(atomic_number)
+            symbol = symbol
+            atomic_number = None if atomic_number is None else int(atomic_number)
 
         if atomic_number is None and symbol is None:
-           raise ValueError("Unknown atomic type")
+            raise ValueError("Unknown atomic type")
 
-        if '_' in symbol:
-            symbol = symbol.split('_',1)[0]
+        if "_" in symbol:
+            symbol = symbol.split("_", 1)[0]
 
-        if symbol == 'Vc' or atomic_number == 0 or \
-           (symbol == 'X' and atomic_number is None):
-           self._symbol = 'Vc'
-           self._atomic_number = 0
+        if (
+            symbol == "Vc"
+            or atomic_number == 0
+            or (symbol == "X" and atomic_number is None)
+        ):
+            self._symbol = "Vc"
+            self._atomic_number = 0
         else:
-           if symbol is None:
-              self._atomic_number = atomic_number
-              self._symbol = symbol if symbol is not None else self.mendeleev.symbol
-           else:
-              self._symbol = symbol
-              self._atomic_number = None
-              self._atomic_number = atomic_number if atomic_number is not None else self.mendeleev.atomic_number
+            if symbol is None:
+                self._atomic_number = atomic_number
+                self._symbol = symbol if symbol is not None else self.mendeleev.symbol
+            else:
+                self._symbol = symbol
+                self._atomic_number = None
+                self._atomic_number = (
+                    atomic_number
+                    if atomic_number is not None
+                    else self.mendeleev.atomic_number
+                )
 
         self._n_electrons = n_electrons
         self._n_valence = n_valence
@@ -119,13 +139,13 @@ class AtomicType:
 
     def _check_n_electrons(self):
         if (
-            self._n_core is not None and
-            self._n_valence is not None and
-            self._n_semicore is not None and
-            self._n_electrons is not None and
-            self._n_core + self._n_valence + self._n_semicore != self._n_electrons
-           ):
-              raise ValueError(f"""The following atom setup is inconsistent:
+            self._n_core is not None
+            and self._n_valence is not None
+            and self._n_semicore is not None
+            and self._n_electrons is not None
+            and self._n_core + self._n_valence + self._n_semicore != self._n_electrons
+        ):
+            raise ValueError(f"""The following atom setup is inconsistent:
 n_electrons: {self._n_electrons},
 n_core: {self._n_core},
 n_valence: {self._n_valence},
@@ -137,19 +157,19 @@ n_semicore: {self._n_semicore}""")
 
     def _clear_symbol_cache(self):
         try:
-          del self.mendeleev
+            del self.mendeleev
         except (AttributeError, KeyError):
-          pass
+            pass
 
         try:
-          del self.atomic_number
+            del self.atomic_number
         except (AttributeError, KeyError):
-          pass
+            pass
 
         try:
-          del self.symbol
+            del self.symbol
         except (AttributeError, KeyError):
-          pass
+            pass
 
         self._n_core = None
         self._n_semicore = None
@@ -160,7 +180,7 @@ n_semicore: {self._n_semicore}""")
     def atomic_number(self, v):
         self._atomic_number = int(v)
         self._clear_symbol_cache()
-        self._symbol = self.mendeleev.symbol if v else 'Vc'
+        self._symbol = self.mendeleev.symbol if v else "Vc"
 
     @property
     def symbol(self):
@@ -171,15 +191,20 @@ n_semicore: {self._n_semicore}""")
         self._symbol = v
         self._atomic_number = None
         self._clear_symbol_cache()
-        self._atomic_number = self.mendeleev.atomic_number if v not in ['X', 'Vc'] else 0
-
+        self._atomic_number = (
+            self.mendeleev.atomic_number if v not in ["X", "Vc"] else 0
+        )
 
     @property
     def n_electrons(self):
         if self._n_electrons is not None:
-           return self._n_electrons
-        if self._n_valence is not None and self._n_core is not None and self._n_semicore is not None:
-           return self._n_valence + self._n_core + self._n_semicore
+            return self._n_electrons
+        if (
+            self._n_valence is not None
+            and self._n_core is not None
+            and self._n_semicore is not None
+        ):
+            return self._n_valence + self._n_core + self._n_semicore
         return self.atomic_number
 
     @n_electrons.setter
@@ -192,11 +217,11 @@ n_semicore: {self._n_semicore}""")
     @property
     def n_valence(self):
         if self._n_valence is not None:
-           return self._n_valence
+            return self._n_valence
         if self._n_core is not None:
-           return self.n_electrons - self._n_core
+            return self.n_electrons - self._n_core
         if self.n_electrons == 0:
-           return 0
+            return 0
         return self.mendeleev.nvalence()
 
     @n_valence.setter
@@ -207,7 +232,7 @@ n_semicore: {self._n_semicore}""")
     @property
     def n_core(self):
         if self._n_core is not None:
-           self._n_core
+            self._n_core
         return self.n_electrons - self.n_valence - self.n_semicore
 
     @n_core.setter
@@ -218,9 +243,9 @@ n_semicore: {self._n_semicore}""")
     @property
     def n_semicore(self):
         if self._n_semicore is not None:
-           return self._n_semicore
+            return self._n_semicore
         if self._n_core is not None and self._n_valence is not None:
-           return self.n_electrons - self._n_core - self._n_valence
+            return self.n_electrons - self._n_core - self._n_valence
         return 0
 
     @n_semicore.setter
@@ -229,20 +254,26 @@ n_semicore: {self._n_semicore}""")
         self.__check_n_electrons()
 
     def __repr__(self):
-        return f"({self.atomic_number})" if self.symbol == 'X' else self.symbol
+        return f"({self.atomic_number})" if self.symbol == "X" else self.symbol
 
     def __str__(self):
         return self.__repr__()
 
     def to_tuple(self):
-        return (self.symbol, self.n_electrons, self.n_core, self.n_valence, self.n_semicore)
+        return (
+            self.symbol,
+            self.n_electrons,
+            self.n_core,
+            self.n_valence,
+            self.n_semicore,
+        )
 
     def is_vacuum(self):
         return self.atomic_number == 0
 
     @property
     def potential(self):
-        """ The radial potential data of the site """
+        """The radial potential data of the site"""
         return self._potential
 
     @potential.setter
@@ -261,7 +292,7 @@ n_semicore: {self._n_semicore}""")
 
     @property
     def charge(self):
-        """ The radial charge data of the site """
+        """The radial charge data of the site"""
         return self._charge
 
     @charge.setter
@@ -276,7 +307,7 @@ n_semicore: {self._n_semicore}""")
 
     @property
     def moments(self):
-        """ The moments data of the site """
+        """The moments data of the site"""
         return self._moments
 
     @moments.setter
@@ -286,7 +317,7 @@ n_semicore: {self._n_semicore}""")
         self._moments = value
 
     def for_mesh(self, mesh):
-        """ Return copy for a given mesh """
+        """Return copy for a given mesh"""
         if mesh is None:
             return self
         smesh = self.mesh
@@ -309,10 +340,10 @@ n_semicore: {self._n_semicore}""")
             out._mesh = for_mesh
         return out
 
-    def remesh(self, mesh, map:'Dict[AtomicType,AtomicType]'):
-        """ Return the copy for a given mesh, updating the informations
+    def remesh(self, mesh, map: "Dict[AtomicType,AtomicType]"):
+        """Return the copy for a given mesh, updating the informations
         in the map of the old: new objects, so the remeshed items will
-        share the meshes. """
+        share the meshes."""
         if self in map:
             return map[self]
         out = map[self] = self.for_mesh(mesh)

@@ -1,4 +1,4 @@
-""" This module contains routines for building systems, which can be used for SPR-KKR calculations
+"""This module contains routines for building systems, which can be used for SPR-KKR calculations
 - e.g. system with vacuum pseudoatoms, or 2D semiinfinite systems
 """
 
@@ -10,13 +10,20 @@ import numpy as np
 from ase import Atoms
 
 from numbers import Real
-from typing import Union, Tuple, Optional,Dict
+from typing import Union, Tuple, Optional, Dict
 
 
-def semiinfinite_system(atoms:Atoms, repeat:Union[Tuple[Real,Real],Real], atoms2:Atoms=None,
-                        hkl:Optional[Tuple[Real]]=None, hkl2:Optional[Tuple[Real]]=None,
-                        axis:int=2, site_on_the_top: Optional[int]=None, eps=1e-6):
-    """ Build a semiinfinite system from one or two 3D periodic systems.
+def semiinfinite_system(
+    atoms: Atoms,
+    repeat: Union[Tuple[Real, Real], Real],
+    atoms2: Atoms = None,
+    hkl: Optional[Tuple[Real]] = None,
+    hkl2: Optional[Tuple[Real]] = None,
+    axis: int = 2,
+    site_on_the_top: Optional[int] = None,
+    eps=1e-6,
+):
+    """Build a semiinfinite system from one or two 3D periodic systems.
 
     If two systems are given, they have to have identical the first two
     lattice vectors. If one system is given, the second system is created
@@ -56,15 +63,17 @@ def semiinfinite_system(atoms:Atoms, repeat:Union[Tuple[Real,Real],Real], atoms2
     """
 
     if isinstance(repeat, Real):
-       repeat=(repeat, math.floor(repeat) + math.ceil(repeat) - repeat)
+        repeat = (repeat, math.floor(repeat) + math.ceil(repeat) - repeat)
 
     if hkl is not None:
-       DeprecationWarning("hkl parameter for semiinfinite system is deprecated,"
-                          "please use ase2sprkkr.ase.buil.rotate() before calling "
-                          "the function")
-       atoms1 = rotate(atoms, hkl)
+        DeprecationWarning(
+            "hkl parameter for semiinfinite system is deprecated,"
+            "please use ase2sprkkr.ase.buil.rotate() before calling "
+            "the function"
+        )
+        atoms1 = rotate(atoms, hkl)
     else:
-       atoms1 = atoms
+        atoms1 = atoms
 
     if site_on_the_top is not None:
         coors = atoms.get_scaled_positions(wrap=True)
@@ -81,25 +90,25 @@ def semiinfinite_system(atoms:Atoms, repeat:Union[Tuple[Real,Real],Real], atoms2
             atoms1.positions = atoms.cell @ coors
 
     if atoms2 is None:
-       atoms2 = vacuum_like(atoms1 if hkl2 is None else atoms)
+        atoms2 = vacuum_like(atoms1 if hkl2 is None else atoms)
     if hkl2 is not None:
-       atoms2 = rotate(atoms2, hkl2)
-       DeprecationWarning("hkl2 parameter for semiinfinite system is deprecated,"
-                          "please use ase2sprkkr.ase.buil.rotate() before calling "
-                          "the function")
+        atoms2 = rotate(atoms2, hkl2)
+        DeprecationWarning(
+            "hkl2 parameter for semiinfinite system is deprecated,"
+            "please use ase2sprkkr.ase.buil.rotate() before calling "
+            "the function"
+        )
 
     catoms = aperiodic_times(atoms1, repeat[0], axis=axis)
     catoms2 = aperiodic_times(atoms2, repeat[1], axis=axis, direction=-1)
     catoms = _stack([catoms, catoms2], axis=axis)
 
-    out = stack( {'left': atoms1,
-                  'central': catoms,
-                  'right': atoms2}, axis=axis)
+    out = stack({"left": atoms1, "central": catoms, "right": atoms2}, axis=axis)
     return out
 
 
-def stack(atomses:Dict[str,Atoms], axis:int, *args, inherit_cell=True, **kwargs):
-    """ Stack the atoms along given axis to a one object, creating the regions in the atoms.
+def stack(atomses: Dict[str, Atoms], axis: int, *args, inherit_cell=True, **kwargs):
+    """Stack the atoms along given axis to a one object, creating the regions in the atoms.
 
     The function accepts list of the names, the list of the Atoms objects, and all the other parameters
     of the function :func:`ase2sprkkr.ase.build.stack`.
@@ -109,8 +118,8 @@ def stack(atomses:Dict[str,Atoms], axis:int, *args, inherit_cell=True, **kwargs)
     last = list(atomses.items())[-1]
 
     if inherit_cell is True:
-       inherit_cell = np.ones(3, dtype=bool)
-       inherit_cell[axis]=False
+        inherit_cell = np.ones(3, dtype=bool)
+        inherit_cell[axis] = False
 
     SPRKKRAtoms.promote_ase_atoms(out, update_info=False)
     with out.spacegroup_info.block_updating(True):
@@ -119,8 +128,10 @@ def stack(atomses:Dict[str,Atoms], axis:int, *args, inherit_cell=True, **kwargs)
                 upto = None
             else:
                 upto = (cnt or 0) + len(atoms)
-            AtomsRegion.from_atoms(atoms, name, slice(cnt, upto), inherit_cell=inherit_cell, atoms=out)
-            cnt=upto
+            AtomsRegion.from_atoms(
+                atoms, name, slice(cnt, upto), inherit_cell=inherit_cell, atoms=out
+            )
+            cnt = upto
     return out
 
 
@@ -131,5 +142,5 @@ def vacuum_like(atoms):
     out = atoms.copy()
     SPRKKRAtoms.promote_ase_atoms(out)
     for site in out.sites:
-        site.occupation = { 'Vc' : 1.0 }
+        site.occupation = {"Vc": 1.0}
     return out

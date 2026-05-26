@@ -1,6 +1,7 @@
 """
 Wrapper for spglib for computing symmetry of a primitive cell
 """
+
 from __future__ import annotations
 from typing import Optional, Dict
 import numpy as np
@@ -13,7 +14,8 @@ from .sites import Site, SiteType
 
 
 def site_type_copier(atoms):
-    """ Return a function, that always copy the site_type """
+    """Return a function, that always copy the site_type"""
+
     def copy(site):
         return site.site_type.copy(atoms=atoms)
 
@@ -21,7 +23,7 @@ def site_type_copier(atoms):
 
 
 def used_site_type_copier(atoms):
-    """ Return a function, that copy the site_type, if it is requested more than once """
+    """Return a function, that copy the site_type, if it is requested more than once"""
     used = set()
 
     def copy(site):
@@ -35,7 +37,6 @@ def used_site_type_copier(atoms):
 
 
 class BaseSpacegroupInfo:
-
     def spacegroup_number(self) -> Optional[int]:
         """
         Returns
@@ -47,9 +48,9 @@ class BaseSpacegroupInfo:
         return dataset.number if dataset else None
 
     @property
-    def dataset(self)->Optional[Dict]:
-        """ Return SpgLib dataset containing informations about symmetry,
-        spacegroup, equivalence of sites etc... """
+    def dataset(self) -> Optional[Dict]:
+        """Return SpgLib dataset containing informations about symmetry,
+        spacegroup, equivalence of sites etc..."""
         if self._dataset is None:
             self.recompute()
         return self._dataset
@@ -71,8 +72,8 @@ class BaseSpacegroupInfo:
         """
 
         atoms = self.for_atoms
-        frac = atoms.get_scaled_positions(wrap=True)   # (nat, 3), fractional
-        types = np.empty(len(atoms), dtype=object)     # species
+        frac = atoms.get_scaled_positions(wrap=True)  # (nat, 3), fractional
+        types = np.empty(len(atoms), dtype=object)  # species
         if not self.dataset or self.dataset.rotations is None:
             return None
         rotations = self.dataset.rotations
@@ -80,7 +81,7 @@ class BaseSpacegroupInfo:
         sites = atoms.sites
         for i in range(len(types)):
             types[i] = atoms.sites[i].site_type
-        B = atoms.cell.array                           # 3x3 (row-vectors); frac @ B → Cartesian
+        B = atoms.cell.array  # 3x3 (row-vectors); frac @ B → Cartesian
 
         table = -np.ones((len(rotations), len(sites)), dtype=int)
 
@@ -91,7 +92,6 @@ class BaseSpacegroupInfo:
         byType = {typ: np.array(idxs, int) for typ, idxs in byType.items()}
         pos_byType = {typ: frac[idxs] for typ, idxs in byType.items()}
 
-
         for g in range(len(rotations)):
             rot = rotations[g]
             trn = translations[g]
@@ -101,10 +101,10 @@ class BaseSpacegroupInfo:
             for i in range(len(atoms)):
                 typ = types[i]
                 idxs = byType[typ]
-                cand = pos_byType[typ]                 # candidate positions (the same species)
+                cand = pos_byType[typ]  # candidate positions (the same species)
                 d = Xp[i] - cand
-                d -= np.rint(d)                        # wrap to nearest lattice image in frac
-                d_cart = d @ B                         # compare in Cartesian space
+                d -= np.rint(d)  # wrap to nearest lattice image in frac
+                d_cart = d @ B  # compare in Cartesian space
                 jloc = np.argmin(np.linalg.norm(d_cart, axis=1))
                 if np.linalg.norm(d_cart[jloc]) <= symprec + 1e-12:
                     table[g, i] = idxs[jloc]
@@ -115,8 +115,8 @@ class BaseSpacegroupInfo:
                     )
         return table
 
-class RegionSpacegroupInfo(BaseSpacegroupInfo):
 
+class RegionSpacegroupInfo(BaseSpacegroupInfo):
     def __init__(self, spacegroup_info, region):
         self.info = spacegroup_info
         self._dataset = None
@@ -125,12 +125,16 @@ class RegionSpacegroupInfo(BaseSpacegroupInfo):
     def recompute(self):
         self._dataset.recompute()
 
-class SpacegroupInfo(BaseSpacegroupInfo):
-    """ Class, that carry information about spacegroup and symmetry of a structure """
 
-    def __init__(self, atoms: sprkkr_atoms.SPRKKRAtoms,
-                 symmetry = True,
-                 dataset: Optional[Dict]=None):
+class SpacegroupInfo(BaseSpacegroupInfo):
+    """Class, that carry information about spacegroup and symmetry of a structure"""
+
+    def __init__(
+        self,
+        atoms: sprkkr_atoms.SPRKKRAtoms,
+        symmetry=True,
+        dataset: Optional[Dict] = None,
+    ):
         """
         Parameters
         ----------
@@ -157,7 +161,7 @@ class SpacegroupInfo(BaseSpacegroupInfo):
         return self.atoms
 
     def to_dict(self):
-        return {'dataset': self._dataset, 'symmetry': self.symmetry }
+        return {"dataset": self._dataset, "symmetry": self.symmetry}
 
     def info_for_region(self, region):
         name = region.name
@@ -169,30 +173,32 @@ class SpacegroupInfo(BaseSpacegroupInfo):
     todict = to_dict
 
     def copy_for(self, atoms):
-        """ Return copy of the object for the given atoms """
+        """Return copy of the object for the given atoms"""
         out = copy.copy(self)
         out.atoms = atoms
         out._dataset = None
         return out
 
     def check_spacegroup_kinds(self):
-        """ Returns True, if the spacegroup_kinds array match the sites info. """
+        """Returns True, if the spacegroup_kinds array match the sites info."""
         a = self.atoms
-        if 'spacegroup_kinds' in a.arrays:
+        if "spacegroup_kinds" in a.arrays:
             return False
         kinds = {}
         sites = {}
-        occ = a.info.get('occupancy', {})
-        for site, kind in zip(a.sites, a.array('spacegroup_kinds')):
+        occ = a.info.get("occupancy", {})
+        for site, kind in zip(a.sites, a.array("spacegroup_kinds")):
             st = site.site_type
-            if kinds.setdefault(kind, st) != st or \
-               sites.setdefault(st, kind) != kind or \
-               str(kind) not in occ:
-                  return False
+            if (
+                kinds.setdefault(kind, st) != st
+                or sites.setdefault(st, kind) != kind
+                or str(kind) not in occ
+            ):
+                return False
         return True
 
     def update_spacegroup_kinds(self, if_required=False, invalidate_spacegroup=False):
-        """ Update the occupancy info and spagroup_kinds array """
+        """Update the occupancy info and spagroup_kinds array"""
         if invalidate_spacegroup:
             self._dataset = None
         if if_required and not self.check_spacegroup_kinds():
@@ -205,13 +211,13 @@ class SpacegroupInfo(BaseSpacegroupInfo):
             st = site.site_type
             if not st in stypes:
                 sgi[i] = stypes[st] = num
-                occ[str(num)]= st.occupation.to_dict(True)
-                num+=1
+                occ[str(num)] = st.occupation.to_dict(True)
+                num += 1
             else:
                 sgi[i] = stypes[st]
 
-        self.atoms.set_array('spacegroup_kinds', sgi)
-        self.atoms.info['occupancy'] = occ
+        self.atoms.set_array("spacegroup_kinds", sgi)
+        self.atoms.info["occupancy"] = occ
 
     def __repr__(self):
         return f"Spacegroup {str(self.spacegroup_number() or 'None')}"
@@ -219,82 +225,94 @@ class SpacegroupInfo(BaseSpacegroupInfo):
     def __str__(self):
         return self.__repr__()
 
-
     @property
-    def equivalent_sites(self)->np.ndarray:
-        """ Return numpy array, that tags the sites by its equivalence
-        classes """
+    def equivalent_sites(self) -> np.ndarray:
+        """Return numpy array, that tags the sites by its equivalence
+        classes"""
         self.atoms.sites
-        return self.atoms.get_array('spacegroup_kinds')
+        return self.atoms.get_array("spacegroup_kinds")
 
-    def recompute(self,
-                  symmetry=None,
-                  consider_old=True,
-                  precision=1e-5, angular_precision=1e-5,
-                  *,
-                  atomic_kinds=None,
-                  copy=False,
-                  init=False,
-                  update_info=True
-                  ):
-       """ Init the sites array: the array of Sites objects,
-       that holds additional SPRKKR properties and informations about site-equivalence """
-       if symmetry is not None:
-           self.symmetry = symmetry
-       if self._block:
-           if init:
-               self.__block.init=True
-           if copy:
-               self._block.copy=True
-           if update_info:
-               self._block.update_info=True
-           if atomic_kinds:
-               raise NotImplementedError("Calling recompute during _block with atomic_kinds specified is not implemented")
-           if not consider_old:
-               self.consider_old=False
-           self._block.angular_precision = min(angular_precision, self._block.angular_precision)
-           self._block.precision = min(precision, self._block.precision)
-           self._block.do = True
-           return
+    def recompute(
+        self,
+        symmetry=None,
+        consider_old=True,
+        precision=1e-5,
+        angular_precision=1e-5,
+        *,
+        atomic_kinds=None,
+        copy=False,
+        init=False,
+        update_info=True,
+    ):
+        """Init the sites array: the array of Sites objects,
+        that holds additional SPRKKR properties and informations about site-equivalence"""
+        if symmetry is not None:
+            self.symmetry = symmetry
+        if self._block:
+            if init:
+                self.__block.init = True
+            if copy:
+                self._block.copy = True
+            if update_info:
+                self._block.update_info = True
+            if atomic_kinds:
+                raise NotImplementedError(
+                    "Calling recompute during _block with atomic_kinds specified is not implemented"
+                )
+            if not consider_old:
+                self.consider_old = False
+            self._block.angular_precision = min(
+                angular_precision, self._block.angular_precision
+            )
+            self._block.precision = min(precision, self._block.precision)
+            self._block.do = True
+            return
 
-       atoms = self.atoms
-       if init or not atoms.are_sites_inited:
-           init = True
-       else:
-           old_sites = atoms.sites
-       creator = SiteType.creator(atoms)
-       if not init:
-           stype_copier = site_type_copier(atoms) if copy else used_site_type_copier(atoms)
+        atoms = self.atoms
+        if init or not atoms.are_sites_inited:
+            init = True
+        else:
+            old_sites = atoms.sites
+        creator = SiteType.creator(atoms)
+        if not init:
+            stype_copier = (
+                site_type_copier(atoms) if copy else used_site_type_copier(atoms)
+            )
 
-           def create(i):
-               osite = old_sites[i]
-               return stype_copier(osite) if osite else creator(i)
-       else:
-           create = creator
+            def create(i):
+                osite = old_sites[i]
+                return stype_copier(osite) if osite else creator(i)
+        else:
+            create = creator
 
-       sites = np.zeros(len(atoms), dtype=object)
-       indexes = np.arange(len(atoms))
+        sites = np.zeros(len(atoms), dtype=object)
+        indexes = np.arange(len(atoms))
 
-       def set_site(sites, i, stype):
-           if sites[i]:
-               sites[i].unregister()
-           sites[i] = Site(stype)
+        def set_site(sites, i, stype):
+            if sites[i]:
+                sites[i].unregister()
+            sites[i] = Site(stype)
 
-       def solve_region(region, slice):
+        def solve_region(region, slice):
             ssites = sites[slice]
             if sum(region.pbc) == 3 and self.symmetry or region is atoms:
                 kinds = None if atomic_kinds is None else atomic_kinds[slice]
-                dataset = spglib_dataset(region, kinds,
-                                         consider_old = consider_old,
-                                         precision=precision,
-                                         angular_precision=angular_precision,
-                                         add = ssites if atoms.regions else None)
+                dataset = spglib_dataset(
+                    region,
+                    kinds,
+                    consider_old=consider_old,
+                    precision=precision,
+                    angular_precision=angular_precision,
+                    add=ssites if atoms.regions else None,
+                )
             else:
                 dataset = False
 
             to_global = indexes[slice]
             if self.symmetry and dataset:
-                uniq, index, umap = np.unique(dataset.equivalent_atoms, return_index=True, return_inverse=True)
+                uniq, index, umap = np.unique(
+                    dataset.equivalent_atoms, return_index=True, return_inverse=True
+                )
                 stypes = np.empty(len(uniq), dtype=object)
                 for i, site in enumerate(index):
                     stypes[i] = create(to_global[site])
@@ -308,13 +326,13 @@ class SpacegroupInfo(BaseSpacegroupInfo):
                     set_site(ssites, i, stype)
             return dataset
 
-       for r in atoms.regions.values():
-           dataset = solve_region(r, r.slice)
-           self.info_for_region(r)._dataset = dataset
-       dataset=solve_region(atoms, slice(None))
-       self._dataset = dataset
-       atoms.set_sites(sites, True, update=update_info)
-       return self
+        for r in atoms.regions.values():
+            dataset = solve_region(r, r.slice)
+            self.info_for_region(r)._dataset = dataset
+        dataset = solve_region(atoms, slice(None))
+        self._dataset = dataset
+        atoms.set_sites(sites, True, update=update_info)
+        return self
 
     @contextmanager
     def block_updating(self, always_recompute=False, **kwargs):
@@ -330,15 +348,15 @@ class SpacegroupInfo(BaseSpacegroupInfo):
 
 
 class SpacegroupInfoBlock:
-    """ Class, for locking the update of spacegroup_info. If more operation are performed, the
-    update is performed after the all operations are done. """
+    """Class, for locking the update of spacegroup_info. If more operation are performed, the
+    update is performed after the all operations are done."""
 
     def __init__(self):
-        self.init=False
-        self.copy=False
-        self.update_info=False
-        self.consider_old=True
-        self.precision = self.angular_precision=float('Inf')
+        self.init = False
+        self.copy = False
+        self.update_info = False
+        self.consider_old = True
+        self.precision = self.angular_precision = float("Inf")
         self.do = False
         self.counter = 1
 
@@ -355,7 +373,7 @@ class SpacegroupInfoBlock:
                 init=self.init,
                 copy=self.copy,
                 update_info=self.update_info,
-                consider_old = self.consider_old,
-                precision = self.precision,
-                angular_precision = self.angular_precision,
+                consider_old=self.consider_old,
+                precision=self.precision,
+                angular_precision=self.angular_precision,
             )

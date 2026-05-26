@@ -1,4 +1,4 @@
-""" Common GrammarTypes as numbers, strings etc. """
+"""Common GrammarTypes as numbers, strings etc."""
 
 from ase.units import Rydberg
 import datetime
@@ -11,571 +11,636 @@ import unyt
 from unyt.array import unyt_quantity
 
 from ..decorators import add_to_signature, cached_property
-from ..grammar import generate_grammar, separator_grammar, \
-                     replace_whitechars, optional_quote
+from ..grammar import (
+    generate_grammar,
+    separator_grammar,
+    replace_whitechars,
+    optional_quote,
+)
 from .grammar_type import TypedGrammarType, GrammarType, add_to_parent_validation
 
 ppc = pp.pyparsing_common
 
+
 class Char(TypedGrammarType):
+    datatype = str
 
-  datatype = str
+    @add_to_parent_validation
+    def _validate(self, value, why="set"):
+        return len(value) == 1 or "Char has to have length one"
 
-  @add_to_parent_validation
-  def _validate(self, value, why='set'):
-      return len(value) == 1 or "Char has to have length one"
+    def grammar_name(self):
+        return "<char>"
 
-  def grammar_name(self):
-      return "<char>"
-
-  _grammar = pp.Word(pp.printables, exact=1)
+    _grammar = pp.Word(pp.printables, exact=1)
 
 
 class Number(TypedGrammarType):
-  """ Base class for a number - descendants of this class can have minimal and/or maximal possible value. """
+    """Base class for a number - descendants of this class can have minimal and/or maximal possible value."""
 
-  @add_to_signature(GrammarType.__init__)
-  def __init__(self, min:Optional[int]=None, max:Optional[int]=None, *args, **kwargs):
-      """
-      Parameters
-      ----------
-      min:
-        Minimal allowed value.
+    @add_to_signature(GrammarType.__init__)
+    def __init__(
+        self, min: Optional[int] = None, max: Optional[int] = None, *args, **kwargs
+    ):
+        """
+        Parameters
+        ----------
+        min:
+          Minimal allowed value.
 
-      max:
-        Maximal allowed value.
-      """
-      self.min = min
-      self.max = max
-      super().__init__(*args, **kwargs)
+        max:
+          Maximal allowed value.
+        """
+        self.min = min
+        self.max = max
+        super().__init__(*args, **kwargs)
 
-  @add_to_parent_validation
-  def _validate(self, value, why='set'):
-      if self.min is not None and self.min > value:
-         return f"A value greater that or equal to {self.min} is required, {value} have been given."
-      if self.max is not None and self.max < value:
-         return f"A value less than or equal to {self.max} is required, {value} have been given."
-      return True
+    @add_to_parent_validation
+    def _validate(self, value, why="set"):
+        if self.min is not None and self.min > value:
+            return f"A value greater that or equal to {self.min} is required, {value} have been given."
+        if self.max is not None and self.max < value:
+            return f"A value less than or equal to {self.max} is required, {value} have been given."
+        return True
 
 
 class FixedPointNumber(Number):
+    numpy_type = int
 
-  numpy_type = int
+    def convert(self, value):
+        if isinstance(value, float) and np.abs(int(value) - value) < 1e-15:
+            from .warnings import SuspiciousValueWarning
 
-  def convert(self, value):
-      if isinstance(value, float) and np.abs(int(value) - value) < 1e-15:
-          from .warnings import SuspiciousValueWarning
-          SuspiciousValueWarning(value, 'An attemtp to set <integer> value using an <float>. I will do a conversion for you.').warn(
-              stacklevel=6
-          )
-          value=int(value)
+            SuspiciousValueWarning(
+                value,
+                "An attemtp to set <integer> value using an <float>. I will do a conversion for you.",
+            ).warn(stacklevel=6)
+            value = int(value)
 
-      return super().convert(value)
+        return super().convert(value)
 
-  @add_to_parent_validation
-  def _validate(self, value, why='set'):
-      if isinstance(value, float):
-          return "A float value is not allowed for integer."
-      return super()._validate(value, why)
+    @add_to_parent_validation
+    def _validate(self, value, why="set"):
+        if isinstance(value, float):
+            return "A float value is not allowed for integer."
+        return super()._validate(value, why)
 
 
 class Unsigned(FixedPointNumber):
-  """ Unsigned integer (zero is possible) """
+    """Unsigned integer (zero is possible)"""
 
-  _grammar = replace_whitechars(ppc.integer).set_parse_action(lambda x:int(x[0]))
+    _grammar = replace_whitechars(ppc.integer).set_parse_action(lambda x: int(x[0]))
 
-  @add_to_parent_validation
-  def _validate(self, value, why='set'):
-      return value >= 0 or "A positive value required"
+    @add_to_parent_validation
+    def _validate(self, value, why="set"):
+        return value >= 0 or "A positive value required"
 
-  def grammar_name(self):
-    return '<+int>'
+    def grammar_name(self):
+        return "<+int>"
 
-  datatype_name = 'unsigned integer'
+    datatype_name = "unsigned integer"
 
 
 class ObjectNumber(Unsigned):
-  """ An abstract class, that describe an unsigned integer, that reffers to an object.
-  User can give the object either using the object, or by the number. Descendant classes
-  should take care of transforming the object to the resulting integer (by setting
-  the result property of the described :class:`Option<ase2sprkkr.common.options.Option>`)
+    """An abstract class, that describe an unsigned integer, that reffers to an object.
+    User can give the object either using the object, or by the number. Descendant classes
+    should take care of transforming the object to the resulting integer (by setting
+    the result property of the described :class:`Option<ase2sprkkr.common.options.Option>`)
 
-  The type of te object should be given by the type class property.
-  """
+    The type of te object should be given by the type class property.
+    """
 
-  def convert(self, value):
-      if isinstance(value, self.type):
-         return value
-      return super().convert(value)
+    def convert(self, value):
+        if isinstance(value, self.type):
+            return value
+        return super().convert(value)
 
-  def _validate(self, value, why='set'):
-      return isinstance(value, self.type) or super()._validate(value, why=why)
+    def _validate(self, value, why="set"):
+        return isinstance(value, self.type) or super()._validate(value, why=why)
 
 
 class Integer(FixedPointNumber):
-  """ Signed integer """
+    """Signed integer"""
 
-  _grammar = replace_whitechars(ppc.signed_integer).set_parse_action(lambda x:int(x[0]))
+    _grammar = replace_whitechars(ppc.signed_integer).set_parse_action(
+        lambda x: int(x[0])
+    )
 
-  def grammar_name(self):
-    return '<int>'
+    def grammar_name(self):
+        return "<int>"
 
 
 class BaseBool(TypedGrammarType):
-  """ A base type for all kind of boolean values."""
-  numpy_type = bool
-  type_name = 'boolean'
+    """A base type for all kind of boolean values."""
+
+    numpy_type = bool
+    type_name = "boolean"
 
 
 class Bool(BaseBool):
-  """ A bool type, whose value is represented by a letter (T or F) """
-  _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).set_parse_action( lambda x: x[0].upper() == 'T' )
+    """A bool type, whose value is represented by a letter (T or F)"""
 
-  def grammar_name(self):
-    return '<T|F>'
+    _grammar = (pp.CaselessKeyword("T") | pp.CaselessKeyword("F")).set_parse_action(
+        lambda x: x[0].upper() == "T"
+    )
 
-  def _string(self, val):
-    return 'T' if val else 'F'
+    def grammar_name(self):
+        return "<T|F>"
+
+    def _string(self, val):
+        return "T" if val else "F"
 
 
 class Boolean(BaseBool):
-  """ A bool type, whose value is represented by a letter (T or F) """
-  _items = [ 'True', 'False', '1', '0', 'yes', 'no' ]
-  _grammar =  pp.Or([pp.CaselessKeyword(i) for i in _items]).\
-                   set_parse_action( lambda x: x[0].lower() in ('true','yes','1') )
+    """A bool type, whose value is represented by a letter (T or F)"""
 
-  def grammar_name(self):
-    return '<True|False|0|1|yes|no>'
+    _items = ["True", "False", "1", "0", "yes", "no"]
+    _grammar = pp.Or([pp.CaselessKeyword(i) for i in _items]).set_parse_action(
+        lambda x: x[0].lower() in ("true", "yes", "1")
+    )
 
-  def _string(self, val):
-    return 'True' if val else 'False'
+    def grammar_name(self):
+        return "<True|False|0|1|yes|no>"
+
+    def _string(self, val):
+        return "True" if val else "False"
 
 
 class IntBool(BaseBool):
-  """ A bool type, whose value is represented by a letter (1 or 0) """
-  _grammar = (pp.CaselessKeyword('1') | pp.CaselessKeyword('0')).set_parse_action( lambda x: x[0] == '1' )
-  _rev_grammar = _grammar.copy().set_parse_action( lambda x: x[0] == '0' )
+    """A bool type, whose value is represented by a letter (1 or 0)"""
 
-  @add_to_signature(TypedGrammarType.__init__)
-  def __init__(self, reversed=False, *args, **kwargs):
-      """
-      Parameters
-      ----------
-      reversed
-       "reversed integer-boolean" returns 1 if it is False
-      """
-      self.reversed = bool(reversed)
-      super().__init__(*args, **kwargs)
+    _grammar = (pp.CaselessKeyword("1") | pp.CaselessKeyword("0")).set_parse_action(
+        lambda x: x[0] == "1"
+    )
+    _rev_grammar = _grammar.copy().set_parse_action(lambda x: x[0] == "0")
 
-  def grammar_name(self):
-      return '<1|0>'
+    @add_to_signature(TypedGrammarType.__init__)
+    def __init__(self, reversed=False, *args, **kwargs):
+        """
+        Parameters
+        ----------
+        reversed
+         "reversed integer-boolean" returns 1 if it is False
+        """
+        self.reversed = bool(reversed)
+        super().__init__(*args, **kwargs)
 
-  def _string(self, val):
-      return '1' if val != self.reversed else '0'
+    def grammar_name(self):
+        return "<1|0>"
+
+    def _string(self, val):
+        return "1" if val != self.reversed else "0"
 
 
 class Real(Number):
-  """ A real value """
-  _grammar = replace_whitechars(ppc.fnumber).set_parse_action(lambda x: float(x[0]))
+    """A real value"""
 
-  def grammar_name(self):
-    return '<float>'
+    _grammar = replace_whitechars(ppc.fnumber).set_parse_action(lambda x: float(x[0]))
 
-  numpy_type = float
+    def grammar_name(self):
+        return "<float>"
 
-  nan = None
+    numpy_type = float
 
-  @add_to_signature(Number.__init__)
-  def __init__(self, nan=None ,*args, **kwargs):
-      self.nan = nan
-      if nan is not None:
-          self._grammar = self._grammar | pp.Regex(nan).set_parse_action(lambda x: float('NaN'))
-      super().__init__(*args, **kwargs)
+    nan = None
 
-  def convert(self, value):
-      if isinstance(value, (int, np.integer)):
-          from .warnings import SuspiciousValueWarning
-          SuspiciousValueWarning(value, 'An attemtp to set <float> value using an <integer>. I will do a conversion for you.').warn(
-              stacklevel=6
-          )
-          value=float(value)
+    @add_to_signature(Number.__init__)
+    def __init__(self, nan=None, *args, **kwargs):
+        self.nan = nan
+        if nan is not None:
+            self._grammar = self._grammar | pp.Regex(nan).set_parse_action(
+                lambda x: float("NaN")
+            )
+        super().__init__(*args, **kwargs)
 
-      return super().convert(value)
+    def convert(self, value):
+        if isinstance(value, (int, np.integer)):
+            from .warnings import SuspiciousValueWarning
+
+            SuspiciousValueWarning(
+                value,
+                "An attemtp to set <float> value using an <integer>. I will do a conversion for you.",
+            ).warn(stacklevel=6)
+            value = float(value)
+
+        return super().convert(value)
 
 
 class Date(Number):
-  """ A date value of the form 'DD.MM.YYYY' """
+    """A date value of the form 'DD.MM.YYYY'"""
 
-  _grammar = pp.Regex(r'(?P<d>\d{2}).(?P<m>\d{2}).(?P<y>\d{4})').set_parse_action(lambda x: datetime.date(int(x['y']), int(x['m']), int(x['d'])))
+    _grammar = pp.Regex(r"(?P<d>\d{2}).(?P<m>\d{2}).(?P<y>\d{4})").set_parse_action(
+        lambda x: datetime.date(int(x["y"]), int(x["m"]), int(x["d"]))
+    )
 
-  def grammar_name(self):
-    return '<dd.mm.yyyy>'
+    def grammar_name(self):
+        return "<dd.mm.yyyy>"
 
-  def _string(self, val):
-    return val.strftime("%d.%m.%Y")
+    def _string(self, val):
+        return val.strftime("%d.%m.%Y")
 
-  numpy_type = datetime.date
-  type_name = 'date'
+    numpy_type = datetime.date
+    type_name = "date"
 
 
 class BaseRealWithUnits(Real):
-  """ The base class for float value, which can have units append.
-      The value is converted automatically to the base units.
-  """
+    """The base class for float value, which can have units append.
+    The value is converted automatically to the base units.
+    """
 
-  grammar_cache = {}
-  """ The grammar for units is cached """
+    grammar_cache = {}
+    """ The grammar for units is cached """
 
-  @cached_property
-  def unit_strings(self):
-    return { str(v):k for k,v in self.units.items() }
+    @cached_property
+    def unit_strings(self):
+        return {str(v): k for k, v in self.units.items()}
 
-  def _grammar_units(self, units):
-    i = id(units)
-    if not i in self.grammar_cache:
-      def unit_defs():
-          for i in self.units:
-              yield pp.CaselessKeyword(i), i
-          if self.default_unit:
-              yield pp.Empty(), self.default_unit
+    def _grammar_units(self, units):
+        i = id(units)
+        if not i in self.grammar_cache:
 
-      units = ( g.set_parse_action(lambda x,*args,unit=unit: unit) for g, unit in unit_defs() )
-      out = Real.I.grammar() + pp.Or(units)
-      out.set_parse_action(lambda x: x[0] * self.units[x[1]])
-      self.grammar_cache[i] = out
-      return out
-    return self.grammar_cache[i]
+            def unit_defs():
+                for i in self.units:
+                    yield pp.CaselessKeyword(i), i
+                if self.default_unit:
+                    yield pp.Empty(), self.default_unit
 
-  def _grammar(self, param_name):
-    return self._grammar_units(self.units)
+            units = (
+                g.set_parse_action(lambda x, *args, unit=unit: unit)
+                for g, unit in unit_defs()
+            )
+            out = Real.I.grammar() + pp.Or(units)
+            out.set_parse_action(lambda x: x[0] * self.units[x[1]])
+            self.grammar_cache[i] = out
+            return out
+        return self.grammar_cache[i]
 
-  def convert(self, value):
-    if isinstance(value, unyt_quantity):
+    def _grammar(self, param_name):
+        return self._grammar_units(self.units)
+
+    def convert(self, value):
+        if isinstance(value, unyt_quantity):
+            return value
+        if isinstance(value, tuple) and len(value) == 2 and value[1] in self.units:
+            return super().convert(value[0]) * self.units[value[1]]
+        if self.default_unit and isinstance(value, numbers.Real):
+            return super().convert(value) * self.units[self.default_unit]
         return value
-    if isinstance(value, tuple) and len(value) == 2 and value[1] in self.units:
-        return super().convert(value[0]) * self.units[value[1]]
-    if self.default_unit and isinstance(value, numbers.Real):
-        return super().convert(value) * self.units[self.default_unit]
-    return value
 
-  def _validate(self, value, why='set'):
-    if not isinstance(value, unyt_quantity):
-        if isinstance(value, tuple) and len(value) == 2 and not value[1] in self.units:
-            return f"Given unit {value[1]} is not allowed, allowed are: {','.join(self.units.keys())}"
-        return "Real with units have to be given as tuple containing " \
-               "a float (the value) and a string (the units), or as "\
-               "Unyt.unit_object.Unit object with propper units."
-    if not str(value.units) in self.unit_strings:
-           return f"Invalid unit {value.units}, allowed are {','.join(self.unit_strings.keys())}"
-    return True
+    def _validate(self, value, why="set"):
+        if not isinstance(value, unyt_quantity):
+            if (
+                isinstance(value, tuple)
+                and len(value) == 2
+                and not value[1] in self.units
+            ):
+                return f"Given unit {value[1]} is not allowed, allowed are: {','.join(self.units.keys())}"
+            return (
+                "Real with units have to be given as tuple containing "
+                "a float (the value) and a string (the units), or as "
+                "Unyt.unit_object.Unit object with propper units."
+            )
+        if not str(value.units) in self.unit_strings:
+            return f"Invalid unit {value.units}, allowed are {','.join(self.unit_strings.keys())}"
+        return True
 
-  def _string(self, value):
-      if self.default_unit:
-          value = value.to(self.units[self.default_unit])
-      val = super()._string(value.value)
-      if not self.default_unit:
-          val += " " + self.unit_strings[str(value.units)]
-      return val
+    def _string(self, value):
+        if self.default_unit:
+            value = value.to(self.units[self.default_unit])
+        val = super()._string(value.value)
+        if not self.default_unit:
+            val += " " + self.unit_strings[str(value.units)]
+        return val
 
-  def grammar_name(self):
-    return '<float>[{}]'.format("|".join(('' if i is None else i for i in self.units)))
+    def grammar_name(self):
+        return "<float>[{}]".format(
+            "|".join(("" if i is None else i for i in self.units))
+        )
 
-  numpy_type = float
+    numpy_type = float
 
 
 class RealWithUnits(BaseRealWithUnits):
-  """ A float value with user-defined units """
+    """A float value with user-defined units"""
 
-  def __init__(self, *args, units, default_unit=False, **kwargs):
-     self.units = units
-     self.default_unit = default_unit
-     super().__init__(*args, **kwargs)
+    def __init__(self, *args, units, default_unit=False, **kwargs):
+        self.units = units
+        self.default_unit = default_unit
+        super().__init__(*args, **kwargs)
 
 
 class Energy(BaseRealWithUnits):
-  """ The grammar type for energy. The default units are Rydberg, one can specify eV. """
+    """The grammar type for energy. The default units are Rydberg, one can specify eV."""
 
-  units = {
-      'Ry' : unyt.Ry,
-      'eV' : unyt.eV
-  }
+    units = {"Ry": unyt.Ry, "eV": unyt.eV}
 
-  default_unit = 'Ry'
+    default_unit = "Ry"
 
-  """ The allowed units and their conversion factors """
+    """ The allowed units and their conversion factors """
 
-  def __str__(self):
-      return "Energy (<Real> [Ry|eV])"
+    def __str__(self):
+        return "Energy (<Real> [Ry|eV])"
 
 
 class BaseString(TypedGrammarType):
-  """ Base type for string grammar types """
+    """Base type for string grammar types"""
 
-  datatype = str
-  datatype_name = 'string'
+    datatype = str
+    datatype_name = "string"
 
-  @add_to_parent_validation
-  def _validate(self, value, why='set'):
-    if not why=='parse':
-      try:
-        self._grammar.parse_string(value, True)
-      except pp.ParseException as e:
-        return f"Forbidden character '{e.line[e.col-1]}' in the string"
-    return True
+    @add_to_parent_validation
+    def _validate(self, value, why="set"):
+        if not why == "parse":
+            try:
+                self._grammar.parse_string(value, True)
+            except pp.ParseException as e:
+                return f"Forbidden character '{e.line[e.col - 1]}' in the string"
+        return True
 
 
 class String(BaseString):
-  """ Just a string (without whitespaces and few special chars) """
-  _grammar = pp.Word(pp.printables,exclude_chars=",;{}").set_parse_action(lambda x:x[0])
+    """Just a string (without whitespaces and few special chars)"""
 
-  def grammar_name(self):
-    return '<str>'
+    _grammar = pp.Word(pp.printables, exclude_chars=",;{}").set_parse_action(
+        lambda x: x[0]
+    )
+
+    def grammar_name(self):
+        return "<str>"
+
 
 class AlwaysQString(BaseString):
-  """ Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes. """
-  _grammar = (pp.Word(pp.printables, exclude_chars="\",;{}") | pp.QuotedString('"')).set_parse_action(lambda x:x[0])
+    """Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes."""
 
-  def _validate(self, value, why='set'):
-    if not value.__class__ is str:
-        return "String expected"
-    return True
+    _grammar = (
+        pp.Word(pp.printables, exclude_chars='",;{}') | pp.QuotedString('"')
+    ).set_parse_action(lambda x: x[0])
 
-  def _string(self, value):
-    value = value.replace('"', '\\"')
-    return f'"{value}"'
+    def _validate(self, value, why="set"):
+        if not value.__class__ is str:
+            return "String expected"
+        return True
 
-  def grammar_name(self):
-    return '"<str>"'
+    def _string(self, value):
+        value = value.replace('"', '\\"')
+        return f'"{value}"'
+
+    def grammar_name(self):
+        return '"<str>"'
 
 
 class QString(AlwaysQString):
-  """ Either a quoted string, or just a word (without whitespaces or special chars) """
+    """Either a quoted string, or just a word (without whitespaces or special chars)"""
 
-  def _string(self, value):
-    value = str(value)
-    if re.match(r"^[\S\"]+$", value):
-        return value
-    return super()._string(value)
+    def _string(self, value):
+        value = str(value)
+        if re.match(r"^[\S\"]+$", value):
+            return value
+        return super()._string(value)
 
 
 class LineString(BaseString):
-  """ A string, that takes all up to the end of the line """
-  _grammar = pp.SkipTo(pp.LineEnd() | pp.StringEnd())
+    """A string, that takes all up to the end of the line"""
 
-  def grammar_name(self):
-    return "<str....>\n"
+    _grammar = pp.SkipTo(pp.LineEnd() | pp.StringEnd())
+
+    def grammar_name(self):
+        return "<str....>\n"
 
 
 def _keyword_transform_upper(value):
-  return str(value).upper()
+    return str(value).upper()
 
 
 def _keyword_transform_lower(value):
-  return str(value).lower()
+    return str(value).lower()
 
 
 def _keyword_transform_identity(value):
-  return value
+    return value
 
 
 class Keyword(GrammarType):
-  """
-  A value, that can take values from the predefined set of strings.
-  """
-  def __init__(self, *keywords, aliases=None, transform='upper', quote=None, **kwargs):
-    self.aliases = aliases or {}
-    self.quote = quote
-    if transform == 'upper':
-      self.transform = _keyword_transform_upper
-    elif transform == 'lower':
-      self.transform = _keyword_transform_lower
-    else:
-      self.transform = _keyword_transform_identity
+    """
+    A value, that can take values from the predefined set of strings.
+    """
 
-    if len(keywords)==1 and isinstance(keywords[0], dict):
-       self.choices = keywords[0]
-       keywords = self.choices.keys()
-    else:
-       self.choices = None
+    def __init__(
+        self, *keywords, aliases=None, transform="upper", quote=None, **kwargs
+    ):
+        self.aliases = aliases or {}
+        self.quote = quote
+        if transform == "upper":
+            self.transform = _keyword_transform_upper
+        elif transform == "lower":
+            self.transform = _keyword_transform_lower
+        else:
+            self.transform = _keyword_transform_identity
 
-    self.keywords = [ self.transform(i) for i in keywords ]
-    self._build_grammar()
+        if len(keywords) == 1 and isinstance(keywords[0], dict):
+            self.choices = keywords[0]
+            keywords = self.choices.keys()
+        else:
+            self.choices = None
 
-    super().__init__(**kwargs)
+        self.keywords = [self.transform(i) for i in keywords]
+        self._build_grammar()
 
-  def _build_grammar(self):
-    with generate_grammar():
-      self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(str(i)) for i in self.keywords)).set_parse_action(self._parse_keyword_token) + optional_quote
+        super().__init__(**kwargs)
 
-  def _parse_keyword_token(self, tokens):
-      return self.transform(tokens[0])
+    def _build_grammar(self):
+        with generate_grammar():
+            self._grammar = (
+                optional_quote
+                + pp.MatchFirst(
+                    (pp.CaselessKeyword(str(i)) for i in self.keywords)
+                ).set_parse_action(self._parse_keyword_token)
+                + optional_quote
+            )
 
-  def __getstate__(self):
-      state = self.__dict__.copy()
-      state.pop('_grammar', None)
-      return state
+    def _parse_keyword_token(self, tokens):
+        return self.transform(tokens[0])
 
-  def __setstate__(self, state):
-      self.__dict__.update(state)
-      self._build_grammar()
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state.pop("_grammar", None)
+        return state
 
-  def items(self):
-      if self.choices is not None:
-          yield from self.choices.items()
-      else:
-          for i in self.keywords:
-              yield i, None
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self._build_grammar()
 
-  def _validate(self, value, why='set'):
-    return value in self.keywords or "Required one of [" + "|".join(self.keywords) + "]"
+    def items(self):
+        if self.choices is not None:
+            yield from self.choices.items()
+        else:
+            for i in self.keywords:
+                yield i, None
 
-  def _string(self, val):
-      if self.quote and val.__class__ == str:
-          return f"{self.quote}{val}{self.quote}"
-      else:
-          return str(val)
+    def _validate(self, value, why="set"):
+        return (
+            value in self.keywords
+            or "Required one of [" + "|".join(self.keywords) + "]"
+        )
 
-  def grammar_name(self):
-      if len(self.keywords) == 1:
-         return f'FixedValue({next(iter(self.keywords))})'
-      return 'AnyOf(' + ','.join((str(i) for i in self.keywords )) + ')'
+    def _string(self, val):
+        if self.quote and val.__class__ == str:
+            return f"{self.quote}{val}{self.quote}"
+        else:
+            return str(val)
 
-  def __str__(self):
-      return self.grammar_name()
+    def grammar_name(self):
+        if len(self.keywords) == 1:
+            return f"FixedValue({next(iter(self.keywords))})"
+        return "AnyOf(" + ",".join((str(i) for i in self.keywords)) + ")"
 
-  def convert(self, value):
-      out = self.transform(value)
-      return self.aliases.get(out, out)
+    def __str__(self):
+        return self.grammar_name()
 
-  def additional_description(self, prefix=''):
-      ad = super().additional_description(prefix)
-      if not self.choices:
-         return ad
-      out = f'\n{prefix}Possible values:\n'
-      out += '\n'.join([f"{prefix}  {str(k):<10}{v}" for k,v in self.choices.items()])
-      if ad:
-         out += f'\n\n{prefix}' + ad
-      return out
+    def convert(self, value):
+        out = self.transform(value)
+        return self.aliases.get(out, out)
 
-  is_independent_on_the_predecessor = True
+    def additional_description(self, prefix=""):
+        ad = super().additional_description(prefix)
+        if not self.choices:
+            return ad
+        out = f"\n{prefix}Possible values:\n"
+        out += "\n".join(
+            [f"{prefix}  {str(k):<10}{v}" for k, v in self.choices.items()]
+        )
+        if ad:
+            out += f"\n\n{prefix}" + ad
+        return out
+
+    is_independent_on_the_predecessor = True
 
 
 def DefKeyword(default, *others, **kwargs):
-  """
-  A value, that can take values from the predefined set of strings, the first one is the default value.
-  """
-  if isinstance(default, dict) and len(others) == 0:
-     def_val = next(iter(default))
-  else:
-     def_val = default
-  return Keyword(default, *others, default_value=def_val, **kwargs)
+    """
+    A value, that can take values from the predefined set of strings, the first one is the default value.
+    """
+    if isinstance(default, dict) and len(others) == 0:
+        def_val = next(iter(default))
+    else:
+        def_val = default
+    return Keyword(default, *others, default_value=def_val, **kwargs)
 
 
 class Flag(BaseBool):
-  """
-  A boolean value, which is True, if a name of the value appears in the input file.
-  The resulting type of a Flag value is bool """
+    """
+    A boolean value, which is True, if a name of the value appears in the input file.
+    The resulting type of a Flag value is bool"""
 
-  _grammar = pp.Empty().set_parse_action(lambda x: True)
+    _grammar = pp.Empty().set_parse_action(lambda x: True)
 
-  def grammar_name(self):
-      return None
+    def grammar_name(self):
+        return None
 
-  def str(self):
-      return "(Flag)"
+    def str(self):
+        return "(Flag)"
 
-  def missing_value(self):
-      return (True, True, False)
+    def missing_value(self):
+        return (True, True, False)
 
-  def _validate(self, value, why='set'):
-      return value is True or value is False or value is None or "This is Flag with no value, please set to True to be present or to False/None to not"
+    def _validate(self, value, why="set"):
+        return (
+            value is True
+            or value is False
+            or value is None
+            or "This is Flag with no value, please set to True to be present or to False/None to not"
+        )
 
 
 class BasicSeparator(GrammarType):
-  """ Basic type for separators - fake items in
-  input/output file, which has no value """
+    """Basic type for separators - fake items in
+    input/output file, which has no value"""
 
-  has_value = False
+    has_value = False
 
-  def _validate(self, value, why='set'):
-      return 'You can not set a value to a separator'
+    def _validate(self, value, why="set"):
+        return "You can not set a value to a separator"
+
 
 class KeywordSeparator(BasicSeparator):
-  """ Separator with an exact string """
-  def __init__(self, keyword, **kwargs):
-      self.keyword = keyword
-      super().__init__(**kwargs)
+    """Separator with an exact string"""
 
-  @cached_property
-  def _grammar(self):
-      return pp.Keyword(self.keyword.strip(' \t'))
+    def __init__(self, keyword, **kwargs):
+        self.keyword = keyword
+        super().__init__(**kwargs)
 
-  def _grammar_name(self):
-      return self.keyword
+    @cached_property
+    def _grammar(self):
+        return pp.Keyword(self.keyword.strip(" \t"))
 
-  def _string(self, val=None):
-      return self.keyword
+    def _grammar_name(self):
+        return self.keyword
+
+    def _string(self, val=None):
+        return self.keyword
+
 
 class Separator(BasicSeparator):
-  """ Special class for a separator inside a section.
-      By default, it is a line of stars.
-  """
-  @cached_property
-  def _grammar(self):
-      return separator_grammar(self.char)
+    """Special class for a separator inside a section.
+    By default, it is a line of stars.
+    """
 
-  def __init__(self, grammar=None, char='*', length=79, *args, **kwargs):
-      self.char = char
-      self.length = length
-      if grammar:
-         self._grammar = grammar
-      super().__init__(*args, **kwargs)
+    @cached_property
+    def _grammar(self):
+        return separator_grammar(self.char)
 
-  def _grammar_name(self):
-      return f'{self.char*4}...{self.char*4}\n'
+    def __init__(self, grammar=None, char="*", length=79, *args, **kwargs):
+        self.char = char
+        self.length = length
+        if grammar:
+            self._grammar = grammar
+        super().__init__(*args, **kwargs)
 
-  def _string(self, val=None):
-      return self.char * self.length
+    def _grammar_name(self):
+        return f"{self.char * 4}...{self.char * 4}\n"
+
+    def _string(self, val=None):
+        return self.char * self.length
 
 
 class BlankSeparator(BasicSeparator):
-  """ Special class for a blank separator. In fact (with a delimiter) it is a blank line.
-  """
-  _grammar = pp.Empty().set_parse_action(lambda x: [None])
+    """Special class for a blank separator. In fact (with a delimiter) it is a blank line."""
 
-  def _grammar_name(self):
-      return ''
+    _grammar = pp.Empty().set_parse_action(lambda x: [None])
 
-  def _string(self, val=None):
-      return ''
+    def _grammar_name(self):
+        return ""
+
+    def _string(self, val=None):
+        return ""
 
 
 # commonly used types
 integer = Integer.I = Integer()
 """ A standard grammar type instance for (signed) integers """
-unsigned = Unsigned.I = Unsigned()         # NOQA: E741
+unsigned = Unsigned.I = Unsigned()  # NOQA: E741
 """ A standard grammar type instance for unsigned integers """
-boolean = Bool.I = Bool()                  # NOQA: E741
+boolean = Bool.I = Bool()  # NOQA: E741
 """ A standard grammar type instance for booleans in potential files """
-flag = Flag.I = Flag()                     # NOQA: E741
+flag = Flag.I = Flag()  # NOQA: E741
 """ A standard grammar type instance for booleans in input files """
-real = Real.I = Real()                     # NOQA: E741
+real = Real.I = Real()  # NOQA: E741
 """ A standard grammar type instance for reals"""
-date = Date.I = Date()                     # NOQA: E741
+date = Date.I = Date()  # NOQA: E741
 """ A standard instance for the grammar type for dates """
-string = String.I = String()               # NOQA: E741
+string = String.I = String()  # NOQA: E741
 """ A standard grammar type instance for strings """
-qstring = QString.I = QString()            # NOQA: E741
+qstring = QString.I = QString()  # NOQA: E741
 """ A standard grammar type instance for quoted strings in input files """
-qstring = AlwaysQString.I = AlwaysQString() # NOQA: E741
+qstring = AlwaysQString.I = AlwaysQString()  # NOQA: E741
 """ A standard grammar type instance for quoted strings in configuration files """
 line_string = LineString.I = LineString()  # NOQA: E741
 """ A standard grammar type instance for one-line strings in potential files """
-energy = Energy.I = Energy()               # NOQA: E741
+energy = Energy.I = Energy()  # NOQA: E741
 """ A standard grammar type instance for energy values (float) for potential files """
-separator = Separator.I = Separator()      # NOQA: E741
+separator = Separator.I = Separator()  # NOQA: E741
 """ A standard grammar type instance for separators in potential files """
-int_bool = IntBool.I = IntBool()           # NOQA: E741
+int_bool = IntBool.I = IntBool()  # NOQA: E741
 """ A standard grammar type instance for bool expressed as integer """
-boolean = Boolean.I = Boolean()            # NOQA: E741
+boolean = Boolean.I = Boolean()  # NOQA: E741
 """ A standard grammar type instance for True|False 0|1 yes|no boolean"""

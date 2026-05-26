@@ -34,6 +34,7 @@ Author: Christopher D. Woodgate, University of Bristol, 2025
 Email: christopher.woodgate@bristol.ac.uk
 """
 
+
 def main():
 
     import numpy as np
@@ -44,45 +45,58 @@ def main():
 
     # BCC Fe has a_lat = 2.87 \AA
     a_lat = 2.87
-    atom = bulk('Fe', 'bcc', a=a_lat)
+    atom = bulk("Fe", "bcc", a=a_lat)
 
     # Now set up the 'alloy'
-    atoms=SPRKKRAtoms.promote_ase_atoms(atom)
+    atoms = SPRKKRAtoms.promote_ase_atoms(atom)
 
     # We cannot use a Python dictionary here, as we need an alloy of two elements
     # with the same chemical symbol and this behaviour is not permitted in a Python dictionary
     # Instead, we use a list.
-    atoms.sites[0].occupation.set([('Fe', 0.5), ('Fe',0.5)])
+    atoms.sites[0].occupation.set([("Fe", 0.5), ("Fe", 0.5)])
 
     # Now we set up the ASE calculator
-    calculator = SPRKKR(atoms=atoms,mpi=['mpirun','-np','4'])
+    calculator = SPRKKR(atoms=atoms, mpi=["mpirun", "-np", "4"])
 
     # NOTE: we need to specify initial magnetic moments, up and down, on the two Fe atoms
     # NOTE: These are in units of \mu_B
     calculator.input_parameters.SCF.MSPIN = [2.3, -2.3]
 
     # And other necessary parameters
-    calculator.input_parameters.set(NKTAB=500) # Control k-point sampling
-    calculator.input_parameters.set(VXC='VWN') # VWN LDA XC functional
-    calculator.input_parameters.set(MODE='SP-SREL') # Scalar relativistic mode for the DLM physics
-    calculator.input_parameters.set(NL=4) # l_max=3 means 4 l-channels
-    calculator.input_parameters.set(NE=32) # 32-point semicircular energy contour
-    calculator.input_parameters.ENERGY.GRID = 5 # Semicircular energy contour
-    calculator.input_parameters.SCF.MIX = 0.05 # Gentle mixing paramter to ensure convergence
-    calculator.input_parameters.SCF.TOL = 1e-7 # Tight tolerance on SCF cycle
-    calculator.input_parameters.SCF.NITER = 1000 # Allow for lots of iterations if needed
-    calculator.input_parameters.ENERGY.ImE = 0.00 # Distance of closest approach to real axis
-    calculator.input_parameters.CPA.NITER = 100 # Allow for a lot of CPA iterations if needed
-    calculator.input_parameters.CPA.TOL = 1e-8 # Tight CPA tol to go with tight SCF tol
-    calculator.input_parameters.SCF.USEVMATT = True # I like to use the Mattheiss construction for the potential
+    calculator.input_parameters.set(NKTAB=500)  # Control k-point sampling
+    calculator.input_parameters.set(VXC="VWN")  # VWN LDA XC functional
+    calculator.input_parameters.set(
+        MODE="SP-SREL"
+    )  # Scalar relativistic mode for the DLM physics
+    calculator.input_parameters.set(NL=4)  # l_max=3 means 4 l-channels
+    calculator.input_parameters.set(NE=32)  # 32-point semicircular energy contour
+    calculator.input_parameters.ENERGY.GRID = 5  # Semicircular energy contour
+    calculator.input_parameters.SCF.MIX = (
+        0.05  # Gentle mixing paramter to ensure convergence
+    )
+    calculator.input_parameters.SCF.TOL = 1e-7  # Tight tolerance on SCF cycle
+    calculator.input_parameters.SCF.NITER = (
+        1000  # Allow for lots of iterations if needed
+    )
+    calculator.input_parameters.ENERGY.ImE = (
+        0.00  # Distance of closest approach to real axis
+    )
+    calculator.input_parameters.CPA.NITER = (
+        100  # Allow for a lot of CPA iterations if needed
+    )
+    calculator.input_parameters.CPA.TOL = 1e-8  # Tight CPA tol to go with tight SCF tol
+    calculator.input_parameters.SCF.USEVMATT = (
+        True  # I like to use the Mattheiss construction for the potential
+    )
 
     # Run the calculator
-    out=calculator.calculate()
+    out = calculator.calculate()
 
     print(out.energy)
-    print(out.last_iteration['energy']['EF'].to_dict())
-    print(out.iterations[-1]['error']())
-    print(out.last_iteration['moment'].to_dict())
+    print(out.last_iteration["energy"]["EF"].to_dict())
+    print(out.iterations[-1]["error"]())
+    print(out.last_iteration["moment"].to_dict())
+
 
 # If we run this script, execute 'main'
 if __name__ == "__main__":
