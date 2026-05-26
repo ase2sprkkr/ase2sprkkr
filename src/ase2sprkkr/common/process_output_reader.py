@@ -323,7 +323,11 @@ def run_coro_sync(coro_func):
     # Is there a running event loop?
     try:
         asyncio.get_running_loop()
+        in_thread = True
     except RuntimeError:
+        in_thread = False
+
+    if not in_thread:
         return asyncio.run(coro_func)
 
     # YES → must run in another thread
