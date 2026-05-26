@@ -5,6 +5,17 @@ from ..input_parameters_definitions import \
     InputValueDefinition as V
 
 
+def _torque_mode_warning_condition(value):
+    return "Torque task does not support SREL (scalar relativity without spin) or " \
+      "NREL (no relativity at all) MODE. Please change SCF.MODE, or " \
+      "the computation will fail." if value in ('SREL', 'NREL') else None
+
+
+def _torque_nonmag_warning_condition(value):
+    return "Torque task does not support non-magnetic computation. Please disable " \
+      "CONTROL.NONMAG, or the computation will fail." if value else None
+
+
 def input_parameters():
     """ Torque -Torque task input parameters definition"""
     input_parameters = InputParameters('torque', [
@@ -26,11 +37,6 @@ def input_parameters():
         mpi=True,
         info="TORQUE"
     )
-    input_parameters['MODE'].copy_member('MODE').warning_condition = lambda x: \
-      "Torque task does not support SREL (scalar relativity without spin) or " \
-      "NREL (no relativity at all) MODE. Please change SCF.MODE, or " \
-      "the computation will fail." if x in ('SREL', 'NREL') else None
-    input_parameters['CONTROL'].copy_member('NONMAG').warning_condition = lambda x: \
-      "Torque task does not support non-magnetic computation. Please disable " \
-      "CONTROL.NONMAG, or the computation will fail." if x else None
+    input_parameters['MODE'].copy_member('MODE').warning_condition = _torque_mode_warning_condition
+    input_parameters['CONTROL'].copy_member('NONMAG').warning_condition = _torque_nonmag_warning_condition
     return input_parameters

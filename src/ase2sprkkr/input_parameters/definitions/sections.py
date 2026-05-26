@@ -7,7 +7,67 @@ from ..input_parameters_definitions import \
       InputSectionDefinition as Section, \
       InputValueDefinition as V
 from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
-from types import MethodType
+from functools import partial
+
+
+def _sections_tau_bzint_default_value(option):
+  return None if option._container.CLUSTER() or option._container.MOL() else 'POINTS'
+
+
+def _sections_tau_bzint_weyl_write_condition(option):
+  return option._container.BZINT() == 'WEYL'
+
+
+def _sections_energy_emin_default_value(option):
+  return None if option._container.EMINEV() is not None else option._definition._energy_default_value
+
+
+def _sections_energy_emin_is_optional(option):
+  return option._container.EMINEV() is not None
+
+
+def _sections_energy_emax_from_emin_default_value(option):
+  return option._container.EMIN()
+
+
+def _sections_energy_emaxev_from_eminev_default_value(option):
+  return option._container.EMINEV()
+
+
+def _sections_energy_emax_default_value(option):
+  return None if option._container.EMAXEV() is not None else option._definition._energy_default_value
+
+
+def _sections_energy_emax_is_optional(option):
+  return option._container.EMAXEV() is not None
+
+
+_SECTIONS_XC_INFO = {
+  'VWN': ('LDA', 'LDA_C_VWN'),
+  'MJW': ('LDA', '-'),
+  'VBH': ('LDA', 'LDA_C_VBH'),
+  'PBE': ('GGA', 'GGA_X_PBE'),
+  'PW92': ('GGA', 'GGA_X_PW91'),
+  'EV-GGA': ('GGA', 'GGA_X_EV93'),
+  'BJ': ('metaGGA', 'MGGA_X_BJ06'),
+  'MBJ': ('metaGGA', 'MGGA_X_BJ06'),
+}
+
+
+def _sections_xc_libxc_name(option):
+  """Return libxc name of the potential."""
+  return _SECTIONS_XC_INFO.get(option(), (None, None))[1]
+
+
+def _sections_xc_jacobs_ladder(option):
+  """Return NOMAD xc classification."""
+  return _SECTIONS_XC_INFO.get(option(), (None, None))[0]
+
+
+def _sections_xc_enrich(option):
+  option.libxc_name = partial(_sections_xc_libxc_name, option)
+  option.jacobs_ladder = partial(_sections_xc_jacobs_ladder, option)
+  option.xc_info = _SECTIONS_XC_INFO
 
 
 def CONTROL(ADSI):
@@ -86,7 +146,7 @@ The special point method (BZINT=POINTS) uses a regular k-point grid with NKTAB
 points. It is the standard method and gives a good compromise concerning accuracy
 and efficiency. For BZINT=POINTS the parameter NKTAB will be adjusted to allow a
 regular mesh.
-"""), is_required=False, default_value = lambda c: None if c._container.CLUSTER() or c._container.MOL() else 'POINTS',
+"""), is_required=False, default_value=_sections_tau_bzint_default_value,
                              info='The mode of BZ-integration used for calculation of the scattering '
                                   ' path operator τ'),
       V('NKTAB', 250, info='Number of points for the special points method', is_optional=True,
@@ -95,8 +155,8 @@ regular mesh.
         is_optional=True, description='If it is not specified, NKTAB is used.'),
       V('NKTAB3D', int, _nktab_value, info='Number of points for the special points method for 3D region of 2D problem',
         is_optional=True, description='If it is not specified, NKTAB is used'),
-      V('NKMIN', 300, info='Minimal number of k-points used for Weyl integration', write_condition= lambda o: o._container.BZINT() == 'WEYL'),
-      V('NKMAX', 500, info='Maximal number of k-points used for Weyl integration', write_condition= lambda o: o._container.BZINT() == 'WEYL'),
+      V('NKMIN', 300, info='Minimal number of k-points used for Weyl integration', write_condition=_sections_tau_bzint_weyl_write_condition),
+      V('NKMAX', 500, info='Maximal number of k-points used for Weyl integration', write_condition=_sections_tau_bzint_weyl_write_condition),
       # expert
       V('CLUSTER', flag, expert=False, info="""Do cluster type calculation.""", description=
         "Cluster type calculation calculate τ by inverting the real space KKR matrix. "
@@ -141,22 +201,26 @@ def ENERGY(
     ]
 
     if emin:
+        emin_value = V('EMIN', float, _sections_energy_emin_default_value, info=emin[1],
+               is_optional=_sections_energy_emin_is_optional)
+        emin_value._energy_default_value = emin[0]
         vals += [
-            V('EMIN', float, lambda o: None if o._container.EMINEV() is not None else emin[0], info=emin[1],
-                 is_optional=lambda o:o._container.EMINEV() is not None),
+        emin_value,
             V('EMINEV', float, emin[2], info='EMIN, given in eV with respect to the Fermi level', is_optional=True),
           ]
     if emax == 'emin':
         vals += [
-              V('EMAX', float, lambda o: o._container.EMIN(), info='The same value as EMIN', is_hidden=True,
-                   is_optional=lambda o: o._container.EMAXEV() is not None),
-              V('EMAXEV', float, lambda o: o._container.EMINEV(), info='The same value as EMAXEV', is_hidden=True, is_optional=True),
+        V('EMAX', float, _sections_energy_emax_from_emin_default_value, info='The same value as EMIN', is_hidden=True,
+          is_optional=_sections_energy_emax_is_optional),
+        V('EMAXEV', float, _sections_energy_emaxev_from_eminev_default_value, info='The same value as EMAXEV', is_hidden=True, is_optional=True),
         ]
     elif emax:
+        emax_value = V('EMAX', float, _sections_energy_emax_default_value, info=emax[1],
+               is_optional=_sections_energy_emax_is_optional)
+        emax_value._energy_default_value = emax[0]
         vals += [
-              V('EMAX', float, lambda o: None if o._container.EMAXEV() is not None else emax[0], info=emax[1],
-                   is_optional=lambda o:o._container.EMAXEV() is not None),
-              V('EMAXEV', float, emax[2], info='EMAX in eV with respect to the Fermi level', is_optional=True),
+        emax_value,
+        V('EMAXEV', float, emax[2], info='EMAX in eV with respect to the Fermi level', is_optional=True),
         ]
     vals += add
     return Section('ENERGY', vals)
@@ -165,34 +229,9 @@ def ENERGY(
 def xc(*args, **kwargs):
     xc = V(*args, **kwargs)
 
-    xc_info = {
-     'VWN' : ( 'LDA', 'LDA_C_VWN'),  # TODO: which one?
-     'MJW' : ( 'LDA', '-'),          # NOT in LibXC ?
-     'VBH' :( 'LDA', 'LDA_C_VBH'),
-     'PBE' :( 'GGA', 'GGA_X_PBE'),   # TODO: which one
-     'PW92' : ('GGA', 'GGA_X_PW91'),
-     'EV-GGA':('GGA', 'GGA_X_EV93'),
-     'BJ'   :('metaGGA', 'MGGA_X_BJ06'),  # TODO: one of the two is wrong....
-     'MBJ'  :('metaGGA', 'MGGA_X_BJ06'),
-    }
-
-    def enrich(xc):
-
-        def libxc_name(self):
-            """ Return libxc name of the potential """
-            return xc_info.get(self(), (None, None))[1]
-
-        def jacobs_ladder(self):
-            """ Return NOMAD xc classification """
-            return xc_info.get(self(), (None, None))[0]
-
-        xc.libxc_name = MethodType(libxc_name, xc)
-        xc.jacobs_ladder = MethodType(jacobs_ladder, xc)
-        xc.xc_info = xc_info
-
-    xc.enrich = enrich
+    xc.enrich = _sections_xc_enrich
     for k,v in xc.type.choices.items():
-        info = xc_info[k]
+        info = _SECTIONS_XC_INFO[k]
         xc.type.choices[k] = v + f" (type: {info[0]}, libxc equivalent: {info[1] or '-'})"
     return xc
 

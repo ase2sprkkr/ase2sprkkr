@@ -115,8 +115,12 @@ class ConfigurationContainer(BaseConfigurationContainer):
       Return the member of the container of a given name.
       It search either the members and interactive_members containers
       """
-      if name in self._members:
-          out = self._members[name]
+      members = self.__dict__.get('_members')
+      interactive_members = self.__dict__.get('_interactive_members')
+      if members is None:
+          raise AttributeError(name)
+      if name in members:
+          out = members[name]
       elif name in self._interactive_members:
           out = self._interactive_members[name]
       else:
@@ -144,6 +148,8 @@ class ConfigurationContainer(BaseConfigurationContainer):
       The members of the container are accesible as attributes of the container, too.
       Either using their normal, or ``sanitized`` names.
       """
+      if name.startswith('_'):
+          raise AttributeError(name)
       try:
         out = self._get_member(name)
       except AttributeError as e:

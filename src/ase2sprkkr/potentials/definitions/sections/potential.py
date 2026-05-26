@@ -6,6 +6,14 @@ from ....common.configuration_definitions import SeparatorDefinition, BaseDefini
 import re
 
 
+def _sections_potential_fullpot_condition(value):
+    return value != ''
+
+
+def _sections_potential_fullpot_write_condition(value):
+    return value() != ''
+
+
 class PotentialSection(PotSection):
     pass
 
@@ -28,11 +36,11 @@ class PotentialSectionDefinition(PotSectionDefinition):
            ),
 
           V('FULLPOT', RawData(ends_with=re.compile("\n?(={79}|-{79})"),
-                               condition = lambda x: x != ''
+                               condition = _sections_potential_fullpot_condition
                                ),
                     is_required=False,
                     name_in_grammar=False,
-                    write_condition = lambda x: x() != ''
+                    write_condition = _sections_potential_fullpot_write_condition
           ),
           SeparatorDefinition('=', length=79)
       ]

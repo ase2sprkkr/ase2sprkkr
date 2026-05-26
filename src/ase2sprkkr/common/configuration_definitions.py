@@ -27,6 +27,10 @@ from .grammar_types.basic import Separator, KeywordSeparator
 from .parsing_results import Key, ArrayKey, DictKey, RepeatedKey, DefDictKey, IgnoredKey
 
 
+def _definition_write_condition_always_true(_):
+    return True
+
+
 class NotAllowed:
     """ Object of this class can be returned as a result of a :func:ConfigurationDefinition.condition """
     def __init__(self, msg):
@@ -437,7 +441,7 @@ class RealItemDefinition(BaseDefinition):
        self.name_regex = name_regex
        self.is_expert = is_expert
        self.is_hidden = is_hidden
-       self.write_condition = write_condition or (lambda x: True)
+       self.write_condition = write_condition or _definition_write_condition_always_true
        self.name_in_grammar = self.__class__.name_in_grammar \
                                if name_in_grammar is None else name_in_grammar
        self._info = info

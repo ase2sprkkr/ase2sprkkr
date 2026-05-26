@@ -5,6 +5,10 @@ from ...potential_sections import PotentialSection
 from ....common.grammar_types import Table, Array
 
 
+def _sections_magnetisation_direction_data_it_free_header(value):
+    return '*' not in value
+
+
 class MagnetisationDirectionSection(PotentialSection):
     def _depends_on(self):
         return ['TYPES']
@@ -40,7 +44,7 @@ class MagnetisationDirectionSectionDefinition(PotSectionDefinition):
           V('QMVEC', Array(float, length=3), [0.,0.,0.]),
           V('DATA_IQ', Table({'MTET_Q': float, 'MPHI_Q': float}, numbering='IQ', numbering_format='{:>10}', free_header=True)),
           V('DATA_IT', Table({'MTET_T':float, 'MPHI_T':float, 'MGAM_T': float}, numbering='IT', free_numbering=True, numbering_format='{:>10}',
-                                                                                free_header= lambda x: '*' not in x), is_optional=True),
+                                                                                free_header=_sections_magnetisation_direction_data_it_free_header), is_optional=True),
       ]
       super().__init__(name, members, has_hidden_members=True)
 

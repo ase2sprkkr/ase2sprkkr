@@ -15,6 +15,18 @@ from ..decorators import add_to_signature, cached_property
 from .basic import Integer, Real, Unsigned, real
 
 
+def _array_dtype_condition_always_true(_type, _shape):
+  return True
+
+
+def _array_dtype_condition_not_object(value_type, _shape):
+  return value_type != object
+
+
+def _array_dtype_condition_not_object_and_scalar(value_type, shape):
+  return value_type != object and not len(shape)
+
+
 class Array(GrammarType):
   """ A (numpy) array of values of one type """
 
@@ -65,16 +77,22 @@ class Array(GrammarType):
     self.min_length = min_length or length
     self.max_length = max_length or length
     self.write_length = write_length
+    self._delimiter_spec = delimiter
+
+    self._build_grammar()
+
+  def _build_grammar(self):
+    delimiter = self.delimiter
 
     with generate_grammar():
-      if delimiter is not None:
-        self.delimiter_str = delimiter
-        self.delimiter = pp.Suppress(delimiter)
+      if self._delimiter_spec is not None:
+        self.delimiter_str = self._delimiter_spec
+        delimiter = pp.Suppress(self._delimiter_spec)
 
       grammar = self.type.grammar()
       if self.write_length:
           grammar = pp.Word(pp.nums).set_parse_action(lambda t: int(t[0])) + \
-                    pp.ZeroOrMore(self.delimiter + grammar)
+                    pp.ZeroOrMore(delimiter + grammar)
 
           def check(x):
               if len(x) != x[0] + 1:
@@ -83,18 +101,27 @@ class Array(GrammarType):
 
           grammar.set_parse_action(check)
       elif self.min_length and self.min_length == self.max_length:
-          if self.delimiter:
-              g2 = self.delimiter + grammar
+          if delimiter:
+              g2 = delimiter + grammar
               grammar = grammar + g2 * (self.max_length - 1)
           else:
               grammar = grammar * self.max_length
       else:
-          grammar = delimitedList(grammar, self.delimiter)
+          grammar = delimitedList(grammar, delimiter)
 
       self._set_convert_action(grammar)
       grammar.set_name(self.grammar_name())
 
     self._grammar = grammar
+
+  def __getstate__(self):
+    state = self.__dict__.copy()
+    state.pop('_grammar', None)
+    return state
+
+  def __setstate__(self, state):
+    self.__dict__.update(state)
+    self._build_grammar()
 
   def _set_convert_action(self, grammar):
     if self.as_list:
@@ -164,11 +191,11 @@ class Array(GrammarType):
   def _dtype_condition(self):
 
       if np.__version__ >= '1.23':
-          return lambda type, shape: True
+        return _array_dtype_condition_always_true
       if np.__version__ >= '1.20':
-          return lambda type, shape: type != object
+        return _array_dtype_condition_not_object
       else:
-          return lambda type, shape: type != object and not len(shape)
+        return _array_dtype_condition_not_object_and_scalar
 
   def convert(self, value):
     if self.as_list:
@@ -244,8 +271,23 @@ class Complex(TypedGrammarType):
   @add_to_signature(TypedGrammarType.__init__)
   def __init__(self, delimiter='', **kwargs):
     self.data =  Array(Real.I, length=2, delimiter=delimiter, **kwargs)
-    self._grammar = self.data.grammar().set_parse_action(lambda x: complex(*x[0]))
+    self._build_grammar()
     super().__init__()
+
+  def _build_grammar(self):
+    self._grammar = self.data.grammar().set_parse_action(self._parse_complex_tokens)
+
+  def _parse_complex_tokens(self, tokens):
+    return complex(*tokens[0])
+
+  def __getstate__(self):
+    state = self.__dict__.copy()
+    state.pop('_grammar', None)
+    return state
+
+  def __setstate__(self, state):
+    self.__dict__.update(state)
+    self._build_grammar()
 
   def convert(self, value):
     return complex(value)

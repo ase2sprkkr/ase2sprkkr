@@ -366,6 +366,18 @@ class LineString(BaseString):
     return "<str....>\n"
 
 
+def _keyword_transform_upper(value):
+  return str(value).upper()
+
+
+def _keyword_transform_lower(value):
+  return str(value).lower()
+
+
+def _keyword_transform_identity(value):
+  return value
+
+
 class Keyword(GrammarType):
   """
   A value, that can take values from the predefined set of strings.
@@ -374,11 +386,11 @@ class Keyword(GrammarType):
     self.aliases = aliases or {}
     self.quote = quote
     if transform == 'upper':
-        self.transform = lambda x: str(x).upper()
+      self.transform = _keyword_transform_upper
     elif transform == 'lower':
-        self.transform = lambda x: str(x).lower()
+      self.transform = _keyword_transform_lower
     else:
-        self.transform = lambda x:x
+      self.transform = _keyword_transform_identity
 
     if len(keywords)==1 and isinstance(keywords[0], dict):
        self.choices = keywords[0]
@@ -387,10 +399,25 @@ class Keyword(GrammarType):
        self.choices = None
 
     self.keywords = [ self.transform(i) for i in keywords ]
-    with generate_grammar():
-      self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(str(i)) for i in self.keywords)).set_parse_action(lambda x: self.transform(x[0])) + optional_quote
+    self._build_grammar()
 
     super().__init__(**kwargs)
+
+  def _build_grammar(self):
+    with generate_grammar():
+      self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(str(i)) for i in self.keywords)).set_parse_action(self._parse_keyword_token) + optional_quote
+
+  def _parse_keyword_token(self, tokens):
+      return self.transform(tokens[0])
+
+  def __getstate__(self):
+      state = self.__dict__.copy()
+      state.pop('_grammar', None)
+      return state
+
+  def __setstate__(self, state):
+      self.__dict__.update(state)
+      self._build_grammar()
 
   def items(self):
       if self.choices is not None:

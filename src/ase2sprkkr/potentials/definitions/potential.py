@@ -1,5 +1,7 @@
 """ Here, the format of the potential_file is defined """
 
+import datetime
+
 from .sections import \
     ScfInfoSectionDefinition, \
     GlobalSystemParameterDefinition, \
@@ -17,6 +19,14 @@ from .sections import \
     MomentsSectionDefinition \
 
 
+def _potential_header_default_value(_):
+  return f'SPR-KKR potential file, created at {datetime.datetime.now()}'
+
+
+def _potential_system_default_value(option):
+  return 'System: {}'.format(option._get_root_container().atoms.symbols if option else '<UNKNOWN>')
+
+
 def fce():
   from ...common.grammar_types import \
         Table, Array, Sequence, \
@@ -27,7 +37,6 @@ def fce():
         PotValueDefinition as V,\
         PotentialDefinition, \
         Separator
-  import datetime
 
   sections = []
 
@@ -43,10 +52,10 @@ def fce():
 
   Section('HEADER', [
     Separator(),
-    V('HEADER', line_string, lambda x: f'SPR-KKR potential file, created at {datetime.datetime.now()}'),
+    V('HEADER', line_string, _potential_header_default_value),
     Separator(),
     V('TITLE', line_string, 'Created by ASE-SPR-KKR wrapper'),
-    V('SYSTEM', line_string, lambda x: 'System: {}'.format(x._get_root_container().atoms.symbols if x else '<UNKNOWN>') ),
+    V('SYSTEM', line_string, _potential_system_default_value),
     V('PACKAGE', line_string, 'SPR-KKR'),
     V('FORMAT', Sequence(int, Date(prefix='(', postfix=')'), names = ['VERSION', 'DATE']),
           default_value = [9, datetime.datetime(2019,1,18)]),

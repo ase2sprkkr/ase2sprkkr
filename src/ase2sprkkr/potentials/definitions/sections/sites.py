@@ -7,6 +7,14 @@ from ....sprkkr.sprkkr_atoms import SPRKKRAtoms
 import numpy as np
 
 
+def _sections_sites_basscale_after_convert(_, value):
+    return np.ones((3)) if np.all(value == 0.) else value
+
+
+def _sections_sites_basscale_condition(value):
+    return True if np.all(value != 0.) else "BASSCALE values should not be zero (with the exception that [0,0,0] is considered as valid and replaced by [1,1,1]"
+
+
 class SitesSection(PotentialSection):
   """ This section retrieves the atomic positions and
       it creates (during reading) the ASE Atoms object """
@@ -41,8 +49,8 @@ class SitesSectionDefinition(PotSectionDefinition):
           V('CARTESIAN', bool, fixed_value=True),
           # V('BASSCALE', Array(float, length=3), fixed_value=[1.,1.,1.]),
           V('BASSCALE', default_value=[1.,1.,1.], type=Array(float, length=3,
-                  after_convert = lambda s,v: np.ones((3)) if np.all(v==0.) else v,
-                  condition = lambda v: True if np.all(v!=0.) else "BASSCALE values should not be zero (with the exception that [0,0,0] is considered as valid and replaced by [1,1,1]"
+              after_convert = _sections_sites_basscale_after_convert,
+              condition = _sections_sites_basscale_condition
           )),
           V('SCALED_ATOMIC_POSITIONS', Table({'QBAS(X)': float, 'QBAS(Y)' : float, 'QBAS(Z)': float}, numbering='IQ',free_header=True, format='>22.14f', numbering_format='>5')),
       ]

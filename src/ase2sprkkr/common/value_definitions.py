@@ -9,6 +9,19 @@ import pyparsing as pp
 from .warnings import warnings, DataValidityError
 
 
+def _value_definition_default_value_from_container(option):
+  return option._definition.default_value_from_container(option._container)
+
+
+def _value_definition_result_is_visible_default_value(option):
+  if hasattr(option, '_result'):
+      return option._result
+  default_value = option._definition.result_is_visible_default_value
+  if callable(default_value):
+      return default_value(option)
+  return default_value
+
+
 class ValueModifier:
     """ If this class is given as a type of a Value, it will modify the definition
     of value somehow. It is responsibile to set the True type of the value """
@@ -163,8 +176,10 @@ class ValueDefinition(RealItemDefinition):
     delimiter
        If not None, use the specified name_value_delimiter instead of common one
     """
+    self.default_value_from_container = default_value_from_container
+    self.result_is_visible_default_value = None
     if default_value_from_container:
-       default_value = lambda o: default_value_from_container(o._container)
+       default_value = _value_definition_default_value_from_container
     if expert is not None:
        if type is None:
           type = expert
@@ -215,7 +230,8 @@ class ValueDefinition(RealItemDefinition):
        self.default_value = self.type.default_value
 
     if result_is_visible:
-       self.default_value = lambda o: o._result if hasattr(o, '_result') else default_value
+       self.result_is_visible_default_value = default_value
+       self.default_value = _value_definition_result_is_visible_default_value
 
     if is_required is None:
        is_required = not is_expert and (not is_optional and default_value is None)

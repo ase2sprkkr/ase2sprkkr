@@ -13,6 +13,30 @@ from ....physics.lattice_data import Pearson
 from ....sprkkr.atoms_region import AtomsRegion
 
 
+def _sections_lattice_left_symmetry_error(_):
+    return 'Left region of a 2D calculations have to be symmetric in all dimensions'
+
+
+def _sections_lattice_right_symmetry_error(_):
+    return 'Right region of a 2D calculations have to be symmetric in all dimensions'
+
+
+def _sections_lattice_central_symmetry_error(_):
+    return 'Central region of a 2D calculations have to be symmetric just in X and Y axis.'
+
+
+def _sections_lattice_atoms_pbc_error(_):
+    return 'For a 2D calculation, atoms have to be periodic in X and Y axes.'
+
+
+def _sections_lattice_value_is_not_none(value):
+    return value is not None
+
+
+def _sections_lattice_value_is_none(value):
+    return value is None
+
+
 class LatticeSection(PotentialSection):
 
   """ This section retrieves the lattice geometry and
@@ -27,10 +51,10 @@ class LatticeSection(PotentialSection):
           if not ('left' in atoms.regions and 'right' in atoms.regions and 'central' in atoms.regions):
               raise ValueError("To run a 2D calculation, an atoms object have to have defined "
               "'left', 'right' and 'central' region.")
-          for i in ('left', 'right'):
-              check_symmetry(atoms.regions[i].pbc, True, lambda x: f'{i.capitalize()} region of a 2D calculations have to be symmetric in all dimensions')
-          check_symmetry(atoms.regions['central'].pbc, [True, True, False], lambda x: 'Central region of a 2D calculations have to be symmetric just in X and Y axis.')
-          check_symmetry(atoms.pbc, [True, True, False], lambda x: 'For a 2D calculation, atoms have to be periodic in X and Y axes.')
+          check_symmetry(atoms.regions['left'].pbc, True, _sections_lattice_left_symmetry_error)
+          check_symmetry(atoms.regions['right'].pbc, True, _sections_lattice_right_symmetry_error)
+          check_symmetry(atoms.regions['central'].pbc, [True, True, False], _sections_lattice_central_symmetry_error)
+          check_symmetry(atoms.pbc, [True, True, False], _sections_lattice_atoms_pbc_error)
           self.SYSDIM = '2D'
           bcell = atoms.regions['left'].cell
       else:
@@ -141,7 +165,7 @@ class LatticeSectionDefinition(PotSectionDefinition):
       d3 = data['SYSDIM'] == '3D'
       if d3 != (data['SYSTYPE'] == 'BULK'):
           raise ValueError('LATTICE.SYSDIM have to be 2D to create LIV or LIR structures')
-      op = (lambda x: x is not None) if d3 else (lambda x: x is None)
+      op = _sections_lattice_value_is_not_none if d3 else _sections_lattice_value_is_none
       if op(data['NQ_L']):
           raise ValueError('LATTICE.NQ_L can be specified only for 2D structures')
       if op(data['A_L(3)']):

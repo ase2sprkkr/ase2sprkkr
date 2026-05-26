@@ -6,6 +6,14 @@ from ....common.configuration_definitions import SeparatorDefinition, BaseDefini
 import re
 
 
+def _sections_charge_fullpot_condition(value):
+    return value != ''
+
+
+def _sections_charge_fullpot_write_condition(value):
+    return value() != ''
+
+
 class ChargeSection(PotSection):
     pass
 
@@ -27,11 +35,11 @@ class ChargeSectionDefinition(PotSectionDefinition):
                     name_in_grammar=False,
            ),
           V('FULLPOT', RawData(ends_with=re.compile("\n?(={79})"),
-                               condition = lambda x: x != ''
+                               condition = _sections_charge_fullpot_condition
                                ),
                     is_required=False,
                     name_in_grammar=False,
-                    write_condition = lambda x: x() != ''
+                    write_condition = _sections_charge_fullpot_write_condition
           ),
           SeparatorDefinition('=', length=79)
       ]
