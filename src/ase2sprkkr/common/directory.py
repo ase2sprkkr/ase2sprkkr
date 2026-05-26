@@ -4,7 +4,7 @@ import os
 
 class Directory:
 
-    @classmethod
+    @staticmethod
     def new(dir, default='.'):
         if isinstance(dir, Directory):
             return dir
