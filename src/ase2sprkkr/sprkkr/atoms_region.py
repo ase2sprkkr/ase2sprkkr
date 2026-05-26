@@ -127,7 +127,7 @@ class AtomsRegion:
       self._clear_cache
 
   def _clear_cache(self):
-      for i in ('ids', 'set_of_ids'):
+      for i in ('ids', 'set_of_ids', 'arrays'):
           if i in self.__dict__:
               delattr(self, i)
 
@@ -222,3 +222,11 @@ class AtomsRegion:
 
   def __repr__(self):
       return f"<AtomsRegion {self.name}>"
+
+  def __getstate__(self):
+      state = self.__dict__.copy()
+      breakpoint()
+      for i in ['arrays']:
+          if i in state:
+              del state[i]
+      return state
