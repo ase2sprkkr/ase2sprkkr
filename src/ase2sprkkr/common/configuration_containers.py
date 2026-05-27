@@ -116,7 +116,6 @@ class ConfigurationContainer(BaseConfigurationContainer):
         It search either the members and interactive_members containers
         """
         members = self.__dict__.get("_members")
-        interactive_members = self.__dict__.get("_interactive_members")
         if members is None:
             raise AttributeError(name)
         if name in members:
@@ -472,7 +471,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
         del self._members[name]
 
         iname = name.lower()
-        if self._lowercase_members(iname) is member:
+        if self._lowercase_members.get(iname) is member:
             del self._lowercase_members[iname]
 
         df = member._definition
@@ -481,7 +480,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
                 if self._interactive_members.get(iname) is member:
                     del self._interactive_members[iname]
                     iname = iname.lower()
-                    if self._lowercase_members(iname) is member:
+                    if self._lowercase_members.get(iname) is member:
                         del self._lowercase_members[iname]
 
     def __iter__(self):
