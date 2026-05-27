@@ -18,11 +18,12 @@ class Directory:
 
         self.enters = 0
         self.dir = dir
+        self.path = dir
         if self.dir == ".":
             self.chdir = contextlib.suppress
 
     def __str__(self):
-        return str(self.dir) if self.dir is not False else self.path
+        return str(self.path) if self.path is not False else '<tempdir>'
 
     def __repr__(self):
         return f"<Directory {str(self)}>"
@@ -35,7 +36,6 @@ class Directory:
                 self.path = self.handler.name
             else:
                 self.handler = None
-                self.path = self.dir
 
             if self.handler:
                 self.handler.__enter__()
@@ -45,12 +45,16 @@ class Directory:
         self.enters -= 1
         if self.enters == 0 and self.handler:
             self.handler.__exit__(type, value, traceback)
+            self.path = self.dir
 
     @contextlib.contextmanager
     def chdir(self):
-        try:
             cwd = os.getcwd()
-            os.chdir(self.path)
-            yield self.path
-        finally:
-            os.chdir(cwd)
+            if self.path:
+                 os.chdir(self.path)
+                 try:
+                     yield self.path
+                 finally:
+                    os.chdir(cwd)
+            else:
+                yield cwd
