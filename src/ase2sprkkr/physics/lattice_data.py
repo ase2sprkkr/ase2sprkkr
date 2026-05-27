@@ -933,4 +933,4 @@ class LatticeData:
 
     @property
     def shoenflies_symbol(self):
-        return pearson_to_shoenflies[self.pearson.pearson_symbol]
+        return self.pearson.shoenflies
