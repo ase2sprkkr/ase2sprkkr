@@ -199,7 +199,7 @@ class BaseDefinition:
 
     @property
     def all_names(self):
-        yield name
+        yield self.name
 
     @property
     def real_name(self):
