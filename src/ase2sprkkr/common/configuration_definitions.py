@@ -272,7 +272,9 @@ class BaseDefinition:
         """
         if self.grammar_hooks:
             for i in self.grammar_hooks:
-                grammar = i(grammar)
+                hooked = i(grammar)
+                if hooked is not None:
+                    grammar = hooked
         return grammar
 
     def added_to_container(self, container):
