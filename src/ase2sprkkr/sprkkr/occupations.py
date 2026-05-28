@@ -5,6 +5,7 @@ from __future__ import annotations
 import numpy as np
 from .atomic_types import AtomicType
 from typing import Dict, Union, Optional, List, Tuple
+from numbers import Integral
 from collections.abc import Iterable
 from .sites import SiteType
 from .radial_meshes import Mesh
@@ -22,7 +23,7 @@ class Occupation:
     """ A bit hack for correct function of mesh property during the initialization """
 
     @staticmethod
-    def for_atom_from_ase_atoms(atoms, i: Integer):
+    def for_atom_from_ase_atoms(atoms, i: Integral):
         if "spacegroup_kinds" in atoms.arrays and "occupancy" in atoms.arrays:
             occ = atoms.arrays["occupancy"].get(
                 atoms.arrays["spacegroup_kinds"][i], None
@@ -209,7 +210,7 @@ class Occupation:
                 return
             prim.atomic_number = number
         else:
-            for i in occ:
+            for i in self._occupation.keys():
                 i.atomic_number = number
                 return
 
