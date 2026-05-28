@@ -31,7 +31,7 @@ def add_debug_hook(only_original=False):
 
 
 def debug_pyparsing(term):
-    term.setDebug(True)
+    term.set_debug(True)
     if hasattr(term, "exprs"):
         for i in term.exprs:
             debug_pyparsing(i)
