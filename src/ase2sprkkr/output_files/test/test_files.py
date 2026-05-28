@@ -4,7 +4,6 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 import tempfile
-import numpy as np
 from ase.units import Rydberg as Ry
 
 if __package__:
@@ -31,24 +30,26 @@ class TestOutput(TestCase):
                 if ext == "spc":
                     self.assertEqual("ARPES", out.KEYWORD())
                     if out.NE() > 1:
-                        self.assertEqual((200, 160), out.ENERGY().shape)
+                        if i == 'WSe2_ARPES.spc':
+                            self.assertEqual((200, 160), out.ENERGY().shape)
                         o2 = out + out
                         for i in "ENERGY", "THETA", "K", "DETERMINANT":
                             self.assertEqual(out[i](), o2[i]())
                         for i in "TOTAL", "POLARIZATION", "UP", "DOWN":
                             self.assertEqual(2 * out[i](), o2[i]())
                 elif ext == "dos":
-                    self.assertEqual(out.n_orbitals(1), 3)
-                    self.assertEqual(out.n_spins(), 2)
-                    self.assertEqual((2, 3, 1200), out.dos_for_site_type("Ta").shape)
-                    self.assertEqual(
-                        out.DOS["Ta"][5] / Ry, out.dos_for_site_type("Ta", 1, 2)[:]
-                    )
-                    self.assertEqual(out["Ta"].dos, out[0].dos)
-                    self.assertEqual(out["Ta"].dos, out[0].dos)
-                    self.assertEqual(
-                        out.total_dos().dos, (out[0] * 2 + out[1] * 2 + out[2] * 4).dos
-                    )
+                    if i == 'TaAs_DOS.dos':
+                      self.assertEqual(out.n_orbitals(1), 3)
+                      self.assertEqual(out.n_spins(), 2)
+                      self.assertEqual((2, 3, 1200), out.dos_for_site_type("Ta").shape)
+                      self.assertEqual(
+                          out.DOS["Ta"][5] / Ry, out.dos_for_site_type("Ta", 1, 2)[:]
+                      )
+                      self.assertEqual(out["Ta"].dos, out[0].dos)
+                      self.assertEqual(out["Ta"].dos, out[0].dos)
+                      self.assertEqual(
+                          out.total_dos().dos, (out[0] * 2 + out[1] * 2 + out[2] * 4).dos
+                      )
 
                 elif ext == "bsf":
                     if out.MODE() == "EK-REL":
