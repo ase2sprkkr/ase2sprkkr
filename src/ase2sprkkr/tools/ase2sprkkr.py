@@ -68,15 +68,20 @@ def run():
     modules = {m.__name__.rsplit(".", 1)[1]: m for m in modules if hasattr(m, "parser")}
     unknowns = {}
 
+    aliases = {}
     for name, m in modules.items():
         name = name.replace("_", "-")
+        alias=getattr(m, "aliases", None)
         sub = subs.add_parser(
             name,
             help=m.help,
-            aliases=getattr(m, "aliases", []),
+            aliases=alias or [],
             formatter_class=argparse.RawDescriptionHelpFormatter,
             description=m.help + "\n" + m.description,
         )
+        if alias:
+            for a in alias:
+                aliases[a] = name
         if hasattr(m, "unknowns"):
             unknowns[name] = m.unknowns
         m.parser(sub)
@@ -116,7 +121,8 @@ def run():
         if help:
             parser.print_help()
     else:
-        action = modules[args.ase2sprkkr_command.replace("-", "_")].run
+        module = args.ase2sprkkr_command
+        action = modules[aliases.get(module, module).replace("-", "_")].run
         del args.ase2sprkkr_command
         action(args, global_args)
 
