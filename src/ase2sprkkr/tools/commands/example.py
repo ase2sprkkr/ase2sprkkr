@@ -40,11 +40,11 @@ def parser(parser):
         action="store_true",
     )
     parser.add_argument(
-        "-g", "--grep", help="Find an example according to the given regex", type=str
+        "-g", "--regex", help="Find an example according to the given regex", type=str
     )
 
 
-def run(args):
+def run(args, global_args):
     from ase2sprkkr.gui import examples
 
     if not args.example:
@@ -59,7 +59,7 @@ def run(args):
             return
         print("")
 
-        exs = examples.list_of_examples(regex=args.grep)
+        exs = examples.list_of_examples(regex=args.regex)
         print(f"{'NAME':<30} {'SCRIPT':<20} DESCRIPTION")
         for e in exs:
             print(f"{e.name:<30} {e.main_script.name:<20} {e.short_docstring or ''}")
