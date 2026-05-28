@@ -78,8 +78,8 @@ def parser(parser):
 
 def run(args, global_args):
     from ...gui.shell import Python, JupyterLab, Pdb
-    import tempfile
-    import contextlib
+    import os
+    from ...common.directory import Directory
 
     if args.jupyter:
         shell = JupyterLab
@@ -91,24 +91,23 @@ def run(args, global_args):
     kwargs = {}
     shell = shell(**kwargs)
 
-    full_path = True
+    change_dir = True
     if args.directory:
-        dire = contextlib.nullcontext(args.directory)
+        dire = Directory(args.directory)
     elif args.example:
-        dire = tempfile.TemporaryDirectory()
+        dire = Directory(False)
     else:
-        full_path = False
-        dire = contextlib.nullcontext(None)
+        change_dir = False
+        dire = Directory(".")
 
+    if change_dir:
+        cwd = Path(os.getcwd())
     for i in args.output:
-        if full_path:
-            i = Path(file_path).resolve(i)
+        if change_dir:
+            i = cwd.resolve(i)
         shell.add_output_file(i)
 
     with dire as dr:
-        if dr is not None:
-            shell.change_working_dir(dr)
-
         if args.example:
             shell.run_example(args.example, dr)
 
