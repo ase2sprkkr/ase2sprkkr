@@ -297,7 +297,7 @@ class InputParameters(ConfigurationFile):
     @classmethod
     def definition(cls, name):
         name = name.upper()
-        if not name in cls._definitions:
+        if name not in cls._definitions:
             module = cls.definition_modules[name]
             ip = module.input_parameters
             if isinstance(ip, ipdefs.InputParametersDefinition):

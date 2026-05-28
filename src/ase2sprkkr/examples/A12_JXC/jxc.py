@@ -1,8 +1,6 @@
 """Calculates the exchange coupling parameters Jij of the Heisenberg model and
 Dzyaloshinskii-Moriya interaction."""
 
-import sys
-
 
 def main():
     from ase2sprkkr.sprkkr.calculator import SPRKKR
@@ -23,13 +21,12 @@ def main():
     # calculator.input_parameters.MODE.MALF = 0.0
     # calculator.input_parameters.MODE.MBET = 45.0
     # calculator.input_parameters.MODE.MGAM = 0.0
-    current_dir = os.getcwd()
 
     try:
         potential_file = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "Fe.pot_new"
         )
-        result = calculator.calculate(
+        result = calculator.calculate(   # noqa F841
             potential=potential_file,
             print_output=True,
             output_file=os.path.join(

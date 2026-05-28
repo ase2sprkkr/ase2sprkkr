@@ -2,7 +2,6 @@ import ase
 import ase.build
 import numpy as np
 from ase2sprkkr import SPRKKR
-from ase.units import Bohr
 import os
 from ase2sprkkr.bindings.spglib import spglib_dataset
 import pytest
@@ -150,7 +149,10 @@ class TestSpheres(TestCase):
         sym = sy.find_symmetry(cu, use_spacegroup=False)
         self.assertEqual(sym, should)
         add_empty_spheres(cu, method="xband")
-        sort = lambda x: np.asarray(sorted(tuple(i) for i in x))
+
+        def sort(x):
+            return np.asarray(sorted(tuple(i) for i in x))
+
         self.assertEqual(
             sort(cu.get_scaled_positions()), sort(full.get_scaled_positions())
         )
@@ -194,7 +196,7 @@ class TestSpheres(TestCase):
     def test2(self):
         if os.environ.get("DO_NOT_RUN_SPRKKR", "") == "":
             cu = ase.build.bulk("Cu")
-            out = SPRKKR().calculate(
+            SPRKKR().calculate(
                 cu,
                 **self.calc_args(
                     empty_spheres={"min_radius": 0.25},

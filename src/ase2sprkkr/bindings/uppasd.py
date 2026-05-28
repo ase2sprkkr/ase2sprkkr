@@ -1,4 +1,3 @@
-from enum import Enum
 from pathlib import Path
 from typing import Optional
 import warnings
@@ -213,7 +212,6 @@ def write_mom_file(
     if not jxc_ouput_file:
         jxc_ouput_file = JXCOutputFile.from_atoms(atoms)
 
-    site_types = []
     out = []
     warned = False
 
@@ -235,7 +233,7 @@ def write_mom_file(
             if at.moments is None:
                 if not warned:
                     warnings.warn(
-                        f"Some atomic types do not have moments computed. Skipping."
+                        "Some atomic types do not have moments computed. Skipping."
                     )
                     warned = True
                 continue

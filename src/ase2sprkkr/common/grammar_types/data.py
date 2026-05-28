@@ -205,7 +205,9 @@ class RawData(GrammarType):
                 self.forward << self._n_lines_grammar(parsed[0][1])
                 return parsed
 
-            hook = lambda grammar: grammar.add_parse_action(paction)
+            def hook(grammar):
+                grammar.add_parse_action(paction)
+
             obj.add_grammar_hook(hook)
             self.remove_forward = lambda: obj.remove_grammar_hook(hook)
         else:
@@ -319,7 +321,7 @@ class NumpyArray(RawData):
                             io.StringIO(v), delimiter=self.delimiter, dtype=dt
                         )
                         break
-                    except Exception as last_error:
+                    except Exception:
                         pass
                 else:
                     if not last_error:

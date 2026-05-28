@@ -4,9 +4,6 @@ import code
 import codeop
 import contextlib
 import os
-import sys
-import ase2sprkkr
-import re
 from ase2sprkkr.gui.examples import Example
 import subprocess
 from pathlib import Path
@@ -222,7 +219,7 @@ else:
                 self.save(dr / "notebook.ipynb")
 
             try:
-                import jupyterlab
+                import jupyterlab  # noqa F401
             except ImportError:
                 raise Exception(
                     "Jupyter lab not installed, please install (e.g. using pip install jupyter-lab"

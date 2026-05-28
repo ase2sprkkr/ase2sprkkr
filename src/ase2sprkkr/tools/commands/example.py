@@ -5,7 +5,6 @@ This command just show the path to the examples
 
 from pathlib import Path
 import sys
-import os
 
 if not __package__:
     __package__ = "ase2sprkkr.tools.commands"

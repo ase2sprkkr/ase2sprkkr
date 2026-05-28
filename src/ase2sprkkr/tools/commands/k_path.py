@@ -5,7 +5,6 @@ GUI for specifiing BSF k-points PATH
 
 from pathlib import Path
 import sys
-import argparse
 
 if not __package__:
     __package__ = "ase2sprkkr.tools.commands"

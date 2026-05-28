@@ -9,7 +9,7 @@ from ..input_parameters_definitions import (
 )
 from ...sprkkr.sprkkr_grammar_types import Site
 
-input_parameters = lambda: InputParameters(
+def input_parameters(): return InputParameters(
     "arpes",
     [
         CONTROL("ARPES"),

@@ -92,7 +92,7 @@ class LatticeSection(PotentialSection):
             cell = atoms.cell
         elif self.SYSDIM() == "2D":
             for i in "left", "right", "central":
-                if not i in atoms.regions:
+                if i not in atoms.regions:
                     raise ValueError(
                         "For a 2D problem, the 'left', 'right' and 'central' regions have to be defined"
                     )

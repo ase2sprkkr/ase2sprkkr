@@ -6,7 +6,6 @@ from ..output_files_definitions import (
 from typing import Optional
 import numpy as np
 import matplotlib
-import matplotlib.pyplot as plt
 import copy
 
 from ..output_files import CommonOutputFile, Arithmetic

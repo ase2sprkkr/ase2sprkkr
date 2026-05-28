@@ -1,3 +1,4 @@
+# ruff: noqa: F405
 """
 Classes, that represents various value types that can appear in the configuration and problem definitionfiles.
 

@@ -217,7 +217,7 @@ class ContainerDefinition(RealItemDefinition):
         def write(i):
             s = i.data_description(verbose, show_hidden, cprefix)
             if not i.info_in_data_description:
-                if not "\n" in s:
+                if "\n" not in s:
                     info = i.info(False)
                     if info:
                         s = s + (" " * (max(40 - len(s), 0) + 2)) + info
@@ -746,4 +746,4 @@ class ConfigurationRootDefinition(ContainerDefinition):
         return grammar
 
     def _generic_info(self):
-        return f"Configuration"
+        return "Configuration"

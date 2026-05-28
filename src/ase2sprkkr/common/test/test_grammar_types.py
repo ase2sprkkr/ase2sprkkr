@@ -569,7 +569,7 @@ class TestGrammar(TestCase):
             test(val, res)
         for v in [[1.0, 2, 3], "asasd"]:
             test_invalid(v)
-        a = lambda *args: np.asarray(args)
+        a = lambda *args: np.asarray(args)  # noqa E731
         for v, r in [(3, 3.0), ((5, 1.0), a(5.0, 1.0)), ((7.0, 3), a(7.0, 3.0))]:
             test_warning(v, r)
         for v in [[1.0, 3.0], 8.0]:

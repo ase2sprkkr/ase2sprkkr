@@ -124,8 +124,6 @@ def run(args, global_args):
 
     from ...bindings.uppasd import (
         Coordinates,
-        write_dmfile,
-        write_jfile,
         write_mom_file,
         write_pos_file,
         write_inpsd_file,
@@ -254,9 +252,9 @@ def run(args, global_args):
         print(f"Number of atoms: {len(atoms.sites)}")
         if selector.it is not ...:
             print(
-                f"Selected IQs: {', '.join(map(lambda i: selector_obj.it_labels[
-                            i
-                        ], selector.it))}"
+                f"Selected IQs: {
+                    ', '.join(map(lambda i: selector_obj.it_labels[i], selector.it))
+                }"
             )
 
         if not args.no_write and dmi_output is not None:

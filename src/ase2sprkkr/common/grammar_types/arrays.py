@@ -25,11 +25,11 @@ def _array_dtype_condition_always_true(_type, _shape):
 
 
 def _array_dtype_condition_not_object(value_type, _shape):
-    return value_type != object
+    return value_type is not object
 
 
 def _array_dtype_condition_not_object_and_scalar(value_type, shape):
-    return value_type != object and not len(shape)
+    return value_type is not object and not len(shape)
 
 
 class Array(GrammarType):

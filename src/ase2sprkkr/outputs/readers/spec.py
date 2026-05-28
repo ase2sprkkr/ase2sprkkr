@@ -4,12 +4,11 @@ Parser for spec.out files containing spectral function calculations.
 
 import re
 import numpy as np
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict
 
 from ..task_result import TaskResult, KkrOutputReader
 from .default import DefaultOutputParser
 from ...common.decorators import cached_property
-from ...output_files.output_files import OutputFile
 
 
 class SpecResult(TaskResult):

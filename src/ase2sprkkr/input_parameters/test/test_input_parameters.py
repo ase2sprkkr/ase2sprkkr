@@ -473,7 +473,7 @@ XSITES NR=3 FLAG
 
     def test_repeated_value(self):
 
-        t = lambda x: re.sub(r"\s+", " ", x).strip()
+        t = lambda x: re.sub(r"\s+", " ", x).strip()  # noqa E731
         assertParse = self.assertParse
         assertNotValid = partial(self.assertNotValid, grammar=lambda: grammar)
 
@@ -854,7 +854,7 @@ XSITES NR=3 FLAG
         assert ipd["ENERGY"]["A"].default_value == 1
 
     def test_length(self):
-        t = lambda x: re.sub(r"\s+", " ", x).strip()
+        t = lambda x: re.sub(r"\s+", " ", x).strip()  # noqa E731
 
         ipd = cd.InputParametersDefinition.definition_from_dict(
             {

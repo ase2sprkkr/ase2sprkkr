@@ -32,7 +32,7 @@ from .version import __version__  # NOQA: F401, E402
 def _init():
     import ase  # NOQA: F401
     from .ase.register import register
-    from .configuration import load_user_preferences
+    from .configuration import load_user_preferences  # noqa: F401
 
     register()
     import os
@@ -44,4 +44,4 @@ def _init():
 _init()
 del _init
 
-from .configuration import config
+from .configuration import config as config

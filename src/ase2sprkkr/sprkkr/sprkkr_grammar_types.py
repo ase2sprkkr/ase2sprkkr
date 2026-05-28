@@ -2,8 +2,6 @@
 that are specific for SPR-KKR, are present."""
 
 from ..common.grammar_types import ObjectNumber
-from ..common.alternative_types import allowed_types
-import numpy as np
 from .sites import Site as _Site
 from .atomic_types import AtomicType as _AtomicType
 

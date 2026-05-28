@@ -189,7 +189,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             items = enumerate(values)
 
         for k, v in items:
-            if not k in self._values:
+            if k not in self._values:
                 st(self.add(k), v)
             else:
                 st(self._values[k], v)
@@ -235,9 +235,9 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         """
         if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
             out = [v.as_dict(only_changed, generated, copy) for v in self]
-            if out[-1] != None:
+            if out[-1] is not None:
                 for i in range(len(out) - 1, 0, -1):
-                    if out[i] != None:
+                    if out[i] is not None:
                         out = out[: i + 1]
                     else:
                         out = None

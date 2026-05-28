@@ -55,7 +55,8 @@ class TestCalculator(TestCase):
 
     @pytest.mark.slow
     def test_calculator(self, temporary_dir):
-        here = lambda x: os.path.join(self.dirname, x)
+        def here(x):
+            return os.path.join(self.dirname, x)
 
         atoms = bulk("Li")
         calculator = SPRKKR(atoms=atoms, **self.calc_args())
@@ -129,7 +130,8 @@ class TestCalculator(TestCase):
         if not self.run_sprkkr():
             return
 
-        here = lambda x: os.path.join(self.dirname, x)
+        def here(x):
+            return os.path.join(self.dirname, x)
 
         atoms = bulk("Li")
         calculator = SPRKKR(atoms=atoms, **self.calc_args(mpi=False))

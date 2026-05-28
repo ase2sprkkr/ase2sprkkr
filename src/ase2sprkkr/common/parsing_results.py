@@ -12,7 +12,10 @@ class Result:
 class Key:
     """A base class for items, that have to be treated in a special way"""
 
-    NONE = lambda x: x
+    @staticmethod
+    def NONE(x):
+        return x
+
     """ The regular items has no special key """
 
     def __init__(self, key):

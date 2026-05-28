@@ -2,15 +2,11 @@ from ..output_files_definitions import (
     OutputFileValueDefinition as V,
     create_output_file_definition,
     OutputFileDefinition,
-    Separator,
     BlankSeparator,
     OutputFileSectionDefinition,
 )
 from typing import Optional
 import numpy as np
-import matplotlib.colors as mcolors
-from functools import lru_cache
-import warnings
 from ase.units import Rydberg
 from ase2sprkkr.physics.broadening import (
     create_lorentz_broadener,
@@ -19,10 +15,9 @@ from ase2sprkkr.physics.broadening import (
 )
 from scipy.interpolate import interp1d
 
-from ..output_files import Arithmetic, CommonOutputFile
+from ..output_files import CommonOutputFile
 from ...common.grammar_types import (
     Array,
-    NumpyArray,
     Keyword,
     Char,
     Table,
@@ -36,7 +31,7 @@ from ...common.configuration_definitions import (
     SeparatorDefinition,
     BaseDefinition,
 )
-from ...gui.plot import Multiplot, plotting_function, set_up_common_plot, single_plot
+from ...gui.plot import Multiplot, set_up_common_plot, single_plot
 from ...common.decorators import cached_property, add_to_signature
 
 
@@ -99,7 +94,6 @@ class RATOutputFile(CommonOutputFile):
     def core_states_energies(self, no_core_splitting=False):
         states_index = self.core_states_index
         n_groups = len(self.GROUPS)
-        efermi = self.EFERMI()
         out = np.empty((n_groups, len(states_index)))
 
         def fill_group(i):
@@ -309,7 +303,7 @@ class RATOutputFile(CommonOutputFile):
         else:
             nef = fidx - 1
 
-        if interpolate_to_fermi != False:
+        if interpolate_to_fermi:
             if abs(senergies[nef]) < interpolation_threshold:
                 interpolate_to_fermi = False
 
@@ -352,11 +346,6 @@ class RATOutputFile(CommonOutputFile):
 
             if interpolate_to_fermi:
                 senergies[upper_half_idx] = 0
-            low_order = make_slice(order[:fidx])
-            high_order = make_slice(order[upper_half_idx_source:])
-        else:
-            low_order = make_slice(order)
-            high_order = False
 
         size = len(senergies)
         # Energy, Group, State, Polarization

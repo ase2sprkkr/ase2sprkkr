@@ -9,9 +9,9 @@ from scipy.interpolate import interp1d
 import os
 
 if __package__:
-    from .init_tests import TestCase, patch_package
+    from .init_tests import patch_package
 else:
-    from ase2sprkkr.output_files.test.init_tests import TestCase, patch_package
+    from ase2sprkkr.output_files.test.init_tests import patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
 # ---------------------------------------------------------------------------
@@ -181,7 +181,6 @@ class TestPolarizationSpectrum:
         ref_pol, _ = ref_xas
         e = generated_data["ENERGY"]
         py = generated_data["POLARIZATION"][0]
-        f = interp1d(e, py, bounds_error=True)
 
         # Main peak > 1.0 Mb
         assert py.max() > 1.0, f"Peak {py.max():.3f} Mb < 1.0 Mb"
@@ -203,7 +202,6 @@ class TestDifferenceSpectrum:
 
     def test_difference_is_zero(self, generated_data, ref_xas):
         _, ref_diff_arr = ref_xas
-        e = generated_data["ENERGY"]
         py_diff = generated_data["DIFFERENCE"][0]
         py_max = np.max(np.abs(py_diff))
         ref_diff = ref_diff_arr[:, 1]
@@ -229,7 +227,6 @@ class TestSumRuleSpectra:
         if "SPIN" not in generated_data:
             pytest.skip("No SPIN data (n_ktypes <= 1)")
 
-        e = generated_data["ENERGY"]
         py_spin = generated_data["SPIN"]
         py_orb = generated_data["ORBIT"]
 

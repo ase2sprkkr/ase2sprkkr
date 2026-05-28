@@ -14,7 +14,6 @@ from ...common.generated_configuration_definitions import (
 )
 from ...common.configuration_definitions import switch
 from ...gui.plot import change_default_kwargs, colormesh, Multiplot
-import matplotlib.pyplot as plt
 
 
 class ARPESOutputFile(CommonOutputFile, Arithmetic):

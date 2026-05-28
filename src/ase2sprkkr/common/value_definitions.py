@@ -276,6 +276,7 @@ class ValueDefinition(RealItemDefinition):
         if delimiter_grammar is not None:
             self.grammar_of_delimiter = pp.Suppress(delimiter_grammar)
 
+
     configuration_type_name = "OPTION"
 
     type_from_type_map = {}

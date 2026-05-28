@@ -174,7 +174,7 @@ class SPRKKRAtoms(Atoms):
         to the ASE properties, but the opposite does not hold - to reflect the changes
         in these properties please create a new Atoms object with given properties.
         """
-        if not SPRKKRAtoms.sites_array_name in self.arrays:
+        if SPRKKRAtoms.sites_array_name not in self.arrays:
             self.spacegroup_info.recompute(init=True)
         return self.arrays[SPRKKRAtoms.sites_array_name]
 

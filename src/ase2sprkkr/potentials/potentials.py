@@ -137,4 +137,3 @@ class Potential(ConfigurationFile):
 
 
 # At last - to avoid circular import problem
-from ..sprkkr.sprkkr_atoms import SPRKKRAtoms  # NOQA: E402

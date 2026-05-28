@@ -127,7 +127,7 @@ def empty_spheres(
 
     pmg_structure = AseAtomsAdaptor.get_structure(atoms)
     for s in map(str, pmg_structure.species):
-        if not s in radii_ratios_map:
+        if s not in radii_ratios_map:
             radii_ratios_map[s] = 1.0
     structure = StructureAdapter(pmg_structure, radii_ratios_map, overlap_matrix)
 

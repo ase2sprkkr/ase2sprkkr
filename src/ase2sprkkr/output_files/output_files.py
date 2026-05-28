@@ -118,7 +118,6 @@ class OutputFile(ConfigurationFile):
         for imp, module, ispackage in pkgutil.iter_modules(path=[path], prefix=name):
             __import__(module)
             mod = sys.modules[module].definition
-            ext = mod.extension
             out[mod.extension] = mod
         return out
 

@@ -121,7 +121,7 @@ def run(args, global_args):
             print(f"Configuration defaults have been written to file '{file}'.")
         else:
             print(
-                f"Configuration file have already existed, so it have not been overwritten."
+                "Configuration file have already existed, so it have not been overwritten."
             )
         run = False
     if args.path:

@@ -71,7 +71,6 @@ def _collect_inputs(
     max_radius_bohr = float(max_radius) * to_bohr
 
     alat_bohr = atoms.cell.get_bravais_lattice().a * to_bohr
-    n = len(atoms)
 
     es = atoms.spacegroup_info.equivalent_sites
     es = UniqueValuesMapping(es)

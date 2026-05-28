@@ -3,7 +3,7 @@
 from .sections import CONTROL, TAU, ENERGY, TASK, SITES
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters
 
-input_parameters = lambda: InputParameters(
+def input_parameters(): return InputParameters(
     "dos",
     [
         CONTROL("DOS"),

@@ -4,7 +4,6 @@
 def main():
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     import os
-    import sys
 
     print("Starting SPRKKR calculation...")
 
@@ -51,7 +50,7 @@ def main():
     output_file = os.path.abspath("torque_calculation.out")
 
     try:
-        result = calculator.calculate(
+        calculator.calculate(
             potential=potential_file,
             directory=script_dir,  # Set the working directory for the calculation
             print_output=True,

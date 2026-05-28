@@ -147,7 +147,10 @@ class GrammarType:
         out = self._format or ""
         if "{" not in out:
             out = f"{{:{out}}}"
-        escape = lambda x: x.replace("{", "{{").replace("}", "}}")
+
+        def escape(x):
+            return x.replace("{", "{{").replace("}", "}}")
+
         if self.prefix:
             out = escape(self.prefix) + out
         if self.postfix:

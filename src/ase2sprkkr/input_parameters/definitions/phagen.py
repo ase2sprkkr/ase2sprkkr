@@ -5,7 +5,7 @@ from .sections import CONTROL, TASK, TAU, ENERGY, SCF
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters
 # ,InputValueDefinition as V
 
-input_parameters = lambda: InputParameters(
+def input_parameters(): return InputParameters(
     "phagen",
     [
         CONTROL("PHAGEN"),

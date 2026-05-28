@@ -2,7 +2,6 @@
 
 import re
 import pyparsing as pp
-import numpy as np
 import unyt
 
 from ..output_definitions import (
@@ -153,7 +152,7 @@ class ScfResult(TaskResult):
         values: list
           The values.
         """
-        if not name in self.iterations[0]:
+        if name not in self.iterations[0]:
             raise KeyError(f"No such iteration value: {name}")
 
         return self.iterations.values_of(name)
@@ -371,7 +370,7 @@ class ScfOutputParser(SprKkrOutputParser):
                         )
                     )
                     line = await readline_until(stdout, lambda line: line != b"\n")
-                    if not "E=" in line:
+                    if "E=" not in line:
                         break
                 out["atomic_types"] = atoms
                 duration = None

@@ -1,7 +1,6 @@
 import ase
 import ase2sprkkr
 from ase.build import bulk
-from pytest import fixture
 
 if __package__:
     from .init_tests import TestCase, patch_package

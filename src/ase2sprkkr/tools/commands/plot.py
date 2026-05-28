@@ -189,7 +189,7 @@ def run(args, global_args):
 
         of = OutputFile.from_file(output)
         for x in ["layer"]:
-            if x in kwargs and not x in of.plot_parameters:
+            if x in kwargs and x not in of.plot_parameters:
                 raise ValueError(f"Argument '--{x}' is not valid for {of}")
 
         if filename:

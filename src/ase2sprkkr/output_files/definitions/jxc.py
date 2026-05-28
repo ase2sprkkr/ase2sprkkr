@@ -144,7 +144,7 @@ class JXCOutputFile(OutputFile):
             values = parse_list(values)
             try:
                 return [int(v) for v in values]
-            except:
+            except Exception:
                 raise ValueError(
                     f"Invalid IQ selector: {values}. Must be (a comma-separated) list of integers."
                 )
@@ -311,11 +311,11 @@ class JXCOutputFile(OutputFile):
         x = data["DR"]
 
         if is_jij:
-            label = lambda partner_index: (
+            def label(partner_index): return (
                 f"${labels[type_index]}$-${labels[partner_index]}$"
             )
-            value_label = lambda: r"$J_{ij}$"
-            name = lambda: f"Jij_{labels[type_index]}"
+            def value_label(): return r"$J_{ij}$"
+            def name(): return f"Jij_{labels[type_index]}"
             y = data[["JXX"]]
 
             spin_mom = self._spin_moments()
@@ -329,11 +329,11 @@ class JXCOutputFile(OutputFile):
 
         else:
             index, axis_labels = self._dij_components(axis)
-            label = lambda partner_index: (
+            def label(partner_index): return (
                 f"{labels[type_index]}-{labels[partner_index]}"
             )  # $_{axis_labels[colindex]}$'
-            value_label = lambda: rf"$D_{{ij}}^{{{axis_labels[colindex]}}}$"
-            name = lambda: f"Dij_{labels[type_index]}"
+            def value_label(): return rf"$D_{{ij}}^{{{axis_labels[colindex]}}}$"
+            def name(): return f"Dij_{labels[type_index]}"
             y = data[index]
             spin_mom = None
 
@@ -463,7 +463,7 @@ class JXCOutputFile(OutputFile):
         for site in atoms.sites:
             for atomic_type in site.occupation:
                 if atomic_type.symbol in first:
-                    if not atomic_type.symbol in duplicates:
+                    if atomic_type.symbol not in duplicates:
                         duplicates[atomic_type.symbol] = {first[atomic_type.symbol]: 1}
                     duplicates[atomic_type.symbol][atomic_type] = (
                         len(duplicates[atomic_type.symbol]) + 1

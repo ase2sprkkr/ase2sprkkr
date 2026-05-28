@@ -3,7 +3,6 @@
 from ..task_result import TaskResult, KkrOutputReader, OutputFileResultValue
 from .default import DefaultOutputParser
 from ...common.decorators import cached_property
-from ...output_files.output_files import OutputFile
 import os
 
 

@@ -10,7 +10,6 @@ from ..potentials.potentials import Potential
 from ..input_parameters import input_parameters as input_parameters
 from ..output_files.output_files import OutputFile
 from pathlib import Path
-import os
 import platform
 import subprocess
 import shutil

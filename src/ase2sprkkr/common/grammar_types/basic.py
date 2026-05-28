@@ -1,6 +1,5 @@
 """Common GrammarTypes as numbers, strings etc."""
 
-from ase.units import Rydberg
 import datetime
 import numbers
 import pyparsing as pp
@@ -257,7 +256,7 @@ class BaseRealWithUnits(Real):
 
     def _grammar_units(self, units):
         i = id(units)
-        if not i in self.grammar_cache:
+        if i not in self.grammar_cache:
 
             def unit_defs():
                 for i in self.units:
@@ -292,7 +291,7 @@ class BaseRealWithUnits(Real):
             if (
                 isinstance(value, tuple)
                 and len(value) == 2
-                and not value[1] in self.units
+                and value[1] not in self.units
             ):
                 return f"Given unit {value[1]} is not allowed, allowed are: {','.join(self.units.keys())}"
             return (
@@ -300,7 +299,7 @@ class BaseRealWithUnits(Real):
                 "a float (the value) and a string (the units), or as "
                 "Unyt.unit_object.Unit object with propper units."
             )
-        if not str(value.units) in self.unit_strings:
+        if str(value.units) not in self.unit_strings:
             return f"Invalid unit {value.units}, allowed are {','.join(self.unit_strings.keys())}"
         return True
 
@@ -377,7 +376,7 @@ class AlwaysQString(BaseString):
     ).set_parse_action(lambda x: x[0])
 
     def _validate(self, value, why="set"):
-        if not value.__class__ is str:
+        if value.__class__ is not str:
             return "String expected"
         return True
 
@@ -484,7 +483,7 @@ class Keyword(GrammarType):
         )
 
     def _string(self, val):
-        if self.quote and val.__class__ == str:
+        if self.quote and isinstance(val, str):
             return f"{self.quote}{val}{self.quote}"
         else:
             return str(val)

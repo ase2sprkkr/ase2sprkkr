@@ -1,23 +1,11 @@
-import sys
 import numpy as np
-import scipy.constants
 import pymatgen.core
-from pymatgen.symmetry.bandstructure import HighSymmKpath
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from copy import deepcopy
-import matplotlib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-from scipy.spatial.transform import Rotation as R
-from random import seed
-from random import randint
-from itertools import permutations
-from datetime import datetime
-import warnings
 from matplotlib import rc
 from matplotlib.backend_bases import MouseEvent
 from matplotlib.patches import FancyArrowPatch
-from mpl_toolkits.mplot3d import Axes3D, proj3d
+from mpl_toolkits.mplot3d import proj3d
 from ase import Atoms
 
 
@@ -60,7 +48,6 @@ def k_path_gui(atoms: Atoms, verbose=False):
             return  # We want pick_event, not mouse press
 
         ind = event.ind[0]  # Index of picked point
-        picked_point = highsymmpts[ind]
         fig_kkr.canvas.draw_idle()
 
         # Toggle: remove if last in path
@@ -96,7 +83,6 @@ def k_path_gui(atoms: Atoms, verbose=False):
 
     # Create a pymatgen object. Pymatgen does not recognize empty cells so I change them to H.
 
-    species_Z = atoms.get_atomic_numbers()
     cell = atoms.cell
     positions = atoms.positions
     ALAT = cell.get_bravais_lattice().a
@@ -325,8 +311,6 @@ def k_path_gui(atoms: Atoms, verbose=False):
 
     # print(BZ)
 
-    highsymmpnt_size = 15
-
     sz_gamma = 20
     sz_vertex = 20
     sz_face = 20
@@ -341,13 +325,11 @@ def k_path_gui(atoms: Atoms, verbose=False):
     colors = []
 
     # 1. Gamma point
-    # ax_kkr.scatter(0,0,0,s=highsymmpnt_size,color=highsymmvertex_color)
     highsymmpts = np.array([[0, 0, 0]])
     sz.append(sz_gamma)
     colors.append(c_gamma)
 
     # 2. Vertices of BZ
-    # ax_kkr.scatter(pmg_BZ_unique_verts[:,0],pmg_BZ_unique_verts[:,1],pmg_BZ_unique_verts[:,2],s=highsymmpnt_size,color=highsymmvertex_color)
     highsymmpts = np.append(highsymmpts, pmg_BZ_unique_verts, axis=0)
     for i in range(len(pmg_BZ_unique_verts)):
         sz.append(sz_vertex)
@@ -367,7 +349,6 @@ def k_path_gui(atoms: Atoms, verbose=False):
         x = x / nvert
         y = y / nvert
         z = z / nvert
-        # ax_kkr.scatter(x,y,z,s=highsymmpnt_size,color=highsymmface_color)
         highsymmpts = np.append(highsymmpts, np.array([[x, y, z]]), axis=0)
         sz.append(sz_face)
         colors.append(c_face)
@@ -426,7 +407,7 @@ def k_path_gui(atoms: Atoms, verbose=False):
 
     # Line to show selected path
     (path_line,) = ax_kkr.plot([], [], [], "-", color="red", linewidth=3)
-    path_scatter = ax_kkr.scatter([], [], [], s=50, color="red")
+    ax_kkr.scatter([], [], [], s=50, color="red")
     # Store path as a list of indices
     selected_path = []
 

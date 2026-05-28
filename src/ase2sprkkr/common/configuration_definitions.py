@@ -306,7 +306,7 @@ class BaseDefinition:
            { name of the argument of the __init__ function : name of the object attribute }
         """
 
-        if not "_copy_args" in self.__class__.__dict__:
+        if "_copy_args" not in self.__class__.__dict__:
             args = inspect.getfullargspec(self.__class__.__init__).args[1:]
             self.__class__._copy_args = {
                 v: "_" + v if "_" + v in self.__dict__ else v
@@ -917,7 +917,7 @@ class Switch(ControlDefinition):
 
         # resolve the "symlinks"
         for i in self.values:
-            if self.values[i] == None:
+            if self.values[i] is None:
                 self.values[i] = self.values[values[i]]
         self.container = None
         # self.copied = False

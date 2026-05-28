@@ -180,12 +180,16 @@ def stack(
 
     # first, define a function to retrieve the shifts
     if at is None:
-        valid_at = lambda n: False
+
+        def valid_at(n):
+            return False
     else:
         atlen = len(at)
-        valid_at = lambda n: (
-            n < atlen and at[n] is not None and not np.equal(at[n], [0, 0, 0]).all()
-        )
+
+        def valid_at(n):
+            return (
+                n < atlen and at[n] is not None and not np.equal(at[n], [0, 0, 0]).all()
+            )
 
     def get_at(i):
         if not valid_at(i):

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import SymLogNorm, CenteredNorm, LogNorm, Normalize
 from matplotlib.colors import ListedColormap
 
-from typing import Optional, Callable
+from typing import Optional
 import numpy as np
 import os
 import re
@@ -396,7 +396,7 @@ class Multiplot:
             kw.update(self.specific_kwargs.get(self.index, {}))
             kw.update(kwargs)
             if not plot_function:
-                plot_function = lambda **kwargs: option.plot(**kwargs)
+                def plot_function(**kwargs): return option.plot(**kwargs)
             plot_function(axis=axis, **kw)
 
     @contextmanager

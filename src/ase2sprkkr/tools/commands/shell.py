@@ -5,17 +5,12 @@ Opening the ASE2SPRKKR output files and/or scripts in the shell or Jupyter noteb
 
 from pathlib import Path
 import sys
-import argparse
 
 if not __package__:
     __package__ = "ase2sprkkr.tools.commands"
 sys.path.append(str(Path(__file__).resolve().parents[3]))
 
 from ...common.tools import (
-    parse_tuple_function,
-    parse_named_option,
-    append_id_to_filename,
-    parse_inches,
     main,
 )  # NOQA
 from ...common.lazy_string import LazyString  # NOQA

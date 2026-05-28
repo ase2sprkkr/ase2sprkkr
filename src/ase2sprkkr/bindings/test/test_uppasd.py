@@ -1,7 +1,7 @@
 if __package__:
-    from .init_tests import TestCase, patch_package
+    from .init_tests import patch_package
 else:
-    from ase2sprkkr.bindings.test.init_tests import TestCase, patch_package
+    from ase2sprkkr.bindings.test.init_tests import patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
 from pathlib import Path

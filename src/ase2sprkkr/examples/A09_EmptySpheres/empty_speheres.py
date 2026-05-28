@@ -20,7 +20,7 @@ def main():
     # custom arguments of ase2sprkkr.bindings.empty_spheres, resulting either in calling
     # es_finder, if it is available, or xband empty_spheres routines, called from the function
     # empty_spheres in ase2sprkkr.bindings.xband.spheres (compiled from spheres.pyx)
-    out = calc.calculate(
+    out = calc.calculate(  # noqa F841
         atoms=atoms,
         options={"NITER": 1},
         empty_spheres={"max_radius": 2.0, "verbose": True, "max_spheres": 300},

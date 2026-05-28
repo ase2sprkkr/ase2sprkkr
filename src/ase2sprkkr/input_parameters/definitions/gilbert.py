@@ -7,7 +7,7 @@ from ..input_parameters_definitions import (
     InputValueDefinition as V,
 )
 
-input_parameters = lambda: InputParameters(
+def input_parameters(): return InputParameters(
     "gilbert",
     [
         CONTROL("GILBERT"),

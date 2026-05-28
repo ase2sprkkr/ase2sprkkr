@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 from .atomic_types import AtomicType
-from typing import Dict, Union, Optional
+from typing import Dict, Union, Optional, List, Tuple
 from collections.abc import Iterable
 from .sites import SiteType
 from .radial_meshes import Mesh

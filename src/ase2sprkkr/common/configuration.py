@@ -78,12 +78,18 @@ class Configuration:
     ):
 
         if only_changed == "default":
-            pick_only_changed = lambda d: not d.is_always_added
+
+            def pick_only_changed(d):
+                return not d.is_always_added
         elif only_changed == "basic":
-            pick_only_changed = lambda d: d.is_expert
+
+            def pick_only_changed(d):
+                return d.is_expert
         else:
             only_changed = bool(only_changed)
-            pick_only_changed = lambda d: only_changed
+
+            def pick_only_changed(d):
+                return only_changed
 
         def get(self):
             d = self._definition

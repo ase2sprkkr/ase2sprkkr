@@ -165,7 +165,7 @@ class SpacegroupInfo(BaseSpacegroupInfo):
 
     def info_for_region(self, region):
         name = region.name
-        if not name in self._regions:
+        if name not in self._regions:
             self._regions[name] = RegionSpacegroupInfo(self, region)
         return self._regions[name]
 
@@ -209,7 +209,7 @@ class SpacegroupInfo(BaseSpacegroupInfo):
         num = 0
         for i, site in enumerate(self.atoms.sites):
             st = site.site_type
-            if not st in stypes:
+            if st not in stypes:
                 sgi[i] = stypes[st] = num
                 occ[str(num)] = st.occupation.to_dict(True)
                 num += 1

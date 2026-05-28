@@ -127,7 +127,6 @@ def spglib_dataset(
         and np.sum(atoms.arrays["sprkkr_sites_data"] == 0) != 0
     ):
         equivalent_sites = sg_dataset.equivalent_atoms
-        recompute = False
         types = {}
         counter = max(equivalent_sites)
         for i, (site, typ) in enumerate(
@@ -136,7 +135,7 @@ def spglib_dataset(
             if site == 0:
                 continue
             stype = site.site_type
-            if not typ in types:
+            if typ not in types:
                 types[typ] = {stype: typ}
                 out = typ
             else:

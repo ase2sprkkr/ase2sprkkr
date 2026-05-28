@@ -7,7 +7,6 @@ from ...common.grammar_types import (
     flag,
     energy,
     Integer,
-    Array,
     Keyword,
 )
 
@@ -109,7 +108,7 @@ def CONTROL(ADSI):
                 "case",
                 is_required=True,
                 result_is_visible=True,
-                info="The custom field for the description of the problem - the output files will have called 'DATASET.<ext>'.",
+                info="The custom field for the description of the problem - the output files will been called 'DATASET.<ext>'.",
             ),
             V(
                 "ADSI",

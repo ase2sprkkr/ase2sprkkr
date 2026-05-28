@@ -23,6 +23,7 @@ from ..common.directory import Directory
 from ..ase.symbols import filename_from_symbols
 from ..bindings.empty_spheres import add_empty_spheres
 import copy
+import abc
 import subprocess
 import tempfile
 import collections
@@ -743,7 +744,7 @@ class SPRKKR(Calculator):
             for i in (input_file, potential_file, self.input_file, self.potential_file):
                 if isinstance(i, str):
                     i = Path(i).stem
-                    if not "%" in i:  # thus i is not template
+                    if "%" not in i:  # thus i is not template
                         return i
             return "sprkkr"
 
@@ -1068,7 +1069,7 @@ class FilenameTemplator:
         self.symbols = symbols
 
     def _get(self, name, default):
-        if not name in self.data:
+        if name not in self.data:
             self.data[name] = default(self)
         return self.data[name]
 

@@ -1,4 +1,5 @@
 from ase.spacegroup import crystal
+from ase.cell import Cell
 import os
 import tempfile
 
@@ -112,7 +113,10 @@ number of atom types NT
   1  22        Ti    2 1.000  1  2
   2   8         O    4 1.000  3  4  5  6
         """
-        sanitize = lambda x: "\n".join(map(lambda x: x.strip(), x.strip().split("\n")))
+
+        def sanitize(x):
+            return "\n".join(map(lambda x: x.strip(), x.strip().split("\n")))
+
         self.assertEqual(sanitize(x), sanitize(y))
         if os.name != "nt":
             write_sysfile(atoms, tempfile.NamedTemporaryFile().name)

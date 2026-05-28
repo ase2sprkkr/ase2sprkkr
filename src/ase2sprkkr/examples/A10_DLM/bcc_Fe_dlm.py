@@ -37,8 +37,6 @@ Email: christopher.woodgate@bristol.ac.uk
 
 def main():
 
-    import numpy as np
-    from ase import Atoms
     from ase.build import bulk
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     from ase2sprkkr.sprkkr.sprkkr_atoms import SPRKKRAtoms

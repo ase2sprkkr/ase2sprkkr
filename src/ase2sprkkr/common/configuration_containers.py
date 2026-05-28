@@ -8,7 +8,6 @@ and that are results of parsing of a configuration file.
 
 from .configuration import Configuration
 import itertools
-import re
 from typing import Union, Any, Dict
 from .warnings import warnings, DataValidityError
 from .section_adaptors import SectionAdaptor, MergeSectionAdaptor
@@ -211,7 +210,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
             if ll == 0:
                 return False
             n = name[0]
-            if not n in self._members:
+            if n not in self._members:
                 return False
             if ll == 1:
                 return True
@@ -387,7 +386,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
         def set_value(name, value):
             if "." in name:
                 section, name = name.split(".", 1)
-                if not section in self:
+                if section not in self:
                     if unknown == "add":
                         self.add(section)
                     else:
@@ -544,17 +543,17 @@ class ConfigurationContainer(BaseConfigurationContainer):
         self._members[name] = member
 
         lname = name.lower()
-        if not lname in self._lowercase_members:
+        if lname not in self._lowercase_members:
             self._lowercase_members[lname] = member
 
         df = member._definition
 
         if not df.is_hidden:
             for iname in df.interactive_names():
-                if not iname in self._interactive_members:
+                if iname not in self._interactive_members:
                     self._interactive_members[iname] = member
                     iname = iname.lower()
-                    if not iname in self._lowercase_members:
+                    if iname not in self._lowercase_members:
                         self._lowercase_members[iname] = member
 
     def is_changed(self):

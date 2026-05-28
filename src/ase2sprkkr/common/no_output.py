@@ -1,7 +1,8 @@
 """Context manager, that suppress output to the given descriptor.
 The common usage is to suppress output of C/Fortran functions"""
 
-import os, sys
+import os
+import sys
 from typing import Union
 from collections.abc import Iterable
 

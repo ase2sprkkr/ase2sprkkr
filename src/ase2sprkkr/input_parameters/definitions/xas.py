@@ -1,11 +1,10 @@
 """XAS task input parameters definition"""
 
-from ...common.grammar_types import SetOf, DefKeyword, Keyword, Range, Array, flag
+from ...common.grammar_types import DefKeyword, flag
 from .sections import CONTROL, TASK, TAU, ENERGY, SITES, MODE
 from ..input_parameters_definitions import (
     InputParametersDefinition as InputParameters,
     InputValueDefinition as V,
-    InputSectionDefinition as Section,
 )
 
 

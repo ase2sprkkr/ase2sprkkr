@@ -50,7 +50,7 @@ class OccupationSection(PotentialSection):
 
         def site(i, d):
             ind = unique[i]
-            if not ind in tags:
+            if ind not in tags:
                 occ = d["ITOQ CONC"]
                 mesh = read_io_data["meshes"][d["IMQ"] - 1]
                 occ = Occupation(

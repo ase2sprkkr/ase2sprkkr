@@ -1,5 +1,4 @@
 import os
-import unyt
 from ..readers.scf import ScfOutputParser, ScfResult, atomic_types_definition
 from ..readers.jxc import JxcOutputReader
 

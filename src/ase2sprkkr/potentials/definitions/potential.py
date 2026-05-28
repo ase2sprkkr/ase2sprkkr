@@ -31,7 +31,7 @@ def _potential_system_default_value(option):
 
 
 def fce():
-    from ...common.grammar_types import Table, Array, Sequence, Date, line_string
+    from ...common.grammar_types import Sequence, Date, line_string
     from ..potential_definitions import (
         PotSectionDefinition,
         ASEArraySectionDefinition,
