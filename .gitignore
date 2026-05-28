@@ -7,3 +7,4 @@ src/ase2sprkkr.egg-info/**
 docs/.doctrees/**
 docs/.buildinfo
 build/**
+**/__*/**
