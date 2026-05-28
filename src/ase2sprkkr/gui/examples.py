@@ -118,7 +118,7 @@ class Example:
         return textwrap.dedent(body)
 
     def satisfy_regex(self, regex):
-        re.compile(regex)
+        regex = re.compile(regex)
         return regex.search(self.name) or regex.search(self.source())
 
 
@@ -132,7 +132,7 @@ def list_of_examples(regex=None):
         Example(d) for d in base_dir.iterdir() if d.is_dir() and pattern.match(d.name)
     ]
     if regex:
-        re.compile(a)
-        out2 = [i for i in out if i.satisfy_regex(regex)]
+        regex = re.compile(regex)
+        out = [i for i in out if i.satisfy_regex(regex)]
 
     return out
