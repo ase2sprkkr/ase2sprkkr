@@ -33,15 +33,15 @@ class ProcessOutputParser:
     def _kill(self):
         if self.proc and self.proc.returncode is None:
             self.proc.kill()  # SIGKILL on Unix, TerminateProcess on Windows
-        proc.terminate()  # SIGTERM on Unix, CTRL-BREAK-ish on Windows
+        self.proc.terminate()  # SIGTERM on Unix, CTRL-BREAK-ish on Windows
 
         try:
             # 2) Give it time to clean up
-            run_coro_sync(asyncio.wait_for(proc.wait(), 0.1))
+            run_coro_sync(asyncio.wait_for(self.proc.wait(), 0.1))
             return
         except asyncio.TimeoutError:
             pass
-        proc.kill()  # SIGKILL / TerminateProcess
+        self.proc.kill()  # SIGKILL / TerminateProcess
 
     async def run_subprocess(self, read_args=[]):
 
@@ -81,7 +81,7 @@ class ProcessOutputParser:
         def replace_feed_data(stream_reader, kind):
             nonlocal exception
             if stream_reader._buffer:
-                process(stread_reader._buffer, kind)
+                process(stream_reader._buffer, kind)
 
             def feed_data(data):
                 nonlocal exception
