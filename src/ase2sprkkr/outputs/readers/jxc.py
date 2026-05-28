@@ -95,7 +95,7 @@ class JxcResult(TaskResult):
                 output_file.write_uppasd_file(file_name=file_name, directory=directory)
                 argname = args[key]
                 if argname in kwargs:
-                    warning.warn(
+                    warnings.warn(
                         f"Option `{argname}` already present in the kwargs. I have no place to wrute the name of {key} file into inpsd.dat"
                     )
                 else:
