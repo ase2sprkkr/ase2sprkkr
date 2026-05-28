@@ -14,7 +14,6 @@ from ...common.configuration_definitions import gather, switch
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 from functools import lru_cache
-import warnings
 from ase.units import Rydberg
 from ...gui.plot import colormesh, Multiplot
 
@@ -115,8 +114,8 @@ def create_definition():
                     check_sites(sites.start)
                     check_sites(sites.stop)
                     if sites.start >= sites.stop:
-                        raise ValueError(f"Empty sites range.")
-                elif not isinstance(sites, None):
+                        raise ValueError("Empty sites range.")
+                elif not sites is None:
                     raise ValueError(f"I can not filter sites by {sites}.")
 
                 data = data[sites].sum(axis=0)
@@ -138,18 +137,21 @@ def create_definition():
             }
 
             if c.MODE() == "CONST-E":
-                v = lambda v: np.array2string(np.array(v), precision=3, separator=",")
+
+                def ticks(v):
+                    return np.array2string(np.array(v), precision=3, separator=",")
+
                 kw.update(
                     {
                         "xticks": [0.0, 1.0],
                         "xticklabels": [
                             "" if c.VECK_START() is None else v(c.VECK_START()),
-                            v(c.VECK1()),
+                            ticks(c.VECK1()),
                         ],
                         "xlabel": r"Kx",
                         "ylabel": r"Ky",
                         "yticks": [1.0],
-                        "yticklabels": [v(c.VECK2())],
+                        "yticklabels": [ticks(c.VECK2())],
                     }
                 )
 
@@ -228,8 +230,6 @@ def create_definition():
                     return data.reshape(4, c.NK1(), nq, nk2)[type + 1]
 
         return index
-
-    norm = np.linalg.norm
 
     definition = create_output_file_definition(
         Keyword("BSF-SPOL", "BSF-SPN", "BSF"),
