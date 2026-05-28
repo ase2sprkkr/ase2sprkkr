@@ -117,3 +117,6 @@ wheel.exclude = [
 markers = [
 	"slow: long-running test (typically over about 1 second)",
 ]
+
+[tool.ruff.lint]
+ignore = ["E402", "E741"]
