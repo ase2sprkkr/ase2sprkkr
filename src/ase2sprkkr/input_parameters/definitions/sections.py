@@ -189,7 +189,7 @@ class TauSection(Section):
                 section.NKTAB3D.result = section.NKTAB3D()
                 section.NKTAB.result = section.NKTAB._create_dangerous_value(None)
                 if not section.KKRMODE():
-                    section.KKRMODE.result = "TB-KKR"
+                    section.KKRMODE.result = "TB"
 
 
 def _nktab_value(option):
@@ -305,7 +305,7 @@ regular mesh.
             expert=False,
             info="Cluster type calculation but for a molecular system. The system is specified as for CLUSTER.",
         ),
-        V("KKRMODE", Keyword("STANDARD", "TB", "IMPURITY"), is_optional=True),
+        V("KKRMODE", Keyword("STANDARD", "TB", "IMPURITY", aliases={'TB-KKR': 'TB'}), is_optional=True),
     ],
 )
 """The definition of the TAU section of the task input file """
