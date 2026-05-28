@@ -107,18 +107,20 @@ def create_definition():
                 check_sites(sites)
                 data = data[sites]
             else:
-                if isinstance(sites, list):
-                    for i in sites:
-                        check_sites(i)
-                elif isinstance(sites, slice):
-                    check_sites(sites.start)
-                    check_sites(sites.stop)
-                    if sites.start >= sites.stop:
-                        raise ValueError("Empty sites range.")
-                elif not sites is None:
-                    raise ValueError(f"I can not filter sites by {sites}.")
+                if sites is not None:
+                    if isinstance(sites, list):
+                        for i in sites:
+                            check_sites(i)
+                    elif isinstance(sites, slice):
+                        check_sites(sites.start)
+                        check_sites(sites.stop)
+                        if sites.start >= sites.stop:
+                            raise ValueError("Empty sites range.")
+                    else:
+                        raise ValueError(f"I can not filter sites by {sites}.")
+                    data = data[sites]
 
-                data = data[sites].sum(axis=0)
+                data = data.sum(axis=0)
 
             if negative:
                 vmax = max(np.abs(np.max(data)), np.abs(np.min(data)))
