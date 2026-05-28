@@ -64,8 +64,6 @@ class ProcessOutputParser:
 
         exception = None
 
-        patch = self.outfile or self.print_output or self.read_callback
-
         def process(data, kind):
             utf8 = None
             if self.print_output:
