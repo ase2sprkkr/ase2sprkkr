@@ -21,10 +21,9 @@ from ..common.decorators import cached_class_property, cache
 from .input_parameters import InputParameters, InputSection
 
 with generate_grammar():
-    section_line_ends = pp.ZeroOrMore(
-        pp.ZeroOrMore(pp.LineEnd().set_whitespace_chars("")) + pp.White(" \t")
-    )
-
+    endl = pp.LineEnd().set_whitespace_chars("")
+    white = pp.White(" \t")
+    section_line_ends = endl + pp.ZeroOrMore(pp.ZeroOrMore(white) +  endl) + white
 
 class InputValueDefinition(ConfigurationValueDefinition):
     """This class describes the format of one value of
