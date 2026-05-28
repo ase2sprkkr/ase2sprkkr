@@ -661,13 +661,13 @@ class VirtualDefinition(BaseDefinition):
     def create_object(self, container=None):
         return Dummy(self, container)
 
-    def __init__(self, name=None, template=None, condition=None):
+    def __init__(self, name=None, template=None, is_optional=False, condition=None):
         if not name:
             if not template:
                 template = self.__class__.__name__.upper()
             name = f"_{template}_{VirtualDefinition.counter}"
             VirtualDefinition.counter += 1
-        super().__init__(name, condition)
+        super().__init__(name, is_optional, condition)
 
     def all_names_in_grammar(self):
         return iter(())
@@ -684,8 +684,8 @@ class Stub(VirtualDefinition):
     """Item that allows to reuse existing item on the other place
     e.g. in another branch of Switch"""
 
-    def __init__(self, item, name=None, condition=None):
-        super().__init__(name=None, template=f"STUB_FOR_{name or item}", condition=None)
+    def __init__(self, item, name=None, is_optional=False, condition=None):
+        super().__init__(name=None, template=f"STUB_FOR_{name or item}", is_optional=is_optional, condition=condition)
         self.item = item
         self.condition = None
 
@@ -831,13 +831,16 @@ def switch(item, values, condition=lambda x: x, name=None):
     return (switch,) + tuple(switch.all_values())
 
 
+def _if_defined_helper(value):
+    return None if value is None else True
+
 def if_defined(item, values, not_values=[], name=None):
     if name is None:
         name = "IF_{item}"
     return switch(
         item,
         {None: not_values, True: values},
-        lambda x: None if x is None else True,
+        _if_defined_helper,
         name,
     )
 
@@ -855,7 +858,7 @@ class Switch(ControlDefinition):
 
     with generate_grammar():
         empty = pp.Empty()
-        empty.__xx = 1
+        empty.set_name("<DISABLED>")
 
     def __init__(self, item, values, condition=lambda x: x, name=None, template=None):
         """
@@ -894,7 +897,7 @@ class Switch(ControlDefinition):
         def create(n):
             nonlocal used
             if n.name in used:
-                return Stub(n.name, condition=self)
+                return Stub(n.name, is_optional= n.is_optional, condition=self)
             else:
                 used.add(n.name)
                 return n
@@ -942,12 +945,9 @@ class Switch(ControlDefinition):
         if not self.container.force_order:
             return grammar
         f = pp.Forward()
-        if definition.name in self.values.get(None, {}):
-            f <<= grammar
-            f.set_name(f"<IF* ndef THEN {str(grammar)}>")
-        else:
-            f <<= self.empty
-            f.set_name(f"<IF* False THEN {str(grammar)}")
+        f <<= self.empty
+        f.set_name(f"<IF* ? THEN {str(grammar)}")
+
         self._grammars[definition.name] = (grammar, f)
         return f
 
@@ -955,28 +955,27 @@ class Switch(ControlDefinition):
         grammars = self._grammars = {}
 
         def choose(value):
-            ok = self.values.get(value, {})
-            for i in ok.values():
-                tpl = grammars.get(i.name, None)
-                if tpl:
-                    f = tpl[1]
-                    f <<= tpl[0]
-                    f.set_name(f"<IF True THEN {str(tpl[0])}>")
-                elif i.output_definition.has_grammar():
-                    raise KeyError(
-                        f"In Switch, the item {i.name} for case {value} was not prepared"
-                    )
 
-            for i in set(self.all_values()).difference(ok.values()):
-                tpl = grammars.get(i.name, None)
-                if tpl:
-                    f = tpl[1]
-                    f.set_name(f"<IF False THEN {str(tpl[0])}>")
-                    f <<= self.empty
-                elif i.output_definition.has_grammar():
-                    raise KeyError(
-                        f"In Switch, the item {i.name} for case {value} was not prepared"
-                    )
+            def ok(original, forward):
+                forward <<= original
+                forward.set_name(f"<IF True THEN {str(original)}>")
+                return True
+
+            def not_ok(original, forward):
+                forward <<= self.empty
+                forward.set_name(f"<IF False THEN {str(original)}>")
+                return False
+
+            for k, items in self.values.items():
+                fn = ok if k == value else not_ok
+                for kk, i in items.items():
+                    tpl = grammars.get(i.name, None)
+                    if tpl:
+                        fn(tpl[0], tpl[1])
+                    elif i.output_definition.has_grammar():
+                        raise KeyError(
+                            f"In Switch, the item {i.name} for case {value} was not prepared"
+                        )
 
         if not self.container.force_order:
             return grammar

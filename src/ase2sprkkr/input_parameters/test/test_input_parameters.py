@@ -928,7 +928,7 @@ XSITES NR=3 FLAG
         assertParse = self.assertParse
         assertNotValid = self.assertNotValid
         ipd = cd.InputParametersDefinition.definition_from_dict(
-            {"ENERGY": [V("A", 1), *switch("A", {1: [V("B", 2)], 2: V("C", 3)})]}
+            {"ENERGY": [V("A", 1), *switch("A", {1: [V("B", 2, is_optional=True)], 2: V("C", 3, is_optional=True)})]}
         )
 
         ipd.custom_class = None
@@ -949,7 +949,10 @@ XSITES NR=3 FLAG
         assertNotValid("ENERGY A=1 B=2 C=1", grammar)
         assertNotValid("ENERGY A=2 B=2 C=1", grammar)
         assertNotValid("ENERGY A=3 C=3", grammar)
-
+        assertParse("ENERGY A=2", {"ENERGY": {"A": 2}}, grammar)
+        ipd["ENERGY"]["C"].is_optional = False
+        grammar = ipd.grammar()
+        assertNotValid("ENERGY A=2", grammar)
         ipd = cd.InputParametersDefinition.definition_from_dict(
             {
                 "ENERGY": [
@@ -957,8 +960,8 @@ XSITES NR=3 FLAG
                     *switch(
                         "A",
                         {
-                            1: [V("B", 2), V("D", 3), V("C", 1)],
-                            2: [V("C", 3), V("E", 1), V("B", 2)],
+                            1: [V("B", 2, is_optional=True), V("D", 3, is_optional=True), V("C", 1, is_optional=True)],
+                            2: [V("C", 3, is_optional=True), V("E", 1, is_optional=True), V("B", 2, is_optional=True)],
                         },
                     ),
                 ]
@@ -976,11 +979,23 @@ XSITES NR=3 FLAG
             {"ENERGY": {"A": 1, "B": 5, "D": 3, "C": 5}},
             grammar,
         )
+        assertParse("ENERGY A=2 B=7",{"ENERGY" : {'A':2, 'B':7}} , grammar)
+        assertParse("ENERGY A=1 B=7",{"ENERGY" : {'A':1, 'B': 7}} , grammar)
+        assertParse("ENERGY A=1 B=7 D=6",{"ENERGY" : {'A':1, 'B': 7, 'D':6}} , grammar)
+        assertNotValid("ENERGY A=1 D=2 B=3", grammar)
+        assertNotValid("ENERGY A=1 B=5 D=3 C=5 B=6", grammar)
+        assertNotValid("ENERGY A=1 B=5 D=3 C=5 E=6", grammar)
+        assertNotValid("ENERGY A=2 B=5 C=4 E=3", grammar)
 
+        ipd["ENERGY"]["B"].is_optional = False
+        ipd["ENERGY"]["C"].is_optional = False
+        ipd["ENERGY"]["D"].is_optional = False
+        ipd["ENERGY"]["E"].is_optional = False
         grammar = ipd.grammar()
         assertNotValid("ENERGY A=2 B=2", grammar)
         assertNotValid("ENERGY A=1 B=2", grammar)
         assertNotValid("ENERGY A=1 B=2 D=3", grammar)
+        assertNotValid("ENERGY A=1 D=2 B=3", grammar)
         assertNotValid("ENERGY A=1 B=5 D=3 C=5 B=6", grammar)
         assertNotValid("ENERGY A=1 B=5 D=3 C=5 E=6", grammar)
         assertNotValid("ENERGY A=2 B=5 C=4 E=3", grammar)

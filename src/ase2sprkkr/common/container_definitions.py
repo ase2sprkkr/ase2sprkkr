@@ -340,22 +340,22 @@ class ContainerDefinition(RealItemDefinition):
                     head_item, grammar_chain = item, grammar
                 else:
                     add = delimiter + grammar
-                    if item.is_optional:
-                        add = pp.Optional(add)
                     if item.condition and self.force_order:
                         add = item.condition.prepare_grammar(item, add)
+                    if item.is_optional:
+                        add = pp.Optional(add)
                     grammar_chain = grammar_chain + add
             yield head_item, grammar_chain
 
         if self.force_order:
-            init = pp.Empty()
+            init = pp.Empty().set_name("<INIT>")
 
             def set_loc(loc, toks):
                 init.location = loc
 
             init.set_parse_action(set_loc)
 
-            first = pp.Empty().add_condition(lambda loc, toks: loc == init.location)
+            first = pp.Empty().add_condition(lambda loc, toks: loc == init.location).set_name("<FIRST>")
             if custom_value:
                 cvs = pp.ZeroOrMore(custom_value + delimiter).set_name("<custom...>")
                 after = delimiter + cvs
@@ -374,12 +374,11 @@ class ContainerDefinition(RealItemDefinition):
                     else:
                         delim = inter
                     g = delim + g
+                    if head.condition:
+                        g = head.condition.prepare_grammar(head, g)
                     if head.is_optional:
                         g = pp.Optional(g)
-                    if head.condition:
-                        yield head.condition.prepare_grammar(head, g)
-                    else:
-                        yield g
+                    yield g
 
             values = pp.And([i for i in sequence()])
 
