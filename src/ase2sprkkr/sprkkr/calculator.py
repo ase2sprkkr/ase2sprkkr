@@ -322,7 +322,7 @@ class SPRKKR(Calculator):
             if not self._potential or isinstance(self._potential, (bool, str)):
                 return None
             if isinstance(self._potential, str):
-                potential = Potential.from_file(potential, atoms=atoms)
+                self._potential = Potential.from_file(self._potential)
             self._atoms = self._potential.atoms
         return self._atoms
 
