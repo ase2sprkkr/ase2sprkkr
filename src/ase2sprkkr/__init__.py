@@ -28,6 +28,8 @@ from .outputs.task_result import TaskResult  # NOQA E402
 """ Version of the package """
 from .version import __version__  # NOQA: F401, E402
 
+""" Enhance the atoms with sites array and other ASE2SPRKKR enhancements """
+promote_ase_atoms = SPRKKRAtoms.promote_ase_atoms
 
 def _init():
     import ase  # NOQA: F401
