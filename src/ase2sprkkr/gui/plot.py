@@ -127,12 +127,20 @@ def finish_plot(
         plt.savefig(filename, dpi=dpi)
 
     if layout == "constrained":
-        fig.set_constrained_layout_pads(
-            w_pad=0.1,  # horizontal outer padding
-            h_pad=0.1,  # vertical outer padding
-            wspace=0.05,
-            hspace=0.05,
-        )
+        try:
+            fig.get_layout_engine().set(
+                w_pad=0.1,  # horizontal outer padding
+                h_pad=0.1,  # vertical outer padding
+                wspace=0.05,
+                hspace=0.05,
+            )
+        except AttributeError:
+            fig.set_constrained_layout_pads(
+                w_pad=0.1,  # horizontal outer padding
+                h_pad=0.1,  # vertical outer padding
+                wspace=0.05,
+                hspace=0.05,
+            )
     if show:
         plt.show()
 
