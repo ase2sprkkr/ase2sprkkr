@@ -109,10 +109,10 @@
 
 
 <div class="viewcode-block" id="UnknownDataValue">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.UnknownDataValue.html#ase2sprkkr.output_files.output_files_definitions.UnknownDataValue">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.UnknownDataValue.html#ase2sprkkr.output_files.definitions.bsf.UnknownDataValue">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">UnknownDataValue</span><span class="p">(</span><span class="n">ConfigurationValue</span><span class="p">):</span>
 <div class="viewcode-block" id="UnknownDataValue.as_array">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.UnknownDataValue.html#ase2sprkkr.output_files.output_files_definitions.UnknownDataValue.as_array">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.UnknownDataValue.html#ase2sprkkr.output_files.definitions.bsf.UnknownDataValue.as_array">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">as_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -123,14 +123,14 @@
 
 
 <div class="viewcode-block" id="OutputFile">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.output_files_definitions.OutputFile">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.definitions.bsf.OutputFile">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OutputFile</span><span class="p">(</span><span class="n">ConfigurationFile</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Objects of this class holds datas of an output file&quot;&quot;&quot;</span>
 
     <span class="n">plot_parameters</span> <span class="o">=</span> <span class="p">{}</span>
 
 <div class="viewcode-block" id="OutputFile.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.output_files_definitions.OutputFile.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.definitions.bsf.OutputFile.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="kc">None</span>
@@ -138,14 +138,14 @@
 
 
 <div class="viewcode-block" id="OutputFile.can_be_plotted">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.output_files_definitions.OutputFile.can_be_plotted">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.definitions.bsf.OutputFile.can_be_plotted">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">can_be_plotted</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s2">&quot;plot&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="OutputFile.set_potential_filename">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.output_files_definitions.OutputFile.set_potential_filename">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.definitions.bsf.OutputFile.set_potential_filename">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_potential_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential_filename</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;potential_filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">potential_filename</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;potential&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
@@ -175,7 +175,7 @@
         <span class="p">)</span>
 
 <div class="viewcode-block" id="OutputFile.potential_filename">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.output_files_definitions.OutputFile.potential_filename">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.definitions.bsf.OutputFile.potential_filename">[docs]</a>
     <span class="nd">@potential_filename</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">potential_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_potential_filename</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
@@ -186,7 +186,7 @@
         <span class="k">return</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
 
 <div class="viewcode-block" id="OutputFile.potential">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.output_files_definitions.OutputFile.potential">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.definitions.bsf.OutputFile.potential">[docs]</a>
     <span class="nd">@potential</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Potential</span><span class="p">):</span>
@@ -228,14 +228,14 @@
         <span class="k">return</span> <span class="n">out</span>
 
 <div class="viewcode-block" id="OutputFile.definition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.output_files_definitions.OutputFile.definition">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.definitions.bsf.OutputFile.definition">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">definition</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="OutputFile.from_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.output_files_definitions.OutputFile.from_file">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.OutputFile.html#ase2sprkkr.output_files.definitions.bsf.OutputFile.from_file">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">first_try</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">try_only</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -328,22 +328,22 @@
 
 
 <div class="viewcode-block" id="CommonOutputFile">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.output_files_definitions.CommonOutputFile">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.definitions.bsf.CommonOutputFile">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CommonOutputFile</span><span class="p">(</span><span class="n">OutputFile</span><span class="p">):</span>
 <div class="viewcode-block" id="CommonOutputFile.n_atoms">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.output_files_definitions.CommonOutputFile.n_atoms">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.definitions.bsf.CommonOutputFile.n_atoms">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">n_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ORBITALS</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CommonOutputFile.n_types">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.output_files_definitions.CommonOutputFile.n_types">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.definitions.bsf.CommonOutputFile.n_types">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">n_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CommonOutputFile.site_type_index">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.output_files_definitions.CommonOutputFile.site_type_index">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.definitions.bsf.CommonOutputFile.site_type_index">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">site_type_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">type</span>
@@ -354,7 +354,7 @@
 
 
 <div class="viewcode-block" id="CommonOutputFile.n_orbitals">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.output_files_definitions.CommonOutputFile.n_orbitals">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.definitions.bsf.CommonOutputFile.n_orbitals">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">n_orbitals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
         <span class="nb">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_type_index</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ORBITALS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="nb">type</span><span class="p">][</span><span class="s2">&quot;IQAT&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]][</span><span class="s2">&quot;NLQ&quot;</span><span class="p">]</span></div>
@@ -363,10 +363,10 @@
 
 
 <div class="viewcode-block" id="Arithmetic">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.Arithmetic.html#ase2sprkkr.output_files.output_files_definitions.Arithmetic">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.Arithmetic.html#ase2sprkkr.output_files.definitions.bsf.Arithmetic">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Arithmetic</span><span class="p">:</span>
 <div class="viewcode-block" id="Arithmetic._check_arithmetic">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.Arithmetic.html#ase2sprkkr.output_files.output_files_definitions.Arithmetic._check_arithmetic">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.Arithmetic.html#ase2sprkkr.output_files.definitions.bsf.Arithmetic._check_arithmetic">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_check_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_assert_arithmetic&quot;</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
@@ -402,7 +402,7 @@
         <span class="k">return</span> <span class="n">out</span>
 
 <div class="viewcode-block" id="Arithmetic._do_arithmetic">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.Arithmetic.html#ase2sprkkr.output_files.output_files_definitions.Arithmetic._do_arithmetic">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.output_files.Arithmetic.html#ase2sprkkr.output_files.definitions.bsf.Arithmetic._do_arithmetic">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_do_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run given function for all &quot;summable/subtractable/etc... data&quot;&quot;&quot;</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arithmetic_values</span>

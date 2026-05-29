@@ -102,9 +102,9 @@ you can do it manually, if needed.
 ::
 
    from ase.build import bulk
-   from ase2sprkkr.sprkkr.sprkkr_atoms import SPRKKRAtoms
    atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
-   atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
+   from ase2sprkkr import promote_ase_atoms
+   atoms = promote_ase_atoms(atoms)
 
 Promoted atoms have the sites attribute, which is an array of the sites
 in the primitive cell. If two sites are indistinguishable, they share
@@ -135,7 +135,7 @@ accordingly --- or just query the occupation of a given atomic type:
 Some codes stores the occupation information in
 ``atoms.info['occupancy']``. To allow interoperability with these codes
 the occupancy is readed from this array when
-meth:`SPRKKRAtoms.promote_ase_atoms<ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms>` is called and the
+func:`promote_ase_atoms<ase2sprkkr.promote_ase_atoms>` is called and the
 ``atoms.info['occupancy']`` is updated each time the
 ``atoms.sites[x].occupation`` is changed.
 

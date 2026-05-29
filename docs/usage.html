@@ -193,9 +193,9 @@ the atoms object to the ASE2SPRKKR one. It is done automatically, if you
 pass the atoms object into the SPRKKR calculator constructor, however,
 you can do it manually, if needed.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase.build</span><span class="w"> </span><span class="kn">import</span> <span class="n">bulk</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.sprkkr_atoms</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 <span class="n">atoms</span><span class="o">=</span><span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;LiCl&#39;</span><span class="p">,</span> <span class="s1">&#39;rocksalt&#39;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">5.64</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">atoms</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">promote_ase_atoms</span>
+<span class="n">atoms</span> <span class="o">=</span> <span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Promoted atoms have the sites attribute, which is an array of the sites
@@ -221,7 +221,7 @@ accordingly — or just query the occupation of a given atomic type:</p>
 <p>Some codes stores the occupation information in
 <code class="docutils literal notranslate"><span class="pre">atoms.info['occupancy']</span></code>. To allow interoperability with these codes
 the occupancy is readed from this array when
-meth:<cite>SPRKKRAtoms.promote_ase_atoms&lt;ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms&gt;</cite> is called and the
+func:<cite>promote_ase_atoms&lt;ase2sprkkr.promote_ase_atoms&gt;</cite> is called and the
 <code class="docutils literal notranslate"><span class="pre">atoms.info['occupancy']</span></code> is updated each time the
 <code class="docutils literal notranslate"><span class="pre">atoms.sites[x].occupation</span></code> is changed.</p>
 </section>

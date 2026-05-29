@@ -3,6 +3,7 @@ Changelog
 
 Version 3.5
 -----------
+* promote_ase_atoms can be directly imported from ase2sprkkr root package
 * JXC output file parsing and plotting
 * XAS output file parsing and plotting
 * Semiinfinite structures building improved
