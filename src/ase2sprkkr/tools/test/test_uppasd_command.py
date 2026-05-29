@@ -82,6 +82,8 @@ class TestUppasdCommand(TestCase):
         )
 
         args = SimpleNamespace(
+            outfile=None,
+            inpsd=None,
             pot_file="calc.pot",
             jxc_file="calc_XCPLTEN_Jij.dat",
             dmi_file=None,
@@ -99,7 +101,7 @@ class TestUppasdCommand(TestCase):
             font_size=14,
         )
 
-        uppasd.run(args, {})
+        uppasd.run(args, {'debug':True})
 
         assert jxc_output.create_selector_calls == [
             {
@@ -148,6 +150,8 @@ class TestUppasdCommand(TestCase):
         )
 
         args = SimpleNamespace(
+            outfile=None,
+            inpsd=None,
             pot_file="calc.pot",
             jxc_file="calc_XCPLTEN_Jij.dat",
             dmi_file=None,
@@ -165,7 +169,7 @@ class TestUppasdCommand(TestCase):
             font_size=14,
         )
 
-        uppasd.run(args)
+        uppasd.run(args, {'debug':True})
 
         assert jxc_output.create_selector_calls == [
             {
