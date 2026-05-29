@@ -156,8 +156,12 @@ class DOSOutputFile(CommonOutputFile):
         dpi=600,
         **kwargs,
     ):
+        n_types = self.n_types()
+        if n_types > 1:
+            n_types += 1
         if isinstance(layout, int):
-            layout = ((self.n_types()) // layout + 1, layout)
+            layout = ( (n_types - 1) // layout + 1, min(layout, n_types))
+        print(layout)
         with Multiplot(
             layout=layout,
             figsize=figsize,
@@ -167,7 +171,7 @@ class DOSOutputFile(CommonOutputFile):
             dpi=dpi,
             **kwargs,
         ) as mp:
-            for dos in self.iterate_dos(spin, l, total=True):
+            for dos in self.iterate_dos(spin, l, total=n_types > 1):
                 mp.plot(dos)
 
     def __getitem__(self, name):
