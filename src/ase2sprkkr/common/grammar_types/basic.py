@@ -7,6 +7,7 @@ from typing import Optional
 import numpy as np
 import re
 import unyt
+import itertools
 from unyt.array import unyt_quantity
 
 from ..decorators import add_to_signature, cached_property
@@ -452,7 +453,7 @@ class Keyword(GrammarType):
             self._grammar = (
                 optional_quote
                 + pp.MatchFirst(
-                    (pp.CaselessKeyword(str(i)) for i in self.keywords)
+                    (pp.CaselessKeyword(str(i)) for i in itertools.chain(self.keywords, self.aliases.keys()) )
                 ).set_parse_action(self._parse_keyword_token)
                 + optional_quote
             )
