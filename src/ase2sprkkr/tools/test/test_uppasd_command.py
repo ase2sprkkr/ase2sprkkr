@@ -99,7 +99,7 @@ class TestUppasdCommand(TestCase):
             font_size=14,
         )
 
-        uppasd.run(args)
+        uppasd.run(args, {})
 
         assert jxc_output.create_selector_calls == [
             {
