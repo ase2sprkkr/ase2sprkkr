@@ -2,16 +2,16 @@
 Unlike ``ase2sprkkr.sprkkr.build``, this module contains generic
 routines, possible usable with plain ASE (with any calculator).
 """
-
 from fractions import Fraction
-from math import gcd, lcm
 import numbers
-
 import numpy as np
 import ase
 from typing import List, Union, Optional, Tuple
 from ase.build import surface
 
+from ..common import backward_compatibility
+#now you can import lcm
+from math import gcd, lcm
 
 def aperiodic_times(
     atoms: ase.Atoms,

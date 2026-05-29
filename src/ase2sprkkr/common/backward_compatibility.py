@@ -2,7 +2,15 @@
 
 import functools
 import enum
+import math
 from . import decorators
+
+if not hasattr(math, 'lcm'):
+
+   def lcm(a, b):
+       return abs(a * b) // math.gcd(a, b)
+
+   math.lcm = lcm
 
 if not hasattr(functools, "cache"):
     functools.cache = functools.lru_cache(maxsize=None)
