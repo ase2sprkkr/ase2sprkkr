@@ -3,9 +3,8 @@ Changelog
 
 Version 3.5
 -----------
-* JXC output parsed
-* JXC output files plotting
-* XAS plotting
+* JXC output file parsing and plotting
+* XAS output file parsing and plotting
 * Semiinfinite structures building improved
 * Uppasd improvements: calling sd directly, input file stub writing
 * Better multiple plots layout
