@@ -17,25 +17,25 @@ test:
 doc: doc-gather doc-build doc-readme
 
 doc-gather: doc-clean
-	(cd sphinx ; sphinx-apidoc -feM -o ./auto ../src/ase2sprkkr \
+	(cd doc_src ; sphinx-apidoc -feM -o ./auto ../src/ase2sprkkr \
 	"../src/ase2sprkkr/*/test" \
 	"../src/ase2sprkkr/*/test/*" \
 	)
 
 doc-clean:
-	rm -rf sphinx/auto/*
+	rm -rf doc_src/auto/*
 	rm -rf docs/*
 	rm -rf docs/.??*
 
 doc-debug:
-	(cd docs;  sphinx-build -P sphinx .)
+	(cd docs;  sphinx-build -P doc_src .)
 
 doc-build:
-	sphinx-build -j auto sphinx docs/
-	cp -r sphinx/_root/* sphinx/_root/.??* docs/
+	sphinx-build -j auto doc_src docs/
+	cp -r doc_src/_root/* doc_src/_root/.??* docs/
 
 doc-readme:
-	cd sphinx; pandoc README.rst -o ../README.md
+	cd doc_src; pandoc README.rst -o ../README.md
 
 package: | package_clean
 	python -m build --sdist
