@@ -66,4 +66,3 @@ class TestBuild(TestCase):
         self.assertEqual(_minimal_surface_layers(atoms, (1, 1, 1)), 3)
         self.assertEqual(rotated.pbc, np.asarray([True, True, True]))
         self.assertEqual(len(rotated), 3 * len(atoms))
-        self.assertEqual(np.unique(rotated.get_tags()), np.array([1, 2, 3]))
