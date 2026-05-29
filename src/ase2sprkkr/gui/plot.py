@@ -145,7 +145,7 @@ def finish_plot(
         plt.show()
 
 
-def auto_range(rng, data):
+def auto_range(rng, data, eps=1e-4):
     """
     Fill the missing value in the given range by the data.
 
@@ -158,11 +158,21 @@ def auto_range(rng, data):
     (2, 4)
     """
     if rng is None:
-        return (np.min(data), np.max(data))
-    return (
-        rng[0] if rng[0] is not None else np.min(data),
-        rng[1] if rng[1] is not None else np.max(data),
-    )
+        out = (np.min(data), np.max(data))
+    else:
+        out = (
+            rng[0] if rng[0] is not None else np.min(data),
+            rng[1] if rng[1] is not None else np.max(data),
+        )
+    if out[0] == out[1]:
+        val = out[0]
+        if val == 0:
+            out = (val - eps, val + eps)
+        elif out[0] > 0:
+            out = (max(val - eps, 0), val + eps)
+        else:
+            out = (val - eps, min(val + eps, 0))
+    return out
 
 
 def plotting_function(func):
