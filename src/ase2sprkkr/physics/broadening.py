@@ -47,9 +47,7 @@ def create_gaussian_broadener(
             raise ValueError("x must be strictly increasing.")
         return dx
 
-    def gaussian_weight_matrix() -> Tuple[
-        Union[np.ndarray, "sp.csr_matrix"], np.ndarray
-    ]:
+    def gaussian_weight_matrix() -> Tuple[Union[np.ndarray, "sp.csr_matrix"], np.ndarray]:
         """
         Build weight matrix W such that y_out = W @ y_in (if include_dx=True).
 
@@ -147,9 +145,7 @@ def create_gaussian_broadener(
                     xi = x_sorted[col]
                     j = np.searchsorted(xout_sorted, xi)
                     j = np.clip(j, 0, M - 1)
-                    if j > 0 and abs(xout_sorted[j - 1] - xi) <= abs(
-                        xout_sorted[j] - xi
-                    ):
+                    if j > 0 and abs(xout_sorted[j - 1] - xi) <= abs(xout_sorted[j] - xi):
                         j -= 1
                     # zero the column and place delta mass:
                     W_sorted[:, col] = 0.0
@@ -177,9 +173,7 @@ def create_gaussian_broadener(
                     # delta -> nearest output row
                     j = np.searchsorted(xout_sorted, xi)
                     j = np.clip(j, 0, M - 1)
-                    if j > 0 and abs(xout_sorted[j - 1] - xi) <= abs(
-                        xout_sorted[j] - xi
-                    ):
+                    if j > 0 and abs(xout_sorted[j - 1] - xi) <= abs(xout_sorted[j] - xi):
                         j -= 1
                     rows.append(j)
                     cols.append(i)
@@ -290,10 +284,7 @@ def create_lorentz_broadener(x_orig, gamma, wlortab=None, nelag=5, ylag=True):
     x1_low = x[0] - j_arr * de  # shape (4,1)
     x2_low = x1_low + de  # shape (4,1)
     G_low = gamma + wlortab[0]
-    W_low = (
-        np.arctan((x2_low - x[None, :]) / G_low)
-        - np.arctan((x1_low - x[None, :]) / G_low)
-    ) / np.pi
+    W_low = (np.arctan((x2_low - x[None, :]) / G_low) - np.arctan((x1_low - x[None, :]) / G_low)) / np.pi
     # W_low shape: (4, N)
 
     if ylag and N >= 2:
@@ -329,10 +320,7 @@ def create_lorentz_broadener(x_orig, gamma, wlortab=None, nelag=5, ylag=True):
     x1_high = x[-1] + np.arange(0, 4)[:, None] * de
     x2_high = x1_high + de
     G_high = gamma + wlortab[-1]
-    W_high = (
-        np.arctan((x2_high - x[None, :]) / G_high)
-        - np.arctan((x1_high - x[None, :]) / G_high)
-    ) / np.pi
+    W_high = (np.arctan((x2_high - x[None, :]) / G_high) - np.arctan((x1_high - x[None, :]) / G_high)) / np.pi
     L[:, -1] += W_high.sum(axis=0)
 
     def broaden_y(y_orig):

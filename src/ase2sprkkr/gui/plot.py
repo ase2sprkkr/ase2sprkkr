@@ -29,12 +29,7 @@ def normalize_rc_params(params):
 
 
 rc_params = normalize_rc_params(
-    {
-        "font.family": "serif",
-        "mathtext.fontset": "cm",
-        "font.size": 10,
-        "font.weight": "normal",
-    }
+    {"font.family": "serif", "mathtext.fontset": "cm", "font.size": 10, "font.weight": "normal"}
 )
 
 
@@ -53,14 +48,7 @@ def combine_colormaps(cmap1, cmap2, n1, n2, index1, index2):
     return combined_cmap
 
 
-def combined_colormap(
-    range1=(0.5, 0),
-    range2=(0.15, 1),
-    n1=8000,
-    n2=15000,
-    cmap1=plt.cm.bwr,
-    cmap2=plt.cm.jet,
-):
+def combined_colormap(range1=(0.5, 0), range2=(0.15, 1), n1=8000, n2=15000, cmap1=plt.cm.bwr, cmap2=plt.cm.jet):
     # Create the new colormap
     return combine_colormaps(cmap1, cmap2, n1, n2, range1, range2)
 
@@ -77,12 +65,7 @@ def create_rc_context(latex: Optional[bool] = None):
 
 @contextmanager
 def single_plot(
-    filename: Optional[str] = None,
-    show: Optional[bool] = None,
-    window_title=None,
-    dpi=600,
-    latex=None,
-    figsize=(6, 4),
+    filename: Optional[str] = None, show: Optional[bool] = None, window_title=None, dpi=600, latex=None, figsize=(6, 4)
 ):
     """
     Creates single plot according to the given function a either show it or save it.
@@ -109,13 +92,7 @@ def single_plot(
         finish_plot(fig, filename, show, dpi)
 
 
-def finish_plot(
-    fig,
-    filename: Optional[str] = None,
-    show: Optional[bool] = None,
-    dpi=600,
-    layout=False,
-):
+def finish_plot(fig, filename: Optional[str] = None, show: Optional[bool] = None, dpi=600, layout=False):
     """
     Show the plot and/or save it to the given file
     """
@@ -149,21 +126,19 @@ def auto_range(rng, data, eps=1e-4):
     """
     Fill the missing value in the given range by the data.
 
-    >>> if np.__version__ > '2.0': np.set_printoptions(legacy='1.25')
-    >>> auto_range( (None, None), [2,5,-3,7] )
+    >>> if np.__version__ > "2.0":
+    ...     np.set_printoptions(legacy="1.25")
+    >>> auto_range((None, None), [2, 5, -3, 7])
     (-3, 7)
-    >>> auto_range( (None, 4), [2,5,-3,7] )
+    >>> auto_range((None, 4), [2, 5, -3, 7])
     (-3, 4)
-    >>> auto_range( (2, 4), [2,5,-3,7] )
+    >>> auto_range((2, 4), [2, 5, -3, 7])
     (2, 4)
     """
     if rng is None:
         out = (np.min(data), np.max(data))
     else:
-        out = (
-            rng[0] if rng[0] is not None else np.min(data),
-            rng[1] if rng[1] is not None else np.max(data),
-        )
+        out = (rng[0] if rng[0] is not None else np.min(data), rng[1] if rng[1] is not None else np.max(data))
     if out[0] == out[1]:
         val = out[0]
         if val == 0:
@@ -188,24 +163,14 @@ def plotting_function(func):
     @add_to_signature(func)
     @functools.wraps(func)
     def plot_function(
-        *args,
-        filename=None,
-        show=None,
-        dpi=600,
-        latex=None,
-        figsize=(6, 4),
-        callback=None,
-        axis=None,
-        **kwargs,
+        *args, filename=None, show=None, dpi=600, latex=None, figsize=(6, 4), callback=None, axis=None, **kwargs
     ):
         if axis:
             func(*args, axis=axis, **kwargs)
             if callback:
                 callback(axis)
         else:
-            with single_plot(
-                filename=filename, show=show, dpi=dpi, latex=latex, figsize=figsize
-            ) as axis:
+            with single_plot(filename=filename, show=show, dpi=dpi, latex=latex, figsize=figsize) as axis:
                 func(*args, axis=axis, **kwargs)
                 if callback:
                     callback(axis)
@@ -214,15 +179,7 @@ def plotting_function(func):
 
 
 def set_up_common_plot(
-    axis,
-    title=None,
-    xlabel=None,
-    ylabel=None,
-    xticklabels=None,
-    yticklabels=None,
-    xticks=None,
-    yticks=None,
-    **kwargs,
+    axis, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None, xticks=None, yticks=None, **kwargs
 ):
     loc = locals()
     """
@@ -230,23 +187,13 @@ def set_up_common_plot(
    """
     args = {
         n: loc[n]
-        for n in (
-            "xlabel",
-            "ylabel",
-            "xticks",
-            "yticks",
-            "xticklabels",
-            "yticklabels",
-            "title",
-        )
+        for n in ("xlabel", "ylabel", "xticks", "yticks", "xticklabels", "yticklabels", "title")
         if n != "kwargs" and loc[n] is not None
     }
     kwargs.update(args)
     for name in kwargs:
         if not hasattr(axis, "set_" + name):
-            raise ValueError(
-                f"Axis has not set_{name} method, thus I don't know what to do with {name} argument"
-            )
+            raise ValueError(f"Axis has not set_{name} method, thus I don't know what to do with {name} argument")
         getattr(axis, "set_" + name)(kwargs[name])
 
 
@@ -304,9 +251,7 @@ def colormesh(
 
     axis.set_xlim(auto_range(xrange, x))
     axis.set_ylim(auto_range(yrange, y))
-    axis.pcolormesh(
-        x, y, c, cmap=colormap, shading="gouraud", norm=norm, vmin=vmin, vmax=vmax
-    )
+    axis.pcolormesh(x, y, c, cmap=colormap, shading="gouraud", norm=norm, vmin=vmin, vmax=vmax)
     if show_zero_line:
         opts = {"lw": 1.0, "color": "black"}
         if isinstance(show_zero_line, dict):
@@ -317,10 +262,7 @@ def colormesh(
 
     if colorbar:
         axis.figure.colorbar(
-            plt.cm.ScalarMappable(
-                matplotlib.colors.Normalize(vmin=vmin, vmax=vmax), cmap=colormap
-            ),
-            ax=axis,
+            plt.cm.ScalarMappable(matplotlib.colors.Normalize(vmin=vmin, vmax=vmax), cmap=colormap), ax=axis
         )
 
 
@@ -345,9 +287,7 @@ class Multiplot:
         self.show = show
         self.dpi = dpi
         self.latex = latex
-        self.layout_kind = (
-            layout_kind  #'constrained', 'tight', 'adjust', {dict for adjust}
-        )
+        self.layout_kind = layout_kind  #'constrained', 'tight', 'adjust', {dict for adjust}
 
         if separate_plots:
             self.figsize = figsize
@@ -355,27 +295,15 @@ class Multiplot:
             self.figure = None
         else:
             self.figure, self.axes = plt.subplots(
-                figsize=figsize,
-                nrows=layout[0],
-                ncols=layout[1],
-                constrained_layout=layout_kind == "constrained",
+                figsize=figsize, nrows=layout[0], ncols=layout[1], constrained_layout=layout_kind == "constrained"
             )
             if layout_kind == "adjust" or isinstance(layout_kind, dict):
-                adj = {
-                    "left": 0.12,
-                    "right": 0.95,
-                    "bottom": 0.17,
-                    "top": 0.90,
-                    "hspace": 0.75,
-                    "wspace": 0.4,
-                }
+                adj = {"left": 0.12, "right": 0.95, "bottom": 0.17, "top": 0.90, "hspace": 0.75, "wspace": 0.4}
                 if isinstance(layout_kind, dict):
                     adj.update(self.layout_kind)
                 plt.subplots_adjust(**adj)
 
-            self.free_axes = np.atleast_1d(self.axes).ravel(
-                order="C" if not updown_layout else "F"
-            )
+            self.free_axes = np.atleast_1d(self.axes).ravel(order="C" if not updown_layout else "F")
             self.free_axes = [i for i in self.free_axes[::-1]]
 
         self.specific_kwargs = {k: v for k, v in kwargs.items() if str(k).isnumeric()}
@@ -395,9 +323,7 @@ class Multiplot:
         if not self.separate_plots:
             for i in self.free_axes:
                 i.set_visible(False)
-            finish_plot(
-                self.figure, self.filename, self.show, self.dpi, layout=self.layout_kind
-            )
+            finish_plot(self.figure, self.filename, self.show, self.dpi, layout=self.layout_kind)
             return self.context.__exit__(type, value, traceback)
         else:
             if self.separate_plots != "show":
@@ -414,7 +340,10 @@ class Multiplot:
             kw.update(self.specific_kwargs.get(self.index, {}))
             kw.update(kwargs)
             if not plot_function:
-                def plot_function(**kwargs): return option.plot(**kwargs)
+
+                def plot_function(**kwargs):
+                    return option.plot(**kwargs)
+
             plot_function(axis=axis, **kw)
 
     @contextmanager

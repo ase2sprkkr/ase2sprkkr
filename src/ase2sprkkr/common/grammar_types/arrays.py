@@ -9,13 +9,7 @@ from typing import List, Optional, Union
 from ..alternative_types import numpy_types
 
 from ..grammar import generate_grammar, delimitedList, line_end, White
-from .grammar_type import (
-    GrammarType,
-    compare_numpy_values,
-    type_from_type,
-    type_from_default_value,
-    TypedGrammarType,
-)
+from .grammar_type import GrammarType, compare_numpy_values, type_from_type, type_from_default_value, TypedGrammarType
 from ..decorators import add_to_signature, cached_property
 from .basic import Integer, Real, Unsigned, real
 
@@ -107,9 +101,7 @@ class Array(GrammarType):
 
             grammar = self.type.grammar()
             if self.write_length:
-                grammar = pp.Word(pp.nums).set_parse_action(
-                    lambda t: int(t[0])
-                ) + pp.ZeroOrMore(delimiter + grammar)
+                grammar = pp.Word(pp.nums).set_parse_action(lambda t: int(t[0])) + pp.ZeroOrMore(delimiter + grammar)
 
                 def check(x):
                     if len(x) != x[0] + 1:
@@ -191,17 +183,13 @@ class Array(GrammarType):
         else:
             cls = np.ndarray
         if not isinstance(value, cls):
-            return (
-                f"A value of the {cls} type is required, a {value.__class__} is given"
-            )
+            return f"A value of the {cls} type is required, a {value.__class__} is given"
 
         for i, v in enumerate(value):
             try:
                 self.type.validate(v, why="set")
             except ValueError as e:
-                raise ValueError(
-                    "Value {} in the set is incorrect: {}".format(i, str(e))
-                ) from e
+                raise ValueError("Value {} in the set is incorrect: {}".format(i, str(e))) from e
         if self.min_length is not None and len(value) < self.min_length:
             return f"The array should be at least {self.min_length} items long, it has {len(value)} items"
         if self.max_length is not None and len(value) > self.max_length:
@@ -271,9 +259,7 @@ class Array(GrammarType):
 class SetOf(Array):
     """Set of values of the same type. E.g. {1,2,3}"""
 
-    delimiter = pp.Suppress(pp.Literal(",") | pp.Literal(";") | White(" \t")).set_name(
-        "[,; ]"
-    )
+    delimiter = pp.Suppress(pp.Literal(",") | pp.Literal(";") | White(" \t")).set_name("[,; ]")
     delimiter_str = ","
 
     @add_to_signature(Array.__init__)
@@ -283,9 +269,7 @@ class SetOf(Array):
         super().__init__(type, *args, **kwargs)
 
     def transform_grammar(self, grammar, param_name=False):
-        return grammar | self.type.grammar(param_name).copy().add_parse_action(
-            lambda x: np.atleast_1d(x.asList())
-        )
+        return grammar | self.type.grammar(param_name).copy().add_parse_action(lambda x: np.atleast_1d(x.asList()))
 
     def copy_value(self, value):
         return copy.deepcopy(value)
@@ -319,10 +303,7 @@ class Complex(TypedGrammarType):
         return complex(value)
 
     def _validate(self, value, why="set"):
-        return (
-            isinstance(value, (complex, np.complexfloating))
-            or "A complex value required, {value} given."
-        )
+        return isinstance(value, (complex, np.complexfloating)) or "A complex value required, {value} given."
 
     def _grammar_name(self):
         return "{complex (as 2 reals)}"
@@ -354,11 +335,7 @@ class Sequence(GrammarType):
     ):
         super().__init__(**kwargs)
         if names:
-            self.names = (
-                names
-                if isinstance(names, dict)
-                else {name: i for i, name in enumerate(names)}
-            )
+            self.names = names if isinstance(names, dict) else {name: i for i, name in enumerate(names)}
             self.value_type = namedtuple("_".join(names), names)
             self.value_constructor = self.value_type
             self.value_constructor = self.value_type
@@ -374,10 +351,7 @@ class Sequence(GrammarType):
             format = {type_from_type(k): v for k, v in format.items()}
         if isinstance(format, (str, dict)):
             format = itertools.repeat(format)
-        self.types = [
-            type_from_default_value(i, dfs, format_all=format_all)
-            for i, dfs in zip(types, format)
-        ]
+        self.types = [type_from_default_value(i, dfs, format_all=format_all) for i, dfs in zip(types, format)]
         if allowed_values and not isinstance(allowed_values, set):
             allowed_values = set(allowed_values)
         self.allowed_values = allowed_values
@@ -397,13 +371,10 @@ class Sequence(GrammarType):
             return g
 
         grammars = [grm(i) for i in self.types]
-        grammar = pp.And(grammars).set_parse_action(
-            lambda x: self.value_constructor(*x)
-        )
+        grammar = pp.And(grammars).set_parse_action(lambda x: self.value_constructor(*x))
         if self.allowed_values is not None:
             grammar.add_condition_ex(
-                lambda x: x[0] in self.allowed_values,
-                lambda x: f"{x[0]} is not in the list of allowed values",
+                lambda x: x[0] in self.allowed_values, lambda x: f"{x[0]} is not in the list of allowed values"
             )
         return grammar
 
@@ -453,15 +424,7 @@ class Sequence(GrammarType):
 
         if self.names:
             for n, i in self.names.items():
-                (
-                    lambda i: setattr(
-                        cls,
-                        n,
-                        property(
-                            lambda self: self[i], lambda self, v: self.__setitem__(i, v)
-                        ),
-                    )
-                )(i)
+                (lambda i: setattr(cls, n, property(lambda self: self[i], lambda self, v: self.__setitem__(i, v))))(i)
 
         option.__class__ = cls
 
@@ -636,17 +599,11 @@ class Table(GrammarType):
         self.group_size_format = group_size_format
 
         self.sequence = Sequence(
-            *columns,
-            format=format,
-            format_all=format_all,
-            condition=row_condition,
-            default_values=default_values,
+            *columns, format=format, format_all=format_all, condition=row_condition, default_values=default_values
         )
         if repeat_sparse:
             if self.names:
-                repeat_sparse = [
-                    i for i, name in enumerate(self.names) if name in repeat_sparse
-                ]
+                repeat_sparse = [i for i, name in enumerate(self.names) if name in repeat_sparse]
             self.repeat_sparse_sequence = Sequence(
                 *(c for i, c in enumerate(columns) if i in repeat_sparse),
                 format=format,
@@ -661,14 +618,10 @@ class Table(GrammarType):
 
         self.named_result = named_result
         self.length = length
-        self.numbering = SpecialColumn(
-            self, numbering, numbering_label, numbering_format
-        )
+        self.numbering = SpecialColumn(self, numbering, numbering_label, numbering_format)
         self.free_numbering = free_numbering
         self.grouping = SpecialColumn(self, grouping, grouping_label, grouping_format)
-        self.groups_as_list = bool(self.grouping) and (
-            groups_as_list if groups_as_list is not None else not group_size
-        )
+        self.groups_as_list = bool(self.grouping) and (groups_as_list if groups_as_list is not None else not group_size)
 
     def special_columns(self):
         if self.grouping:
@@ -693,10 +646,7 @@ class Table(GrammarType):
                 grp_size.group_size = x[0]
 
             grp_size = Unsigned.I.grammar().copy().set_parse_action(set_g_size)
-            grammar = (
-                pp.Suppress(pp.CaselessKeyword(self.group_size) + grp_size + "\n")
-                + grammar
-            )
+            grammar = pp.Suppress(pp.CaselessKeyword(self.group_size) + grp_size + "\n") + grammar
 
         if self.header:
             if self.free_header:
@@ -704,9 +654,7 @@ class Table(GrammarType):
                 if callable(self.free_header):
                     fh.add_condition_ex(
                         lambda x: self.free_header(x[0]),
-                        lambda x: (
-                            f"This is not an allowed header for table {param_name}: {x[0]}"
-                        ),
+                        lambda x: f"This is not an allowed header for table {param_name}: {x[0]}",
                     )
                 grammar = pp.Suppress(fh) + grammar
             else:
@@ -730,9 +678,7 @@ class Table(GrammarType):
             if not self.free_numbering:
                 should_be = [*range(1, len(datas) + 1)]
                 if not x[::2] == should_be:
-                    raise pp.ParseException(
-                        s, loc, "The first column should contain row numbering"
-                    )
+                    raise pp.ParseException(s, loc, "The first column should contain row numbering")
             return tabelize(datas)
 
         def data_grouping(s, loc, data):
@@ -742,10 +688,7 @@ class Table(GrammarType):
             c = 0
             if len(data) % (2 * grp_size.group_size):
                 raise pp.ParseException(
-                    s,
-                    loc,
-                    "The data in the table should be grouped "
-                    f"by groups of length {grp_size.group_size}.",
+                    s, loc, f"The data in the table should be grouped by groups of length {grp_size.group_size}."
                 )
             for i in range(0, len(data), 2):
                 c += 1
@@ -812,8 +755,7 @@ class Table(GrammarType):
                         raise pp.ParseException(
                             s,
                             loc,
-                            f"The group {i // 3 + 1} should have "
-                            f"{grp_size.group_size} members, it has {len(g)}.",
+                            f"The group {i // 3 + 1} should have {grp_size.group_size} members, it has {len(g)}.",
                         )
             if self.groups_as_list:
                 return [out]
@@ -866,10 +808,7 @@ class Table(GrammarType):
 
         if self.group_size:
             out.append(
-                self.group_size_format.format(
-                    self.group_size,
-                    len(data[0]) if data is not None and len(data) else 1,
-                )
+                self.group_size_format.format(self.group_size, len(data[0]) if data is not None and len(data) else 1)
             )
 
         def line(row, prefix):
@@ -887,11 +826,7 @@ class Table(GrammarType):
         if self.grouping:
             for n, group in enumerate(data, 1):
                 for g, d in enumerate(unflatten(group), 1):
-                    line(
-                        d,
-                        self.grouping.format_string(n)
-                        + self.numbering.format_string(g),
-                    )
+                    line(d, self.grouping.format_string(n) + self.numbering.format_string(g))
         else:
             for n, d in enumerate(unflatten(data), 1):
                 line(d, self.numbering.format_string(n))
@@ -907,9 +842,7 @@ class Table(GrammarType):
             if len(value.shape) != dim:
                 return f"The array should have dimension={dim}, it has dimension {len(value.shape)}"
             if value.dtype != dtype:
-                return (
-                    f"The data type of the value should be {dtype}, it is {value.dtype}"
-                )
+                return f"The data type of the value should be {dtype}, it is {value.dtype}"
             if dim == 2 and value.shape[1] != len(self.sequence.types):
                 return f"The array is required to have {len(self.sequence.types)} columns, it has {value.shape[1]}"
             return True
@@ -920,10 +853,7 @@ class Table(GrammarType):
                 return out
         else:
             if not isinstance(value, (list, np.ndarray)):
-                return (
-                    "The grouped table accepts list of table data as a value, "
-                    f"{value.__class__} have been given."
-                )
+                return f"The grouped table accepts list of table data as a value, {value.__class__} have been given."
             for i, d in enumerate(value):
                 out = validate(d)
                 if out is not True:
@@ -938,9 +868,7 @@ class Table(GrammarType):
                             return f"Size of the {i + 1}th table should be same as of the first one, i.e. {size}"
 
         if self.length is not None and self.length != len(value):
-            return (
-                f"The array is required to have {self.length} rows, it has {len(value)}"
-            )
+            return f"The array is required to have {self.length} rows, it has {len(value)}"
         return True
 
     def convert(self, value):
@@ -986,12 +914,7 @@ class Table(GrammarType):
 
     def grammar_name(self):
         if self.names:
-            data = " ".join(
-                (
-                    f"{i}:{j.grammar_name()}"
-                    for i, j in zip(self.names, self.sequence.types)
-                )
-            )
+            data = " ".join((f"{i}:{j.grammar_name()}" for i, j in zip(self.names, self.sequence.types)))
         else:
             data = self.sequence.grammar_name()
         return f"<TABLE of {data}>"

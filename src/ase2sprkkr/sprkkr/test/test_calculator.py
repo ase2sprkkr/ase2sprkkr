@@ -28,12 +28,7 @@ def _fast_atoms(b, jrws=20, r1=2e-6):
 class TestCalculator(TestCase):
     @pytest.mark.slow
     def test_2D(self, temporary_dir):
-        a = Atoms(
-            symbols="C",
-            positions=[[0, 0, 0]],
-            cell=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
-            pbc=[1, 1, 1],
-        )
+        a = Atoms(symbols="C", positions=[[0, 0, 0]], cell=[[1, 0, 0], [0, 1, 0], [0, 0, 1]], pbc=[1, 1, 1])
         b = semiinfinite_system(a, repeat=2)
         assert np.max(b.arrays["spacegroup_kinds"]) == 5
         cal = SPRKKR(atoms=b, **self._calc_args)
@@ -116,9 +111,7 @@ class TestCalculator(TestCase):
         assert_change(True, True)
         calculator.save_input(input_parameters=inp_file, potential=False)
         assert_change(False, False)
-        calculator.save_input(
-            input_parameters=inp_file, options={"NITER": 2}, potential=False
-        )
+        calculator.save_input(input_parameters=inp_file, options={"NITER": 2}, potential=False)
         assert_change(True, False)
         calculator.save_input(input_parameters=inp_file, potential=atoms.potential)
         assert_change(True, True)
@@ -152,9 +145,7 @@ class TestCalculator(TestCase):
         self.assertTrue(isinstance(out.calculator.potential_object, Potential))
 
         # read again the output from a file - the results should be the same
-        out2 = SPRKKR.InputParameters.create("scf").read_output_from_file(
-            out.output_file
-        )
+        out2 = SPRKKR.InputParameters.create("scf").read_output_from_file(out.output_file)
         self.assertEqual(out.output_file, out2.output_file)
         self.assertEqual(2, len(out2.iterations))
         out.plot(filename=here("output_test_calc.png"))
@@ -166,18 +157,14 @@ class TestCalculator(TestCase):
         atoms = bulk("LiCl", "rocksalt", a=5.64) * (2, 1, 1)
         calculator = SPRKKR(atoms=atoms, **self.calc_args())
         # _fast_atoms(atoms, jrws=50, r1=1e-6)
-        out = calculator.calculate(
-            options={"EMIN": -1.0, "NITER": 1, "NKTAB": 40, "NE": 20}
-        )
+        out = calculator.calculate(options={"EMIN": -1.0, "NITER": 1, "NKTAB": 40, "NE": 20})
         self.assertEqual(1, len(out.iterations))
         self.assertEqual(3, len(out.iterations[-1]["atomic_types"]))
         for i in out.iterations[-1]["atomic_types"].values():
             self.assertEqual(4, len(i["orbitals"]))
         self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
 
-        out = SPRKKR.InputParameters.from_file(out.input_file).read_output_from_file(
-            out.output_file
-        )
+        out = SPRKKR.InputParameters.from_file(out.input_file).read_output_from_file(out.output_file)
         self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
         self.assertEqual(1, len(out.iterations))
 
@@ -201,9 +188,5 @@ class TestCalculator(TestCase):
         self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
         self.assertEqual(1, len(out.iterations))
 
-        calculator.calculate(
-            input_parameters="PHAGEN",
-            potential=out.potential_filename,
-            options={"NKTAB": 30},
-        )
+        calculator.calculate(input_parameters="PHAGEN", potential=out.potential_filename, options={"NKTAB": 30})
         out.calculator.calculate(input_parameters="PHAGEN", options={"NKTAB": 10})

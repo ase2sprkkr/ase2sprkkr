@@ -14,9 +14,7 @@ class DangerousValue:
     - to  overcame sometimes too strict enforment of the options values.
     """
 
-    def __init__(
-        self, value, value_type: GrammarType | None = None, validate: bool = True
-    ):
+    def __init__(self, value, value_type: GrammarType | None = None, validate: bool = True):
         """
         Parameters
         ----------
@@ -64,9 +62,7 @@ class BaseOption(Configuration):
     def _save_to_file(self, file, always=False, name_in_grammar=None, delimiter=""):
         """Write the name-value pair to the given file, if the value
         is set."""
-        return self._definition.output_definition._save_to_file(
-            file, self, always, name_in_grammar, delimiter
-        )
+        return self._definition.output_definition._save_to_file(file, self, always, name_in_grammar, delimiter)
 
     def _find_members(self, name, lower_case=True, option=None):
         if self._definition.has_name(name, lower_case) and option is not False:
@@ -108,16 +104,16 @@ class Option(BaseOption):
     >>> from ase2sprkkr.sprkkr.calculator import SPRKKR
     >>> calculator = SPRKKR()
     >>> conf = calculator.input_parameters
-    >>> conf.ENERGY.ImE = 5.
+    >>> conf.ENERGY.ImE = 5.0
     >>> conf.ENERGY.ImE()
     unyt_quantity(5., 'Ry')
     >>> conf.ENERGY.ImE.info
     'Configuration value ImE'
-    >>> conf.ENERGY.ImE.help()                     # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
+    >>> conf.ENERGY.ImE.help()  # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
     Configuration value ImE
     <BLANKLINE>
     ImE : Energy (<Real> [Ry|eV]) ≝ 0.0 Ry (optional)
-    >>> conf.ENERGY.ImE.set_dangerous('1J')
+    >>> conf.ENERGY.ImE.set_dangerous("1J")
     >>> conf.ENERGY.ImE()
     '1J'
     """
@@ -268,11 +264,7 @@ class Option(BaseOption):
             )
 
             warnings.warn_explicit(
-                message=w.message,
-                category=w.category,
-                filename=w.filename,
-                lineno=w.lineno,
-                source=w.source,
+                message=w.message, category=w.category, filename=w.filename, lineno=w.lineno, source=w.source
             )
 
     def _post_set(self):
@@ -331,9 +323,7 @@ class Option(BaseOption):
             try:
                 name = as_integer(name)
             except TypeError as e:
-                raise KeyError(
-                    "Numbered array indexes can be only integers, lists or slices"
-                ) from e
+                raise KeyError("Numbered array indexes can be only integers, lists or slices") from e
             if name < 1:
                 raise KeyError("Numbered array indexes has to be greater than zero")
 
@@ -369,9 +359,7 @@ class Option(BaseOption):
                     except ValueError:
                         stop = 2
                 name = slice(max(1, name.start or 1), stop, name.step)
-            return [
-                self._getitem(n) for n in range(name.start, name.stop, name.step or 1)
-            ]
+            return [self._getitem(n) for n in range(name.start, name.stop, name.step or 1)]
         return self._getitem(name)
 
     def _getitem(self, name):
@@ -380,9 +368,7 @@ class Option(BaseOption):
             try:
                 name = as_integer(name)
             except TypeError as e:
-                raise KeyError(
-                    "Numbered array indexes can be only integers, lists or slices"
-                ) from e
+                raise KeyError("Numbered array indexes can be only integers, lists or slices") from e
         if self._value is None:
             return self.default_value
         if name in self._value:
@@ -398,9 +384,7 @@ class Option(BaseOption):
         if isinstance(value, DangerousValue):
             value = value()
         if self._definition.is_repeated.is_dict and isinstance(value, dict):
-            value = {
-                i: v() if isinstance(v, DangerousValue) else v for i, v in value.items()
-            }
+            value = {i: v() if isinstance(v, DangerousValue) else v for i, v in value.items()}
         return value
 
     def _pack_value(self, value):
@@ -461,11 +445,7 @@ class Option(BaseOption):
         else:
             if not self._definition.type.has_value:
                 return
-            if (
-                self._definition.default_value is None
-                and not do_not_check_required
-                and self.is_required
-            ):
+            if self._definition.default_value is None and not do_not_check_required and self.is_required:
                 raise DataValidityError(f"Option {self._get_path()} must have a value.")
             self._value = None
             self.clear_result()
@@ -514,9 +494,7 @@ class Option(BaseOption):
         missing, _, np = d.type.missing_value()
         if np.__class__ is value.__class__ and np == value:
             return value, False
-        if value is None or (
-            not d.is_always_added and self.is_it_the_default_value(value)
-        ):
+        if value is None or (not d.is_always_added and self.is_it_the_default_value(value)):
             return value, False
         return value, True
 
@@ -531,9 +509,7 @@ class Option(BaseOption):
 
     def _validate(self, why="save"):
         d = self._definition
-        if (
-            not d.is_validated if d.is_validated is not None else d.is_generated
-        ) or not d.type.has_value:
+        if (not d.is_validated if d.is_validated is not None else d.is_generated) or not d.type.has_value:
             return
 
         def vali(value):
@@ -595,11 +571,7 @@ class Option(BaseOption):
 
         default = self.default_value
         if d.is_repeated.is_numbered.has_default:
-            return (
-                "def" in value
-                and len(value) == 1
-                and d.type.is_the_same_value(value["def"], default)
-            )
+            return "def" in value and len(value) == 1 and d.type.is_the_same_value(value["def"], default)
         else:
             return d.type.is_the_same_value(value, default)
 
@@ -641,11 +613,7 @@ class Option(BaseOption):
             if len(v) > 20:
                 v = f"{v[:10]}...{v[-10:]}"
 
-        type = (
-            "(generated)"
-            if self._definition.is_generated
-            else f"of type {self._definition.type}"
-        )
+        type = "(generated)" if self._definition.is_generated else f"of type {self._definition.type}"
         return f"<Option {self._get_path()} {type} with{o} value{v}>"
 
 

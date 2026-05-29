@@ -25,9 +25,7 @@ def _potential_header_default_value(_):
 
 
 def _potential_system_default_value(option):
-    return "System: {}".format(
-        option._get_root_container().atoms.symbols if option else "<UNKNOWN>"
-    )
+    return "System: {}".format(option._get_root_container().atoms.symbols if option else "<UNKNOWN>")
 
 
 def fce():

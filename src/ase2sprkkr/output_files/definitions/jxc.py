@@ -1,7 +1,4 @@
-from ..output_files_definitions import (
-    OutputFileValueDefinition as V,
-    OutputFileDefinition,
-)
+from ..output_files_definitions import OutputFileValueDefinition as V, OutputFileDefinition
 from typing import Optional
 import numpy as np
 import re
@@ -13,17 +10,7 @@ from collections import namedtuple
 
 from ..output_files import OutputFile
 from ...common.decorators import cached_property, cached_class_property
-from ...common.grammar_types import (
-    RawData,
-    Table,
-    Integer,
-    Real,
-    Array,
-    Sequence,
-    String,
-    LineString,
-    NumpyArray,
-)
+from ...common.grammar_types import RawData, Table, Integer, Real, Array, Sequence, String, LineString, NumpyArray
 from ...common.configuration_definitions import SeparatorDefinition
 from ...gui.plot import Multiplot
 
@@ -37,16 +24,7 @@ Selector = namedtuple("Selector", ["iq", "it"])
 
 
 class JXCOutputFile(OutputFile):
-    plot_parameters = {
-        "exchange_radius",
-        "iq",
-        "it",
-        "exclude_it",
-        "exclude_vc",
-        "font_size",
-        "axis",
-        "separate_plots",
-    }
+    plot_parameters = {"exchange_radius", "iq", "it", "exclude_it", "exclude_vc", "font_size", "axis", "separate_plots"}
 
     def is_Jij(self):
         return len(self.DATA().dtype.names) == 15
@@ -86,19 +64,13 @@ class JXCOutputFile(OutputFile):
             ) from exc
 
     def element_to_its(self, label: str):
-        return [
-            it
-            for it, l in self.it_labels.items()
-            if l.startswith(label) and (l == label or l[len(label)] == "_")
-        ]
+        return [it for it, l in self.it_labels.items() if l.startswith(label) and (l == label or l[len(label)] == "_")]
 
     @cached_class_property
     def _it_selector_regex():
         return re.compile(r"\s*([A-Z][a-z]*(_(\d+)))?\s*")
 
-    def create_selector(
-        self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True
-    ):
+    def create_selector(self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True):
         if selector is not None:
             return selector
 
@@ -145,9 +117,7 @@ class JXCOutputFile(OutputFile):
             try:
                 return [int(v) for v in values]
             except Exception:
-                raise ValueError(
-                    f"Invalid IQ selector: {values}. Must be (a comma-separated) list of integers."
-                )
+                raise ValueError(f"Invalid IQ selector: {values}. Must be (a comma-separated) list of integers.")
 
         iq = parse_iq(iq)
         it = parse_it(it)
@@ -167,13 +137,9 @@ class JXCOutputFile(OutputFile):
             it = it - exclude_it
         return Selector(iq, it)
 
-    def it_selector(
-        self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True
-    ):
+    def it_selector(self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True):
         if selector is None:
-            selector = self.create_selector(
-                iq=iq, it=it, exclude_vc=exclude_vc, exclude_it=exclude_it
-            )
+            selector = self.create_selector(iq=iq, it=it, exclude_vc=exclude_vc, exclude_it=exclude_it)
         iq, it = selector
         out = ...
         if iq is not ...:
@@ -182,13 +148,9 @@ class JXCOutputFile(OutputFile):
             out = it if out is ... else set(out).intersection(it)
         return out
 
-    def iq_selector(
-        self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True
-    ):
+    def iq_selector(self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True):
         if selector is None:
-            selector = self.create_selector(
-                iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc
-            )
+            selector = self.create_selector(iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc)
         iq, it = selector
 
         out = self.it_selector(selector=selector)
@@ -196,22 +158,8 @@ class JXCOutputFile(OutputFile):
             return ...
         return set().union(*(self.it_to_iqs(it) for it in out))
 
-    def filtered_data(
-        self,
-        selector=None,
-        iq=None,
-        it=None,
-        exclude_it=None,
-        exclude_vc=True,
-        exchange_radius=4.0,
-    ):
-        its = self.it_selector(
-            selector=selector,
-            iq=iq,
-            it=it,
-            exclude_it=exclude_it,
-            exclude_vc=exclude_vc,
-        )
+    def filtered_data(self, selector=None, iq=None, it=None, exclude_it=None, exclude_vc=True, exchange_radius=4.0):
+        its = self.it_selector(selector=selector, iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc)
         data = self.DATA()
 
         if its is ...:
@@ -253,15 +201,11 @@ class JXCOutputFile(OutputFile):
             "z": (["DZ"], ["z"]),
             "all": (["DX", "DY", "DZ"], ["x", "y", "z"]),
         }
-        component_axis = {0: "x", 1: "y", 2: "z", None: "all"}.get(
-            component_axis, component_axis
-        )
+        component_axis = {0: "x", 1: "y", 2: "z", None: "all"}.get(component_axis, component_axis)
         try:
             return components[component_axis]
         except KeyError as exc:
-            raise ValueError(
-                f"Invalid DMI axis '{component_axis}'. Use one of: all, x, y, z."
-            ) from exc
+            raise ValueError(f"Invalid DMI axis '{component_axis}'. Use one of: all, x, y, z.") from exc
 
     def plot(
         self,
@@ -311,11 +255,16 @@ class JXCOutputFile(OutputFile):
         x = data["DR"]
 
         if is_jij:
-            def label(partner_index): return (
-                f"${labels[type_index]}$-${labels[partner_index]}$"
-            )
-            def value_label(): return r"$J_{ij}$"
-            def name(): return f"Jij_{labels[type_index]}"
+
+            def label(partner_index):
+                return f"${labels[type_index]}$-${labels[partner_index]}$"
+
+            def value_label():
+                return r"$J_{ij}$"
+
+            def name():
+                return f"Jij_{labels[type_index]}"
+
             y = data[["JXX"]]
 
             spin_mom = self._spin_moments()
@@ -329,11 +278,16 @@ class JXCOutputFile(OutputFile):
 
         else:
             index, axis_labels = self._dij_components(axis)
-            def label(partner_index): return (
-                f"{labels[type_index]}-{labels[partner_index]}"
-            )  # $_{axis_labels[colindex]}$'
-            def value_label(): return rf"$D_{{ij}}^{{{axis_labels[colindex]}}}$"
-            def name(): return f"Dij_{labels[type_index]}"
+
+            def label(partner_index):
+                return f"{labels[type_index]}-{labels[partner_index]}"  # $_{axis_labels[colindex]}$'
+
+            def value_label():
+                return rf"$D_{{ij}}^{{{axis_labels[colindex]}}}$"
+
+            def name():
+                return f"Dij_{labels[type_index]}"
+
             y = data[index]
             spin_mom = None
 
@@ -352,32 +306,19 @@ class JXCOutputFile(OutputFile):
                 xxx = xx[mask]
                 yyy = col[mask]
                 if spin_mom is not None:
-                    sign_ij = np.sign(spin_mom[type_index - 1]) * np.sign(
-                        spin_mom[partner_index - 1]
-                    )
+                    sign_ij = np.sign(spin_mom[type_index - 1]) * np.sign(spin_mom[partner_index - 1])
                     yyy *= sign_ij
                 # cycle over DX,DY,DZ (or just plot one line for all other cases)
                 color = next(colors)
-                axis.plot(
-                    xxx,
-                    yyy,
-                    alpha=0.75,
-                    lw=2.0,
-                    color=color,
-                    label=label(partner_index),
-                )
-                axis.scatter(
-                    xxx, yyy, color=color, alpha=0.75, s=45, lw=1.0, edgecolor="black"
-                )
+                axis.plot(xxx, yyy, alpha=0.75, lw=2.0, color=color, label=label(partner_index))
+                axis.scatter(xxx, yyy, color=color, alpha=0.75, s=45, lw=1.0, edgecolor="black")
             axis.set_xlabel(r"$r_{ij}/a_{\mathrm{lat}}$", fontsize=font_size)
             axis.set_ylabel(value_label() + r" $[meV]$", fontsize=font_size)
             axis.tick_params(axis="x", colors="black", labelsize=font_size)
             axis.tick_params(axis="y", colors="black", labelsize=font_size)
             axis.axhline(0, color="black", linestyle="--")
             if label_spacing:
-                axis.legend(
-                    fontsize=font_size - 2, loc="best", labelspacing=label_spacing
-                )
+                axis.legend(fontsize=font_size - 2, loc="best", labelspacing=label_spacing)
             axis.grid(False)
             axis.set_ylim(-extremum, extremum)
 
@@ -403,11 +344,7 @@ class JXCOutputFile(OutputFile):
                 for colindex, cname in enumerate(y.dtype.names):
                     col = yy[cname]
 
-                    mp.plot(
-                        self,
-                        name=name(),
-                        plot_function=plot,
-                    )
+                    mp.plot(self, name=name(), plot_function=plot)
         return True
 
     def write_uppasd_file(
@@ -465,9 +402,7 @@ class JXCOutputFile(OutputFile):
                 if atomic_type.symbol in first:
                     if atomic_type.symbol not in duplicates:
                         duplicates[atomic_type.symbol] = {first[atomic_type.symbol]: 1}
-                    duplicates[atomic_type.symbol][atomic_type] = (
-                        len(duplicates[atomic_type.symbol]) + 1
-                    )
+                    duplicates[atomic_type.symbol][atomic_type] = len(duplicates[atomic_type.symbol]) + 1
                 else:
                     first[atomic_type.symbol] = atomic_type
 
@@ -481,10 +416,7 @@ class JXCOutputFile(OutputFile):
             (
                 i + 1,
                 len(site.occupation),
-                [
-                    (it(atomic_type), label(atomic_type), occ)
-                    for atomic_type, occ in site.occupation.items()
-                ],
+                [(it(atomic_type), label(atomic_type), occ) for atomic_type, occ in site.occupation.items()],
             )
             for i, site in enumerate(atoms.sites)
         ]
@@ -546,20 +478,9 @@ def create_definition():
                 name_in_grammar=False,
             ),
             V(
-                "NQ",
-                int,
-                written_name="number of sites   NQ",
-                delimiter=" = ",
-                delimiter_grammar="=",
+                "NQ", int, written_name="number of sites   NQ", delimiter=" = ", delimiter_grammar="="
             ),  # , indent=10*" "),
-            V(
-                "NT",
-                int,
-                written_name="number of types   NT",
-                delimiter=" = ",
-                delimiter_grammar="=",
-                indent=10 * " ",
-            ),
+            V("NT", int, written_name="number of types   NT", delimiter=" = ", delimiter_grammar="=", indent=10 * " "),
             SeparatorDefinition("                              site occupation:"),
             V(
                 "OCCUPATION",
@@ -567,11 +488,7 @@ def create_definition():
                     IQ=Integer(prefix="IQ = ", format="{:>3}"),
                     NOQ=int,
                     DATA=Array(
-                        Sequence(
-                            int,
-                            String(prefix="-", format="{:>10}"),
-                            Real(prefix="x = ", format="{:6.3f}"),
-                        ),
+                        Sequence(int, String(prefix="-", format="{:>10}"), Real(prefix="x = ", format="{:6.3f}")),
                         prefix="IT:",
                     ),
                     header=False,
@@ -588,19 +505,8 @@ def create_definition():
                 "DATA",
                 NumpyArray(
                     dtypes=[
-                        shared_dtype
-                        + [
-                            ("JXX", float),
-                            ("JYY", float),
-                            ("JXY", float),
-                            ("JYX", float),
-                        ],
-                        shared_dtype
-                        + [
-                            ("DX", float),
-                            ("DY", float),
-                            ("DZ", float),
-                        ],
+                        shared_dtype + [("JXX", float), ("JYY", float), ("JXY", float), ("JYX", float)],
+                        shared_dtype + [("DX", float), ("DY", float), ("DZ", float)],
                     ]
                 ),
                 name_in_grammar=False,

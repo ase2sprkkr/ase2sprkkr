@@ -21,9 +21,7 @@ def _sections_lattice_right_symmetry_error(_):
 
 
 def _sections_lattice_central_symmetry_error(_):
-    return (
-        "Central region of a 2D calculations have to be symmetric just in X and Y axis."
-    )
+    return "Central region of a 2D calculations have to be symmetric just in X and Y axis."
 
 
 def _sections_lattice_atoms_pbc_error(_):
@@ -48,35 +46,19 @@ class LatticeSection(PotentialSection):
             self.SYSDIM = "3D"
             bcell = atoms.cell
         elif pbc == 2:
-            if not (
-                "left" in atoms.regions
-                and "right" in atoms.regions
-                and "central" in atoms.regions
-            ):
+            if not ("left" in atoms.regions and "right" in atoms.regions and "central" in atoms.regions):
                 raise ValueError(
                     "To run a 2D calculation, an atoms object have to have defined "
                     "'left', 'right' and 'central' region."
                 )
-            check_symmetry(
-                atoms.regions["left"].pbc, True, _sections_lattice_left_symmetry_error
-            )
-            check_symmetry(
-                atoms.regions["right"].pbc, True, _sections_lattice_right_symmetry_error
-            )
-            check_symmetry(
-                atoms.regions["central"].pbc,
-                [True, True, False],
-                _sections_lattice_central_symmetry_error,
-            )
-            check_symmetry(
-                atoms.pbc, [True, True, False], _sections_lattice_atoms_pbc_error
-            )
+            check_symmetry(atoms.regions["left"].pbc, True, _sections_lattice_left_symmetry_error)
+            check_symmetry(atoms.regions["right"].pbc, True, _sections_lattice_right_symmetry_error)
+            check_symmetry(atoms.regions["central"].pbc, [True, True, False], _sections_lattice_central_symmetry_error)
+            check_symmetry(atoms.pbc, [True, True, False], _sections_lattice_atoms_pbc_error)
             self.SYSDIM = "2D"
             bcell = atoms.regions["left"].cell
         else:
-            raise ValueError(
-                f"I don't know which calculation I should run with the periodicity of type: {atoms.pbc}."
-            )
+            raise ValueError(f"I don't know which calculation I should run with the periodicity of type: {atoms.pbc}.")
 
         bravais_lattice = bcell.get_bravais_lattice()
         alat = bravais_lattice.a
@@ -93,12 +75,8 @@ class LatticeSection(PotentialSection):
         elif self.SYSDIM() == "2D":
             for i in "left", "right", "central":
                 if i not in atoms.regions:
-                    raise ValueError(
-                        "For a 2D problem, the 'left', 'right' and 'central' regions have to be defined"
-                    )
-            self.SYSTYPE = (
-                "LIV" if atoms.regions["right"].only_vacuum_atoms() else "LIR"
-            )
+                    raise ValueError("For a 2D problem, the 'left', 'right' and 'central' regions have to be defined")
+            self.SYSTYPE = "LIV" if atoms.regions["right"].only_vacuum_atoms() else "LIR"
             cell = atoms.cell
             if (cell[2] == [0, 0, 0]).all():
                 if (atoms.regions["central"] == [0, 0, 0]).all():
@@ -107,9 +85,7 @@ class LatticeSection(PotentialSection):
                         " atoms object, or for its central region"
                     )
                 cell[2] = (
-                    atoms.regions["left"].cell[2]
-                    + atoms.regions["right"].cell[2]
-                    + atoms.regions["central"].cell[2]
+                    atoms.regions["left"].cell[2] + atoms.regions["right"].cell[2] + atoms.regions["central"].cell[2]
                 )
             self.A_L3 = atoms.regions["left"].cell[2] / alat
             self.A_R3 = atoms.regions["right"].cell[2] / alat
@@ -117,23 +93,17 @@ class LatticeSection(PotentialSection):
             self.NQ_R = len(atoms.regions["right"])
             for i, j in [("left", "right"), ("left", "central"), ("right", "central")]:
                 if atoms.regions[i].shared_ids_with(atoms.regions[j]):
-                    raise ValueError(
-                        f"{i.capitalize()} and {j} region can not share the same site"
-                    )
+                    raise ValueError(f"{i.capitalize()} and {j} region can not share the same site")
             la = len(atoms)
             if self.NQ_L() + self.NQ_R() + len(atoms.regions["central"]) != la:
-                raise ValueError(
-                    "The left, central and right do not cover all the atoms in the sample"
-                )
+                raise ValueError("The left, central and right do not cover all the atoms in the sample")
 
             def order(region):
                 region = atoms.regions[region]
                 z = region.positions[:, 2]
                 return region.ids[np.argsort(z)]
 
-            write_io_data["sites_order"] = np.concatenate(
-                list(map(order, ["left", "central", "right"]))
-            )
+            write_io_data["sites_order"] = np.concatenate(list(map(order, ["left", "central", "right"])))
             for i, j in zip(range(len(atoms)), write_io_data["sites_order"]):
                 if i != j:
                     break
@@ -141,9 +111,7 @@ class LatticeSection(PotentialSection):
                 # optimalization - do not reorder
                 write_io_data["sites_order"] = slice(None)
         else:
-            raise ValueError(
-                f"{self.SISDIM()} problem periodicity type not implemented"
-            )
+            raise ValueError(f"{self.SISDIM()} problem periodicity type not implemented")
         write_io_data["lattice.alat"] = alat
         self["ALAT"].set(alat / Bohr)
         self["SCALED_PRIMITIVE_CELL"].set(cell / alat)
@@ -164,9 +132,7 @@ class LatticeSection(PotentialSection):
             cc[2] -= lc[2] + rc[2]
             regions = [
                 AtomsRegion("left", slice(None, self.NQ_L()), lc, [True, True, True]),  # NOQA E241
-                AtomsRegion(
-                    "central", slice(self.NQ_L(), -self.NQ_R()), cc, [True, True, False]
-                ),  # NOQA E241
+                AtomsRegion("central", slice(self.NQ_L(), -self.NQ_R()), cc, [True, True, False]),  # NOQA E241
                 AtomsRegion("right", slice(-self.NQ_R(), None), rc, [True, True, True]),  # NOQA E241
             ]
             pbc = [True, True, False]
@@ -189,14 +155,7 @@ class LatticeSectionDefinition(PotSectionDefinition):
             V("SYSTYPE", DefKeyword("BULK", "LIV", "LIR")),
             V(
                 "BRAVAIS",
-                Sequence(
-                    int,
-                    str,
-                    str,
-                    str,
-                    str,
-                    allowed_values=(i.xband_data() for i in Pearson.pearsons.values()),
-                ),
+                Sequence(int, str, str, str, str, allowed_values=(i.xband_data() for i in Pearson.pearsons.values())),
             ),
             V("ALAT", float),
             # Keywords and thus the numbering has just (or at least) 10 char long
@@ -219,14 +178,8 @@ class LatticeSectionDefinition(PotSectionDefinition):
     def validate(self, data, why: str = "set"):
         d3 = data["SYSDIM"] == "3D"
         if d3 != (data["SYSTYPE"] == "BULK"):
-            raise ValueError(
-                "LATTICE.SYSDIM have to be 2D to create LIV or LIR structures"
-            )
-        op = (
-            _sections_lattice_value_is_not_none
-            if d3
-            else _sections_lattice_value_is_none
-        )
+            raise ValueError("LATTICE.SYSDIM have to be 2D to create LIV or LIR structures")
+        op = _sections_lattice_value_is_not_none if d3 else _sections_lattice_value_is_none
         if op(data["NQ_L"]):
             raise ValueError("LATTICE.NQ_L can be specified only for 2D structures")
         if op(data["A_L(3)"]):

@@ -59,9 +59,7 @@ def k_path_gui(atoms: Atoms, verbose=False):
             selected_path.append(ind)
 
         if selected_path:
-            highlight.set_data(
-                [highsymmpts[selected_path[-1]][0]], [highsymmpts[selected_path[-1]][1]]
-            )
+            highlight.set_data([highsymmpts[selected_path[-1]][0]], [highsymmpts[selected_path[-1]][1]])
             highlight.set_3d_properties([highsymmpts[selected_path[-1]][2]])
             highlight.set_visible(True)
         else:
@@ -99,11 +97,7 @@ def k_path_gui(atoms: Atoms, verbose=False):
         a0 = 1e10
         pmg_cell = a0 * cell
         pmg_coords = a0 * positions
-        print(
-            pymatgen.core.Structure(
-                pmg_cell, pmg_Z_full, pmg_coords, coords_are_cartesian=True
-            )
-        )
+        print(pymatgen.core.Structure(pmg_cell, pmg_Z_full, pmg_coords, coords_are_cartesian=True))
 
     BZ_pmg = pmg_structure.lattice.get_brillouin_zone()
 
@@ -117,9 +111,7 @@ def k_path_gui(atoms: Atoms, verbose=False):
             ky_BZ_pmg.append(vertex[1])
             kz_BZ_pmg.append(vertex[2])
 
-    vert_BZ_pmg = np.array(
-        [np.array(kx_BZ_pmg), np.array(ky_BZ_pmg), np.array(kz_BZ_pmg)]
-    ).T
+    vert_BZ_pmg = np.array([np.array(kx_BZ_pmg), np.array(ky_BZ_pmg), np.array(kz_BZ_pmg)]).T
     d, d_i = np.unique(vert_BZ_pmg, axis=0, return_index=True)
     pmg_BZ_unique_verts = vert_BZ_pmg[d_i]
 
@@ -136,13 +128,7 @@ def k_path_gui(atoms: Atoms, verbose=False):
         # Make axes of 3D plot have equal scale so that spheres appear as
         # spheres and cubes as cubes.  Required since `ax.axis('equal')`
         # and `ax.set_aspect('equal')` don't work on 3D.
-        limits = np.array(
-            [
-                ax.get_xlim3d(),
-                ax.get_ylim3d(),
-                ax.get_zlim3d(),
-            ]
-        )
+        limits = np.array([ax.get_xlim3d(), ax.get_ylim3d(), ax.get_zlim3d()])
         origin = np.mean(limits, axis=1)
         radius = 0.5 * np.max(np.abs(limits[:, 1] - limits[:, 0]))
         _set_axes_radius(ax, origin, radius)
@@ -195,10 +181,7 @@ def k_path_gui(atoms: Atoms, verbose=False):
             i += 1
 
         pc = Poly3DCollection(
-            [list(zip(x, y, z))],
-            facecolor=[0.0, 0.0, 1.0, 0.05],
-            edgecolor=[0.0, 0.0, 0.0, 0.8],
-            linewidth=1,
+            [list(zip(x, y, z))], facecolor=[0.0, 0.0, 1.0, 0.05], edgecolor=[0.0, 0.0, 0.0, 0.8], linewidth=1
         )
         ax_kkr.add_collection3d(pc)
 
@@ -218,13 +201,7 @@ def k_path_gui(atoms: Atoms, verbose=False):
             color="blue",
         )
         ax_kkr.add_artist(arrow)
-        ax_kkr.text(
-            rec_basis[0, 0] + 0.02,
-            rec_basis[0, 1] + 0.02,
-            rec_basis[0, 2] + 0.02,
-            r"$b_1$",
-            fontsize=10,
-        )
+        ax_kkr.text(rec_basis[0, 0] + 0.02, rec_basis[0, 1] + 0.02, rec_basis[0, 2] + 0.02, r"$b_1$", fontsize=10)
 
         arrow = Arrow3D(
             [0, rec_basis[1, 0]],
@@ -236,13 +213,7 @@ def k_path_gui(atoms: Atoms, verbose=False):
             color="blue",
         )
         ax_kkr.add_artist(arrow)
-        ax_kkr.text(
-            rec_basis[1, 0] + 0.02,
-            rec_basis[1, 1] + 0.02,
-            rec_basis[1, 2] + 0.02,
-            r"$b_2$",
-            fontsize=10,
-        )
+        ax_kkr.text(rec_basis[1, 0] + 0.02, rec_basis[1, 1] + 0.02, rec_basis[1, 2] + 0.02, r"$b_2$", fontsize=10)
 
         arrow = Arrow3D(
             [0, rec_basis[2, 0]],
@@ -254,50 +225,20 @@ def k_path_gui(atoms: Atoms, verbose=False):
             color="blue",
         )
         ax_kkr.add_artist(arrow)
-        ax_kkr.text(
-            rec_basis[2, 0] + 0.02,
-            rec_basis[2, 1] + 0.02,
-            rec_basis[2, 2] + 0.02,
-            r"$b_3$",
-            fontsize=10,
-        )
+        ax_kkr.text(rec_basis[2, 0] + 0.02, rec_basis[2, 1] + 0.02, rec_basis[2, 2] + 0.02, r"$b_3$", fontsize=10)
 
     # Draw k-space unit vectors
     if draw_k_basis:
         length = 0.4
-        arrow = Arrow3D(
-            [0, length],
-            [0, 0],
-            [0, 0],
-            mutation_scale=20,
-            lw=1,
-            arrowstyle="-|>",
-            color="red",
-        )
+        arrow = Arrow3D([0, length], [0, 0], [0, 0], mutation_scale=20, lw=1, arrowstyle="-|>", color="red")
         ax_kkr.add_artist(arrow)
         ax_kkr.text(length + 0.02, 0 + 0.02, 0 + 0.02, r"$k_x$", fontsize=10)
 
-        arrow = Arrow3D(
-            [0, 0],
-            [0, length],
-            [0, 0],
-            mutation_scale=20,
-            lw=1,
-            arrowstyle="-|>",
-            color="green",
-        )
+        arrow = Arrow3D([0, 0], [0, length], [0, 0], mutation_scale=20, lw=1, arrowstyle="-|>", color="green")
         ax_kkr.add_artist(arrow)
         ax_kkr.text(0 + 0.02, length + 0.02, 0 + 0.02, r"$k_y$", fontsize=10)
 
-        arrow = Arrow3D(
-            [0, 0],
-            [0, 0],
-            [0, length],
-            mutation_scale=20,
-            lw=1,
-            arrowstyle="-|>",
-            color="blue",
-        )
+        arrow = Arrow3D([0, 0], [0, 0], [0, length], mutation_scale=20, lw=1, arrowstyle="-|>", color="blue")
         ax_kkr.add_artist(arrow)
         ax_kkr.text(0 + 0.02, 0 + 0.02, length + 0.02, r"$k_z$", fontsize=10)
 
@@ -390,20 +331,11 @@ def k_path_gui(atoms: Atoms, verbose=False):
     sz = np.array(sz)
 
     # Scatter plot highsymmpts
-    ax_kkr.scatter(
-        highsymmpts[:, 0],
-        highsymmpts[:, 1],
-        highsymmpts[:, 2],
-        s=sz,
-        color=colors,
-        picker=True,
-    )
+    ax_kkr.scatter(highsymmpts[:, 0], highsymmpts[:, 1], highsymmpts[:, 2], s=sz, color=colors, picker=True)
     ax_kkr.set_proj_type("ortho")
 
     # Marker for highlighting the selected point
-    (highlight,) = ax_kkr.plot(
-        [0], [0], [0], "o", color="red", markersize=8, visible=False
-    )
+    (highlight,) = ax_kkr.plot([0], [0], [0], "o", color="red", markersize=8, visible=False)
 
     # Line to show selected path
     (path_line,) = ax_kkr.plot([], [], [], "-", color="red", linewidth=3)
@@ -427,21 +359,9 @@ def k_path_gui(atoms: Atoms, verbose=False):
     if len(highsymmpts[selected_path]) > 1:
         for i in range(len(highsymmpts[selected_path]) - 1):
             kpath_length += np.sqrt(
-                (
-                    highsymmpts[selected_path][i + 1][0]
-                    - highsymmpts[selected_path][i][0]
-                )
-                ** 2
-                + (
-                    highsymmpts[selected_path][i + 1][1]
-                    - highsymmpts[selected_path][i][1]
-                )
-                ** 2
-                + (
-                    highsymmpts[selected_path][i + 1][2]
-                    - highsymmpts[selected_path][i][2]
-                )
-                ** 2
+                (highsymmpts[selected_path][i + 1][0] - highsymmpts[selected_path][i][0]) ** 2
+                + (highsymmpts[selected_path][i + 1][1] - highsymmpts[selected_path][i][1]) ** 2
+                + (highsymmpts[selected_path][i + 1][2] - highsymmpts[selected_path][i][2]) ** 2
             )
 
     kpath_length *= (2.0 * np.pi) / ALAT  # In 1/angstrom
@@ -460,12 +380,7 @@ def k_path_gui(atoms: Atoms, verbose=False):
             )
 
         path_points = highsymmpts[selected_path]
-        return {
-            "NKDIR": len(path_points) - 1,
-            "NK": NK,
-            "KA": path_points[:-1],
-            "KE": path_points[1:],
-        }
+        return {"NKDIR": len(path_points) - 1, "NK": NK, "KA": path_points[:-1], "KE": path_points[1:]}
     else:
         return None
 

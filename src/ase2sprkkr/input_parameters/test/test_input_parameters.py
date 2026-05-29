@@ -59,9 +59,7 @@ class TestInputParameters(TestCase):
 
     def test_custom_value(self):
         with generate_grammar():
-            cv = cd.InputSectionDefinition.custom_member_grammar(
-                lambda x: x[0] not in ["aaa"]
-            )
+            cv = cd.InputSectionDefinition.custom_member_grammar(lambda x: x[0] not in ["aaa"])
         self.assertTrue("\n" not in cv.whiteChars)
 
         assertParse = partial(self.assertParse, grammar=lambda: cv)
@@ -98,9 +96,7 @@ class TestInputParameters(TestCase):
         assertNotValid("aaa=1.0")
 
         with generate_grammar():
-            cv = cd.InputValueDefinition("aaa", int, is_required=True).grammar(
-                allow_dangerous=True
-            )
+            cv = cd.InputValueDefinition("aaa", int, is_required=True).grammar(allow_dangerous=True)
 
         assertParse("aaa=1", ("aaa", 1))
         assertParseDangerous("aaa=1.0", ("aaa", 1.0))
@@ -117,12 +113,7 @@ class TestInputParameters(TestCase):
 
     def test_is_required(self):
         ipd = cd.InputParametersDefinition.definition_from_dict(
-            {
-                "ENERGY": [
-                    V("E", 1),
-                    V("F", int, None, is_required=lambda o: o._container.E() != 2),
-                ]
-            }
+            {"ENERGY": [V("E", 1), V("F", int, None, is_required=lambda o: o._container.E() != 2)]}
         )
 
         ip = ipd.create_object()
@@ -139,17 +130,12 @@ class TestInputParameters(TestCase):
         ip.validate()
 
         assert ipd.read_from_string("ENERGY E=2").ENERGY.to_dict() == {"E": 2}
-        assert ipd.read_from_string("ENERGY E=1 F=2").ENERGY.to_dict() == {
-            "E": 1,
-            "F": 2,
-        }
+        assert ipd.read_from_string("ENERGY E=1 F=2").ENERGY.to_dict() == {"E": 1, "F": 2}
         with pytest.warns(DataValidityError):
             ipd.read_from_string("ENERGY E=1")
 
     def test_write_condition(self):
-        input_parameters_def = cd.InputParametersDefinition.definition_from_dict(
-            {"ENERGY": [V("E", 1)]}
-        )
+        input_parameters_def = cd.InputParametersDefinition.definition_from_dict({"ENERGY": [V("E", 1)]})
         # del input_parameters_def._members['TASK']
         id = input_parameters_def.read_from_file(io.StringIO("ENERGY E=1"))
         self.assertEqual(id.to_string(), "ENERGY\n\tE=1\n")
@@ -266,10 +252,7 @@ SITES NL=2""",
 SITES NL=2
 
               """,
-            {
-                "ENERGY": {"GRID": ar(3), "NE": ar(300), "NXXX": True},
-                "SITES": {"NL": 2},
-            },
+            {"ENERGY": {"GRID": ar(3), "NE": ar(300), "NXXX": True}, "SITES": {"NL": 2}},
         )
 
         # SITES do not start on the begin of the line, so it is not the start of the section
@@ -281,15 +264,7 @@ SITES NL=2
      SITES NL=2
 
               """,
-            {
-                "ENERGY": {
-                    "GRID": ar(3),
-                    "NE": ar(300),
-                    "NXXX": True,
-                    "SITES": True,
-                    "NL": 2,
-                }
-            },
+            {"ENERGY": {"GRID": ar(3), "NE": ar(300), "NXXX": True, "SITES": True, "NL": 2}},
         )
 
         assertParse(
@@ -300,15 +275,7 @@ SITES NL=2
   SITES NL=2
 
               """,
-            {
-                "ENERGY": {
-                    "GRID": ar(3),
-                    "NE": ar(300),
-                    "NXXX": True,
-                    "SITES": True,
-                    "NL": 2,
-                }
-            },
+            {"ENERGY": {"GRID": ar(3), "NE": ar(300), "NXXX": True, "SITES": True, "NL": 2}},
         )
 
         assertNotValid("""ENERGY GRID={3}
@@ -333,11 +300,7 @@ SITES NL=2
 
 XSITES NR=3
               """,
-            {
-                "ENERGY": {"GRID": ar(3), "NE": ar(300), "NXXX": True},
-                "SITES": {"NL": 2},
-                "XSITES": {"NR": 3},
-            },
+            {"ENERGY": {"GRID": ar(3), "NE": ar(300), "NXXX": True}, "SITES": {"NL": 2}, "XSITES": {"NR": 3}},
         )
 
         # multiline custom section
@@ -464,9 +427,7 @@ XSITES NR=3 FLAG
         self.assertEqual(ips.ENERGY.ENERGY(), 6.0)
         ips.set("ENERGY.ENERGYY", 7.0, unknown="ignore")
         self.assertFalse("ENERGYY" in ips.ENERGY)
-        self.assertRaises(
-            KeyError, lambda: ips.set("ENERGY.ENERGYY", 7.0, unknown="fail")
-        )
+        self.assertRaises(KeyError, lambda: ips.set("ENERGY.ENERGYY", 7.0, unknown="fail"))
         ips.set("ENERGY.ENERGYY", 7.0, unknown="add")
         self.assertEqual(ips.ENERGY.ENERGYY(), 7.0)
 
@@ -498,16 +459,12 @@ XSITES NR=3 FLAG
         grammar = ipd.grammar()
         assertParse(data, {"ENERGY": {"A": 3, "B": [2, 5, 8], "C": 77}}, grammar)
         ip = ipd.read_from_string(data)
-        self.assertEqual(
-            {"ENERGY": {"A": 3, "B": ar([2, 5, 8]), "C": 77}}, ip.to_dict()
-        )
+        self.assertEqual({"ENERGY": {"A": 3, "B": ar([2, 5, 8]), "C": 77}}, ip.to_dict())
         self.assertEqual("ENERGY A=3 B=2 B=5 B=8 C=77", t(ip.ENERGY.to_string()))
         ipd["ENERGY"].force_order = True
         assertParse(data, {"ENERGY": {"A": 3, "B": [2, 5, 8], "C": 77}}, grammar)
         ip = ipd.read_from_string(data)
-        self.assertEqual(
-            {"ENERGY": {"A": 3, "B": ar([2, 5, 8]), "C": 77}}, ip.to_dict()
-        )
+        self.assertEqual({"ENERGY": {"A": 3, "B": ar([2, 5, 8]), "C": 77}}, ip.to_dict())
         self.assertEqual("ENERGY A=3 B=2 B=5 B=8 C=77", t(ip.ENERGY.to_string()))
 
         ipd["ENERGY"]["B"].is_repeated = V.Repeated.NUMBERED
@@ -528,13 +485,7 @@ XSITES NR=3 FLAG
         assertParse(data, {"ENERGY": {"A": 3, "B": [2, 8, 5], "C": 77}}, grammar)
 
         ipd = cd.InputParametersDefinition.definition_from_dict(
-            {
-                "ENERGY": [
-                    V("A", 1),
-                    V("B", gt.Array(int, length=2), is_repeated=True),
-                    V("C", 3),
-                ]
-            }
+            {"ENERGY": [V("A", 1), V("B", gt.Array(int, length=2), is_repeated=True), V("C", 3)]}
         )
         grammar = ipd.grammar()
 
@@ -543,11 +494,7 @@ XSITES NR=3 FLAG
     B=5 9
     B=8 16
     C=77"""
-        assertParse(
-            data,
-            {"ENERGY": {"A": 3, "B": [ar([2, 3]), ar([5, 9]), ar([8, 16])], "C": 77}},
-            grammar,
-        )
+        assertParse(data, {"ENERGY": {"A": 3, "B": [ar([2, 3]), ar([5, 9]), ar([8, 16])], "C": 77}}, grammar)
         ip = ipd.read_from_string(data)
         self.assertEqual(t(data), t(ip.ENERGY.to_string()))
 
@@ -559,11 +506,7 @@ XSITES NR=3 FLAG
     B2=5 9
     B3=8 16
     C=77"""
-        assertParse(
-            data,
-            {"ENERGY": {"A": 3, "B": [ar([2, 3]), ar([5, 9]), ar([8, 16])], "C": 77}},
-            grammar,
-        )
+        assertParse(data, {"ENERGY": {"A": 3, "B": [ar([2, 3]), ar([5, 9]), ar([8, 16])], "C": 77}}, grammar)
         ip = ipd.read_from_string(data)
         self.assertEqual(t(data), t(ip.ENERGY.to_string()))
 
@@ -593,36 +536,19 @@ XSITES NR=3 FLAG
             grammar = input_parameters_def._grammar_of_values()
         assertNotValid("ENERGY NE=1 Ime=0.5")
         assertNotValid("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8")
-        assertParse(
-            "ENERGY NE=1 Ime1=0.4 Ime5=0.8",
-            {
-                "ENERGY": {"NE": ar(1), "Ime": {1: 0.4, 5: 0.8}},
-            },
-        )
+        assertParse("ENERGY NE=1 Ime1=0.4 Ime5=0.8", {"ENERGY": {"NE": ar(1), "Ime": {1: 0.4, 5: 0.8}}})
 
-        input_parameters_def.sections["ENERGY"]["Ime"].is_repeated = V.Repeated[
-            "DEFAULTDICT"
-        ]
+        input_parameters_def.sections["ENERGY"]["Ime"].is_repeated = V.Repeated["DEFAULTDICT"]
         with generate_grammar():
             grammar = input_parameters_def._grammar_of_values()
 
-        assertParse(
-            "ENERGY NE=1 Ime1=0.4 Ime5=0.8",
-            {
-                "ENERGY": {"NE": ar(1), "Ime": {1: 0.4, 5: 0.8}},
-            },
-        )
+        assertParse("ENERGY NE=1 Ime1=0.4 Ime5=0.8", {"ENERGY": {"NE": ar(1), "Ime": {1: 0.4, 5: 0.8}}})
         assertNotValid("ENERGY NE=1 Ime=0.5 Ime=2.0")
         assertParse(
-            "ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8",
-            {
-                "ENERGY": {"NE": ar(1), "Ime": {"def": 0.5, 1: 0.4, 5: 0.8}},
-            },
+            "ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8", {"ENERGY": {"NE": ar(1), "Ime": {"def": 0.5, 1: 0.4, 5: 0.8}}}
         )
 
-        ip = input_parameters_def.read_from_file(
-            io.StringIO("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8")
-        )
+        ip = input_parameters_def.read_from_file(io.StringIO("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8"))
         self.assertEqual(0.5, ip.ENERGY.Ime())
         self.assertEqual(0.8, ip.ENERGY.Ime[5])
         self.assertEqual([0.4, 0.5, 0.5, 0.5, 0.8], ip.ENERGY.Ime[:])
@@ -660,18 +586,13 @@ XSITES NR=3 FLAG
         ip.ENERGY.Ime[1:3] = 7.0
         self.assertEqual([7.0, 7.0, 3.0, 8.0], ip.ENERGY.Ime[:])
 
-        ip = input_parameters_def.read_from_file(
-            io.StringIO("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8")
-        )
+        ip = input_parameters_def.read_from_file(io.StringIO("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8"))
         with pytest.raises(DataValidityError):
             ip.ENERGY.Ime = "ss"
         ip.ENERGY.Ime.set_dangerous("uu")
         self.assertEqual(ip.ENERGY.Ime(), "uu")
         out = ip.ENERGY.to_string()
-        self.assertEqual(
-            "ENERGY GRID={3} NE={1} Ime=uu Ime1=0.4 Ime5=0.8",
-            re.sub(r"\s+", " ", out).strip(),
-        )
+        self.assertEqual("ENERGY GRID={3} NE={1} Ime=uu Ime1=0.4 Ime5=0.8", re.sub(r"\s+", " ", out).strip())
         with pytest.raises(pp.ParseBaseException):
             input_parameters_def.read_from_file(io.StringIO(out))
         ip = input_parameters_def.read_from_file(io.StringIO(out), allow_dangerous=True)
@@ -683,8 +604,7 @@ XSITES NR=3 FLAG
         ip.ENERGY.Ime.set_dangerous("yy", index=5)
         out = ip.ENERGY.to_string()
         self.assertEqual(
-            "ENERGY GRID={3} NE={1} Ime=1.0 Ime1=0.4 Ime5=yy",
-            re.sub(r"\s+", " ", ip.ENERGY.to_string()).strip(),
+            "ENERGY GRID={3} NE={1} Ime=1.0 Ime1=0.4 Ime5=yy", re.sub(r"\s+", " ", ip.ENERGY.to_string()).strip()
         )
         with pytest.raises(pp.ParseBaseException):
             input_parameters_def.read_from_file(io.StringIO(out))
@@ -694,34 +614,18 @@ XSITES NR=3 FLAG
     def test_gather(self):
         assertParse = self.assertParse
         ipd = cd.InputParametersDefinition.definition_from_dict(
-            {
-                "ENERGY": [
-                    V("GRID", gt.SetOf(int, length=1), fixed_value=3),
-                    *gather(V("A", 1), V("B", 2)),
-                    V("C", 3),
-                ]
-            }
+            {"ENERGY": [V("GRID", gt.SetOf(int, length=1), fixed_value=3), *gather(V("A", 1), V("B", 2)), V("C", 3)]}
         )
-        assertParse(
-            "ENERGY GRID={3} A B=1 2 C=3",
-            {"ENERGY": {"GRID": ar(3), "A": 1, "B": 2, "C": 3}},
-            ipd.grammar(),
-        )
+        assertParse("ENERGY GRID={3} A B=1 2 C=3", {"ENERGY": {"GRID": ar(3), "A": 1, "B": 2, "C": 3}}, ipd.grammar())
         out = ipd.read_from_string("ENERGY GRID={3} A B=1 2 C=3")
         # self.assertEqual("ENERGY GRID={3} A B=1 2 C=3 TASK INPUTPARAMETERSDEFINITION ", re.sub(r'[\s\t\n]+',' ', out.to_string()))
-        self.assertEqual(
-            "ENERGY GRID={3} A B=1 2 C=3 ", re.sub(r"[\s\t\n]+", " ", out.to_string())
-        )
+        self.assertEqual("ENERGY GRID={3} A B=1 2 C=3 ", re.sub(r"[\s\t\n]+", " ", out.to_string()))
 
     def test_numpy_array(self):
         assertParse = self.assertParse
 
         ipd = cd.InputParametersDefinition.definition_from_dict(
-            {
-                "ENERGY": [
-                    V("C", gt.NumpyArray(lines=3), name_in_grammar=False),
-                ]
-            }
+            {"ENERGY": [V("C", gt.NumpyArray(lines=3), name_in_grammar=False)]}
         )
         assertParse(
             """ENERGY
@@ -818,25 +722,15 @@ XSITES NR=3 FLAG
             with generate_grammar():
                 self.assertEqual(np.asarray(val), na.parse(str))
 
-        test(
-            gt.NumpyArray(item_format="%2.0f"),
-            [[1, 2, 3], [4, 5, 6]],
-            " 1  2  3\n 4  5  6",
-        )
-        test(
-            gt.NumpyArray(indented=2, item_format="%2.0f"),
-            [[1, 2, 3], [4, 5, 6]],
-            "   1  2  3\n   4  5  6",
-        )
+        test(gt.NumpyArray(item_format="%2.0f"), [[1, 2, 3], [4, 5, 6]], " 1  2  3\n 4  5  6")
+        test(gt.NumpyArray(indented=2, item_format="%2.0f"), [[1, 2, 3], [4, 5, 6]], "   1  2  3\n   4  5  6")
         test(
             gt.NumpyArray(indented=(8, 2), item_format="%2.0f"),
             [[1, 2, 3, 4, 5, 6], [4, 5, 6, 7, 8, 9]],
             " 1  2  3\n    4  5\n    6\n 4  5  6\n    7  8\n    9",
         )
         test(
-            gt.NumpyArray(
-                indented=(8, 2), no_newline_at_end=False, item_format="%2.0f"
-            ),
+            gt.NumpyArray(indented=(8, 2), no_newline_at_end=False, item_format="%2.0f"),
             [[1, 2, 3, 4, 5, 6], [4, 5, 6, 7, 8, 9]],
             " 1  2  3\n    4  5\n    6\n 4  5  6\n    7  8\n    9\n",
         )
@@ -908,12 +802,7 @@ XSITES NR=3 FLAG
                 "ENERGY": [
                     V("A", 1),
                     V("NK", Length("K1", default_values=[1, 2, 3])),
-                    V(
-                        "K1",
-                        gt.Array(int, length=3),
-                        is_repeated="REPEATED",
-                        is_optional=True,
-                    ),
+                    V("K1", gt.Array(int, length=3), is_repeated="REPEATED", is_optional=True),
                 ]
             }
         )
@@ -970,19 +859,11 @@ XSITES NR=3 FLAG
         )
         ipd["ENERGY"].force_order = True
         grammar = ipd.grammar()
-        assertParse(
-            "ENERGY A=2 C=4 E=2 B=6",
-            {"ENERGY": {"A": 2, "C": 4, "E": 2, "B": 6}},
-            grammar,
-        )
-        assertParse(
-            "ENERGY A=1 B=5 D=3 C=5",
-            {"ENERGY": {"A": 1, "B": 5, "D": 3, "C": 5}},
-            grammar,
-        )
-        assertParse("ENERGY A=2 B=7",{"ENERGY" : {'A':2, 'B':7}} , grammar)
-        assertParse("ENERGY A=1 B=7",{"ENERGY" : {'A':1, 'B': 7}} , grammar)
-        assertParse("ENERGY A=1 B=7 D=6",{"ENERGY" : {'A':1, 'B': 7, 'D':6}} , grammar)
+        assertParse("ENERGY A=2 C=4 E=2 B=6", {"ENERGY": {"A": 2, "C": 4, "E": 2, "B": 6}}, grammar)
+        assertParse("ENERGY A=1 B=5 D=3 C=5", {"ENERGY": {"A": 1, "B": 5, "D": 3, "C": 5}}, grammar)
+        assertParse("ENERGY A=2 B=7", {"ENERGY": {"A": 2, "B": 7}}, grammar)
+        assertParse("ENERGY A=1 B=7", {"ENERGY": {"A": 1, "B": 7}}, grammar)
+        assertParse("ENERGY A=1 B=7 D=6", {"ENERGY": {"A": 1, "B": 7, "D": 6}}, grammar)
         assertNotValid("ENERGY A=1 D=2 B=3", grammar)
         assertNotValid("ENERGY A=1 B=5 D=3 C=5 B=6", grammar)
         assertNotValid("ENERGY A=1 B=5 D=3 C=5 E=6", grammar)
@@ -1002,6 +883,4 @@ XSITES NR=3 FLAG
         assertNotValid("ENERGY A=2 B=5 C=4 E=3", grammar)
         out = ipd.read_from_string("ENERGY A=2 C=4 E=2 B=6")
         self.assertEqual(out["ENERGY"].to_dict(), {"A": 2, "C": 4, "E": 2, "B": 6})
-        self.assertEqual(
-            out["ENERGY"].to_string(), "ENERGY\n\tA=2\n\tC=4\n\tE=2\n\tB=6\n"
-        )
+        self.assertEqual(out["ENERGY"].to_string(), "ENERGY\n\tA=2\n\tC=4\n\tE=2\n\tB=6\n")

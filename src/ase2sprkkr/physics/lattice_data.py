@@ -872,9 +872,7 @@ hall_numbers_to_AP = {
 }
 
 
-def ap_number_from_spacegroup(
-    spacegroup_number: int, hall_number: int | None = None, cell=None
-) -> int:
+def ap_number_from_spacegroup(spacegroup_number: int, hall_number: int | None = None, cell=None) -> int:
     """Return the Xband A. Perlov number for a space-group setting.
 
     The trigonal space groups 143, 144, 145, and 147 need the cell shape to

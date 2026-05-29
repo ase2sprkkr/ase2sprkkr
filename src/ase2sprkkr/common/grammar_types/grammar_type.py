@@ -10,12 +10,7 @@ import pyparsing as pp
 import inspect
 
 from .. import grammar_types
-from ..decorators import (
-    cached_class_property,
-    cache,
-    add_called_class_as_argument,
-    cached_property,
-)
+from ..decorators import cached_class_property, cache, add_called_class_as_argument, cached_property
 from ..alternative_types import normalize_type, allowed_types
 from ..grammar import generate_grammar
 from ..formats import full_format_for_string
@@ -118,18 +113,12 @@ class GrammarType:
         self.postfix = postfix
         """ The string, that will be printed after the value """
         self._format = format
-        self.after_format = (
-            after_format
-            if not after_format or "{" in after_format
-            else f"{{:{after_format}}}"
-        )
+        self.after_format = after_format if not after_format or "{" in after_format else f"{{:{after_format}}}"
         """ The (python) format string, that will be used for printing the value.
         The format is passed as format argument to ``str.format`` routine.  """
         self.condition = condition
         if after_convert is not None:
-            self.convert = lambda v: after_convert(
-                self, self.__class__.convert(self, v)
-            )
+            self.convert = lambda v: after_convert(self, self.__class__.convert(self, v))
 
         """ Some subclasses has default_value defined via read-only property. """
         if default_value is not None:
@@ -193,16 +182,9 @@ class GrammarType:
         if self.prefix or self.postfix:
             with generate_grammar():
                 if self.prefix:
-                    grammar = (
-                        pp.Literal(self.prefix.strip()).suppress().set_name(self.prefix)
-                        + grammar
-                    )
+                    grammar = pp.Literal(self.prefix.strip()).suppress().set_name(self.prefix) + grammar
                 if self.postfix:
-                    grammar += (
-                        pp.Literal(self.postfix.strip())
-                        .suppress()
-                        .set_name(self.postfix)
-                    )
+                    grammar += pp.Literal(self.postfix.strip()).suppress().set_name(self.postfix)
                 grammar = self.transform_grammar(grammar, param_name)
 
         if self.has_value:
@@ -211,9 +193,7 @@ class GrammarType:
                 try:
                     self.validate(x[0], why="parse", param_name=param_name)
                 except ValueError as e:
-                    raise pp.ParseException(
-                        s, loc, str(e) + "\nValidating of the parsed value failed"
-                    ) from e
+                    raise pp.ParseException(s, loc, str(e) + "\nValidating of the parsed value failed") from e
                 return x
 
             grammar.add_parse_action(validate)
@@ -314,13 +294,9 @@ class GrammarType:
         if error_message is False:
             error_message = "invalid value"
         if isinstance(error_message, Exception):
-            raise ValueError(
-                "Value '{}' {} is not valid: {}".format(value, param, error_message)
-            ) from error_message
+            raise ValueError("Value '{}' {} is not valid: {}".format(value, param, error_message)) from error_message
         else:
-            raise ValueError(
-                "Value '{}' {} is not valid: {}".format(value, param, error_message)
-            )
+            raise ValueError("Value '{}' {} is not valid: {}".format(value, param, error_message))
 
     def convert(self, value):
         """Convert a value from user to the "cannonical form" """
@@ -405,9 +381,7 @@ class GrammarType:
             out = out.replace("\n", "\n" + prefix)
         return out
 
-    def type_validation(
-        self, value, types: Union[List[Type], Type], typename: Optional[str] = None
-    ):
+    def type_validation(self, value, types: Union[List[Type], Type], typename: Optional[str] = None):
         """
         Parameters
         ----------
@@ -488,9 +462,7 @@ class TypedGrammarType(GrammarType):
         return self.type_validation(value, self.allowed_types, self.datatype_name)
 
 
-def type_from_type(
-    type, format: Union[str, Dict] = "", format_all: bool = False, type_map: Dict = {}
-):
+def type_from_type(type, format: Union[str, Dict] = "", format_all: bool = False, type_map: Dict = {}):
     """Guess and return the grammar element (GrammarType class descendatnt) from a python type. E.g. int => Integer.
 
     The given format can be optionally set to the returned grammar element.
@@ -550,14 +522,8 @@ def type_from_value(value, type_map={}):
 
     type_from_set_map = grammar_types.type_from_set_map
 
-    if isinstance(value, recognized_set_types) and not isinstance(
-        value, unyt.unyt_quantity
-    ):
-        return (
-            type_from_set_map[normalize_type(value[0].__class__)]
-            if len(value)
-            else grammar_types.Integer.I
-        )
+    if isinstance(value, recognized_set_types) and not isinstance(value, unyt.unyt_quantity):
+        return type_from_set_map[normalize_type(value[0].__class__)] if len(value) else grammar_types.Integer.I
     if isinstance(value, str):
         try:
             grammar_types.String._grammar.parse_string(value, True)

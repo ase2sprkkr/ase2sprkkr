@@ -11,13 +11,7 @@ if not __package__:
     __package__ = "ase2sprkkr.tools.commands"
 sys.path.append(str(Path(__file__).resolve().parents[3]))
 
-from ...common.tools import (
-    parse_tuple_function,
-    parse_named_option,
-    append_id_to_filename,
-    parse_inches,
-    main,
-)  # NOQA
+from ...common.tools import parse_tuple_function, parse_named_option, append_id_to_filename, parse_inches, main  # NOQA
 from ...common.lazy_string import LazyString  # NOQA
 
 
@@ -42,11 +36,7 @@ def parser(parser):
         else:
             return slice(out[0] - 1, out[1])
 
-    parser.add_argument(
-        "output",
-        help="SPR-KKR output file name (see the supported files above).",
-        nargs="+",
-    )
+    parser.add_argument("output", help="SPR-KKR output file name (see the supported files above).", nargs="+")
     parser.add_argument(
         "-o",
         "--output_filename",
@@ -76,21 +66,9 @@ def parser(parser):
         help='The plot size. Example: "5cm,5cm", "6,4". The default units are inches.',
         required=False,
     )
+    parser.add_argument("-c", "--colormap", dest="colormap", type=str, help="Matplotlib colormap", required=False)
     parser.add_argument(
-        "-c",
-        "--colormap",
-        dest="colormap",
-        type=str,
-        help="Matplotlib colormap",
-        required=False,
-    )
-    parser.add_argument(
-        "-d",
-        "--dpi",
-        dest="dpi",
-        type=float,
-        help="DPI of the resulting image (default 600)",
-        required=False,
+        "-d", "--dpi", dest="dpi", type=float, help="DPI of the resulting image (default 600)", required=False
     )
     parser.add_argument(
         "-n",
@@ -182,9 +160,7 @@ def run(args, global_args):
             except Exception as e:
                 if global_args["debug"]:
                     raise
-                print(
-                    f"File {kw.get('filename') or output} can not be plotted due to: \n {e} "
-                )
+                print(f"File {kw.get('filename') or output} can not be plotted due to: \n {e} ")
                 error = 1
 
         of = OutputFile.from_file(output)
@@ -207,19 +183,13 @@ def run(args, global_args):
                 try:
                     val = of[name.upper()]
                 except KeyError:
-                    raise ValueError(
-                        f"There is no value named '{name.upper()}' in the output file."
-                    )
+                    raise ValueError(f"There is no value named '{name.upper()}' in the output file.")
                 if not hasattr(val, "plot"):
-                    raise ValueError(
-                        f"Value '{name.upper()}' does not know, how it should be plotted."
-                    )
+                    raise ValueError(f"Value '{name.upper()}' does not know, how it should be plotted.")
                 plot(val, **kwargs)
         else:
             if not hasattr(of, "plot"):
-                raise ValueError(
-                    f"File '{of}' does not know, how it should be plotted."
-                )
+                raise ValueError(f"File '{of}' does not know, how it should be plotted.")
             plot(of, filename=fn, **kwargs)
 
     return error

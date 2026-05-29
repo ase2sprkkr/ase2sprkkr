@@ -5,14 +5,7 @@ import os
 import re
 from typing import Union
 from .common.decorators import cache
-from .common.grammar_types import (
-    CustomMixed,
-    AlwaysQString,
-    Array,
-    Bool,
-    Keyword,
-    Integer,
-)
+from .common.grammar_types import CustomMixed, AlwaysQString, Array, Bool, Keyword, Integer
 from .common.container_definitions import SectionDefinition, ConfigurationRootDefinition
 from .common.configuration_containers import RootConfigurationContainer
 from .common.value_definitions import ValueDefinition
@@ -33,9 +26,7 @@ def _get_suffix(*_):
 
 def user_preferences_file():
     """Return filename with user preferences"""
-    return os.path.join(
-        platformdirs.user_config_dir("ase2sprkkr", "ase2sprkkr"), "__init__.py"
-    )
+    return os.path.join(platformdirs.user_config_dir("ase2sprkkr", "ase2sprkkr"), "__init__.py")
 
 
 def load_user_preferences():
@@ -105,7 +96,7 @@ def mpi_runner(mpi):
 
       ::
 
-          ['mpirun', '-np', '4']
+          ["mpirun", "-np", "4"]
     """
     if mpi is None:
         mpi = config.running.mpi()
@@ -130,9 +121,7 @@ class Configuration(RootConfigurationContainer):
     def _generic_info(self):
         return "ASE2SPRKKR Configuration"
 
-    def store_value_permanent(
-        self, name: str, value, doc=None, doc_regex: bool or str = False
-    ):
+    def store_value_permanent(self, name: str, value, doc=None, doc_regex: bool or str = False):
         """
         Set/remove permanently the value with given name in the config file.
         No name/value checking. If the value is present, it is
@@ -160,9 +149,7 @@ class Configuration(RootConfigurationContainer):
         global user_preference_file
         file = user_preferences_file()
         if not os.path.isfile(file):
-            raise ValueError(
-                "Please, generate the user prefernce file using 'ase2sprkkr config -d' first."
-            )
+            raise ValueError("Please, generate the user prefernce file using 'ase2sprkkr config -d' first.")
 
         with open(file, "r+") as f:
             content = f.read()
@@ -184,9 +171,7 @@ class Configuration(RootConfigurationContainer):
                 cnt = 1
                 pre = ""
                 last = f"(?!(.*\n)*{pattern})"
-            content, replaced = re.subn(
-                f"{pre}(^|\n){pattern}[^\n]*(\n|$){last}", r"\1" + line, content, cnt
-            )
+            content, replaced = re.subn(f"{pre}(^|\n){pattern}[^\n]*(\n|$){last}", r"\1" + line, content, cnt)
             if replaced:
                 f.seek(0)
                 f.write(content)
@@ -292,8 +277,7 @@ definition = ConfigFileDefinition(
                     "suffix",
                     AlwaysQString.I,
                     default_value=_get_suffix,
-                    info="This suffix is appended (if not stated otherwise) to the SPRKKR "
-                    "executable names.",
+                    info="This suffix is appended (if not stated otherwise) to the SPRKKR executable names.",
                 ),
                 V(
                     "dir",
@@ -304,17 +288,7 @@ definition = ConfigFileDefinition(
             ],
             info="Configuration, that affects how the execubables are runned",
         ),
-        Section(
-            "nomad",
-            [
-                V(
-                    "token",
-                    AlwaysQString.I,
-                    info="Token for NOMAD upload",
-                    is_optional=True,
-                )
-            ],
-        ),
+        Section("nomad", [V("token", AlwaysQString.I, info="Token for NOMAD upload", is_optional=True)]),
     ],
 )
 

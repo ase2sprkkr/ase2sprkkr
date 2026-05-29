@@ -44,9 +44,7 @@ class OutputFile(ConfigurationFile):
     @cached_property
     def potential_filename(self):
         if not getattr(self, "_filename", None):
-            raise ValueError(
-                "The output file has no filename. Set the potential filename manually."
-            )
+            raise ValueError("The output file has no filename. Set the potential filename manually.")
 
         path = Path(self._filename)
         directory = path.parent
@@ -96,15 +94,7 @@ class OutputFile(ConfigurationFile):
         of the file"""
         V = output_files_definitions.OutputFileValueDefinition
         return output_files_definitions.create_output_file_definition(
-            V("KEYWORD", str),
-            [
-                V(
-                    "DATA",
-                    RestOfTheFile(),
-                    name_in_grammar=False,
-                    result_class=UnknownDataValue,
-                )
-            ],
+            V("KEYWORD", str), [V("DATA", RestOfTheFile(), name_in_grammar=False, result_class=UnknownDataValue)]
         )
 
     @cached_class_property
@@ -211,11 +201,7 @@ class OutputFile(ConfigurationFile):
                 return cls.unknown_output_file_definition.read_from_file(filename)
             except pp.ParseBaseException as e:
                 raise Exception(f"Can not parse file: {filename}") from e
-        raise (
-            first
-            or last
-            or ValueError(f"File {filename} is not recognized as any known file type")
-        )
+        raise (first or last or ValueError(f"File {filename} is not recognized as any known file type"))
 
 
 class CommonOutputFile(OutputFile):
@@ -244,9 +230,7 @@ class Arithmetic:
             try:
                 self._assert_arithmetic(other)
             except AssertionError as e:
-                raise ValueError(
-                    "The outputs are not compatibile to be summed or subtracted."
-                ) from e
+                raise ValueError("The outputs are not compatibile to be summed or subtracted.") from e
         pass
 
     def __add__(self, other):

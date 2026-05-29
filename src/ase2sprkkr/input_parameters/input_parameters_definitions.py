@@ -49,9 +49,7 @@ class InputSectionDefinition(ConfigurationSectionDefinition):
     result_class = InputSection
     """ The standard class for InputParameters section """
 
-    custom_class = staticmethod(
-        CustomConfigurationValue.factory(InputValueDefinition, mixed)
-    )
+    custom_class = staticmethod(CustomConfigurationValue.factory(InputValueDefinition, mixed))
     """ Factory for custom values in the input sections. """
 
     delimiter = "\n"
@@ -78,9 +76,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     result_class = InputParameters
     """ The parsing of a potential file results in an instance of :class:`InputParameters` """
 
-    custom_class = staticmethod(
-        CustomConfigurationSection.factory(InputSectionDefinition)
-    )
+    custom_class = staticmethod(CustomConfigurationSection.factory(InputSectionDefinition))
     """ The class factory for custom sections in the container """
 
     configuration_type_name = "INPUT PARAMETERS"
@@ -95,9 +91,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
             return x.set_whitespace_chars("")
 
         out = (
-            pp.Optional(section_line_ends)
-            + pp.OneOrMore(ws(pp.LineEnd()))
-            + pp.FollowedBy(ws(pp.Regex(r"[^\s]")))
+            pp.Optional(section_line_ends) + pp.OneOrMore(ws(pp.LineEnd())) + pp.FollowedBy(ws(pp.Regex(r"[^\s]")))
         ).suppress()
         out.set_name("<newline><printable>")
         return out
@@ -107,22 +101,12 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     def custom_value_grammar(cls):
         value = cls.child_class.custom_member_grammar()
         delim = cls.child_class.grammar_of_delimiter()
-        return delimitedList(value, delim).set_parse_action(
-            lambda x: dict_from_parsed(x.asList())
-        )
+        return delimitedList(value, delim).set_parse_action(lambda x: dict_from_parsed(x.asList()))
 
     def _generic_info(self):
         return f"Input parameters for task {self.name}"
 
-    def __init__(
-        self,
-        name,
-        members=None,
-        executable="kkrscf",
-        mpi=True,
-        result_reader=None,
-        **kwargs,
-    ):
+    def __init__(self, name, members=None, executable="kkrscf", mpi=True, result_reader=None, **kwargs):
         """
         Parameters
         ---------

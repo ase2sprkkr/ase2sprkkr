@@ -1,15 +1,8 @@
 """In this module the base classes for SPR-KKR configuration sections and files are present."""
 
-from ..common.configuration_containers import (
-    RootConfigurationContainer,
-    Section,
-    CustomSection,
-)
+from ..common.configuration_containers import RootConfigurationContainer, Section, CustomSection
 from ..common.repeated_configuration_containers import RepeatedConfigurationContainer
-from ..common.container_definitions import (
-    ConfigurationRootDefinition,
-    SectionDefinition,
-)
+from ..common.container_definitions import ConfigurationRootDefinition, SectionDefinition
 from ..common.value_definitions import ValueDefinition
 from ..common.options import Option, CustomOption
 
@@ -21,9 +14,7 @@ from .sprkkr_atoms import SPRKKRAtoms
 
 
 class ConfigurationSectionTrait:
-    def set_from_atoms(
-        self, atoms: Union[Optional[Atoms]], io_data: Optional[WriteIoData] = None
-    ):
+    def set_from_atoms(self, atoms: Union[Optional[Atoms]], io_data: Optional[WriteIoData] = None):
         """Set the sections' values of the potential according to the given ASE atoms object.
 
         Parameters
@@ -78,9 +69,7 @@ class ConfigurationSection(Section, ConfigurationSectionTrait):
     """Configuration section to be used in SPRKKR configuration files"""
 
 
-class RepeatedConfigurationSection(
-    RepeatedConfigurationContainer, ConfigurationSectionTrait
-):
+class RepeatedConfigurationSection(RepeatedConfigurationContainer, ConfigurationSectionTrait):
     """Configuration section to be used in SPRKKR configuration files"""
 
 

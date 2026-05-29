@@ -11,9 +11,7 @@ from ..potentials import Potential  # NOQA E402
 
 class Test2DPotential(TestCase):
     def test(self):
-        p = Potential.from_file(
-            os.path.join(os.path.dirname(__file__), "..", "examples", "GeTe.pot")
-        )
+        p = Potential.from_file(os.path.join(os.path.dirname(__file__), "..", "examples", "GeTe.pot"))
         atoms = p.atoms
         self.assertEqual(str(atoms.symbols), "GeXTeX" * 8 + "GeXTeX13")
         self.assertEqual(len(atoms.regions["left"]), 4)

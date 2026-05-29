@@ -19,11 +19,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         """
         The members of the container, in a form of ``{obj.name : obj}``
         """
-        self._values = (
-            []
-            if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION
-            else {}
-        )
+        self._values = [] if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION else {}
 
     def __getitem__(self, name):
         """
@@ -39,13 +35,8 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
 
     def add(self, id=None):
         out = self._definition.create_object(self, repeated=False)
-        if (id is None) != (
-            self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION
-        ):
-            raise ValueError(
-                "Non-none Id for repeated list is allowed"
-                "only for dict-like repeated containers"
-            )
+        if (id is None) != (self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION):
+            raise ValueError("Non-none Id for repeated list is allowedonly for dict-like repeated containers")
         if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
             self._values.append(out)
         else:
@@ -78,11 +69,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         generated: bool
           If True
         """
-        self._values = (
-            []
-            if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION
-            else {}
-        )
+        self._values = [] if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION else {}
 
     def get(self, name=None, unknown="find"):
         """
@@ -116,26 +103,10 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             raise ValueError(f"No {name} member of {self}")
         return val.get()
 
-    def set(
-        self,
-        values: Union[Dict[str, Any], str, None] = {},
-        value=None,
-        *,
-        unknown="find",
-        error=None,
-        **kwargs,
-    ):
+    def set(self, values: Union[Dict[str, Any], str, None] = {}, value=None, *, unknown="find", error=None, **kwargs):
         self._set(values, value, unknown=unknown, error=error, **kwargs)
 
-    def _set(
-        self,
-        values: Union[Dict[str, Any], str, None] = {},
-        value=None,
-        *,
-        unknown="find",
-        error=None,
-        **kwargs,
-    ):
+    def _set(self, values: Union[Dict[str, Any], str, None] = {}, value=None, *, unknown="find", error=None, **kwargs):
         """
         Set the value(s) of parameter(s). Usage:
 
@@ -173,8 +144,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
                 values = {values: value}
         elif value is not None:
             raise ValueError(
-                "If value argument of Container.set method is given,"
-                " the values have to be string name of the value"
+                "If value argument of Container.set method is given, the values have to be string name of the value"
             )
 
         if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
@@ -211,12 +181,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             return self._values
         return self._values.values()
 
-    def _as_dict(
-        self,
-        only_changed: Union[bool, str] = "basic",
-        generated: bool = False,
-        copy=False,
-    ):
+    def _as_dict(self, only_changed: Union[bool, str] = "basic", generated: bool = False, copy=False):
         """
         Return the content of the container as a dictionary.
         Nested containers will be transformed to dictionaries as well.
@@ -258,9 +223,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
     def __repr__(self):
         return super().__repr__() + "[]"
 
-    def _save_to_file(
-        self, file, always=False, name_in_grammar=None, delimiter=""
-    ) -> bool:
+    def _save_to_file(self, file, always=False, name_in_grammar=None, delimiter="") -> bool:
         """Save the content of the container to the file (according to the definition)
 
         Parameters
@@ -296,14 +259,8 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
           ``set`` - Validation on user input. Allow required values not to be set.
           ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.
         """
-        if (
-            why == "save"
-            and not self._definition.is_optional
-            and not self.has_any_value()
-        ):
-            DataValidityError.warn(
-                f"Non-optional section {self._definition.name} has no value to save"
-            )
+        if why == "save" and not self._definition.is_optional and not self.has_any_value():
+            DataValidityError.warn(f"Non-optional section {self._definition.name} has no value to save")
         for o in self.values():
             o._validate(why)
 
@@ -312,7 +269,5 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         if not ln:
             return np.empty((0,))
         return np.fromiter(
-            (self[i][name]() for i in self),
-            count=ln,
-            dtype=self[0][name]._definition.type.numpy_dtype()[0],
+            (self[i][name]() for i in self), count=ln, dtype=self[0][name]._definition.type.numpy_dtype()[0]
         )

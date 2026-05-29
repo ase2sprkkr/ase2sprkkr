@@ -25,9 +25,7 @@ class Occupation:
     @staticmethod
     def for_atom_from_ase_atoms(atoms, i: Integral):
         if "spacegroup_kinds" in atoms.arrays and "occupancy" in atoms.arrays:
-            occ = atoms.arrays["occupancy"].get(
-                atoms.arrays["spacegroup_kinds"][i], None
-            )
+            occ = atoms.arrays["occupancy"].get(atoms.arrays["spacegroup_kinds"][i], None)
         else:
             occ = None
         if not occ:
@@ -62,16 +60,11 @@ class Occupation:
         """Create a copy of the object, associated with a given site."""
         if for_mesh is None and site is not None:
             for_mesh = site.mesh
-        return Occupation(
-            {a.for_mesh(for_mesh): v for a, v in self._occupation.items()}, site
-        )
+        return Occupation({a.for_mesh(for_mesh): v for a, v in self._occupation.items()}, site)
 
     def set(
         self,
-        dct: Union[
-            Dict[Union[AtomicType, str], float],
-            List[Tuple[Union[AtomicType, str], float]],
-        ],
+        dct: Union[Dict[Union[AtomicType, str], float], List[Tuple[Union[AtomicType, str], float]]],
         update_atoms=True,
         for_mesh=None,
     ) -> None:
@@ -89,9 +82,7 @@ class Occupation:
             iterator = dct
         if not for_mesh:
             for_mesh = self.mesh
-        self._occupation = dict(
-            (AtomicType.to_atomic_type(i, for_mesh), j) for i, j in iterator
-        )
+        self._occupation = dict((AtomicType.to_atomic_type(i, for_mesh), j) for i, j in iterator)
         self._normalize()
         if update_atoms:
             self._update_atoms()
@@ -102,9 +93,7 @@ class Occupation:
 
     @property
     def mesh(self):
-        (len(self._occupation) and self.atomic_type(0).mesh) or (
-            self._site and self._site.mesh
-        ) or None
+        (len(self._occupation) and self.atomic_type(0).mesh) or (self._site and self._site.mesh) or None
 
     def items(self):
         """dict.items() like enumeration"""
@@ -151,18 +140,14 @@ class Occupation:
         name = self._find_key(name)
         return self._occupation[name]
 
-    def replace_type(
-        self, name: Union[str, int, AtomicType], to: Union[str, AtomicType]
-    ):
+    def replace_type(self, name: Union[str, int, AtomicType], to: Union[str, AtomicType]):
         """
         Replace the given atomic type (see :meth:`atomic_type<ase2sprkkr.sprkkr.occupations.Occupation.atomic_type>`, how
         it can be identified) by the new one (given either by AtomicType or by its chemical symbol)
         """
         key = self._find_key(name)
         to = AtomicType.to_atomic_type(to, self.mesh)
-        self._occupation = dict(
-            (k if k is not key else to, v) for k, v in self._occupation.items()
-        )
+        self._occupation = dict((k if k is not key else to, v) for k, v in self._occupation.items())
 
     def clean(self):
         """Remove all items with zero probability."""

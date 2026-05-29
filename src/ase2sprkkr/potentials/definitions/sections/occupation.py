@@ -26,21 +26,13 @@ class OccupationSection(PotentialSection):
                 list(gen_occ),
             )
 
-        self["DATA"].set(
-            [onesite(i) for i in atoms.sites[write_io_data["sites_order"]]]
-        )
+        self["DATA"].set([onesite(i) for i in atoms.sites[write_io_data["sites_order"]]])
 
     def _update_atoms(self, atoms, read_io_data):
         data = self["DATA"]
         indexes = [tuple(d) for d in data()]
-        sg_info = SpacegroupInfo(atoms).recompute(
-            init=True, atomic_kinds=indexes, update_info=False
-        )
-        unique = (
-            sg_info.dataset.equivalent_atoms
-            if sg_info.dataset
-            else np.arange(len(indexes))
-        )
+        sg_info = SpacegroupInfo(atoms).recompute(init=True, atomic_kinds=indexes, update_info=False)
+        unique = sg_info.dataset.equivalent_atoms if sg_info.dataset else np.arange(len(indexes))
 
         tags = {}
 
@@ -53,9 +45,7 @@ class OccupationSection(PotentialSection):
             if ind not in tags:
                 occ = d["ITOQ CONC"]
                 mesh = read_io_data["meshes"][d["IMQ"] - 1]
-                occ = Occupation(
-                    {(read_io_data["types"][it - 1], oc) for it, oc in occ}, mesh=mesh
-                )
+                occ = Occupation({(read_io_data["types"][it - 1], oc) for it, oc in occ}, mesh=mesh)
                 site = Site.create(
                     atoms=atoms,
                     occupation=occ,
@@ -80,9 +70,7 @@ class OccupationSectionDefinition(PotSectionDefinition):
         V = PotValueDefinition
 
         def validate_row(result):
-            return (
-                result[2] == len(result[3]) or "Number of occupations differs from NOQ"
-            )
+            return result[2] == len(result[3]) or "Number of occupations differs from NOQ"
 
         members = [
             V(

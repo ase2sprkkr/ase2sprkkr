@@ -44,9 +44,7 @@ class DOS(Arithmetic):
     def __getitem__(self, key):
         return self.dos[key]
 
-    def plot(
-        self, axis=None, legend_ncols=1, legend_height=0.3, legend_fontsize=10, **kwargs
-    ):
+    def plot(self, axis=None, legend_ncols=1, legend_height=0.3, legend_fontsize=10, **kwargs):
         axis.set_xlabel(r"$E-E_{\rm F}$ (eV)")
         axis.set_ylabel(r"DOS (states/eV)")
 
@@ -54,9 +52,7 @@ class DOS(Arithmetic):
         if self.type:
             title = [self.type]
         if self.spin is not None:
-            title.append(
-                "spin {}".format({0: "up", 1: "down"}.get(self.spin, self.spin))
-            )
+            title.append("spin {}".format({0: "up", 1: "down"}.get(self.spin, self.spin)))
         if self.l is not None:
             orbital = {0: "s", 1: "p", 2: "d", 3: "f"}.get(self.l, None)
             title.append(orbital + "orbitals" if orbital else self.l)
@@ -84,17 +80,11 @@ class DOS(Arithmetic):
             if self.l is not None:
                 handles = [plot_l(data, spin, self.l)]
             else:
-                handles = [
-                    plot_l(d, spin, l) for d, l in zip(data, ("s", "p", "d", "f"))
-                ]
+                handles = [plot_l(d, spin, l) for d, l in zip(data, ("s", "p", "d", "f"))]
                 if len(handles):
                     handles.append(plot_l(np.sum(data, axis=0), spin, "total"))
             if legend and not self.l:
-                ncols = (
-                    "ncols"
-                    if Version(matplotlib.__version__) >= Version("3.6")
-                    else "ncol"
-                )
+                ncols = "ncols" if Version(matplotlib.__version__) >= Version("3.6") else "ncol"
                 axis.legend(
                     handles=handles,
                     loc="best",
@@ -160,16 +150,10 @@ class DOSOutputFile(CommonOutputFile):
         if n_types > 1:
             n_types += 1
         if isinstance(layout, int):
-            layout = ( (n_types - 1) // layout + 1, min(layout, n_types))
+            layout = ((n_types - 1) // layout + 1, min(layout, n_types))
         print(layout)
         with Multiplot(
-            layout=layout,
-            figsize=figsize,
-            latex=latex,
-            filename=filename,
-            show=show,
-            dpi=dpi,
-            **kwargs,
+            layout=layout, figsize=figsize, latex=latex, filename=filename, show=show, dpi=dpi, **kwargs
         ) as mp:
             for dos in self.iterate_dos(spin, l, total=n_types > 1):
                 mp.plot(dos)
@@ -190,9 +174,7 @@ class DOSOutputFile(CommonOutputFile):
                         name = i
                         break
                 else:
-                    raise KeyError(
-                        f"There is no atomic type {name} nor such value in the DOS file"
-                    ) from ke
+                    raise KeyError(f"There is no atomic type {name} nor such value in the DOS file") from ke
             for i, slc in enumerate(self.iterate_data_slices()):
                 if i == name:
                     return self._create_dos(slc, i)
@@ -299,12 +281,7 @@ def create_definition():
             V("DOS-FMT", str, written_name="DOS-FMT:"),
             V(
                 "RAW_DATA",
-                NumpyArray(
-                    written_shape=(-1, 8),
-                    delimiter=10,
-                    indented=(80, 10),
-                    item_format="%8.4E",
-                ),
+                NumpyArray(written_shape=(-1, 8), delimiter=10, indented=(80, 10), item_format="%8.4E"),
                 name_in_grammar=False,
             ),
             NV("ENERGY", "RAW_DATA", i(0), info="Energies"),
@@ -315,9 +292,7 @@ def create_definition():
                 i(slice(2, None)),
                 ("NE", -1),
                 transpose=True,
-                transform_key=lambda k, dos: (
-                    dos.index_of_dos_for_site_type(k) if isinstance(k, str) else k
-                ),
+                transform_key=lambda k, dos: dos.index_of_dos_for_site_type(k) if isinstance(k, str) else k,
                 info="Desntity of states",
                 description="Density of states, the leading dimension iterates: "
                 "1..n_atoms, 1..n_spins, 1..n_orbitals(atoms) ",

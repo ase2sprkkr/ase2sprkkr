@@ -21,66 +21,26 @@ def parser(parser):
         default=None,
         help="Output file name of a JXC computation (if it is given, other files can be found automatically)",
     )
+    group.add_argument("-p", "--pot-file", type=str, default=None, help="Input potential file (.pot or .pot_new)")
     group.add_argument(
-        "-p",
-        "--pot-file",
-        type=str,
-        default=None,
-        help="Input potential file (.pot or .pot_new)",
+        "-j", "--jxc-file", type=str, default=None, help="Input exchange interaction file (_XCPLTEN_Jij.dat)"
     )
-    group.add_argument(
-        "-j",
-        "--jxc-file",
-        type=str,
-        default=None,
-        help="Input exchange interaction file (_XCPLTEN_Jij.dat)",
-    )
-    group.add_argument(
-        "-d",
-        "--dmi-file",
-        type=str,
-        default=None,
-        help="Input DMI file (_DMIVEC_Dij.dat)",
-    )
+    group.add_argument("-d", "--dmi-file", type=str, default=None, help="Input DMI file (_DMIVEC_Dij.dat)")
 
     group = parser.add_argument_group("Geerating uppasd files")
-    group.add_argument(
-        "-o", "--output-dir", type=str, default=".", help="Output directory for files"
-    )
-    group.add_argument(
-        "-u",
-        "--inpsd",
-        action="store_true",
-        default=None,
-        help="Write inpsd input file stub",
-    )
-    group.add_argument(
-        "-n", "--no-write", action="store_true", help="Skip writing output files"
-    )
+    group.add_argument("-o", "--output-dir", type=str, default=".", help="Output directory for files")
+    group.add_argument("-u", "--inpsd", action="store_true", default=None, help="Write inpsd input file stub")
+    group.add_argument("-n", "--no-write", action="store_true", help="Skip writing output files")
 
     group = parser.add_argument_group("Plotting")
-    group.add_argument(
-        "--plot", action="store_true", help="Generate exchange interaction plots"
-    )
+    group.add_argument("--plot", action="store_true", help="Generate exchange interaction plots")
     group.add_argument("--no-plot", action="store_true", help="Skip generating plots")
+    group.add_argument("--separate-plots", action="store_true", help="Generate one plot file per site type")
     group.add_argument(
-        "--separate-plots",
-        action="store_true",
-        help="Generate one plot file per site type",
+        "--axis", type=str, choices=("all", "x", "y", "z"), default="all", help="DMI component to plot: all, x, y, or z"
     )
     group.add_argument(
-        "--axis",
-        type=str,
-        choices=("all", "x", "y", "z"),
-        default="all",
-        help="DMI component to plot: all, x, y, or z",
-    )
-    group.add_argument(
-        "-r",
-        "--exchange-radius",
-        type=float,
-        default=4.0,
-        help="Maximum distance for exchange interaction plots",
+        "-r", "--exchange-radius", type=float, default=4.0, help="Maximum distance for exchange interaction plots"
     )
     group.add_argument(
         "-c",
@@ -91,43 +51,24 @@ def parser(parser):
         const="cartesian",
         help="Use cartesian coordinates for interaction instead of lattice ones",
     )
-    group.add_argument(
-        "-f", "--font-size", type=int, default=14, help="Font size for plots"
-    )
+    group.add_argument("-f", "--font-size", type=int, default=14, help="Font size for plots")
 
     group = parser.add_argument_group("Filtering")
     group.add_argument(
-        "-e",
-        "--exclude",
-        type=str,
-        nargs="*",
-        default=None,
-        help="Comma-separated site selectors to exclude",
+        "-e", "--exclude", type=str, nargs="*", default=None, help="Comma-separated site selectors to exclude"
     )
     group.add_argument(
-        "-i",
-        "--include",
-        type=str,
-        nargs="*",
-        default=None,
-        help="Comma-separated site selectors to include",
+        "-i", "--include", type=str, nargs="*", default=None, help="Comma-separated site selectors to include"
     )
     group.add_argument(
-        "--include-vacuum",
-        action="store_true",
-        help="Include vacuum sites in selector matching and exported outputs",
+        "--include-vacuum", action="store_true", help="Include vacuum sites in selector matching and exported outputs"
     )
 
 
 def run(args, global_args):
     import glob
 
-    from ...bindings.uppasd import (
-        Coordinates,
-        write_mom_file,
-        write_pos_file,
-        write_inpsd_file,
-    )  # NOQA
+    from ...bindings.uppasd import Coordinates, write_mom_file, write_pos_file, write_inpsd_file  # NOQA
     from ...output_files.output_files import OutputFile  # NOQA
     from ...output_files.definitions.jxc import JXCOutputFile  # NOQA
     from ...potentials.potentials import Potential  # NOQA
@@ -138,13 +79,7 @@ def run(args, global_args):
         return output
 
     def _plot_exchange_interactions(
-        output,
-        output_dir,
-        selector,
-        exchange_radius,
-        font_size,
-        separate_plots=False,
-        axis="all",
+        output, output_dir, selector, exchange_radius, font_size, separate_plots=False, axis="all"
     ):
         if output.is_Jij():
             plot_name = "Jij"
@@ -242,20 +177,13 @@ def run(args, global_args):
 
         selector_obj = jxc_output or dmi_output or JXCOutputFile.from_atoms(atoms)
         selector = selector_obj.create_selector(
-            iq=args.include,
-            it=args.include,
-            exclude_it=args.exclude,
-            exclude_vc=not args.include_vacuum,
+            iq=args.include, it=args.include, exclude_it=args.exclude, exclude_vc=not args.include_vacuum
         )
         coordinates = getattr(Coordinates, args.coordinates)
         print(f"Potential: {args.pot_file}")
         print(f"Number of atoms: {len(atoms.sites)}")
         if selector.it is not ...:
-            print(
-                f"Selected IQs: {
-                    ', '.join(map(lambda i: selector_obj.it_labels[i], selector.it))
-                }"
-            )
+            print(f"Selected IQs: {', '.join(map(lambda i: selector_obj.it_labels[i], selector.it))}")
 
         if not args.no_write and dmi_output is not None:
             dmi_output.write_uppasd_file(
@@ -274,24 +202,11 @@ def run(args, global_args):
             )
 
         if not args.no_write:
-            write_pos_file(
-                atoms,
-                output_dir / "posfile.dat",
-                selector=selector,
-            )
-            if not write_mom_file(
-                atoms,
-                output_dir / "momfile.dat",
-                selector=selector,
-            ):
-                print(
-                    "Warning: no selected site type has moments. Skipping momfile.dat."
-                )
+            write_pos_file(atoms, output_dir / "posfile.dat", selector=selector)
+            if not write_mom_file(atoms, output_dir / "momfile.dat", selector=selector):
+                print("Warning: no selected site type has moments. Skipping momfile.dat.")
             if args.inpsd:
-                write_inpsd_file(
-                    atoms,
-                    directory=output_dir,
-                )
+                write_inpsd_file(atoms, directory=output_dir)
 
         if args.plot and not args.no_plot and jxc_output is not None:
             _plot_exchange_interactions(

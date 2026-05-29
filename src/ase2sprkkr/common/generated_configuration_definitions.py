@@ -65,9 +65,7 @@ class Length(InheritingValueModifier):
     def __init__(self, *of, default_values=_NO_DEFAULT):
         self._length_of = of
         if default_values is not self._NO_DEFAULT:
-            if not isinstance(default_values, (list, tuple)) or (
-                len(of) == 1 and len(default_values) != 1
-            ):
+            if not isinstance(default_values, (list, tuple)) or (len(of) == 1 and len(default_values) != 1):
                 default_values = (default_values,) * len(of)
             else:
                 assert len(default_values) == len(of)
@@ -137,9 +135,7 @@ class Length(InheritingValueModifier):
             if len(data[i]) != ln:
                 err.append(i)
         if err:
-            raise pp.ParseException(
-                f"Length of {' and'.join(err)} should be {ln} as stated in {self.get_path()}"
-            )
+            raise pp.ParseException(f"Length of {' and'.join(err)} should be {ln} as stated in {self.get_path()}")
 
     def _create_grammar(self, allow_dangerous):
         """Add check for the length"""
@@ -149,9 +145,7 @@ class Length(InheritingValueModifier):
             data = MergeSectionDefinitionAdaptor(data, self.container)
             self.validate_section(data, length=ln)
 
-        return out.set_parse_action(
-            lambda x: (ValidateKey(x[0]), lambda d: validate(d, x[1]))
-        )
+        return out.set_parse_action(lambda x: (ValidateKey(x[0]), lambda d: validate(d, x[1])))
 
 
 class NumpyViewDefinition(BaseGeneratedValueDefinition):
@@ -192,9 +186,7 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
      PlotInfo object that defines how the results are plotted
     """
 
-    def data_description(
-        self, verbose: Union[bool, str] = False, show_hidden=False, prefix: str = ""
-    ):
+    def data_description(self, verbose: Union[bool, str] = False, show_hidden=False, prefix: str = ""):
         if self.shape:
             shape = f"({self.shape})"
         else:
@@ -245,9 +237,7 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
         if self.shape:
             out.shape = self.determine_shape(container)
         if self.reorder:
-            out = np.transpose(
-                out, axes=self.reorder if self.reorder is not True else None
-            )
+            out = np.transpose(out, axes=self.reorder if self.reorder is not True else None)
         return out
 
     def getter(self, container, key=None):

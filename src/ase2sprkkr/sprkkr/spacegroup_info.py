@@ -129,12 +129,7 @@ class RegionSpacegroupInfo(BaseSpacegroupInfo):
 class SpacegroupInfo(BaseSpacegroupInfo):
     """Class, that carry information about spacegroup and symmetry of a structure"""
 
-    def __init__(
-        self,
-        atoms: sprkkr_atoms.SPRKKRAtoms,
-        symmetry=True,
-        dataset: Optional[Dict] = None,
-    ):
+    def __init__(self, atoms: sprkkr_atoms.SPRKKRAtoms, symmetry=True, dataset: Optional[Dict] = None):
         """
         Parameters
         ----------
@@ -189,11 +184,7 @@ class SpacegroupInfo(BaseSpacegroupInfo):
         occ = a.info.get("occupancy", {})
         for site, kind in zip(a.sites, a.array("spacegroup_kinds")):
             st = site.site_type
-            if (
-                kinds.setdefault(kind, st) != st
-                or sites.setdefault(st, kind) != kind
-                or str(kind) not in occ
-            ):
+            if kinds.setdefault(kind, st) != st or sites.setdefault(st, kind) != kind or str(kind) not in occ:
                 return False
         return True
 
@@ -261,9 +252,7 @@ class SpacegroupInfo(BaseSpacegroupInfo):
                 )
             if not consider_old:
                 self.consider_old = False
-            self._block.angular_precision = min(
-                angular_precision, self._block.angular_precision
-            )
+            self._block.angular_precision = min(angular_precision, self._block.angular_precision)
             self._block.precision = min(precision, self._block.precision)
             self._block.do = True
             return
@@ -275,9 +264,7 @@ class SpacegroupInfo(BaseSpacegroupInfo):
             old_sites = atoms.sites
         creator = SiteType.creator(atoms)
         if not init:
-            stype_copier = (
-                site_type_copier(atoms) if copy else used_site_type_copier(atoms)
-            )
+            stype_copier = site_type_copier(atoms) if copy else used_site_type_copier(atoms)
 
             def create(i):
                 osite = old_sites[i]
@@ -310,9 +297,7 @@ class SpacegroupInfo(BaseSpacegroupInfo):
 
             to_global = indexes[slice]
             if self.symmetry and dataset:
-                uniq, index, umap = np.unique(
-                    dataset.equivalent_atoms, return_index=True, return_inverse=True
-                )
+                uniq, index, umap = np.unique(dataset.equivalent_atoms, return_index=True, return_inverse=True)
                 stypes = np.empty(len(uniq), dtype=object)
                 for i, site in enumerate(index):
                     stypes[i] = create(to_global[site])

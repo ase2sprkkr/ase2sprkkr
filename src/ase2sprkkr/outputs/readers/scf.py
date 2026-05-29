@@ -10,16 +10,7 @@ from ..output_definitions import (
     OutputValueEqualDefinition as VE,
     OutputNonameValueDefinition as VN,
 )
-from ...common.grammar_types import (
-    Table,
-    integer,
-    string,
-    Real,
-    RealWithUnits,
-    String,
-    Sequence,
-    Array,
-)
+from ...common.grammar_types import Table, integer, string, Real, RealWithUnits, String, Sequence, Array
 from ..task_result import TaskResult, ResultValue
 from ...common.process_output_reader import readline, readline_until
 from ..sprkkr_output_reader import SprKkrOutputParser
@@ -55,11 +46,7 @@ class DataValue(ResultValue):
 
 
 def plot_iterations(
-    iterations,
-    what=["error", ("energy", "ETOT"), ("energy", "EMIN")],
-    filename=None,
-    logscale=None,
-    **kwargs,
+    iterations, what=["error", ("energy", "ETOT"), ("energy", "EMIN")], filename=None, logscale=None, **kwargs
 ):
 
     import matplotlib.pyplot as pyplot
@@ -90,9 +77,7 @@ def plot_iterations(
 class RealOrStars(Real):
     """A real value, where ``****`` means ``NaN``"""
 
-    _grammar = Real._grammar | replace_whitechars(pp.Word("*")).set_parse_action(
-        lambda x: float("NaN")
-    )
+    _grammar = Real._grammar | replace_whitechars(pp.Word("*")).set_parse_action(lambda x: float("NaN"))
 
 
 class ScfResult(TaskResult):
@@ -174,23 +159,13 @@ class ScfResult(TaskResult):
             "converged": ResultValue("Converged", str(self.last_iteration.converged())),
             "iterations": ResultValue("Number of iterations", len(self.iterations)),
             "fermi energy": IterationValue(
-                "Fermi energy",
-                self.last_iteration.energy.EF(),
-                lambda: self.plot(("energy", "EF")),
+                "Fermi energy", self.last_iteration.energy.EF(), lambda: self.plot(("energy", "EF"))
             ),
-            "error": IterationValue(
-                "Error", self.last_iteration.error(), lambda: self.plot("error")
-            ),
+            "error": IterationValue("Error", self.last_iteration.error(), lambda: self.plot("error")),
             "data": DataValue("Data", self),
         }
 
-    def plot(
-        self,
-        what=["error", ("energy", "ETOT"), ("energy", "EMIN")],
-        filename=None,
-        logscale=None,
-        **kwargs,
-    ):
+    def plot(self, what=["error", ("energy", "ETOT"), ("energy", "EMIN")], filename=None, logscale=None, **kwargs):
         """Plot the development of the given value(s) during iterations.
 
         Parameters
@@ -252,9 +227,7 @@ class PlottableValue(V):
     def enrich(self, option):
         def plot(options, **kwargs):
             c = option._container._container
-            plot_iterations(
-                option._container._container, self.get_path[len(c.get_path) :], **kwargs
-            )
+            plot_iterations(option._container._container, self.get_path[len(c.get_path) :], **kwargs)
 
         option.plot = lambda **kwargs: plot(option, **kwargs)
         super().enrich(option)
@@ -272,18 +245,8 @@ scf_section = Section(
         V("system_name", str),
         V("iteration", int, info="Number of the iteration."),
         PV("error", float),
-        V(
-            "b_error",
-            float,
-            is_required=False,
-            info="RMS error of the exchange-correlation B-field at this iteration.",
-        ),
-        V(
-            "duration",
-            float,
-            is_required=False,
-            info="Execution time of this iteration in seconds.",
-        ),
+        V("b_error", float, is_required=False, info="RMS error of the exchange-correlation B-field at this iteration."),
+        V("duration", float, is_required=False, info="Execution time of this iteration in seconds."),
         V("converged", bool, info="True, if the SCF cycle converged this iteration."),
         Section("moment", [PV("spin", float), PV("orbital", float)]),
         Section(
@@ -291,23 +254,9 @@ scf_section = Section(
             [
                 PV(("EF", "fermi"), float, info="Fermi energy"),
                 PV(("ETOT", "total"), float, info="Total energy"),
-                PV(
-                    ("EMIN", "band_states_min"),
-                    float,
-                    info="Bottom of energy contour for band states",
-                ),
-                PV(
-                    ("ESCBOT", "semi_core_min"),
-                    float,
-                    info="Lower limit for semi-core states",
-                    is_required=False,
-                ),
-                PV(
-                    ("ECTOP", "core_max"),
-                    float,
-                    info="Upper limit for core states",
-                    is_required=False,
-                ),
+                PV(("EMIN", "band_states_min"), float, info="Bottom of energy contour for band states"),
+                PV(("ESCBOT", "semi_core_min"), float, info="Lower limit for semi-core states", is_required=False),
+                PV(("ECTOP", "core_max"), float, info="Upper limit for core states", is_required=False),
             ],
         ),
         Section("atomic_types", atomic_types_definition.members(), is_repeated=True),
@@ -349,9 +298,7 @@ class ScfOutputParser(SprKkrOutputParser):
                 if b"ECTOP" in line:
                     out["energy"]["ECTOP"] = float(line.split(b"=")[1])
 
-                line = await readline_until(
-                    stdout, lambda line: b"SPRKKR-run for: " in line
-                )
+                line = await readline_until(stdout, lambda line: b"SPRKKR-run for: " in line)
                 line = line.strip()
                 if first and self.print_info:
                     print(line)

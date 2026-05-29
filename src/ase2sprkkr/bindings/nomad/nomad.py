@@ -15,10 +15,7 @@ from typing import Optional, Union, Dict
 
 def map_io_to_nomad(items):
 
-    return [
-        {"name": i[0], "section": i[1]} if isinstance(i, tuple) else {"section": i}
-        for i in items
-    ]
+    return [{"name": i[0], "section": i[1]} if isinstance(i, tuple) else {"section": i} for i in items]
 
 
 class ExternalEntry:
@@ -41,13 +38,7 @@ class ExternalEntry:
 class NomadEntry:
     """Description of a entry in a :class:`NomadArchive`"""
 
-    def __init__(
-        self,
-        archive,
-        name,
-        output: TaskResult,
-        depends_on: "Union[str, bool, NomadEntry]",
-    ):
+    def __init__(self, archive, name, output: TaskResult, depends_on: "Union[str, bool, NomadEntry]"):
         self.archive = archive
         self.name = name
         self.output = output
@@ -64,18 +55,13 @@ class NomadEntry:
             p2 = value.output.path_to("converged")
             if p1 != p2 and not filecmp.cmp(p1, p2):
                 raise ValueError(
-                    f"The task {self.output.files['output']} does not use "
-                    f"potential from {value.output.files['output']}"
+                    f"The task {self.output.files['output']} does not use potential from {value.output.files['output']}"
                 )
-            self.archive.add_symlink(
-                os.path.join("..", value.file("converged")), self.file("potential")
-            )
+            self.archive.add_symlink(os.path.join("..", value.file("converged")), self.file("potential"))
         self._depends_on = value
 
     def file(self, name):
-        return os.path.join(
-            os.path.dirname(self.name), os.path.basename(self.output.files[name])
-        )
+        return os.path.join(os.path.dirname(self.name), os.path.basename(self.output.files[name]))
 
     @cached_property
     def task_name(self):
@@ -109,12 +95,7 @@ class NomadEntry:
 class NomadArchive:
     """This class handles Nomad uploads"""
 
-    def __init__(
-        self,
-        filename: Optional[str] = None,
-        depends: Union[str, bool] = True,
-        name=None,
-    ):
+    def __init__(self, filename: Optional[str] = None, depends: Union[str, bool] = True, name=None):
         """
         Parameters
         ----------
@@ -169,22 +150,14 @@ class NomadArchive:
             self.zip.write(output.path_to(kind), os.path.join(folder, file))
 
         for kind in output.files:
-            if (
-                kind == "potential"
-                and not isinstance(depends, ExternalEntry)
-                and not output.task_name.lower() == "scf"
-            ):
+            if kind == "potential" and not isinstance(depends, ExternalEntry) and not output.task_name.lower() == "scf":
                 continue
             add_file(output.path_to(kind))
 
         self.entries[name] = out
         return out
 
-    def add_entry(
-        self,
-        output: Union[TaskResult, str],
-        depends: Union[str, bool, NomadEntry] = True,
-    ):
+    def add_entry(self, output: Union[TaskResult, str], depends: Union[str, bool, NomadEntry] = True):
         """
         Add entry
 
@@ -215,10 +188,7 @@ class NomadArchive:
 
     def finalize(self):
         self.resolve_auto_dependencies()
-        self.zip.writestr(
-            "workflow.archive.yaml",
-            yaml.dump(self.workflow(), Dumper=IndentDumper, sort_keys=False),
-        )
+        self.zip.writestr("workflow.archive.yaml", yaml.dump(self.workflow(), Dumper=IndentDumper, sort_keys=False))
         self.zip.close()
         self.file.seek(0)
 
@@ -228,13 +198,9 @@ class NomadArchive:
         """
         auto = [i for i in self.entries.values() if i.depends_on is True]
         if auto:
-            scf = [
-                i for i in self.entries.values() if i.output.task_name.lower() == "scf"
-            ]
+            scf = [i for i in self.entries.values() if i.output.task_name.lower() == "scf"]
             if len(scf) != 1:
-                raise ValueError(
-                    "If an automatic dependency is used, just one SCF task have to be submited."
-                )
+                raise ValueError("If an automatic dependency is used, just one SCF task have to be submited.")
             scf = scf[0]
             for i in auto:
                 i.depends_on = scf

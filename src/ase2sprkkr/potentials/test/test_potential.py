@@ -36,12 +36,7 @@ class TestPotential(TestCase):
 
     def test_potential(self, temporary_dir):
         a = 5.64
-        nacl = crystal(
-            ["Na", "Cl"],
-            [(0, 0, 0), (0.5, 0.5, 0.5)],
-            spacegroup=225,
-            cellpar=[a, a, a, 90, 90, 90],
-        )
+        nacl = crystal(["Na", "Cl"], [(0, 0, 0), (0.5, 0.5, 0.5)], spacegroup=225, cellpar=[a, a, a, 90, 90, 90])
 
         sio = io.StringIO()
         p1 = Potential.from_atoms(nacl)
@@ -62,16 +57,9 @@ class TestPotential(TestCase):
         path = os.path.join(os.path.dirname(__file__), "..", "examples", "GeTe.pot")
         p = Potential.from_file(path)
         if os.environ.get("DO_NOT_RUN_SPRKKR", "") == "":
-            SPRKKR().calculate(
-                potential=p,
-                **self.calc_args(
-                    options={"NITER": 1, "NKTAB": 5, "NE": 5, "TOL": 1e-2}
-                ),
-            )
+            SPRKKR().calculate(potential=p, **self.calc_args(options={"NITER": 1, "NKTAB": 5, "NE": 5, "TOL": 1e-2}))
         else:
-            SPRKKR().save_input(
-                potential=p, **self.calc_args(options={"NITER": 1}, TYPE="save_input")
-            )
+            SPRKKR().save_input(potential=p, **self.calc_args(options={"NITER": 1}, TYPE="save_input"))
 
     @pytest.mark.slow
     def test_potential_data(self, temporary_dir):
@@ -88,14 +76,10 @@ class TestPotential(TestCase):
         pp = Potential.from_file(s)
         p = Potential.from_file(path)
         self.assertEqual(pp.atoms.sites[1].potential.bt, -p.atoms.sites[1].potential.bt)
-        self.assertFalse(
-            np.allclose(pp.atoms.sites[1].potential.bt, p.atoms.sites[1].potential.bt)
-        )
+        self.assertFalse(np.allclose(pp.atoms.sites[1].potential.bt, p.atoms.sites[1].potential.bt))
 
         if os.environ.get("DO_NOT_RUN_SPRKKR", "") == "":
-            SPRKKR().calculate(
-                potential=p, **self.calc_args(options={"NITER": 1, "NKTAB": 5, "NE": 5})
-            )
+            SPRKKR().calculate(potential=p, **self.calc_args(options={"NITER": 1, "NKTAB": 5, "NE": 5}))
 
     def test_examples(self):
         path = os.path.join(os.path.dirname(__file__), "..", "examples")
@@ -128,9 +112,7 @@ class TestPotential(TestCase):
         self.assertEqual(datetime, p.HEADER.FORMAT[1].__class__)
 
     def test_reset(self):
-        pot = Potential.from_file(
-            os.path.join(os.path.dirname(__file__), "../examples/fp_new.pot")
-        )
+        pot = Potential.from_file(os.path.join(os.path.dirname(__file__), "../examples/fp_new.pot"))
         pot.atoms.sites[0].mesh.r1 = 1.0
         pot.MESH_INFORMATION.DATA()[0][0] = 2.0
         self.assertNotEqual(pot.SCF_INFO.SCFSTATUS(), "START")

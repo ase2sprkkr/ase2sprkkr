@@ -4,13 +4,7 @@ Variant type that can accepts either number or two-item array)"""
 import pyparsing as pp
 import copy
 
-from .grammar_type import (
-    GrammarType,
-    compare_numpy_values,
-    recognized_set_types,
-    type_from_type,
-    type_from_value,
-)
+from .grammar_type import GrammarType, compare_numpy_values, recognized_set_types, type_from_type, type_from_value
 from ..decorators import cached_property, add_to_signature
 
 from .basic import Energy, Real, Integer, QString, LineString, Flag, Bool, Boolean
@@ -81,19 +75,9 @@ class Range(BaseMixed):
         return self.types[1 if isinstance(value, recognized_set_types) else 0]
 
 
-def VariantGenerator(
-    name, bool_type=Boolean.I, string_type=QString.I, add_types=None, doc=None
-):
+def VariantGenerator(name, bool_type=Boolean.I, string_type=QString.I, add_types=None, doc=None):
 
-    base_types = [
-        Energy.I,
-        Real.I,
-        Integer.I,
-        set_of_integers,
-        set_of_reals,
-        bool_type,
-        string_type,
-    ]
+    base_types = [Energy.I, Real.I, Integer.I, set_of_integers, set_of_reals, bool_type, string_type]
     if add_types:
         base_types += add_types
 
@@ -117,10 +101,7 @@ def VariantGenerator(
 
 
 Mixed = VariantGenerator(
-    "Mixed",
-    Flag.I,
-    QString.I,
-    doc=""" A variant value to be used in input files (in unknown - custom - options) """,
+    "Mixed", Flag.I, QString.I, doc=""" A variant value to be used in input files (in unknown - custom - options) """
 )
 Mixed.missing_value = lambda self: (True, True, False)
 
@@ -130,9 +111,7 @@ PotMixed = VariantGenerator(
     LineString.I,
     doc=""" A variant value to be used in potential files (in unknown - custom - options) """,
 )
-Variant = VariantGenerator(
-    "PotMixed", Boolean.I, QString.I, doc=""" Variant type for configuration """
-)
+Variant = VariantGenerator("PotMixed", Boolean.I, QString.I, doc=""" Variant type for configuration """)
 
 
 class CustomMixed(BaseMixed):

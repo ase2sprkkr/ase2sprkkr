@@ -118,24 +118,16 @@ def output_file_header():
         V("EFERMI", float, info="Fermi energy"),
         V("INFO", str),
         BlankSeparator(),
-        V(
-            "ORBITALS",
-            Table({"IQ": int, "NLQ": unsigned}, named_result=True),
-            name_in_grammar=False,
-        ),
+        V("ORBITALS", Table({"IQ": int, "NLQ": unsigned}, named_result=True), name_in_grammar=False),
         V(
             "TYPES",
-            Table(
-                {"IT": int, "TXT_T": str, "CONC": float, "NAT": int, "IQAT": Array(int)}
-            ),
+            Table({"IT": int, "TXT_T": str, "CONC": float, "NAT": int, "IQAT": Array(int)}),
             name_in_grammar=False,
         ),
     ]
 
 
-def create_output_file_definition(
-    keyword, add, name=None, cls=OutputFileDefinition, **kwargs
-):
+def create_output_file_definition(keyword, add, name=None, cls=OutputFileDefinition, **kwargs):
     """Create a definition of an output file. One should supply the additional values
     containing the actual data.
     """

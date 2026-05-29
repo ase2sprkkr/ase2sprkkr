@@ -86,9 +86,7 @@ def ref_sumrule():
     spin = d.get("G1.S0")
     orb = d.get("G0.S0")
     if spin is None or orb is None:
-        raise RuntimeError(
-            f"Reference sumrule file {REF_SUMR_AGR} missing expected blocks"
-        )
+        raise RuntimeError(f"Reference sumrule file {REF_SUMR_AGR} missing expected blocks")
     return spin, orb  # (spin SSR, orbital OSR) – normalised to max=100
 
 
@@ -102,9 +100,7 @@ class TestEnergyGrid:
 
     def test_n_points(self, generated_data, ref_xas):
         ref_pol, _ = ref_xas
-        assert len(generated_data["ENERGY"]) == len(ref_pol), (
-            "Number of energy points differs from reference"
-        )
+        assert len(generated_data["ENERGY"]) == len(ref_pol), "Number of energy points differs from reference"
 
     def test_energy_range(self, generated_data, ref_xas):
         ref_pol, _ = ref_xas
@@ -135,18 +131,14 @@ class TestPolarizationSpectrum:
         ref = ref_pol[:, 1]
         py_peak_e = e[np.argmax(py)]
         ref_peak_e = ref_pol[np.argmax(ref), 0]
-        assert abs(py_peak_e - ref_peak_e) < 0.5, (
-            f"Peak position: Python {py_peak_e:.3f} eV, ref {ref_peak_e:.3f} eV"
-        )
+        assert abs(py_peak_e - ref_peak_e) < 0.5, f"Peak position: Python {py_peak_e:.3f} eV, ref {ref_peak_e:.3f} eV"
 
     def test_peak_amplitude(self, generated_data, ref_xas):
         ref_pol, _ = ref_xas
         py = generated_data["POLARIZATION"][0]
         ref = ref_pol[:, 1]
         ratio = py.max() / ref.max()
-        assert 0.80 < ratio < 1.20, (
-            f"Peak amplitude ratio {ratio:.3f} outside [0.80, 1.20]"
-        )
+        assert 0.80 < ratio < 1.20, f"Peak amplitude ratio {ratio:.3f} outside [0.80, 1.20]"
 
     def test_pointwise_median_ratio(self, generated_data, ref_xas):
         """Median point-wise ratio of Python/Reference should be close to 1."""
@@ -160,9 +152,7 @@ class TestPolarizationSpectrum:
         mask = ref > 0.05  # only compare where spectrum is significant
         ratio = py_at_ref[mask] / ref[mask]
         median = np.median(ratio)
-        assert 0.90 < median < 1.10, (
-            f"Median Python/Reference ratio {median:.3f} outside [0.90, 1.10]"
-        )
+        assert 0.90 < median < 1.10, f"Median Python/Reference ratio {median:.3f} outside [0.90, 1.10]"
 
     def test_pointwise_rms(self, generated_data, ref_xas):
         """RMS relative error over significant region should be below 15 %."""
@@ -207,9 +197,7 @@ class TestDifferenceSpectrum:
         ref_diff = ref_diff_arr[:, 1]
         ref_max = np.max(np.abs(ref_diff))
         # Both should be negligible compared to the XAS peak
-        assert ref_max < 1e-6, (
-            f"Reference difference is non-trivial: max={ref_max:.2e} Mb"
-        )
+        assert ref_max < 1e-6, f"Reference difference is non-trivial: max={ref_max:.2e} Mb"
         assert py_max < 1e-6, f"Python difference is non-trivial: max={py_max:.2e} Mb"
 
 
@@ -238,9 +226,5 @@ class TestSumRuleSpectra:
 
         # Both should be negligible compared to the polarization-averaged XAS peak
         xas_peak = generated_data["POLARIZATION"][0].max()
-        assert py_scale / xas_peak < 1e-5, (
-            f"Python SPIN/ORBIT not near zero: {py_scale:.2e} vs XAS peak {xas_peak:.3f}"
-        )
-        assert ref_scale <= 100.1, (
-            f"Reference sumrule unexpectedly large: {ref_scale:.1f}"
-        )
+        assert py_scale / xas_peak < 1e-5, f"Python SPIN/ORBIT not near zero: {py_scale:.2e} vs XAS peak {xas_peak:.3f}"
+        assert ref_scale <= 100.1, f"Reference sumrule unexpectedly large: {ref_scale:.1f}"

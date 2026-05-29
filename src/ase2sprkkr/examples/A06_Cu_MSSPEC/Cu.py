@@ -60,10 +60,7 @@ def main(args):
         data.view()
 
     if len(args) <= 1:
-        print(
-            "Please specify either 'sprkkr', 'msspec' keywords or both "
-            "of them on the command line"
-        )
+        print("Please specify either 'sprkkr', 'msspec' keywords or both of them on the command line")
 
 
 # Just run the script only when directly called from command line

@@ -26,12 +26,8 @@ calculator.input_parameters.set(
 def parser(parser):
 
     parser.add_argument("potential", help="Potential file.", type=str)
-    parser.add_argument(
-        "-v", "--verbose", help="Verbose.", action="store_true", default=False
-    )
-    parser.add_argument(
-        "-i", "--input-file", help="Print the path as part of the SPRKKR input file."
-    )
+    parser.add_argument("-v", "--verbose", help="Verbose.", action="store_true", default=False)
+    parser.add_argument("-i", "--input-file", help="Print the path as part of the SPRKKR input file.")
 
 
 def run(args, global_args):

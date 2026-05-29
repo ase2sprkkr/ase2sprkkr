@@ -16,9 +16,7 @@ class TestSpgilib(TestCase):
     def test_spglib_dataset(self):
 
         def ssert(mapping, out):
-            self.assertTrue(
-                UniqueValuesMapping(out.equivalent_atoms).is_equivalent_to(mapping)
-            )
+            self.assertTrue(UniqueValuesMapping(out.equivalent_atoms).is_equivalent_to(mapping))
 
         atoms = bulk("NaCl", "rocksalt", a=5.64)
         dataset = spglib_dataset(atoms)

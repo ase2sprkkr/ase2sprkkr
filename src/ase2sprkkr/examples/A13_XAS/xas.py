@@ -19,15 +19,11 @@ def main():
     calculator.input_parameters.TASK.FRAMEPHI = 45.0
 
     try:
-        potential_file = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), "Fe.pot_new"
-        )
-        result = calculator.calculate(   #noqa: F841
+        potential_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Fe.pot_new")
+        result = calculator.calculate(  # noqa: F841
             potential=potential_file,
             print_output=True,
-            output_file=os.path.join(
-                os.path.dirname(os.path.abspath(__file__)), "Fe_XAS.out"
-            ),
+            output_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), "Fe_XAS.out"),
         )
 
     except Exception as e:

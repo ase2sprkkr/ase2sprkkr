@@ -73,9 +73,7 @@ class Configuration:
         raise NotImplementedError()
 
     @staticmethod
-    def as_dict_getter(
-        only_changed: Union[bool, str] = "default", generated=False, copy=False
-    ):
+    def as_dict_getter(only_changed: Union[bool, str] = "default", generated=False, copy=False):
 
         if only_changed == "default":
 
@@ -110,13 +108,7 @@ class Configuration:
 
         return get
 
-    def as_dict(
-        self,
-        only_changed: Union[bool, str] = "basic",
-        generated=False,
-        copy=False,
-        getter=None,
-    ):
+    def as_dict(self, only_changed: Union[bool, str] = "basic", generated=False, copy=False, getter=None):
         """Return the value of self, in the case of container as a dictionary. To be redefined in the descendants.
 
         Parameters
@@ -181,10 +173,7 @@ class Configuration:
         if lst and print:
             for warning in lst:
                 warnings.showwarning(
-                    message=warning.message,
-                    category=warning.category,
-                    filename=warning.filename,
-                    lineno=warning.lineno,
+                    message=warning.message, category=warning.category, filename=warning.filename, lineno=warning.lineno
                 )
 
     def validate(self, why="save"):

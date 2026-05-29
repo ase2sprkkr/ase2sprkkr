@@ -74,18 +74,10 @@ class AtomsRegion:
             self.set_atoms(atoms, add)
 
     @staticmethod
-    def from_atoms(
-        from_atoms: Atoms,
-        name: str,
-        slice: slice,
-        inherit_cell=False,
-        atoms: Atoms = None,
-    ):
+    def from_atoms(from_atoms: Atoms, name: str, slice: slice, inherit_cell=False, atoms: Atoms = None):
         """Creates a region from the property of the given atoms object. The pbc and cell
         are taken from it."""
-        return AtomsRegion(
-            name, slice, from_atoms.cell, from_atoms.pbc, inherit_cell, atoms
-        )
+        return AtomsRegion(name, slice, from_atoms.cell, from_atoms.pbc, inherit_cell, atoms)
 
     @property
     def cell(self):
@@ -203,10 +195,7 @@ class AtomsRegion:
         return self.atoms.get_array(name, copy)[self.slice]
 
     def are_sites_inited(self):
-        return (
-            isinstance(self.atoms, sprkkr_atoms.SPRKKRAtoms)
-            and self.atoms.are_sites_inited()
-        )
+        return isinstance(self.atoms, sprkkr_atoms.SPRKKRAtoms) and self.atoms.are_sites_inited()
 
     def get_atomic_numbers(self):
         return self.atoms.get_atomic_numbers()[self.slice]
@@ -232,12 +221,7 @@ class AtomsRegion:
 
     def copy_for_atoms(self, atoms, slice=None):
         region = AtomsRegion(
-            self.name,
-            self.slice if slice is None else slice,
-            self.cell,
-            self.pbc,
-            self.inherit_cell,
-            atoms,
+            self.name, self.slice if slice is None else slice, self.cell, self.pbc, self.inherit_cell, atoms
         )
         return region
 

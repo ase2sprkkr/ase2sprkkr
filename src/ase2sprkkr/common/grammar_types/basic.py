@@ -11,12 +11,7 @@ import itertools
 from unyt.array import unyt_quantity
 
 from ..decorators import add_to_signature, cached_property
-from ..grammar import (
-    generate_grammar,
-    separator_grammar,
-    replace_whitechars,
-    optional_quote,
-)
+from ..grammar import generate_grammar, separator_grammar, replace_whitechars, optional_quote
 from .grammar_type import TypedGrammarType, GrammarType, add_to_parent_validation
 
 ppc = pp.pyparsing_common
@@ -39,9 +34,7 @@ class Number(TypedGrammarType):
     """Base class for a number - descendants of this class can have minimal and/or maximal possible value."""
 
     @add_to_signature(GrammarType.__init__)
-    def __init__(
-        self, min: Optional[int] = None, max: Optional[int] = None, *args, **kwargs
-    ):
+    def __init__(self, min: Optional[int] = None, max: Optional[int] = None, *args, **kwargs):
         """
         Parameters
         ----------
@@ -72,8 +65,7 @@ class FixedPointNumber(Number):
             from .warnings import SuspiciousValueWarning
 
             SuspiciousValueWarning(
-                value,
-                "An attemtp to set <integer> value using an <float>. I will do a conversion for you.",
+                value, "An attemtp to set <integer> value using an <float>. I will do a conversion for you."
             ).warn(stacklevel=6)
             value = int(value)
 
@@ -122,9 +114,7 @@ class ObjectNumber(Unsigned):
 class Integer(FixedPointNumber):
     """Signed integer"""
 
-    _grammar = replace_whitechars(ppc.signed_integer).set_parse_action(
-        lambda x: int(x[0])
-    )
+    _grammar = replace_whitechars(ppc.signed_integer).set_parse_action(lambda x: int(x[0]))
 
     def grammar_name(self):
         return "<int>"
@@ -140,9 +130,7 @@ class BaseBool(TypedGrammarType):
 class Bool(BaseBool):
     """A bool type, whose value is represented by a letter (T or F)"""
 
-    _grammar = (pp.CaselessKeyword("T") | pp.CaselessKeyword("F")).set_parse_action(
-        lambda x: x[0].upper() == "T"
-    )
+    _grammar = (pp.CaselessKeyword("T") | pp.CaselessKeyword("F")).set_parse_action(lambda x: x[0].upper() == "T")
 
     def grammar_name(self):
         return "<T|F>"
@@ -169,9 +157,7 @@ class Boolean(BaseBool):
 class IntBool(BaseBool):
     """A bool type, whose value is represented by a letter (1 or 0)"""
 
-    _grammar = (pp.CaselessKeyword("1") | pp.CaselessKeyword("0")).set_parse_action(
-        lambda x: x[0] == "1"
-    )
+    _grammar = (pp.CaselessKeyword("1") | pp.CaselessKeyword("0")).set_parse_action(lambda x: x[0] == "1")
     _rev_grammar = _grammar.copy().set_parse_action(lambda x: x[0] == "0")
 
     @add_to_signature(TypedGrammarType.__init__)
@@ -208,9 +194,7 @@ class Real(Number):
     def __init__(self, nan=None, *args, **kwargs):
         self.nan = nan
         if nan is not None:
-            self._grammar = self._grammar | pp.Regex(nan).set_parse_action(
-                lambda x: float("NaN")
-            )
+            self._grammar = self._grammar | pp.Regex(nan).set_parse_action(lambda x: float("NaN"))
         super().__init__(*args, **kwargs)
 
     def convert(self, value):
@@ -218,8 +202,7 @@ class Real(Number):
             from .warnings import SuspiciousValueWarning
 
             SuspiciousValueWarning(
-                value,
-                "An attemtp to set <float> value using an <integer>. I will do a conversion for you.",
+                value, "An attemtp to set <float> value using an <integer>. I will do a conversion for you."
             ).warn(stacklevel=6)
             value = float(value)
 
@@ -265,10 +248,7 @@ class BaseRealWithUnits(Real):
                 if self.default_unit:
                     yield pp.Empty(), self.default_unit
 
-            units = (
-                g.set_parse_action(lambda x, *args, unit=unit: unit)
-                for g, unit in unit_defs()
-            )
+            units = (g.set_parse_action(lambda x, *args, unit=unit: unit) for g, unit in unit_defs())
             out = Real.I.grammar() + pp.Or(units)
             out.set_parse_action(lambda x: x[0] * self.units[x[1]])
             self.grammar_cache[i] = out
@@ -289,11 +269,7 @@ class BaseRealWithUnits(Real):
 
     def _validate(self, value, why="set"):
         if not isinstance(value, unyt_quantity):
-            if (
-                isinstance(value, tuple)
-                and len(value) == 2
-                and value[1] not in self.units
-            ):
+            if isinstance(value, tuple) and len(value) == 2 and value[1] not in self.units:
                 return f"Given unit {value[1]} is not allowed, allowed are: {','.join(self.units.keys())}"
             return (
                 "Real with units have to be given as tuple containing "
@@ -313,9 +289,7 @@ class BaseRealWithUnits(Real):
         return val
 
     def grammar_name(self):
-        return "<float>[{}]".format(
-            "|".join(("" if i is None else i for i in self.units))
-        )
+        return "<float>[{}]".format("|".join(("" if i is None else i for i in self.units)))
 
     numpy_type = float
 
@@ -361,9 +335,7 @@ class BaseString(TypedGrammarType):
 class String(BaseString):
     """Just a string (without whitespaces and few special chars)"""
 
-    _grammar = pp.Word(pp.printables, exclude_chars=",;{}").set_parse_action(
-        lambda x: x[0]
-    )
+    _grammar = pp.Word(pp.printables, exclude_chars=",;{}").set_parse_action(lambda x: x[0])
 
     def grammar_name(self):
         return "<str>"
@@ -372,9 +344,7 @@ class String(BaseString):
 class AlwaysQString(BaseString):
     """Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes."""
 
-    _grammar = (
-        pp.Word(pp.printables, exclude_chars='",;{}') | pp.QuotedString('"')
-    ).set_parse_action(lambda x: x[0])
+    _grammar = (pp.Word(pp.printables, exclude_chars='",;{}') | pp.QuotedString('"')).set_parse_action(lambda x: x[0])
 
     def _validate(self, value, why="set"):
         if value.__class__ is not str:
@@ -425,9 +395,7 @@ class Keyword(GrammarType):
     A value, that can take values from the predefined set of strings.
     """
 
-    def __init__(
-        self, *keywords, aliases=None, transform="upper", quote=None, **kwargs
-    ):
+    def __init__(self, *keywords, aliases=None, transform="upper", quote=None, **kwargs):
         self.aliases = aliases or {}
         self.quote = quote
         if transform == "upper":
@@ -453,7 +421,7 @@ class Keyword(GrammarType):
             self._grammar = (
                 optional_quote
                 + pp.MatchFirst(
-                    (pp.CaselessKeyword(str(i)) for i in itertools.chain(self.keywords, self.aliases.keys()) )
+                    (pp.CaselessKeyword(str(i)) for i in itertools.chain(self.keywords, self.aliases.keys()))
                 ).set_parse_action(self._parse_keyword_token)
                 + optional_quote
             )
@@ -478,10 +446,7 @@ class Keyword(GrammarType):
                 yield i, None
 
     def _validate(self, value, why="set"):
-        return (
-            value in self.keywords
-            or "Required one of [" + "|".join(self.keywords) + "]"
-        )
+        return value in self.keywords or "Required one of [" + "|".join(self.keywords) + "]"
 
     def _string(self, val):
         if self.quote and isinstance(val, str):
@@ -506,9 +471,7 @@ class Keyword(GrammarType):
         if not self.choices:
             return ad
         out = f"\n{prefix}Possible values:\n"
-        out += "\n".join(
-            [f"{prefix}  {str(k):<10}{v}" for k, v in self.choices.items()]
-        )
+        out += "\n".join([f"{prefix}  {str(k):<10}{v}" for k, v in self.choices.items()])
         if ad:
             out += f"\n\n{prefix}" + ad
         return out

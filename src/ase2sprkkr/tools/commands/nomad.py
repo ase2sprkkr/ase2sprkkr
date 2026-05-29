@@ -23,13 +23,7 @@ Or you can authenticate once using -a switch, then the token will be stored. """
 def parser(parser):
 
     nomad = argparse.ArgumentParser(add_help=False)
-    nomad.add_argument(
-        "--nomad-url",
-        "-N",
-        help="Nomad URL.",
-        type=str,
-        default=NomadApi.default_api_url,
-    )
+    nomad.add_argument("--nomad-url", "-N", help="Nomad URL.", type=str, default=NomadApi.default_api_url)
     nomad.add_argument(
         "--password",
         "-P",
@@ -40,52 +34,26 @@ def parser(parser):
     nomad_auth = argparse.ArgumentParser(add_help=False, parents=[nomad])
     group = nomad_auth.add_mutually_exclusive_group()
     group.add_argument(
-        "--token",
-        "-t",
-        help="Nomad token. Can be also specified in config.nomad.token.",
-        type=str,
-        required=False,
+        "--token", "-t", help="Nomad token. Can be also specified in config.nomad.token.", type=str, required=False
     )
-    group.add_argument(
-        "--user", "-u", help="Nomad user name. ", type=str, required=False
-    )
+    group.add_argument("--user", "-u", help="Nomad user name. ", type=str, required=False)
 
     subs = parser.add_subparsers(required=True)
 
     sub = subs.add_parser(
-        "authenticate",
-        help="Retrieve and store Nomad token for further passwordless authentication.",
-        parents=[nomad],
+        "authenticate", help="Retrieve and store Nomad token for further passwordless authentication.", parents=[nomad]
     )
     group = sub.add_mutually_exclusive_group(required=True)
     group.add_argument("user", help="Nomad user name. ", type=str, nargs="?")
-    group.add_argument(
-        "--delete-credentials",
-        "-d",
-        help="Clear authentication data.",
-        action="store_true",
-    )
+    group.add_argument("--delete-credentials", "-d", help="Clear authentication data.", action="store_true")
+    sub.add_argument("--print-token", "-o", help="Print the resulting token.", action="store_true")
+    sub.add_argument("--do-not-store", "-n", help="Only obtain the token, do not store it.", action="store_true")
     sub.add_argument(
-        "--print-token", "-o", help="Print the resulting token.", action="store_true"
-    )
-    sub.add_argument(
-        "--do-not-store",
-        "-n",
-        help="Only obtain the token, do not store it.",
-        action="store_true",
-    )
-    sub.add_argument(
-        "--expires",
-        "-e",
-        help="Validity of the token (in days), the default is one year.",
-        type=int,
-        default=365,
+        "--expires", "-e", help="Validity of the token (in days), the default is one year.", type=int, default=365
     )
     sub.set_defaults(func=authenticate, api=True, token=False)
 
-    sub = subs.add_parser(
-        "token", help="Print the (currently stored) Nomad authentication token"
-    )
+    sub = subs.add_parser("token", help="Print the (currently stored) Nomad authentication token")
     sub.set_defaults(func=token, api=False, token=False)
 
     sub = subs.add_parser("upload", help="Upload a file to nomad", parents=[nomad_auth])
@@ -118,17 +86,14 @@ def authenticate(args):
     if args.delete_credentials:
         token = None
         config.nomad.token.set_permanent(
-            token,
-            r"Authentication token to Nomad \(written by 'ase2sprkkr nomad authenticate [^\s]+'\)",
-            True,
+            token, r"Authentication token to Nomad \(written by 'ase2sprkkr nomad authenticate [^\s]+'\)", True
         )
         return
     else:
         token = retrieve_token(args, args.expires * 24 * 3600)
     if not args.do_not_store:
         config.nomad.token.set_permanent(
-            token,
-            f"Authentication token to Nomad (written by 'ase2sprkkr nomad authenticate {args.user}')",
+            token, f"Authentication token to Nomad (written by 'ase2sprkkr nomad authenticate {args.user}')"
         )
 
     if args.print_token:
@@ -154,8 +119,7 @@ def get_token(args):
         token = config.nomad.token()
     if not token:
         raise ValueError(
-            "No Nomad authentization token: "
-            "please either supply -u parameter, or run `nomad authenticate`"
+            "No Nomad authentization token: please either supply -u parameter, or run `nomad authenticate`"
         )
     return token
 

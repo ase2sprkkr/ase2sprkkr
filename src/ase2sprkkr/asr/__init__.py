@@ -14,8 +14,5 @@ try:
 except ImportError:
     import warnings
 
-    warnings.warn(
-        "I am not able to import asr module, asr recipes will not be available",
-        category=RuntimeWarning,
-    )
+    warnings.warn("I am not able to import asr module, asr recipes will not be available", category=RuntimeWarning)
     del warnings

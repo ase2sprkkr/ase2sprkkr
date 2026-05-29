@@ -16,17 +16,11 @@ class TypesSectionDefinition(PotSectionDefinition):
             V(
                 "DATA",
                 Table(
-                    {
-                        "TXT": str,
-                        "ZT": int,
-                        "NCORT": int,
-                        "NVALT": int,
-                        "NSEMCORSHLT": int,
-                    },
+                    {"TXT": str, "ZT": int, "NCORT": int, "NVALT": int, "NSEMCORSHLT": int},
                     numbering="IT",
                     free_header=True,
                 ),
-            ),
+            )
         ]
         super().__init__(name, members, has_hidden_members=True)
 

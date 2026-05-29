@@ -10,15 +10,10 @@ POSFILE_FORMAT = "{:5.0f} {:5.0f} {: 4.10f} {: 4.10f} {: 4.10f}\n"
 MOMFILE_FORMAT = "{:5.0f} {:5.0f} {: 4.10f} {: 4.10f} {: 4.10f} {: 4.10f}\n"
 JFILE_FORMAT = "{:5.0f}  {:5.0f}  {: 4.10f}  {: 4.10f}  {: 4.10f}  {: 4.8f}  {:4.10f}\n"
 DMFILE_FORMAT = "{:5.0f}  {:5.0f}  {: 4.10f}  {: 4.10f}  {: 4.10f}  {: 4.8f}  {: 4.8f}  {: 4.8f}  {:4.10f}\n"
-COORDINATE_FIELDS = {
-    Coordinates.cartesian: ("DRX", "DRY", "DRZ"),
-    Coordinates.lattice: ("N1", "N2", "N3"),
-}
+COORDINATE_FIELDS = {Coordinates.cartesian: ("DRX", "DRY", "DRZ"), Coordinates.lattice: ("N1", "N2", "N3")}
 
 
-def write_inpsd_file(
-    atoms: Atoms, file_name=None, directory=None, id=None, sym=0, ncell=None, **kwargs
-):
+def write_inpsd_file(atoms: Atoms, file_name=None, directory=None, id=None, sym=0, ncell=None, **kwargs):
     file_name = file_name or "inpsd.dat"
     if directory:
         file_path = Path(directory) / file_name
@@ -71,12 +66,7 @@ def write_jfile(
 ):
     coordinate_fields = COORDINATE_FIELDS[coordinates]
     rows = jxc_ouput_file.filtered_data(
-        selector=selector,
-        iq=iq,
-        it=it,
-        exclude_it=exclude_it,
-        exclude_vc=exclude_vc,
-        exchange_radius=exchange_radius,
+        selector=selector, iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc, exchange_radius=exchange_radius
     )
 
     file_name = file_name or "jfile.dat"
@@ -115,12 +105,7 @@ def write_dmfile(
 ):
     coordinate_fields = COORDINATE_FIELDS[coordinates]
     rows = jxc_ouput_file.filtered_data(
-        selector=selector,
-        iq=iq,
-        it=it,
-        exclude_it=exclude_it,
-        exclude_vc=exclude_vc,
-        exchange_radius=exchange_radius,
+        selector=selector, iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc, exchange_radius=exchange_radius
     )
 
     if directory:
@@ -185,15 +170,7 @@ def write_pos_file(
                 site_kind = site_types[site_type]
             except KeyError:
                 site_kind = site_types[site_type] = len(site_types) + 1
-            posfile.write(
-                POSFILE_FORMAT.format(
-                    iq,
-                    site_kind,
-                    position[0],
-                    position[1],
-                    position[2],
-                )
-            )
+            posfile.write(POSFILE_FORMAT.format(iq, site_kind, position[0], position[1], position[2]))
     return True
 
 
@@ -232,9 +209,7 @@ def write_mom_file(
         for at in site.occupation:
             if at.moments is None:
                 if not warned:
-                    warnings.warn(
-                        "Some atomic types do not have moments computed. Skipping."
-                    )
+                    warnings.warn("Some atomic types do not have moments computed. Skipping.")
                     warned = True
                 continue
             iqs = out.get(at, None)

@@ -21,11 +21,7 @@ def main():
     print("Setting up input parameters...")
     calculator.input_parameters = "torque"
     calculator.input_parameters.CONTROL.DATASET = "Fe"
-    calculator.input_parameters.MODE.MDIR = [
-        1.0,
-        0.0,
-        0.0,
-    ]  # Using floats instead of integers
+    calculator.input_parameters.MODE.MDIR = [1.0, 0.0, 0.0]  # Using floats instead of integers
     calculator.input_parameters.MODE.MALF = 0.0
     calculator.input_parameters.MODE.MBET = 45.0
     calculator.input_parameters.MODE.MGAM = 0.0
@@ -36,9 +32,7 @@ def main():
     # Check if potential file exists
     if not os.path.exists(potential_file):
         print(f"\nError: Potential file not found at {potential_file}")
-        print(
-            "Please ensure the potential file 'Fe.pot_new' is in the same directory as this script."
-        )
+        print("Please ensure the potential file 'Fe.pot_new' is in the same directory as this script.")
         return 1
 
     print(f"Using potential file: {potential_file}")

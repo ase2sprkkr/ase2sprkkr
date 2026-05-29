@@ -55,11 +55,7 @@ def separator_pattern(char):
 @cache
 def separator_grammar(char):
     """Pattern for separating sections in an input file"""
-    separator = (
-        pp.Regex(separator_pattern(char))
-        .set_name(f"{char * 10}[{char * 4}....]")
-        .suppress()
-    )
+    separator = pp.Regex(separator_pattern(char)).set_name(f"{char * 10}[{char * 4}....]").suppress()
     return separator
 
 
@@ -118,12 +114,7 @@ class White(pp.White):
 class SkipToRegex(pp.Token):
     """Skip to given regex"""
 
-    def __init__(
-        self,
-        pattern,
-        include_pattern: Optional[bool] = None,
-        parse_pattern: bool = False,
-    ):
+    def __init__(self, pattern, include_pattern: Optional[bool] = None, parse_pattern: bool = False):
         if not isinstance(pattern, re.Pattern):
             pattern = re.compile(pattern)
         self.pattern = pattern

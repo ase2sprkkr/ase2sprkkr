@@ -17,20 +17,18 @@ class UniqueValuesMapping:
 
     .. doctest::
 
-      >>> UniqueValuesMapping.from_values([1,4,1]).mapping
+      >>> UniqueValuesMapping.from_values([1, 4, 1]).mapping
       array([1, 2, 1], dtype=int32)
       >>> UniqueValuesMapping.from_values([int, int, str]).mapping
       array([1, 1, 2], dtype=int32)
-      >>> UniqueValuesMapping.from_values([1,4,1]).value_to_class_id
+      >>> UniqueValuesMapping.from_values([1, 4, 1]).value_to_class_id
       {1: 1, 4: 2}
-      >>> UniqueValuesMapping.from_values([1,4,1,1]).merge([1,1,2,1]).mapping
+      >>> UniqueValuesMapping.from_values([1, 4, 1, 1]).merge([1, 1, 2, 1]).mapping
       array([1, 2, 3, 1], dtype=int32)
     """
 
     def __repr__(self):
-        if isinstance(self.mapping, np.ndarray) and np.issubdtype(
-            self.mapping.dtype, np.integer
-        ):
+        if isinstance(self.mapping, np.ndarray) and np.issubdtype(self.mapping.dtype, np.integer):
             v = self.normalized(dtype=False)[0]
         else:
             v = self.mapping
@@ -123,9 +121,9 @@ class UniqueValuesMapping:
           Length of values - provide it, if len(values) is not available
 
         .. doctest::
-          >>> UniqueValuesMapping.from_values([1.,4.,1.]).mapping
+          >>> UniqueValuesMapping.from_values([1.0, 4.0, 1.0]).mapping
           array([1, 2, 1], dtype=int32)
-          >>> UniqueValuesMapping.from_values([1.,4.,1.]).value_to_class_id
+          >>> UniqueValuesMapping.from_values([1.0, 4.0, 1.0]).value_to_class_id
           {1.0: 1, 4.0: 2}
         """
         mapping, reverse = UniqueValuesMapping._create_mapping(values, length)
@@ -143,7 +141,7 @@ class UniqueValuesMapping:
               maps equivalence classes to value indexes
 
         .. doctest::
-          >>> UniqueValuesMapping._create_mapping([1.,4.,1.])
+          >>> UniqueValuesMapping._create_mapping([1.0, 4.0, 1.0])
           (array([1, 2, 1], dtype=int32), {1.0: 1, 4.0: 2})
         """
         mapping = np.empty(length or len(values), dtype=dtype)
@@ -173,23 +171,21 @@ class UniqueValuesMapping:
 
         .. doctest::
 
-          >>> UniqueValuesMapping([1,4,1]).is_equivalent_to([0,1,0])
+          >>> UniqueValuesMapping([1, 4, 1]).is_equivalent_to([0, 1, 0])
           True
-          >>> UniqueValuesMapping([1,4,1]).is_equivalent_to([0,0,0])
+          >>> UniqueValuesMapping([1, 4, 1]).is_equivalent_to([0, 0, 0])
           False
-          >>> UniqueValuesMapping([1,4,1]).is_equivalent_to([0,1,1])
+          >>> UniqueValuesMapping([1, 4, 1]).is_equivalent_to([0, 1, 1])
           False
-          >>> UniqueValuesMapping([1,4,1]).is_equivalent_to([5,3,5])
+          >>> UniqueValuesMapping([1, 4, 1]).is_equivalent_to([5, 3, 5])
           True
-          >>> UniqueValuesMapping([1,4,1]).is_equivalent_to(UniqueValuesMapping.from_values([2,5,2]))
+          >>> UniqueValuesMapping([1, 4, 1]).is_equivalent_to(UniqueValuesMapping.from_values([2, 5, 2]))
           True
         """
         return self.are_equivalent(self, mapping)
 
     @staticmethod
-    def are_equivalent(
-        a: Union[UniqueValuesMapping, Iterable], b: Union[UniqueValuesMapping, Iterable]
-    ) -> bool:
+    def are_equivalent(a: Union[UniqueValuesMapping, Iterable], b: Union[UniqueValuesMapping, Iterable]) -> bool:
         """
         Return, whether the two mappings are equal, regardless the actual "names" of the equivalence classes.
 
@@ -232,10 +228,11 @@ class UniqueValuesMapping:
 
         .. doctest::
           #In old numpy the following line would fail, new numpy prints the types of scalars
-          >>> if np.__version__ > '2.0': np.set_printoptions(legacy = '1.25')
-          >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized()
+          >>> if np.__version__ > "2.0":
+          ...     np.set_printoptions(legacy="1.25")
+          >>> UniqueValuesMapping.from_values([(0, 2), (0, 3), (0, 2)]).normalized()
           (array([1, 2, 1], dtype=int32), {1: 1, 2: 2})
-          >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized(start_from=0)
+          >>> UniqueValuesMapping.from_values([(0, 2), (0, 3), (0, 2)]).normalized(start_from=0)
           (array([0, 1, 0], dtype=int32), {1: 0, 2: 1})
         """
 
@@ -247,9 +244,7 @@ class UniqueValuesMapping:
             dtype = np.integer
         elif dtype is None:
             dtype = np.int32
-        mapping, reverse = self._create_mapping(
-            self.mapping, start_from=start_from, dtype=dtype
-        )
+        mapping, reverse = self._create_mapping(self.mapping, start_from=start_from, dtype=dtype)
         return mapping, reverse
 
     def normalize(self, start_from=1, strict: bool = False, dtype=None):
@@ -276,17 +271,15 @@ class UniqueValuesMapping:
 
         .. doctest::
 
-          >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().mapping
+          >>> UniqueValuesMapping.from_values([(0, 2), (0, 3), (0, 2)]).normalize().mapping
           array([1, 2, 1], dtype=int32)
-          >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().value_to_class_id[(0,3)]
+          >>> UniqueValuesMapping.from_values([(0, 2), (0, 3), (0, 2)]).normalize().value_to_class_id[(0, 3)]
           2
-          >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize(start_from=0).mapping
+          >>> UniqueValuesMapping.from_values([(0, 2), (0, 3), (0, 2)]).normalize(start_from=0).mapping
           array([0, 1, 0], dtype=int32)
         """
         self.mapping, self.reverse = self.normalized(start_from, strict, dtype)
 
         if self.value_to_class_id is not None:
-            self.value_to_class_id = {
-                k: self.reverse[v] for k, v in self.value_to_class_id.items()
-            }
+            self.value_to_class_id = {k: self.reverse[v] for k, v in self.value_to_class_id.items()}
         return self

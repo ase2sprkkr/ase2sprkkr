@@ -159,9 +159,7 @@ class SiteType:
         if self._occupation is None:
             ids = self.index()
             if not len(ids):
-                raise ValueError(
-                    "This atomic site is not from the provided Atoms object"
-                )
+                raise ValueError("This atomic site is not from the provided Atoms object")
             atoms = self.atoms
             an = atoms.get_atomic_numbers()
             oc = atoms.info.get("occupancy", {})

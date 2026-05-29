@@ -40,12 +40,7 @@ The value type can be given by a standard python type, this map maps the
 python type for the appropriate grammar_type class.
 """
 
-type_from_set_map = {
-    float: set_of_reals,
-    np.float32: set_of_reals,
-    int: set_of_integers,
-    np.int32: set_of_integers,
-}
+type_from_set_map = {float: set_of_reals, np.float32: set_of_reals, int: set_of_integers, np.int32: set_of_integers}
 """ Map the python type of a collection member to a grammar type of the collection.
 
 Only canonical types are expected, see :meth:`ase2sprkkr.common.grammar_types.normalize_type`

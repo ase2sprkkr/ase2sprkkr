@@ -19,27 +19,10 @@ description = "On the most modern unix/linux systems, it is in the file ~/.confi
 
 
 def parser(parser):
-    parser.add_argument(
-        "-p",
-        "--path",
-        help="Just print the path to the configuration file.",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-P",
-        "--print",
-        help="Just print the path configuration file.",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-s", "--show", help="Print the configuration.", action="store_true"
-    )
-    parser.add_argument(
-        "-i",
-        "--info",
-        help="Show the description of the configuration options.",
-        action="store_true",
-    )
+    parser.add_argument("-p", "--path", help="Just print the path to the configuration file.", action="store_true")
+    parser.add_argument("-P", "--print", help="Just print the path configuration file.", action="store_true")
+    parser.add_argument("-s", "--show", help="Print the configuration.", action="store_true")
+    parser.add_argument("-i", "--info", help="Show the description of the configuration options.", action="store_true")
     parser.add_argument(
         "-S",
         "--set",
@@ -48,16 +31,10 @@ def parser(parser):
         metavar=("NAME", "VALUE"),
     )
     parser.add_argument(
-        "-e",
-        "--edit",
-        help="Edit the file using the editor in the $EDITOR environment variable.",
-        action="store_true",
+        "-e", "--edit", help="Edit the file using the editor in the $EDITOR environment variable.", action="store_true"
     )
     parser.add_argument(
-        "-d",
-        "--default",
-        help="Put the default values into the file, if it not exists.",
-        action="store_true",
+        "-d", "--default", help="Put the default values into the file, if it not exists.", action="store_true"
     )
     parser.add_argument(
         "-D",
@@ -67,9 +44,7 @@ def parser(parser):
         action="store_const",
         const="overwrite",
     )
-    parser.add_argument(
-        "-o", "--show-default", help="Show the default values.", action="store_true"
-    )
+    parser.add_argument("-o", "--show-default", help="Show the default values.", action="store_true")
 
 
 def default_content(file):
@@ -120,9 +95,7 @@ def run(args, global_args):
                 f.write(default_content(file))
             print(f"Configuration defaults have been written to file '{file}'.")
         else:
-            print(
-                "Configuration file have already existed, so it have not been overwritten."
-            )
+            print("Configuration file have already existed, so it have not been overwritten.")
         run = False
     if args.path:
         print(file)

@@ -20,27 +20,11 @@ aliases = ["examples"]
 
 
 def parser(parser):
-    parser.add_argument(
-        "example",
-        type=int,
-        nargs="?",
-        help="The number of the example to print. If ommited",
-    )
-    parser.add_argument(
-        "-c", "--copy", help="Copy the example to a given dir", type=str
-    )
-    parser.add_argument(
-        "-p", "--path", help="Print a path to the example(s)", action="store_true"
-    )
-    parser.add_argument(
-        "-s",
-        "--script",
-        help="Print a path to the example main script",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-g", "--regex", help="Find an example according to the given regex", type=str
-    )
+    parser.add_argument("example", type=int, nargs="?", help="The number of the example to print. If ommited")
+    parser.add_argument("-c", "--copy", help="Copy the example to a given dir", type=str)
+    parser.add_argument("-p", "--path", help="Print a path to the example(s)", action="store_true")
+    parser.add_argument("-s", "--script", help="Print a path to the example main script", action="store_true")
+    parser.add_argument("-g", "--regex", help="Find an example according to the given regex", type=str)
 
 
 def run(args, global_args):
@@ -48,9 +32,7 @@ def run(args, global_args):
 
     if not args.example:
         if args.script:
-            raise ValueError(
-                "The --script argument requires to specify the example number."
-            )
+            raise ValueError("The --script argument requires to specify the example number.")
         if not args.path:
             print("Examples dir: ", end="")
         print(examples.examples_dir())

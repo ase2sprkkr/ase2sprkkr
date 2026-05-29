@@ -1,8 +1,5 @@
 from ...potential_definitions import PotSectionDefinition, PotValueDefinition
-from ...potential_sections import (
-    PotentialSection as PotSection,
-    AtomicTypePotentialSection,
-)
+from ...potential_sections import PotentialSection as PotSection, AtomicTypePotentialSection
 from ....common.grammar_types import NumpyArray
 from ....common.configuration_definitions import SeparatorDefinition, BaseDefinition
 import re
@@ -27,13 +24,7 @@ class MomentsSectionDefinition(PotSectionDefinition):
             V("TYPE", int),
             V(
                 "DATA",
-                NumpyArray(
-                    lines=1,
-                    shape=(5,),
-                    written_shape=(1, 5),
-                    item_format="% .14E",
-                    indented=1,
-                ),
+                NumpyArray(lines=1, shape=(5,), written_shape=(1, 5), item_format="% .14E", indented=1),
                 name_in_grammar=False,
             ),
             SeparatorDefinition("=", length=79),

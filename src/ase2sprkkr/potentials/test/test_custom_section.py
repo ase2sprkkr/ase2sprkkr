@@ -19,41 +19,13 @@ class TestCustomSection(TestCase):
     def test_custom_section(self):
 
         with generate_grammar():
-            self.assertTrue(
-                re.compile(SectionString.delimiter_pattern).fullmatch(
-                    "\n****************\n"
-                )
-            )
-            self.assertTrue(
-                re.compile(SectionString.delimiter_pattern).fullmatch(
-                    "    \n****************\n"
-                )
-            )
-            self.assertTrue(
-                re.compile(SectionString.delimiter_pattern).fullmatch(
-                    " \n \n   \n****************\n"
-                )
-            )
-            self.assertTrue(
-                re.compile(SectionString.delimiter_pattern).fullmatch(
-                    "\n****************\n   \n    \n"
-                )
-            )
-            self.assertNone(
-                re.compile(SectionString.delimiter_pattern).fullmatch(
-                    "a\n****************\n"
-                )
-            )
-            self.assertNone(
-                re.compile(SectionString.delimiter_pattern).fullmatch(
-                    "\n****************\na"
-                )
-            )
-            self.assertNone(
-                re.compile(SectionString.delimiter_pattern).fullmatch(
-                    "\n******* *********\na"
-                )
-            )
+            self.assertTrue(re.compile(SectionString.delimiter_pattern).fullmatch("\n****************\n"))
+            self.assertTrue(re.compile(SectionString.delimiter_pattern).fullmatch("    \n****************\n"))
+            self.assertTrue(re.compile(SectionString.delimiter_pattern).fullmatch(" \n \n   \n****************\n"))
+            self.assertTrue(re.compile(SectionString.delimiter_pattern).fullmatch("\n****************\n   \n    \n"))
+            self.assertNone(re.compile(SectionString.delimiter_pattern).fullmatch("a\n****************\n"))
+            self.assertNone(re.compile(SectionString.delimiter_pattern).fullmatch("\n****************\na"))
+            self.assertNone(re.compile(SectionString.delimiter_pattern).fullmatch("\n******* *********\na"))
 
             cmg = PotentialDefinition.custom_member_grammar()
 

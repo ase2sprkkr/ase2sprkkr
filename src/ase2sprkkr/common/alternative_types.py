@@ -5,11 +5,7 @@ it seems"""
 import numpy as np
 import datetime as datetime
 
-numpy_types = {
-    int: np.int32,
-    float: np.float64,
-    complex: np.complex128,
-}
+numpy_types = {int: np.int32, float: np.float64, complex: np.complex128}
 """ Map to numpy types """
 
 types_alternatives = {

@@ -25,9 +25,7 @@ class DosResult(TaskResult):
 
     @cached_property
     def output_values(self):
-        return {
-            "dos": OutputFileResultValue("Density of states", "dos", self.dos_filename)
-        }
+        return {"dos": OutputFileResultValue("Density of states", "dos", self.dos_filename)}
 
 
 class DosOutputReader(KkrOutputReader):

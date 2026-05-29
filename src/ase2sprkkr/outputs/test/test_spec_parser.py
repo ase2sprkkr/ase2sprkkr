@@ -58,33 +58,14 @@ stookes-vector    of the photonfield  0.10000E+01  100.000%    0.000%    0.000%
             },
         )
         self.assertEqual(out.lattice_constants, {"a": 4.62983})
-        self.assertEqual(
-            out.basis_vectors["real"], np.asarray([[4.62983, 0.0], [-2.31492, 4.00955]])
-        )
-        self.assertEqual(
-            out.basis_vectors["reciprocal"],
-            np.asarray([[1.35711, 0.78353], [0.0, 1.56706]]),
-        )
+        self.assertEqual(out.basis_vectors["real"], np.asarray([[4.62983, 0.0], [-2.31492, 4.00955]]))
+        self.assertEqual(out.basis_vectors["reciprocal"], np.asarray([[1.35711, 0.78353], [0.0, 1.56706]]))
         self.assertEqual(
             out.spectral_data,
             np.asarray(
                 [
-                    [
-                        1.8937e00,
-                        -9.6825e-02,
-                        6.1567e-08,
-                        -3.9380e-04,
-                        3.0771e-08,
-                        3.0795e-08,
-                    ],
-                    [
-                        1.9000e00,
-                        -9.6825e-02,
-                        5.7837e-08,
-                        -4.2368e-04,
-                        2.8906e-08,
-                        2.8931e-08,
-                    ],
+                    [1.8937e00, -9.6825e-02, 6.1567e-08, -3.9380e-04, 3.0771e-08, 3.0795e-08],
+                    [1.9000e00, -9.6825e-02, 5.7837e-08, -4.2368e-04, 2.8906e-08, 2.8931e-08],
                 ]
             ),
         )

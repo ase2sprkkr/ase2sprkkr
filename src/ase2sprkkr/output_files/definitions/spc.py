@@ -8,10 +8,7 @@ import numpy as np
 
 from ..output_files import Arithmetic, CommonOutputFile
 from ...common.grammar_types import NumpyArray, Prefixed
-from ...common.generated_configuration_definitions import (
-    NumpyViewDefinition as NV,
-    GeneratedValueDefinition as GV,
-)
+from ...common.generated_configuration_definitions import NumpyViewDefinition as NV, GeneratedValueDefinition as GV
 from ...common.configuration_definitions import switch
 from ...gui.plot import change_default_kwargs, colormesh, Multiplot
 
@@ -46,9 +43,7 @@ class ARPESOutputFile(CommonOutputFile, Arithmetic):
             mp.plot(self.POLARIZATION)
 
     def _arithmetic_values(self):
-        return [
-            ("RAW_DATA", (slice(None), slice(2, 6 if self.MODE() == "energy" else 5)))
-        ]
+        return [("RAW_DATA", (slice(None), slice(2, 6 if self.MODE() == "energy" else 5)))]
 
     def _assert_arithmetic(self, other):
         """Check, that the file can be summed/subtracked from an other file"""
@@ -119,29 +114,11 @@ def create_definition():
                     "energy": [
                         NV("THETA", "RAW_DATA", i(0), ("NE", "NT")),
                         NV("ENERGY", "RAW_DATA", i(1), ("NE", "NT")),
-                        NV(
-                            "K",
-                            "RAW_DATA",
-                            i(6),
-                            ("NE", "NT"),
-                            info="K_parallel (pi/A)",
-                        ),
+                        NV("K", "RAW_DATA", i(6), ("NE", "NT"), info="K_parallel (pi/A)"),
                     ],
                     "kx_ky": [
-                        NV(
-                            "KX",
-                            "RAW_DATA",
-                            i(0),
-                            ("NP", "NT"),
-                            info="k_x coordinate (1/Å)",
-                        ),
-                        NV(
-                            "KY",
-                            "RAW_DATA",
-                            i(1),
-                            ("NP", "NT"),
-                            info="k_y coordinate (1/Å)",
-                        ),
+                        NV("KX", "RAW_DATA", i(0), ("NP", "NT"), info="k_x coordinate (1/Å)"),
+                        NV("KY", "RAW_DATA", i(1), ("NP", "NT"), info="k_y coordinate (1/Å)"),
                     ],
                 },
             ),
@@ -150,9 +127,7 @@ def create_definition():
                 "RAW_DATA",
                 ii(2),
                 info="Total intensity",
-                plot=change_default_kwargs(
-                    plot, title=r"Total intensity", colormap="gray"
-                ),
+                plot=change_default_kwargs(plot, title=r"Total intensity", colormap="gray"),
             ),
             NV(
                 "UP",
@@ -173,9 +148,7 @@ def create_definition():
                 "RAW_DATA",
                 ii(5),
                 info="Spin polarization",
-                plot=change_default_kwargs(
-                    plot, colormap="bwr", title=r"Spin polarization"
-                ),
+                plot=change_default_kwargs(plot, colormap="bwr", title=r"Spin polarization"),
             ),
             NV("DETERMINANT", "RAW_DATA", determinant),
         ],

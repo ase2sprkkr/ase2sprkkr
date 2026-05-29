@@ -33,18 +33,8 @@ class TestSysfile(TestCase):
 
         self.assertEqual(ap_number_from_spacegroup(136, 419), 384)
 
-        self.assertEqual(
-            ap_number_from_spacegroup(
-                143, cell=Cell.fromcellpar([3, 3, 5, 90, 90, 120])
-            ),
-            395,
-        )
-        self.assertEqual(
-            ap_number_from_spacegroup(
-                143, cell=Cell.fromcellpar([3, 3, 3, 75, 75, 75])
-            ),
-            396,
-        )
+        self.assertEqual(ap_number_from_spacegroup(143, cell=Cell.fromcellpar([3, 3, 5, 90, 90, 120])), 395)
+        self.assertEqual(ap_number_from_spacegroup(143, cell=Cell.fromcellpar([3, 3, 3, 75, 75, 75])), 396)
 
         self.assertEqual(ap_number_from_spacegroup(146, 433), 402)
         self.assertEqual(ap_number_from_spacegroup(146, 434), 401)
@@ -60,12 +50,7 @@ class TestSysfile(TestCase):
     def test(self):
         a = 4.6
         c = 2.95
-        atoms = crystal(
-            ["Ti", "O"],
-            basis=[(0, 0, 0), (0.3, 0.3, 0.0)],
-            spacegroup=136,
-            cellpar=[a, a, c, 90, 90, 90],
-        )
+        atoms = crystal(["Ti", "O"], basis=[(0, 0, 0), (0.3, 0.3, 0.0)], spacegroup=136, cellpar=[a, a, c, 90, 90, 90])
         # atoms = bulk('Ag')
         x = sysfile_content(atoms)
         y = """

@@ -15,9 +15,7 @@ import os
 
 def run_sprkkr(fn):
     """run this test only if SPRKKR executable can be runned"""
-    return pytest.mark.skipif(
-        not TestCase.run_sprkkr(), reason="The test require SPRKKR running"
-    )(fn)
+    return pytest.mark.skipif(not TestCase.run_sprkkr(), reason="The test require SPRKKR running")(fn)
 
 
 def patch_package(package, name):
@@ -28,9 +26,9 @@ def patch_package(package, name):
     ..code::
 
       if __package__:
-        from .init_tests import TestCase, patch_package
+          from .init_tests import TestCase, patch_package
       else:
-         from init_tests import TestCase, patch_package
+          from init_tests import TestCase, patch_package
       __package__, __name__ = patch_package(__package__, __name__)
 
     """
@@ -206,8 +204,7 @@ def assertListEqual(a, b, msg=""):
 
     assert a.__class__ is b.__class__, message("A list is expected")
     assert len(a) == len(b), message(
-        "The lists should have the same lengths, they have "
-        f"the lengths {len(a)} and {len(b)} respectivelly"
+        f"The lists should have the same lengths, they have the lengths {len(a)} and {len(b)} respectivelly"
     )
     for i, vals in enumerate(zip(a, b)):
         try:
@@ -218,6 +215,4 @@ def assertListEqual(a, b, msg=""):
 
 assertion.addTypeEqualityFunc(list, assertListEqual)
 assertion.addTypeEqualityFunc(dict, assertDictEqual)
-assertion.addTypeEqualityFunc(
-    Cell, lambda a, b, msg: arr_testfce(np.array(a), np.array(b), msg)
-)
+assertion.addTypeEqualityFunc(Cell, lambda a, b, msg: arr_testfce(np.array(a), np.array(b), msg))

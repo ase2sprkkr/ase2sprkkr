@@ -31,21 +31,12 @@ class AtomicType:
             try:
                 import mendeleev
             except ImportError as e:
-                raise ImportError(
-                    "Cannot import Mendeleev package to guess the atomic type properties"
-                ) from e
+                raise ImportError("Cannot import Mendeleev package to guess the atomic type properties") from e
             AtomicType._mendeleev_module = mendeleev
         return AtomicType._mendeleev_module.element(self.atomic_number or self.symbol)
 
     def __init__(
-        self,
-        symbol,
-        atomic_number=None,
-        n_core=None,
-        n_valence=None,
-        n_semicore=None,
-        n_electrons=None,
-        mesh=None,
+        self, symbol, atomic_number=None, n_core=None, n_valence=None, n_semicore=None, n_electrons=None, mesh=None
     ):
         """
         Parameters
@@ -75,9 +66,7 @@ class AtomicType:
         """
         if isinstance(symbol, (int, np.int64)):
             if atomic_number is not None and atomic_number != symbol:
-                raise ValueError(
-                    f"Number of electrons in symbol ({symbol}) and atomic_number ({atomic_number}) differ"
-                )
+                raise ValueError(f"Number of electrons in symbol ({symbol}) and atomic_number ({atomic_number}) differ")
             atomic_number = int(symbol)
             symbol = None
         else:
@@ -90,11 +79,7 @@ class AtomicType:
         if "_" in symbol:
             symbol = symbol.split("_", 1)[0]
 
-        if (
-            symbol == "Vc"
-            or atomic_number == 0
-            or (symbol == "X" and atomic_number is None)
-        ):
+        if symbol == "Vc" or atomic_number == 0 or (symbol == "X" and atomic_number is None):
             self._symbol = "Vc"
             self._atomic_number = 0
         else:
@@ -104,11 +89,7 @@ class AtomicType:
             else:
                 self._symbol = symbol
                 self._atomic_number = None
-                self._atomic_number = (
-                    atomic_number
-                    if atomic_number is not None
-                    else self.mendeleev.atomic_number
-                )
+                self._atomic_number = atomic_number if atomic_number is not None else self.mendeleev.atomic_number
 
         self._n_electrons = n_electrons
         self._n_valence = n_valence
@@ -191,19 +172,13 @@ n_semicore: {self._n_semicore}""")
         self._symbol = v
         self._atomic_number = None
         self._clear_symbol_cache()
-        self._atomic_number = (
-            self.mendeleev.atomic_number if v not in ["X", "Vc"] else 0
-        )
+        self._atomic_number = self.mendeleev.atomic_number if v not in ["X", "Vc"] else 0
 
     @property
     def n_electrons(self):
         if self._n_electrons is not None:
             return self._n_electrons
-        if (
-            self._n_valence is not None
-            and self._n_core is not None
-            and self._n_semicore is not None
-        ):
+        if self._n_valence is not None and self._n_core is not None and self._n_semicore is not None:
             return self._n_valence + self._n_core + self._n_semicore
         return self.atomic_number
 
@@ -260,13 +235,7 @@ n_semicore: {self._n_semicore}""")
         return self.__repr__()
 
     def to_tuple(self):
-        return (
-            self.symbol,
-            self.n_electrons,
-            self.n_core,
-            self.n_valence,
-            self.n_semicore,
-        )
+        return (self.symbol, self.n_electrons, self.n_core, self.n_valence, self.n_semicore)
 
     def is_vacuum(self):
         return self.atomic_number == 0

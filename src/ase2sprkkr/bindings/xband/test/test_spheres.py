@@ -153,9 +153,7 @@ class TestSpheres(TestCase):
         def sort(x):
             return np.asarray(sorted(tuple(i) for i in x))
 
-        self.assertEqual(
-            sort(cu.get_scaled_positions()), sort(full.get_scaled_positions())
-        )
+        self.assertEqual(sort(cu.get_scaled_positions()), sort(full.get_scaled_positions()))
 
         pot = Potential.from_file(os.path.join(dirr, "V.pot"))
         v = pot.atoms
@@ -197,10 +195,6 @@ class TestSpheres(TestCase):
         if os.environ.get("DO_NOT_RUN_SPRKKR", "") == "":
             cu = ase.build.bulk("Cu")
             SPRKKR().calculate(
-                cu,
-                **self.calc_args(
-                    empty_spheres={"min_radius": 0.25},
-                    options={"niter": 1, "ne": 20, "nktab": 5},
-                ),
+                cu, **self.calc_args(empty_spheres={"min_radius": 0.25}, options={"niter": 1, "ne": 20, "nktab": 5})
             )
             self.assertEqual(len(cu), 4)

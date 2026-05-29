@@ -21,11 +21,7 @@ class BsfResult(TaskResult):
 
     @cached_property
     def output_values(self):
-        return {
-            "bsf": OutputFileResultValue(
-                "Bloch spectral function", "bsf", self.bsf_filename
-            )
-        }
+        return {"bsf": OutputFileResultValue("Bloch spectral function", "bsf", self.bsf_filename)}
 
 
 class BsfOutputReader(KkrOutputReader):

@@ -23,7 +23,7 @@ class Directory:
             self.chdir = contextlib.suppress
 
     def __str__(self):
-        return str(self.path) if self.path is not False else '<tempdir>'
+        return str(self.path) if self.path is not False else "<tempdir>"
 
     def __repr__(self):
         return f"<Directory {str(self)}>"
@@ -49,12 +49,12 @@ class Directory:
 
     @contextlib.contextmanager
     def chdir(self):
-            cwd = os.getcwd()
-            if self.path:
-                 os.chdir(self.path)
-                 try:
-                     yield self.path
-                 finally:
-                    os.chdir(cwd)
-            else:
-                yield cwd
+        cwd = os.getcwd()
+        if self.path:
+            os.chdir(self.path)
+            try:
+                yield self.path
+            finally:
+                os.chdir(cwd)
+        else:
+            yield cwd

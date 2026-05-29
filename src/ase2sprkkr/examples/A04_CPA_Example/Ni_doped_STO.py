@@ -10,22 +10,14 @@ def main():
 
     # Define a Perovskite Factory class
     class PerovskiteFactory(SimpleTetragonalFactory):
-        bravais_basis = [
-            [0, 0, 0.0],
-            [0.5, 0.5, 0.5],
-            [0.0, 0.5, 0.5],
-            [0.5, 0.5, 0],
-            [0.5, 0.0, 0.5],
-        ]
+        bravais_basis = [[0, 0, 0.0], [0.5, 0.5, 0.5], [0.0, 0.5, 0.5], [0.5, 0.5, 0], [0.5, 0.0, 0.5]]
         element_basis = (0, 1, 2, 2, 2)
 
     Perovskite = PerovskiteFactory()
 
     # Generate the base STO cell
     a0 = 3.905
-    STO = Perovskite(
-        ("Sr", "Ti", "O"), latticeconstant={"a": a0, "c/a": 1.0}, size=(1, 1, 1)
-    )
+    STO = Perovskite(("Sr", "Ti", "O"), latticeconstant={"a": a0, "c/a": 1.0}, size=(1, 1, 1))
 
     # First we create new child of the atoms object which includes occupations
     atoms = SPRKKRAtoms.promote_ase_atoms(STO)

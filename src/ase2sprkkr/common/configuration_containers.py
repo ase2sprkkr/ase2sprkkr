@@ -241,11 +241,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
           If True
         """
         for i in self._members.values():
-            i.clear(
-                do_not_check_required,
-                call_hooks=call_hooks,
-                generated=False if generated is None else generated,
-            )
+            i.clear(do_not_check_required, call_hooks=call_hooks, generated=False if generated is None else generated)
 
     def get_members(self, name=None, unknown="find", is_option=None, lower_case=True):
         """
@@ -327,28 +323,12 @@ class ConfigurationContainer(BaseConfigurationContainer):
             raise ValueError(f"No {name} member of {self}")
         return item.as_dict(only_changed=False, generated=True)
 
-    def set(
-        self,
-        values: Union[Dict[str, Any], str, None] = {},
-        value=None,
-        *,
-        unknown="find",
-        error=None,
-        **kwargs,
-    ):
+    def set(self, values: Union[Dict[str, Any], str, None] = {}, value=None, *, unknown="find", error=None, **kwargs):
         error = error or "section"
         self._set(values, value, unknown=unknown, error=error, **kwargs)
         self.validate(why="warning")
 
-    def _set(
-        self,
-        values: Union[Dict[str, Any], str, None] = {},
-        value=None,
-        *,
-        unknown="find",
-        error=None,
-        **kwargs,
-    ):
+    def _set(self, values: Union[Dict[str, Any], str, None] = {}, value=None, *, unknown="find", error=None, **kwargs):
         """
         Set the value(s) of parameter(s). Usage:
 
@@ -379,8 +359,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
             values = {values: value}
         elif value is not None:
             raise ValueError(
-                "If value argument of Container.set method is given,"
-                " the values have to be string name of the value"
+                "If value argument of Container.set method is given, the values have to be string name of the value"
             )
 
         def set_value(name, value):
@@ -390,13 +369,9 @@ class ConfigurationContainer(BaseConfigurationContainer):
                     if unknown == "add":
                         self.add(section)
                     else:
-                        raise KeyError(
-                            f"There is no section {section} in {self} to set{section}.{name} to {value}"
-                        )
+                        raise KeyError(f"There is no section {section} in {self} to set{section}.{name} to {value}")
                 self._members[section]._set(
-                    {name: value},
-                    unknown="fail" if unknown == "find" else unknown,
-                    error=error,
+                    {name: value}, unknown="fail" if unknown == "find" else unknown, error=error
                 )
                 return
             option = self._members.get(name, None)
@@ -409,9 +384,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
                 if unknown == "ignore":
                     return
                 if not unknown == "add":
-                    raise KeyError(
-                        "No option with name {} in {}".format(name, str(self))
-                    )
+                    raise KeyError("No option with name {} in {}".format(name, str(self)))
                     return
                 self.add(name, value)
             else:
@@ -426,9 +399,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
                 set_value(i, v)
 
         if kwargs:
-            self.validate_section(
-                why="set", section_adaptor=MergeSectionAdaptor(kwargs, self)
-            )
+            self.validate_section(why="set", section_adaptor=MergeSectionAdaptor(kwargs, self))
             for i, v in kwargs.items():
                 set_value(i, v)
 
@@ -445,13 +416,9 @@ class ConfigurationContainer(BaseConfigurationContainer):
           Value of the added value
         """
         if not getattr(self._definition, "custom_class", False):
-            raise TypeError(
-                f"Can not add custom members to a configuration class {self._definition}"
-            )
+            raise TypeError(f"Can not add custom members to a configuration class {self._definition}")
         if name in self._members:
-            raise TypeError(
-                f"Section member {name} is already in the section {self._definition}"
-            )
+            raise TypeError(f"Section member {name} is already in the section {self._definition}")
         cc = self._definition.custom_class
         self._add(cc(name, self))
         if value is not None:
@@ -529,9 +496,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
         value:typing.Optional[ase2sprkkr.common.options.Option]
         The first option of the given name, if such exists. ``None`` otherwise.
         """
-        if is_option is not True and name == (
-            self.name.lower() if lower else self.name
-        ):
+        if is_option is not True and name == (self.name.lower() if lower else self.name):
             yield self
         for i in self._values():
             if i._definition.is_hidden:
@@ -562,9 +527,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
                 return True
         return False
 
-    def _save_to_file(
-        self, file, always=False, name_in_grammar=None, delimiter=""
-    ) -> bool:
+    def _save_to_file(self, file, always=False, name_in_grammar=None, delimiter="") -> bool:
         """Save the content of the container to the file (according to the definition)
 
         Parameters
@@ -580,18 +543,12 @@ class ConfigurationContainer(BaseConfigurationContainer):
         something_have_been_written
           If any value have been written return True, otherwise return False.
         """
-        return self._definition._save_to_file(
-            file, self, always, name_in_grammar, delimiter
-        )
+        return self._definition._save_to_file(file, self, always, name_in_grammar, delimiter)
 
     def __setattr__(self, name, value):
         """Setting the (unknown) attribute of a section sets the value of the member
         with a given name"""
-        if (
-            name[0] == "_"
-            or name in self.__dict__
-            or hasattr(getattr(self.__class__, name, None), "__set__")
-        ):
+        if name[0] == "_" or name in self.__dict__ or hasattr(getattr(self.__class__, name, None), "__set__"):
             super().__setattr__(name, value)
         else:
             val = self._get_member(name)
@@ -610,14 +567,8 @@ class ConfigurationContainer(BaseConfigurationContainer):
         """
         sa = SectionAdaptor(self)
         self._definition.validate(sa, why)
-        if (
-            why == "save"
-            and not self._definition.is_optional
-            and not self.has_any_value()
-        ):
-            raise ValueError(
-                f"Non-optional section {self._definition.name} has no value to save"
-            )
+        if why == "save" and not self._definition.is_optional and not self.has_any_value():
+            raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
         for o in self._values():
             d = o._definition
             if d.allowed(self):
@@ -717,9 +668,7 @@ class RootConfigurationContainer(ConfigurationContainer):
 
     name_in_grammar = False
 
-    def read_from_file(
-        self, file, clear_first: bool = True, allow_dangerous: bool = False
-    ):
+    def read_from_file(self, file, clear_first: bool = True, allow_dangerous: bool = False):
         """Read data from a file
 
         Parameters

@@ -60,11 +60,7 @@ def tag_sites(atoms: Atoms, consider_old: bool, return_mapping: False):
         else:
 
             def occ(i, site):
-                return (
-                    site.occupation
-                    if site
-                    else Occupation.for_atom_from_ase_atoms(atoms, i)
-                )
+                return site.occupation if site else Occupation.for_atom_from_ase_atoms(atoms, i)
 
             out = (occ(i, site).as_dict for i, site in enumerate(atoms.sites))
             out = [str(sorted(i.items())) for i in out]
@@ -129,9 +125,7 @@ def spglib_dataset(
         equivalent_sites = sg_dataset.equivalent_atoms
         types = {}
         counter = max(equivalent_sites)
-        for i, (site, typ) in enumerate(
-            zip(atoms.arrays["sprkkr_sites_data"], equivalent_sites)
-        ):
+        for i, (site, typ) in enumerate(zip(atoms.arrays["sprkkr_sites_data"], equivalent_sites)):
             if site == 0:
                 continue
             stype = site.site_type

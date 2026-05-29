@@ -118,5 +118,12 @@ markers = [
 	"slow: long-running test (typically over about 1 second)",
 ]
 
+[tool.ruff]
+line-length=120
+
+[tool.ruff.format]
+docstring-code-format=true
+skip-magic-trailing-comma=true
+
 [tool.ruff.lint]
 ignore = ["E402", "E741"]

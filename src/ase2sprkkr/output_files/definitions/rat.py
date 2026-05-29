@@ -8,29 +8,13 @@ from ..output_files_definitions import (
 from typing import Optional
 import numpy as np
 from ase.units import Rydberg
-from ase2sprkkr.physics.broadening import (
-    create_lorentz_broadener,
-    create_gaussian_broadener,
-    compute_wlortab,
-)
+from ase2sprkkr.physics.broadening import create_lorentz_broadener, create_gaussian_broadener, compute_wlortab
 from scipy.interpolate import interp1d
 
 from ..output_files import CommonOutputFile
-from ...common.grammar_types import (
-    Array,
-    Keyword,
-    Char,
-    Table,
-    Sequence,
-    Complex,
-    Real,
-)
+from ...common.grammar_types import Array, Keyword, Char, Table, Sequence, Complex, Real
 from ...common.generated_configuration_definitions import GeneratedValueDefinition
-from ...common.configuration_definitions import (
-    KeywordSeparator,
-    SeparatorDefinition,
-    BaseDefinition,
-)
+from ...common.configuration_definitions import KeywordSeparator, SeparatorDefinition, BaseDefinition
 from ...gui.plot import Multiplot, set_up_common_plot, single_plot
 from ...common.decorators import cached_property, add_to_signature
 
@@ -46,12 +30,7 @@ class RATOutputFile(CommonOutputFile):
     def energies(self, group=0):
         """Energies in Ev relative to E-Fermi."""
         efermi = self.EFERMI()
-        return np.array(
-            [
-                (i.ENERGY()[0].real - efermi) * Rydberg
-                for i in self.GROUPS[group].DATA.values()
-            ]
-        )
+        return np.array([(i.ENERGY()[0].real - efermi) * Rydberg for i in self.GROUPS[group].DATA.values()])
 
     def order(self):
         """Order of the energie dataset."""
@@ -60,9 +39,7 @@ class RATOutputFile(CommonOutputFile):
         energies = self.energies()
         for i in range(1, len(self.GROUPS)):
             if not (self.energies(i) != energies):
-                raise ValueError(
-                    f"Set of energies for GROUP={i} differs from the ones for GROUP=0"
-                )
+                raise ValueError(f"Set of energies for GROUP={i} differs from the ones for GROUP=0")
         cst = self.core_state_types
         if len(cst[0]) > 2:
             raise ValueError("Too much KAP core-state-types")
@@ -80,11 +57,7 @@ class RATOutputFile(CommonOutputFile):
     def core_states_index(self):
         """Return indexes of core_states in CORE_STATES table, some of them can have two lines"""
         STATES = self.GROUPS[0].CORE_STATES
-        return [
-            i
-            for i in range(len(STATES))
-            if i == 0 or STATES[i]["ICST"] != STATES[i - 1]["ICST"]
-        ]
+        return [i for i in range(len(STATES)) if i == 0 or STATES[i]["ICST"] != STATES[i - 1]["ICST"]]
 
     @cached_property
     def core_state_types(self):
@@ -129,9 +102,7 @@ class RATOutputFile(CommonOutputFile):
             core_hole_width(atomic_number, nc, lc, 2, source=source),
         )
 
-    def broadener(
-        self, energies, gauss_width, lorentz_width, n_valence=None, wlortab=None
-    ):
+    def broadener(self, energies, gauss_width, lorentz_width, n_valence=None, wlortab=None):
         if lorentz_width is None:
             lorentz_width = self.lorentz_width()
         if n_valence is None:
@@ -145,9 +116,7 @@ class RATOutputFile(CommonOutputFile):
             wlortab = compute_wlortab(energies, n_valence)
 
         lorentz = [
-            None
-            if w < 0.001 and n_valence > 0
-            else create_lorentz_broadener(energies, w, wlortab)
+            None if w < 0.001 and n_valence > 0 else create_lorentz_broadener(energies, w, wlortab)
             for w in lorentz_width
         ]
         if len(lorentz) == 1:
@@ -170,9 +139,7 @@ class RATOutputFile(CommonOutputFile):
     @property
     def data(self):
         if not hasattr(self, "_data"):
-            raise ValueError(
-                "First call the `generate_data` method to compute the data"
-            )
+            raise ValueError("First call the `generate_data` method to compute the data")
         return self._data
 
     def plot(
@@ -261,10 +228,7 @@ class RATOutputFile(CommonOutputFile):
         """core energies"""
         ktypes, type_map = self.core_state_types
         n_ktypes = len(ktypes)
-        groups = [
-            np.where(type_map[self.core_states_index] == i)[0].tolist()
-            for i in range(len(ktypes))
-        ]
+        groups = [np.where(type_map[self.core_states_index] == i)[0].tolist() for i in range(len(ktypes))]
         if len(groups) > 1:
             if groups[0][0] > groups[1][0]:
                 groups = groups[::-1]
@@ -279,9 +243,7 @@ class RATOutputFile(CommonOutputFile):
         border = len(groups[0])
         if n_ktypes > 1:
             for i in e_core:
-                dcormin = min(
-                    dcormin, np.min(np.abs(i[:border, np.newaxis] - i[border:]))
-                )
+                dcormin = min(dcormin, np.min(np.abs(i[:border, np.newaxis] - i[border:])))
 
         """ energies """
         energies = self.energies()
@@ -311,9 +273,9 @@ class RATOutputFile(CommonOutputFile):
             """transform order array to slice, if possible - check for subsequent numbers"""
             if len(order) == 0:
                 return slice(0, 0)
-            if np.all(order[:-1] < order[1:]) and 2 * np.sum(order) == (
-                order[-1] - order[0] + 1
-            ) * (order[0] + order[-1]):
+            if np.all(order[:-1] < order[1:]) and 2 * np.sum(order) == (order[-1] - order[0] + 1) * (
+                order[0] + order[-1]
+            ):
                 return slice(order[0], order[-1] + 1)
             return order
 
@@ -321,9 +283,7 @@ class RATOutputFile(CommonOutputFile):
             if interpolate_to_fermi:
                 upper_half_idx_source = upper_half_idx = nef
                 # weights for interpolation to fermi
-                if ((nef == 0) or (senergies[nef] <= 0.0)) and (
-                    nef < len(senergies) - 1
-                ):
+                if ((nef == 0) or (senergies[nef] <= 0.0)) and (nef < len(senergies) - 1):
                     interp_idx = nef + 1
                 else:
                     interp_idx = nef - 1
@@ -337,8 +297,7 @@ class RATOutputFile(CommonOutputFile):
             if zero_below:
                 senergies = np.concatenate(
                     [
-                        abs(zero_below_energy)
-                        * (np.linspace(-1.0, 0.0, zero_below_num, endpoint=False) ** 3),
+                        abs(zero_below_energy) * (np.linspace(-1.0, 0.0, zero_below_num, endpoint=False) ** 3),
                         senergies[upper_half_idx:],
                     ]
                 )
@@ -364,10 +323,7 @@ class RATOutputFile(CommonOutputFile):
             source = np.empty(source_shape)
             for i, g in enumerate(self.GROUPS.values()):
                 for j, d in enumerate(g.DATA.values()):
-                    source[
-                        j,
-                        i,
-                    ] = d.DATA[name].real.reshape((-1, n_pol))
+                    source[j, i] = d.DATA[name].real.reshape((-1, n_pol))
             source = source[order]
 
             out = np.empty(shape)
@@ -398,17 +354,11 @@ class RATOutputFile(CommonOutputFile):
         broaden = self.broadener(senergies, gauss_width, lorentz_width, n_valence)
         borders = [0, border, n_states]
         for i in range(n_ktypes):
-            rd[:, :, borders[i] : borders[i + 1]] = broaden(
-                rd[:, :, borders[i] : borders[i + 1]], i
-            )
-            rt[:, :, borders[i] : borders[i + 1]] = broaden(
-                rt[:, :, borders[i] : borders[i + 1]], i
-            )
+            rd[:, :, borders[i] : borders[i + 1]] = broaden(rd[:, :, borders[i] : borders[i + 1]], i)
+            rt[:, :, borders[i] : borders[i + 1]] = broaden(rt[:, :, borders[i] : borders[i + 1]], i)
 
         if merge_all is None:
-            merge_all = abs(e_core_avg[0] - e_core_avg[-1]) < (
-                senergies[-1] - senergies[0]
-            )
+            merge_all = abs(e_core_avg[0] - e_core_avg[-1]) < (senergies[-1] - senergies[0])
         if n_ktypes <= 1 or no_core_splitting:
             merge_all = False
 
@@ -416,14 +366,7 @@ class RATOutputFile(CommonOutputFile):
         Výpočet SD
         """
 
-        def shift_by_e_core_avg_diff(
-            data,
-            energies=senergies,
-            borders=borders,
-            out=None,
-            ref_avg=None,
-            clip=False,
-        ):
+        def shift_by_e_core_avg_diff(data, energies=senergies, borders=borders, out=None, ref_avg=None, clip=False):
             """
             Interpolate `data` shifted by core-energy differences onto `energies`.
 
@@ -453,19 +396,12 @@ class RATOutputFile(CommonOutputFile):
                             de = ref_avg - e_core[i, j]
                         shifted = eval_energies - de
                         for p in range(n_pol):
-                            f = interp1d(
-                                senergies,
-                                data[:, i, j, p],
-                                kind="cubic",
-                                fill_value="extrapolate",
-                            )
+                            f = interp1d(senergies, data[:, i, j, p], kind="cubic", fill_value="extrapolate")
                             out_view[:, i, j, p] = f(shifted)
                             # values corresponding to evaluation points outside source grid
                             if clip:
                                 out_view[shifted < senergies[0], i, j, p] = 0.0
-                                out_view[shifted > senergies[-1], i, j, p] = data[
-                                    -1, i, j, p
-                                ]
+                                out_view[shifted > senergies[-1], i, j, p] = data[-1, i, j, p]
 
             return out
 
@@ -473,20 +409,14 @@ class RATOutputFile(CommonOutputFile):
             ie = np.searchsorted(senergies, dcormin, side="right")
             if ie >= len(senergies):
                 raise ValueError("No E(i) > Dcormin found")
-            shifted_energies = np.concatenate(
-                (senergies[:ie], senergies[upper_half_idx:] - my_fermi + dcormin)
-            )
+            shifted_energies = np.concatenate((senergies[:ie], senergies[upper_half_idx:] - my_fermi + dcormin))
             kref = np.argmax(e_core_avg)
             avg = e_core_avg[kref]
 
             # Use shift_by_e_core_avg_diff to fill ad/at on the merged energy grid
             # pass ref_avg so all states are shifted to the same reference (kref)
-            ad = shift_by_e_core_avg_diff(
-                rd, energies=shifted_energies, borders=borders, ref_avg=avg, clip=True
-            )
-            at = shift_by_e_core_avg_diff(
-                rt, energies=shifted_energies, borders=borders, ref_avg=avg, clip=True
-            )
+            ad = shift_by_e_core_avg_diff(rd, energies=shifted_energies, borders=borders, ref_avg=avg, clip=True)
+            at = shift_by_e_core_avg_diff(rt, energies=shifted_energies, borders=borders, ref_avg=avg, clip=True)
 
             df = avg - e_core
             ebot = shifted_energies[0] + np.max(df)
@@ -498,9 +428,7 @@ class RATOutputFile(CommonOutputFile):
             ad = ad[iebot:ietop]
             at = at[iebot:ietop]
             # Recompute per-ktype `sd` on the merged energy grid (preserve per-ktype shifts)
-            sd = shift_by_e_core_avg_diff(
-                rd, energies=shifted_energies, borders=borders, clip=True
-            )
+            sd = shift_by_e_core_avg_diff(rd, energies=shifted_energies, borders=borders, clip=True)
             senergies = shifted_energies
         else:
             sd = shift_by_e_core_avg_diff(rd)
@@ -750,12 +678,7 @@ def create_definition():
                     ),
                     BlankSeparator(),
                     V("N_ENERGIES", int, written_name="number of energies", indent=" "),
-                    V(
-                        "IFMT",
-                        Array(int, length=2),
-                        written_name="output format IFMT",
-                        indent=" ",
-                    ),
+                    V("IFMT", Array(int, length=2), written_name="output format IFMT", indent=" "),
                     V("VUC", float),
                     BlankSeparator(),
                     OutputFileSectionDefinition(
@@ -764,20 +687,14 @@ def create_definition():
                             V(
                                 "ENERGY",
                                 Sequence(
-                                    Complex(postfix=" RYD ", delimiter="", prefix=""),
-                                    Real(postfix=" EV (REL EF)"),
+                                    Complex(postfix=" RYD ", delimiter="", prefix=""), Real(postfix=" EV (REL EF)")
                                 ),
                                 name_in_grammar=False,
                             ),
                             V(
                                 "DATA",
                                 Table(
-                                    {
-                                        "ABSRTA": complex,
-                                        "ABSRTB": complex,
-                                        "ABSRATE": complex,
-                                        "ADD": str,
-                                    },
+                                    {"ABSRTA": complex, "ABSRTB": complex, "ABSRATE": complex, "ADD": str},
                                     grouping=True,
                                     numbering=True,
                                     header=False,

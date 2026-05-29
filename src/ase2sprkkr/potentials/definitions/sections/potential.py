@@ -1,8 +1,5 @@
 from ...potential_definitions import PotSectionDefinition, PotValueDefinition
-from ...potential_sections import (
-    PotentialSection as PotSection,
-    AtomicTypePotentialSection,
-)
+from ...potential_sections import PotentialSection as PotSection, AtomicTypePotentialSection
 from ....common.grammar_types import NumpyArray, RawData
 from ....common.configuration_definitions import SeparatorDefinition, BaseDefinition
 import re
@@ -43,10 +40,7 @@ class PotentialSectionDefinition(PotSectionDefinition):
             ),
             V(
                 "FULLPOT",
-                RawData(
-                    ends_with=re.compile("\n?(={79}|-{79})"),
-                    condition=_sections_potential_fullpot_condition,
-                ),
+                RawData(ends_with=re.compile("\n?(={79}|-{79})"), condition=_sections_potential_fullpot_condition),
                 is_required=False,
                 name_in_grammar=False,
                 write_condition=_sections_potential_fullpot_write_condition,
@@ -54,11 +48,7 @@ class PotentialSectionDefinition(PotSectionDefinition):
             SeparatorDefinition("=", length=79),
         ]
         super().__init__(
-            name,
-            members,
-            has_hidden_members=True,
-            is_repeated=BaseDefinition.Repeated.LIST_SECTION,
-            is_optional=True,
+            name, members, has_hidden_members=True, is_repeated=BaseDefinition.Repeated.LIST_SECTION, is_optional=True
         )
 
     result_class = PotentialSection

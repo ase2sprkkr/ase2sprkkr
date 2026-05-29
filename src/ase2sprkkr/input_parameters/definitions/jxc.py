@@ -1,10 +1,7 @@
 """JXC task input parameters definition"""
 
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
-from ..input_parameters_definitions import (
-    InputParametersDefinition as InputParameters,
-    InputValueDefinition as V,
-)
+from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
 
 
 def _jxc_mode_warning_condition(value):
@@ -53,11 +50,7 @@ def input_parameters():
         mpi=True,
         info="JXC",
     )
-    input_parameters["MODE"].copy_member(
-        "MODE"
-    ).warning_condition = _jxc_mode_warning_condition
-    input_parameters["CONTROL"].copy_member(
-        "NONMAG"
-    ).warning_condition = _jxc_nonmag_warning_condition
+    input_parameters["MODE"].copy_member("MODE").warning_condition = _jxc_mode_warning_condition
+    input_parameters["CONTROL"].copy_member("NONMAG").warning_condition = _jxc_nonmag_warning_condition
 
     return input_parameters

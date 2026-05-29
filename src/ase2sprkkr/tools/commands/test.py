@@ -21,21 +21,15 @@ unknowns = "pytest_arguments"
 
 
 def parser(parser):
-    parser.add_argument(
-        "pytest_arguments", help="Arguments for pytest.", nargs=argparse.REMAINDER
-    )
+    parser.add_argument("pytest_arguments", help="Arguments for pytest.", nargs=argparse.REMAINDER)
     parser.add_argument(
         "--no-kkr",
         help="Do not run SPRKKR executables, just test the interface only.",
         action="store_false",
         default=True,
     )
-    parser.add_argument(
-        "--pp", help="Pyparsing verbose stacktrace.", action="store_true"
-    )
-    parser.add_argument(
-        "--fast", help="Run only tests not marked as slow.", action="store_true"
-    )
+    parser.add_argument("--pp", help="Pyparsing verbose stacktrace.", action="store_true")
+    parser.add_argument("--fast", help="Run only tests not marked as slow.", action="store_true")
 
 
 def run(args, global_args):
@@ -50,19 +44,9 @@ def run(args, global_args):
         os.environ["DO_NOT_RUN_SPRKKR"] = "1"
     a2s_path = os.path.join(root_path, "ase2sprkkr")
     if pytest.version_tuple[0] <= 6:
-        print(
-            "Pytest version >= 6.0 is required. Please install it with pip install --upgrade 'pytest>=6'"
-        )
+        print("Pytest version >= 6.0 is required. Please install it with pip install --upgrade 'pytest>=6'")
         exit(-1)
-    pytest_args = [
-        sys.executable,
-        "-m",
-        "pytest",
-        "--doctest-modules",
-        "--rootdir",
-        root_path,
-        a2s_path,
-    ]
+    pytest_args = [sys.executable, "-m", "pytest", "--doctest-modules", "--rootdir", root_path, a2s_path]
     if args.fast:
         pytest_args += ["-m", "not slow"]
     pytest_args += args.pytest_arguments

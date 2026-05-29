@@ -63,9 +63,7 @@ class PotSectionDefinition(ConfigurationSectionDefinition):
     child_class = PotValueDefinition
     """ standard child class """
 
-    custom_class = staticmethod(
-        CustomConfigurationValue.factory(PotValueDefinition, pot_mixed)
-    )
+    custom_class = staticmethod(CustomConfigurationValue.factory(PotValueDefinition, pot_mixed))
     """ Adding a custom values is allowed """
 
     delimiter = "\n"

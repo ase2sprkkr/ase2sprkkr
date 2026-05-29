@@ -129,13 +129,9 @@ class RawData(GrammarType):
                 out = self.forward
         elif self.ends_with:
             if isinstance(self.ends_with, re.Pattern):
-                out = SkipToRegex(
-                    self.ends_with, include_pattern=self.include_ends_with
-                )
+                out = SkipToRegex(self.ends_with, include_pattern=self.include_ends_with)
             else:
-                out = pp.SkipTo(
-                    pp.Suppress(self.ends_with), include=self.include_ends_with
-                )
+                out = pp.SkipTo(pp.Suppress(self.ends_with), include=self.include_ends_with)
                 out.set_parse_action(lambda x: x[0])
         else:
             out = RestOfTheFile._grammar.copy()
@@ -149,9 +145,7 @@ class RawData(GrammarType):
                     v = re.sub(f"(^|\n){self.indented}", r"\1", v)
             if self.line_length:
                 v = re.sub(
-                    f"([^\n]{{{self.line_length}}}[^{self.written_delimiter}\n]*)\n",
-                    f"\\1{self.written_delimiter}",
-                    v,
+                    f"([^\n]{{{self.line_length}}}[^{self.written_delimiter}\n]*)\n", f"\\1{self.written_delimiter}", v
                 )
             return v
 
@@ -163,9 +157,7 @@ class RawData(GrammarType):
         out = str(val)
         if self.line_length:
             out = re.sub(
-                f"([^\n]{{{self.line_length}}}[^{self.written_delimiter}\n]*){self.written_delimiter}",
-                "\\1\n",
-                out,
+                f"([^\n]{{{self.line_length}}}[^{self.written_delimiter}\n]*){self.written_delimiter}", "\\1\n", out
             )
 
         indented = self.indented
@@ -317,9 +309,7 @@ class NumpyArray(RawData):
                 last_error = None
                 for dt in self.dtypes:
                     try:
-                        v = np.genfromtxt(
-                            io.StringIO(v), delimiter=self.delimiter, dtype=dt
-                        )
+                        v = np.genfromtxt(io.StringIO(v), delimiter=self.delimiter, dtype=dt)
                         break
                     except Exception:
                         pass

@@ -49,9 +49,7 @@ def pretty_symbols(symbols):
     > >> pretty_symbols("C4H4OC4H4OC2C4H4OC4H4OC2")
     '{{C4H4O}2C2}2'
     """
-    symbols = re.sub(
-        "([A-Z][a-z]*)([0-9]+)", lambda m: m.group(1) * int(m.group(2)), str(symbols)
-    )
+    symbols = re.sub("([A-Z][a-z]*)([0-9]+)", lambda m: m.group(1) * int(m.group(2)), str(symbols))
 
     prev = []
     i = 0

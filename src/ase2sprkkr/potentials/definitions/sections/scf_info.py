@@ -50,15 +50,7 @@ class ScfInfoSectionDefinition(PotSectionDefinition):
             V("INFO", line_string, "NONE"),
             V(
                 "SCFSTATUS",
-                DefKeyword(
-                    "START",
-                    "CONVERGED",
-                    "ITR-BULK",
-                    "ITR-R-BULK",
-                    "ITR-L-BULK",
-                    "ITR-I-ZONE",
-                    "ITR",
-                ),
+                DefKeyword("START", "CONVERGED", "ITR-BULK", "ITR-R-BULK", "ITR-L-BULK", "ITR-I-ZONE", "ITR"),
             ),
             V("FULLPOT", False),
             V("BREITINT", False),

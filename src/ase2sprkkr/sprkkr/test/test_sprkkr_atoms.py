@@ -102,23 +102,13 @@ class TestSPRKKRAtoms(TestCase):
         self.assertFalse(atoms.sites[1].site_type == atoms.sites[3].site_type)
 
         atoms = bulk("LiCl", "rocksalt", a=5.64) * (2, 1, 1)
-        atoms.info["occupancy"] = {
-            0: {"Li": 1},
-            1: {"Cl": 1},
-            2: {"Li": 1},
-            3: {"Cl": 1},
-        }
+        atoms.info["occupancy"] = {0: {"Li": 1}, 1: {"Cl": 1}, 2: {"Li": 1}, 3: {"Cl": 1}}
         atoms.arrays["spacegroup_kinds"] = np.array([0, 1, 0, 1])
         SPRKKRAtoms.promote_ase_atoms(atoms)
         self.assertTrue(atoms.sites[1].site_type == atoms.sites[3].site_type)
 
         atoms = bulk("LiCl", "rocksalt", a=5.64) * (2, 1, 1)
-        atoms.info["occupancy"] = {
-            0: {"Li": 1},
-            1: {"Cl": 0.5, "I": 0.5},
-            2: {"Li": 1},
-            3: {"Cl": 1},
-        }
+        atoms.info["occupancy"] = {0: {"Li": 1}, 1: {"Cl": 0.5, "I": 0.5}, 2: {"Li": 1}, 3: {"Cl": 1}}
         atoms.arrays["spacegroup_kinds"] = np.array([0, 1, 0, 2])
         SPRKKRAtoms.promote_ase_atoms(atoms)
         self.assertFalse(atoms.sites[1].site_type == atoms.sites[3].site_type)

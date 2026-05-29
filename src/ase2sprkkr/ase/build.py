@@ -55,10 +55,7 @@ def aperiodic_times(
             times = t
     else:
         if axis is not None:
-            raise ValueError(
-                "If axis is specified, only a scalar value have to "
-                "be supplied to the times argument."
-            )
+            raise ValueError("If axis is specified, only a scalar value have to be supplied to the times argument.")
 
     if isinstance(direction, int):
         direction = [direction, direction, direction]
@@ -187,9 +184,7 @@ def stack(
         atlen = len(at)
 
         def valid_at(n):
-            return (
-                n < atlen and at[n] is not None and not np.equal(at[n], [0, 0, 0]).all()
-            )
+            return n < atlen and at[n] is not None and not np.equal(at[n], [0, 0, 0]).all()
 
     def get_at(i):
         if not valid_at(i):
@@ -232,9 +227,7 @@ def stack(
     else:
         for a in remains:
             if (out.pbc != a.pbc)[cell_index].any():
-                raise ValueError(
-                    "The stacked atoms has incompatibile pbc. Check the check_pbc argument."
-                )
+                raise ValueError("The stacked atoms has incompatibile pbc. Check the check_pbc argument.")
     out.pbc[axis] = periodic
 
     # and finally, stack the atoms
@@ -250,9 +243,7 @@ def stack(
         for c in cell_index:
             if (a.cell[c] != atoms0.cell[c]).any():
                 if out.pbc[c] if check_strain == "pbc" else check_strain:
-                    strain = np.linalg.norm(a.cell[c] - a0cell[c]) / np.linalg.norm(
-                        a0cell[c]
-                    )
+                    strain = np.linalg.norm(a.cell[c] - a0cell[c]) / np.linalg.norm(a0cell[c])
                     if strain > max_strain:
                         raise ValueError(
                             "The {i}th stacked Atoms object {a.symbols} has incompatibile cell, check the max_strain argument."
@@ -324,9 +315,7 @@ def _ext_gcd(a, b):
     return y, x - y * (a // b)
 
 
-def _fractional_inplane_period(
-    shift: np.ndarray, tol: float = 1e-10, max_denominator: int = 256
-) -> Optional[int]:
+def _fractional_inplane_period(shift: np.ndarray, tol: float = 1e-10, max_denominator: int = 256) -> Optional[int]:
     period = 1
     for value in np.asarray(shift, dtype=float):
         fraction = value - np.floor(value)
@@ -339,16 +328,12 @@ def _fractional_inplane_period(
     return period
 
 
-def _minimal_surface_layers(
-    atoms: ase.Atoms, hkl: Tuple[float], tol: float = 1e-10, max_layers: int = 256
-) -> int:
+def _minimal_surface_layers(atoms: ase.Atoms, hkl: Tuple[float], tol: float = 1e-10, max_layers: int = 256) -> int:
     basis = _surface_basis(atoms.cell, hkl, tol=tol)
     cell = np.dot(basis, np.asarray(atoms.cell))
     a1, a2, a3 = cell
 
-    metric = np.array(
-        [[np.dot(a1, a1), np.dot(a1, a2)], [np.dot(a2, a1), np.dot(a2, a2)]]
-    )
+    metric = np.array([[np.dot(a1, a1), np.dot(a1, a2)], [np.dot(a2, a1), np.dot(a2, a2)]])
     rhs = np.array([np.dot(a1, a3), np.dot(a2, a3)])
     shift = np.linalg.solve(metric, rhs)
 
@@ -360,9 +345,7 @@ def _minimal_surface_layers(
         if np.allclose(layers * shift, np.rint(layers * shift), atol=tol):
             return layers
 
-    raise ValueError(
-        f"Unable to determine a periodic slab thickness for Miller indices {tuple(hkl)}."
-    )
+    raise ValueError(f"Unable to determine a periodic slab thickness for Miller indices {tuple(hkl)}.")
 
 
 def rotate(atoms: ase.Atoms, hkl: Tuple[float]):
@@ -381,12 +364,7 @@ def rotate(atoms: ase.Atoms, hkl: Tuple[float]):
     return surface(atoms, np.rint(hkl).astype(int), layers, periodic=True)
 
 
-def shift(
-    atoms: ase.Atoms,
-    shift: Optional[Union[float, int, tuple, list, np.ndarray]],
-    axis=2,
-    wrap=True,
-):
+def shift(atoms: ase.Atoms, shift: Optional[Union[float, int, tuple, list, np.ndarray]], axis=2, wrap=True):
     """
     Shift the atoms (to get the desired atom to the top/bottom of the cell).
 

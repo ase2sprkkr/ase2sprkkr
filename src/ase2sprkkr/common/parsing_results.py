@@ -130,12 +130,12 @@ def dict_from_parsed(values):
     Moreover, if there is key of type (a,b), it will be transformed to subdictionary.
     Such a keys do not allow duplicates.
 
-    >>> dict_from_parsed( [ ('x', 'y'),  ((DictKey('a', 1)), 1 ), ((DictKey('a', 3)), 2) ] )
+    >>> dict_from_parsed([("x", "y"), ((DictKey("a", 1)), 1), ((DictKey("a", 3)), 2)])
     {'x': 'y', 'a': {1: 1, 3: 2}}
-    >>> dict_from_parsed( [ ('x', 1), ('x', '2') ] ) # doctest: +IGNORE_EXCEPTION_DETAIL
+    >>> dict_from_parsed([("x", 1), ("x", "2")])  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     pyparsing.exceptions.ParseException: There are non-unique keys: x
-    >>> dict_from_parsed( [ (RepeatedKey('x'), 1), (RepeatedKey('x'), 2) ] )
+    >>> dict_from_parsed([(RepeatedKey("x"), 1), (RepeatedKey("x"), 2)])
     {'x': [1, 2]}
     """
     out = Values()
@@ -167,9 +167,7 @@ def dict_from_parsed(values):
 
     if duplicates:
         duplicates = ", ".join((i.upper() for i in duplicates))
-        errors.append(
-            pp.ParseException(f"There are duplicate items named {duplicates}")
-        )
+        errors.append(pp.ParseException(f"There are duplicate items named {duplicates}"))
 
     if errors:
         if len(errors) == 1:

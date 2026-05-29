@@ -2,10 +2,7 @@
 
 from ...common.grammar_types import SetOf, Integer
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
-from ..input_parameters_definitions import (
-    InputParametersDefinition as InputParameters,
-    InputValueDefinition as V,
-)
+from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
 from ...common.generated_configuration_definitions import Length
 from ...common.configuration_definitions import if_not_defined
 
@@ -61,18 +58,7 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
                         [
                             V(
                                 "NKDIR",
-                                Length(
-                                    "KA",
-                                    "KE",
-                                    default_values=[
-                                        [0.0, 0.0, 0.0],
-                                        [
-                                            1.0,
-                                            1.0,
-                                            1.0,
-                                        ],
-                                    ],
-                                ),
+                                Length("KA", "KE", default_values=[[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]]),
                                 info="Number of directions treated in k-spaces",
                                 is_required="Please, specify either TASK.KPATH or TASK.KA and TASK.KE",
                             ),
@@ -97,11 +83,7 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
             ENERGY(
                 emin=(-0.2, "The lowest E-value", None),
                 emax=(-1.0, "The highest E-value", None),
-                defaults={
-                    "GRID": 3,
-                    "NE": 200,
-                    "ImE": 0.001,
-                },
+                defaults={"GRID": 3, "NE": 200, "ImE": 0.001},
             ),
             CONTROL("BLOCHSF"),
             TAU,

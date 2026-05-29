@@ -16,14 +16,7 @@ from ...potentials.potentials import Potential
 
 
 def make_atoms():
-    atoms = Atoms(
-        symbols=["Fe", "Ni", "Fe"],
-        positions=[
-            (0.0, 0.0, 0.0),
-            (1.0, 0.0, 0.0),
-            (2.0, 0.0, 0.0),
-        ],
-    )
+    atoms = Atoms(symbols=["Fe", "Ni", "Fe"], positions=[(0.0, 0.0, 0.0), (1.0, 0.0, 0.0), (2.0, 0.0, 0.0)])
     atoms.sites = [object(), object(), object()]
     return atoms
 
@@ -58,27 +51,17 @@ class TestUppasdCommand(TestCase):
         jxc_output = FakeOutput(selector)
         calls = {"pos": [], "mom": []}
 
-        monkeypatch.setattr(
-            Potential,
-            "from_file",
-            staticmethod(lambda filename: SimpleNamespace(atoms=atoms)),
-        )
-        monkeypatch.setattr(
-            OutputFile, "from_file", staticmethod(lambda filename, **kwargs: jxc_output)
-        )
+        monkeypatch.setattr(Potential, "from_file", staticmethod(lambda filename: SimpleNamespace(atoms=atoms)))
+        monkeypatch.setattr(OutputFile, "from_file", staticmethod(lambda filename, **kwargs: jxc_output))
         monkeypatch.setattr(
             uppasd_bindings,
             "write_pos_file",
-            lambda atoms, path, **kwargs: (
-                calls["pos"].append((Path(path).name, kwargs)) or True
-            ),
+            lambda atoms, path, **kwargs: calls["pos"].append((Path(path).name, kwargs)) or True,
         )
         monkeypatch.setattr(
             uppasd_bindings,
             "write_mom_file",
-            lambda atoms, path, **kwargs: (
-                calls["mom"].append((Path(path).name, kwargs)) or True
-            ),
+            lambda atoms, path, **kwargs: calls["mom"].append((Path(path).name, kwargs)) or True,
         )
 
         args = SimpleNamespace(
@@ -101,24 +84,15 @@ class TestUppasdCommand(TestCase):
             font_size=14,
         )
 
-        uppasd.run(args, {'debug':True})
+        uppasd.run(args, {"debug": True})
 
         assert jxc_output.create_selector_calls == [
-            {
-                "iq": ["Fe"],
-                "it": ["Fe"],
-                "exclude_it": ["Ni"],
-                "exclude_vc": False,
-            }
+            {"iq": ["Fe"], "it": ["Fe"], "exclude_it": ["Ni"], "exclude_vc": False}
         ]
         assert jxc_output.write_calls == [
             (
                 "jfile.dat",
-                {
-                    "selector": selector,
-                    "exchange_radius": 7.5,
-                    "coordinates": uppasd_bindings.Coordinates.cartesian,
-                },
+                {"selector": selector, "exchange_radius": 7.5, "coordinates": uppasd_bindings.Coordinates.cartesian},
             )
         ]
         assert calls["pos"] == [("posfile.dat", {"selector": selector})]
@@ -130,14 +104,8 @@ class TestUppasdCommand(TestCase):
         jxc_output = FakeOutput(selector)
         calls = {"pos": 0, "mom": 0}
 
-        monkeypatch.setattr(
-            Potential,
-            "from_file",
-            staticmethod(lambda filename: SimpleNamespace(atoms=atoms)),
-        )
-        monkeypatch.setattr(
-            OutputFile, "from_file", staticmethod(lambda filename, **kwargs: jxc_output)
-        )
+        monkeypatch.setattr(Potential, "from_file", staticmethod(lambda filename: SimpleNamespace(atoms=atoms)))
+        monkeypatch.setattr(OutputFile, "from_file", staticmethod(lambda filename, **kwargs: jxc_output))
         monkeypatch.setattr(
             uppasd_bindings,
             "write_pos_file",
@@ -169,15 +137,8 @@ class TestUppasdCommand(TestCase):
             font_size=14,
         )
 
-        uppasd.run(args, {'debug':True})
+        uppasd.run(args, {"debug": True})
 
-        assert jxc_output.create_selector_calls == [
-            {
-                "iq": None,
-                "it": None,
-                "exclude_it": None,
-                "exclude_vc": True,
-            }
-        ]
+        assert jxc_output.create_selector_calls == [{"iq": None, "it": None, "exclude_it": None, "exclude_vc": True}]
         assert jxc_output.write_calls == []
         assert calls == {"pos": 0, "mom": 0}

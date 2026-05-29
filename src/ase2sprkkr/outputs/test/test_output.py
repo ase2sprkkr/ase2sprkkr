@@ -37,9 +37,7 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
             self.assertEqual(out.iterations[-1].converged(), True)
 
     def test_jxc(self):
-        path = os.path.realpath(
-            os.path.join(os.path.dirname(__file__), "..", "examples")
-        )
+        path = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "examples"))
         result = JxcOutputReader.read_from_file("Fe_jxc.out", directory=path)
         assert result.jxc_filename == os.path.join(path, "Fe_JXC_XCPLTEN_Jij.dat")
         assert result.dij_filename == os.path.join(path, "Fe_JXC_XCPLTEN_Dij.dat")

@@ -23,9 +23,7 @@ class JxcResult(TaskResult):
         try:
             return self.path_to("dmi")
         except KeyError:
-            raise AttributeError(
-                "Dzyaloshinski-Moriya vectors file not found in output"
-            )
+            raise AttributeError("Dzyaloshinski-Moriya vectors file not found in output")
 
     @cached_property
     def dmi(self):
@@ -60,11 +58,7 @@ class JxcResult(TaskResult):
 
     @property
     def output_values(self):
-        files = {
-            "jxc": "Exchange couplings",
-            "dij": "Exchange tensors",
-            "dmi": "Dzyaloshinski-Moriya vectors",
-        }
+        files = {"jxc": "Exchange couplings", "dij": "Exchange tensors", "dmi": "Dzyaloshinski-Moriya vectors"}
 
         return {
             key: OutputFileResultValue(name, "jxc", getattr(self, f"{key}_filename"))
@@ -102,13 +96,9 @@ class JxcResult(TaskResult):
                     kwargs[argname] = file_name
 
         if pos_file is not False:
-            write_pos_file(
-                self.atoms, pos_file, jxc_ouput_file=output_file, directory=directory
-            )
+            write_pos_file(self.atoms, pos_file, jxc_ouput_file=output_file, directory=directory)
         if mom_file is not False:
-            write_mom_file(
-                self.atoms, mom_file, jxc_ouput_file=output_file, directory=directory
-            )
+            write_mom_file(self.atoms, mom_file, jxc_ouput_file=output_file, directory=directory)
         if inpsd_file is not False:
             write_inpsd_file(self.atoms, posfile=pos_file, momfile=mom_file, **kwargs)
 
@@ -124,12 +114,7 @@ class JxcResult(TaskResult):
         **kwargs,
     ):
         self.write_uppasd_files(
-            **{
-                k: v
-                for k, v in locals().items()
-                if k not in ("self", "kwargs", "executable")
-            },
-            **kwargs,
+            **{k: v for k, v in locals().items() if k not in ("self", "kwargs", "executable")}, **kwargs
         )
         import subprocess
         from ...common.directory import Directory
@@ -152,11 +137,7 @@ class JxcOutputParser(SprKkrOutputParser):
             )
             + rb"))\s*"
         )
-        file_types = {
-            b"XCPLTEN_Jij": "jxc",
-            b"XCPLTEN_Dij": "dij",
-            b"DMIVEC_Dij": "dmi",
-        }
+        file_types = {b"XCPLTEN_Jij": "jxc", b"XCPLTEN_Dij": "dij", b"DMIVEC_Dij": "dmi"}
 
         match = None
 

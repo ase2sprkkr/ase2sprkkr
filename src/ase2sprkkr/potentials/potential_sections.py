@@ -98,9 +98,7 @@ class AtomicTypePotentialSection(PotentialSectionTrait, RepeatedConfigurationSec
 
         if notfound:
             if found:
-                DataValidityWarning.warn(
-                    f"Not all the atomic types have the {self.property_label} set"
-                )
+                DataValidityWarning.warn(f"Not all the atomic types have the {self.property_label} set")
             elif converged:
                 DataValidityWarning.warn(
                     f"The atomic types have not the {self.property_label} set, but the computation is set to converged."

@@ -225,11 +225,7 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
                     break
 
         # remove args/kwargs from the childs argument
-        new_pars = {
-            i.name: i
-            for i in new_pars
-            if (i.kind != P.VAR_KEYWORD or kwargs) and i.kind != P.VAR_POSITIONAL
-        }
+        new_pars = {i.name: i for i in new_pars if (i.kind != P.VAR_KEYWORD or kwargs) and i.kind != P.VAR_POSITIONAL}
 
         used = set()
 
@@ -240,11 +236,7 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
 
         if prepend:
             old_names = set((i.name for i in pars if i.name not in excluding))
-            old_pars = [
-                use(i)
-                for i in new_pars.values()
-                if i.kind != P.KEYWORD_ONLY or i.name not in old_names
-            ]
+            old_pars = [use(i) for i in new_pars.values() if i.kind != P.KEYWORD_ONLY or i.name not in old_names]
 
             def add_pars():
                 for i in pars:
@@ -262,11 +254,7 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
 
             add_pars = [i for i in add_pars()]
         else:
-            old_pars = [
-                use(new_pars[i.name]) if i.name in new_pars else i
-                for i in pars
-                if i.name not in excluding
-            ]
+            old_pars = [use(new_pars[i.name]) if i.name in new_pars else i for i in pars if i.name not in excluding]
             add_pars = [i for i in new_pars.values() if i.name not in used]
 
         # the easy and fast way - only keyword arguments are present, the function can be called as is,
@@ -326,20 +314,18 @@ def add_called_class_as_argument(decorator):
     >>> @add_called_class_as_argument
     ... def decorator(func):
     ...
-    ...       def wrapped(cls, self):
-    ...            super(cls, self).call()
-    ...            func(self)
-    ...       return wrapped
+    ...     def wrapped(cls, self):
+    ...         super(cls, self).call()
+    ...         func(self)
     ...
+    ...     return wrapped
     >>> class A:
-    ...    def call(self):
-    ...         print('A', end='')
-    ...
+    ...     def call(self):
+    ...         print("A", end="")
     >>> class B(A):
-    ...      @decorator
-    ...      def call(self):
-    ...           print('B', end='')
-    ...
+    ...     @decorator
+    ...     def call(self):
+    ...         print("B", end="")
     >>> B().call()
     AB
     """

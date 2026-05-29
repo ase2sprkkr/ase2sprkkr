@@ -88,9 +88,7 @@ class TestSites(TestCase):
 
         # test 1/r interpolation
         s0.potential = [1 / m1.coors, 1 / m1.coors * 2]
-        self.assertEqual(
-            s0.potential.interpolate(1.5), np.asarray([1 / 1.5, 1 / 1.5 * 2])
-        )
+        self.assertEqual(s0.potential.interpolate(1.5), np.asarray([1 / 1.5, 1 / 1.5 * 2]))
 
     def test_vacuum(self):
         a = SPRKKRAtoms("NaCl")
@@ -163,17 +161,13 @@ class TestSites(TestCase):
         out2 = calc.calculate(atoms=atoms1, options={"NITER": 1})  # , directory='./d')
         self.assertEqual(atoms2.sites[0].potential.vt, out2.atoms.sites[0].potential.vt)
         self.assertEqual(atoms2.sites[0].potential.bt, out2.atoms.sites[0].potential.bt)
-        self.assertEqual(
-            atoms2.sites[0].charge.raw_value, out2.atoms.sites[0].charge.raw_value
-        )
+        self.assertEqual(atoms2.sites[0].charge.raw_value, out2.atoms.sites[0].charge.raw_value)
         # calc.save_input(atoms=zero.atoms, directory='a', options={'NITER' : 2})
         atoms1.atoms.sites[0].potential.vt *= 2
         atoms1.atoms.sites[0].potential.bt *= 2
         # calc.save_input(atoms=zero.atoms, directory='b', options={'NITER' : 2})
         out3 = calc.calculate(atoms=atoms1, options={"NITER": 1})
-        self.assertNotEqual(
-            atoms2.sites[0].potential.vt, out3.atoms.sites[0].potential.vt
-        )
+        self.assertNotEqual(atoms2.sites[0].potential.vt, out3.atoms.sites[0].potential.vt)
 
     def test_occupancy_and_spacegroup_kinds(self):
         ciffile = "test2.cif"

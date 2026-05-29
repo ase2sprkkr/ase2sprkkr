@@ -10,9 +10,7 @@ if not __package__:
     __package__ = "ase2sprkkr.tools.commands"
 sys.path.append(str(Path(__file__).resolve().parents[3]))
 
-from ...common.tools import (
-    main,
-)  # NOQA
+from ...common.tools import main  # NOQA
 from ...common.lazy_string import LazyString  # NOQA
 
 
@@ -31,18 +29,10 @@ help = "Open SPR-KKR output files in a Python shell or Jupyter notebook"
 
 def parser(parser):
     parser.add_argument(
-        "-o",
-        "--output",
-        help="SPR-KKR output file name (see the supported files above).",
-        action="append",
-        default=[],
+        "-o", "--output", help="SPR-KKR output file name (see the supported files above).", action="append", default=[]
     )
-    parser.add_argument(
-        "-j", "--jupyter", help="Open Jupyter notebook.", action="store_true"
-    )
-    parser.add_argument(
-        "-D", "--pdb", help="Run the command inside pdb", action="store_true"
-    )
+    parser.add_argument("-j", "--jupyter", help="Open Jupyter notebook.", action="store_true")
+    parser.add_argument("-D", "--pdb", help="Run the command inside pdb", action="store_true")
     parser.add_argument(
         "-e",
         "--example",
@@ -51,23 +41,11 @@ def parser(parser):
         type=int,
     )
     parser.add_argument(
-        "-d",
-        "--directory",
-        help='Directory, where to copy the example. Use "." for the current directory.',
+        "-d", "--directory", help='Directory, where to copy the example. Use "." for the current directory.'
     )
+    parser.add_argument("-s", "--save", help="Save the script/Jupyter notebook.", action="store", type=str)
     parser.add_argument(
-        "-s",
-        "--save",
-        help="Save the script/Jupyter notebook.",
-        action="store",
-        type=str,
-    )
-    parser.add_argument(
-        "-r",
-        "--run",
-        help="Execute the notebook before saving and opening Jupyter notebook.",
-        action="store",
-        type=str,
+        "-r", "--run", help="Execute the notebook before saving and opening Jupyter notebook.", action="store", type=str
     )
 
 

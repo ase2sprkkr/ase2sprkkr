@@ -170,12 +170,7 @@ def fortran_code_find_empty_spheres(
     """
 
     inp = _collect_inputs(
-        atoms,
-        min_radius=min_radius,
-        max_radius=max_radius,
-        mesh=mesh,
-        verbose=verbose,
-        max_spheres=max_spheres,
+        atoms, min_radius=min_radius, max_radius=max_radius, mesh=mesh, verbose=verbose, max_spheres=max_spheres
     )
 
     n = int(inp.positions_scaled.shape[0])
@@ -184,13 +179,9 @@ def fortran_code_find_empty_spheres(
     # Fortran expects NTMAX=200 in radii.f90; keep that as a conservative max.
     ntmax = 200
     if inp.n_types > ntmax:
-        raise ValueError(
-            f"n_types={inp.n_types} exceeds NTMAX={ntmax} used by FIND_EMPTY_SPHERES"
-        )
+        raise ValueError(f"n_types={inp.n_types} exceeds NTMAX={ntmax} used by FIND_EMPTY_SPHERES")
     if n > ntmax:
-        raise ValueError(
-            f"n_atoms={n} exceeds NTMAX={ntmax} used by FIND_EMPTY_SPHERES"
-        )
+        raise ValueError(f"n_atoms={n} exceeds NTMAX={ntmax} used by FIND_EMPTY_SPHERES")
 
     lines: list[str] = []
     a = lines.append
@@ -242,10 +233,7 @@ def fortran_code_find_empty_spheres(
         row = inp.cell_scaled[col, :]
         a(
             "  cell(1:3,{j}) = (/ {x0}, {x1}, {x2} /)".format(
-                j=col + 1,
-                x0=_fmt_f64(row[0]),
-                x1=_fmt_f64(row[1]),
-                x2=_fmt_f64(row[2]),
+                j=col + 1, x0=_fmt_f64(row[0]), x1=_fmt_f64(row[1]), x2=_fmt_f64(row[2])
             )
         )
 
@@ -254,10 +242,7 @@ def fortran_code_find_empty_spheres(
         p = inp.positions_scaled[i, :]
         a(
             "  bas(1:3,{j}) = (/ {x0}, {x1}, {x2} /)".format(
-                j=i + 1,
-                x0=_fmt_f64(p[0]),
-                x1=_fmt_f64(p[1]),
-                x2=_fmt_f64(p[2]),
+                j=i + 1, x0=_fmt_f64(p[0]), x1=_fmt_f64(p[1]), x2=_fmt_f64(p[2])
             )
         )
 
@@ -279,15 +264,9 @@ def fortran_code_find_empty_spheres(
     a("  rotations(:,:,:) = 0d0")
     a("  translations(:,:) = 0d0")
 
-    if (
-        inp.n_symmetry_ops >= 0
-        and inp.rotations is not None
-        and inp.translations is not None
-    ):
+    if inp.n_symmetry_ops >= 0 and inp.rotations is not None and inp.translations is not None:
         if inp.n_symmetry_ops > 96:
-            raise ValueError(
-                f"n_symmetry_ops={inp.n_symmetry_ops} exceeds 96 hardcoded in emitted program"
-            )
+            raise ValueError(f"n_symmetry_ops={inp.n_symmetry_ops} exceeds 96 hardcoded in emitted program")
         a(f"  n_symmetry_ops = {inp.n_symmetry_ops}")
         for op in range(inp.n_symmetry_ops):
             r = inp.rotations[op]
@@ -297,19 +276,12 @@ def fortran_code_find_empty_spheres(
             for j in range(3):
                 a(
                     "  rotations(:,{j}, {op}) = (/ {x0}, {x1}, {x2} /)".format(
-                        op=op,
-                        j=j + 1,
-                        x0=_fmt_f64(r[j, 0]),
-                        x1=_fmt_f64(r[j, 1]),
-                        x2=_fmt_f64(r[j, 2]),
+                        op=op, j=j + 1, x0=_fmt_f64(r[j, 0]), x1=_fmt_f64(r[j, 1]), x2=_fmt_f64(r[j, 2])
                     )
                 )
             a(
                 "  translations(1:3,{op}) = (/ {x0}, {x1}, {x2} /)".format(
-                    op=op,
-                    x0=_fmt_f64(t[0]),
-                    x1=_fmt_f64(t[1]),
-                    x2=_fmt_f64(t[2]),
+                    op=op, x0=_fmt_f64(t[0]), x1=_fmt_f64(t[1]), x2=_fmt_f64(t[2])
                 )
             )
     else:

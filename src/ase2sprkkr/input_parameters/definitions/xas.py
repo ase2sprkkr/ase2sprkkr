@@ -2,10 +2,7 @@
 
 from ...common.grammar_types import DefKeyword, flag
 from .sections import CONTROL, TASK, TAU, ENERGY, SITES, MODE
-from ..input_parameters_definitions import (
-    InputParametersDefinition as InputParameters,
-    InputValueDefinition as V,
-)
+from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
 
 
 def input_parameters():
@@ -20,13 +17,7 @@ def input_parameters():
             TASK("XAS").copy(
                 [
                     V("IT", int, 1, is_required=True, info="""atom type IT"""),
-                    V(
-                        "CL",
-                        str,
-                        "2P",
-                        is_required=True,
-                        info="""initial core level shell""",
-                    ),
+                    V("CL", str, "2P", is_required=True, info="""initial core level shell"""),
                     V("MECHECK", flag, False, is_optional=True),
                     V(
                         "OUTPUT",

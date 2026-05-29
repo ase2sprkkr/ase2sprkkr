@@ -128,9 +128,7 @@ def stack(atomses: Dict[str, Atoms], axis: int, *args, inherit_cell=True, **kwar
                 upto = None
             else:
                 upto = (cnt or 0) + len(atoms)
-            AtomsRegion.from_atoms(
-                atoms, name, slice(cnt, upto), inherit_cell=inherit_cell, atoms=out
-            )
+            AtomsRegion.from_atoms(atoms, name, slice(cnt, upto), inherit_cell=inherit_cell, atoms=out)
             cnt = upto
     return out
 

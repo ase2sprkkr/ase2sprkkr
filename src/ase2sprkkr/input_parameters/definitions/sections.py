@@ -1,19 +1,9 @@
 """Definitions of sections to be used in definitions of input parameters
 (input files for SPR-KKR tasks)"""
 
-from ...common.grammar_types import (
-    SetOf,
-    DefKeyword,
-    flag,
-    energy,
-    Integer,
-    Keyword,
-)
+from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Keyword
 
-from ..input_parameters_definitions import (
-    InputSectionDefinition as Section,
-    InputValueDefinition as V,
-)
+from ..input_parameters_definitions import InputSectionDefinition as Section, InputValueDefinition as V
 from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
 from functools import partial
 
@@ -27,11 +17,7 @@ def _sections_tau_bzint_weyl_write_condition(option):
 
 
 def _sections_energy_emin_default_value(option):
-    return (
-        None
-        if option._container.EMINEV() is not None
-        else option._definition._energy_default_value
-    )
+    return None if option._container.EMINEV() is not None else option._definition._energy_default_value
 
 
 def _sections_energy_emin_is_optional(option):
@@ -47,11 +33,7 @@ def _sections_energy_emaxev_from_eminev_default_value(option):
 
 
 def _sections_energy_emax_default_value(option):
-    return (
-        None
-        if option._container.EMAXEV() is not None
-        else option._definition._energy_default_value
-    )
+    return None if option._container.EMAXEV() is not None else option._definition._energy_default_value
 
 
 def _sections_energy_emax_is_optional(option):
@@ -110,12 +92,7 @@ def CONTROL(ADSI):
                 result_is_visible=True,
                 info="The custom field for the description of the problem - the output files will been called 'DATASET.<ext>'.",
             ),
-            V(
-                "ADSI",
-                DefKeyword(ADSI),
-                is_required=True,
-                info="Type of the computation.",
-            ),
+            V("ADSI", DefKeyword(ADSI), is_required=True, info="Type of the computation."),
             V(
                 "POTFIL",
                 str,
@@ -202,11 +179,7 @@ TAU = TauSection(
         V(
             "BZINT",
             Keyword(
-                {
-                    "POINTS": "special points method",
-                    "WEYL": "Weyl method",
-                    "CLUSTER": "Cluster method",
-                },
+                {"POINTS": "special points method", "WEYL": "Weyl method", "CLUSTER": "Cluster method"},
                 description="""
 The Weyl method (BZINT=WEYL) is a point sampling method using more or less ran-
 dom points. The number of k-points used for the integration varies quadratically be-
@@ -220,8 +193,7 @@ regular mesh.
             ),
             is_required=False,
             default_value=_sections_tau_bzint_default_value,
-            info="The mode of BZ-integration used for calculation of the scattering "
-            " path operator τ",
+            info="The mode of BZ-integration used for calculation of the scattering  path operator τ",
         ),
         V(
             "NKTAB",
@@ -274,13 +246,7 @@ regular mesh.
             is_optional=True,
             info="Number of atomic shells around the central atom of a cluster",
         ),
-        V(
-            "CLURAD",
-            float,
-            is_expert=True,
-            is_optional=True,
-            info="Radius of the cluster in multiples of ALAT.",
-        ),
+        V("CLURAD", float, is_expert=True, is_optional=True, info="Radius of the cluster in multiples of ALAT."),
         V(
             "IQCNTR",
             Site.I,
@@ -295,28 +261,19 @@ regular mesh.
             is_optional=True,
             info="The center of the cluster is set at one of the site positions that is occupied by the atomic type ITCNTR.",
         ),
-        V(
-            "NLOUT",
-            expert=3,
-            info="The calculated τ -matrix is printed up to lmax=NLOUT.",
-        ),
+        V("NLOUT", expert=3, info="The calculated τ -matrix is printed up to lmax=NLOUT."),
         V(
             "MOL",
             expert=False,
             info="Cluster type calculation but for a molecular system. The system is specified as for CLUSTER.",
         ),
-        V("KKRMODE", Keyword("STANDARD", "TB", "IMPURITY", aliases={'TB-KKR': 'TB'}), is_optional=True),
+        V("KKRMODE", Keyword("STANDARD", "TB", "IMPURITY", aliases={"TB-KKR": "TB"}), is_optional=True),
     ],
 )
 """The definition of the TAU section of the task input file """
 
 
-def ENERGY(
-    emin=(-0.2, "The real part of the lowest E-value", None),
-    emax=None,
-    add=[],
-    defaults={},
-):
+def ENERGY(emin=(-0.2, "The real part of the lowest E-value", None), emax=None, add=[], defaults={}):
     """The definition of the ENERGY section of the task input file"""
     vals = [
         V(
@@ -338,13 +295,7 @@ def ENERGY(
   10    ellipse in the complex plain
   11    semi circle (5) plus straight line (3)""",
         ),
-        V(
-            "NE",
-            SetOf(int),
-            defaults.get("NE", [32]),
-            is_required=True,
-            info="Number of points in energy-mesh",
-        ),
+        V("NE", SetOf(int), defaults.get("NE", [32]), is_required=True, info="Number of points in energy-mesh"),
         V("ImE", energy, defaults.get("ImE", 0.0)),
     ]
 
@@ -359,13 +310,7 @@ def ENERGY(
         emin_value._energy_default_value = emin[0]
         vals += [
             emin_value,
-            V(
-                "EMINEV",
-                float,
-                emin[2],
-                info="EMIN, given in eV with respect to the Fermi level",
-                is_optional=True,
-            ),
+            V("EMINEV", float, emin[2], info="EMIN, given in eV with respect to the Fermi level", is_optional=True),
         ]
     if emax == "emin":
         vals += [
@@ -397,13 +342,7 @@ def ENERGY(
         emax_value._energy_default_value = emax[0]
         vals += [
             emax_value,
-            V(
-                "EMAXEV",
-                float,
-                emax[2],
-                info="EMAX in eV with respect to the Fermi level",
-                is_optional=True,
-            ),
+            V("EMAXEV", float, emax[2], info="EMAX in eV with respect to the Fermi level", is_optional=True),
         ]
     vals += add
     return Section("ENERGY", vals)
@@ -415,9 +354,7 @@ def xc(*args, **kwargs):
     xc.enrich = _sections_xc_enrich
     for k, v in xc.type.choices.items():
         info = _SECTIONS_XC_INFO[k]
-        xc.type.choices[k] = (
-            v + f" (type: {info[0]}, libxc equivalent: {info[1] or '-'})"
-        )
+        xc.type.choices[k] = v + f" (type: {info[0]}, libxc equivalent: {info[1] or '-'})"
     return xc
 
 
@@ -443,47 +380,15 @@ SCF = Section(
             ),
             info="parametrisation of the exchange-correlation potential",
         ),
-        V(
-            "ALG",
-            DefKeyword({"BROYDEN2": "Broyden’s second method", "TCHEBY": "Tchebychev"}),
-            info="Mixing algorithm",
-        ),
-        V(
-            "EFGUESS",
-            float,
-            is_required=False,
-            info="Skip the Fermi energy search in the beginning.",
-        ),
+        V("ALG", DefKeyword({"BROYDEN2": "Broyden’s second method", "TCHEBY": "Tchebychev"}), info="Mixing algorithm"),
+        V("EFGUESS", float, is_required=False, info="Skip the Fermi energy search in the beginning."),
         V("TOL", 0.00001, info="Tolerance threshold for the mixing algorithm"),
         V("ISTBRY", 1, info="Start Broyden after ISTBRY iterations"),
-        V(
-            "FULLPOT",
-            False,
-            info="Non-spherical callculation (full-potential) instead of ASA",
-        ),
-        V(
-            "ITDEPT",
-            40,
-            info="Iteration depth for Broyden algorithm (length of used history)",
-        ),
-        V(
-            "QION",
-            SetOf(float),
-            is_required=False,
-            info="Guess for the ionic charges Qt for atomic types",
-        ),
-        V(
-            "QIONSCL",
-            float,
-            is_required=False,
-            info="Guess for the ionic charges Qt for atomic types",
-        ),
-        V(
-            "MSPIN",
-            SetOf(float),
-            is_required=False,
-            info="Guess for the magnetic moment μ_{spin,t} for atomic types",
-        ),
+        V("FULLPOT", False, info="Non-spherical callculation (full-potential) instead of ASA"),
+        V("ITDEPT", 40, info="Iteration depth for Broyden algorithm (length of used history)"),
+        V("QION", SetOf(float), is_required=False, info="Guess for the ionic charges Qt for atomic types"),
+        V("QIONSCL", float, is_required=False, info="Guess for the ionic charges Qt for atomic types"),
+        V("MSPIN", SetOf(float), is_required=False, info="Guess for the magnetic moment μ_{spin,t} for atomic types"),
         V(
             "USEVMATT",
             False,
@@ -499,12 +404,7 @@ STRCONST = Section(
     [
         V("ETA", float, is_optional=True, info="Ewald parameter"),
         V("RMAX", float, is_optional=True, info="Convergency radius in real space"),
-        V(
-            "GMAX",
-            float,
-            is_optional=True,
-            info="Convergency radius in reciprocal space",
-        ),
+        V("GMAX", float, is_optional=True, info="Convergency radius in reciprocal space"),
     ],
     is_expert=True,
     is_optional=True,
@@ -662,14 +562,4 @@ def TASK(task, add=[]):
     return Section("TASK", [V("TASK", task, name_in_grammar=False)] + add)
 
 
-__all__ = [
-    "CONTROL",
-    "TAU",
-    "ENERGY",
-    "SCF",
-    "SITES",
-    "TASK",
-    "STRCONST",
-    "CPA",
-    "MODE",
-]
+__all__ = ["CONTROL", "TAU", "ENERGY", "SCF", "SITES", "TASK", "STRCONST", "CPA", "MODE"]

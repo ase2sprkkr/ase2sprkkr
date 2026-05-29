@@ -99,9 +99,7 @@ def create_definition():
             def check_sites(site):
                 limit = data.shape[0]
                 if site < 0 or site >= limit:
-                    raise ValueError(
-                        f"Site number should be between {0} and {limit - 1}."
-                    )
+                    raise ValueError(f"Site number should be between {0} and {limit - 1}.")
 
             if isinstance(sites, int):
                 check_sites(sites)
@@ -146,10 +144,7 @@ def create_definition():
                 kw.update(
                     {
                         "xticks": [0.0, 1.0],
-                        "xticklabels": [
-                            "" if c.VECK_START() is None else v(c.VECK_START()),
-                            ticks(c.VECK1()),
-                        ],
+                        "xticklabels": ["" if c.VECK_START() is None else v(c.VECK_START()), ticks(c.VECK1())],
                         "xlabel": r"Kx",
                         "ylabel": r"Ky",
                         "yticks": [1.0],
@@ -172,12 +167,7 @@ def create_definition():
 
                 def callback(ax):
                     for index in c.INDKDIR()[:-1]:
-                        ax.plot(
-                            [k[index - 1], k[index - 1]],
-                            [mesh[1, 0, 1], mesh[1, -1, 1]],
-                            color="black",
-                            lw=0.5,
-                        )
+                        ax.plot([k[index - 1], k[index - 1]], [mesh[1, 0, 1], mesh[1, -1, 1]], color="black", lw=0.5)
 
             kw.update(kwargs)
             colormesh(*mesh, data, callback=callback, **kw)
@@ -243,13 +233,7 @@ def create_definition():
                 "MODE",
                 {
                     "EK-REL": [
-                        V(
-                            "NE_a",
-                            int,
-                            written_name="NE",
-                            info="Number of energies (the second axis)",
-                            is_hidden=True,
-                        ),
+                        V("NE_a", int, written_name="NE", info="Number of energies (the second axis)", is_hidden=True),
                         V("NK", int, info="Number of K points (the same as NK2)"),
                         Separator(),
                         *gather(V("EMIN", float), V("EMAX", float)),
@@ -257,29 +241,14 @@ def create_definition():
                         V("NKDIR", int),
                         V(
                             "LBLKDIR",
-                            NumpyArray(
-                                written_shape=(-1, 1),
-                                shape=(-1,),
-                                lines="NKDIR",
-                                dtype="line",
-                            ),
+                            NumpyArray(written_shape=(-1, 1), shape=(-1,), lines="NKDIR", dtype="line"),
                             name_in_grammar=False,
                         ),
                         Separator(),
                         V("INDKDIR", int, is_repeated=True),
                         Separator(),
-                        V(
-                            "NK_a",
-                            int,
-                            written_name="NK",
-                            info="Number of K points (the last axis)",
-                            is_hidden=True,
-                        ),
-                        V(
-                            "K",
-                            NumpyArray(written_shape=(-1, 1), shape=(-1,), lines="NK"),
-                            name_in_grammar=False,
-                        ),
+                        V("NK_a", int, written_name="NK", info="Number of K points (the last axis)", is_hidden=True),
+                        V("K", NumpyArray(written_shape=(-1, 1), shape=(-1,), lines="NK"), name_in_grammar=False),
                         Separator(),
                         V(
                             "E",
@@ -296,12 +265,7 @@ def create_definition():
                         V("NK2", int, info="Number of K points (the second axis)"),
                         V("ERYD", Array(float, length=2)),
                         Separator(),
-                        V(
-                            "VECK_START",
-                            Array(float, length=3),
-                            is_stored=False,
-                            is_optional=True,
-                        ),
+                        V("VECK_START", Array(float, length=3), is_stored=False, is_optional=True),
                         V("NK1_a", int, written_name="NK1", is_hidden=True),
                         V("VECK1", Array(float, length=3)),
                         V("NK2_a", int, written_name="NK2", is_hidden=True),
@@ -311,11 +275,7 @@ def create_definition():
                             "K1",
                             Array(float),
                             init_by_default=True,
-                            default_value_from_container=lambda o: k_points(
-                                0.0,
-                                1.0,
-                                o.NK1(),
-                            ),
+                            default_value_from_container=lambda o: k_points(0.0, 1.0, o.NK1()),
                             is_stored=False,
                             info="First axis for the data",
                         ),
@@ -323,11 +283,7 @@ def create_definition():
                             "K2",
                             Array(float),
                             init_by_default=True,
-                            default_value_from_container=lambda o: k_points(
-                                0.0,
-                                1.0,
-                                o.NK2(),
-                            ),
+                            default_value_from_container=lambda o: k_points(0.0, 1.0, o.NK2()),
                             is_stored=False,
                             info="Second axis for the data",
                         ),
@@ -340,16 +296,10 @@ def create_definition():
                 is_stored=False,
                 init_by_default=True,
                 default_value_from_container=lambda c: (
-                    np.meshgrid(c.K1(), c.K2())
-                    if c.MODE() == "CONST-E"
-                    else np.meshgrid(c.K(), c.E())
+                    np.meshgrid(c.K1(), c.K2()) if c.MODE() == "CONST-E" else np.meshgrid(c.K(), c.E())
                 ),
             ),
-            V(
-                "RAW_DATA",
-                NumpyArray(written_shape=(-1, 1), shape=(-1,)),
-                name_in_grammar=False,
-            ),
+            V("RAW_DATA", NumpyArray(written_shape=(-1, 1), shape=(-1,)), name_in_grammar=False),
             *switch(
                 "KEYWORD",
                 {
@@ -366,44 +316,18 @@ def create_definition():
                             "RAW_DATA",
                             i(1),
                             reorder=reorder,
-                            plot=plot(
-                                title="Spin down", negative=True, colormap="Blues"
-                            ),
+                            plot=plot(title="Spin down", negative=True, colormap="Blues"),
                         ),
                     ],
                     "BSF-SPOL": [
-                        NV(
-                            "I_X",
-                            "RAW_DATA",
-                            i(0),
-                            reorder=reorder,
-                            plot=plot(title=r"$\sigma_x$"),
-                        ),
-                        NV(
-                            "I_Y",
-                            "RAW_DATA",
-                            i(1),
-                            reorder=reorder,
-                            plot=plot(title=r"$\sigma_y$"),
-                        ),
-                        NV(
-                            "I_Z",
-                            "RAW_DATA",
-                            i(2),
-                            reorder=reorder,
-                            plot=plot(title=r"$\sigma_z$"),
-                        ),
+                        NV("I_X", "RAW_DATA", i(0), reorder=reorder, plot=plot(title=r"$\sigma_x$")),
+                        NV("I_Y", "RAW_DATA", i(1), reorder=reorder, plot=plot(title=r"$\sigma_y$")),
+                        NV("I_Z", "RAW_DATA", i(2), reorder=reorder, plot=plot(title=r"$\sigma_z$")),
                     ],
                     "BSF-SPN": "BSF-SPOL",
                 },
             ),
-            NV(
-                "I",
-                "RAW_DATA",
-                i(-1),
-                reorder=reorder,
-                plot=plot(negative=True, colormap=mymap, title="Total"),
-            ),
+            NV("I", "RAW_DATA", i(-1), reorder=reorder, plot=plot(negative=True, colormap=mymap, title="Total")),
         ],
         cls=BSFDefinition,
         name="BSF",

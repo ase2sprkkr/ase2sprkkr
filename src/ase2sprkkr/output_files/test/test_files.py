@@ -30,7 +30,7 @@ class TestOutput(TestCase):
                 if ext == "spc":
                     self.assertEqual("ARPES", out.KEYWORD())
                     if out.NE() > 1:
-                        if i == 'WSe2_ARPES.spc':
+                        if i == "WSe2_ARPES.spc":
                             self.assertEqual((200, 160), out.ENERGY().shape)
                         o2 = out + out
                         for i in "ENERGY", "THETA", "K", "DETERMINANT":
@@ -38,18 +38,14 @@ class TestOutput(TestCase):
                         for i in "TOTAL", "POLARIZATION", "UP", "DOWN":
                             self.assertEqual(2 * out[i](), o2[i]())
                 elif ext == "dos":
-                    if i == 'TaAs_DOS.dos':
-                      self.assertEqual(out.n_orbitals(1), 3)
-                      self.assertEqual(out.n_spins(), 2)
-                      self.assertEqual((2, 3, 1200), out.dos_for_site_type("Ta").shape)
-                      self.assertEqual(
-                          out.DOS["Ta"][5] / Ry, out.dos_for_site_type("Ta", 1, 2)[:]
-                      )
-                      self.assertEqual(out["Ta"].dos, out[0].dos)
-                      self.assertEqual(out["Ta"].dos, out[0].dos)
-                      self.assertEqual(
-                          out.total_dos().dos, (out[0] * 2 + out[1] * 2 + out[2] * 4).dos
-                      )
+                    if i == "TaAs_DOS.dos":
+                        self.assertEqual(out.n_orbitals(1), 3)
+                        self.assertEqual(out.n_spins(), 2)
+                        self.assertEqual((2, 3, 1200), out.dos_for_site_type("Ta").shape)
+                        self.assertEqual(out.DOS["Ta"][5] / Ry, out.dos_for_site_type("Ta", 1, 2)[:])
+                        self.assertEqual(out["Ta"].dos, out[0].dos)
+                        self.assertEqual(out["Ta"].dos, out[0].dos)
+                        self.assertEqual(out.total_dos().dos, (out[0] * 2 + out[1] * 2 + out[2] * 4).dos)
 
                 elif ext == "bsf":
                     if out.MODE() == "EK-REL":
@@ -60,9 +56,7 @@ class TestOutput(TestCase):
                         second = out.NK2()
                     self.assertEqual(out.I().shape, (out.NQ_EFF(), first, second))
                     if out.KEYWORD() in ("BSF"):
-                        self.assertEqual(
-                            out.I_UP().shape, (out.NQ_EFF(), first, second)
-                        )
+                        self.assertEqual(out.I_UP().shape, (out.NQ_EFF(), first, second))
                         self.assertRaises(DisabledAttributeError, lambda: out.I_X)
                     else:
                         self.assertEqual(out.I_X().shape, (out.NQ_EFF(), first, second))
@@ -138,10 +132,7 @@ class TestOutput(TestCase):
             object.__setattr__(out, "_potential", None)
             object.__setattr__(out, "_potential_filename", None)
 
-            with patch(
-                "ase2sprkkr.output_files.output_files.Potential.from_file",
-                return_value="loaded",
-            ) as loader:
+            with patch("ase2sprkkr.output_files.output_files.Potential.from_file", return_value="loaded") as loader:
                 self.assertEqual(out.potential, "loaded")
                 loader.assert_called_once_with(str(guessed))
 
@@ -177,9 +168,7 @@ class TestOutput(TestCase):
         self.assertEqual(out.it_labels, {1: "Fe_1", 2: "Ni", 3: "Fe_2"})
 
     def test_dij_plot_accepts_axis_argument(self):
-        filename = (
-            Path(dirname(dirname(__file__))) / "examples" / "SrTiO3_JXC_XCPLTEN_Dij.dat"
-        )
+        filename = Path(dirname(dirname(__file__))) / "examples" / "SrTiO3_JXC_XCPLTEN_Dij.dat"
         out = OutputFile.from_file(str(filename), unknown=False)
 
         with tempfile.NamedTemporaryFile() as name:

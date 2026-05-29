@@ -9,8 +9,4 @@ should be named according to the name of the contained task (e.g. DOS, ARPES, SC
 import platformdirs
 import os
 
-__path__.append(
-    os.path.join(
-        platformdirs.user_config_dir("ase2sprkkr", "ase2sprkkr"), "input_parameters"
-    )
-)
+__path__.append(os.path.join(platformdirs.user_config_dir("ase2sprkkr", "ase2sprkkr"), "input_parameters"))

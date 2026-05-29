@@ -58,7 +58,7 @@ def as_integer(value):
 def dict_first_item(self):
     """
     Return the first item of the given dict.
-    >>> dict_first_item({'a':4, 'c':2, 'h':8})
+    >>> dict_first_item({"a": 4, "c": 2, "h": 8})
     4
     """
     return self[next(iter(self))]

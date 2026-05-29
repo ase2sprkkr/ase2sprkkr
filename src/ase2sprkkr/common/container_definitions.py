@@ -105,15 +105,9 @@ class ContainerDefinition(RealItemDefinition):
         self.has_hidden_members = has_hidden_members
         if force_order is not None:
             self.force_order = force_order
-        self.repeated_delimiter = (
-            is_repeated if isinstance(is_repeated, str) else repeated_delimiter
-        )
+        self.repeated_delimiter = is_repeated if isinstance(is_repeated, str) else repeated_delimiter
         if not isinstance(is_repeated, self.Repeated):
-            is_repeated = (
-                self.Repeated.LIST_SECTION
-                if is_repeated or repeated_delimiter
-                else self.Repeated.NO
-            )
+            is_repeated = self.Repeated.LIST_SECTION if is_repeated or repeated_delimiter else self.Repeated.NO
         self.is_repeated = is_repeated
 
     configuration_type_name = "SECTION"
@@ -125,12 +119,7 @@ class ContainerDefinition(RealItemDefinition):
     def __repr__(self):
         return f"<{self.configuration_type_name} {self.name}>"
 
-    def data_description(
-        self,
-        verbose: Union[bool, str, int] = False,
-        show_hidden: bool = False,
-        prefix: str = "",
-    ):
+    def data_description(self, verbose: Union[bool, str, int] = False, show_hidden: bool = False, prefix: str = ""):
         """
         Return the runtime documentation for the configuration described by this object.
 
@@ -189,12 +178,7 @@ class ContainerDefinition(RealItemDefinition):
                 out = f"{prefix}{out}\n{under}{add}"
         return out
 
-    def additional_data_description(
-        self,
-        verbose: Union[bool, str, int] = False,
-        show_hidden=False,
-        prefix: str = "",
-    ):
+    def additional_data_description(self, verbose: Union[bool, str, int] = False, show_hidden=False, prefix: str = ""):
         """
         Return the description (documentation for runtime) of the items in the container.
 
@@ -323,9 +307,7 @@ class ContainerDefinition(RealItemDefinition):
                 if not g:
                     continue
                 if i.can_be_repeated:
-                    dlmtr = (
-                        delimiter if i.can_be_repeated is True else i.can_be_repeated
-                    )
+                    dlmtr = delimiter if i.can_be_repeated is True else i.can_be_repeated
                     g = delimitedList(g, dlmtr)
                 yield i, g
 
@@ -363,9 +345,7 @@ class ContainerDefinition(RealItemDefinition):
                 after = pp.Forward() << delimiter
             after.add_condition(lambda loc, toks: loc != init.location)
             inter_cvs = (first | after).set_name("<?DELIM>")
-            inter = first | delimiter.copy().add_condition(
-                lambda loc, toks: loc != init.location
-            )
+            inter = first | delimiter.copy().add_condition(lambda loc, toks: loc != init.location)
 
             def sequence():
                 for head, g in repeated_grammars():
@@ -406,14 +386,10 @@ class ContainerDefinition(RealItemDefinition):
 
             def _validate(s, loc, value):
                 # just pass the dict to the validate function
-                is_ok = self.validate(
-                    MergeSectionDefinitionAdaptor(value[0], self), "parse"
-                )
+                is_ok = self.validate(MergeSectionDefinitionAdaptor(value[0], self), "parse")
                 if is_ok is not True:
                     if is_ok is None:
-                        is_ok = (
-                            f"Validation of parsed data of {self.name} section failed"
-                        )
+                        is_ok = f"Validation of parsed data of {self.name} section failed"
                     raise pp.ParseException(s, loc, is_ok)
                 return value
 
@@ -456,14 +432,10 @@ class ContainerDefinition(RealItemDefinition):
     @classmethod
     def custom_member_grammar(cls, name_condition=None):
         """Grammar for the custom - unknown - child"""
-        name = pp.Word(cls.custom_name_characters).set_parse_action(
-            lambda x: x[0].strip()
-        )
+        name = pp.Word(cls.custom_name_characters).set_parse_action(lambda x: x[0].strip())
         if name_condition:
             name.add_condition(name_condition)
-        out = (name + cls.delimited_custom_value_grammar()).set_parse_action(
-            lambda x: tuple(x)
-        )
+        out = (name + cls.delimited_custom_value_grammar()).set_parse_action(lambda x: tuple(x))
         out.set_name(cls.custom_value_name)
         return out
 
@@ -474,9 +446,7 @@ class ContainerDefinition(RealItemDefinition):
     def excluded_names_condition(self):
         """Add the condition to the element, that
         its value is not any of given names"""
-        names = set(
-            (_ending_numbers.sub("", i).upper() for i in self.all_member_names())
-        )
+        names = set((_ending_numbers.sub("", i).upper() for i in self.all_member_names()))
 
         if not names:
             return
@@ -497,9 +467,7 @@ class ContainerDefinition(RealItemDefinition):
         out = grammar.parse_file(file, parse_all=True)
         return self.parse_return(out, return_value_only)
 
-    def parse(
-        self, string, whole_string=True, return_value_only=True, allow_dangerous=False
-    ):
+    def parse(self, string, whole_string=True, return_value_only=True, allow_dangerous=False):
         """Parse the string, return the parsed data as dictionary"""
         grammar = self.grammar(allow_dangerous)
         out = grammar.parse_string(string, parse_all=True)
@@ -520,13 +488,7 @@ class ContainerDefinition(RealItemDefinition):
         return val
 
     async def parse_from_stream(
-        self,
-        stream,
-        up_to,
-        start=None,
-        whole_string=True,
-        return_value_only=True,
-        allow_dangerous=False,
+        self, stream, up_to, start=None, whole_string=True, return_value_only=True, allow_dangerous=False
     ):
         """
         Parse string readed from asyncio stream.
@@ -579,9 +541,7 @@ class ContainerDefinition(RealItemDefinition):
             return self.repeated_class(self, container)
         return super().create_object(container)
 
-    def _save_to_file(
-        self, file, value, always=False, name_in_grammar=None, delimiter=""
-    ) -> bool:
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter="") -> bool:
         """Save the content of the container to the file (according to the definition)
 
         Parameters
@@ -598,9 +558,7 @@ class ContainerDefinition(RealItemDefinition):
           If any value have been written return True, otherwise return False.
         """
         if not always:
-            if not self.write_condition(value._container) or not self.allowed(
-                value._container
-            ):
+            if not self.write_condition(value._container) or not self.allowed(value._container):
                 return
 
         if self.is_expert:

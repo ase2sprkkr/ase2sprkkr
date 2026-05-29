@@ -141,10 +141,7 @@ class BaseDefinition:
             if val is False:
                 return cls.NO
             if val is True:
-                if (
-                    hasattr(grammar_type, "is_numpy_array")
-                    and grammar_type.is_numpy_array
-                ):
+                if hasattr(grammar_type, "is_numpy_array") and grammar_type.is_numpy_array:
                     return cls.ARRAY
                 else:
                     return cls.REPEATED
@@ -309,18 +306,13 @@ class BaseDefinition:
         if "_copy_args" not in self.__class__.__dict__:
             args = inspect.getfullargspec(self.__class__.__init__).args[1:]
             self.__class__._copy_args = {
-                v: "_" + v if "_" + v in self.__dict__ else v
-                for v in args
-                if v not in self._copy_excluded_args
+                v: "_" + v if "_" + v in self.__dict__ else v for v in args if v not in self._copy_excluded_args
             }
         return self.__class__._copy_args
 
     def _get_init_args_for_copy(self, **kwargs) -> Dict[str, Any]:
         """Compute the dictionary-kwargs to create copy"""
-        out = {
-            k: getattr(self, v)
-            for k, v in self._get_init_args_mapping_for_copy().items()
-        }
+        out = {k: getattr(self, v) for k, v in self._get_init_args_mapping_for_copy().items()}
         out.update(kwargs)
         return out
 
@@ -468,14 +460,8 @@ class RealItemDefinition(BaseDefinition):
         self.name_regex = name_regex
         self.is_expert = is_expert
         self.is_hidden = is_hidden
-        self.write_condition = (
-            write_condition or _definition_write_condition_always_true
-        )
-        self.name_in_grammar = (
-            self.__class__.name_in_grammar
-            if name_in_grammar is None
-            else name_in_grammar
-        )
+        self.write_condition = write_condition or _definition_write_condition_always_true
+        self.name_in_grammar = self.__class__.name_in_grammar if name_in_grammar is None else name_in_grammar
         self._info = info
         """ A short help text describing the content for the users. """
         self._description = description
@@ -586,11 +572,7 @@ class RealItemDefinition(BaseDefinition):
                 names = [pp.Regex(self.name_regex)]
             else:
                 names = self.all_names_in_grammar()
-                keyword = (
-                    pp.CaselessLiteral
-                    if self.is_repeated.is_numbered
-                    else pp.CaselessKeyword
-                )
+                keyword = pp.CaselessLiteral if self.is_repeated.is_numbered else pp.CaselessKeyword
                 if self.do_not_skip_whitespaces_before_name:
                     names = [keyword(i).leave_whitespace() for i in names]
                 else:
@@ -609,17 +591,13 @@ class RealItemDefinition(BaseDefinition):
                     else:
                         name += idx
                     name += pp.WordEnd(pp.alphanums + "_")
-            name.set_parse_action(
-                lambda x: self.is_repeated.key_type(self.name, *x.asList()[1:])
-            )
+            name.set_parse_action(lambda x: self.is_repeated.key_type(self.name, *x.asList()[1:]))
         else:
             name = pp.Empty().set_parse_action(lambda x: self.name)
 
         return name
 
-    def _tuple_with_my_name(
-        self, expr, delimiter=None, has_value: bool = True, name_in_grammar=None
-    ):
+    def _tuple_with_my_name(self, expr, delimiter=None, has_value: bool = True, name_in_grammar=None):
         """Create the grammar returning tuple (self.name, <result of the expr>)
 
         Parameters
@@ -692,15 +670,11 @@ class Stub(VirtualDefinition):
     def create_object(self, container=None):
         return DummyStub(self, container)
 
-    def _save_to_file(
-        self, file, value, always=False, name_in_grammar=None, delimiter=""
-    ):
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=""):
         item = value._container[self.item]
         if not always and not self.allowed(value._container):
             return False
-        return item._save_to_file(
-            file, always=True, name_in_grammar=name_in_grammar, delimiter=delimiter
-        )
+        return item._save_to_file(file, always=True, name_in_grammar=name_in_grammar, delimiter=delimiter)
 
     def _create_grammar(self, allow_dangerous=False, **kwargs):
         item = self.container[self.item]
@@ -729,9 +703,7 @@ class Ignored:
     def has_grammar(self):
         return False
 
-    def _save_to_file(
-        self, file, value, always=False, name_in_grammar=None, delimiter=""
-    ):
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=""):
         return False
 
 
@@ -741,13 +713,7 @@ class Gather:
     other grammar elements, such that their names goes first and then the
     values go. See gather."""
 
-    def __init__(
-        self,
-        *items,
-        name_delimiter=" ",
-        value_delimiter="\t",
-        value_delimiter_grammar="",
-    ):
+    def __init__(self, *items, name_delimiter=" ", value_delimiter="\t", value_delimiter_grammar=""):
         if len(items) == 0:
             raise ValueError("Gather requires at least one value")
         self.items = items
@@ -763,12 +729,7 @@ class Gather:
         def values():
             nonlocal delimiter
             for i in self.items:
-                yield i._grammar(
-                    allow_dangerous,
-                    name_value_delimiter=delimiter,
-                    name_in_grammar=False,
-                    original=True,
-                )
+                yield i._grammar(allow_dangerous, name_value_delimiter=delimiter, name_in_grammar=False, original=True)
                 delimiter = self.value_delimiter_grammar
 
         names.extend(values())
@@ -781,13 +742,9 @@ class Gather:
         out.set_parse_action(discard_names)
         return out
 
-    def _save_to_file(
-        self, file, value, always=False, name_in_grammar=None, delimiter=""
-    ):
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=""):
         if name_in_grammar is not False:
-            names = self.name_delimiter.join(
-                i.formated_name for i in self.items if i.name_in_grammar
-            )
+            names = self.name_delimiter.join(i.formated_name for i in self.items if i.name_in_grammar)
         else:
             names = None
         if names:
@@ -800,9 +757,7 @@ class Gather:
             val, write = i._written_value()
             if write:
                 if not i._definition.write_value(file, val, delimiter):
-                    raise NotImplementedError(
-                        "Gathered values have to be always written"
-                    )
+                    raise NotImplementedError("Gathered values have to be always written")
             else:
                 raise NotImplementedError("Gathered values have to be always written")
 
@@ -834,15 +789,11 @@ def switch(item, values, condition=lambda x: x, name=None):
 def _if_defined_helper(value):
     return None if value is None else True
 
+
 def if_defined(item, values, not_values=[], name=None):
     if name is None:
         name = "IF_{item}"
-    return switch(
-        item,
-        {None: not_values, True: values},
-        _if_defined_helper,
-        name,
-    )
+    return switch(item, {None: not_values, True: values}, _if_defined_helper, name)
 
 
 def if_not_defined(item, values, not_values=[], name=None):
@@ -879,8 +830,8 @@ class Switch(ControlDefinition):
 
            desribes both the following files::
 
-             TYPE=SCALAR
-             SCALAR=1
+             TYPE = SCALAR
+             SCALAR = 1
 
            and::
              TYPE=COMPLEX
@@ -897,7 +848,7 @@ class Switch(ControlDefinition):
         def create(n):
             nonlocal used
             if n.name in used:
-                return Stub(n.name, is_optional= n.is_optional, condition=self)
+                return Stub(n.name, is_optional=n.is_optional, condition=self)
             else:
                 used.add(n.name)
                 return n
@@ -973,9 +924,7 @@ class Switch(ControlDefinition):
                     if tpl:
                         fn(tpl[0], tpl[1])
                     elif i.output_definition.has_grammar():
-                        raise KeyError(
-                            f"In Switch, the item {i.name} for case {value} was not prepared"
-                        )
+                        raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
 
         if not self.container.force_order:
             return grammar
@@ -1031,9 +980,7 @@ class SeparatorDefinition(VirtualDefinition):
     def _create_grammar(self, allow_dangerous=False):
         return pp.Suppress(self.separator_type.grammar())
 
-    def _save_to_file(
-        self, file, value, always=False, name_in_grammar=None, delimiter=""
-    ):
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=""):
         if self.write_condition and not self.write_condition(value):
             return False
         if not always:

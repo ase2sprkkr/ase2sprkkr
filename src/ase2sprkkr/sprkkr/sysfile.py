@@ -26,15 +26,11 @@ def sysfile_content(atoms, filename="<unknown>"):
             self.occupancy = []
 
         def __repr__(self):
-            s = "<SiteData(iq={:d}, noq={:d})>".format(
-                self.iq, len(self.site.occupation)
-            )
+            s = "<SiteData(iq={:d}, noq={:d})>".format(self.iq, len(self.site.occupation))
             return s
 
     class TypeData(object):
-        def __init__(
-            self, symbol, atomic_number, concentration=1.0, it=None, mesh=None, iqs=None
-        ):
+        def __init__(self, symbol, atomic_number, concentration=1.0, it=None, mesh=None, iqs=None):
             self.symbol = symbol
             self.atomic_number = atomic_number
             self.concentration = concentration
@@ -43,11 +39,7 @@ def sysfile_content(atoms, filename="<unknown>"):
 
         def __repr__(self):
             s = "<TypeData('{}', id={:d}, concentration={:.4f}, site={:d},equivalent_sites={})>".format(
-                self.symbol,
-                self.id,
-                self.concentration,
-                self.site.id,
-                self.equivalent_sites,
+                self.symbol, self.id, self.concentration, self.site.id, self.equivalent_sites
             )
             return s
 
@@ -70,9 +62,7 @@ def sysfile_content(atoms, filename="<unknown>"):
         for symbol, concentration in site.occupation.items():
             it += 1
             iqs = equivalent_sites[icl]
-            td = TypeData(
-                str(symbol), symbol.atomic_number, concentration, it=it, iqs=iqs
-            )
+            td = TypeData(str(symbol), symbol.atomic_number, concentration, it=it, iqs=iqs)
             atomic_types.append(td)
             for iq in equivalent_sites[icl]:
                 sites[iq - 1].occupancy.append(it)
@@ -138,13 +128,7 @@ def sysfile_content(atoms, filename="<unknown>"):
 
     filestring += " IT  ZT  TXTT  NAT  CONC  IQAT (sites occupied)\n"
     for iat, at in enumerate(atomic_types):
-        filestring += " %2i%4i  %8s%5i%6.3f" % (
-            at.it,
-            at.atomic_number,
-            at.symbol,
-            len(at.iqs),
-            at.concentration,
-        )
+        filestring += " %2i%4i  %8s%5i%6.3f" % (at.it, at.atomic_number, at.symbol, len(at.iqs), at.concentration)
         for key in at.iqs:
             filestring += "%3i" % (key)
         filestring += "\n"

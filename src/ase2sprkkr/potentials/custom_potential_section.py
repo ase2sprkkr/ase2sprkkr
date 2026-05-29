@@ -4,10 +4,7 @@ I.e. these sections can has any content (they are readed up to the section separ
 """
 
 from ..common.grammar_types import GrammarType
-from ..sprkkr.configuration import (
-    ConfigurationValueDefinition,
-    CustomConfigurationValue,
-)
+from ..sprkkr.configuration import ConfigurationValueDefinition, CustomConfigurationValue
 from ..common.grammar import separator_pattern
 from ..common.decorators import cached_class_property
 
@@ -58,19 +55,11 @@ class SectionString(GrammarType):
     This grammar_type as used as a value type for the custom section.
     """
 
-    delimiter_pattern = (
-        "(?:[ \t\r]*(?:\n[ \t\r]*)*)*\n"
-        + separator_pattern("*")
-        + "(?:[ \t\r]*(?:\n[ \t\r]*))*\n"
-    )
+    delimiter_pattern = "(?:[ \t\r]*(?:\n[ \t\r]*)*)*\n" + separator_pattern("*") + "(?:[ \t\r]*(?:\n[ \t\r]*))*\n"
 
     @cached_class_property
     def grammar_of_delimiter():
-        return (
-            pp.Regex(SectionString.delimiter_pattern)
-            .set_name("*" * 79 + "<newline>")
-            .suppress()
-        )
+        return pp.Regex(SectionString.delimiter_pattern).set_name("*" * 79 + "<newline>").suppress()
 
     @cached_class_property
     def _grammar():
@@ -97,9 +86,7 @@ class CustomPotentialSection(CustomConfigurationValue):
     """
 
     def __init__(self, name, container=None):
-        super().__init__(
-            CustomPotentialSectionDefinition(name, SectionString.I), container
-        )
+        super().__init__(CustomPotentialSectionDefinition(name, SectionString.I), container)
 
     def _depends_on(self):
         return []

@@ -21,10 +21,7 @@ description = "You can pass the input parameters using the command line. However
 
 def parser(parser):
     bool_arg = getattr(argparse, "BooleanOptionalAction", "store_true")
-    parser.add_argument(
-        "pot",
-        help="SPR-KKR potential file or input file. The type is determined by its content.",
-    )
+    parser.add_argument("pot", help="SPR-KKR potential file or input file. The type is determined by its content.")
 
     grp = parser.add_mutually_exclusive_group()
     grp.add_argument(
@@ -42,13 +39,7 @@ def parser(parser):
         type=str,
     )
 
-    parser.add_argument(
-        "--print-output",
-        "-O",
-        help="Print the output of SPRKKR.",
-        default="None",
-        action=bool_arg,
-    )
+    parser.add_argument("--print-output", "-O", help="Print the output of SPRKKR.", default="None", action=bool_arg)
     parser.add_argument("--output-file", "-o", help="Output file", type=str)
     parser.add_argument(
         "--empty-spheres",
@@ -57,10 +48,7 @@ def parser(parser):
         action=bool_arg,
     )
     parser.add_argument(
-        "options",
-        nargs="*",
-        help="Input parameters in the form <name>=<value>.",
-        type=parse_named_option,
+        "options", nargs="*", help="Input parameters in the form <name>=<value>.", type=parse_named_option
     )
 
 
@@ -90,9 +78,7 @@ def run(args, global_args):
         if o is not None:
             kwargs[i] = o
 
-    calc.calculate(
-        potential=potential, input_parameters=ip, options=dict(args.options), **kwargs
-    )
+    calc.calculate(potential=potential, input_parameters=ip, options=dict(args.options), **kwargs)
 
 
 if __name__ == "__main__":

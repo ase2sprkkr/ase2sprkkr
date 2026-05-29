@@ -2215,15 +2215,12 @@ def core_hole_width(Z, NC, LC, IK, source="campbell-papp"):
 
     # Check if the atomic number is within the valid range
     if Z < 1 or Z > 104:
-        raise ValueError(
-            f"Error in core_hole_width: Z={Z} is out of the valid range [1, 104]."
-        )
+        raise ValueError(f"Error in core_hole_width: Z={Z} is out of the valid range [1, 104].")
 
     dataset = _CORE_HOLE_WIDTH_SOURCES.get(source)
     if dataset is None:
         raise ValueError(
-            f"Unknown core-hole width source '{source}'. "
-            f"Valid options are: {list(_CORE_HOLE_WIDTH_SOURCES)}"
+            f"Unknown core-hole width source '{source}'. Valid options are: {list(_CORE_HOLE_WIDTH_SOURCES)}"
         )
 
     # Fortran uses 1-based indexing for arrays, so we convert the atomic number Z.
@@ -2240,6 +2237,4 @@ def core_hole_width(Z, NC, LC, IK, source="campbell-papp"):
     try:
         return arr[z_index]
     except (IndexError, ValueError):
-        raise ValueError(
-            f"Unknown data for lorentzian core hole for Z={Z}, NC={NC}, LC={LC}, IK={IK}"
-        )
+        raise ValueError(f"Unknown data for lorentzian core hole for Z={Z}, NC={NC}, LC={LC}, IK={IK}")

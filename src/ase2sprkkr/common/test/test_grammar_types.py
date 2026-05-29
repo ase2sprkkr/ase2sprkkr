@@ -22,12 +22,8 @@ class TestGrammar(TestCase):
         self.assertFalse(gt.Real.is_the_same_value(1.0, 0.0))
         self.assertTrue(gt.String.is_the_same_value("1111", "1111"))
         self.assertFalse(gt.String.is_the_same_value("1112", "1111"))
-        self.assertTrue(
-            gt.Array.is_the_same_value(np.array([1, 2, 3]), np.array([1, 2, 3]))
-        )
-        self.assertFalse(
-            gt.Array.is_the_same_value(np.array([1, 2, 3]), np.array([1, 2, 4]))
-        )
+        self.assertTrue(gt.Array.is_the_same_value(np.array([1, 2, 3]), np.array([1, 2, 3])))
+        self.assertFalse(gt.Array.is_the_same_value(np.array([1, 2, 3]), np.array([1, 2, 4])))
         self.assertTrue(gt.Array.is_the_same_value([1, 2, 3], [1, 2, 3]))
         self.assertFalse(gt.Array.is_the_same_value([1, 2, 3], [1, 2, 4]))
         # TODO this is not working. However, it should not be needed, so i let it as it for now
@@ -56,11 +52,7 @@ class TestGrammar(TestCase):
                 assert len(out) == 1
                 out = out[0]
                 self.assertEqual(
-                    out,
-                    res,
-                    "{} should be {} and is {} for type {}".format(
-                        val, res, out, type.__class__.__name__
-                    ),
+                    out, res, "{} should be {} and is {} for type {}".format(val, res, out, type.__class__.__name__)
                 )
             except (ValueError, pyparsing.ParseException) as e:
                 assert res is Error or res is ParseError, (
@@ -112,23 +104,15 @@ class TestGrammar(TestCase):
             self.assertTrue(type.validate(val) is True)
 
         type = gt.Integer()
-        for val, res in [
-            ("1", 1),
-        ]:
+        for val, res in [("1", 1)]:
             test(val, res)
 
         type = gt.Integer(min=-5, max=15)
-        for val, res in [
-            (-101, Error),
-        ]:
+        for val, res in [(-101, Error)]:
             test(val, res)
 
         type = gt.QString()
-        for val, res in [
-            ("1", "1"),
-            ('"aaa bbb"', "aaa bbb"),
-            ("aaa bbb", ParseError),
-        ]:
+        for val, res in [("1", "1"), ('"aaa bbb"', "aaa bbb"), ("aaa bbb", ParseError)]:
             test(val, res)
 
         type = gt.Integer()
@@ -166,13 +150,7 @@ class TestGrammar(TestCase):
             test_warning(v, r)
 
         type = gt.Real()
-        for val, res in [
-            ("1", 1.0),
-            ("a", Error),
-            ("-1.1", -1.1),
-            ("1.1 a", Error),
-            ("-1e-2", -1e-2),
-        ]:
+        for val, res in [("1", 1.0), ("a", Error), ("-1.1", -1.1), ("1.1 a", Error), ("-1e-2", -1e-2)]:
             test(val, res)
         for v in ["aaaa", (1, 2, 3)]:
             test_invalid(v)
@@ -200,12 +178,7 @@ class TestGrammar(TestCase):
             test_invalid(v)
 
         type = gt.Energy()
-        for val, res in [
-            ("1", 1.0 * unyt.Ry),
-            ("Ry", Error),
-            ("1 Ry", 1.0 * unyt.Ry),
-            ("1 eV", 1.0 * unyt.eV),
-        ]:
+        for val, res in [("1", 1.0 * unyt.Ry), ("Ry", Error), ("1 Ry", 1.0 * unyt.Ry), ("1 eV", 1.0 * unyt.eV)]:
             test(val, res)
         for v in ["aaaa", (1, 2, 3)]:
             test_invalid(v)
@@ -213,12 +186,7 @@ class TestGrammar(TestCase):
             test_warning(v, r)
 
         type = gt.SetOf(int)
-        for val, res in [
-            ("a{}", Error),
-            ("{a}", Error),
-            ("{1,2}", np.array([1, 2])),
-            ("{1,a}", Error),
-        ]:
+        for val, res in [("a{}", Error), ("{a}", Error), ("{1,2}", np.array([1, 2])), ("{1,a}", Error)]:
             test(val, res)
         for v in [[1.5, 2, 3], "asasd"]:
             test_invalid(v)
@@ -254,11 +222,7 @@ class TestGrammar(TestCase):
             test(val, res)
 
         type = gt.Sequence(int, str, float)
-        for val, res in [
-            ("a{}", Error),
-            ("{1 a 1.1}", Error),
-            ("1 aaa 2.", (1, "aaa", 2.0)),
-        ]:
+        for val, res in [("a{}", Error), ("{1 a 1.1}", Error), ("1 aaa 2.", (1, "aaa", 2.0))]:
             test(val, res)
 
         type = gt.Table(X=int, YY=str, ZZZ=float)
@@ -267,10 +231,7 @@ class TestGrammar(TestCase):
                 """ X YY ZZZ
         1 dog 2.5
         3 cat 3e-2""",
-                np.array(
-                    [(1, "dog", 2.5), (3, "cat", 3e-2)],
-                    dtype=[("X", int), ("YY", object), ("ZZZ", float)],
-                ),
+                np.array([(1, "dog", 2.5), (3, "cat", 3e-2)], dtype=[("X", int), ("YY", object), ("ZZZ", float)]),
             ),
             (
                 """ XX YY ZZZ
@@ -296,15 +257,10 @@ class TestGrammar(TestCase):
         2 cat 2.5
               0.8""",
                 np.array(
-                    [
-                        (1, "dog", 2.5),
-                        (1, "dog", 3e-2),
-                        (2, "cat", 2.5),
-                        (2, "cat", 0.8),
-                    ],
+                    [(1, "dog", 2.5), (1, "dog", 3e-2), (2, "cat", 2.5), (2, "cat", 0.8)],
                     dtype=[("X", int), ("YY", object), ("ZZZ", float)],
                 ),
-            ),
+            )
         ]:
             test(val, res)
 
@@ -314,10 +270,7 @@ class TestGrammar(TestCase):
                 """ X YY ZZZ
         1 1 dog 2.5
         2 3 cat 3e-2""",
-                np.array(
-                    [(1, "dog", 2.5), (3, "cat", 3e-2)],
-                    dtype=[("X", int), ("YY", object), ("ZZZ", float)],
-                ),
+                np.array([(1, "dog", 2.5), (3, "cat", 3e-2)], dtype=[("X", int), ("YY", object), ("ZZZ", float)]),
             )
         ]:
             test(val, res)
@@ -332,18 +285,9 @@ class TestGrammar(TestCase):
         3 1 5 dog 55.5
         3 2 6 cat 3e-2""",
                 [
-                    np.array(
-                        [(1, "dog", 2.5), (3, "cat", 3e-2)],
-                        dtype=[("X", int), ("YY", object), ("ZZZ", float)],
-                    ),
-                    np.array(
-                        [(1, "dog", 2.5)],
-                        dtype=[("X", int), ("YY", object), ("ZZZ", float)],
-                    ),
-                    np.array(
-                        [(5, "dog", 55.5), (6, "cat", 3e-2)],
-                        dtype=[("X", int), ("YY", object), ("ZZZ", float)],
-                    ),
+                    np.array([(1, "dog", 2.5), (3, "cat", 3e-2)], dtype=[("X", int), ("YY", object), ("ZZZ", float)]),
+                    np.array([(1, "dog", 2.5)], dtype=[("X", int), ("YY", object), ("ZZZ", float)]),
+                    np.array([(5, "dog", 55.5), (6, "cat", 3e-2)], dtype=[("X", int), ("YY", object), ("ZZZ", float)]),
                 ],
             ),
             (
@@ -367,9 +311,7 @@ class TestGrammar(TestCase):
         ]:
             test(val, res)
 
-        type = gt.Table(
-            X=int, YY=str, ZZZ=float, numbering=True, grouping=True, group_size="GSIZE"
-        )
+        type = gt.Table(X=int, YY=str, ZZZ=float, numbering=True, grouping=True, group_size="GSIZE")
         for val, res in [
             (
                 """ X YY ZZZ
@@ -457,14 +399,7 @@ class TestGrammar(TestCase):
         ]:
             test(val, res)
 
-        type = gt.Table(
-            X=int,
-            YY=str,
-            ZZZ=float,
-            grouping=True,
-            group_size="GSIZE",
-            groups_as_list=True,
-        )
+        type = gt.Table(X=int, YY=str, ZZZ=float, grouping=True, group_size="GSIZE", groups_as_list=True)
         for val, res in [
             (
                 """ X YY ZZZ
@@ -476,18 +411,9 @@ class TestGrammar(TestCase):
         1 5 dog 0.2
         2 6 cat 3e-2 """,
                 [
-                    np.array(
-                        [(1, "dog", 2.5), (3, "cat", 3e-2)],
-                        dtype=[("X", int), ("YY", object), ("ZZZ", float)],
-                    ),
-                    np.array(
-                        [(1, "dog", 2.5), (1, "hat", 2.5)],
-                        dtype=[("X", int), ("YY", object), ("ZZZ", float)],
-                    ),
-                    np.array(
-                        [(5, "dog", 0.2), (6, "cat", 3e-2)],
-                        dtype=[("X", int), ("YY", object), ("ZZZ", float)],
-                    ),
+                    np.array([(1, "dog", 2.5), (3, "cat", 3e-2)], dtype=[("X", int), ("YY", object), ("ZZZ", float)]),
+                    np.array([(1, "dog", 2.5), (1, "hat", 2.5)], dtype=[("X", int), ("YY", object), ("ZZZ", float)]),
+                    np.array([(5, "dog", 0.2), (6, "cat", 3e-2)], dtype=[("X", int), ("YY", object), ("ZZZ", float)]),
                 ],
             )
         ]:
@@ -544,14 +470,7 @@ class TestGrammar(TestCase):
         for v in ["asdasdsad", [1.0, 3.0], 8.0]:
             test_valid(v)
 
-        type = gt.Table(
-            X=int,
-            YY=str,
-            ZZZ=float,
-            numbering=True,
-            format=">20",
-            numbering_format="<4",
-        )
+        type = gt.Table(X=int, YY=str, ZZZ=float, numbering=True, format=">20", numbering_format="<4")
         data = """ X YY ZZZ
         1 2 dog 2.5"""
         parsed = type.parse(data)
@@ -560,12 +479,7 @@ class TestGrammar(TestCase):
         self.assertEqual(len(data2), 2 * (4 + 3 * 21 + 1) - 1)
 
         type = gt.Range(float)
-        for val, res in [
-            ("{40,50}", np.array([40.0, 50.0])),
-            ("40", 40.0),
-            ("{40,50,60}", Error),
-            ("{40}", Error),
-        ]:
+        for val, res in [("{40,50}", np.array([40.0, 50.0])), ("40", 40.0), ("{40,50,60}", Error), ("{40}", Error)]:
             test(val, res)
         for v in [[1.0, 2, 3], "asasd"]:
             test_invalid(v)
@@ -576,9 +490,5 @@ class TestGrammar(TestCase):
             test_valid(v)
 
         type = gt.Date()
-        for val, res in [
-            ("{40,50}", Error),
-            ("23.01.2020", datetime.date(2020, 1, 23)),
-            ("40", Error),
-        ]:
+        for val, res in [("{40,50}", Error), ("23.01.2020", datetime.date(2020, 1, 23)), ("40", Error)]:
             test(val, res)

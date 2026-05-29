@@ -117,9 +117,7 @@ class Shell:
 
     def add_output_file(self, file):
         of = "out" + str(self.output_file_counter)
-        self.output_file_counter = (
-            self.output_file_counter + 1 if self.output_file_counter else 1
-        )
+        self.output_file_counter = self.output_file_counter + 1 if self.output_file_counter else 1
         self.code.append(f"{of} = OutputFile.from_file({repr(str(file))})\n{of}.plot()")
 
     def run_example(self, example, dir):
@@ -210,9 +208,7 @@ else:
             self.saved = filename
 
         def open(self):
-            print(
-                "\n Opening JupyterLab... Press CTRL+C to stop the Jupyter computational kernel.\n"
-            )
+            print("\n Opening JupyterLab... Press CTRL+C to stop the Jupyter computational kernel.\n")
             dr = Path(self.dir or ".")
 
             if not self.saved:
@@ -221,16 +217,10 @@ else:
             try:
                 import jupyterlab  # noqa F401
             except ImportError:
-                raise Exception(
-                    "Jupyter lab not installed, please install (e.g. using pip install jupyter-lab"
-                )
+                raise Exception("Jupyter lab not installed, please install (e.g. using pip install jupyter-lab")
 
             with chdir(self.dir):
-                cmd = [
-                    "jupyter-lab",
-                    "--NotebookApp.shutdown_no_activity_timeout=60",
-                    self.saved,
-                ]
+                cmd = ["jupyter-lab", "--NotebookApp.shutdown_no_activity_timeout=60", self.saved]
                 # Launch JupyterLab
                 try:
                     proc = subprocess.Popen(

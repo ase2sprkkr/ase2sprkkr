@@ -31,11 +31,7 @@ def empty_spheres_atoms(atoms, round_zero=True, **kwargs):
         return None
 
     empty = SPRKKRAtoms(
-        symbols="X" * len(res.radii),
-        positions=res.positions,
-        pbc=atoms.pbc,
-        cell=atoms.cell,
-        symmetry=False,
+        symbols="X" * len(res.radii), positions=res.positions, pbc=atoms.pbc, cell=atoms.cell, symmetry=False
     )
     if round_zero:
         empty.positions[np.abs(empty.positions) < 1e-15] = 0

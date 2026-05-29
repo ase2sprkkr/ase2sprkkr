@@ -65,9 +65,7 @@ class LayerData(object):
         self.layvec = np.array([0.0, 0.0, 0.0])
 
     def __repr__(self):
-        s = "<LayerData(id={:d}, number of atoms in layer={:d})".format(
-            self.id, self.nat
-        )
+        s = "<LayerData(id={:d}, number of atoms in layer={:d})".format(self.id, self.nat)
         for atom in self.atoms:
             s += "   Atom in Layer id={:d}, pos={},{},{},type={:d} ".format(
                 atom.id, atom.pos[0], atom.pos[1], atom.pos[2], atom.type_id
@@ -88,9 +86,7 @@ def floatjm(inp):
 ###############################################################################################
 
 
-def structure_file_to_atoms(
-    filename, potential: Potential, n_bulk: int = 2, vacuum_height: float = 10.0
-):
+def structure_file_to_atoms(filename, potential: Potential, n_bulk: int = 2, vacuum_height: float = 10.0):
     """
     Read in_structure.inp file (that contains informations about the structure of a surface)
     and create the ASE atoms object according to the readed data.

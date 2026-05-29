@@ -128,9 +128,7 @@ def list_of_examples(regex=None):
     """
     base_dir = examples_dir()
     pattern = re.compile(r"^A\d{2}_")  # matches A{number*2}_
-    out = [
-        Example(d) for d in base_dir.iterdir() if d.is_dir() and pattern.match(d.name)
-    ]
+    out = [Example(d) for d in base_dir.iterdir() if d.is_dir() and pattern.match(d.name)]
     if regex:
         regex = re.compile(regex)
         out = [i for i in out if i.satisfy_regex(regex)]

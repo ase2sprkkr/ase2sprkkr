@@ -13,12 +13,8 @@ class MagnetisationDirectionSection(PotentialSection):
         return ["TYPES"]
 
     def _set_from_atoms(self, atoms, write_io_data):
-        self.DATA_IQ = [
-            site.magnetisation for site in atoms.sites[write_io_data["sites_order"]]
-        ]
-        self.DATA_IT = [
-            type.magnetisation for type in write_io_data.types.value_to_class_id
-        ]
+        self.DATA_IQ = [site.magnetisation for site in atoms.sites[write_io_data["sites_order"]]]
+        self.DATA_IT = [type.magnetisation for type in write_io_data.types.value_to_class_id]
         self.KMROT = atoms.info.get("SPRKKR_KMROT", 0)
         self.QMVEC = atoms.info.get("SPRKKR_QMVEC", [0.0, 0.0, 0.0])
 
@@ -44,12 +40,7 @@ class MagnetisationDirectionSectionDefinition(PotSectionDefinition):
             V("QMVEC", Array(float, length=3), [0.0, 0.0, 0.0]),
             V(
                 "DATA_IQ",
-                Table(
-                    {"MTET_Q": float, "MPHI_Q": float},
-                    numbering="IQ",
-                    numbering_format="{:>10}",
-                    free_header=True,
-                ),
+                Table({"MTET_Q": float, "MPHI_Q": float}, numbering="IQ", numbering_format="{:>10}", free_header=True),
             ),
             V(
                 "DATA_IT",

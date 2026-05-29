@@ -50,9 +50,7 @@ class SPRKKRAtoms(Atoms):
                 obj.__class__ = SPRKKRAtoms
             else:
                 if not isinstance(obj, Atoms):
-                    raise ValueError(
-                        f"Can not promote class {obj} of class {obj.__class__} to {SPRKKRAtoms}"
-                    )
+                    raise ValueError(f"Can not promote class {obj} of class {obj.__class__} to {SPRKKRAtoms}")
 
                 class SprKKrAtomsEx(obj.__class__, SPRKKRAtoms):
                     pass
@@ -135,18 +133,12 @@ class SPRKKRAtoms(Atoms):
             site.update_atomic_number(number)
 
     def compute_sites_symmetry(
-        self,
-        symmetry=None,
-        consider_old=False,
-        symmetry_precision=1e-5,
-        angular_precision=1e-5,
+        self, symmetry=None, consider_old=False, symmetry_precision=1e-5, angular_precision=1e-5
     ):
         """SPRKKR has some properties shared by all by-symmetry-equal sites.
         This method can be called to recompute the equivalent sites.
         """
-        self.spacegroup_info.recompute(
-            symmetry, consider_old, symmetry_precision, angular_precision
-        )
+        self.spacegroup_info.recompute(symmetry, consider_old, symmetry_precision, angular_precision)
         self.spacegroup_info.update_spacegroup_kinds()
 
     def breaks_sites_symmetry(self, *args, **kwargs):
@@ -192,10 +184,7 @@ class SPRKKRAtoms(Atoms):
         return SPRKKRAtoms.sites_array_name in self.arrays
 
     def set_sites(
-        self,
-        sites: np.ndarray,
-        spacegroup_info: Union[SpacegroupInfo, bool, None] = None,
-        update: bool = True,
+        self, sites: np.ndarray, spacegroup_info: Union[SpacegroupInfo, bool, None] = None, update: bool = True
     ):
         """Set the sites property and update all other dependent
         properties (symbols, occupancy) according to the sites.
@@ -265,9 +254,7 @@ class SPRKKRAtoms(Atoms):
         out = super().copy()
         SPRKKRAtoms.promote_ase_atoms(out)
         if self.are_sites_inited():
-            out.set_sites(
-                Site.copy_sites(out.sites, out), self.spacegroup_info.copy_for(out)
-            )
+            out.set_sites(Site.copy_sites(out.sites, out), self.spacegroup_info.copy_for(out))
         return out
 
     def _promote_if_other(self, other):
@@ -294,10 +281,7 @@ class SPRKKRAtoms(Atoms):
             if "occupancy" in self.info or "occupancy" in other.info:
                 self.info.setdefault("occupancy", {})
                 self.info["occupancy"].update(
-                    {
-                        str(int(i) + shift): v
-                        for i, v in other.info.get("occupancy", {}).items()
-                    }
+                    {str(int(i) + shift): v for i, v in other.info.get("occupancy", {}).items()}
                 )
         self.info["spacegroup_info"]._dataset = None
         if self.are_sites_inited():

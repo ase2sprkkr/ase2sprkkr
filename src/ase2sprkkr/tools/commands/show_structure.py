@@ -19,10 +19,7 @@ aliases = ["view"]
 def parser(parser):
     parser.add_argument("potential_file", help="SPRKKR potential file (.pot)")
     parser.add_argument(
-        "-i",
-        "--input",
-        help="in_struct.inp file name (if not specified, only pot file will be ploted)",
-        required=False,
+        "-i", "--input", help="in_struct.inp file name (if not specified, only pot file will be ploted)", required=False
     )
 
     parser.add_argument(
@@ -58,19 +55,10 @@ def parser(parser):
         required=False,
     )
     parser.add_argument(
-        "-A",
-        "--visualise-potential",
-        help="Visualise the potential",
-        action="store_true",
-        required=False,
+        "-A", "--visualise-potential", help="Visualise the potential", action="store_true", required=False
     )
     parser.add_argument(
-        "-s",
-        "--scale-radii",
-        help="Ase visualisation atomic radius",
-        type=float,
-        required=False,
-        default=0.5,
+        "-s", "--scale-radii", help="Ase visualisation atomic radius", type=float, required=False, default=0.5
     )
     parser.add_argument(
         "-v",
@@ -82,12 +70,7 @@ def parser(parser):
         required=False,
     )
     parser.add_argument(
-        "-b",
-        "--nbulk",
-        type=int,
-        help="Repetition of bulk unit (default=2)",
-        default=2,
-        required=False,
+        "-b", "--nbulk", type=int, help="Repetition of bulk unit (default=2)", default=2, required=False
     )
 
 
@@ -134,10 +117,7 @@ def run(args, global_args):
         if structure_filename:
             # Extract data from structure file
             structure = structure_file_to_atoms(
-                args.input,
-                potential,
-                n_bulk=args.nbulk,
-                vacuum_height=args.vacuum_height,
+                args.input, potential, n_bulk=args.nbulk, vacuum_height=args.vacuum_height
             )
             # Visualise the structure or write out to the file
             structure.write(ciffile, format=outformat)

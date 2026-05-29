@@ -54,9 +54,7 @@ class TestDefinitions(TestCase):
                     raise
             else:
                 if i in "BSFEK":
-                    raise Exception(
-                        "This tasks should not be runnable using the defaults argument"
-                    )
+                    raise Exception("This tasks should not be runnable using the defaults argument")
 
             ip2 = df.read_from_string(out)
             self.assertEqual(ip.to_dict(), ip2.to_dict())
@@ -99,9 +97,7 @@ class TestDefinitions(TestCase):
                         t.TASK.TASK = i
 
             except Exception as e:
-                raise Exception(
-                    f'Parsing of "{i}" failed with the reason: \n {e}'
-                ).with_traceback(e.__traceback__)
+                raise Exception(f'Parsing of "{i}" failed with the reason: \n {e}').with_traceback(e.__traceback__)
 
         td = InputParameters.definitions["PHAGEN"]
         td["TASK"]["TASK"].default_value = "scf"

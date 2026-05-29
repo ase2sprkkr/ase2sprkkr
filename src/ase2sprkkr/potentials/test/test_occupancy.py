@@ -36,9 +36,4 @@ class TestOccupancy(TestCase):
         }
 
         calculator = SPRKKR(atoms=atoms)
-        calculator.save_input(
-            input_file="Cu.inp",
-            potential_file="Cu.pot",
-            options=scf_opts,
-            directory=temporary_dir,
-        )
+        calculator.save_input(input_file="Cu.inp", potential_file="Cu.pot", options=scf_opts, directory=temporary_dir)

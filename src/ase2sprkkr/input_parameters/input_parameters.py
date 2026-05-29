@@ -153,9 +153,7 @@ class InputParameters(ConfigurationFile):
         """
         print_output = calculator.value_or_default("print_output", print_output)
         executable_suffix = self.resolve_executable_suffix(executable_suffix)
-        executable_suffix = calculator.value_or_default(
-            "executable_suffix", executable_suffix
-        )
+        executable_suffix = calculator.value_or_default("executable_suffix", executable_suffix)
         mpi = calculator.value_or_default("mpi", mpi)
 
         d = self._definition
@@ -196,11 +194,7 @@ class InputParameters(ConfigurationFile):
                     print(f"run <{input_file.name}")
                 executable = ["gdb"] + executable
             out = runner.create_process(
-                executable,
-                output_file,
-                stdin=stdin,
-                input_file=input_file.name,
-                callback=cleanup,
+                executable, output_file, stdin=stdin, input_file=input_file.name, callback=cleanup
             )
             if not run_async:
                 out = out.run()
@@ -215,14 +209,10 @@ class InputParameters(ConfigurationFile):
                     "Also, pleas check that the MPI is functional on your machine, or explicitly disable "
                     "MPI with mpi=False argument of calculate method (or set ase2sprkkr.config.running.mpi = False)\n\n"
                 )
-            e.strerror = (
-                add + "SPRKKR cannot be run due to the following error: \n" + e.strerror
-            )
+            e.strerror = add + "SPRKKR cannot be run due to the following error: \n" + e.strerror
             raise
 
-    def process_runner(
-        self, calculator=None, print_output=False, read_callback=None, directory=None
-    ):
+    def process_runner(self, calculator=None, print_output=False, read_callback=None, directory=None):
         """Return the result readed: the class that parse the output
         of the runned task
 
@@ -261,10 +251,7 @@ class InputParameters(ConfigurationFile):
         directory = directory or os.path.dirname(filename)
         return self.process_runner(directory=directory).read_from_file(filename)
 
-    def executable_params(
-        self,
-        directory=None,
-    ):
+    def executable_params(self, directory=None):
         """
         Return
         ------
@@ -286,11 +273,7 @@ class InputParameters(ConfigurationFile):
         names = (i for i in pkgutil.iter_modules(definitions.__path__))
         im = importlib.import_module
         modules = (im(".definitions." + i.name, __package__) for i in names)
-        return {
-            m.__name__.rsplit(".", 1)[-1].upper(): m
-            for m in modules
-            if hasattr(m, "input_parameters")
-        }
+        return {m.__name__.rsplit(".", 1)[-1].upper(): m for m in modules if hasattr(m, "input_parameters")}
 
     _definitions = {}
 
@@ -312,8 +295,7 @@ class InputParameters(ConfigurationFile):
                     ip = ip()
                 except Exception as e:
                     raise RuntimeError(
-                        f"Can not load file {module.__name__} in {module.__file__} "
-                        f"due to the following error:\n {e}"
+                        f"Can not load file {module.__name__} in {module.__file__} due to the following error:\n {e}"
                     ) from e
             cls._definitions[name] = ip
             process_input_parameters_definition(module, ip)

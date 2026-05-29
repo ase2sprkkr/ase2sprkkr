@@ -164,9 +164,7 @@ class ProcessOutputParser:
             print(line.decode("utf8"))
 
     async def read_output(self, stdout, *args):
-        raise NotImplementedError(
-            "Please, redefine ProcessOuputParser.read_output coroutine"
-        )
+        raise NotImplementedError("Please, redefine ProcessOuputParser.read_output coroutine")
 
     def set_print_output(self, print_output):
         self.print_output = print_output
@@ -179,9 +177,7 @@ class ProcessOutputParser:
         if not self:
             self = cls()
 
-        return run_coro_sync(
-            self.read_output_file(output, error, read_args, return_code)
-        )
+        return run_coro_sync(self.read_output_file(output, error, read_args, return_code))
 
     async def read_output_file(self, output, error=None, read_args=[], return_code=0):
         """
@@ -198,9 +194,7 @@ class ProcessOutputParser:
             with AsyncioFileReader(error) as air:
                 return await self.read_error(air, *read_args)
 
-        out_result, err_result = await asyncio.gather(
-            read_output_file(), read_error_file()
-        )
+        out_result, err_result = await asyncio.gather(read_output_file(), read_error_file())
 
         return self.result(out_result, err_result, return_code)
 

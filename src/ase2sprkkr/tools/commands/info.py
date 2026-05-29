@@ -32,10 +32,7 @@ description = """\n Example of usage:
 
 
 """ This options will be printed, if no argument is given """
-default_options = [
-    "task",
-    "output_file",
-]
+default_options = ["task", "output_file"]
 
 """ These are the all options """
 possible_options = default_options
@@ -50,11 +47,7 @@ def parser(parser):
         const=True,
     )
     parser.add_argument(
-        "--output-file",
-        "-o",
-        help="Show informations about the known output files. You can ",
-        nargs="?",
-        const=True,
+        "--output-file", "-o", help="Show informations about the known output files. You can ", nargs="?", const=True
     )
     action = getattr(argparse, "BooleanOptionalAction", "store_true")
     parser.add_argument(
@@ -76,8 +69,7 @@ def run(args, global_args):
             input_parameters = list(input_parameters)
             path = None
             print(
-                "The known SPRKKR tasks (kind of input parameters)\n"
-                "---------------------------------------------------"
+                "The known SPRKKR tasks (kind of input parameters)\n---------------------------------------------------"
             )
             tasks = "the known SPRKKR tasks"
             anyof = "any of "
@@ -88,17 +80,12 @@ def run(args, global_args):
                 path = None
             input_parameters = [i for i in input_parameters if filter in i.name.lower()]
             if len(input_parameters) == 0:
-                print(
-                    "There is no known SPRKKR task with '{filter.upper()}' in its name"
-                )
+                print("There is no known SPRKKR task with '{filter.upper()}' in its name")
                 return
             if filter == "":
                 tasks = "the known SPRKKR tasks"
                 anyof = "any of "
-            elif (
-                len(input_parameters) == 1
-                and input_parameters[0].name.upper() == filter.upper()
-            ):
+            elif len(input_parameters) == 1 and input_parameters[0].name.upper() == filter.upper():
                 tasks = f"the task '{input_parameters[0].name.upper()}'"
                 anyof = ""
             else:
@@ -147,9 +134,7 @@ def run(args, global_args):
         if filter is not True:
             filter = filter.lower()
         for ext, i in OutputFile.definitions.items():
-            if filter is not True and (
-                (filter not in ext.lower()) or (filter not in i.name.lower())
-            ):
+            if filter is not True and ((filter not in ext.lower()) or (filter not in i.name.lower())):
                 continue
 
             if args.verbose:

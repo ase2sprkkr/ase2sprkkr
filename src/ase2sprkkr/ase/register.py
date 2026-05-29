@@ -35,15 +35,10 @@ try:
             rc = plugin.register_calculator
             rio = plugin.register_io_format
         else:
-            from ase.plugins.register import (
-                register_io_format as rio,
-                register_calculator as rc,
-            )
+            from ase.plugins.register import register_io_format as rio, register_calculator as rc
 
         rc("ase2sprkkr.SPRKKR")
-        rio(
-            "ase2sprkkr.ase.io", "SPRKKR potential file", "1F", name="sprkkr", ext="pot"
-        )
+        rio("ase2sprkkr.ase.io", "SPRKKR potential file", "1F", name="sprkkr", ext="pot")
 
 except ImportError:
     pass

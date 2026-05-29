@@ -58,10 +58,7 @@ class OutputFileResultValue:
             raise Exception("PyQt6 is required for saving the output file")
 
         file_path, _ = QFileDialog.getSaveFileName(
-            parent,
-            "Save File",
-            "",
-            f" (*.{self.definition().extension});;All Files (*)",
+            parent, "Save File", "", f" (*.{self.definition().extension});;All Files (*)"
         )
         shutil.copy(self.filename(), file_path)
 
@@ -80,9 +77,7 @@ class OutputFileResultValue:
 class TaskResult:
     """A base class for a result of a runned task (kkrscf executable)"""
 
-    def __init__(
-        self, input_parameters, calculator, directory, output_file=None, input_file=None
-    ):
+    def __init__(self, input_parameters, calculator, directory, output_file=None, input_file=None):
         self._input_parameters = input_parameters
         self._calculator = calculator
         self.files = {}
@@ -102,19 +97,15 @@ class TaskResult:
                 return f.name
             return f
 
-        return (
-            self._directory
-            or os.path.dirname(file_name(self.files.get("output")) or "")
-            or os.getcwd()
-        )
+        return self._directory or os.path.dirname(file_name(self.files.get("output")) or "") or os.getcwd()
 
     def path_to(self, file):
         """return full path to a given file
 
         ..doctest::
-        >>> t = TaskResult(None, None, '/example')
-        >>> t.files['input'] = 'input.txt'
-        >>> t.path_to('input')
+        >>> t = TaskResult(None, None, "/example")
+        >>> t.files["input"] = "input.txt"
+        >>> t.path_to("input")
         '/example/input.txt'
         """
         file = self.files[file]
@@ -131,9 +122,7 @@ class TaskResult:
         if self._input_parameters:
             return self._input_parameters
         if self.input_parameters_file:
-            return input_parameters.InputParameters.from_file(
-                self.input_parameters_file
-            )
+            return input_parameters.InputParameters.from_file(self.input_parameters_file)
 
     @cached_property
     def input_parameters_file(self):
@@ -147,9 +136,7 @@ class TaskResult:
         if not potfil:
             potfil = self.files.get("potential", None)
         if not potfil:
-            raise ValueError(
-                "Please set CONTROL.POTFIL of the input_parameters to read the potential"
-            )
+            raise ValueError("Please set CONTROL.POTFIL of the input_parameters to read the potential")
         if self.directory:
             potfil = os.path.join(self.directory, potfil)
         return potfil
@@ -237,14 +224,7 @@ class KkrOutputReader:
     Descendants should define parser_class and result_class property.
     """
 
-    def __init__(
-        self,
-        input_parameters,
-        calculator,
-        directory,
-        print_output=False,
-        read_callback=None,
-    ):
+    def __init__(self, input_parameters, calculator, directory, print_output=False, read_callback=None):
         self.input_parameters = input_parameters
         """ Input parameters, that command to read the output (thus probably the ones, that
       run the process that produced the output. It is used e.g. for determining the potential file,
@@ -258,11 +238,7 @@ class KkrOutputReader:
     def _create_result(self, output_file, input_file=None):
         """Create an object that stores results of the KKR output parsing."""
         return self.result_class(
-            self.input_parameters,
-            self.calculator,
-            self.directory,
-            output_file=output_file,
-            input_file=input_file,
+            self.input_parameters, self.calculator, self.directory, output_file=output_file, input_file=input_file
         )
 
     def _create_process(self, coroutine, result, callback=None):
@@ -278,15 +254,11 @@ class KkrOutputReader:
     def create_process(self, cmd, outfile, input_file=None, callback=None, **kwargs):
         """Create an object that takes care of running the command and parsing the results"""
         result = self._create_result(getattr(outfile, "name", None), input_file)
-        coroutine = self.parser.run_async(
-            cmd, outfile, self.directory, [result], **kwargs
-        )
+        coroutine = self.parser.run_async(cmd, outfile, self.directory, [result], **kwargs)
         return self._create_process(coroutine, result, callback=callback)
 
     @maybeclassmethod
-    def read_from_file(
-        self, cls, output, error=None, return_code=0, input_file=None, directory=None
-    ):
+    def read_from_file(self, cls, output, error=None, return_code=0, input_file=None, directory=None):
         """Creates an object that takes care of reading and parsing of the output of a sprkkr process"""
         if self is None:
             self = cls(None, None, directory or os.path.dirname(output))

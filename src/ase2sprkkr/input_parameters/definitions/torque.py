@@ -1,10 +1,7 @@
 """Torque task input parameters definition"""
 
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
-from ..input_parameters_definitions import (
-    InputParametersDefinition as InputParameters,
-    InputValueDefinition as V,
-)
+from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
 
 
 def _torque_mode_warning_condition(value):
@@ -38,16 +35,8 @@ def input_parameters():
             ENERGY(defaults={"EMIN": -0.2, "ImE": 0.0, "GRID": 8, "NE": 36}),
             TASK("TORQUE").copy(
                 [
-                    V(
-                        "THETAQ",
-                        [90.0],
-                        info="""the angles characterizing the orientation of the direction û""",
-                    ),
-                    V(
-                        "PHIQ",
-                        [90.0],
-                        info="""the angles characterizing the orientation of the direction û""",
-                    ),
+                    V("THETAQ", [90.0], info="""the angles characterizing the orientation of the direction û"""),
+                    V("PHIQ", [90.0], info="""the angles characterizing the orientation of the direction û"""),
                 ]
             ),
             SITES,
@@ -56,10 +45,6 @@ def input_parameters():
         mpi=True,
         info="TORQUE",
     )
-    input_parameters["MODE"].copy_member(
-        "MODE"
-    ).warning_condition = _torque_mode_warning_condition
-    input_parameters["CONTROL"].copy_member(
-        "NONMAG"
-    ).warning_condition = _torque_nonmag_warning_condition
+    input_parameters["MODE"].copy_member("MODE").warning_condition = _torque_mode_warning_condition
+    input_parameters["CONTROL"].copy_member("NONMAG").warning_condition = _torque_nonmag_warning_condition
     return input_parameters

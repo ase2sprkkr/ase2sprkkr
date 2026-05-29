@@ -8,6 +8,7 @@ import numpy as np
 import pyparsing as pp
 from .warnings import warnings, DataValidityError
 
+
 class ValueModifier:
     """If this class is given as a type of a Value, it will modify the definition
     of value somehow. It is responsibile to set the True type of the value"""
@@ -23,9 +24,7 @@ class InheritingValueModifier(ValueModifier):
         cls = self._enriching_classes.get(dcls)
         if not cls:
             scls = self.__class__
-            self._enriching_classes[dcls] = cls = type(
-                scls.__name__ + dcls.__name__, (scls, dcls), {}
-            )
+            self._enriching_classes[dcls] = cls = type(scls.__name__ + dcls.__name__, (scls, dcls), {})
 
         definition.__class__ = cls
         return self.type
@@ -213,9 +212,7 @@ class ValueDefinition(RealItemDefinition):
 
         if default_value is None and not isinstance(type, (GrammarType, builtins.type)):
             self.type = type_from_value(type, type_map=self.type_from_type_map)
-            default_value = (
-                None if isinstance(type, dict) else self.type.convert(type)
-            )
+            default_value = None if isinstance(type, dict) else self.type.convert(type)
         else:
             self.type = type_from_type(type, type_map=self.type_from_type_map)
             if default_value is not None:
@@ -265,9 +262,7 @@ class ValueDefinition(RealItemDefinition):
             self.name_in_grammar = self.type.name_in_grammar
 
         if self.is_repeated.is_numbered and not self.name_in_grammar:
-            raise ValueError(
-                "Repeated numbered values have to have its name in the grammar"
-            )
+            raise ValueError("Repeated numbered values have to have its name in the grammar")
 
         if delimiter is not None:
             if delimiter_grammar is None:
@@ -275,7 +270,6 @@ class ValueDefinition(RealItemDefinition):
             self.name_value_delimiter = delimiter
         if delimiter_grammar is not None:
             self.grammar_of_delimiter = pp.Suppress(delimiter_grammar)
-
 
     configuration_type_name = "OPTION"
 
@@ -289,7 +283,7 @@ class ValueDefinition(RealItemDefinition):
         if self.default_value_from_container:
             defval = (lambda d: lambda o: d(o._container))(defval)
         if self.result_is_visible:
-            return lambda o: o._result if hasattr(o, '_result') else defval
+            return lambda o: o._result if hasattr(o, "_result") else defval
         return defval
 
     @default_value.setter
@@ -311,9 +305,7 @@ class ValueDefinition(RealItemDefinition):
         """The Option can be enriched by the definition, e.g. the docsting can be extended."""
         self.type.enrich(option)
 
-    def data_description(
-        self, verbose: Union[bool, str] = False, show_hidden=False, prefix: str = ""
-    ):
+    def data_description(self, verbose: Union[bool, str] = False, show_hidden=False, prefix: str = ""):
         """
         Return the description of the contained data type and their type.
 
@@ -356,17 +348,13 @@ class ValueDefinition(RealItemDefinition):
             out += f"  ({flags})"
 
         if verbose:
-            add = self.additional_data_description(
-                prefix=prefix + self._description_indentation
-            )
+            add = self.additional_data_description(prefix=prefix + self._description_indentation)
             if add:
                 out += "\n"
                 out += add
         return out
 
-    def additional_data_description(
-        self, verbose=False, show_hidden=False, prefix: str = ""
-    ) -> str:
+    def additional_data_description(self, verbose=False, show_hidden=False, prefix: str = "") -> str:
         """Return the additional runtime-documentation for the configuration value.
         E.g. return the possible choices for the value, etc...
 
@@ -421,9 +409,7 @@ class ValueDefinition(RealItemDefinition):
                         else:
                             req = True
                     if req is True:
-                        raise ValueError(
-                            f"The value is required for {opt._get_path()}, it can't be None"
-                        )
+                        raise ValueError(f"The value is required for {opt._get_path()}, it can't be None")
                     else:
                         raise ValueError(req)
                 return True
@@ -481,9 +467,7 @@ class ValueDefinition(RealItemDefinition):
                     eq = x[0] == self.default_value
                 if eq:
                     return x
-                message = "The value of {} is {} and it should be {}".format(
-                    self.name, x[0], self.default_value
-                )
+                message = "The value of {} is {} and it should be {}".format(self.name, x[0], self.default_value)
                 raise pp.ParseException(s, loc, message, body)
 
             body = body.copy().add_parse_action(check_fixed)
@@ -491,9 +475,7 @@ class ValueDefinition(RealItemDefinition):
         if allow_dangerous and hasattr(self, "type_of_dangerous"):
             danger = pp.Forward()
             danger << self.type_of_dangerous.grammar(self.name + "_dangerous")
-            danger.add_parse_action(
-                lambda x: DangerousValue(x[0], self.type_of_dangerous, False)
-            )
+            danger.add_parse_action(lambda x: DangerousValue(x[0], self.type_of_dangerous, False))
             body = body ^ danger
 
         if delimiter:
@@ -510,24 +492,14 @@ class ValueDefinition(RealItemDefinition):
             return None
         return self._hooked_grammar
 
-    def _create_grammar(
-        self,
-        allow_dangerous=False,
-        name_in_grammar=None,
-        name_value_delimiter=None,
-        original=False,
-    ):
+    def _create_grammar(self, allow_dangerous=False, name_in_grammar=None, name_value_delimiter=None, original=False):
         """Return a grammar for the name-value pair"""
         if self.output_definition is not self and not original:
             g = self.output_definition._grammar
             return g and g(allow_dangerous)
 
-        name_in_grammar = (
-            name_in_grammar if name_in_grammar is not None else self.name_in_grammar
-        )
-        if (
-            name_value_delimiter is None and name_in_grammar
-        ) or name_value_delimiter is True:
+        name_in_grammar = name_in_grammar if name_in_grammar is not None else self.name_in_grammar
+        if (name_value_delimiter is None and name_in_grammar) or name_value_delimiter is True:
             name_value_delimiter = self.grammar_of_delimiter
 
         body = self._grammar_of_value(name_value_delimiter, allow_dangerous)
@@ -542,9 +514,7 @@ class ValueDefinition(RealItemDefinition):
                 nbody += str(name_value_delimiter) or " "
             nbody += self.grammar_type.grammar_name()
 
-        out = self._tuple_with_my_name(
-            body, has_value=self.type.has_value, name_in_grammar=name_in_grammar
-        )
+        out = self._tuple_with_my_name(body, has_value=self.type.has_value, name_in_grammar=name_in_grammar)
         out.set_name(nbody)
         return out
 
@@ -561,9 +531,7 @@ class ValueDefinition(RealItemDefinition):
             return self.default_value
         return None
 
-    def _save_to_file(
-        self, file, option, always=False, name_in_grammar=None, delimiter=""
-    ):
+    def _save_to_file(self, file, option, always=False, name_in_grammar=None, delimiter=""):
         value, write = option._written_value(always)
         if write:
             return self.write(file, value, name_in_grammar, delimiter=delimiter)
@@ -605,10 +573,7 @@ class ValueDefinition(RealItemDefinition):
             nmb = self.is_repeated.is_numbered
             if self.is_repeated.type == self.Repeated.Type.DICT:
                 if nmb == self.Repeated.Numbering.WITH_DEFAULT:
-                    written = (
-                        (name + (str(i) if i != "def" else ""), v)
-                        for i, v in value.items()
-                    )
+                    written = ((name + (str(i) if i != "def" else ""), v) for i, v in value.items())
                 else:  # Dict has to be numbered
                     written = ((name + str(i), v) for i, v in value.items())
             else:

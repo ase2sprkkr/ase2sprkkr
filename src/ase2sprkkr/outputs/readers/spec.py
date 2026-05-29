@@ -60,24 +60,16 @@ class SpecResult(TaskResult):
             self._potential_barrier["epsx"] = float(epsx_match.group(1))
 
         # Parse zparup and zpardn (these appear to be arrays)
-        zpar_match = re.search(
-            r"#\s*zparup:\s*([\d.E+-]+)\s+([\d.E+-]+)\s+([\d.E+-]+)", content
-        )
+        zpar_match = re.search(r"#\s*zparup:\s*([\d.E+-]+)\s+([\d.E+-]+)\s+([\d.E+-]+)", content)
         if zpar_match:
             self._potential_barrier["zparup"] = [float(x) for x in zpar_match.groups()]
 
-        zpardn_match = re.search(
-            r"#\s*zpardn:\s*([\d.E+-]+)\s+([\d.E+-]+)\s+([\d.E+-]+)", content
-        )
+        zpardn_match = re.search(r"#\s*zpardn:\s*([\d.E+-]+)\s+([\d.E+-]+)\s+([\d.E+-]+)", content)
         if zpardn_match:
-            self._potential_barrier["zpardn"] = [
-                float(x) for x in zpardn_match.groups()
-            ]
+            self._potential_barrier["zpardn"] = [float(x) for x in zpardn_match.groups()]
 
         # Parse bparp
-        bparp_match = re.search(
-            r"#\s*bparp:\s*([\d.E+-]+)\s+([\d.E+-]+)\s+([\d.E+-]+)", content
-        )
+        bparp_match = re.search(r"#\s*bparp:\s*([\d.E+-]+)\s+([\d.E+-]+)\s+([\d.E+-]+)", content)
         if bparp_match:
             self._potential_barrier["bparp"] = [float(x) for x in bparp_match.groups()]
 
@@ -92,19 +84,11 @@ class SpecResult(TaskResult):
         if lat_match:
             self._lattice_constants["a"] = float(lat_match.group(1))
 
-        self._basis_vectors = {
-            "real": np.zeros((2, 2)),
-            "reciprocal": np.zeros((2, 2)),
-        }
+        self._basis_vectors = {"real": np.zeros((2, 2)), "reciprocal": np.zeros((2, 2))}
         # Parse real basis vectors
-        matches = re.finditer(
-            r"(real|reciprocal) basis\s+(\d+)\s*:\s*([\d.-]+)\s+([\d.-]+)", content
-        )
+        matches = re.finditer(r"(real|reciprocal) basis\s+(\d+)\s*:\s*([\d.-]+)\s+([\d.-]+)", content)
         for match in matches:
-            self._basis_vectors[match.group(1)][int(match.group(2)) - 1] = [
-                match.group(3),
-                match.group(4),
-            ]
+            self._basis_vectors[match.group(1)][int(match.group(2)) - 1] = [match.group(3), match.group(4)]
 
     def _parse_spectral_data(self) -> None:
         """Parse the main spectral data table."""
@@ -123,10 +107,7 @@ class SpecResult(TaskResult):
         data = []
         for line in data_lines:
             # Match lines with numbers in scientific notation
-            if re.match(
-                r"^\s*[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E-]+$",
-                line,
-            ):
+            if re.match(r"^\s*[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E-]+$", line):
                 values = [float(x) for x in line.split()]
                 data.append(values)
 

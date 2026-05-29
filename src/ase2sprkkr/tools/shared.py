@@ -8,8 +8,7 @@ import argparse
 
 def main(local):
     parser = argparse.ArgumentParser(
-        description=local["description"],
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=local["description"], formatter_class=argparse.RawDescriptionHelpFormatter
     )
     local["parser"](parser)
     args = parser.parse_args()
