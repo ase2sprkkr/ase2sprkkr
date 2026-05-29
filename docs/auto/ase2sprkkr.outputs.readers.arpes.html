@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>arpes &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ArpesProcessRunner" href="ase2sprkkr.outputs.readers.arpes.ArpesProcessRunner.html" />
+    <link rel="next" title="ArpesOutputReader" href="ase2sprkkr.outputs.readers.arpes.ArpesOutputReader.html" />
     <link rel="prev" title="readers" href="ase2sprkkr.outputs.readers.html" /> 
 </head>
 
@@ -84,6 +84,7 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.bsf.html">bsf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.default.html">default</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.dos.html">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.jxc.html">jxc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.html">scf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.spec.html">spec</a></li>
 </ul>
@@ -132,12 +133,12 @@
 <h1>arpes<a class="headerlink" href="#arpes" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs.readers.arpes</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-4a2f958889cea69f1806f550b8d050eacb1fd467.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.arpes.ArpesProcessRunner, ase2sprkkr.outputs.readers.arpes.ArpesResult" usemap="#inheritance39e4429ee2" class="inheritance graphviz" /></div>
-<map id="inheritance39e4429ee2" name="inheritance39e4429ee2">
-<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.arpes.ArpesProcessRunner.html#ase2sprkkr.outputs.readers.arpes.ArpesProcessRunner" target="_top" title="ARPES task output reader currently do nothing, just have a special" alt="" coords="175,55,329,80"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrProcessRunner.html#ase2sprkkr.outputs.task_result.KkrProcessRunner" target="_top" title="Class, that run a process and read its output using underlined" alt="" coords="5,55,145,80"/>
-<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.arpes.ArpesResult.html#ase2sprkkr.outputs.readers.arpes.ArpesResult" target="_top" title="ARPES result provides acces to the generated SPC output file" alt="" coords="202,5,302,31"/>
-<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="29,5,121,31"/>
+<div class="graphviz"><img src="../_images/inheritance-afbd139a117193c6d9fa7f6f21680b733c38c338.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.arpes.ArpesOutputReader, ase2sprkkr.outputs.readers.arpes.ArpesResult" usemap="#inheritance2c693d2732" class="inheritance graphviz" /></div>
+<map id="inheritance2c693d2732" name="inheritance2c693d2732">
+<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.arpes.ArpesOutputReader.html#ase2sprkkr.outputs.readers.arpes.ArpesOutputReader" target="_top" title="ARPES task has no special parser, it just has a special" alt="" coords="168,57,316,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Class, that runs a process and reads its output using the underlying" alt="" coords="5,57,139,85"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.arpes.ArpesResult.html#ase2sprkkr.outputs.readers.arpes.ArpesResult" target="_top" title="ARPES result provides acces to the generated SPC output file" alt="" coords="192,5,292,33"/>
+<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="26,5,118,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -146,8 +147,8 @@
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.arpes.ArpesProcessRunner.html#ase2sprkkr.outputs.readers.arpes.ArpesProcessRunner" title="ase2sprkkr.outputs.readers.arpes.ArpesProcessRunner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArpesProcessRunner</span></code></a>(input_parameters, ...[, ...])</p></td>
-<td><p>ARPES task output reader currently do nothing, just have a special result, that allow easy acces to spc output file</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.arpes.ArpesOutputReader.html#ase2sprkkr.outputs.readers.arpes.ArpesOutputReader" title="ase2sprkkr.outputs.readers.arpes.ArpesOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArpesOutputReader</span></code></a>(input_parameters, ...[, ...])</p></td>
+<td><p>ARPES task has no special parser, it just has a special result, that allow easy acces to spc output file</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.arpes.ArpesResult.html#ase2sprkkr.outputs.readers.arpes.ArpesResult" title="ase2sprkkr.outputs.readers.arpes.ArpesResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArpesResult</span></code></a>(input_parameters, calculator, ...)</p></td>
 <td><p>ARPES result provides acces to the generated SPC output file containing the results of Angle resolved photoelectron electroscopy, using the <code class="xref py py-attr docutils literal notranslate"><span class="pre">spc</span></code> property.</p></td>
@@ -161,7 +162,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.outputs.readers.html" class="btn btn-neutral float-left" title="readers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.outputs.readers.arpes.ArpesProcessRunner.html" class="btn btn-neutral float-right" title="ArpesProcessRunner" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.outputs.readers.arpes.ArpesOutputReader.html" class="btn btn-neutral float-right" title="ArpesOutputReader" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>spheres_debug &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="_as_list_literal_f64" href="ase2sprkkr.bindings.xband.spheres_debug._as_list_literal_f64.html" />
-    <link rel="prev" title="xband" href="ase2sprkkr.bindings.xband.html" /> 
+    <link rel="prev" title="find_symmetry_ex" href="ase2sprkkr.bindings.xband.symmetry.find_symmetry_ex.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -75,10 +75,11 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.es_finder.html">es_finder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.nomad.html">nomad</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.spglib.html">spglib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.uppasd.html">uppasd</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.bindings.xband.html">xband</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">spheres_debug</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.xband.spheres.html">spheres</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.xband.symmetry.html">symmetry</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">spheres_debug</a></li>
 </ul>
 </li>
 </ul>
@@ -130,9 +131,9 @@
 <h1>spheres_debug<a class="headerlink" href="#spheres-debug" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.bindings.xband.spheres_debug</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-1c123f160fda8ec3eeb4b1413172b032b42affa3.png" alt="Inheritance diagram of ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs" usemap="#inheritance97610fdefc" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-56d27bfe390f8a4e8eeb9c01d06741f14bd1156d.png" alt="Inheritance diagram of ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs" usemap="#inheritance97610fdefc" class="inheritance graphviz" /></div>
 <map id="inheritance97610fdefc" name="inheritance97610fdefc">
-<area shape="rect" id="node1" href="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.html#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs" target="_top" title="FindEmptySpheresInputs(max_spheres: &#39;int&#39;, min_radius_bohr: &#39;float&#39;, max_radius_bohr: &#39;float&#39;, alat_bohr: &#39;float&#39;, cell_scaled: &#39;np.ndarray&#39;, positions_scaled: &#39;np.ndarray&#39;, mapping: &#39;np.ndarray&#39;, n_classes: &#39;int&#39;, n_types: &#39;int&#39;, symbols4: &#39;list[str]&#39;, atomic_numbers: &#39;np.ndarray&#39;, occupations: &#39;np.ndarray&#39;, type_eq_class: &#39;np.ndarray&#39;, mesh: &#39;np.ndarray&#39;, n_symmetry_ops: &#39;int&#39;, rotations: &#39;np.ndarray | None&#39;, translations: &#39;np.ndarray | None&#39;, verbose: &#39;int&#39;)" alt="" coords="5,5,188,31"/>
+<area shape="rect" id="node1" href="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.html#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs" target="_top" title="FindEmptySpheresInputs(max_spheres: &#39;int&#39;, min_radius_bohr: &#39;float&#39;, max_radius_bohr: &#39;float&#39;, alat_bohr: &#39;float&#39;, cell_scaled: &#39;np.ndarray&#39;, positions_scaled: &#39;np.ndarray&#39;, mapping: &#39;np.ndarray&#39;, n_classes: &#39;int&#39;, n_types: &#39;int&#39;, symbols4: &#39;list[str]&#39;, atomic_numbers: &#39;np.ndarray&#39;, occupations: &#39;np.ndarray&#39;, type_eq_class: &#39;np.ndarray&#39;, mesh: &#39;np.ndarray&#39;, n_symmetry_ops: &#39;int&#39;, rotations: &#39;np.ndarray | None&#39;, translations: &#39;np.ndarray | None&#39;, verbose: &#39;int&#39;)" alt="" coords="5,5,188,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -180,7 +181,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.bindings.xband.html" class="btn btn-neutral float-left" title="xband" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.bindings.xband.symmetry.find_symmetry_ex.html" class="btn btn-neutral float-left" title="find_symmetry_ex" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.bindings.xband.spheres_debug._as_list_literal_f64.html" class="btn btn-neutral float-right" title="_as_list_literal_f64" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

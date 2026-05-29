@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.common.yaml &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -91,21 +91,23 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.common.yaml</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; YAML - related stuff &quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
+<span></span><span class="sd">&quot;&quot;&quot;YAML - related stuff&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 
 
 <div class="viewcode-block" id="IndentDumper">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.yaml.IndentDumper.html#ase2sprkkr.common.yaml.IndentDumper">[docs]</a>
-<span class="k">class</span> <span class="nc">IndentDumper</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">Dumper</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IndentDumper</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">Dumper</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Better indentation for YAML, according to</span>
 
 <span class="sd">    https://stackoverflow.com/questions/25108581/python-yaml-dump-bad-indentation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="IndentDumper.increase_indent">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.yaml.IndentDumper.html#ase2sprkkr.common.yaml.IndentDumper.increase_indent">[docs]</a>
-    <span class="k">def</span> <span class="nf">increase_indent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indentless</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">increase_indent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indentless</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">increase_indent</span><span class="p">(</span><span class="n">flow</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
 </div>
 

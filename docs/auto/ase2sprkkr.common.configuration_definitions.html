@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>configuration_definitions &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="gather" href="ase2sprkkr.common.configuration_definitions.gather.html" />
+    <link rel="next" title="_definition_write_condition_always_true" href="ase2sprkkr.common.configuration_definitions._definition_write_condition_always_true.html" />
     <link rel="prev" title="ase2sprkkr.common.configuration_containers.DisabledAttributeError" href="ase2sprkkr.common.configuration_containers.DisabledAttributeError.html" /> 
 </head>
 
@@ -77,6 +77,8 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">configuration_definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions._definition_write_condition_always_true.html">_definition_write_condition_always_true</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions._if_defined_helper.html">_if_defined_helper</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.gather.html">gather</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.if_defined.html">if_defined</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.if_not_defined.html">if_not_defined</a></li>
@@ -164,18 +166,18 @@
 <h1>configuration_definitions<a class="headerlink" href="#configuration-definitions" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.common.configuration_definitions</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-fcbb0507d5bf86fdcd2e5fe5a2fe0507037ac4fd.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_definitions.BaseDefinition, ase2sprkkr.common.configuration_definitions.ControlDefinition, ase2sprkkr.common.configuration_definitions.Gather, ase2sprkkr.common.configuration_definitions.Ignored, ase2sprkkr.common.configuration_definitions.NotAllowed, ase2sprkkr.common.configuration_definitions.RealItemDefinition, ase2sprkkr.common.configuration_definitions.SeparatorDefinition, ase2sprkkr.common.configuration_definitions.Stub, ase2sprkkr.common.configuration_definitions.Switch, ase2sprkkr.common.configuration_definitions.VirtualDefinition" usemap="#inheritance52cf5e123c" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-30f523dd9b02a09d384c3ba278d6048405158899.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_definitions.BaseDefinition, ase2sprkkr.common.configuration_definitions.ControlDefinition, ase2sprkkr.common.configuration_definitions.Gather, ase2sprkkr.common.configuration_definitions.Ignored, ase2sprkkr.common.configuration_definitions.NotAllowed, ase2sprkkr.common.configuration_definitions.RealItemDefinition, ase2sprkkr.common.configuration_definitions.SeparatorDefinition, ase2sprkkr.common.configuration_definitions.Stub, ase2sprkkr.common.configuration_definitions.Switch, ase2sprkkr.common.configuration_definitions.VirtualDefinition" usemap="#inheritance52cf5e123c" class="inheritance graphviz" /></div>
 <map id="inheritance52cf5e123c" name="inheritance52cf5e123c">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="5,153,123,179"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.common.configuration_definitions.VirtualDefinition" target="_top" title="Base class for a definition, that do not have value, just control" alt="" coords="160,128,288,153"/>
-<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="152,177,296,203"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ControlDefinition.html#ase2sprkkr.common.configuration_definitions.ControlDefinition" target="_top" title="Control definitions has no grammar, they just modify the other items of the container" alt="" coords="333,79,465,104"/>
-<area shape="rect" id="node10" href="ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.common.configuration_definitions.Switch" target="_top" title="Items of this class can control, which elements of grammar will be active and which not" alt="" coords="503,79,575,104"/>
-<area shape="rect" id="node8" href="ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.common.configuration_definitions.SeparatorDefinition" target="_top" title="Basic class for separators" alt="" coords="325,128,473,153"/>
-<area shape="rect" id="node9" href="ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.common.configuration_definitions.Stub" target="_top" title="Item that allows to reuse existing item on the other place" alt="" coords="363,177,435,203"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.Gather.html#ase2sprkkr.common.configuration_definitions.Gather" target="_top" title="Output definition for the element of grammar, that reads besides himself" alt="" coords="28,104,100,129"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_definitions.Ignored.html#ase2sprkkr.common.configuration_definitions.Ignored" target="_top" title="Output definition for an ignored option." alt="" coords="28,55,100,80"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_definitions.NotAllowed.html#ase2sprkkr.common.configuration_definitions.NotAllowed" target="_top" title="Object of this class can be returned as a result of a :func:ConfigurationDefinition.condition" alt="" coords="15,5,113,31"/>
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="5,161,122,189"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.common.configuration_definitions.VirtualDefinition" target="_top" title="Base class for a definition, that do not have value, just control" alt="" coords="159,135,286,162"/>
+<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="151,187,294,214"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ControlDefinition.html#ase2sprkkr.common.configuration_definitions.ControlDefinition" target="_top" title="Control definitions has no grammar, they just modify the other items of the container" alt="" coords="332,83,463,110"/>
+<area shape="rect" id="node10" href="ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.common.configuration_definitions.Switch" target="_top" title="Items of this class can control, which elements of grammar will be active and which not" alt="" coords="500,83,572,110"/>
+<area shape="rect" id="node8" href="ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.common.configuration_definitions.SeparatorDefinition" target="_top" title="Basic class for separators" alt="" coords="324,135,471,162"/>
+<area shape="rect" id="node9" href="ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.common.configuration_definitions.Stub" target="_top" title="Item that allows to reuse existing item on the other place" alt="" coords="361,187,433,214"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.Gather.html#ase2sprkkr.common.configuration_definitions.Gather" target="_top" title="Output definition for the element of grammar, that reads besides himself" alt="" coords="28,109,100,137"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_definitions.Ignored.html#ase2sprkkr.common.configuration_definitions.Ignored" target="_top" title="Output definition for an ignored option." alt="" coords="28,57,100,85"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_definitions.NotAllowed.html#ase2sprkkr.common.configuration_definitions.NotAllowed" target="_top" title="Object of this class can be returned as a result of a :func:ConfigurationDefinition.condition" alt="" coords="15,5,112,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -191,6 +193,12 @@ e.g. an <a class="reference internal" href="ase2sprkkr.common.options.Option.htm
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions._definition_write_condition_always_true.html#ase2sprkkr.common.configuration_definitions._definition_write_condition_always_true" title="ase2sprkkr.common.configuration_definitions._definition_write_condition_always_true"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_definition_write_condition_always_true</span></code></a>(_)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions._if_defined_helper.html#ase2sprkkr.common.configuration_definitions._if_defined_helper" title="ase2sprkkr.common.configuration_definitions._if_defined_helper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_if_defined_helper</span></code></a>(value)</p></td>
+<td><p></p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.gather.html#ase2sprkkr.common.configuration_definitions.gather" title="ase2sprkkr.common.configuration_definitions.gather"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gather</span></code></a>(first, *members)</p></td>
 <td><p>Modify the given option definitions, that they appears in the output file in the form.</p></td>
 </tr>
@@ -211,7 +219,7 @@ e.g. an <a class="reference internal" href="ase2sprkkr.common.options.Option.htm
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" title="ase2sprkkr.common.configuration_definitions.BaseDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseDefinition</span></code></a>(name[, is_optional, condition])</p></td>
 <td><p>This class is a member of definition of configuration, that can be both real (holds a value or values) or just virtual.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ControlDefinition.html#ase2sprkkr.common.configuration_definitions.ControlDefinition" title="ase2sprkkr.common.configuration_definitions.ControlDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ControlDefinition</span></code></a>([name, template, condition])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ControlDefinition.html#ase2sprkkr.common.configuration_definitions.ControlDefinition" title="ase2sprkkr.common.configuration_definitions.ControlDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ControlDefinition</span></code></a>([name, template, ...])</p></td>
 <td><p>Control definitions has no grammar, they just modify the other items of the container</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Gather.html#ase2sprkkr.common.configuration_definitions.Gather" title="ase2sprkkr.common.configuration_definitions.Gather"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Gather</span></code></a>(*items[, name_delimiter, ...])</p></td>
@@ -229,13 +237,13 @@ e.g. an <a class="reference internal" href="ase2sprkkr.common.options.Option.htm
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.common.configuration_definitions.SeparatorDefinition" title="ase2sprkkr.common.configuration_definitions.SeparatorDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeparatorDefinition</span></code></a>([separator_type, ...])</p></td>
 <td><p>Basic class for separators</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.common.configuration_definitions.Stub" title="ase2sprkkr.common.configuration_definitions.Stub"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stub</span></code></a>(item[, name, condition])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.common.configuration_definitions.Stub" title="ase2sprkkr.common.configuration_definitions.Stub"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stub</span></code></a>(item[, name, is_optional, condition])</p></td>
 <td><p>Item that allows to reuse existing item on the other place e.g. in another branch of Switch.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.common.configuration_definitions.Switch" title="ase2sprkkr.common.configuration_definitions.Switch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Switch</span></code></a>(item, values[, condition, name, template])</p></td>
 <td><p>Items of this class can control, which elements of grammar will be active and which not</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.common.configuration_definitions.VirtualDefinition" title="ase2sprkkr.common.configuration_definitions.VirtualDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VirtualDefinition</span></code></a>([name, template, condition])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.common.configuration_definitions.VirtualDefinition" title="ase2sprkkr.common.configuration_definitions.VirtualDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VirtualDefinition</span></code></a>([name, template, ...])</p></td>
 <td><p>Base class for a definition, that do not have value, just control the flow of the parsing</p></td>
 </tr>
 </tbody>
@@ -247,7 +255,7 @@ e.g. an <a class="reference internal" href="ase2sprkkr.common.options.Option.htm
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.common.configuration_containers.DisabledAttributeError.html" class="btn btn-neutral float-left" title="ase2sprkkr.common.configuration_containers.DisabledAttributeError" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.common.configuration_definitions.gather.html" class="btn btn-neutral float-right" title="gather" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.configuration_definitions._definition_write_condition_always_true.html" class="btn btn-neutral float-right" title="_definition_write_condition_always_true" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

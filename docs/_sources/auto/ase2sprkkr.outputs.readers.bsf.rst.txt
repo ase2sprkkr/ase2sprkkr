@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.outputs.readers.bsf**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.outputs.readers.bsf.BsfProcessRunner  ase2sprkkr.outputs.readers.bsf.BsfResult 
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.bsf.BsfOutputReader  ase2sprkkr.outputs.readers.bsf.BsfResult 
       :parts: 1
 
 |
@@ -35,7 +35,7 @@ Full name: **ase2sprkkr.outputs.readers.bsf**
       :toctree:
       :template: custom-class-template.rst
    
-      BsfProcessRunner
+      BsfOutputReader
       BsfResult
    
    

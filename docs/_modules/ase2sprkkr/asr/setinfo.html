@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.setinfo &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -93,21 +93,21 @@
   <h1>Source code for ase2sprkkr.asr.setinfo</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Manually set key-value-pairs for material.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">write_json</span><span class="p">,</span> <span class="n">ASRResult</span>
-<span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
-<span class="kn">import</span> <span class="nn">click</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">write_json</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ast</span><span class="w"> </span><span class="kn">import</span> <span class="n">literal_eval</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">click</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
 
 <div class="viewcode-block" id="KeyValuePair">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.setinfo.KeyValuePair.html#ase2sprkkr.asr.setinfo.KeyValuePair">[docs]</a>
-<span class="k">class</span> <span class="nc">KeyValuePair</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">ParamType</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KeyValuePair</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">ParamType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read atoms object from filename and return Atoms object.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="KeyValuePair.convert">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.setinfo.KeyValuePair.html#ase2sprkkr.asr.setinfo.KeyValuePair.convert">[docs]</a>
-    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert string to a (key, value) tuple.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">value</span>
         <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
@@ -123,7 +123,7 @@
 
 <div class="viewcode-block" id="check_key_value">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.setinfo.check_key_value.html#ase2sprkkr.asr.setinfo.check_key_value">[docs]</a>
-<span class="k">def</span> <span class="nf">check_key_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_key_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check validity of any protected key value pairs.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">protected_keys</span><span class="p">:</span>
         <span class="n">allowed_values</span> <span class="o">=</span> <span class="n">protected_keys</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
@@ -138,7 +138,7 @@
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.setinfo&#39;</span><span class="p">)</span>
 <span class="nd">@argument</span><span class="p">(</span><span class="s1">&#39;key_value_pairs&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;key:value&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
           <span class="nb">type</span><span class="o">=</span><span class="n">KeyValuePair</span><span class="p">())</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">key_value_pairs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">key_value_pairs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set additional key value pairs.</span>
 
 <span class="sd">    These extra key value pairs are stored in info.json.  To set a key</span>

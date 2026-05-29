@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.formalpolarization &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -102,24 +102,24 @@
 <span class="sd">The central recipe of this module is :func:`asr.formalpolarization.main`.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">DictStr</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">DictStr</span><span class="p">,</span> <span class="n">ASRResult</span>
 
 
 <div class="viewcode-block" id="AtomsTooCloseToBoundary">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.AtomsTooCloseToBoundary.html#ase2sprkkr.asr.formalpolarization.AtomsTooCloseToBoundary">[docs]</a>
-<span class="k">class</span> <span class="nc">AtomsTooCloseToBoundary</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AtomsTooCloseToBoundary</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
 
 <div class="viewcode-block" id="get_electronic_polarization_phase">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.get_electronic_polarization_phase.html#ase2sprkkr.asr.formalpolarization.get_electronic_polarization_phase">[docs]</a>
-<span class="k">def</span> <span class="nf">get_electronic_polarization_phase</span><span class="p">(</span><span class="n">calc</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">gpaw.berryphase</span> <span class="kn">import</span> <span class="n">get_berry_phases</span>
-    <span class="kn">from</span> <span class="nn">gpaw.mpi</span> <span class="kn">import</span> <span class="n">SerialCommunicator</span>
-    <span class="kn">from</span> <span class="nn">ase.parallel</span> <span class="kn">import</span> <span class="n">world</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_electronic_polarization_phase</span><span class="p">(</span><span class="n">calc</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.berryphase</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_berry_phases</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.mpi</span><span class="w"> </span><span class="kn">import</span> <span class="n">SerialCommunicator</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">world</span>
 
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="n">SerialCommunicator</span><span class="p">)</span>
 
@@ -141,7 +141,7 @@
 
 <div class="viewcode-block" id="get_atomic_polarization_phase">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.get_atomic_polarization_phase.html#ase2sprkkr.asr.formalpolarization.get_atomic_polarization_phase">[docs]</a>
-<span class="k">def</span> <span class="nf">get_atomic_polarization_phase</span><span class="p">(</span><span class="n">calc</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_atomic_polarization_phase</span><span class="p">(</span><span class="n">calc</span><span class="p">):</span>
     <span class="n">Z_a</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">():</span>
         <span class="k">for</span> <span class="n">ida</span><span class="p">,</span> <span class="n">setup</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">setups</span><span class="o">.</span><span class="n">id_a</span><span class="p">,</span>
@@ -156,7 +156,7 @@
 
 <div class="viewcode-block" id="get_dipole_polarization_phase">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.get_dipole_polarization_phase.html#ase2sprkkr.asr.formalpolarization.get_dipole_polarization_phase">[docs]</a>
-<span class="k">def</span> <span class="nf">get_dipole_polarization_phase</span><span class="p">(</span><span class="n">dipole_v</span><span class="p">,</span> <span class="n">cell_cv</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_dipole_polarization_phase</span><span class="p">(</span><span class="n">dipole_v</span><span class="p">,</span> <span class="n">cell_cv</span><span class="p">):</span>
     <span class="n">B_cv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">cell_cv</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
     <span class="n">dipole_phase_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">B_cv</span><span class="p">,</span> <span class="n">dipole_v</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dipole_phase_c</span></div>
@@ -165,10 +165,10 @@
 
 <div class="viewcode-block" id="get_wavefunctions">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.get_wavefunctions.html#ase2sprkkr.asr.formalpolarization.get_wavefunctions">[docs]</a>
-<span class="k">def</span> <span class="nf">get_wavefunctions</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">calculator</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">gpaw.mpi</span> <span class="kn">import</span> <span class="n">serial_comm</span>
-    <span class="kn">from</span> <span class="nn">ase.calculators.calculator</span> <span class="kn">import</span> <span class="n">get_calculator_class</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_wavefunctions</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">calculator</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.mpi</span><span class="w"> </span><span class="kn">import</span> <span class="n">serial_comm</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_calculator_class</span>
     <span class="n">calcname</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
     <span class="n">calc</span> <span class="o">=</span> <span class="n">get_calculator_class</span><span class="p">(</span><span class="n">calcname</span><span class="p">)(</span><span class="o">**</span><span class="n">calculator</span><span class="p">)</span>
     <span class="n">atoms</span><span class="o">.</span><span class="n">calc</span> <span class="o">=</span> <span class="n">calc</span>
@@ -182,7 +182,7 @@
 
 <div class="viewcode-block" id="distance_to_non_pbc_boundary">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.distance_to_non_pbc_boundary.html#ase2sprkkr.asr.formalpolarization.distance_to_non_pbc_boundary">[docs]</a>
-<span class="k">def</span> <span class="nf">distance_to_non_pbc_boundary</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">distance_to_non_pbc_boundary</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="n">pbc_c</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_pbc</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">pbc_c</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -198,7 +198,7 @@
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.formalpolarization&#39;</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--gpwname&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Formal polarization gpw file name.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--calculator&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Calculator parameters.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">DictStr</span><span class="p">())</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">gpwname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;formalpol.gpw&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">gpwname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;formalpol.gpw&#39;</span><span class="p">,</span>
          <span class="n">calculator</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span>
              <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;gpaw&#39;</span><span class="p">,</span>
              <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;pw&#39;</span><span class="p">,</span> <span class="s1">&#39;ecut&#39;</span><span class="p">:</span> <span class="mi">800</span><span class="p">},</span>
@@ -218,10 +218,10 @@
 <span class="sd">    Calculate the formal polarization geometric phase necesarry for in</span>
 <span class="sd">    the modern theory of polarization.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-    <span class="kn">from</span> <span class="nn">gpaw.mpi</span> <span class="kn">import</span> <span class="n">world</span>
-    <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Bohr</span>
-    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.mpi</span><span class="w"> </span><span class="kn">import</span> <span class="n">world</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohr</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
 
     <span class="n">dist_a</span> <span class="o">=</span> <span class="n">distance_to_non_pbc_boundary</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>

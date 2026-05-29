@@ -1,0 +1,6 @@
+<map id="inheritance2c693d2732" name="inheritance2c693d2732">
+<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.arpes.ArpesOutputReader.html#ase2sprkkr.outputs.readers.arpes.ArpesOutputReader" target="_top" title="ARPES task has no special parser, it just has a special" alt="" coords="168,57,316,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Class, that runs a process and reads its output using the underlying" alt="" coords="5,57,139,85"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.arpes.ArpesResult.html#ase2sprkkr.outputs.readers.arpes.ArpesResult" target="_top" title="ARPES result provides acces to the generated SPC output file" alt="" coords="192,5,292,33"/>
+<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="26,5,118,33"/>
+</map>

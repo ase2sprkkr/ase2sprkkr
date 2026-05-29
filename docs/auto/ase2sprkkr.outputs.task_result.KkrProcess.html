@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KkrProcess &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="KkrProcessRunner" href="ase2sprkkr.outputs.task_result.KkrProcessRunner.html" />
-    <link rel="prev" title="task_result" href="ase2sprkkr.outputs.task_result.html" /> 
+    <link rel="next" title="OutputFileResultValue" href="ase2sprkkr.outputs.task_result.OutputFileResultValue.html" />
+    <link rel="prev" title="KkrOutputReader" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -82,8 +82,10 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.html">sprkkr_output_reader</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.outputs.task_result.html">task_result</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html">KkrOutputReader</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">KkrProcess</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.KkrProcessRunner.html">KkrProcessRunner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.OutputFileResultValue.html">OutputFileResultValue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.ResultValue.html">ResultValue</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.TaskResult.html">TaskResult</a></li>
 </ul>
 </li>
@@ -129,18 +131,18 @@
 <h1>KkrProcess<a class="headerlink" href="#kkrprocess" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.KkrProcess">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.task_result.</span></span><span class="sig-name descname"><span class="pre">KkrProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_reader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coroutine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#KkrProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.KkrProcess" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.task_result.</span></span><span class="sig-name descname"><span class="pre">KkrProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_parser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coroutine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#KkrProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.KkrProcess" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-050ea0dbf9aa1555dc13a13df38e4226ee7f1173.png" alt="Inheritance diagram of ase2sprkkr.outputs.task_result.KkrProcess" usemap="#inheritance0ae6271cd3" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-facf0daf6a3d607e89d272120db9050f4425b648.png" alt="Inheritance diagram of ase2sprkkr.outputs.task_result.KkrProcess" usemap="#inheritance0ae6271cd3" class="inheritance graphviz" /></div>
 <map id="inheritance0ae6271cd3" name="inheritance0ae6271cd3">
-<area shape="rect" id="node1" href="#ase2sprkkr.outputs.task_result.KkrProcess" target="_top" title="task_result.KkrProcess" alt="" coords="5,5,176,31"/>
+<area shape="rect" id="node1" href="#ase2sprkkr.outputs.task_result.KkrProcess" target="_top" title="task_result.KkrProcess" alt="" coords="5,5,175,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.KkrProcess.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_reader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coroutine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#KkrProcess.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.KkrProcess.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_parser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coroutine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#KkrProcess.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.KkrProcess.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -155,7 +157,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.task_result.KkrProcess.run_async">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run_async</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#KkrProcess.run_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.KkrProcess.run_async" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run_async</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/task_result.html#KkrProcess.run_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.task_result.KkrProcess.run_async" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -166,8 +168,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.outputs.task_result.html" class="btn btn-neutral float-left" title="task_result" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.outputs.task_result.KkrProcessRunner.html" class="btn btn-neutral float-right" title="KkrProcessRunner" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.outputs.task_result.KkrOutputReader.html" class="btn btn-neutral float-left" title="KkrOutputReader" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.outputs.task_result.OutputFileResultValue.html" class="btn btn-neutral float-right" title="OutputFileResultValue" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

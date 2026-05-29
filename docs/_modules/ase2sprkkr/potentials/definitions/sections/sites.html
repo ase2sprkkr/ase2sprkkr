@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.potentials.definitions.sections.sites &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/mods.css?v=26f6988d" />
@@ -92,74 +92,104 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.potentials.definitions.sections.sites</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">...potential_definitions</span> <span class="kn">import</span> <span class="n">PotSectionDefinition</span><span class="p">,</span> \
-                                   <span class="n">PotValueDefinition</span>
-<span class="kn">from</span> <span class="nn">...potential_sections</span> <span class="kn">import</span> <span class="n">PotentialSection</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">...potential_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">PotSectionDefinition</span><span class="p">,</span> <span class="n">PotValueDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...potential_sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">PotentialSection</span>
 
-<span class="kn">from</span> <span class="nn">....common.grammar_types</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Table</span>
-<span class="kn">from</span> <span class="nn">....sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">....common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Table</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">....sprkkr.sprkkr_atoms</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<div class="viewcode-block" id="_sections_sites_basscale_after_convert">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites._sections_sites_basscale_after_convert.html#ase2sprkkr.potentials.definitions.sections.sites._sections_sites_basscale_after_convert">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_sections_sites_basscale_after_convert</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">))</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">)</span> <span class="k">else</span> <span class="n">value</span></div>
+
+
+
+<div class="viewcode-block" id="_sections_sites_basscale_condition">
+<a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites._sections_sites_basscale_condition.html#ase2sprkkr.potentials.definitions.sections.sites._sections_sites_basscale_condition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_sections_sites_basscale_condition</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">value</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">else</span> <span class="s2">&quot;BASSCALE values should not be zero (with the exception that [0,0,0] is considered as valid and replaced by [1,1,1]&quot;</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="SitesSection">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites.SitesSection.html#ase2sprkkr.potentials.definitions.sections.sites.SitesSection">[docs]</a>
-<span class="k">class</span> <span class="nc">SitesSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; This section retrieves the atomic positions and</span>
-<span class="sd">      it creates (during reading) the ASE Atoms object &quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SitesSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This section retrieves the atomic positions and</span>
+<span class="sd">    it creates (during reading) the ASE Atoms object&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SitesSection._depends_on">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites.SitesSection.html#ase2sprkkr.potentials.definitions.sections.sites.SitesSection._depends_on">[docs]</a>
-  <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;LATTICE&#39;</span><span class="p">]</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;LATTICE&quot;</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="SitesSection._set_from_atoms">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites.SitesSection.html#ase2sprkkr.potentials.definitions.sections.sites.SitesSection._set_from_atoms">[docs]</a>
-  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">):</span>
-      <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;SCALED_ATOMIC_POSITIONS&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
-          <span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">write_io_data</span><span class="p">[</span><span class="s1">&#39;sites_order&#39;</span><span class="p">]]</span> <span class="o">/</span> <span class="p">(</span> <span class="n">write_io_data</span><span class="p">[</span><span class="s1">&#39;lattice.alat&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;BASSCALE&#39;</span><span class="p">]())</span>
-      <span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;SCALED_ATOMIC_POSITIONS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+            <span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">write_io_data</span><span class="p">[</span><span class="s2">&quot;sites_order&quot;</span><span class="p">]]</span> <span class="o">/</span> <span class="p">(</span><span class="n">write_io_data</span><span class="p">[</span><span class="s2">&quot;lattice.alat&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;BASSCALE&quot;</span><span class="p">]())</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SitesSection._update_atoms">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites.SitesSection.html#ase2sprkkr.potentials.definitions.sections.sites.SitesSection._update_atoms">[docs]</a>
-  <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">):</span>
-      <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;SCALED_ATOMIC_POSITIONS&#39;</span><span class="p">]()</span> <span class="o">*</span> \
-            <span class="p">(</span><span class="n">read_io_data</span><span class="p">[</span><span class="s1">&#39;lattice.alat&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;BASSCALE&#39;</span><span class="p">]())</span>
-      <span class="k">try</span><span class="p">:</span>
-         <span class="k">if</span> <span class="n">atoms</span><span class="p">:</span>
-            <span class="n">atoms</span><span class="o">.</span><span class="n">set_positions</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
-            <span class="k">return</span>
-      <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-         <span class="k">pass</span>
-      <span class="n">atoms</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="p">(</span><span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span><span class="p">,</span> <span class="n">potential</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">)</span>
-      <span class="n">read_io_data</span><span class="o">.</span><span class="n">update_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">atoms</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">):</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;SCALED_ATOMIC_POSITIONS&quot;</span><span class="p">]()</span> <span class="o">*</span> <span class="p">(</span><span class="n">read_io_data</span><span class="p">[</span><span class="s2">&quot;lattice.alat&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;BASSCALE&quot;</span><span class="p">]())</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">atoms</span><span class="p">:</span>
+                <span class="n">atoms</span><span class="o">.</span><span class="n">set_positions</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+                <span class="k">return</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">atoms</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="p">(</span><span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">)</span>
+        <span class="n">read_io_data</span><span class="o">.</span><span class="n">update_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">atoms</span></div>
 </div>
 
 
 
 <div class="viewcode-block" id="SitesSectionDefinition">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition">[docs]</a>
-<span class="k">class</span> <span class="nc">SitesSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
-
+<span class="k">class</span><span class="w"> </span><span class="nc">SitesSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
 <div class="viewcode-block" id="SitesSectionDefinition.__init__">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition.__init__">[docs]</a>
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;SITES&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-      <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
-      <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
-          <span class="n">V</span><span class="p">(</span><span class="s1">&#39;CARTESIAN&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">fixed_value</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-          <span class="c1"># V(&#39;BASSCALE&#39;, Array(float, length=3), fixed_value=[1.,1.,1.]),</span>
-          <span class="n">V</span><span class="p">(</span><span class="s1">&#39;BASSCALE&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                  <span class="n">after_convert</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">,</span><span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">))</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">v</span><span class="o">==</span><span class="mf">0.</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span><span class="p">,</span>
-                  <span class="n">condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">v</span><span class="o">!=</span><span class="mf">0.</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;BASSCALE values should not be zero (with the exception that [0,0,0] is considered as valid and replaced by [1,1,1]&quot;</span>
-          <span class="p">)),</span>
-          <span class="n">V</span><span class="p">(</span><span class="s1">&#39;SCALED_ATOMIC_POSITIONS&#39;</span><span class="p">,</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;QBAS(X)&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="s1">&#39;QBAS(Y)&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="s1">&#39;QBAS(Z)&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">},</span> <span class="n">numbering</span><span class="o">=</span><span class="s1">&#39;IQ&#39;</span><span class="p">,</span><span class="n">free_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;&gt;22.14f&#39;</span><span class="p">,</span> <span class="n">numbering_format</span><span class="o">=</span><span class="s1">&#39;&gt;5&#39;</span><span class="p">)),</span>
-      <span class="p">]</span>
-      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="n">has_hidden_members</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;SITES&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;CARTESIAN&quot;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">fixed_value</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="c1"># V(&#39;BASSCALE&#39;, Array(float, length=3), fixed_value=[1.,1.,1.]),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">&quot;BASSCALE&quot;</span><span class="p">,</span>
+                <span class="n">default_value</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">Array</span><span class="p">(</span>
+                    <span class="nb">float</span><span class="p">,</span>
+                    <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                    <span class="n">after_convert</span><span class="o">=</span><span class="n">_sections_sites_basscale_after_convert</span><span class="p">,</span>
+                    <span class="n">condition</span><span class="o">=</span><span class="n">_sections_sites_basscale_condition</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">&quot;SCALED_ATOMIC_POSITIONS&quot;</span><span class="p">,</span>
+                <span class="n">Table</span><span class="p">(</span>
+                    <span class="p">{</span><span class="s2">&quot;QBAS(X)&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">&quot;QBAS(Y)&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">&quot;QBAS(Z)&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">},</span>
+                    <span class="n">numbering</span><span class="o">=</span><span class="s2">&quot;IQ&quot;</span><span class="p">,</span>
+                    <span class="n">free_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;&gt;22.14f&quot;</span><span class="p">,</span>
+                    <span class="n">numbering_format</span><span class="o">=</span><span class="s2">&quot;&gt;5&quot;</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="n">has_hidden_members</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
-  <span class="n">result_class</span> <span class="o">=</span> <span class="n">SitesSection</span></div>
+    <span class="n">result_class</span> <span class="o">=</span> <span class="n">SitesSection</span></div>
 
 
 

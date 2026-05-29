@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.potentials.definitions.sections.types &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/mods.css?v=26f6988d" />
@@ -92,38 +92,41 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.potentials.definitions.sections.types</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">...potential_definitions</span> <span class="kn">import</span> <span class="n">PotSectionDefinition</span><span class="p">,</span> \
-                                   <span class="n">PotValueDefinition</span>
-<span class="kn">from</span> <span class="nn">...potential_sections</span> <span class="kn">import</span> <span class="n">UniqueListSection</span>
-<span class="kn">from</span> <span class="nn">....common.grammar_types</span> <span class="kn">import</span> <span class="n">Table</span>
-<span class="kn">from</span> <span class="nn">....sprkkr.atomic_types</span> <span class="kn">import</span> <span class="n">AtomicType</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">...potential_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">PotSectionDefinition</span><span class="p">,</span> <span class="n">PotValueDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...potential_sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">UniqueListSection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">....common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">....sprkkr.atomic_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">AtomicType</span>
 
 
 <div class="viewcode-block" id="TypesSection">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.types.TypesSection.html#ase2sprkkr.potentials.definitions.sections.types.TypesSection">[docs]</a>
-<span class="k">class</span> <span class="nc">TypesSection</span><span class="p">(</span><span class="n">UniqueListSection</span><span class="p">):</span>
-  <span class="n">_value_name</span> <span class="o">=</span> <span class="s1">&#39;types&#39;</span>
-  <span class="n">_value_class</span> <span class="o">=</span> <span class="n">AtomicType</span></div>
+<span class="k">class</span><span class="w"> </span><span class="nc">TypesSection</span><span class="p">(</span><span class="n">UniqueListSection</span><span class="p">):</span>
+    <span class="n">_value_name</span> <span class="o">=</span> <span class="s2">&quot;types&quot;</span>
+    <span class="n">_value_class</span> <span class="o">=</span> <span class="n">AtomicType</span></div>
 
 
 
 <div class="viewcode-block" id="TypesSectionDefinition">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.types.TypesSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.types.TypesSectionDefinition">[docs]</a>
-<span class="k">class</span> <span class="nc">TypesSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
-
+<span class="k">class</span><span class="w"> </span><span class="nc">TypesSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
 <div class="viewcode-block" id="TypesSectionDefinition.__init__">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.types.TypesSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.types.TypesSectionDefinition.__init__">[docs]</a>
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;TYPES&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-      <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
-      <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
-          <span class="n">V</span><span class="p">(</span><span class="s1">&#39;DATA&#39;</span><span class="p">,</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;TXT&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;ZT&#39;</span> <span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;NCORT&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;NVALT&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;NSEMCORSHLT&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">},</span>
-                          <span class="n">numbering</span><span class="o">=</span><span class="s1">&#39;IT&#39;</span><span class="p">,</span> <span class="n">free_header</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-          <span class="p">),</span>
-      <span class="p">]</span>
-      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="n">has_hidden_members</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;TYPES&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">&quot;DATA&quot;</span><span class="p">,</span>
+                <span class="n">Table</span><span class="p">(</span>
+                    <span class="p">{</span><span class="s2">&quot;TXT&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;ZT&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;NCORT&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;NVALT&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;NSEMCORSHLT&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">},</span>
+                    <span class="n">numbering</span><span class="o">=</span><span class="s2">&quot;IT&quot;</span><span class="p">,</span>
+                    <span class="n">free_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="n">has_hidden_members</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
-  <span class="n">result_class</span> <span class="o">=</span> <span class="n">TypesSection</span></div>
+    <span class="n">result_class</span> <span class="o">=</span> <span class="n">TypesSection</span></div>
 
 
 

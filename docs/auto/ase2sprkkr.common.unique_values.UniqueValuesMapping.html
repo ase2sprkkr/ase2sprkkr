@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>UniqueValuesMapping &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -152,26 +152,26 @@
 <h1>UniqueValuesMapping<a class="headerlink" href="#uniquevaluesmapping" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.unique_values.UniqueValuesMapping">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.unique_values.</span></span><span class="sig-name descname"><span class="pre">UniqueValuesMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_to_class_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/unique_values.html#UniqueValuesMapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.unique_values.</span></span><span class="sig-name descname"><span class="pre">UniqueValuesMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_to_class_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/unique_values.html#UniqueValuesMapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping" title="Link to this definition"></a></dt>
 <dd><p>A class, that can map a collection of (possible non-unique) values to a set
 of unique identifiers. It effectively makes the classes of equivalence
 between indexes of the input array.</p>
 <p>The instances of the class can be merged to distinct the values, that are
 the same according to one criterion, but distinct on the other.</p>
-<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">mapping</span>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">mapping</span>
 <span class="go">array([1, 2, 1], dtype=int32)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span><span class="o">.</span><span class="n">mapping</span>
 <span class="go">array([1, 1, 2], dtype=int32)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">value_to_class_id</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">value_to_class_id</span>
 <span class="go">{1: 1, 4: 2}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">merge</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">mapping</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">merge</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">mapping</span>
 <span class="go">array([1, 2, 3, 1], dtype=int32)</span>
 </pre></div>
 </div>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-09009d692c121d61f98934be66914d9ff408aef0.png" alt="Inheritance diagram of ase2sprkkr.common.unique_values.UniqueValuesMapping" usemap="#inheritance924ff828d6" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-9d9127da8ca9985b956e7e82b64dfd853dab5cea.png" alt="Inheritance diagram of ase2sprkkr.common.unique_values.UniqueValuesMapping" usemap="#inheritance924ff828d6" class="inheritance graphviz" /></div>
 <map id="inheritance924ff828d6" name="inheritance924ff828d6">
-<area shape="rect" id="node1" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping" target="_top" title="A class, that can map a collection of (possible non&#45;unique) values to a set" alt="" coords="5,5,271,31"/>
+<area shape="rect" id="node1" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping" target="_top" title="A class, that can map a collection of (possible non&#45;unique) values to a set" alt="" coords="5,5,270,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -264,7 +264,7 @@ of class members indexes.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.unique_values.UniqueValuesMapping.from_values">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/unique_values.html#UniqueValuesMapping.from_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping.from_values" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/unique_values.html#UniqueValuesMapping.from_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping.from_values" title="Link to this definition"></a></dt>
 <dd><p>Create equivalence-classes mapping. Unlike the constructor,
 this method tags the values by integers and also compute the reverse
 (value to equivalence class) mapping.</p>
@@ -286,13 +286,13 @@ this method tags the values by integers and also compute the reverse
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.unique_values.UniqueValuesMapping._create_mapping">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_create_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_from=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'numpy.int32'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/unique_values.html#UniqueValuesMapping._create_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping._create_mapping" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_create_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_from=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'numpy.int32'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/unique_values.html#UniqueValuesMapping._create_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping._create_mapping" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
 <li><p><strong>mapping</strong> (<em>np.ndarray</em>) – maps the value indexes to equivalence class id</p></li>
 <li><p><strong>reverse</strong> (<em>dict</em>) – maps equivalence classes to value indexes</p></li>
-<li><p><em>.. doctest::</em> – &gt;&gt;&gt; UniqueValuesMapping._create_mapping([1.,4.,1.])
+<li><p><em>.. doctest::</em> – &gt;&gt;&gt; UniqueValuesMapping._create_mapping([1.0, 4.0, 1.0])
 (array([1, 2, 1], dtype=int32), {1.0: 1, 4.0: 2})</p></li>
 </ul>
 </p>
@@ -314,15 +314,15 @@ this method tags the values by integers and also compute the reverse
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mapping</strong> (<a class="reference internal" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping" title="ase2sprkkr.common.unique_values.UniqueValuesMapping"><em>UniqueValuesMapping</em></a><em> | </em><em>Iterable</em>) – The other mapping can be given either by instance of this class, or just by any iterable (that returns equivalence class names for the items)</p></li>
-<li><p><strong>doctest::</strong> (<em>..</em>) – <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<li><p><strong>doctest::</strong> (<em>..</em>) – <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="go">False</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 <span class="go">False</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
 <span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">(</span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UniqueValuesMapping</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">(</span><span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
 <span class="go">True</span>
 </pre></div>
 </div>
@@ -337,7 +337,7 @@ this method tags the values by integers and also compute the reverse
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.unique_values.UniqueValuesMapping.are_equivalent">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">are_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/unique_values.html#UniqueValuesMapping.are_equivalent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping.are_equivalent" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">are_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/unique_values.html#UniqueValuesMapping.are_equivalent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping.are_equivalent" title="Link to this definition"></a></dt>
 <dd><p>Return, whether the two mappings are equal, regardless the actual “names” of the equivalence classes.</p>
 <p>See <code class="xref py py-meth docutils literal notranslate"><span class="pre">is_equivalent</span></code></p>
 <dl class="field-list simple">
@@ -372,10 +372,11 @@ If False and the names are already integers in a numpy array, do nothing.</p></l
 It holds, that <code class="docutils literal notranslate"><span class="pre">mappind[index]</span> <span class="pre">==</span> <span class="pre">equivalence_class</span></code></p></li>
 <li><p><strong>reverse</strong> (<em>dict</em>) – Dict <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">equivalence_class</span> <span class="pre">:</span> <span class="pre">value</span> <span class="pre">}</span></code></p></li>
 <li><p><em>.. doctest::</em> – #In old numpy the following line would fail, new numpy prints the types of scalars
-&gt;&gt;&gt; if np.__version__ &gt; ‘2.0’: np.set_printoptions(legacy = ‘1.25’)
-&gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized()
+&gt;&gt;&gt; if np.__version__ &gt; “2.0”:
+…     np.set_printoptions(legacy=”1.25”)
+&gt;&gt;&gt; UniqueValuesMapping.from_values([(0, 2), (0, 3), (0, 2)]).normalized()
 (array([1, 2, 1], dtype=int32), {1: 1, 2: 2})
-&gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized(start_from=0)
+&gt;&gt;&gt; UniqueValuesMapping.from_values([(0, 2), (0, 3), (0, 2)]).normalized(start_from=0)
 (array([0, 1, 0], dtype=int32), {1: 0, 2: 1})</p></li>
 </ul>
 </p>
@@ -401,11 +402,11 @@ any integer type will be sufficient.</p></li>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><em>unique_values_mapping</em> – Return self.</p></li>
-<li><p><em>.. doctest::</em> – &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().mapping
+<li><p><em>.. doctest::</em> – &gt;&gt;&gt; UniqueValuesMapping.from_values([(0, 2), (0, 3), (0, 2)]).normalize().mapping
 array([1, 2, 1], dtype=int32)
-&gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().value_to_class_id[(0,3)]
+&gt;&gt;&gt; UniqueValuesMapping.from_values([(0, 2), (0, 3), (0, 2)]).normalize().value_to_class_id[(0, 3)]
 2
-&gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize(start_from=0).mapping
+&gt;&gt;&gt; UniqueValuesMapping.from_values([(0, 2), (0, 3), (0, 2)]).normalize(start_from=0).mapping
 array([0, 1, 0], dtype=int32)</p></li>
 </ul>
 </p>

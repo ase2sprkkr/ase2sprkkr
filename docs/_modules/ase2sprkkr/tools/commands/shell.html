@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.tools.commands.shell &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -95,85 +95,102 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Opening the ASE2SPRKKR output files and/or scripts in the shell or Jupyter notebook</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">__package__</span><span class="p">:</span>
-  <span class="n">__package__</span> <span class="o">=</span> <span class="s1">&#39;ase2sprkkr.tools.commands&#39;</span>
+    <span class="n">__package__</span> <span class="o">=</span> <span class="s2">&quot;ase2sprkkr.tools.commands&quot;</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
 
-<span class="kn">from</span> <span class="nn">...common.tools</span> <span class="kn">import</span> <span class="n">parse_tuple_function</span><span class="p">,</span> <span class="n">parse_named_option</span><span class="p">,</span> \
-        <span class="n">append_id_to_filename</span><span class="p">,</span> <span class="n">parse_inches</span><span class="p">,</span> <span class="n">main</span> <span class="c1"># NOQA</span>
-<span class="kn">from</span> <span class="nn">...common.lazy_string</span> <span class="kn">import</span> <span class="n">LazyString</span>      <span class="c1"># NOQA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span>  <span class="c1"># NOQA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.lazy_string</span><span class="w"> </span><span class="kn">import</span> <span class="n">LazyString</span>  <span class="c1"># NOQA</span>
 
 
 <span class="nd">@LazyString</span>
-<span class="k">def</span> <span class="nf">description</span><span class="p">():</span>
-    <span class="kn">from</span> <span class="nn">...output_files.output_files</span> <span class="kn">import</span> <span class="n">OutputFile</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="s1">&#39;The type of the file is guessed from the content of the file and from the extension. The currently supported files are: </span><span class="se">\n</span><span class="s1">&#39;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">description</span><span class="p">():</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">...output_files.output_files</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutputFile</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;The type of the file is guessed from the content of the file and from the extension. The currently supported files are: </span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">defs</span> <span class="o">=</span> <span class="n">OutputFile</span><span class="o">.</span><span class="n">definitions</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-    <span class="n">out</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">info</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">defs</span><span class="p">))</span>
+    <span class="n">out</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">defs</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">out</span>
 
 
-<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Open SPR-KKR output files in a Python shell or Jupyter notebook&#39;</span>
+<span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Open SPR-KKR output files in a Python shell or Jupyter notebook&quot;</span>
+
 
 <div class="viewcode-block" id="parser">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.shell.parser.html#ase2sprkkr.tools.commands.shell.parser">[docs]</a>
-<span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SPR-KKR output file name (see the supported files above).&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-j&#39;</span><span class="p">,</span> <span class="s1">&#39;--jupyter&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Open Jupyter notebook.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--example&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Open and run the example given by number. The example files will be copied to the directory given by -d or to a temp directory.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--directory&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Directory, where to copy the example. Use &quot;.&quot; for the current directory.&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--save&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Save the script/Jupyter notebook.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--run&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Execute the notebook before saving and opening Jupyter notebook.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span></div>
+<span class="k">def</span><span class="w"> </span><span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;SPR-KKR output file name (see the supported files above).&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[]</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-j&quot;</span><span class="p">,</span> <span class="s2">&quot;--jupyter&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Open Jupyter notebook.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-D&quot;</span><span class="p">,</span> <span class="s2">&quot;--pdb&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Run the command inside pdb&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-e&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--example&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Open and run the example given by number. The example files will be copied to the directory given by -d or to a temp directory.&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;--directory&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Directory, where to copy the example. Use &quot;.&quot; for the current directory.&#39;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--save&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Save the script/Jupyter notebook.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-r&quot;</span><span class="p">,</span> <span class="s2">&quot;--run&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Execute the notebook before saving and opening Jupyter notebook.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="run">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.shell.run.html#ase2sprkkr.tools.commands.shell.run">[docs]</a>
-<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-  <span class="kn">from</span> <span class="nn">...gui.shell</span> <span class="kn">import</span> <span class="n">Python</span><span class="p">,</span> <span class="n">JupyterLab</span>
-  <span class="kn">import</span> <span class="nn">tempfile</span>
-  <span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">global_args</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">...gui.shell</span><span class="w"> </span><span class="kn">import</span> <span class="n">Python</span><span class="p">,</span> <span class="n">JupyterLab</span><span class="p">,</span> <span class="n">Pdb</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">...common.directory</span><span class="w"> </span><span class="kn">import</span> <span class="n">Directory</span>
 
-  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">jupyter</span><span class="p">:</span>
-    <span class="n">shell</span> <span class="o">=</span> <span class="n">JupyterLab</span>
-    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">run</span> <span class="p">}</span>
-  <span class="k">else</span><span class="p">:</span>
-    <span class="n">shell</span> <span class="o">=</span> <span class="n">Python</span>
-  <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
-  <span class="n">shell</span> <span class="o">=</span> <span class="n">shell</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">jupyter</span><span class="p">:</span>
+        <span class="n">shell</span> <span class="o">=</span> <span class="n">JupyterLab</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;run&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">run</span><span class="p">}</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">pdb</span><span class="p">:</span>
+        <span class="n">shell</span> <span class="o">=</span> <span class="n">Pdb</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">shell</span> <span class="o">=</span> <span class="n">Python</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">shell</span> <span class="o">=</span> <span class="n">shell</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-  <span class="n">full_path</span> <span class="o">=</span> <span class="kc">True</span>
-  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
-      <span class="n">dire</span> <span class="o">=</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">nullcontext</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
-  <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">example</span><span class="p">:</span>
-      <span class="n">dire</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span>
-  <span class="k">else</span><span class="p">:</span>
-      <span class="n">full_path</span> <span class="o">=</span> <span class="kc">False</span>
-      <span class="n">dire</span> <span class="o">=</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">nullcontext</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">change_dir</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
+        <span class="n">dire</span> <span class="o">=</span> <span class="n">Directory</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">example</span><span class="p">:</span>
+        <span class="n">dire</span> <span class="o">=</span> <span class="n">Directory</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">change_dir</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">dire</span> <span class="o">=</span> <span class="n">Directory</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
-  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-      <span class="k">if</span> <span class="n">full_path</span><span class="p">:</span>
-          <span class="n">i</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-      <span class="n">shell</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">change_dir</span><span class="p">:</span>
+        <span class="n">cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">change_dir</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">cwd</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">shell</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 
-  <span class="k">with</span> <span class="n">dire</span> <span class="k">as</span> <span class="n">dr</span><span class="p">:</span>
-      <span class="k">if</span> <span class="n">dr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-          <span class="n">shell</span><span class="o">.</span><span class="n">change_working_dir</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">dire</span> <span class="k">as</span> <span class="n">dr</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">example</span><span class="p">:</span>
+            <span class="n">shell</span><span class="o">.</span><span class="n">run_example</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">example</span><span class="p">,</span> <span class="n">dr</span><span class="p">)</span>
 
-      <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">example</span><span class="p">:</span>
-          <span class="n">shell</span><span class="o">.</span><span class="n">run_example</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">example</span><span class="p">,</span> <span class="n">dr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">save</span><span class="p">:</span>
+            <span class="n">shell</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">save</span><span class="p">)</span>
 
-      <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">save</span><span class="p">:</span>
-          <span class="n">shell</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">save</span><span class="p">)</span>
+        <span class="n">shell</span><span class="o">.</span><span class="n">open</span><span class="p">()</span></div>
 
-      <span class="n">shell</span><span class="o">.</span><span class="n">open</span><span class="p">()</span></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">(</span> <span class="nb">globals</span><span class="p">()</span> <span class="p">)</span>
+    <span class="n">main</span><span class="p">(</span><span class="nb">globals</span><span class="p">())</span>
 </pre></div>
 
            </div>

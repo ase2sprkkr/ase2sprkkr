@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>output_files_definitions &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -84,6 +84,8 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.output_file_header.html">output_file_header</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.BlankSeparator.html">BlankSeparator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition.html">OutputFileDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.OutputFileSection.html">OutputFileSection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.OutputFileSectionDefinition.html">OutputFileSectionDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.html">OutputFileValueDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.Separator.html">Separator</a></li>
 </ul>
@@ -130,21 +132,32 @@
 <h1>output_files_definitions<a class="headerlink" href="#output-files-definitions" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.output_files.output_files_definitions</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-738159c7b3e2403d0e4dfc45d29c64e96949d9a0.png" alt="Inheritance diagram of ase2sprkkr.output_files.output_files_definitions.BlankSeparator, ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition, ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition, ase2sprkkr.output_files.output_files_definitions.Separator" usemap="#inheritance74baad42c6" class="inheritance graphviz" /></div>
-<map id="inheritance74baad42c6" name="inheritance74baad42c6">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="5,68,105,90"/>
-<area shape="rect" id="node9" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="130,47,253,68"/>
-<area shape="rect" id="node13" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.common.configuration_definitions.VirtualDefinition" target="_top" title="Base class for a definition, that do not have value, just control" alt="" coords="137,89,247,111"/>
-<area shape="rect" id="node2" href="ase2sprkkr.output_files.output_files_definitions.BlankSeparator.html#ase2sprkkr.output_files.output_files_definitions.BlankSeparator" target="_top" title="A special (hidden) value, that appears in a output file header" alt="" coords="467,89,572,111"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.common.configuration_definitions.SeparatorDefinition" target="_top" title="Basic class for separators" alt="" coords="279,89,405,111"/>
-<area shape="rect" id="node12" href="ase2sprkkr.output_files.output_files_definitions.Separator.html#ase2sprkkr.output_files.output_files_definitions.Separator" target="_top" title="A special (hidden) value, that appears in a output file header" alt="" coords="483,131,556,153"/>
-<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition" target="_top" title="The class for the configuration files (the root nodes of the configuration)." alt="" coords="634,5,800,26"/>
-<area shape="rect" id="node10" href="ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition.html#ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition" target="_top" title="This class describes the format of one" alt="" coords="825,5,955,26"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="433,5,606,26"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="279,5,405,26"/>
-<area shape="rect" id="node7" href="ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition" target="_top" title="Definition o a configuration value, used in SPRKKR configuration file." alt="" coords="430,47,608,68"/>
-<area shape="rect" id="node11" href="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.html#ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition" target="_top" title="This class describes the format of one value of" alt="" coords="636,47,797,68"/>
-<area shape="rect" id="node8" href="ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" target="_top" title="ValueDefinition" alt="" coords="290,47,394,68"/>
+<div class="graphviz"><img src="../_images/inheritance-9881050ab8de3516f5e539be355383bbfa69ec7d.png" alt="Inheritance diagram of ase2sprkkr.output_files.output_files_definitions.BlankSeparator, ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition, ase2sprkkr.output_files.output_files_definitions.OutputFileSection, ase2sprkkr.output_files.output_files_definitions.OutputFileSectionDefinition, ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition, ase2sprkkr.output_files.output_files_definitions.Separator" usemap="#inheritance0b0266a40f" class="inheritance graphviz" /></div>
+<map id="inheritance0b0266a40f" name="inheritance0b0266a40f">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="101,177,236,195"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="256,177,370,195"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="6,177,78,195"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="4,91,81,109"/>
+<area shape="rect" id="node18" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="121,73,216,91"/>
+<area shape="rect" id="node24" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.common.configuration_definitions.VirtualDefinition" target="_top" title="Base class for a definition, that do not have value, just control" alt="" coords="126,108,211,126"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="425,177,492,195"/>
+<area shape="rect" id="node12" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="596,177,644,195"/>
+<area shape="rect" id="node6" href="ase2sprkkr.output_files.output_files_definitions.BlankSeparator.html#ase2sprkkr.output_files.output_files_definitions.BlankSeparator" target="_top" title="A special (hidden) value, that appears in a output file header" alt="" coords="418,108,499,126"/>
+<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.common.configuration_definitions.SeparatorDefinition" target="_top" title="Basic class for separators" alt="" coords="264,108,362,126"/>
+<area shape="rect" id="node23" href="ase2sprkkr.output_files.output_files_definitions.Separator.html#ase2sprkkr.output_files.output_files_definitions.Separator" target="_top" title="A special (hidden) value, that appears in a output file header" alt="" coords="431,142,487,161"/>
+<area shape="rect" id="node8" href="ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition" target="_top" title="The class for the configuration files (the root nodes of the configuration)." alt="" coords="556,4,685,22"/>
+<area shape="rect" id="node19" href="ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition.html#ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition" target="_top" title="This class describes the format of one" alt="" coords="729,4,830,22"/>
+<area shape="rect" id="node9" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="392,4,526,22"/>
+<area shape="rect" id="node10" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="264,38,362,57"/>
+<area shape="rect" id="node15" href="ase2sprkkr.common.container_definitions.SectionDefinition.html#ase2sprkkr.common.container_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="415,38,503,57"/>
+<area shape="rect" id="node11" href="ase2sprkkr.sprkkr.configuration.ConfigurationSection.html#ase2sprkkr.sprkkr.configuration.ConfigurationSection" target="_top" title="Configuration section to be used in SPRKKR configuration files" alt="" coords="727,159,832,178"/>
+<area shape="rect" id="node20" href="ase2sprkkr.output_files.output_files_definitions.OutputFileSection.html#ase2sprkkr.output_files.output_files_definitions.OutputFileSection" target="_top" title="OutputFileSection" alt="" coords="866,159,956,178"/>
+<area shape="rect" id="node13" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="ConfigurationSectionTrait" alt="" coords="559,142,682,161"/>
+<area shape="rect" id="node14" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition" target="_top" title="Default class for definitions of SPRKKR configuration files&#39; sections" alt="" coords="547,38,694,57"/>
+<area shape="rect" id="node21" href="ase2sprkkr.output_files.output_files_definitions.OutputFileSectionDefinition.html#ase2sprkkr.output_files.output_files_definitions.OutputFileSectionDefinition" target="_top" title="OutputFileSectionDefinition" alt="" coords="713,38,846,57"/>
+<area shape="rect" id="node16" href="ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition" target="_top" title="Definition o a configuration value, used in SPRKKR configuration file." alt="" coords="390,73,528,91"/>
+<area shape="rect" id="node22" href="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.html#ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition" target="_top" title="This class describes the format of one value of" alt="" coords="558,73,683,91"/>
+<area shape="rect" id="node17" href="ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" target="_top" title="ValueDefinition" alt="" coords="273,73,353,91"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -168,6 +181,12 @@
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition.html#ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition" title="ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputFileDefinition</span></code></a>(name[, members])</p></td>
 <td><p>This class describes the format of one value of a standard potential section</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.OutputFileSection.html#ase2sprkkr.output_files.output_files_definitions.OutputFileSection" title="ase2sprkkr.output_files.output_files_definitions.OutputFileSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputFileSection</span></code></a>(definition[, container])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.OutputFileSectionDefinition.html#ase2sprkkr.output_files.output_files_definitions.OutputFileSectionDefinition" title="ase2sprkkr.output_files.output_files_definitions.OutputFileSectionDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputFileSectionDefinition</span></code></a>(name[, members, ...])</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.html#ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition" title="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputFileValueDefinition</span></code></a>(name[, type, ...])</p></td>
 <td><p>This class describes the format of one value of a header of an output file</p></td>

@@ -22,6 +22,8 @@ Full name: **ase2sprkkr.input\_parameters.definitions.torque**
       :toctree:
       :template: custom-base-template.rst
    
+      _torque_mode_warning_condition
+      _torque_nonmag_warning_condition
       input_parameters
    
    

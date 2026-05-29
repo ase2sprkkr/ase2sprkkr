@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>definitions &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -83,8 +83,9 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.OutputFile.html">OutputFile</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.UnknownDataValue.html">UnknownDataValue</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.bsf.html">bsf</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.dij.html">dij</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.dos.html">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.jxc.html">jxc</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.rat.html">rat</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.spc.html">spc</a></li>
 </ul>
 </li>
@@ -132,21 +133,21 @@
 <h1>definitions<a class="headerlink" href="#definitions" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.output_files.definitions</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-d74a87af7247d31e92793736b4d6a25ccf348a11.png" alt="Inheritance diagram of ase2sprkkr.output_files.definitions.Arithmetic, ase2sprkkr.output_files.definitions.CommonOutputFile, ase2sprkkr.output_files.definitions.OutputFile, ase2sprkkr.output_files.definitions.UnknownDataValue" usemap="#inheritanceee83c9911f" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-35987044f33ea3b9fc34b920ea322ca04e67c94c.png" alt="Inheritance diagram of ase2sprkkr.output_files.definitions.Arithmetic, ase2sprkkr.output_files.definitions.CommonOutputFile, ase2sprkkr.output_files.definitions.OutputFile, ase2sprkkr.output_files.definitions.UnknownDataValue" usemap="#inheritanceee83c9911f" class="inheritance graphviz" /></div>
 <map id="inheritanceee83c9911f" name="inheritanceee83c9911f">
-<area shape="rect" id="node1" href="ase2sprkkr.output_files.definitions.Arithmetic.html#ase2sprkkr.output_files.definitions.Arithmetic" target="_top" title="Arithmetic" alt="" coords="12,107,88,129"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="121,46,292,67"/>
-<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="317,46,461,67"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="4,66,96,87"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption" target="_top" title="A base placeholder for a leaf element of a grammar file," alt="" coords="166,87,247,109"/>
-<area shape="rect" id="node11" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" target="_top" title="Class for one option (a configuration value) of SPRKKR &#45; either to" alt="" coords="359,87,419,109"/>
-<area shape="rect" id="node5" href="ase2sprkkr.output_files.definitions.CommonOutputFile.html#ase2sprkkr.output_files.definitions.CommonOutputFile" target="_top" title="CommonOutputFile" alt="" coords="831,6,956,27"/>
-<area shape="rect" id="node6" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="688,26,799,47"/>
-<area shape="rect" id="node12" href="ase2sprkkr.output_files.definitions.OutputFile.html#ase2sprkkr.output_files.definitions.OutputFile" target="_top" title="Objects of this class holds datas of an output file" alt="" coords="856,47,931,68"/>
-<area shape="rect" id="node8" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="486,46,656,67"/>
-<area shape="rect" id="node9" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="ConfigurationSectionTrait" alt="" coords="493,4,648,26"/>
-<area shape="rect" id="node10" href="ase2sprkkr.sprkkr.configuration.ConfigurationValue.html#ase2sprkkr.sprkkr.configuration.ConfigurationValue" target="_top" title="Value (option) in a SPRKKR configuration file." alt="" coords="510,87,632,109"/>
-<area shape="rect" id="node13" href="ase2sprkkr.output_files.definitions.UnknownDataValue.html#ase2sprkkr.output_files.definitions.UnknownDataValue" target="_top" title="UnknownDataValue" alt="" coords="680,87,807,109"/>
+<area shape="rect" id="node1" href="ase2sprkkr.output_files.definitions.Arithmetic.html#ase2sprkkr.output_files.definitions.Arithmetic" target="_top" title="Arithmetic" alt="" coords="13,114,88,137"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="121,48,292,72"/>
+<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="317,48,461,72"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="4,70,96,93"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption" target="_top" title="A base placeholder for a leaf element of a grammar file," alt="" coords="166,92,247,116"/>
+<area shape="rect" id="node11" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" target="_top" title="Class for one option (a configuration value) of SPRKKR &#45; either to" alt="" coords="359,92,419,116"/>
+<area shape="rect" id="node5" href="ase2sprkkr.output_files.definitions.CommonOutputFile.html#ase2sprkkr.output_files.definitions.CommonOutputFile" target="_top" title="CommonOutputFile" alt="" coords="831,6,956,29"/>
+<area shape="rect" id="node6" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="688,27,799,50"/>
+<area shape="rect" id="node12" href="ase2sprkkr.output_files.definitions.OutputFile.html#ase2sprkkr.output_files.definitions.OutputFile" target="_top" title="Objects of this class holds datas of an output file" alt="" coords="856,49,931,73"/>
+<area shape="rect" id="node8" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="486,48,656,72"/>
+<area shape="rect" id="node9" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="ConfigurationSectionTrait" alt="" coords="493,4,649,28"/>
+<area shape="rect" id="node10" href="ase2sprkkr.sprkkr.configuration.ConfigurationValue.html#ase2sprkkr.sprkkr.configuration.ConfigurationValue" target="_top" title="Value (option) in a SPRKKR configuration file." alt="" coords="510,92,632,116"/>
+<area shape="rect" id="node13" href="ase2sprkkr.output_files.definitions.UnknownDataValue.html#ase2sprkkr.output_files.definitions.UnknownDataValue" target="_top" title="UnknownDataValue" alt="" coords="681,92,807,116"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -179,13 +180,16 @@ files of SPRKKR</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.bsf.html#module-ase2sprkkr.output_files.definitions.bsf" title="ase2sprkkr.output_files.definitions.bsf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bsf</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.dij.html#module-ase2sprkkr.output_files.definitions.dij" title="ase2sprkkr.output_files.definitions.dij"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dij</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.dos.html#module-ase2sprkkr.output_files.definitions.dos" title="ase2sprkkr.output_files.definitions.dos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dos</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.dos.html#module-ase2sprkkr.output_files.definitions.dos" title="ase2sprkkr.output_files.definitions.dos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dos</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.jxc.html#module-ase2sprkkr.output_files.definitions.jxc" title="ase2sprkkr.output_files.definitions.jxc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jxc</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.spc.html#module-ase2sprkkr.output_files.definitions.spc" title="ase2sprkkr.output_files.definitions.spc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spc</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.rat.html#module-ase2sprkkr.output_files.definitions.rat" title="ase2sprkkr.output_files.definitions.rat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rat</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.output_files.definitions.spc.html#module-ase2sprkkr.output_files.definitions.spc" title="ase2sprkkr.output_files.definitions.spc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spc</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>

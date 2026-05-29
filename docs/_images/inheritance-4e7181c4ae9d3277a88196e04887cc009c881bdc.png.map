@@ -1,0 +1,7 @@
+<map id="inheritance476ae67036" name="inheritance476ae67036">
+<area shape="rect" id="node1" href="ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number" target="_top" title="Base class for a number &#45; descendants of this class can have minimal and/or maximal possible value." alt="" coords="529,5,640,33"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real" target="_top" title="A real value" alt="" coords="669,5,758,33"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" target="_top" title="grammar_type.TypedGrammarType" alt="" coords="248,5,499,33"/>
+<area shape="rect" id="node5" href="#ase2sprkkr.outputs.readers.scf.RealOrStars" target="_top" title="A real value, where ``****`` means ``NaN``" alt="" coords="787,5,907,33"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="5,5,219,33"/>
+</map>

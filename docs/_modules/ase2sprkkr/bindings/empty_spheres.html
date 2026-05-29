@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.bindings.empty_spheres &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -91,28 +91,27 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.bindings.empty_spheres</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
-<span class="kn">from</span> <span class="nn">..sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..sprkkr.sprkkr_atoms</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
 <div class="viewcode-block" id="EmptySpheresResult">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.EmptySpheresResult.html#ase2sprkkr.bindings.empty_spheres.EmptySpheresResult">[docs]</a>
-<span class="k">class</span> <span class="nc">EmptySpheresResult</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EmptySpheresResult&#39;</span><span class="p">,</span> <span class="s1">&#39;positions radii&#39;</span><span class="p">)):</span>
-
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">EmptySpheresResult</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;EmptySpheresResult&quot;</span><span class="p">,</span> <span class="s2">&quot;positions radii&quot;</span><span class="p">)):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="empty_spheres">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.empty_spheres.html#ase2sprkkr.bindings.empty_spheres.empty_spheres">[docs]</a>
-<span class="k">def</span> <span class="nf">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Returns centres of empty spheres to add &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns centres of empty spheres to add&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">es_finder</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">:</span>
-            <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;es_finder&#39;</span>
-    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;es_finder&#39;</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;es_finder&quot;</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;es_finder&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">es_finder</span><span class="o">.</span><span class="n">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">spheres</span><span class="o">.</span><span class="n">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -121,7 +120,7 @@
 
 <div class="viewcode-block" id="empty_spheres_atoms">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.empty_spheres_atoms.html#ase2sprkkr.bindings.empty_spheres.empty_spheres_atoms">[docs]</a>
-<span class="k">def</span> <span class="nf">empty_spheres_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">round_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">empty_spheres_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">round_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update the structure of the (SPRKKR) ASE atoms, adding the empty</span>
 <span class="sd">    spheres and updating the shpheres radii of the atomic sites, according</span>
@@ -130,13 +129,11 @@
     <span class="n">res</span> <span class="o">=</span> <span class="n">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">radii</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-       <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="n">empty</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="p">(</span><span class="n">symbols</span><span class="o">=</span><span class="s1">&#39;X&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">radii</span><span class="p">),</span>
-                        <span class="n">positions</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span>
-                        <span class="n">pbc</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">,</span>
-                        <span class="n">cell</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span>
-                        <span class="n">symmetry</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">empty</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="p">(</span>
+        <span class="n">symbols</span><span class="o">=</span><span class="s2">&quot;X&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">radii</span><span class="p">),</span> <span class="n">positions</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
     <span class="k">if</span> <span class="n">round_zero</span><span class="p">:</span>
         <span class="n">empty</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">empty</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">empty</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="n">empty</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="o">@</span> <span class="n">empty</span><span class="o">.</span><span class="n">cell</span>
@@ -149,18 +146,18 @@
 
 <div class="viewcode-block" id="add_empty_spheres">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.add_empty_spheres.html#ase2sprkkr.bindings.empty_spheres.add_empty_spheres">[docs]</a>
-<span class="k">def</span> <span class="nf">add_empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">empty</span> <span class="o">=</span> <span class="n">empty_spheres_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">empty</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
             <span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">atoms</span><span class="o">+=</span> <span class="n">empty</span>
+        <span class="n">atoms</span> <span class="o">+=</span> <span class="n">empty</span>
     <span class="k">return</span> <span class="n">atoms</span></div>
 
 
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">es_finder</span>                   <span class="c1"># NOQA</span>
-<span class="kn">from</span> <span class="nn">.xband</span> <span class="kn">import</span> <span class="n">spheres</span>  <span class="c1"># NOQA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">es_finder</span>  <span class="c1"># NOQA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.xband</span><span class="w"> </span><span class="kn">import</span> <span class="n">spheres</span>  <span class="c1"># NOQA</span>
 </pre></div>
 
            </div>

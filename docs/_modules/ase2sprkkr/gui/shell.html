@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.gui.shell &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -91,30 +91,27 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.gui.shell</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; Classes, for opening ASE2SPRKKR in shell or Jupyter notebook &quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">code</span>
-<span class="kn">import</span> <span class="nn">codeop</span>
-<span class="kn">import</span> <span class="nn">contextlib</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">ase2sprkkr</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">ase2sprkkr.gui.examples</span> <span class="kn">import</span> <span class="n">Example</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span></span><span class="sd">&quot;&quot;&quot;Classes, for opening ASE2SPRKKR in shell or Jupyter notebook&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">code</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">codeop</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.gui.examples</span><span class="w"> </span><span class="kn">import</span> <span class="n">Example</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="k">try</span><span class="p">:</span>
-  <span class="kn">import</span> <span class="nn">nbformat</span>
-  <span class="kn">from</span> <span class="nn">nbformat.v4</span> <span class="kn">import</span> <span class="n">new_notebook</span><span class="p">,</span> <span class="n">new_code_cell</span>
-  <span class="kn">from</span> <span class="nn">nbconvert.preprocessors</span> <span class="kn">import</span> <span class="n">ExecutePreprocessor</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">nbformat</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">nbformat.v4</span><span class="w"> </span><span class="kn">import</span> <span class="n">new_notebook</span><span class="p">,</span> <span class="n">new_code_cell</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">nbconvert.preprocessors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExecutePreprocessor</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-  <span class="n">nbformat</span> <span class="o">=</span> <span class="kc">None</span>
-
+    <span class="n">nbformat</span> <span class="o">=</span> <span class="kc">None</span>
 
 
 <div class="viewcode-block" id="split_top_level_chunks">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.split_top_level_chunks.html#ase2sprkkr.gui.shell.split_top_level_chunks">[docs]</a>
-<span class="k">def</span> <span class="nf">split_top_level_chunks</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">split_top_level_chunks</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Split Python code into top-level chunks.</span>
 <span class="sd">    Only splits at blank lines that are preceded by a line with no indentation.</span>
@@ -126,12 +123,12 @@
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">code</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
         <span class="c1"># Check if the current line is blank</span>
         <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="n">empty</span><span class="o">=</span><span class="kc">True</span>
+            <span class="n">empty</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">elif</span> <span class="n">empty</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">))</span> <span class="ow">and</span> <span class="n">current_chunk</span><span class="p">:</span>
                 <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_chunk</span><span class="p">))</span>
                 <span class="n">current_chunk</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">empty</span><span class="o">=</span><span class="kc">False</span>
+            <span class="n">empty</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">current_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">current_chunk</span><span class="p">:</span>
@@ -144,7 +141,7 @@
 <div class="viewcode-block" id="chdir">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.chdir.html#ase2sprkkr.gui.shell.chdir">[docs]</a>
 <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-<span class="k">def</span> <span class="nf">chdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">chdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">yield</span>
         <span class="k">return</span>
@@ -159,11 +156,11 @@
 
 <div class="viewcode-block" id="format_as_python_shell">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.format_as_python_shell.html#ase2sprkkr.gui.shell.format_as_python_shell">[docs]</a>
-<span class="k">def</span> <span class="nf">format_as_python_shell</span><span class="p">(</span><span class="n">code_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">format_as_python_shell</span><span class="p">(</span><span class="n">code_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Format Python code as it would appear in a Python shell.</span>
 <span class="sd">    Prepend &gt;&gt;&gt; to new statements and ... to continuation lines.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Handles multi-line blocks like classes, functions, loops, and conditionals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="n">code_str</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
@@ -201,12 +198,12 @@
 
 <div class="viewcode-block" id="Shell">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell">[docs]</a>
-<span class="k">class</span> <span class="nc">Shell</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; A base class for ASE2SPRKKR interactive computation using ase2sprkkr tool&quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Shell</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A base class for ASE2SPRKKR interactive computation using ase2sprkkr tool&quot;&quot;&quot;</span>
 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; The prefix code, do it always &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Prefix code, do it always &quot;&quot;&quot;</span>
     <span class="n">initialization</span> <span class="o">=</span> <span class="p">[</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;from ase2sprkkr import (</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;from ase2sprkkr import (</span>
 <span class="sd">        SPRKKRAtoms,</span>
 <span class="sd">        InputParameters,</span>
 <span class="sd">        OutputFile,</span>
@@ -216,35 +213,30 @@
 
 <div class="viewcode-block" id="Shell.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">Shell</span><span class="o">.</span><span class="n">initialization</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_file_counter</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_file_counter</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dir</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Shell.change_working_dir">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell.change_working_dir">[docs]</a>
-    <span class="k">def</span> <span class="nf">change_working_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">change_working_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dir</span> <span class="o">=</span> <span class="nb">dir</span></div>
 
 
 <div class="viewcode-block" id="Shell.add_output_file">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell.add_output_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
-        <span class="n">of</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file_counter</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_file_counter</span> <span class="o">=</span> \
-            <span class="bp">self</span><span class="o">.</span><span class="n">output_file_counter</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> \
-            <span class="bp">self</span><span class="o">.</span><span class="n">output_file_counter</span> <span class="k">else</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">of</span><span class="si">}</span><span class="s2"> = OutputFile.from_file(</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="p">))</span><span class="si">}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">of</span><span class="si">}</span><span class="s2">.plot()&quot;</span>
-        <span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+        <span class="n">of</span> <span class="o">=</span> <span class="s2">&quot;out&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file_counter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_file_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file_counter</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file_counter</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">of</span><span class="si">}</span><span class="s2"> = OutputFile.from_file(</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="p">))</span><span class="si">}</span><span class="s2">)</span><span class="se">\n</span><span class="si">{</span><span class="n">of</span><span class="si">}</span><span class="s2">.plot()&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Shell.run_example">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell.run_example">[docs]</a>
-    <span class="k">def</span> <span class="nf">run_example</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
-        <span class="n">ex</span><span class="o">=</span><span class="n">Example</span><span class="o">.</span><span class="n">by_number</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_example</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
+        <span class="n">ex</span> <span class="o">=</span> <span class="n">Example</span><span class="o">.</span><span class="n">by_number</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
         <span class="n">ex</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
 
         <span class="n">content</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">body_of_main</span><span class="p">()</span>
@@ -254,21 +246,28 @@
 
 
 
-<div class="viewcode-block" id="Python">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.Python.html#ase2sprkkr.gui.shell.Python">[docs]</a>
-<span class="k">class</span> <span class="nc">Python</span><span class="p">(</span><span class="n">Shell</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Run the given code in a Python shell &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CommandlineShell">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.CommandlineShell.html#ase2sprkkr.gui.shell.CommandlineShell">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CommandlineShell</span><span class="p">(</span><span class="n">Shell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the given code in a commandline shell&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Python.save">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.Python.html#ase2sprkkr.gui.shell.Python.save">[docs]</a>
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="CommandlineShell.save">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.CommandlineShell.html#ase2sprkkr.gui.shell.CommandlineShell.save">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">))</span></div>
+</div>
 
+
+
+<div class="viewcode-block" id="Python">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.Python.html#ase2sprkkr.gui.shell.Python">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Python</span><span class="p">(</span><span class="n">CommandlineShell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the given code in a Python shell&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Python.open">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.Python.html#ase2sprkkr.gui.shell.Python.open">[docs]</a>
-    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Opening python shell...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -282,81 +281,115 @@
 </div>
 
 
+
+<div class="viewcode-block" id="Pdb">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.Pdb.html#ase2sprkkr.gui.shell.Pdb">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pdb</span><span class="p">(</span><span class="n">CommandlineShell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the given code in a Python shell&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Pdb.open">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.Pdb.html#ase2sprkkr.gui.shell.Pdb.open">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="kn">import</span><span class="w"> </span><span class="nn">pdb</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">linecache</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Opening pdb session...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;&lt;user_code&gt;&quot;</span>
+
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(</span><span class="n">keepends</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">linecache</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">source</span><span class="p">),</span>  <span class="c1"># size</span>
+            <span class="kc">None</span><span class="p">,</span>  <span class="c1"># mtime (None is fine)</span>
+            <span class="n">lines</span><span class="p">,</span>  <span class="c1"># list of lines WITH newline chars</span>
+            <span class="n">filename</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;exec&quot;</span><span class="p">)</span>
+
+        <span class="n">pdb</span><span class="o">.</span><span class="n">runctx</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{})</span></div>
+</div>
+
+
+
 <span class="k">if</span> <span class="n">nbformat</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-  <span class="n">JupyterLab</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">JupyterLab</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="k">else</span><span class="p">:</span>
+
 <div class="viewcode-block" id="JupyterLab">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.JupyterLab.html#ase2sprkkr.gui.shell.JupyterLab">[docs]</a>
-  <span class="k">class</span> <span class="nc">JupyterLab</span><span class="p">(</span><span class="n">Shell</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the given code in a JupyterLab notebook.&quot;&quot;&quot;</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">JupyterLab</span><span class="p">(</span><span class="n">Shell</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the given code in a JupyterLab notebook.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="JupyterLab.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.JupyterLab.html#ase2sprkkr.gui.shell.JupyterLab.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">saved</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="n">run</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">saved</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="n">run</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="JupyterLab.save">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.JupyterLab.html#ase2sprkkr.gui.shell.JupyterLab.save">[docs]</a>
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the notebook to disk.&quot;&quot;&quot;</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="n">filename</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Save the notebook to disk.&quot;&quot;&quot;</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">nb</span> <span class="o">=</span> <span class="n">new_notebook</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">:</span>
-            <span class="n">nb</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_code_cell</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
+            <span class="n">nb</span> <span class="o">=</span> <span class="n">new_notebook</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">:</span>
+                <span class="n">nb</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_code_cell</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">:</span>
-            <span class="n">ep</span> <span class="o">=</span> <span class="n">ExecutePreprocessor</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
-            <span class="n">ep</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="p">}})</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">:</span>
+                <span class="n">ep</span> <span class="o">=</span> <span class="n">ExecutePreprocessor</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+                <span class="n">ep</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="p">}})</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">nbformat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">saved</span> <span class="o">=</span> <span class="n">filename</span></div>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">nbformat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">saved</span> <span class="o">=</span> <span class="n">filename</span></div>
 
 
 <div class="viewcode-block" id="JupyterLab.open">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.JupyterLab.html#ase2sprkkr.gui.shell.JupyterLab.open">[docs]</a>
-    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Opening JupyterLab... Press CTRL+C to stop the Jupyter computational kernel.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">dr</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span> <span class="ow">or</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Opening JupyterLab... Press CTRL+C to stop the Jupyter computational kernel.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">dr</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span> <span class="ow">or</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">dr</span> <span class="o">/</span> <span class="s2">&quot;notebook.ipynb&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">dr</span> <span class="o">/</span> <span class="s2">&quot;notebook.ipynb&quot;</span><span class="p">)</span>
 
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">jupyterlab</span>
-        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Jupyter lab not installed, please install (e.g. using pip install jupyter-lab&quot;</span><span class="p">)</span>
-
-        <span class="k">with</span> <span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="p">):</span>
-            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;jupyter-lab&quot;</span><span class="p">,</span> <span class="s2">&quot;--NotebookApp.shutdown_no_activity_timeout=60&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved</span><span class="p">]</span>
-            <span class="c1"># Launch JupyterLab</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">proc</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
-                    <span class="n">cmd</span><span class="p">,</span>
-                    <span class="n">cwd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="p">,</span>
-                       <span class="n">stdin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># inherit parent&#39;s stdin</span>
-                       <span class="c1">#stdout=None, # inherit parent&#39;s stdout</span>
-                       <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
-                       <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
-                       <span class="c1">#stderr=None, # inherit parent&#39;s stderr</span>
-                        <span class="n">start_new_session</span><span class="o">=</span><span class="kc">False</span>  <span class="c1"># important: do not detach</span>
-                <span class="p">)</span>
-                <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-            <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Terminating the kernel&quot;</span><span class="p">)</span>
-                <span class="n">proc</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+                <span class="kn">import</span><span class="w"> </span><span class="nn">jupyterlab</span>  <span class="c1"># noqa F401</span>
+            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Jupyter lab not installed, please install (e.g. using pip install jupyter-lab&quot;</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="p">):</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;jupyter-lab&quot;</span><span class="p">,</span> <span class="s2">&quot;--NotebookApp.shutdown_no_activity_timeout=60&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved</span><span class="p">]</span>
+                <span class="c1"># Launch JupyterLab</span>
                 <span class="k">try</span><span class="p">:</span>
-                  <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># wait gracefully</span>
-                <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">:</span>
-                  <span class="n">proc</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>       <span class="c1"># force kill</span>
-                  <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>  <span class="c1"># wait gracefully</span></div>
+                    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+                        <span class="n">cmd</span><span class="p">,</span>
+                        <span class="n">cwd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="p">,</span>
+                        <span class="n">stdin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># inherit parent&#39;s stdin</span>
+                        <span class="c1"># stdout=None, # inherit parent&#39;s stdout</span>
+                        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+                        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+                        <span class="c1"># stderr=None, # inherit parent&#39;s stderr</span>
+                        <span class="n">start_new_session</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># important: do not detach</span>
+                    <span class="p">)</span>
+                    <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Terminating the kernel&quot;</span><span class="p">)</span>
+                    <span class="n">proc</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># wait gracefully</span>
+                    <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">:</span>
+                        <span class="n">proc</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>  <span class="c1"># force kill</span>
+                        <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>  <span class="c1"># wait gracefully</span></div>
 </div>
+
+
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                start_new_session=True,</span>

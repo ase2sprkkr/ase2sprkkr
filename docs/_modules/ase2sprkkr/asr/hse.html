@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.hse &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -92,9 +92,9 @@
              
   <h1>Source code for ase2sprkkr.asr.hse</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;HSE band structure.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
-<span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">ase.spectrum.band_structure</span> <span class="kn">import</span> <span class="n">BandStructure</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.spectrum.band_structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">BandStructure</span>
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.hse&#39;</span><span class="p">,</span>
@@ -104,7 +104,7 @@
          <span class="n">resources</span><span class="o">=</span><span class="s1">&#39;24:10h&#39;</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--kptdensity&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;K-point density&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--emptybands&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;number of empty bands to include&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">kptdensity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">8.0</span><span class="p">,</span> <span class="n">emptybands</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="n">kptdensity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">8.0</span><span class="p">,</span> <span class="n">emptybands</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate HSE corrections.&quot;&quot;&quot;</span>
     <span class="n">eigs</span><span class="p">,</span> <span class="n">calc</span> <span class="o">=</span> <span class="n">hse</span><span class="p">(</span><span class="n">kptdensity</span><span class="o">=</span><span class="n">kptdensity</span><span class="p">,</span> <span class="n">emptybands</span><span class="o">=</span><span class="n">emptybands</span><span class="p">)</span>
     <span class="n">eigs_soc</span> <span class="o">=</span> <span class="n">hse_spinorbit</span><span class="p">(</span><span class="n">eigs</span><span class="p">,</span> <span class="n">calc</span><span class="p">)</span>
@@ -116,9 +116,9 @@
 <span class="c1"># XXX move to utils? [also in asr.polarizability]</span>
 <div class="viewcode-block" id="get_kpts_size">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.get_kpts_size.html#ase2sprkkr.asr.hse.get_kpts_size">[docs]</a>
-<span class="k">def</span> <span class="nf">get_kpts_size</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">kptdensity</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_kpts_size</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">kptdensity</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find reasonable monkhorst-pack size which hits high symmetry points.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">gpaw.kpt_descriptor</span> <span class="kn">import</span> <span class="n">kpts2sizeandoffsets</span> <span class="k">as</span> <span class="n">k2so</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.kpt_descriptor</span><span class="w"> </span><span class="kn">import</span> <span class="n">kpts2sizeandoffsets</span> <span class="k">as</span> <span class="n">k2so</span>
     <span class="n">size</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">k2so</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">kptdensity</span><span class="p">)</span>
     <span class="n">size</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
@@ -131,10 +131,10 @@
 
 <div class="viewcode-block" id="hse">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.hse.html#ase2sprkkr.asr.hse.hse">[docs]</a>
-<span class="k">def</span> <span class="nf">hse</span><span class="p">(</span><span class="n">kptdensity</span><span class="p">,</span> <span class="n">emptybands</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">gpaw.hybrids.eigenvalues</span> <span class="kn">import</span> <span class="n">non_self_consistent_eigenvalues</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hse</span><span class="p">(</span><span class="n">kptdensity</span><span class="p">,</span> <span class="n">emptybands</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.hybrids.eigenvalues</span><span class="w"> </span><span class="kn">import</span> <span class="n">non_self_consistent_eigenvalues</span>
 
     <span class="n">convbands</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">emptybands</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;band&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;kpt&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
@@ -172,9 +172,9 @@
 
 <div class="viewcode-block" id="hse_spinorbit">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.hse_spinorbit.html#ase2sprkkr.asr.hse.hse_spinorbit">[docs]</a>
-<span class="k">def</span> <span class="nf">hse_spinorbit</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">gpaw.spinorbit</span> <span class="kn">import</span> <span class="n">soc_eigenstates</span>
-    <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span><span class="p">,</span> <span class="n">get_spin_index</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hse_spinorbit</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.spinorbit</span><span class="w"> </span><span class="kn">import</span> <span class="n">soc_eigenstates</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.magnetic_anisotropy</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_spin_axis</span><span class="p">,</span> <span class="n">get_spin_index</span>
 
     <span class="n">e_skn</span> <span class="o">=</span> <span class="n">dct</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;e_hse_skn&#39;</span><span class="p">)</span>
     <span class="n">dct_soc</span> <span class="o">=</span> <span class="p">{}</span>
@@ -191,19 +191,19 @@
 
 <div class="viewcode-block" id="MP_interpolate">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.MP_interpolate.html#ase2sprkkr.asr.hse.MP_interpolate">[docs]</a>
-<span class="k">def</span> <span class="nf">MP_interpolate</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">delta_skn</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">MP_interpolate</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">delta_skn</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate corrections to band patch.</span>
 
 <span class="sd">    Calculates band stucture along the same band path used for PBE</span>
 <span class="sd">    by interpolating a correction onto the PBE band structure.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">gpaw.spinorbit</span> <span class="kn">import</span> <span class="n">soc_eigenstates</span>
-    <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_monkhorst_pack_size_and_offset</span><span class="p">,</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.spinorbit</span><span class="w"> </span><span class="kn">import</span> <span class="n">soc_eigenstates</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.dft.kpoints</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">get_monkhorst_pack_size_and_offset</span><span class="p">,</span>
                                  <span class="n">monkhorst_pack_interpolate</span><span class="p">)</span>
-    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">singleprec_dict</span>
-    <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">singleprec_dict</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.magnetic_anisotropy</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_spin_axis</span>
 
     <span class="n">bandrange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
     <span class="c1"># read PBE (without SOC)</span>
@@ -237,15 +237,15 @@
 
 <div class="viewcode-block" id="bs_hse">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.bs_hse.html#ase2sprkkr.asr.hse.bs_hse">[docs]</a>
-<span class="k">def</span> <span class="nf">bs_hse</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bs_hse</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>
            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;hse-bs.png&#39;</span><span class="p">,</span>
            <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
            <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
            <span class="n">show_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
            <span class="n">s</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.patheffects</span> <span class="k">as</span> <span class="nn">path_effects</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patheffects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">path_effects</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.hse.json&#39;</span><span class="p">)</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;bandstructure&#39;</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">]</span>
@@ -294,7 +294,7 @@
     <span class="p">])</span>
 
     <span class="c1"># add PBE band structure with soc</span>
-    <span class="kn">from</span> <span class="nn">asr.bandstructure</span> <span class="kn">import</span> <span class="n">add_bs_pbe</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.bandstructure</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_bs_pbe</span>
     <span class="k">if</span> <span class="s1">&#39;results-asr.bandstructure.json&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">add_bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;efermi&#39;</span><span class="p">)),</span>
                         <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">])</span>
@@ -313,8 +313,8 @@
 
 <div class="viewcode-block" id="webpanel">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.webpanel.html#ase2sprkkr.asr.hse.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span><span class="p">,</span> <span class="n">table</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.database.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">fig</span><span class="p">,</span> <span class="n">table</span>
 
     <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gap_hse&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
         <span class="n">hse</span> <span class="o">=</span> <span class="n">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s1">&#39;Property&#39;</span><span class="p">,</span>
@@ -361,7 +361,7 @@
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.Result.html#ase2sprkkr.asr.hse.Result">[docs]</a>
 <span class="nd">@prepare_result</span>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
     <span class="n">vbm_hse_nosoc</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">cbm_hse_nosoc</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">gap_dir_hse_nosoc</span><span class="p">:</span> <span class="nb">float</span>
@@ -407,12 +407,12 @@
                    <span class="s1">&#39;results-asr.hse@calculate.json&#39;</span><span class="p">],</span>
          <span class="n">resources</span><span class="o">=</span><span class="s1">&#39;1:10m&#39;</span><span class="p">,</span>
          <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate HSE band structure along a given path.&quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">asr.utils</span> <span class="kn">import</span> <span class="n">fermi_level</span>
-    <span class="kn">from</span> <span class="nn">ase.dft.bandgap</span> <span class="kn">import</span> <span class="n">bandgap</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">fermi_level</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.dft.bandgap</span><span class="w"> </span><span class="kn">import</span> <span class="n">bandgap</span>
 
     <span class="c1"># interpolate band structure</span>
     <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;hse_nowfs.gpw&#39;</span><span class="p">)</span>

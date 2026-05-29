@@ -1,0 +1,52 @@
+jxc
+===
+
+Full name: **ase2sprkkr.outputs.readers.jxc**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.jxc.JxcOutputParser  ase2sprkkr.outputs.readers.jxc.JxcOutputReader  ase2sprkkr.outputs.readers.jxc.JxcResult 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.readers.jxc
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      JxcOutputParser
+      JxcOutputReader
+      JxcResult
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

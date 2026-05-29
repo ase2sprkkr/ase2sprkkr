@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>spec &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="SpecOutputReader" href="ase2sprkkr.outputs.readers.spec.SpecOutputReader.html" />
+    <link rel="next" title="SpecOutputParser" href="ase2sprkkr.outputs.readers.spec.SpecOutputParser.html" />
     <link rel="prev" title="ScfResult" href="ase2sprkkr.outputs.readers.scf.ScfResult.html" /> 
 </head>
 
@@ -84,6 +84,7 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.bsf.html">bsf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.default.html">default</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.dos.html">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.jxc.html">jxc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.html">scf</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">spec</a></li>
 </ul>
@@ -132,16 +133,16 @@
 <h1>spec<a class="headerlink" href="#spec" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs.readers.spec</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-cdf93db185ed3b1ae61e98155ec5e6079aa189f2.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.spec.SpecOutputReader, ase2sprkkr.outputs.readers.spec.SpecProcessRunner, ase2sprkkr.outputs.readers.spec.SpecResult" usemap="#inheritancee61c45e088" class="inheritance graphviz" /></div>
-<map id="inheritancee61c45e088" name="inheritancee61c45e088">
-<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader" target="_top" title="DefaultOutputReader" alt="" coords="381,104,541,129"/>
-<area shape="rect" id="node5" href="ase2sprkkr.outputs.readers.spec.SpecOutputReader.html#ase2sprkkr.outputs.readers.spec.SpecOutputReader" target="_top" title="Reader for spec.out files." alt="" coords="571,104,713,129"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputReader.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputReader" target="_top" title="SprKkrOutputReader" alt="" coords="197,104,352,129"/>
-<area shape="rect" id="node3" href="ase2sprkkr.outputs.task_result.KkrProcessRunner.html#ase2sprkkr.outputs.task_result.KkrProcessRunner" target="_top" title="Class, that run a process and read its output using underlined" alt="" coords="17,55,157,80"/>
-<area shape="rect" id="node6" href="ase2sprkkr.outputs.readers.spec.SpecProcessRunner.html#ase2sprkkr.outputs.readers.spec.SpecProcessRunner" target="_top" title="Process class for spectral function calculations." alt="" coords="200,55,349,80"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,104,168,129"/>
-<area shape="rect" id="node7" href="ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult" target="_top" title="Class representing the results of a spectral function calculation." alt="" coords="227,5,322,31"/>
-<area shape="rect" id="node8" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="41,5,133,31"/>
+<div class="graphviz"><img src="../_images/inheritance-4e390409d490e8d22ae856610ae873a600cf6b77.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.spec.SpecOutputParser, ase2sprkkr.outputs.readers.spec.SpecOutputReader, ase2sprkkr.outputs.readers.spec.SpecResult" usemap="#inheritanceff6f6762c3" class="inheritance graphviz" /></div>
+<map id="inheritanceff6f6762c3" name="inheritanceff6f6762c3">
+<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.default.DefaultOutputParser.html#ase2sprkkr.outputs.readers.default.DefaultOutputParser" target="_top" title="DefaultOutputParser" alt="" coords="368,109,521,137"/>
+<area shape="rect" id="node5" href="ase2sprkkr.outputs.readers.spec.SpecOutputParser.html#ase2sprkkr.outputs.readers.spec.SpecOutputParser" target="_top" title="Reader for spec.out files." alt="" coords="550,109,687,137"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" target="_top" title="SprKkrOutputParser" alt="" coords="190,109,338,137"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Class, that runs a process and reads its output using the underlying" alt="" coords="16,57,150,85"/>
+<area shape="rect" id="node6" href="ase2sprkkr.outputs.readers.spec.SpecOutputReader.html#ase2sprkkr.outputs.readers.spec.SpecOutputReader" target="_top" title="Process class for spectral function calculations." alt="" coords="193,57,335,85"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,109,161,137"/>
+<area shape="rect" id="node7" href="ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult" target="_top" title="Class representing the results of a spectral function calculation." alt="" coords="218,5,311,33"/>
+<area shape="rect" id="node8" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="37,5,129,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -150,10 +151,10 @@
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.spec.SpecOutputReader.html#ase2sprkkr.outputs.readers.spec.SpecOutputReader" title="ase2sprkkr.outputs.readers.spec.SpecOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpecOutputReader</span></code></a>([print_output, read_callback])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.spec.SpecOutputParser.html#ase2sprkkr.outputs.readers.spec.SpecOutputParser" title="ase2sprkkr.outputs.readers.spec.SpecOutputParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpecOutputParser</span></code></a>([print_output, read_callback])</p></td>
 <td><p>Reader for spec.out files.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.spec.SpecProcessRunner.html#ase2sprkkr.outputs.readers.spec.SpecProcessRunner" title="ase2sprkkr.outputs.readers.spec.SpecProcessRunner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpecProcessRunner</span></code></a>(input_parameters, ...[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.spec.SpecOutputReader.html#ase2sprkkr.outputs.readers.spec.SpecOutputReader" title="ase2sprkkr.outputs.readers.spec.SpecOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpecOutputReader</span></code></a>(input_parameters, ...[, ...])</p></td>
 <td><p>Process class for spectral function calculations.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult" title="ase2sprkkr.outputs.readers.spec.SpecResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpecResult</span></code></a>(input_parameters, calculator, ...)</p></td>
@@ -168,7 +169,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.outputs.readers.scf.ScfResult.html" class="btn btn-neutral float-left" title="ScfResult" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.outputs.readers.spec.SpecOutputReader.html" class="btn btn-neutral float-right" title="SpecOutputReader" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.outputs.readers.spec.SpecOutputParser.html" class="btn btn-neutral float-right" title="SpecOutputParser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

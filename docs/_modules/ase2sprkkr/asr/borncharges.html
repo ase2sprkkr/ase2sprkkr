@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.borncharges &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -92,17 +92,17 @@
              
   <h1>Source code for ase2sprkkr.asr.borncharges</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Effective Born charges.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
 
 
 <div class="viewcode-block" id="webpanel">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.borncharges.webpanel.html#ase2sprkkr.asr.borncharges.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-    <span class="k">def</span> <span class="nf">matrixtable</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">digits</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">skiprow</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skipcolumn</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">matrixtable</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">digits</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">skiprow</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skipcolumn</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="n">table</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">shape</span>
 
@@ -146,7 +146,7 @@
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.borncharges.Result.html#ase2sprkkr.asr.borncharges.Result">[docs]</a>
 <span class="nd">@prepare_result</span>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">Z_avv</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="n">sym_a</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
@@ -163,16 +163,16 @@
          <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">],</span>
          <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--displacement&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Atomic displacement (Å)&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">displacement</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">displacement</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate Born charges.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
 
-    <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Bohr</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohr</span>
 
-    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">chdir</span><span class="p">,</span> <span class="n">read_json</span>
-    <span class="kn">from</span> <span class="nn">asr.formalpolarization</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">formalpolarization</span>
-    <span class="kn">from</span> <span class="nn">asr.setup.displacements</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">setupdisplacements</span>
-    <span class="kn">from</span> <span class="nn">asr.setup.displacements</span> <span class="kn">import</span> <span class="n">get_all_displacements</span><span class="p">,</span> <span class="n">get_displacement_folder</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">chdir</span><span class="p">,</span> <span class="n">read_json</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.formalpolarization</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">formalpolarization</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.setup.displacements</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">setupdisplacements</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.setup.displacements</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_displacements</span><span class="p">,</span> <span class="n">get_displacement_folder</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">setupdisplacements</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
         <span class="n">setupdisplacements</span><span class="p">(</span><span class="n">displacement</span><span class="o">=</span><span class="n">displacement</span><span class="p">)</span>

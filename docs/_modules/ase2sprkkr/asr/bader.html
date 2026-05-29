@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.bader &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -92,12 +92,12 @@
              
   <h1>Source code for ase2sprkkr.asr.bader</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Bader charges analysis.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">ASRResult</span>
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.bader&#39;</span><span class="p">,</span>
          <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.structureinfo&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.gs&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate bader charges.</span>
 
 <span class="sd">    To make Bader analysis we use another program. Download the executable</span>
@@ -110,11 +110,11 @@
 <span class="sd">        $ tar -zxf bader_lnx_64.tar.gz</span>
 <span class="sd">        $ echo  &#39;export PATH=~/baderext:$PATH&#39; &gt;&gt; ~/.bashrc</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">write</span>
-    <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Bohr</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">gpaw.mpi</span> <span class="kn">import</span> <span class="n">world</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohr</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.mpi</span><span class="w"> </span><span class="kn">import</span> <span class="n">world</span>
 
     <span class="k">assert</span> <span class="n">world</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Do not run in parallel!&#39;</span><span class="p">)</span>
 
@@ -123,8 +123,8 @@
     <span class="n">density</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">get_all_electron_density</span><span class="p">()</span> <span class="o">*</span> <span class="n">Bohr</span><span class="o">**</span><span class="mi">3</span>
     <span class="n">write</span><span class="p">(</span><span class="s1">&#39;density.cube&#39;</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">density</span><span class="p">)</span>
 
-    <span class="kn">import</span> <span class="nn">subprocess</span>
-    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
     <span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;data-bader&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
@@ -142,9 +142,9 @@
 
 <div class="viewcode-block" id="print">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bader.print.html#ase2sprkkr.asr.bader.print">[docs]</a>
-<span class="k">def</span> <span class="nf">print</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Print Bader charges.&quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os.path</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">op</span>
     <span class="n">fname</span> <span class="o">=</span> <span class="s1">&#39;data-bader/ACF.dat&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
         <span class="k">return</span>

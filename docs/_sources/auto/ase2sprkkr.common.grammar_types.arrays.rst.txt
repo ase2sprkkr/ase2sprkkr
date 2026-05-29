@@ -34,6 +34,16 @@ Full name: **ase2sprkkr.common.grammar\_types.arrays**
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _array_dtype_condition_always_true
+      _array_dtype_condition_not_object
+      _array_dtype_condition_not_object_and_scalar
+   
    
 
 

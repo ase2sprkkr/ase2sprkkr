@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.output\_files.output\_files\_definitions**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.output_files.output_files_definitions.BlankSeparator  ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition  ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition  ase2sprkkr.output_files.output_files_definitions.Separator 
+.. inheritance-diagram::  ase2sprkkr.output_files.output_files_definitions.BlankSeparator  ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition  ase2sprkkr.output_files.output_files_definitions.OutputFileSection  ase2sprkkr.output_files.output_files_definitions.OutputFileSectionDefinition  ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition  ase2sprkkr.output_files.output_files_definitions.Separator 
       :parts: 1
 
 |
@@ -46,6 +46,8 @@ Full name: **ase2sprkkr.output\_files.output\_files\_definitions**
    
       BlankSeparator
       OutputFileDefinition
+      OutputFileSection
+      OutputFileSectionDefinition
       OutputFileValueDefinition
       Separator
    

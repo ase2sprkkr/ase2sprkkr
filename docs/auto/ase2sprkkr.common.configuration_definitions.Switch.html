@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Switch &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -77,6 +77,8 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions._definition_write_condition_always_true.html">_definition_write_condition_always_true</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions._if_defined_helper.html">_if_defined_helper</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.gather.html">gather</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.if_defined.html">if_defined</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.if_not_defined.html">if_not_defined</a></li>
@@ -165,15 +167,15 @@
 <h1>Switch<a class="headerlink" href="#switch" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.Switch">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.configuration_definitions.</span></span><span class="sig-name descname"><span class="pre">Switch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition=&lt;function</span> <span class="pre">Switch.&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#Switch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.Switch" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.configuration_definitions.</span></span><span class="sig-name descname"><span class="pre">Switch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition=&lt;function</span> <span class="pre">Switch.&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#Switch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.Switch" title="Link to this definition"></a></dt>
 <dd><p>Items of this class can control, which elements of grammar will be active and which not</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-7bc7bef9e0437d4bcaa5e3242cae2661df1f77de.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_definitions.Switch" usemap="#inheritance338ccc792a" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-2fe5f109b8b10a5dffc2523671beb96757e3204a.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_definitions.Switch" usemap="#inheritance338ccc792a" class="inheritance graphviz" /></div>
 <map id="inheritance338ccc792a" name="inheritance338ccc792a">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="4,4,230,25"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.common.configuration_definitions.VirtualDefinition" target="_top" title="Base class for a definition, that do not have value, just control" alt="" coords="253,4,487,25"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ControlDefinition.html#ase2sprkkr.common.configuration_definitions.ControlDefinition" target="_top" title="Control definitions has no grammar, they just modify the other items of the container" alt="" coords="511,4,748,25"/>
-<area shape="rect" id="node4" href="#ase2sprkkr.common.configuration_definitions.Switch" target="_top" title="Items of this class can control, which elements of grammar will be active and which not" alt="" coords="772,4,956,25"/>
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="4,4,230,27"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.common.configuration_definitions.VirtualDefinition" target="_top" title="Base class for a definition, that do not have value, just control" alt="" coords="253,4,488,27"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ControlDefinition.html#ase2sprkkr.common.configuration_definitions.ControlDefinition" target="_top" title="Control definitions has no grammar, they just modify the other items of the container" alt="" coords="511,4,749,27"/>
+<area shape="rect" id="node4" href="#ase2sprkkr.common.configuration_definitions.Switch" target="_top" title="Items of this class can control, which elements of grammar will be active and which not" alt="" coords="772,4,956,27"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -195,8 +197,8 @@ the active elements in the values.</p>
 </pre></div>
 </div>
 <p>desribes both the following files:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span><span class="o">=</span><span class="n">SCALAR</span>
-<span class="n">SCALAR</span><span class="o">=</span><span class="mi">1</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="o">=</span> <span class="n">SCALAR</span>
+<span class="n">SCALAR</span> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
 </div>
 <dl class="simple">
@@ -218,10 +220,10 @@ COMPLEX=1e5 7e5</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.Switch.empty">
-<span class="sig-name descname"><span class="pre">empty</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Empty</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.Switch.empty" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">empty</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;DISABLED&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.Switch.empty" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>ParserElement</p>
@@ -275,7 +277,7 @@ constructor)</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.Switch.condition_name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">condition_name</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.Switch.condition_name" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">condition_name</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.Switch.condition_name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.potentials.definitions.sections.scf_info &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/mods.css?v=26f6988d" />
@@ -96,99 +96,100 @@
 <span class="sd">Scf info section contains configuration options used in computation</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">...potential_definitions</span> <span class="kn">import</span> <span class="n">PotSectionDefinition</span><span class="p">,</span> \
-                                   <span class="n">PotValueDefinition</span>
-<span class="kn">from</span> <span class="nn">...potential_sections</span> <span class="kn">import</span> <span class="n">PotentialSection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...potential_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">PotSectionDefinition</span><span class="p">,</span> <span class="n">PotValueDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...potential_sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">PotentialSection</span>
 
-<span class="kn">from</span> <span class="nn">....common.grammar_types</span> <span class="kn">import</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">line_string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">....common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">line_string</span>
 
 
 <div class="viewcode-block" id="ScfInfoSection">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSection.html#ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSection">[docs]</a>
-<span class="k">class</span> <span class="nc">ScfInfoSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; This section retrieves the atomic positions and</span>
-<span class="sd">      it creates (during reading) the ASE Atoms object &quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ScfInfoSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This section retrieves the atomic positions and</span>
+<span class="sd">    it creates (during reading) the ASE Atoms object&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ScfInfoSection._depends_on">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSection.html#ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSection._depends_on">[docs]</a>
-  <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;SITES&#39;</span><span class="p">]</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;SITES&quot;</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="ScfInfoSection._update_atoms">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSection.html#ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSection._update_atoms">[docs]</a>
-  <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">):</span>
-      <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;fermi_energy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">EF</span><span class="p">()</span>
-      <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sprkkr_rmsavv&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">RMSAVV</span><span class="p">()</span>
-      <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sprkkr_rmsavb&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">RMSAVB</span><span class="p">()</span>
-      <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sprkkr_vmtz&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">VMTZ</span><span class="p">()</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">):</span>
+        <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;fermi_energy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">EF</span><span class="p">()</span>
+        <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sprkkr_rmsavv&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">RMSAVV</span><span class="p">()</span>
+        <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sprkkr_rmsavb&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">RMSAVB</span><span class="p">()</span>
+        <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sprkkr_vmtz&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">VMTZ</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ScfInfoSection._set_from_atoms">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSection.html#ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSection._set_from_atoms">[docs]</a>
-  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">):</span>
-      <span class="n">info</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span>
-      <span class="k">if</span> <span class="s1">&#39;fermi_energy&#39;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">EF</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;fermi_energy&#39;</span><span class="p">]</span>
-      <span class="k">if</span> <span class="s1">&#39;sprkkr_rmsavv&#39;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">RMSAVV</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sprkkr_rmsavv&#39;</span><span class="p">]</span>
-      <span class="k">if</span> <span class="s1">&#39;sprkkr_rmsavb&#39;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">RMSAVB</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sprkkr_rmsavb&#39;</span><span class="p">]</span>
-      <span class="k">if</span> <span class="s1">&#39;sprkkr_vmtz&#39;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">VMTZ</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sprkkr_vmtz&#39;</span><span class="p">]</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">SCFSTATUS</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;START&#39;</span><span class="p">:</span>
-          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
-              <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">atomic_types</span><span class="p">():</span>
-                  <span class="k">if</span> <span class="ow">not</span> <span class="n">j</span><span class="o">.</span><span class="n">has_converged_data</span><span class="p">():</span>
-                      <span class="k">break</span>
-              <span class="k">else</span><span class="p">:</span>
-                  <span class="k">continue</span>
-              <span class="k">break</span>
-          <span class="k">else</span><span class="p">:</span>
-              <span class="bp">self</span><span class="o">.</span><span class="n">SCFSTATUS</span> <span class="o">=</span> <span class="s1">&#39;CONVERGED&#39;</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span>
+        <span class="k">if</span> <span class="s2">&quot;fermi_energy&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">EF</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;fermi_energy&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;sprkkr_rmsavv&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">RMSAVV</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sprkkr_rmsavv&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;sprkkr_rmsavb&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">RMSAVB</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sprkkr_rmsavb&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;sprkkr_vmtz&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">VMTZ</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sprkkr_vmtz&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">SCFSTATUS</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">atomic_types</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">j</span><span class="o">.</span><span class="n">has_converged_data</span><span class="p">():</span>
+                        <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">SCFSTATUS</span> <span class="o">=</span> <span class="s2">&quot;CONVERGED&quot;</span></div>
 </div>
 
 
 
 <div class="viewcode-block" id="ScfInfoSectionDefinition">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSectionDefinition">[docs]</a>
-<span class="k">class</span> <span class="nc">ScfInfoSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
-
+<span class="k">class</span><span class="w"> </span><span class="nc">ScfInfoSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
 <div class="viewcode-block" id="ScfInfoSectionDefinition.__init__">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSectionDefinition.__init__">[docs]</a>
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;SCF-INFO&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-      <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
-      <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;INFO&#39;</span><span class="p">,</span> <span class="n">line_string</span><span class="p">,</span> <span class="s1">&#39;NONE&#39;</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;SCFSTATUS&#39;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="s1">&#39;START&#39;</span><span class="p">,</span> <span class="s1">&#39;CONVERGED&#39;</span><span class="p">,</span> <span class="s1">&#39;ITR-BULK&#39;</span><span class="p">,</span> <span class="s1">&#39;ITR-R-BULK&#39;</span><span class="p">,</span> <span class="s1">&#39;ITR-L-BULK&#39;</span><span class="p">,</span> <span class="s1">&#39;ITR-I-ZONE&#39;</span><span class="p">,</span> <span class="s1">&#39;ITR&#39;</span><span class="p">)),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;FULLPOT&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;BREITINT&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NONMAG&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">alternative_names</span><span class="o">=</span><span class="s1">&#39;NOMAG&#39;</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;ORBPOL&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;NONE&#39;</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;EXTFIELD&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;BLCOUPL&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;BEXT&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;SEMICORE&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;LLOYD&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">is_optional</span> <span class="o">=</span> <span class="kc">True</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;IBZINT&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_optional</span> <span class="o">=</span> <span class="kc">True</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NKTAB&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_optional</span> <span class="o">=</span> <span class="kc">True</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;TETDEPPOT&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_optional</span> <span class="o">=</span> <span class="kc">True</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;XC-POT&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">is_optional</span> <span class="o">=</span> <span class="kc">True</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;SCF-ALG&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">is_optional</span> <span class="o">=</span> <span class="kc">True</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;SCF-ITER&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;SCF-MIX&#39;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;SCF-TOL&#39;</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;RMSAVV&#39;</span><span class="p">,</span> <span class="mf">999999.</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;RMSAVB&#39;</span><span class="p">,</span> <span class="mf">999999.</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;EF&#39;</span><span class="p">,</span> <span class="mf">999999.</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;VMTZ&#39;</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">),</span>
-        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;EWORK&#39;</span><span class="p">,</span><span class="nb">float</span><span class="p">,</span><span class="n">is_optional</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-      <span class="p">]</span>
-      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="n">has_hidden_members</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;SCF-INFO&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="n">line_string</span><span class="p">,</span> <span class="s2">&quot;NONE&quot;</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">&quot;SCFSTATUS&quot;</span><span class="p">,</span>
+                <span class="n">DefKeyword</span><span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="s2">&quot;CONVERGED&quot;</span><span class="p">,</span> <span class="s2">&quot;ITR-BULK&quot;</span><span class="p">,</span> <span class="s2">&quot;ITR-R-BULK&quot;</span><span class="p">,</span> <span class="s2">&quot;ITR-L-BULK&quot;</span><span class="p">,</span> <span class="s2">&quot;ITR-I-ZONE&quot;</span><span class="p">,</span> <span class="s2">&quot;ITR&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;FULLPOT&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;BREITINT&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">((</span><span class="s2">&quot;NONMAG&quot;</span><span class="p">,</span> <span class="s2">&quot;NOMAG&quot;</span><span class="p">),</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;ORBPOL&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;NONE&quot;</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;EXTFIELD&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;BLCOUPL&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;BEXT&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;SEMICORE&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;LLOYD&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NE&quot;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;IBZINT&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NKTAB&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;TETDEPPOT&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;XC-POT&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;SCF-ALG&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;SCF-ITER&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;SCF-MIX&quot;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;SCF-TOL&quot;</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;RMSAVV&quot;</span><span class="p">,</span> <span class="mf">999999.0</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;RMSAVB&quot;</span><span class="p">,</span> <span class="mf">999999.0</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;EF&quot;</span><span class="p">,</span> <span class="mf">999999.0</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;VMTZ&quot;</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;EWORK&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="p">]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="n">has_hidden_members</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
-  <span class="n">result_class</span> <span class="o">=</span> <span class="n">ScfInfoSection</span></div>
+    <span class="n">result_class</span> <span class="o">=</span> <span class="n">ScfInfoSection</span></div>
 
 
 

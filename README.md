@@ -9,15 +9,14 @@ structure calculation.
 
 ## Usefull links
 
--   [SPR-KKR](https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr)
--   [ASE - Atomic Simulation
-    Environment](https://wiki.fysik.dtu.dk/ase/)
--   [Online version of this
-    documentation](https://ase2sprkkr.github.io/ase2sprkkr/)
--   [GitHub repository of the ASE2SPRKKR
-    package](https://github.com/ase2sprkkr/ase2sprkkr/)
--   [SPR-KKR
-    manual](https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/)
+- [SPR-KKR](https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr)
+- [ASE - Atomic Simulation Environment](https://wiki.fysik.dtu.dk/ase/)
+- [Online version of this
+  documentation](https://ase2sprkkr.github.io/ase2sprkkr/)
+- [GitHub repository of the ASE2SPRKKR
+  package](https://github.com/ase2sprkkr/ase2sprkkr/)
+- [SPR-KKR
+  manual](https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/)
 
 ## Installation of the package using package managers
 
@@ -81,10 +80,10 @@ package sources.
 
 ### Requirements
 
--   Python \>= 3.8
--   SPR-KKR (not checked by the installer)
--   Python packages: see the the pypoject.toml file
--   Git (to obtain the sources)
+- Python \>= 3.8
+- SPR-KKR (not checked by the installer)
+- Python packages: see the the pypoject.toml file
+- Git (to obtain the sources)
 
 ### Obtaining the package using GIT
 

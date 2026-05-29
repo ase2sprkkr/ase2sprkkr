@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.ase.pbc &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -93,12 +93,12 @@
   <h1>Source code for ase2sprkkr.ase.pbc</h1><div class="highlight"><pre>
 <div class="viewcode-block" id="check_symmetry">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.pbc.check_symmetry.html#ase2sprkkr.ase.pbc.check_symmetry">[docs]</a>
-<span></span><span class="k">def</span> <span class="nf">check_symmetry</span><span class="p">(</span><span class="n">pbc</span><span class="p">,</span> <span class="n">symmetry</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">err_class</span> <span class="o">=</span> <span class="ne">ValueError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Check the symmetry of the PCB, raise an exception, if they not satisfy the requirements &quot;&quot;&quot;</span>
+<span></span><span class="k">def</span><span class="w"> </span><span class="nf">check_symmetry</span><span class="p">(</span><span class="n">pbc</span><span class="p">,</span> <span class="n">symmetry</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">err_class</span><span class="o">=</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the symmetry of the PCB, raise an exception, if they not satisfy the requirements&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">pbc</span> <span class="o">==</span> <span class="n">symmetry</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-       <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
-           <span class="n">error</span> <span class="o">=</span> <span class="n">error</span><span class="p">()</span>
-       <span class="k">raise</span> <span class="n">err_class</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="n">error</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">err_class</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 </pre></div>
 

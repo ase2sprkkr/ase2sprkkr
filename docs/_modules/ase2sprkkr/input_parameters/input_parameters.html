@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.input_parameters.input_parameters &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -91,457 +91,476 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.input_parameters</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; Containers for configuration parameters of SPR-KKR task.</span>
+<span></span><span class="sd">&quot;&quot;&quot;Containers for configuration parameters of SPR-KKR task.</span>
 
 <span class="sd">These configuration parameters are supplied to SPR-KKR executables as input files.</span>
 <span class="sd">The containers are also the objects, that take care about executing the SPR-KKR</span>
 <span class="sd">executables.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">pkgutil</span>
-<span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">from</span> <span class="nn">..outputs.task_result</span> <span class="kn">import</span> <span class="n">KkrProcessRunner</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">definitions</span>
-<span class="kn">from</span> <span class="nn">..sprkkr.configuration</span> <span class="kn">import</span> <span class="n">ConfigurationFile</span><span class="p">,</span> <span class="n">ConfigurationSection</span>
-<span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_class_property</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
-<span class="kn">from</span> <span class="nn">..configuration</span> <span class="kn">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpi_runner</span>
-<span class="kn">from</span> <span class="nn">..potentials.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
-<span class="kn">from</span> <span class="nn">..common.doc</span> <span class="kn">import</span> <span class="n">process_input_parameters_definition</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pkgutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..outputs.task_result</span><span class="w"> </span><span class="kn">import</span> <span class="n">KkrOutputReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">definitions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..sprkkr.configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigurationFile</span><span class="p">,</span> <span class="n">ConfigurationSection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_class_property</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpi_runner</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..potentials.potentials</span><span class="w"> </span><span class="kn">import</span> <span class="n">Potential</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.doc</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_input_parameters_definition</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 
 <div class="viewcode-block" id="InputSection">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputSection.html#ase2sprkkr.input_parameters.input_parameters.InputSection">[docs]</a>
-<span class="k">class</span> <span class="nc">InputSection</span><span class="p">(</span><span class="n">ConfigurationSection</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Input parameters sections has nothing special, yet. &quot;&quot;&quot;</span></div>
+<span class="k">class</span><span class="w"> </span><span class="nc">InputSection</span><span class="p">(</span><span class="n">ConfigurationSection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Input parameters sections has nothing special, yet.&quot;&quot;&quot;</span></div>
 
 
 
 <div class="viewcode-block" id="InputParameters">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters">[docs]</a>
-<span class="k">class</span> <span class="nc">InputParameters</span><span class="p">(</span><span class="n">ConfigurationFile</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; It holds the configuration values for a SPR-KKR task and run the task</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InputParameters</span><span class="p">(</span><span class="n">ConfigurationFile</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;It holds the configuration values for a SPR-KKR task and run the task</span>
 
-<span class="sd">  This class is a ConfigurationContainer, thus, it holds the configuration values</span>
-<span class="sd">  for the task. Moreover, according to its definition, it can run the task -</span>
-<span class="sd">  execute the executable with proper parameters - and instantiate the result class,</span>
-<span class="sd">  which then parse the output of the task.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
+<span class="sd">    This class is a ConfigurationContainer, thus, it holds the configuration values</span>
+<span class="sd">    for the task. Moreover, according to its definition, it can run the task -</span>
+<span class="sd">    execute the executable with proper parameters - and instantiate the result class,</span>
+<span class="sd">    which then parse the output of the task.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-  <span class="nd">@property</span>
-  <span class="k">def</span> <span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="n">pot</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_potential&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-      <span class="n">potfil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-      <span class="k">if</span> <span class="n">pot</span><span class="p">:</span>
-          <span class="k">if</span> <span class="n">potfil</span> <span class="o">==</span> <span class="n">pot</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-              <span class="k">return</span> <span class="n">pot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-      <span class="n">out</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">potfil</span><span class="p">)</span> <span class="k">if</span> <span class="n">potfil</span> <span class="k">else</span> <span class="kc">None</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="n">potfil</span><span class="p">,</span> <span class="n">out</span>
-      <span class="k">return</span> <span class="n">out</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">pot</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_potential&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">potfil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">pot</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">potfil</span> <span class="o">==</span> <span class="n">pot</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="n">pot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">potfil</span><span class="p">)</span> <span class="k">if</span> <span class="n">potfil</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="n">potfil</span><span class="p">,</span> <span class="n">out</span>
+        <span class="k">return</span> <span class="n">out</span>
 
 <div class="viewcode-block" id="InputParameters.resolve_executable_suffix">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.resolve_executable_suffix">[docs]</a>
-  <span class="k">def</span> <span class="nf">resolve_executable_suffix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">bool</span><span class="p">]):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot;&quot; Return the suffix, that is appended after the name of SPR-KKR executable.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve_executable_suffix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; &quot; Return the suffix, that is appended after the name of SPR-KKR executable.</span>
 
-<span class="sd">      Parameters</span>
-<span class="sd">      ----------</span>
-<span class="sd">      suffix</span>
-<span class="sd">        - If str is given, it is left as is.</span>
-<span class="sd">        - If True, return the default value:</span>
-<span class="sd">                    config.executable.suffix</span>
-<span class="sd">                   (content of SPRKKR_EXECUTABLE_SUFFIX env variable</span>
-<span class="sd">                    or a user_defined_value)</span>
-<span class="sd">        - If False, return &#39;&#39;</span>
-<span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="n">suffix</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-          <span class="k">return</span> <span class="s1">&#39;&#39;</span>
-      <span class="k">if</span> <span class="n">suffix</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-          <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">executables</span><span class="o">.</span><span class="n">suffix</span><span class="p">()</span>
-      <span class="k">return</span> <span class="n">suffix</span></div>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        suffix</span>
+<span class="sd">          - If str is given, it is left as is.</span>
+<span class="sd">          - If True, return the default value:</span>
+<span class="sd">                      config.executable.suffix</span>
+<span class="sd">                     (content of SPRKKR_EXECUTABLE_SUFFIX env variable</span>
+<span class="sd">                      or a user_defined_value)</span>
+<span class="sd">          - If False, return &#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">suffix</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">suffix</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">executables</span><span class="o">.</span><span class="n">suffix</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">suffix</span></div>
 
 
 <div class="viewcode-block" id="InputParameters.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.__init__">[docs]</a>
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">inputfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outputfile</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_inputfile</span> <span class="o">=</span> <span class="n">inputfile</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_outputfile</span> <span class="o">=</span> <span class="n">inputfile</span> <span class="k">if</span> <span class="n">outputfile</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="n">outputfile</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">inputfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outputfile</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inputfile</span> <span class="o">=</span> <span class="n">inputfile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outputfile</span> <span class="o">=</span> <span class="n">inputfile</span> <span class="k">if</span> <span class="n">outputfile</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="n">outputfile</span></div>
 
 
-  <span class="nd">@property</span>
-  <span class="k">def</span> <span class="nf">task_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Return the task name, as defined in the definition of the parameters</span>
-<span class="sd">      (see InputParametersDefinition class) &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">task_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the task name, as defined in the definition of the parameters</span>
+<span class="sd">        (see InputParametersDefinition class)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span>
 
 <div class="viewcode-block" id="InputParameters.is_mpi">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.is_mpi">[docs]</a>
-  <span class="k">def</span> <span class="nf">is_mpi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Will be this task (the task described by this input parameters)</span>
-<span class="sd">      runned using mpi?</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_mpi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Will be this task (the task described by this input parameters)</span>
+<span class="sd">        runned using mpi?</span>
 
-<span class="sd">      Parameters</span>
-<span class="sd">      ----------</span>
-<span class="sd">      mpi: list or str or bool</span>
-<span class="sd">        Optional parameter. If False is given, return False regardless the type of the</span>
-<span class="sd">        task, otherwise it is ignored. See InputParameters.mpi_runner for the explanation of the</span>
-<span class="sd">        parameter.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mpi: list or str or bool</span>
+<span class="sd">          Optional parameter. If False is given, return False regardless the type of the</span>
+<span class="sd">          task, otherwise it is ignored. See InputParameters.mpi_runner for the explanation of the</span>
+<span class="sd">          parameter.</span>
 
-<span class="sd">      Return</span>
-<span class="sd">      ------</span>
-<span class="sd">      is_mpi: bool</span>
-<span class="sd">        Will be this task runned using mpi?</span>
-<span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="n">mpi</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">mpi</span></div>
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        is_mpi: bool</span>
+<span class="sd">          Will be this task runned using mpi?</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">mpi</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">mpi</span></div>
 
 
 <div class="viewcode-block" id="InputParameters.run_process">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.run_process">[docs]</a>
-  <span class="k">def</span> <span class="nf">run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
-                  <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">read_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">run_async</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                  <span class="n">executable_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">executable_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                  <span class="n">mpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gdb</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">      Run the process that calculate the task specified by this input paameters</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_process</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">calculator</span><span class="p">,</span>
+        <span class="n">input_file</span><span class="p">,</span>
+        <span class="n">output_file</span><span class="p">,</span>
+        <span class="n">directory</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+        <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">read_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">run_async</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">executable_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">executable_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">mpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">gdb</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run the process that calculate the task specified by this input paameters</span>
 
-<span class="sd">      calculator: ase2sprkkr.sprkkr.calculator.SPRKKR</span>
-<span class="sd">        Calculator, used for running the task. Various configurations are readed from them.</span>
+<span class="sd">        calculator: ase2sprkkr.sprkkr.calculator.SPRKKR</span>
+<span class="sd">          Calculator, used for running the task. Various configurations are readed from them.</span>
 
-<span class="sd">      directory: str</span>
-<span class="sd">        Where to run the calculation</span>
+<span class="sd">        directory: str</span>
+<span class="sd">          Where to run the calculation</span>
 
-<span class="sd">      input_file: file</span>
-<span class="sd">        File, where the input parameters for the task are stored.</span>
+<span class="sd">        input_file: file</span>
+<span class="sd">          File, where the input parameters for the task are stored.</span>
 
-<span class="sd">      output_file: file</span>
-<span class="sd">        File, where the output will be writed. It should be opened for writing (in binary mode)</span>
+<span class="sd">        output_file: file</span>
+<span class="sd">          File, where the output will be writed. It should be opened for writing (in binary mode)</span>
 
-<span class="sd">      print_output: bool or str</span>
-<span class="sd">        Print the output to the stdout, too? String value &#39;info&#39; prints only selected infromations</span>
-<span class="sd">        (depending on the task runned)</span>
+<span class="sd">        print_output: bool or str</span>
+<span class="sd">          Print the output to the stdout, too? String value &#39;info&#39; prints only selected infromations</span>
+<span class="sd">          (depending on the task runned)</span>
 
-<span class="sd">      read_callback: callable</span>
-<span class="sd">        The function will be called for each line</span>
+<span class="sd">        read_callback: callable</span>
+<span class="sd">          The function will be called for each line</span>
 
-<span class="sd">      run_async: bool</span>
-<span class="sd">        Whether directly execute the process, or return the coroutine to run it</span>
+<span class="sd">        run_async: bool</span>
+<span class="sd">          Whether directly execute the process, or return the coroutine to run it</span>
 
-<span class="sd">      executable_suffix: str or None</span>
-<span class="sd">        Postfix, appended to the name of the called executable (sometimes, SPRKKR executables are</span>
-<span class="sd">        compiled so that the resulting executables has postfixies)</span>
+<span class="sd">        executable_suffix: str or None</span>
+<span class="sd">          Postfix, appended to the name of the called executable (sometimes, SPRKKR executables are</span>
+<span class="sd">          compiled so that the resulting executables has postfixies)</span>
 
-<span class="sd">      callback: Optional[callable]</span>
-<span class="sd">        A function, that will be called with the result object, when the calculation is finished.</span>
+<span class="sd">        callback: Optional[callable]</span>
+<span class="sd">          A function, that will be called with the result object, when the calculation is finished.</span>
 
-<span class="sd">      mpi: list or str or bool</span>
-<span class="sd">        Run the task using mpi? See :func:`ase2sprkkr.config.mpi_runner` for the possible values.</span>
+<span class="sd">        mpi: list or str or bool</span>
+<span class="sd">          Run the task using mpi? See :func:`ase2sprkkr.config.mpi_runner` for the possible values.</span>
 
-<span class="sd">      Return</span>
-<span class="sd">      ------</span>
-<span class="sd">      out: mixed</span>
-<span class="sd">        The result of ase2sprkkr.common.process_output_reader.ProcessOutputReader.run() method: the</span>
-<span class="sd">        parsed output of the runned task.</span>
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        out: mixed</span>
+<span class="sd">          The result of ase2sprkkr.common.process_output_reader.ProcessOutputParser.run() method: the</span>
+<span class="sd">          parsed output of the runned task.</span>
 
-<span class="sd">      &quot;&quot;&quot;</span>
-      <span class="n">print_output</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">value_or_default</span><span class="p">(</span><span class="s1">&#39;print_output&#39;</span><span class="p">,</span> <span class="n">print_output</span><span class="p">)</span>
-      <span class="n">executable_suffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_executable_suffix</span><span class="p">(</span><span class="n">executable_suffix</span><span class="p">)</span>
-      <span class="n">executable_suffix</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">value_or_default</span><span class="p">(</span><span class="s1">&#39;executable_suffix&#39;</span><span class="p">,</span> <span class="n">executable_suffix</span><span class="p">)</span>
-      <span class="n">mpi</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">value_or_default</span><span class="p">(</span><span class="s1">&#39;mpi&#39;</span><span class="p">,</span> <span class="n">mpi</span><span class="p">)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">print_output</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">value_or_default</span><span class="p">(</span><span class="s2">&quot;print_output&quot;</span><span class="p">,</span> <span class="n">print_output</span><span class="p">)</span>
+        <span class="n">executable_suffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_executable_suffix</span><span class="p">(</span><span class="n">executable_suffix</span><span class="p">)</span>
+        <span class="n">executable_suffix</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">value_or_default</span><span class="p">(</span><span class="s2">&quot;executable_suffix&quot;</span><span class="p">,</span> <span class="n">executable_suffix</span><span class="p">)</span>
+        <span class="n">mpi</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">value_or_default</span><span class="p">(</span><span class="s2">&quot;mpi&quot;</span><span class="p">,</span> <span class="n">mpi</span><span class="p">)</span>
 
-      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
-      <span class="n">executable</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">executable</span>
-      <span class="n">executable</span> <span class="o">+=</span> <span class="n">executable_suffix</span>
-      <span class="k">if</span> <span class="n">executable_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
-          <span class="k">if</span> <span class="n">executable_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-             <span class="n">executable_dir</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">executables</span><span class="o">.</span><span class="n">dir</span><span class="p">()</span>
-          <span class="k">if</span> <span class="n">executable_dir</span><span class="p">:</span>
-             <span class="n">executable</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">executable_dir</span><span class="p">,</span> <span class="n">executable</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+        <span class="n">executable</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">executable</span>
+        <span class="n">executable</span> <span class="o">+=</span> <span class="n">executable_suffix</span>
+        <span class="k">if</span> <span class="n">executable_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">executable_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">executable_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">executables</span><span class="o">.</span><span class="n">dir</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">executable_dir</span><span class="p">:</span>
+                <span class="n">executable</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">executable_dir</span><span class="p">,</span> <span class="n">executable</span><span class="p">)</span>
 
-      <span class="n">runner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_runner</span><span class="p">(</span><span class="n">calculator</span><span class="p">,</span> <span class="n">print_output</span><span class="p">,</span> <span class="n">read_callback</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+        <span class="n">runner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_runner</span><span class="p">(</span><span class="n">calculator</span><span class="p">,</span> <span class="n">print_output</span><span class="p">,</span> <span class="n">read_callback</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
 
-      <span class="k">try</span><span class="p">:</span>
-        <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="n">out</span><span class="p">):</span>
-            <span class="n">input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
-                <span class="n">callback</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
 
-        <span class="n">mpi</span> <span class="o">=</span> <span class="n">mpi_runner</span><span class="p">(</span><span class="n">mpi</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">mpi</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">mpi</span><span class="p">:</span>
-             <span class="n">fname</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">name</span>
-             <span class="c1">#max length of the argument in SPRKKR</span>
-             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">:</span>
-                 <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
-             <span class="n">executable</span> <span class="o">=</span> <span class="n">mpi</span> <span class="o">+</span> <span class="p">[</span> <span class="n">executable</span> <span class="o">+</span> <span class="s1">&#39;MPI&#39;</span><span class="p">,</span> <span class="n">fname</span> <span class="p">]</span>
-             <span class="n">stdin</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">else</span><span class="p">:</span>
-             <span class="n">executable</span> <span class="o">=</span> <span class="p">[</span> <span class="n">executable</span> <span class="p">]</span>
-             <span class="n">stdin</span> <span class="o">=</span> <span class="n">input_file</span>
-        <span class="k">if</span> <span class="n">gdb</span><span class="p">:</span>
-             <span class="n">stdin</span> <span class="o">=</span> <span class="kc">None</span>
-             <span class="k">if</span> <span class="n">mpi</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">executable</span> <span class="o">=</span> <span class="n">executable</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run &lt;</span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-             <span class="n">executable</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;gdb&#39;</span> <span class="p">]</span> <span class="o">+</span> <span class="n">executable</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">create_process</span><span class="p">(</span><span class="n">executable</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">stdin</span> <span class="o">=</span> <span class="n">stdin</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">cleanup</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">run_async</span><span class="p">:</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">out</span>
-      <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">add</span> <span class="o">=</span> <span class="s1">&#39;Cannot find SPRKKR executable. Maybe, ase2sprkkr.config.executable.suffix &#39;</span> \
-              <span class="s1">&#39;variable should be set (or the SPRKKR_EXECUTABLE_SUFFIX environment variable)?</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="k">if</span> <span class="n">mpi</span><span class="p">:</span>
-            <span class="n">add</span><span class="o">+=</span><span class="s1">&#39;Also, pleas check that the MPI is functional on your machine, or explicitly disable &#39;</span>\
-                 <span class="s1">&#39;MPI with mpi=False argument of calculate method (or set ase2sprkkr.config.running.mpi = False)</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">;</span>
-        <span class="n">e</span><span class="o">.</span><span class="n">strerror</span> <span class="o">=</span> <span class="n">add</span> <span class="o">+</span> <span class="s2">&quot;SPRKKR cannot be run due to the following error: </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">strerror</span>
-        <span class="k">raise</span></div>
+            <span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="n">out</span><span class="p">):</span>
+                <span class="n">input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
+                    <span class="n">callback</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+            <span class="n">mpi</span> <span class="o">=</span> <span class="n">mpi_runner</span><span class="p">(</span><span class="n">mpi</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">mpi</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">mpi</span><span class="p">:</span>
+                <span class="n">fname</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">name</span>
+                <span class="c1"># max length of the argument in SPRKKR</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">:</span>
+                    <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+                <span class="n">executable</span> <span class="o">=</span> <span class="n">mpi</span> <span class="o">+</span> <span class="p">[</span><span class="n">executable</span> <span class="o">+</span> <span class="s2">&quot;MPI&quot;</span><span class="p">,</span> <span class="n">fname</span><span class="p">]</span>
+                <span class="n">stdin</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">executable</span> <span class="o">=</span> <span class="p">[</span><span class="n">executable</span><span class="p">]</span>
+                <span class="n">stdin</span> <span class="o">=</span> <span class="n">input_file</span>
+            <span class="k">if</span> <span class="n">gdb</span><span class="p">:</span>
+                <span class="n">stdin</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="n">mpi</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">executable</span> <span class="o">=</span> <span class="n">executable</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run &lt;</span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">executable</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;gdb&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">executable</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">create_process</span><span class="p">(</span>
+                <span class="n">executable</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">cleanup</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">run_async</span><span class="p">:</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">out</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">add</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;Cannot find SPRKKR executable. Maybe, ase2sprkkr.config.executable.suffix &quot;</span>
+                <span class="s2">&quot;variable should be set (or the SPRKKR_EXECUTABLE_SUFFIX environment variable)?</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">mpi</span><span class="p">:</span>
+                <span class="n">add</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="s2">&quot;Also, pleas check that the MPI is functional on your machine, or explicitly disable &quot;</span>
+                    <span class="s2">&quot;MPI with mpi=False argument of calculate method (or set ase2sprkkr.config.running.mpi = False)</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">strerror</span> <span class="o">=</span> <span class="n">add</span> <span class="o">+</span> <span class="s2">&quot;SPRKKR cannot be run due to the following error: </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">strerror</span>
+            <span class="k">raise</span></div>
 
 
 <div class="viewcode-block" id="InputParameters.process_runner">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.process_runner">[docs]</a>
-  <span class="k">def</span> <span class="nf">process_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calculator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">read_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Return the result readed: the class that parse the output</span>
-<span class="sd">      of the runned task</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calculator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">read_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the result readed: the class that parse the output</span>
+<span class="sd">        of the runned task</span>
 
-<span class="sd">      Parameters</span>
-<span class="sd">      ----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 
-<span class="sd">      calculator:</span>
-<span class="sd">        Calculator, which will be attached to the resulting class</span>
-<span class="sd">        for ruther processing the results.</span>
+<span class="sd">        calculator:</span>
+<span class="sd">          Calculator, which will be attached to the resulting class</span>
+<span class="sd">          for ruther processing the results.</span>
 
-<span class="sd">      print_output: bool or str</span>
-<span class="sd">        Whether to print output to the stdout.</span>
-<span class="sd">        &#39;info&#39; means only print a short summary</span>
-<span class="sd">      &quot;&quot;&quot;</span>
-      <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">result_reader</span>
+<span class="sd">        print_output: bool or str</span>
+<span class="sd">          Whether to print output to the stdout.</span>
+<span class="sd">          &#39;info&#39; means only print a short summary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">result_reader</span>
 
-      <span class="k">if</span> <span class="ow">not</span> <span class="n">directory</span> <span class="ow">and</span> <span class="n">calculator</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
-         <span class="n">directory</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">directory</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">directory</span> <span class="ow">and</span> <span class="n">calculator</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
+            <span class="n">directory</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">directory</span>
 
-      <span class="k">if</span> <span class="bp">cls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-         <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">TASK</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-         <span class="bp">cls</span> <span class="o">=</span> <span class="n">KkrProcessRunner</span><span class="o">.</span><span class="n">class_for_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-      <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">print_output</span><span class="p">,</span> <span class="n">read_callback</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">cls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">TASK</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="bp">cls</span> <span class="o">=</span> <span class="n">KkrOutputReader</span><span class="o">.</span><span class="n">class_for_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">print_output</span><span class="p">,</span> <span class="n">read_callback</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="InputParameters.read_output_from_file">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.read_output_from_file">[docs]</a>
-  <span class="k">def</span> <span class="nf">read_output_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Read output of a previously runned task from a file and parse it in a same</span>
-<span class="sd">      way, as the process would be runned again.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_output_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read output of a previously runned task from a file and parse it in a same</span>
+<span class="sd">        way, as the process would be runned again.</span>
 
-<span class="sd">      filename</span>
-<span class="sd">        Filename, from which the result will be read</span>
+<span class="sd">        filename</span>
+<span class="sd">          Filename, from which the result will be read</span>
 
-<span class="sd">      directory</span>
-<span class="sd">        A directory, to which are related the paths in the output</span>
-<span class="sd">        Default None means the directory, where the file is</span>
-<span class="sd">      &quot;&quot;&quot;</span>
-      <span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_runner</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+<span class="sd">        directory</span>
+<span class="sd">          A directory, to which are related the paths in the output</span>
+<span class="sd">          Default None means the directory, where the file is</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_runner</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="InputParameters.executable_params">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.executable_params">[docs]</a>
-  <span class="k">def</span> <span class="nf">executable_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">      Return</span>
-<span class="sd">      ------</span>
-<span class="sd">      ([executable], stdin, stdout) params for process.Popen</span>
-<span class="sd">      &quot;&quot;&quot;</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">executable_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        ([executable], stdin, stdout) params for process.Popen</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
 
 
-  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Configuration container </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Configuration container </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
 
 <div class="viewcode-block" id="InputParameters.set_option">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.set_option">[docs]</a>
-  <span class="k">def</span> <span class="nf">set_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">:</span>
-          <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
-             <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-      <span class="k">else</span><span class="p">:</span>
-          <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;No option with name </span><span class="si">{}</span><span class="s2"> in any of the members&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;No option with name </span><span class="si">{}</span><span class="s2"> in any of the members&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span></div>
 
 
-  <span class="nd">@cached_class_property</span>
-  <span class="k">def</span> <span class="nf">definition_modules</span><span class="p">():</span>
-      <span class="n">names</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">iter_modules</span><span class="p">(</span><span class="n">definitions</span><span class="o">.</span><span class="n">__path__</span><span class="p">))</span>
-      <span class="n">im</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span>
-      <span class="n">modules</span> <span class="o">=</span> <span class="p">(</span> <span class="n">im</span><span class="p">(</span><span class="s1">&#39;.definitions.&#39;</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">__package__</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span> <span class="p">)</span>
-      <span class="k">return</span> <span class="p">{</span> <span class="n">m</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">modules</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s1">&#39;input_parameters&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="nd">@cached_class_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">definition_modules</span><span class="p">():</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">iter_modules</span><span class="p">(</span><span class="n">definitions</span><span class="o">.</span><span class="n">__path__</span><span class="p">))</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span>
+        <span class="n">modules</span> <span class="o">=</span> <span class="p">(</span><span class="n">im</span><span class="p">(</span><span class="s2">&quot;.definitions.&quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">__package__</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">m</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">modules</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">&quot;input_parameters&quot;</span><span class="p">)}</span>
 
-  <span class="n">_definitions</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">_definitions</span> <span class="o">=</span> <span class="p">{}</span>
 
 <div class="viewcode-block" id="InputParameters.definition">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.definition">[docs]</a>
-  <span class="nd">@classmethod</span>
-  <span class="k">def</span> <span class="nf">definition</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-      <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_definitions</span><span class="p">:</span>
-          <span class="n">module</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definition_modules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-          <span class="n">ip</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">input_parameters</span>
-          <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">ipdefs</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="p">):</span>
-              <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;In the module &#39;</span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; in file &#39;</span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="vm">__file__</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
-              <span class="s2">&quot;is an InputParametersDefinition object directly defined. &quot;</span>
-              <span class="s2">&quot;Consider to enclose its definition in a lambda function to &quot;</span>
-              <span class="s2">&quot;speed up ase2sprkkr loading.&quot;</span><span class="p">)</span>
-          <span class="k">else</span><span class="p">:</span>
-              <span class="k">try</span><span class="p">:</span>
-                  <span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span><span class="p">()</span>
-              <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                  <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can not load file </span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="vm">__file__</span><span class="si">}</span><span class="s2"> &quot;</span>
-                                     <span class="sa">f</span><span class="s2">&quot;due to the following error:</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
-          <span class="bp">cls</span><span class="o">.</span><span class="n">_definitions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip</span>
-          <span class="n">process_input_parameters_definition</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">ip</span><span class="p">)</span>
-      <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_definitions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">definition</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_definitions</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definition_modules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="n">ip</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">input_parameters</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">ipdefs</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="p">):</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;In the module &#39;</span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; in file &#39;</span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="vm">__file__</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                    <span class="s2">&quot;is an InputParametersDefinition object directly defined. &quot;</span>
+                    <span class="s2">&quot;Consider to enclose its definition in a lambda function to &quot;</span>
+                    <span class="s2">&quot;speed up ase2sprkkr loading.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Can not load file </span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="vm">__file__</span><span class="si">}</span><span class="s2"> due to the following error:</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_definitions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip</span>
+            <span class="n">process_input_parameters_definition</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">ip</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_definitions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
 
 
-  <span class="nd">@cached_class_property</span>
-  <span class="k">def</span> <span class="nf">definitions</span><span class="p">():</span>
-      <span class="c1"># user = os.path.join(platformdirs.user_config_dir(&#39;ase2sprkkr&#39;, &#39;ase2sprkkr&#39;), &#39;input_parameters&#39;)</span>
+    <span class="nd">@cached_class_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">definitions</span><span class="p">():</span>
+        <span class="c1"># user = os.path.join(platformdirs.user_config_dir(&#39;ase2sprkkr&#39;, &#39;ase2sprkkr&#39;), &#39;input_parameters&#39;)</span>
         <span class="n">ip</span> <span class="o">=</span> <span class="n">InputParameters</span>
-        <span class="k">return</span> <span class="p">{</span> <span class="n">n</span><span class="p">:</span> <span class="n">ip</span><span class="o">.</span><span class="n">definition</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ip</span><span class="o">.</span><span class="n">definition_modules</span> <span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">n</span><span class="p">:</span> <span class="n">ip</span><span class="o">.</span><span class="n">definition</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ip</span><span class="o">.</span><span class="n">definition_modules</span><span class="p">}</span>
 
 <div class="viewcode-block" id="InputParameters.is_it_an_input_parameters_name">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.is_it_an_input_parameters_name">[docs]</a>
-  <span class="nd">@classmethod</span>
-  <span class="k">def</span> <span class="nf">is_it_an_input_parameters_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-      <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-      <span class="k">return</span> <span class="n">name</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definition_modules</span> <span class="k">else</span> <span class="kc">False</span></div>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_it_an_input_parameters_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">name</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definition_modules</span> <span class="k">else</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="InputParameters.create_input_parameters">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.create_input_parameters">[docs]</a>
-  <span class="nd">@classmethod</span>
-  <span class="k">def</span> <span class="nf">create_input_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">      Create input_parameters object</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_input_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create input_parameters object</span>
 
-<span class="sd">      Parameters</span>
-<span class="sd">      ----------</span>
-<span class="sd">      arg: str or InputParameters</span>
-<span class="sd">        If an InputParameters object is given, it is returned as is.</span>
-<span class="sd">        If a string is given, it is interpreted either as a filename</span>
-<span class="sd">        (from which the parameters are read) or the task name, for</span>
-<span class="sd">        which the default parameters are used</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        arg: str or InputParameters</span>
+<span class="sd">          If an InputParameters object is given, it is returned as is.</span>
+<span class="sd">          If a string is given, it is interpreted either as a filename</span>
+<span class="sd">          (from which the parameters are read) or the task name, for</span>
+<span class="sd">          which the default parameters are used</span>
 
-<span class="sd">      Return</span>
-<span class="sd">      ------</span>
-<span class="sd">      input_parameters: InputParameters</span>
-<span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-         <span class="n">name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">is_it_an_input_parameters_name</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-         <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">IOBase</span><span class="p">):</span>
-         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">arg</span></div>
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        input_parameters: InputParameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">is_it_an_input_parameters_name</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">IOBase</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">arg</span></div>
 
 
 <div class="viewcode-block" id="InputParameters.create">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.create">[docs]</a>
-  <span class="nd">@classmethod</span>
-  <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Create input parameters for the given task name</span>
-<span class="sd">      Parameters</span>
-<span class="sd">      ----------</span>
-<span class="sd">      name: str</span>
-<span class="sd">        Name of the task (e.g. &#39;SCF&#39;, &#39;PHAGEN&#39;)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create input parameters for the given task name</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: str</span>
+<span class="sd">          Name of the task (e.g. &#39;SCF&#39;, &#39;PHAGEN&#39;)</span>
 
-<span class="sd">      Return</span>
-<span class="sd">      ------</span>
-<span class="sd">      input_parameters: InputParameters</span>
-<span class="sd">        Input parameters with the default values for the given task.</span>
-<span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="n">InputParameters</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">definition</span><span class="p">(</span><span class="n">name</span><span class="p">))</span></div>
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        input_parameters: InputParameters</span>
+<span class="sd">          Input parameters with the default values for the given task.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">InputParameters</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">definition</span><span class="p">(</span><span class="n">name</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="InputParameters.default_parameters">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.default_parameters">[docs]</a>
-  <span class="nd">@classmethod</span>
-  <span class="k">def</span> <span class="nf">default_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Create default input parameters &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;SCF&#39;</span><span class="p">)</span></div>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">default_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create default input parameters&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;SCF&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="InputParameters.from_file">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.from_file">[docs]</a>
-  <span class="nd">@classmethod</span>
-  <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Read an input file and create a new InputParameters object from the readed stuff</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read an input file and create a new InputParameters object from the readed stuff</span>
 
-<span class="sd">      Parameters</span>
-<span class="sd">      ----------</span>
-<span class="sd">      filename: str or file</span>
-<span class="sd">        Input file (either its filename, or an open file)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str or file</span>
+<span class="sd">          Input file (either its filename, or an open file)</span>
 
-<span class="sd">      allow_dangerous</span>
-<span class="sd">        Allow to read dangerous values of options: i.e. the values that do not fullfil the</span>
-<span class="sd">        required type of the given option or its other requirements.</span>
-<span class="sd">      &quot;&quot;&quot;</span>
-      <span class="n">definitions</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span>
-      <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">definitions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-          <span class="k">try</span><span class="p">:</span>
-             <span class="n">out</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="n">allow_dangerous</span><span class="p">)</span>
-             <span class="k">return</span> <span class="n">out</span>
-          <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-             <span class="n">last</span> <span class="o">=</span> <span class="n">e</span>
-      <span class="k">raise</span> <span class="n">last</span></div>
+<span class="sd">        allow_dangerous</span>
+<span class="sd">          Allow to read dangerous values of options: i.e. the values that do not fullfil the</span>
+<span class="sd">          required type of the given option or its other requirements.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">definitions</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">definitions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="n">allow_dangerous</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">out</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">last</span> <span class="o">=</span> <span class="n">e</span>
+        <span class="k">raise</span> <span class="n">last</span></div>
 
 
 <div class="viewcode-block" id="InputParameters.calculate">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate">[docs]</a>
-  <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Create a calculator and run the input_parameters. See SPRKKR.calculate for the arguments &quot;&quot;&quot;</span>
-      <span class="n">calc</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">SPRKKR</span><span class="p">()</span>
-      <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a calculator and run the input_parameters. See SPRKKR.calculate for the arguments&quot;&quot;&quot;</span>
+        <span class="n">calc</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">SPRKKR</span><span class="p">()</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-  <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
-      <span class="n">out</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">configuration_type_name</span>
-      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="s1">&#39; for task &#39;</span> <span class="o">+</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-      <span class="k">return</span> <span class="n">out</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">configuration_type_name</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="s2">&quot; for task &quot;</span> <span class="o">+</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">out</span>
 
 <div class="viewcode-block" id="InputParameters.change_task">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.change_task">[docs]</a>
-  <span class="k">def</span> <span class="nf">change_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">retain_values</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Change the task to the given task. Retain the value of the options,</span>
-<span class="sd">      that are present in the new task.</span>
-<span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="n">retain_values</span><span class="p">:</span>
-          <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">only_changed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_init_members_from_the_definition</span><span class="p">()</span>
-      <span class="k">if</span> <span class="n">retain_values</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">unknown</span> <span class="o">=</span> <span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">change_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">retain_values</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Change the task to the given task. Retain the value of the options,</span>
+<span class="sd">        that are present in the new task.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">retain_values</span><span class="p">:</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">only_changed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_members_from_the_definition</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">retain_values</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="InputParameters.save_to_file">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.save_to_file">[docs]</a>
-  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">save_hook</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">save_hook</span><span class="p">(</span>
-             <span class="nb">getattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-             <span class="n">atoms</span>
-          <span class="p">)</span>
-      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="s2">&quot;save&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">save_hook</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">save_hook</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">atoms</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span></div>
 </div>
 
 
 
 <span class="c1"># at least, to avoid a circular import</span>
-<span class="kn">from</span> <span class="nn">..sprkkr</span> <span class="kn">import</span> <span class="n">calculator</span>   <span class="c1"># NOQA: E402</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">input_parameters_definitions</span> <span class="k">as</span> <span class="n">ipdefs</span>  <span class="c1"># NOQA: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculator</span>  <span class="c1"># NOQA: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">input_parameters_definitions</span> <span class="k">as</span> <span class="n">ipdefs</span>  <span class="c1"># NOQA: E402</span>
 </pre></div>
 
            </div>

@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.common.parsing_results &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -91,18 +91,18 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.common.parsing_results</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pp</span>
 
 
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.Result.html#ase2sprkkr.common.parsing_results.Result">[docs]</a>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; When data are parsed, some (repeated) options can yield</span>
-<span class="sd">    special keys, results in agregating &quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;When data are parsed, some (repeated) options can yield</span>
+<span class="sd">    special keys, results in agregating&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Result.result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.Result.html#ase2sprkkr.common.parsing_results.Result.result">[docs]</a>
-    <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
@@ -110,21 +110,27 @@
 
 <div class="viewcode-block" id="Key">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.Key.html#ase2sprkkr.common.parsing_results.Key">[docs]</a>
-<span class="k">class</span> <span class="nc">Key</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; A base class for items, that have to be treated in a special way &quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Key</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A base class for items, that have to be treated in a special way&quot;&quot;&quot;</span>
 
-    <span class="n">NONE</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span>
+<div class="viewcode-block" id="Key.NONE">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.Key.html#ase2sprkkr.common.parsing_results.Key.NONE">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">NONE</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+
+
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; The regular items has no special key &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Key.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.Key.html#ase2sprkkr.common.parsing_results.Key.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span></div>
 
 
 <div class="viewcode-block" id="Key.get">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.Key.html#ase2sprkkr.common.parsing_results.Key.get">[docs]</a>
-    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="ow">in</span> <span class="n">too</span><span class="p">:</span>
             <span class="n">out</span> <span class="o">=</span> <span class="n">too</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ResultClass</span><span class="p">:</span>
@@ -140,14 +146,14 @@
 
 <div class="viewcode-block" id="IgnoredKey">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.IgnoredKey.html#ase2sprkkr.common.parsing_results.IgnoredKey">[docs]</a>
-<span class="k">class</span> <span class="nc">IgnoredKey</span><span class="p">(</span><span class="n">Key</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; This key is totaly and silently ignored. Use it</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IgnoredKey</span><span class="p">(</span><span class="n">Key</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This key is totaly and silently ignored. Use it</span>
 <span class="sd">    for the keys, that should be written, but not read.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="IgnoredKey.add">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.IgnoredKey.html#ase2sprkkr.common.parsing_results.IgnoredKey.add">[docs]</a>
-    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="k">return</span></div>
 </div>
 
@@ -155,13 +161,14 @@
 
 <div class="viewcode-block" id="ValidateKey">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.ValidateKey.html#ase2sprkkr.common.parsing_results.ValidateKey">[docs]</a>
-<span class="k">class</span> <span class="nc">ValidateKey</span><span class="p">(</span><span class="n">Key</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; This key is totaly and silently ignored. Use it</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ValidateKey</span><span class="p">(</span><span class="n">Key</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This key is totaly and silently ignored. Use it</span>
 <span class="sd">    for the keys, that should be written, but not read.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="ValidateKey.add">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.ValidateKey.html#ase2sprkkr.common.parsing_results.ValidateKey.add">[docs]</a>
-    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="n">too</span><span class="o">.</span><span class="n">checks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
 </div>
 
@@ -169,19 +176,19 @@
 
 <div class="viewcode-block" id="SubKey">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.SubKey.html#ase2sprkkr.common.parsing_results.SubKey">[docs]</a>
-<span class="k">class</span> <span class="nc">SubKey</span><span class="p">(</span><span class="n">Key</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; A base class for items that have subkeys &quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SubKey</span><span class="p">(</span><span class="n">Key</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A base class for items that have subkeys&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SubKey.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.SubKey.html#ase2sprkkr.common.parsing_results.SubKey.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">sub</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">sub</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SubKey.convert">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.SubKey.html#ase2sprkkr.common.parsing_results.SubKey.convert">[docs]</a>
-    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span></div>
 </div>
 
@@ -189,22 +196,20 @@
 
 <div class="viewcode-block" id="DictKey">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.DictKey.html#ase2sprkkr.common.parsing_results.DictKey">[docs]</a>
-<span class="k">class</span> <span class="nc">DictKey</span><span class="p">(</span><span class="n">SubKey</span><span class="p">):</span>
-
+<span class="k">class</span><span class="w"> </span><span class="nc">DictKey</span><span class="p">(</span><span class="n">SubKey</span><span class="p">):</span>
 <div class="viewcode-block" id="DictKey.ResultClass">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.DictKey.html#ase2sprkkr.common.parsing_results.DictKey.ResultClass">[docs]</a>
-    <span class="k">class</span> <span class="nc">ResultClass</span><span class="p">(</span><span class="n">Result</span><span class="p">):</span>
-
-        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">ResultClass</span><span class="p">(</span><span class="n">Result</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 
 <div class="viewcode-block" id="DictKey.add">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.DictKey.html#ase2sprkkr.common.parsing_results.DictKey.add">[docs]</a>
-    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">too</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">too</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
-             <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Duplicate key </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sub</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Duplicate key </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sub</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sub</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 </div>
 
@@ -212,69 +217,64 @@
 
 <div class="viewcode-block" id="DefDictKey">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.DefDictKey.html#ase2sprkkr.common.parsing_results.DefDictKey">[docs]</a>
-<span class="k">class</span> <span class="nc">DefDictKey</span><span class="p">(</span><span class="n">DictKey</span><span class="p">):</span>
-
+<span class="k">class</span><span class="w"> </span><span class="nc">DefDictKey</span><span class="p">(</span><span class="n">DictKey</span><span class="p">):</span>
 <div class="viewcode-block" id="DefDictKey.convert">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.DefDictKey.html#ase2sprkkr.common.parsing_results.DefDictKey.convert">[docs]</a>
-    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">sub</span> <span class="k">if</span> <span class="n">sub</span> <span class="o">==</span> <span class="s1">&#39;def&#39;</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">sub</span> <span class="k">if</span> <span class="n">sub</span> <span class="o">==</span> <span class="s2">&quot;def&quot;</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span></div>
 </div>
 
 
 
 <div class="viewcode-block" id="ArrayKey">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.ArrayKey.html#ase2sprkkr.common.parsing_results.ArrayKey">[docs]</a>
-<span class="k">class</span> <span class="nc">ArrayKey</span><span class="p">(</span><span class="n">SubKey</span><span class="p">):</span>
-
+<span class="k">class</span><span class="w"> </span><span class="nc">ArrayKey</span><span class="p">(</span><span class="n">SubKey</span><span class="p">):</span>
 <div class="viewcode-block" id="ArrayKey.ResultClass">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.ArrayKey.html#ase2sprkkr.common.parsing_results.ArrayKey.ResultClass">[docs]</a>
-    <span class="k">class</span> <span class="nc">ResultClass</span><span class="p">(</span><span class="n">Result</span><span class="p">):</span>
-
+    <span class="k">class</span><span class="w"> </span><span class="nc">ResultClass</span><span class="p">(</span><span class="n">Result</span><span class="p">):</span>
         <span class="n">NOT_SET</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
 
-        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="ArrayKey.ResultClass.result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.ArrayKey.html#ase2sprkkr.common.parsing_results.ArrayKey.ResultClass.result">[docs]</a>
-        <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
 
 <div class="viewcode-block" id="ArrayKey.add">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.ArrayKey.html#ase2sprkkr.common.parsing_results.ArrayKey.add">[docs]</a>
-    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">too</span><span class="p">)</span>
         <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">ln</span> <span class="o">&lt;</span> <span class="n">i</span><span class="p">:</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="o">+=</span><span class="p">[</span><span class="n">out</span><span class="o">.</span><span class="n">NOT_SET</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">ln</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="p">[</span><span class="n">out</span><span class="o">.</span><span class="n">NOT_SET</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">ln</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ln</span> <span class="o">==</span> <span class="n">i</span><span class="p">:</span>
             <span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">out</span><span class="o">.</span><span class="n">NOT_SET</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Duplicate key </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sub</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">val</span></div>
+            <span class="n">out</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span></div>
 </div>
 
 
 
 <div class="viewcode-block" id="RepeatedKey">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.RepeatedKey.html#ase2sprkkr.common.parsing_results.RepeatedKey">[docs]</a>
-<span class="k">class</span> <span class="nc">RepeatedKey</span><span class="p">(</span><span class="n">Key</span><span class="p">):</span>
-
+<span class="k">class</span><span class="w"> </span><span class="nc">RepeatedKey</span><span class="p">(</span><span class="n">Key</span><span class="p">):</span>
 <div class="viewcode-block" id="RepeatedKey.ResultClass">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.RepeatedKey.html#ase2sprkkr.common.parsing_results.RepeatedKey.ResultClass">[docs]</a>
-    <span class="k">class</span> <span class="nc">ResultClass</span><span class="p">(</span><span class="n">Result</span><span class="p">):</span>
-
-        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">ResultClass</span><span class="p">(</span><span class="n">Result</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">[]</span></div>
 
 
 <div class="viewcode-block" id="RepeatedKey.add">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.RepeatedKey.html#ase2sprkkr.common.parsing_results.RepeatedKey.add">[docs]</a>
-    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">too</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">too</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
 </div>
 
@@ -282,11 +282,12 @@
 
 <div class="viewcode-block" id="Values">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.Values.html#ase2sprkkr.common.parsing_results.Values">[docs]</a>
-<span class="k">class</span> <span class="nc">Values</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Result of dict_from_parsed: dictionary with list of checks on the parsed values.&quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Values</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Result of dict_from_parsed: dictionary with list of checks on the parsed values.&quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="Values.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.Values.html#ase2sprkkr.common.parsing_results.Values.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="p">[]</span></div>
@@ -294,34 +295,33 @@
 
 <div class="viewcode-block" id="Values.to_dict">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.Values.html#ase2sprkkr.common.parsing_results.Values.to_dict">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span> <span class="n">i</span><span class="p">:</span> <span class="n">j</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">Values</span><span class="p">)</span> <span class="k">else</span> <span class="n">j</span>
-                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">j</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">Values</span><span class="p">)</span> <span class="k">else</span> <span class="n">j</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
 </div>
 
 
 
 <div class="viewcode-block" id="dict_from_parsed">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.parsing_results.dict_from_parsed.html#ase2sprkkr.common.parsing_results.dict_from_parsed">[docs]</a>
-<span class="k">def</span> <span class="nf">dict_from_parsed</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Create a dictionary from the arguments.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dict_from_parsed</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a dictionary from the arguments.</span>
 <span class="sd">    From duplicate arguments create numpy arrays.</span>
 <span class="sd">    Moreover, if there is key of type (a,b), it will be transformed to subdictionary.</span>
 <span class="sd">    Such a keys do not allow duplicates.</span>
 
-<span class="sd">    &gt;&gt;&gt; dict_from_parsed( [ (&#39;x&#39;, &#39;y&#39;),  ((DictKey(&#39;a&#39;, 1)), 1 ), ((DictKey(&#39;a&#39;, 3)), 2) ] )</span>
+<span class="sd">    &gt;&gt;&gt; dict_from_parsed([(&quot;x&quot;, &quot;y&quot;), ((DictKey(&quot;a&quot;, 1)), 1), ((DictKey(&quot;a&quot;, 3)), 2)])</span>
 <span class="sd">    {&#39;x&#39;: &#39;y&#39;, &#39;a&#39;: {1: 1, 3: 2}}</span>
-<span class="sd">    &gt;&gt;&gt; dict_from_parsed( [ (&#39;x&#39;, 1), (&#39;x&#39;, &#39;2&#39;) ] ) # doctest: +IGNORE_EXCEPTION_DETAIL</span>
+<span class="sd">    &gt;&gt;&gt; dict_from_parsed([(&quot;x&quot;, 1), (&quot;x&quot;, &quot;2&quot;)])  # doctest: +IGNORE_EXCEPTION_DETAIL</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    pyparsing.exceptions.ParseException: There are non-unique keys: x</span>
-<span class="sd">    &gt;&gt;&gt; dict_from_parsed( [ (RepeatedKey(&#39;x&#39;), 1), (RepeatedKey(&#39;x&#39;), 2) ] )</span>
+<span class="sd">    &gt;&gt;&gt; dict_from_parsed([(RepeatedKey(&quot;x&quot;), 1), (RepeatedKey(&quot;x&quot;), 2)])</span>
 <span class="sd">    {&#39;x&#39;: [1, 2]}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">Values</span><span class="p">()</span>
     <span class="n">duplicates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
     <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">Key</span><span class="p">):</span>
             <span class="n">key</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
@@ -331,18 +331,18 @@
 
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-           <span class="n">add</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+            <span class="n">add</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-           <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">process</span><span class="p">:</span>
         <span class="n">out</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
-         <span class="k">try</span><span class="p">:</span>
-           <span class="n">i</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-           <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">i</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">duplicates</span><span class="p">:</span>
         <span class="n">duplicates</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">i</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="p">))</span>
@@ -351,7 +351,7 @@
     <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">errors</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">))</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">))</span>
         <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There are errors in data: </span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
 

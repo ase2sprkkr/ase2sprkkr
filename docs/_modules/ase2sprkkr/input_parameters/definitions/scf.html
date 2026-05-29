@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.input_parameters.definitions.scf &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -91,29 +91,27 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.definitions.scf</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; SCF task input parameters definition&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">.sections</span> <span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SCF</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">CPA</span><span class="p">,</span> <span class="n">MODE</span><span class="p">,</span> <span class="n">TASK</span>
-<span class="kn">from</span> <span class="nn">..input_parameters_definitions</span> <span class="kn">import</span> \
-    <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span> \
-    <span class="c1">#   ,InputValueDefinition as V</span>
+<span></span><span class="sd">&quot;&quot;&quot;SCF task input parameters definition&quot;&quot;&quot;</span>
 
-<span class="n">input_parameters</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">InputParameters</span><span class="p">(</span>
-      <span class="s1">&#39;scf&#39;</span><span class="p">,</span> <span class="p">[</span>
-        <span class="n">CONTROL</span><span class="p">(</span><span class="s1">&#39;SCF&#39;</span><span class="p">),</span>
-        <span class="n">TASK</span><span class="p">(</span><span class="s1">&#39;SCF&#39;</span><span class="p">),</span>
-        <span class="n">TAU</span><span class="p">,</span>
-        <span class="n">ENERGY</span><span class="p">(),</span>
-        <span class="n">SCF</span><span class="p">,</span>
-        <span class="n">SITES</span><span class="p">,</span>
-        <span class="n">STRCONST</span><span class="p">,</span>
-        <span class="n">CPA</span><span class="p">,</span>
-        <span class="n">MODE</span>
-      <span class="p">],</span>
-      <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;SCF - Calculate a self-consistent potential&quot;</span><span class="p">,</span>
-      <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-      <span class="n">executable</span> <span class="o">=</span> <span class="s1">&#39;kkrscf&#39;</span><span class="p">,</span>
-      <span class="n">mpi</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SCF</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">CPA</span><span class="p">,</span> <span class="n">MODE</span><span class="p">,</span> <span class="n">TASK</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span>
+<span class="c1">#   ,InputValueDefinition as V</span>
+
+
+<div class="viewcode-block" id="input_parameters">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.scf.input_parameters.html#ase2sprkkr.input_parameters.definitions.scf.input_parameters">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">InputParameters</span><span class="p">(</span>
+        <span class="s2">&quot;scf&quot;</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">CONTROL</span><span class="p">(</span><span class="s2">&quot;SCF&quot;</span><span class="p">),</span> <span class="n">TASK</span><span class="p">(</span><span class="s2">&quot;SCF&quot;</span><span class="p">),</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">(),</span> <span class="n">SCF</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">CPA</span><span class="p">,</span> <span class="n">MODE</span><span class="p">],</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;SCF - Calculate a self-consistent potential&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;kkrscf&quot;</span><span class="p">,</span>
+        <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
 <span class="sd">&quot;&quot;&quot; SCF task input parameters definition&quot;&quot;&quot;</span>
 </pre></div>
 

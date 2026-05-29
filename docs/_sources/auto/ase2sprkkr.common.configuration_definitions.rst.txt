@@ -30,6 +30,8 @@ Full name: **ase2sprkkr.common.configuration\_definitions**
       :toctree:
       :template: custom-base-template.rst
    
+      _definition_write_condition_always_true
+      _if_defined_helper
       gather
       if_defined
       if_not_defined

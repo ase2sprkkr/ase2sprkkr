@@ -47,6 +47,17 @@ Full name: **ase2sprkkr.input\_parameters.definitions.sections**
       ENERGY
       TASK
       _nktab_value
+      _sections_energy_emax_default_value
+      _sections_energy_emax_from_emin_default_value
+      _sections_energy_emax_is_optional
+      _sections_energy_emaxev_from_eminev_default_value
+      _sections_energy_emin_default_value
+      _sections_energy_emin_is_optional
+      _sections_tau_bzint_default_value
+      _sections_tau_bzint_weyl_write_condition
+      _sections_xc_enrich
+      _sections_xc_jacobs_ladder
+      _sections_xc_libxc_name
       xc
    
    

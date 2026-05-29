@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.magnetic_anisotropy &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -92,13 +92,13 @@
              
   <h1>Source code for ase2sprkkr.asr.magnetic_anisotropy</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Magnetic anisotropy.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span>
 
 
 <div class="viewcode-block" id="get_spin_axis">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.magnetic_anisotropy.get_spin_axis.html#ase2sprkkr.asr.magnetic_anisotropy.get_spin_axis">[docs]</a>
-<span class="k">def</span> <span class="nf">get_spin_axis</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_spin_axis</span><span class="p">():</span>
     <span class="n">anis</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;results-asr.magnetic_anisotropy.json&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">anis</span><span class="p">[</span><span class="s1">&#39;theta&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">pi</span><span class="p">,</span> <span class="n">anis</span><span class="p">[</span><span class="s1">&#39;phi&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">pi</span></div>
 
@@ -106,7 +106,7 @@
 
 <div class="viewcode-block" id="get_spin_index">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.magnetic_anisotropy.get_spin_index.html#ase2sprkkr.asr.magnetic_anisotropy.get_spin_index">[docs]</a>
-<span class="k">def</span> <span class="nf">get_spin_index</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_spin_index</span><span class="p">():</span>
     <span class="n">anis</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;results-asr.magnetic_anisotropy.json&#39;</span><span class="p">)</span>
     <span class="n">axis</span> <span class="o">=</span> <span class="n">anis</span><span class="p">[</span><span class="s1">&#39;spin_axis&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span>
@@ -121,8 +121,8 @@
 
 <div class="viewcode-block" id="spin_axis">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.magnetic_anisotropy.spin_axis.html#ase2sprkkr.asr.magnetic_anisotropy.spin_axis">[docs]</a>
-<span class="k">def</span> <span class="nf">spin_axis</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">spin_axis</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
     <span class="k">if</span> <span class="n">theta</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;z&#39;</span>
     <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="mi">90</span><span class="p">):</span>
@@ -134,8 +134,8 @@
 
 <div class="viewcode-block" id="webpanel">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.magnetic_anisotropy.webpanel.html#ase2sprkkr.asr.magnetic_anisotropy.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">table</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.database.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">table</span>
     <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;magstate&#39;</span><span class="p">,</span> <span class="s1">&#39;NM&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;NM&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[]</span>
 
@@ -160,7 +160,7 @@
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.magnetic_anisotropy.Result.html#ase2sprkkr.asr.magnetic_anisotropy.Result">[docs]</a>
 <span class="nd">@prepare_result</span>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">spin_axis</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">E_x</span><span class="p">:</span> <span class="nb">float</span>
@@ -192,7 +192,7 @@
          <span class="n">tests</span><span class="o">=</span><span class="n">tests</span><span class="p">,</span>
          <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">,</span>
          <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.gs@calculate&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.magstate&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the magnetic anisotropy.</span>
 
 <span class="sd">    Uses the magnetic anisotropy to calculate the preferred spin orientation</span>
@@ -203,10 +203,10 @@
 <span class="sd">        theta: Polar angle in radians</span>
 <span class="sd">        phi: Azimuthal angle in radians</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">read_json</span>
-    <span class="kn">from</span> <span class="nn">gpaw.spinorbit</span> <span class="kn">import</span> <span class="n">soc_eigenstates</span>
-    <span class="kn">from</span> <span class="nn">gpaw.occupations</span> <span class="kn">import</span> <span class="n">create_occ_calc</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_json</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.spinorbit</span><span class="w"> </span><span class="kn">import</span> <span class="n">soc_eigenstates</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.occupations</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_occ_calc</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
 
     <span class="n">magstateresults</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;results-asr.magstate.json&#39;</span><span class="p">)</span>
     <span class="n">magstate</span> <span class="o">=</span> <span class="n">magstateresults</span><span class="p">[</span><span class="s1">&#39;magstate&#39;</span><span class="p">]</span>

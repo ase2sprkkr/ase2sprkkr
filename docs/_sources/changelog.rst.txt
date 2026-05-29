@@ -1,6 +1,30 @@
 Changelog
 =========
 
+Version 3.5
+-----------
+* JXC output parsed
+* JXC output files plotting
+* XAS plotting
+* Semiinfinite structures building improved
+* Uppasd improvements: calling sd directly, input file stub writing
+* Better multiple plots layout
+* A few more values parsed for SFC task
+* Tool: Python like output for ase2sprkkr k-path tool
+* Tool: ase2sprkkr example for searching (--regex) and showing examples
+* Tool: ase2sprkkr shell --pdb for running examples in python debugger
+* Better Hall number determination from Cell
+* Docstrings for examples
+* Various bugfixies
+* SLURM work manager autodetection
+
+internals
+~~~~~~~~~
+* Ruff adoption: formated code and code cleaning
+* Pickability of the Atom objects (for better ase.view compatibility)
+* ProcessOutput and ProcessReaders refactoring
+* Actions for Outputs and OutputFiles (for GUI)
+
 Version 3.4
 -----------
 

@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.tools.commands.k_path &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -95,40 +95,51 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">GUI for specifiing BSF k-points PATH</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">__package__</span><span class="p">:</span>
-  <span class="n">__package__</span> <span class="o">=</span> <span class="s1">&#39;ase2sprkkr.tools.commands&#39;</span>
+    <span class="n">__package__</span> <span class="o">=</span> <span class="s2">&quot;ase2sprkkr.tools.commands&quot;</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
 
-<span class="kn">from</span> <span class="nn">...common.tools</span> <span class="kn">import</span> <span class="n">main</span>  <span class="c1"># NOQA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span>  <span class="c1"># NOQA</span>
 
-<span class="n">help</span><span class="o">=</span><span class="s1">&#39;GUI for specifiing BSF k-points PATH&#39;</span>
+<span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;GUI for specifiing BSF k-points PATH (for E-K mode)&quot;</span>
 
-<span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\n</span><span class="s2"> Editor, where you can choose the points, along them is the k-path generated.&quot;&quot;&quot;</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\n</span><span class="s2"> Editor, where you can choose the points, along them is the k-path generated. The output can be added to the input parameters, e.g.</span>
+
+<span class="s2">from numpy import array</span>
+<span class="s2">calculator.input_parameters.set(</span>
+<span class="s2">{&#39;NKDIR&#39;: 1, &#39;NK&#39;: 146, &#39;KA&#39;: array([[ 0.33333333, -0.57735027, -0.02551552]]), &#39;KE&#39;: array([[ 6.66666667e-01, -8.21078625e-17, -2.55155182e-02]])}</span>
+<span class="s2">)</span>
+<span class="s2">&quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="parser">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.k_path.parser.html#ase2sprkkr.tools.commands.k_path.parser">[docs]</a>
-<span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;potential&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Potential file.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Verbose.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;potential&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Potential file.&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Verbose.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--input-file&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print the path as part of the SPRKKR input file.&quot;</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="run">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.k_path.run.html#ase2sprkkr.tools.commands.k_path.run">[docs]</a>
-<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ase2sprkkr</span> <span class="kn">import</span> <span class="n">Potential</span>
-    <span class="kn">from</span> <span class="nn">ase2sprkkr.gui.k_path</span> <span class="kn">import</span> <span class="n">k_path_gui</span><span class="p">,</span> <span class="n">k_path_to_string</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">global_args</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">Potential</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.gui.k_path</span><span class="w"> </span><span class="kn">import</span> <span class="n">k_path_gui</span><span class="p">,</span> <span class="n">k_path_to_string</span>
+
     <span class="n">kpath</span> <span class="o">=</span> <span class="n">k_path_gui</span><span class="p">(</span><span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">potential</span><span class="p">)</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">kpath</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">k_path_to_string</span><span class="p">(</span><span class="n">kpath</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">input_file</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">k_path_to_string</span><span class="p">(</span><span class="n">kpath</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">kpath</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No k-path selected&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No k-path selected&quot;</span><span class="p">)</span>
         <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
 
 </pre></div>

@@ -1,0 +1,63 @@
+rat
+===
+
+Full name: **ase2sprkkr.output\_files.definitions.rat**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.output_files.definitions.rat.RATDefinition  ase2sprkkr.output_files.definitions.rat.RATOutputFile 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.output_files.definitions.rat
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      G
+      create_definition
+      draw_plot
+      generate_data_calling_function
+      plot
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      RATDefinition
+      RATOutputFile
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

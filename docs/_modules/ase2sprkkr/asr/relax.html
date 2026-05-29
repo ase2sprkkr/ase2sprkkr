@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.relax &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -135,22 +135,22 @@
 
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">write</span><span class="p">,</span> <span class="n">Trajectory</span>
-<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
-<span class="kn">from</span> <span class="nn">ase.optimize.bfgs</span> <span class="kn">import</span> <span class="n">BFGS</span>
-<span class="kn">from</span> <span class="nn">ase.calculators.calculator</span> <span class="kn">import</span> <span class="n">PropertyNotImplementedError</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write</span><span class="p">,</span> <span class="n">Trajectory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atoms</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.optimize.bfgs</span><span class="w"> </span><span class="kn">import</span> <span class="n">BFGS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">PropertyNotImplementedError</span>
 
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">AtomsFile</span><span class="p">,</span> <span class="n">DictStr</span><span class="p">,</span> <span class="n">prepare_result</span><span class="p">,</span> <span class="n">ASRResult</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">AtomsFile</span><span class="p">,</span> <span class="n">DictStr</span><span class="p">,</span> <span class="n">prepare_result</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
 
 <div class="viewcode-block" id="BrokenSymmetryError">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.BrokenSymmetryError.html#ase2sprkkr.asr.relax.BrokenSymmetryError">[docs]</a>
-<span class="k">class</span> <span class="nc">BrokenSymmetryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BrokenSymmetryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
@@ -170,7 +170,7 @@
 
 <div class="viewcode-block" id="is_relax_done">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.is_relax_done.html#ase2sprkkr.asr.relax.is_relax_done">[docs]</a>
-<span class="k">def</span> <span class="nf">is_relax_done</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">smax</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_relax_done</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">smax</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span>
                   <span class="n">smask</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])):</span>
     <span class="n">f</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_stress</span><span class="p">()</span> <span class="o">*</span> <span class="n">smask</span>
@@ -182,12 +182,12 @@
 
 <div class="viewcode-block" id="SpgAtoms">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms">[docs]</a>
-<span class="k">class</span> <span class="nc">SpgAtoms</span><span class="p">(</span><span class="n">Atoms</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SpgAtoms</span><span class="p">(</span><span class="n">Atoms</span><span class="p">):</span>
 
 <div class="viewcode-block" id="SpgAtoms.from_atoms">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms.from_atoms">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_atoms</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_atoms</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
         <span class="c1"># Due to technicalities we cannot mess with the __init__ constructor</span>
         <span class="c1"># -&gt; therefore we make our own</span>
         <span class="n">a</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
@@ -197,7 +197,7 @@
 
 <div class="viewcode-block" id="SpgAtoms.set_symmetries">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms.set_symmetries">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_symmetries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symmetries</span><span class="p">,</span> <span class="n">translations</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_symmetries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symmetries</span><span class="p">,</span> <span class="n">translations</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t_sc</span> <span class="o">=</span> <span class="n">translations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">op_svv</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">op_cc</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span> <span class="k">for</span>
                        <span class="n">op_cc</span> <span class="ow">in</span> <span class="n">symmetries</span><span class="p">]</span>
@@ -225,7 +225,7 @@
 
 <div class="viewcode-block" id="SpgAtoms.get_stress">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms.get_stress">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voigt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voigt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">sigma0_vv</span> <span class="o">=</span> <span class="n">Atoms</span><span class="o">.</span><span class="n">get_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voigt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">sigma_vv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
@@ -241,7 +241,7 @@
 
 <div class="viewcode-block" id="SpgAtoms.get_forces">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms.get_forces">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">f0_av</span> <span class="o">=</span> <span class="n">Atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">f_av</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">f0_av</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">map_a</span><span class="p">,</span> <span class="n">op_vv</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a_sa</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_svv</span><span class="p">):</span>
@@ -255,11 +255,11 @@
 
 <div class="viewcode-block" id="myBFGS">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.myBFGS.html#ase2sprkkr.asr.relax.myBFGS">[docs]</a>
-<span class="k">class</span> <span class="nc">myBFGS</span><span class="p">(</span><span class="n">BFGS</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">myBFGS</span><span class="p">(</span><span class="n">BFGS</span><span class="p">):</span>
 
 <div class="viewcode-block" id="myBFGS.log">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.myBFGS.html#ase2sprkkr.asr.relax.myBFGS.log">[docs]</a>
-    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">forces</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">forces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">stress</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -292,12 +292,12 @@
 
 <div class="viewcode-block" id="relax">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.relax.html#ase2sprkkr.asr.relax.relax">[docs]</a>
-<span class="k">def</span> <span class="nf">relax</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">tmp_atoms_file</span><span class="p">,</span> <span class="n">emin</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">smask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dftd3</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">relax</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">tmp_atoms_file</span><span class="p">,</span> <span class="n">emin</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">smask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dftd3</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
           <span class="n">fixcell</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_symmetry_breaking</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dft</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
           <span class="n">fmax</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">enforce_symmetry</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
     <span class="k">if</span> <span class="n">dftd3</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">ase.calculators.dftd3</span> <span class="kn">import</span> <span class="n">DFTD3</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.dftd3</span><span class="w"> </span><span class="kn">import</span> <span class="n">DFTD3</span>
 
     <span class="n">nd</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_pbc</span><span class="p">()))</span>
     <span class="k">if</span> <span class="n">smask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -312,7 +312,7 @@
             <span class="k">assert</span> <span class="n">pbc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;1D periodic axis should be the last one.&quot;</span>
             <span class="n">smask</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 
-    <span class="kn">from</span> <span class="nn">asr.utils.symmetry</span> <span class="kn">import</span> <span class="n">atoms2symmetry</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.utils.symmetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">atoms2symmetry</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">atoms2symmetry</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span>
                              <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
                              <span class="n">angle_tolerance</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span><span class="o">.</span><span class="n">dataset</span>
@@ -330,7 +330,7 @@
     <span class="n">atoms</span><span class="o">.</span><span class="n">calc</span> <span class="o">=</span> <span class="n">calc</span>
 
     <span class="c1"># We are fixing atom=0 to reduce computational effort</span>
-    <span class="kn">from</span> <span class="nn">ase.constraints</span> <span class="kn">import</span> <span class="n">ExpCellFilter</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.constraints</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExpCellFilter</span>
     <span class="nb">filter</span> <span class="o">=</span> <span class="n">ExpCellFilter</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">smask</span><span class="p">)</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tmp_atoms_file</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
     <span class="k">try</span><span class="p">:</span>
@@ -385,7 +385,7 @@
 
 <div class="viewcode-block" id="set_initial_magnetic_moments">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.set_initial_magnetic_moments.html#ase2sprkkr.asr.relax.set_initial_magnetic_moments">[docs]</a>
-<span class="k">def</span> <span class="nf">set_initial_magnetic_moments</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_initial_magnetic_moments</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
     <span class="n">atoms</span><span class="o">.</span><span class="n">set_initial_magnetic_moments</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">),</span> <span class="nb">float</span><span class="p">))</span></div>
 
 
@@ -393,7 +393,7 @@
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.Result.html#ase2sprkkr.asr.relax.Result">[docs]</a>
 <span class="nd">@prepare_result</span>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Result class for :py:func:`asr.relax.main`.&quot;&quot;&quot;</span>
 
     <span class="n">version</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
@@ -447,7 +447,7 @@
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--fmax&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum force allowed.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--enforce-symmetry/--dont-enforce-symmetry&#39;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Symmetrize forces and stresses.&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span>
          <span class="n">calculator</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;gpaw&#39;</span><span class="p">,</span>
                              <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;pw&#39;</span><span class="p">,</span> <span class="s1">&#39;ecut&#39;</span><span class="p">:</span> <span class="mi">800</span><span class="p">},</span>
                              <span class="s1">&#39;xc&#39;</span><span class="p">:</span> <span class="s1">&#39;PBE&#39;</span><span class="p">,</span>
@@ -494,7 +494,7 @@
 <span class="sd">        stresses will be symmetrized at each step of the relaxation.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">ase.calculators.calculator</span> <span class="kn">import</span> <span class="n">get_calculator_class</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_calculator_class</span>
 
     <span class="k">if</span> <span class="n">tmp_atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">atoms</span> <span class="o">=</span> <span class="n">tmp_atoms</span>
@@ -511,7 +511,7 @@
     <span class="n">nd</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_pbc</span><span class="p">()))</span>
     <span class="k">if</span> <span class="n">calculatorname</span> <span class="o">==</span> <span class="s1">&#39;gpaw&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="s1">&#39;kpts&#39;</span> <span class="ow">in</span> <span class="n">calculator</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">ase.calculators.calculator</span> <span class="kn">import</span> <span class="n">kpts2kpts</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">kpts2kpts</span>
             <span class="k">if</span> <span class="s1">&#39;density&#39;</span> <span class="ow">in</span> <span class="n">calculator</span><span class="p">[</span><span class="s1">&#39;kpts&#39;</span><span class="p">]:</span>
                 <span class="n">kpts</span> <span class="o">=</span> <span class="n">kpts2kpts</span><span class="p">(</span><span class="n">calculator</span><span class="p">[</span><span class="s1">&#39;kpts&#39;</span><span class="p">],</span> <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">)</span>
                 <span class="n">calculator</span><span class="p">[</span><span class="s1">&#39;kpts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kpts</span>

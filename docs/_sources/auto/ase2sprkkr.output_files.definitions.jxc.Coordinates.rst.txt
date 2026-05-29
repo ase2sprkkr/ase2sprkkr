@@ -1,0 +1,36 @@
+Coordinates
+===========
+
+
+.. currentmodule:: ase2sprkkr.output_files.definitions.jxc
+
+.. autoclass:: Coordinates
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.output_files.definitions.jxc.Coordinates
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

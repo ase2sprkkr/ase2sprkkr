@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.common.formats &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -91,49 +91,50 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.common.formats</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; Formating routines &quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">re</span>
+<span></span><span class="sd">&quot;&quot;&quot;Formating routines&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
 
 <div class="viewcode-block" id="format_for_string">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.formats.format_for_string.html#ase2sprkkr.common.formats.format_for_string">[docs]</a>
-<span class="k">def</span> <span class="nf">format_for_string</span><span class="p">(</span><span class="nb">format</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">format_for_string</span><span class="p">(</span><span class="nb">format</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a format string derived from given format,</span>
 <span class="sd">    that suits for string.</span>
 
-<span class="sd">    &gt;&gt;&gt; format_for_string(&#39;&gt;14&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; format_for_string(&quot;&gt;14&quot;)</span>
 <span class="sd">    &#39;&gt;14&#39;</span>
-<span class="sd">    &gt;&gt;&gt; format_for_string(&#39;&gt;14e&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; format_for_string(&quot;&gt;14e&quot;)</span>
 <span class="sd">    &#39;&gt;14&#39;</span>
-<span class="sd">    &gt;&gt;&gt; format_for_string(&#39;&gt;14e&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; format_for_string(&quot;&gt;14e&quot;)</span>
 <span class="sd">    &#39;&gt;14&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;[eEfFgG]$&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[eEfFgG]$&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="full_format_for_string">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.formats.full_format_for_string.html#ase2sprkkr.common.formats.full_format_for_string">[docs]</a>
-<span class="k">def</span> <span class="nf">full_format_for_string</span><span class="p">(</span><span class="nb">format</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">full_format_for_string</span><span class="p">(</span><span class="nb">format</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a format string derived from the given format,</span>
 <span class="sd">    that suits for string.</span>
 
-<span class="sd">    &gt;&gt;&gt; full_format_for_string(&#39;Cokoli {&gt;14} tu&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; full_format_for_string(&quot;Cokoli {&gt;14} tu&quot;)</span>
 <span class="sd">    &#39;Cokoli {&gt;14} tu&#39;</span>
-<span class="sd">    &gt;&gt;&gt; full_format_for_string(&#39;Remove{&gt;14e}here&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; full_format_for_string(&quot;Remove{&gt;14e}here&quot;)</span>
 <span class="sd">    &#39;Remove{&gt;14}here&#39;</span>
-<span class="sd">    &gt;&gt;&gt; full_format_for_string(&#39;{&gt;14g}&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; full_format_for_string(&quot;{&gt;14g}&quot;)</span>
 <span class="sd">    &#39;{&gt;14}&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;[eEfFgG]}(?!})&#39;</span><span class="p">,</span><span class="s1">&#39;}&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[eEfFgG]}(?!})&quot;</span><span class="p">,</span> <span class="s2">&quot;}&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="fortran_format">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.formats.fortran_format.html#ase2sprkkr.common.formats.fortran_format">[docs]</a>
-<span class="k">def</span> <span class="nf">fortran_format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;:.12e&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fortran_format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;:.12e&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Format the value with a leading zero.</span>
 
@@ -159,19 +160,19 @@
 <span class="sd">    output: str</span>
 <span class="sd">      A string containing the number in scientific notation with a leading zero.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">la</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;{&#39;</span> <span class="o">+</span> <span class="nb">format</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+    <span class="n">la</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;{&quot;</span> <span class="o">+</span> <span class="nb">format</span> <span class="o">+</span> <span class="s2">&quot;}&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
-    <span class="n">leading</span> <span class="o">=</span> <span class="n">la</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">la</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)]</span>
+    <span class="n">leading</span> <span class="o">=</span> <span class="n">la</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">la</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)]</span>
     <span class="n">la</span> <span class="o">=</span> <span class="n">a</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
-    <span class="n">trailing</span> <span class="o">=</span> <span class="n">la</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">):]</span>
-    <span class="k">if</span> <span class="s1">&#39;E&#39;</span> <span class="ow">in</span> <span class="nb">format</span><span class="p">:</span>
-        <span class="n">e</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="s1">&#39;e&#39;</span> <span class="ow">in</span> <span class="nb">format</span><span class="p">:</span>
-        <span class="n">e</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">)</span>
+    <span class="n">trailing</span> <span class="o">=</span> <span class="n">la</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="p">:]</span>
+    <span class="k">if</span> <span class="s2">&quot;E&quot;</span> <span class="ow">in</span> <span class="nb">format</span><span class="p">:</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;E&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">&quot;e&quot;</span> <span class="ow">in</span> <span class="nb">format</span><span class="p">:</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;e&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="p">(</span><span class="s2">&quot;No E in fortran format string: &quot;</span> <span class="o">+</span> <span class="nb">format</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">leading</span> <span class="o">+</span> <span class="s1">&#39;0.</span><span class="si">{}{}{}{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="n">e</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="n">e</span><span class="p">:</span><span class="n">e</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span><span class="nb">abs</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">e</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:])</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">trailing</span></div>
+    <span class="k">return</span> <span class="n">leading</span> <span class="o">+</span> <span class="s2">&quot;0.</span><span class="si">{}{}{}{:02d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="n">e</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">e</span> <span class="p">:</span> <span class="n">e</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">e</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:])</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">trailing</span></div>
 
 </pre></div>
 

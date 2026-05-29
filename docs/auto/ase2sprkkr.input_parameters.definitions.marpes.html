@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>marpes &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -144,7 +144,7 @@ INPUT PARAMETERS arpes contains:
 --------------------------------
         SECTION CONTROL contains:
     -----------------------------
-        DATASET : String                  The custom field for the description of the problem - the output files will have called &#39;DATASET.&lt;ext&gt;&#39;.
+        DATASET : String ≝ case           The custom field for the description of the problem - the output files will been called &#39;DATASET.&lt;ext&gt;&#39;.
         ADSI : FixedValue(ARPES) ≝ ARPES  Type of the computation.
         POTFIL : String                   The potential file (see SPRKKR documentation for its format). It isn&#39;t necessary to set it, it will be set by the calculator.
         KRWS : Integer ≝ 1  (optional)    If it is 0, RWS is taken from the potential file and scaled. If 1, RWS is calculated by scaling the muffin-tin radii by a common scaling factor. (This setting is forced in the case of FULLPOT.)
@@ -162,9 +162,9 @@ INPUT PARAMETERS arpes contains:
             It controls how the muffin-tin radii are calculated.
 
         PRINT : Integer ≝ 0  (optional)   Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output.
-        NONMAG : Flag ≝ False             Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation.
-        NOHFF : Flag ≝ False              Set this flag, if you want to include hyper fine field calculation. This leads to a slower calculation.
-        NOSYM : Flag ≝ False              Set this flag, if you want to supress all symetry consideration. This leads to a slower calculation.
+        NONMAG : Flag ≝ False  (optional)  Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation.
+        NOHFF : Flag ≝ False  (optional)  Set this flag, if you want to include hyper fine field calculation. This leads to a slower calculation.
+        NOSYM : Flag ≝ False  (optional)  Set this flag, if you want to supress all symetry consideration. This leads to a slower calculation.
 
 
 
@@ -193,9 +193,9 @@ INPUT PARAMETERS arpes contains:
         NKTAB : Integer ≝ 555  (optional)  Number of points for the special points method
         NKTAB2D : Integer  (optional)     Number of points for the special points method for 2D region of 2D problem
         NKTAB3D : Integer  (optional)     Number of points for the special points method for 3D region of 2D problem
-        NKMIN : Integer ≝ 300             Minimal number of k-points used for Weyl integration
-        NKMAX : Integer ≝ 500             Maximal number of k-points used for Weyl integration
-        KKRMODE : AnyOf(STANDARD-KKR,TB-KKR,LAYER-KKR)  (optional)
+        NKMIN : Integer ≝ 300  (optional)  Minimal number of k-points used for Weyl integration
+        NKMAX : Integer ≝ 500  (optional)  Maximal number of k-points used for Weyl integration
+        KKRMODE : AnyOf(STANDARD,TB,IMPURITY)  (optional)
 
         Expert options:
         --------------
@@ -218,21 +218,21 @@ INPUT PARAMETERS arpes contains:
         EMINEV : Real ≝ -8.0  (optional)  EMIN, given in eV with respect to the Fermi level
         EMAX : Real  (optional)           Maximum of the energy window in eV with respect to the Fermi level
         EMAXEV : Real ≝ 5.0  (optional)   EMAX in eV with respect to the Fermi level
-        EWORK_EV : Real ≝ 4.2             Inner potential of the bulk crystal in eV
-        IMV_INI_EV : Real ≝ 0.05          Imaginary part of the potential in eV (initial state)
-        IMV_FIN_EV : Real ≝ 2.0           Imaginary part of the potential in eV (final state)
+        EWORK_EV : Real ≝ 4.2  (optional)  Inner potential of the bulk crystal in eV
+        IMV_INI_EV : Real ≝ 0.05  (optional)  Imaginary part of the potential in eV (initial state)
+        IMV_FIN_EV : Real ≝ 2.0  (optional)  Imaginary part of the potential in eV (final state)
 
 
 
         SECTION SITES contains:
     ---------------------------
-        NL : Array(of Integer) ≝ [4]      Angula momentum cutoff (the first discarded l-space)
+        NL : Array(of Integer) ≝ [4]  (optional)  Angula momentum cutoff (the first discarded l-space)
 
 
 
         SECTION TASK contains:
     --------------------------
-        TASK : AnyOf(ARPES,AIPES,SPLEED,BAND) ≝ ARPES
+        TASK : AnyOf(ARPES,AIPES,SPLEED,BAND) ≝ ARPES  (optional)
 
             Possible values:
               ARPES     Angle resolved photoemission spectroscopy
@@ -244,7 +244,7 @@ INPUT PARAMETERS arpes contains:
 
         IQ_AT_SURF : Site ≝ 1  (optional)
         MILLER_HKL : Array(of Integer of length 3) ≝ [0 0 1]  (optional)
-        CRYS_VEC : Flag ≝ True            Miller indices with respect to crystalographic primitive vectors
+        CRYS_VEC : Flag ≝ True  (optional)  Miller indices with respect to crystalographic primitive vectors
 
         Expert options:
         --------------
@@ -255,10 +255,10 @@ INPUT PARAMETERS arpes contains:
 
         SECTION SPEC_PH contains:
     -----------------------------
-        THETA : Real ≝ 45.0               Direction of the photon (the polar coordinate)
-        PHI : Real ≝ 0.0                  Direction of the photon (the azimuth coordinate)
-        POL_P : AnyOf(P,S,C+,C-) ≝ P      Polarization of the light
-        EPHOT : Real ≝ 25.0               Photon energy in eV
+        THETA : Real ≝ 45.0  (optional)   Direction of the photon (the polar coordinate)
+        PHI : Real ≝ 0.0  (optional)      Direction of the photon (the azimuth coordinate)
+        POL_P : AnyOf(P,S,C+,C-) ≝ P  (optional)  Polarization of the light
+        EPHOT : Real ≝ 25.0  (optional)   Photon energy in eV
 
         Expert options:
         --------------
@@ -319,7 +319,7 @@ INPUT PARAMETERS arpes contains:
         NK3 : Integer  (optional)         Number of momentum steps 3 for the integration
         K4 : Range  (optional)            Translating vector 4 of the scatering in momentum space
         NK4 : Integer  (optional)         Number of momentum steps 4 for the integration
-        POL_E : FixedValue(PZ) ≝ PZ
+        POL_E : FixedValue(PZ) ≝ PZ  (optional)
         SPOL : Integer  (optional)
         PSPIN : Array(of Real of length 3)  (optional)
         BETA1 : Real  (optional)          Begin of the rotation
@@ -355,8 +355,8 @@ INPUT PARAMETERS arpes contains:
         SECTION SPEC_STR contains:
     ------------------------------
         N_LAYDBL : Array(of Integer) ≝ [10 10]  (optional)
-        NLAT_G_VEC : Integer ≝ 57
-        N_LAYER : Integer ≝ 50
+        NLAT_G_VEC : Integer ≝ 57  (optional)
+        N_LAYER : Integer ≝ 50  (optional)
         SURF_BAR : Array(of Real) ≝ [0.25 0.25]  (optional)
         TRANSP_BAR : Flag ≝ False  (optional)
 </pre></div>

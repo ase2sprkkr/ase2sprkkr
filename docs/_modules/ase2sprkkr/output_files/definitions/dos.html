@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.output_files.definitions.dos &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -92,46 +92,47 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.output_files.definitions.dos</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">..output_files_definitions</span> <span class="kn">import</span> <span class="n">OutputFileValueDefinition</span> <span class="k">as</span> <span class="n">V</span><span class="p">,</span> <span class="n">create_output_file_definition</span><span class="p">,</span> <span class="n">OutputFileDefinition</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">..output_files_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">OutputFileValueDefinition</span> <span class="k">as</span> <span class="n">V</span><span class="p">,</span>
+    <span class="n">create_output_file_definition</span><span class="p">,</span>
+    <span class="n">OutputFileDefinition</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 
-<span class="kn">from</span> <span class="nn">..output_files</span> <span class="kn">import</span> <span class="n">CommonOutputFile</span><span class="p">,</span> <span class="n">Arithmetic</span>
-<span class="kn">from</span> <span class="nn">...common.grammar_types</span> <span class="kn">import</span> <span class="n">NumpyArray</span>
-<span class="kn">from</span> <span class="nn">...common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
-<span class="kn">from</span> <span class="nn">...common.generated_configuration_definitions</span> <span class="kn">import</span> \
-    <span class="n">NumpyViewDefinition</span> <span class="k">as</span> <span class="n">NV</span>
-<span class="kn">from</span> <span class="nn">...gui.plot</span> <span class="kn">import</span> <span class="n">Multiplot</span><span class="p">,</span> <span class="n">set_up_common_plot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..output_files</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommonOutputFile</span><span class="p">,</span> <span class="n">Arithmetic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">NumpyArray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.generated_configuration_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">NumpyViewDefinition</span> <span class="k">as</span> <span class="n">NV</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...gui.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">Multiplot</span><span class="p">,</span> <span class="n">set_up_common_plot</span>
 
-<span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Rydberg</span>
-<span class="kn">from</span> <span class="nn">packaging.version</span> <span class="kn">import</span> <span class="n">Version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rydberg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packaging.version</span><span class="w"> </span><span class="kn">import</span> <span class="n">Version</span>
 
 
 <div class="viewcode-block" id="DOS">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOS.html#ase2sprkkr.output_files.definitions.dos.DOS">[docs]</a>
-<span class="k">class</span> <span class="nc">DOS</span><span class="p">(</span><span class="n">Arithmetic</span><span class="p">):</span>
-
+<span class="k">class</span><span class="w"> </span><span class="nc">DOS</span><span class="p">(</span><span class="n">Arithmetic</span><span class="p">):</span>
 <div class="viewcode-block" id="DOS.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOS.html#ase2sprkkr.output_files.definitions.dos.DOS.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="n">dos</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># NOQA</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Object, that holds DOS for one atom</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="n">dos</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># NOQA</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Object, that holds DOS for one atom</span>
 <span class="sd">        (given type and corresponding id id DOS file)</span>
-<span class="sd">        spin, l (s,p,d,f...) &quot;&quot;&quot;</span>
+<span class="sd">        spin, l (s,p,d,f...)&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="n">energy</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">spin</span> <span class="o">=</span> <span class="n">spin</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">l</span> <span class="o">=</span> <span class="n">l</span>    <span class="c1"># NOQA</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l</span> <span class="o">=</span> <span class="n">l</span>  <span class="c1"># NOQA</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dos</span> <span class="o">=</span> <span class="n">dos</span></div>
 
 
 <div class="viewcode-block" id="DOS.copy">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOS.html#ase2sprkkr.output_files.definitions.dos.DOS.copy">[docs]</a>
-    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy_values</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy_values</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">copy_values</span><span class="p">:</span>
             <span class="n">out</span><span class="o">.</span><span class="n">dos</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">dos</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -139,74 +140,75 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dos</span><span class="o">.</span><span class="n">shape</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dos</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
 
 <div class="viewcode-block" id="DOS.plot">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOS.html#ase2sprkkr.output_files.definitions.dos.DOS.plot">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">legend_ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">legend_height</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">legend_fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">axis</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$E-E_{\rm F}$ (eV)&#39;</span><span class="p">)</span>
-        <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;DOS (states/eV)&#39;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">legend_ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">legend_height</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">legend_fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$E-E_{\rm F}$ (eV)&quot;</span><span class="p">)</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;DOS (states/eV)&quot;</span><span class="p">)</span>
 
         <span class="n">title</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
-           <span class="n">title</span><span class="o">=</span><span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="p">]</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-           <span class="n">title</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;spin </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">({</span><span class="mi">0</span><span class="p">:</span><span class="s1">&#39;up&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="s1">&#39;down&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spin</span><span class="p">)))</span>
+            <span class="n">title</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;spin </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">({</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;up&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;down&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spin</span><span class="p">)))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">l</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-           <span class="n">orbital</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;f&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-           <span class="n">title</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">orbital</span> <span class="o">+</span> <span class="s1">&#39;orbitals&#39;</span> <span class="k">if</span> <span class="n">orbital</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">l</span><span class="p">)</span>
+            <span class="n">orbital</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;f&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">title</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">orbital</span> <span class="o">+</span> <span class="s2">&quot;orbitals&quot;</span> <span class="k">if</span> <span class="n">orbital</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">l</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
-           <span class="n">axis</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">title</span><span class="p">))</span>
+            <span class="n">axis</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">title</span><span class="p">))</span>
 
         <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;blue&#39;</span> <span class="p">},</span>
-            <span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;green&#39;</span> <span class="p">},</span>
-            <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;orange&#39;</span> <span class="p">},</span>
-            <span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;cyan&#39;</span> <span class="p">},</span>
-            <span class="s1">&#39;total&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;black&#39;</span> <span class="p">}</span>
+            <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;orange&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;cyan&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">},</span>
         <span class="p">}</span>
-        <span class="n">set_up_common_plot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">set_up_common_plot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">plot_l</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>  <span class="c1"># NOQA</span>
-            <span class="n">i</span> <span class="o">=</span> <span class="n">l</span> <span class="k">if</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">params</span> <span class="k">else</span> <span class="s1">&#39;total&#39;</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">plot_l</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>  <span class="c1"># NOQA</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">l</span> <span class="k">if</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">params</span> <span class="k">else</span> <span class="s2">&quot;total&quot;</span>
             <span class="n">args</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">line</span><span class="p">,</span> <span class="o">=</span> <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">l</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">line</span><span class="p">,)</span> <span class="o">=</span> <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">l</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">line</span>
 
-        <span class="k">def</span> <span class="nf">plot_spin</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="n">legend</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">plot_spin</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="n">legend</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">spin</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-               <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="o">*</span> <span class="n">spin</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="o">*</span> <span class="n">spin</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">l</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-               <span class="n">handles</span> <span class="o">=</span> <span class="p">[</span> <span class="n">plot_l</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">l</span><span class="p">)</span> <span class="p">]</span>
+                <span class="n">handles</span> <span class="o">=</span> <span class="p">[</span><span class="n">plot_l</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">l</span><span class="p">)]</span>
             <span class="k">else</span><span class="p">:</span>
-               <span class="n">handles</span> <span class="o">=</span> <span class="p">[</span>
-                   <span class="n">plot_l</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="k">for</span>
-                   <span class="n">d</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="s1">&#39;f&#39;</span><span class="p">))</span>
-               <span class="p">]</span>
-               <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">handles</span><span class="p">):</span>
-                 <span class="n">handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                   <span class="n">plot_l</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">spin</span><span class="p">,</span> <span class="s1">&#39;total&#39;</span><span class="p">)</span>
-                 <span class="p">)</span>
+                <span class="n">handles</span> <span class="o">=</span> <span class="p">[</span><span class="n">plot_l</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">))]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">handles</span><span class="p">):</span>
+                    <span class="n">handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plot_l</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">spin</span><span class="p">,</span> <span class="s2">&quot;total&quot;</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">legend</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">l</span><span class="p">:</span>
-                <span class="n">ncols</span> <span class="o">=</span> <span class="s1">&#39;ncols&#39;</span> <span class="k">if</span> <span class="n">Version</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">Version</span><span class="p">(</span><span class="s2">&quot;3.6&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;ncol&#39;</span>
-                <span class="n">axis</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">handles</span><span class="p">,</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">legend_fontsize</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">ncols</span> <span class="p">:</span> <span class="n">legend_ncols</span> <span class="p">},</span> <span class="n">handleheight</span><span class="o">=</span><span class="n">legend_height</span><span class="p">)</span>
+                <span class="n">ncols</span> <span class="o">=</span> <span class="s2">&quot;ncols&quot;</span> <span class="k">if</span> <span class="n">Version</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">Version</span><span class="p">(</span><span class="s2">&quot;3.6&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;ncol&quot;</span>
+                <span class="n">axis</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                    <span class="n">handles</span><span class="o">=</span><span class="n">handles</span><span class="p">,</span>
+                    <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span>
+                    <span class="n">fontsize</span><span class="o">=</span><span class="n">legend_fontsize</span><span class="p">,</span>
+                    <span class="o">**</span><span class="p">{</span><span class="n">ncols</span><span class="p">:</span> <span class="n">legend_ncols</span><span class="p">},</span>
+                    <span class="n">handleheight</span><span class="o">=</span><span class="n">legend_height</span><span class="p">,</span>
+                <span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-           <span class="n">plot_spin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spin</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">plot_spin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spin</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-           <span class="n">legend</span><span class="o">=</span><span class="kc">True</span>
-           <span class="k">for</span> <span class="n">d</span><span class="p">,</span><span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dos</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
-               <span class="n">plot_spin</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">s</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">)</span>
-               <span class="n">legend</span><span class="o">=</span><span class="kc">False</span></div>
+            <span class="n">legend</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dos</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
+                <span class="n">plot_spin</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">)</span>
+                <span class="n">legend</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="DOS._do_arithmetic">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOS.html#ase2sprkkr.output_files.definitions.dos.DOS._do_arithmetic">[docs]</a>
-    <span class="k">def</span> <span class="nf">_do_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_do_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">DOS</span><span class="p">):</span>
             <span class="n">other</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">dos</span>
         <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dos</span><span class="p">,</span> <span class="n">func</span><span class="p">)(</span><span class="n">other</span><span class="p">)</span>
@@ -216,27 +218,26 @@
 
 <div class="viewcode-block" id="DOS._check_arithmetic">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOS.html#ase2sprkkr.output_files.definitions.dos.DOS._check_arithmetic">[docs]</a>
-    <span class="k">def</span> <span class="nf">_check_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">energy</span> <span class="ow">is</span> <span class="n">other</span><span class="o">.</span><span class="n">energy</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
-           <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;DOS of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;DOS of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-           <span class="k">return</span> <span class="s1">&#39;DOS&#39;</span></div>
+            <span class="k">return</span> <span class="s2">&quot;DOS&quot;</span></div>
 
 
 
 <div class="viewcode-block" id="DOSOutputFile">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile">[docs]</a>
-<span class="k">class</span> <span class="nc">DOSOutputFile</span><span class="p">(</span><span class="n">CommonOutputFile</span><span class="p">):</span>
-
+<span class="k">class</span><span class="w"> </span><span class="nc">DOSOutputFile</span><span class="p">(</span><span class="n">CommonOutputFile</span><span class="p">):</span>
 <div class="viewcode-block" id="DOSOutputFile.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">add_hook</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clear_computed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">EFERMI</span><span class="o">.</span><span class="n">add_hook</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clear_computed</span><span class="p">)</span></div>
@@ -244,31 +245,46 @@
 
 <div class="viewcode-block" id="DOSOutputFile._clear_computed">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile._clear_computed">[docs]</a>
-    <span class="k">def</span> <span class="nf">_clear_computed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s1">&#39;energy&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_clear_computed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;energy&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">energy</span></div>
 
 
+<div class="viewcode-block" id="DOSOutputFile.energy">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile.energy">[docs]</a>
     <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ENERGY</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">EFERMI</span><span class="p">())</span> <span class="o">*</span> <span class="n">Rydberg</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ENERGY</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">EFERMI</span><span class="p">())</span> <span class="o">*</span> <span class="n">Rydberg</span></div>
+
 
 <div class="viewcode-block" id="DOSOutputFile.plot">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile.plot">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">latex</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># NOQA</span>
-             <span class="n">filename</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
-             <span class="o">**</span><span class="n">kwargs</span>
-             <span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">l</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">layout</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="n">latex</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># NOQA</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">show</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">n_types</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_types</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">n_types</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">n_types</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="n">layout</span> <span class="o">=</span> <span class="p">(</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_types</span><span class="p">()</span> <span class="p">)</span> <span class="o">//</span> <span class="n">layout</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">layout</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">Multiplot</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">latex</span><span class="o">=</span><span class="n">latex</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span>
-                       <span class="n">adjust</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="mf">0.12</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span> <span class="s1">&#39;hspace&#39;</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">,</span> <span class="s1">&#39;wspace&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">},</span>
-                       <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">mp</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">dos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterate_dos</span><span class="p">(</span><span class="n">spin</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">layout</span> <span class="o">=</span> <span class="p">((</span><span class="n">n_types</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">layout</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">n_types</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">Multiplot</span><span class="p">(</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">latex</span><span class="o">=</span><span class="n">latex</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">mp</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">dos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterate_dos</span><span class="p">(</span><span class="n">spin</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">n_types</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="n">mp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dos</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        In addition to the general Container __getitem__, the following</span>
 <span class="sd">        is possible&gt;</span>
@@ -280,84 +296,82 @@
         <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">ke</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="nb">type</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">):</span>
-                  <span class="k">if</span> <span class="nb">type</span><span class="p">[</span><span class="s1">&#39;TXT_T&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
-                      <span class="n">name</span> <span class="o">=</span> <span class="n">i</span>
-                      <span class="k">break</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">[</span><span class="s2">&quot;TXT_T&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="n">i</span>
+                        <span class="k">break</span>
                 <span class="k">else</span><span class="p">:</span>
-                  <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is no atomic type </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> nor such value&quot;</span>
-                                 <span class="s2">&quot; in the DOS file&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">ke</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">slc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterate_data_slices</span><span class="p">()):</span>
+                    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is no atomic type </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> nor such value in the DOS file&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ke</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">slc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterate_data_slices</span><span class="p">()):</span>
                 <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
-                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dos</span><span class="p">(</span><span class="n">slc</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is no </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">th atomic type&quot;</span>
-                           <span class="s2">&quot; in the DOS file&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">ke</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dos</span><span class="p">(</span><span class="n">slc</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is no </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">th atomic type in the DOS file&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ke</span>
 
 <div class="viewcode-block" id="DOSOutputFile.total_dos">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile.total_dos">[docs]</a>
-    <span class="k">def</span> <span class="nf">total_dos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ll</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterate_dos</span><span class="p">(</span><span class="n">spin</span><span class="p">,</span> <span class="n">ll</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">total_dos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ll</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterate_dos</span><span class="p">(</span><span class="n">spin</span><span class="p">,</span> <span class="n">ll</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">True</span><span class="p">)][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterate_dos</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DOSOutputFile._resolve_spin">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile._resolve_spin">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_resolve_spin</span><span class="p">(</span><span class="n">spin</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_spin</span><span class="p">(</span><span class="n">spin</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spin</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;up&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;down&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">}[</span><span class="n">spin</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;up&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;down&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}[</span><span class="n">spin</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
         <span class="k">return</span> <span class="n">spin</span></div>
 
 
 <div class="viewcode-block" id="DOSOutputFile.iterate_data_slices">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile.iterate_data_slices">[docs]</a>
-    <span class="k">def</span> <span class="nf">iterate_data_slices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># NOQA</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">iterate_data_slices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># NOQA</span>
         <span class="n">spins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_spins</span><span class="p">()</span>
-        <span class="n">end</span><span class="o">=</span><span class="mi">0</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">():</span>
-            <span class="n">start</span><span class="o">=</span><span class="n">end</span>
-            <span class="n">orbitals</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_orbitals_for</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-            <span class="n">end</span><span class="o">+=</span><span class="n">orbitals</span> <span class="o">*</span> <span class="n">spins</span>
-            <span class="k">yield</span> <span class="nb">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="n">end</span><span class="p">)</span></div>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+            <span class="n">orbitals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_orbitals_for</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">+=</span> <span class="n">orbitals</span> <span class="o">*</span> <span class="n">spins</span>
+            <span class="k">yield</span> <span class="nb">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DOSOutputFile.iterate_dos">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile.iterate_dos">[docs]</a>
-    <span class="k">def</span> <span class="nf">iterate_dos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>  <span class="c1"># NOQA</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">iterate_dos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>  <span class="c1"># NOQA</span>
         <span class="n">spin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_spin</span><span class="p">(</span><span class="n">spin</span><span class="p">)</span>
         <span class="n">total</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">slic</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterate_data_slices</span><span class="p">()):</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dos</span><span class="p">(</span> <span class="n">slic</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">slic</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterate_data_slices</span><span class="p">()):</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dos</span><span class="p">(</span><span class="n">slic</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">out</span>
             <span class="k">if</span> <span class="n">total</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="n">ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;CONC&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;IQAT&#39;</span><span class="p">])</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;CONC&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;IQAT&quot;</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">total</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="n">total</span> <span class="o">=</span> <span class="n">out</span> <span class="o">*</span> <span class="n">ratio</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">total</span><span class="o">.</span><span class="n">dos</span> <span class="o">+=</span> <span class="n">out</span><span class="o">.</span><span class="n">dos</span> <span class="o">*</span> <span class="n">ratio</span>
         <span class="k">if</span> <span class="n">total</span><span class="p">:</span>
-            <span class="n">total</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;total&#39;</span>
+            <span class="n">total</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;total&quot;</span>
             <span class="k">yield</span> <span class="n">total</span></div>
 
 
 <div class="viewcode-block" id="DOSOutputFile.index_of_dos_for_site_type">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile.index_of_dos_for_site_type">[docs]</a>
-    <span class="k">def</span> <span class="nf">index_of_dos_for_site_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Return slice to the DOS array selecting the datas for a given site type &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">index_of_dos_for_site_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return slice to the DOS array selecting the datas for a given site type&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">atom</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">site_type_index</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">slic</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterate_data_slices</span><span class="p">()):</span>
-            <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="n">atom</span><span class="p">:</span>
-               <span class="k">return</span> <span class="n">slic</span></div>
+            <span class="n">atom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_type_index</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">slic</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterate_data_slices</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">atom</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">slic</span></div>
 
 
 <div class="viewcode-block" id="DOSOutputFile.dos_for_site_type">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile.dos_for_site_type">[docs]</a>
-    <span class="k">def</span> <span class="nf">dos_for_site_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># NOQA</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Return density of states for a given atom,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dos_for_site_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># NOQA</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return density of states for a given atom,</span>
 <span class="sd">        indexed either by integer index, or a string type.</span>
 
 <span class="sd">        The resulting array is indexed by: [l, spin, energy], however,</span>
@@ -365,44 +379,42 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">spin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_spin</span><span class="p">(</span><span class="n">spin</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">atom</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">site_type_index</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+            <span class="n">atom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_type_index</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
         <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_of_dos_for_site_type</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dos</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DOSOutputFile._create_dos">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile._create_dos">[docs]</a>
-    <span class="k">def</span> <span class="nf">_create_dos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># NOQA</span>
-        <span class="nb">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="nb">id</span><span class="p">][</span><span class="s1">&#39;TXT_T&#39;</span><span class="p">]</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_dos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># NOQA</span>
+        <span class="nb">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="nb">id</span><span class="p">][</span><span class="s2">&quot;TXT_T&quot;</span><span class="p">]</span>
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DOS</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_orbitals_for</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="nb">id</span><span class="p">]),</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
         <span class="c1"># out = np.moveaxis(out, 1, 0)</span>
         <span class="k">if</span> <span class="n">l</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-           <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">[:,</span><span class="n">l</span><span class="p">]</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[:,</span> <span class="n">l</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">spin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-           <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">[</span><span class="n">spin</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">DOS</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="n">out</span> <span class="o">/</span> <span class="n">Rydberg</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span></div>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">spin</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">DOS</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="n">out</span> <span class="o">/</span> <span class="n">Rydberg</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DOSOutputFile.n_orbitals_for">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile.n_orbitals_for">[docs]</a>
-    <span class="k">def</span> <span class="nf">n_orbitals_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_orbitals_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the number of orbitals for the given type record</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ORBITALS</span><span class="p">[</span><span class="n">iq</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;NLQ&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="nb">type</span><span class="p">[</span><span class="s1">&#39;IQAT&#39;</span><span class="p">]</span>
-        <span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ORBITALS</span><span class="p">[</span><span class="n">iq</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;NLQ&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="nb">type</span><span class="p">[</span><span class="s2">&quot;IQAT&quot;</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="DOSOutputFile.n_spins">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSOutputFile.html#ase2sprkkr.output_files.definitions.dos.DOSOutputFile.n_spins">[docs]</a>
-    <span class="k">def</span> <span class="nf">n_spins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_spins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the number of spins for each orbital</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DOS</span><span class="p">())</span>
-        <span class="n">orbitals</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_orbitals_for</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">()</span> <span class="p">)</span>
+        <span class="n">orbitals</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_orbitals_for</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">ln</span> <span class="o">//</span> <span class="n">orbitals</span></div>
 </div>
 
@@ -410,37 +422,44 @@
 
 <div class="viewcode-block" id="DOSDefinition">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.DOSDefinition.html#ase2sprkkr.output_files.definitions.dos.DOSDefinition">[docs]</a>
-<span class="k">class</span> <span class="nc">DOSDefinition</span><span class="p">(</span><span class="n">OutputFileDefinition</span><span class="p">):</span>
-
+<span class="k">class</span><span class="w"> </span><span class="nc">DOSDefinition</span><span class="p">(</span><span class="n">OutputFileDefinition</span><span class="p">):</span>
     <span class="n">result_class</span> <span class="o">=</span> <span class="n">DOSOutputFile</span></div>
 
 
 
 <div class="viewcode-block" id="create_definition">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.dos.create_definition.html#ase2sprkkr.output_files.definitions.dos.create_definition">[docs]</a>
-<span class="k">def</span> <span class="nf">create_definition</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_definition</span><span class="p">():</span>
 
-    <span class="k">def</span> <span class="nf">i</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span><span class="n">j</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">i</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="n">j</span>
 
-    <span class="n">definition</span> <span class="o">=</span> <span class="n">create_output_file_definition</span><span class="p">(</span><span class="s1">&#39;DOS&#39;</span><span class="p">,</span> <span class="p">[</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;DOS-FMT&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="s1">&#39;DOS-FMT:&#39;</span><span class="p">),</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;RAW_DATA&#39;</span><span class="p">,</span> <span class="n">NumpyArray</span><span class="p">(</span><span class="n">written_shape</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span>
-                               <span class="n">delimiter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">indented</span><span class="o">=</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span>
-                               <span class="n">item_format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%8.4E</span><span class="s1">&#39;</span>
-                    <span class="p">),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-
-      <span class="n">NV</span><span class="p">(</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">,</span> <span class="s1">&#39;RAW_DATA&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Energies&#39;</span><span class="p">),</span>
-      <span class="n">NV</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;RAW_DATA&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Y&#39;</span><span class="p">),</span>
-      <span class="n">NV</span><span class="p">(</span><span class="s1">&#39;DOS&#39;</span><span class="p">,</span> <span class="s1">&#39;RAW_DATA&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="kc">None</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">create_output_file_definition</span><span class="p">(</span>
+        <span class="s2">&quot;DOS&quot;</span><span class="p">,</span>
+        <span class="p">[</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;DOS-FMT&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="s2">&quot;DOS-FMT:&quot;</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span>
+                <span class="n">NumpyArray</span><span class="p">(</span><span class="n">written_shape</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">indented</span><span class="o">=</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">item_format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%8.4E</span><span class="s2">&quot;</span><span class="p">),</span>
+                <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">NV</span><span class="p">(</span><span class="s2">&quot;ENERGY&quot;</span><span class="p">,</span> <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Energies&quot;</span><span class="p">),</span>
+            <span class="n">NV</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Y&quot;</span><span class="p">),</span>
+            <span class="n">NV</span><span class="p">(</span>
+                <span class="s2">&quot;DOS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span>
+                <span class="n">i</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="kc">None</span><span class="p">)),</span>
+                <span class="p">(</span><span class="s2">&quot;NE&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
                 <span class="n">transpose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">transform_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span><span class="n">dos</span><span class="p">:</span> <span class="n">dos</span><span class="o">.</span><span class="n">index_of_dos_for_site_type</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">if</span>
-                                            <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">k</span><span class="p">,</span>
-                <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Desntity of states&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span>
-                <span class="s2">&quot;Density of states, the leading dimension iterates: &quot;</span>
-                <span class="s2">&quot;1..n_atoms, 1..n_spins, 1..n_orbitals(atoms) &quot;</span>
-    <span class="p">),</span>
-    <span class="p">],</span> <span class="bp">cls</span><span class="o">=</span><span class="n">DOSDefinition</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Result of a DOS (density of states) calculation.&#39;</span><span class="p">)</span>
+                <span class="n">transform_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">dos</span><span class="p">:</span> <span class="n">dos</span><span class="o">.</span><span class="n">index_of_dos_for_site_type</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">k</span><span class="p">,</span>
+                <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Desntity of states&quot;</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Density of states, the leading dimension iterates: &quot;</span>
+                <span class="s2">&quot;1..n_atoms, 1..n_spins, 1..n_orbitals(atoms) &quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="bp">cls</span><span class="o">=</span><span class="n">DOSDefinition</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Result of a DOS (density of states) calculation.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">definition</span></div>
 
 

@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.outputs.readers.scf**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.outputs.readers.scf.RealOrStars  ase2sprkkr.outputs.readers.scf.ScfOutputReader  ase2sprkkr.outputs.readers.scf.ScfProcessRunner  ase2sprkkr.outputs.readers.scf.ScfResult 
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.scf.DataValue  ase2sprkkr.outputs.readers.scf.IterationValue  ase2sprkkr.outputs.readers.scf.PlottableValue  ase2sprkkr.outputs.readers.scf.RealOrStars  ase2sprkkr.outputs.readers.scf.ScfOutputParser  ase2sprkkr.outputs.readers.scf.ScfOutputReader  ase2sprkkr.outputs.readers.scf.ScfResult 
       :parts: 1
 
 |
@@ -19,18 +19,18 @@ Full name: **ase2sprkkr.outputs.readers.scf**
 
    
    
-   .. rubric:: Module Attributes
+   
+
+
+   
+   
+   .. rubric:: Functions
 
    .. autosummary::
       :toctree:
       :template: custom-base-template.rst
    
-      atomic_types_definition
-   
-   
-
-
-   
+      plot_iterations
    
    
 
@@ -43,9 +43,12 @@ Full name: **ase2sprkkr.outputs.readers.scf**
       :toctree:
       :template: custom-class-template.rst
    
+      DataValue
+      IterationValue
+      PlottableValue
       RealOrStars
+      ScfOutputParser
       ScfOutputReader
-      ScfProcessRunner
       ScfResult
    
    

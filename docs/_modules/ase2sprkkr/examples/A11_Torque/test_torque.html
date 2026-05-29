@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.examples.A11_Torque.test_torque &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -91,12 +91,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.examples.A11_Torque.test_torque</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Magnetic torque calculations.&quot;&quot;&quot;</span>
+
+
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A11_Torque.test_torque.main.html#ase2sprkkr.examples.A11_Torque.test_torque.main">[docs]</a>
-<span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="kn">from</span> <span class="nn">ase2sprkkr.sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
-    <span class="kn">import</span> <span class="nn">os</span>
-    <span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting SPRKKR calculation...&quot;</span><span class="p">)</span>
 
@@ -112,15 +114,15 @@
 
     <span class="c1"># Set input parameters</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Setting up input parameters...&quot;</span><span class="p">)</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s1">&#39;torque&#39;</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">DATASET</span> <span class="o">=</span> <span class="s1">&#39;Fe&#39;</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s2">&quot;torque&quot;</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">DATASET</span> <span class="o">=</span> <span class="s2">&quot;Fe&quot;</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">MODE</span><span class="o">.</span><span class="n">MDIR</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>  <span class="c1"># Using floats instead of integers</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">MODE</span><span class="o">.</span><span class="n">MALF</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">MODE</span><span class="o">.</span><span class="n">MBET</span> <span class="o">=</span> <span class="mf">45.0</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">MODE</span><span class="o">.</span><span class="n">MGAM</span> <span class="o">=</span> <span class="mf">0.0</span>
 
     <span class="c1"># Define potential file path relative to the script location</span>
-    <span class="n">potential_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;Fe.pot_new&#39;</span><span class="p">)</span>
+    <span class="n">potential_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;Fe.pot_new&quot;</span><span class="p">)</span>
 
     <span class="c1"># Check if potential file exists</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">potential_file</span><span class="p">):</span>
@@ -134,14 +136,14 @@
 
     <span class="c1"># Run calculation with explicit path to kkrgen and save output to file</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting calculation...&quot;</span><span class="p">)</span>
-    <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;torque_calculation.out&#39;</span><span class="p">)</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;torque_calculation.out&quot;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>
+        <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>
             <span class="n">potential</span><span class="o">=</span><span class="n">potential_file</span><span class="p">,</span>
             <span class="n">directory</span><span class="o">=</span><span class="n">script_dir</span><span class="p">,</span>  <span class="c1"># Set the working directory for the calculation</span>
             <span class="n">print_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span>
+            <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calculation completed! Output saved to </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -150,7 +152,7 @@
         <span class="c1"># If there was an error but the output file exists, show its contents</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_file</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Output file contents ===&quot;</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;===========================&quot;</span><span class="p">)</span>
         <span class="k">raise</span>
@@ -158,7 +160,8 @@
     <span class="k">return</span> <span class="mi">0</span></div>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

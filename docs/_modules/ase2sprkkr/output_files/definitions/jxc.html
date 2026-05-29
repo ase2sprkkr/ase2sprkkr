@@ -1,0 +1,713 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.output_files.definitions.jxc &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../definitions.html">ase2sprkkr.output_files.definitions</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.output_files.definitions.jxc</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.output_files.definitions.jxc</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">..output_files_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutputFileValueDefinition</span> <span class="k">as</span> <span class="n">V</span><span class="p">,</span> <span class="n">OutputFileDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">cm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..output_files</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutputFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span><span class="p">,</span> <span class="n">cached_class_property</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">RawData</span><span class="p">,</span> <span class="n">Table</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">LineString</span><span class="p">,</span> <span class="n">NumpyArray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.configuration_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeparatorDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...gui.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">Multiplot</span>
+
+
+<div class="viewcode-block" id="Coordinates">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.Coordinates.html#ase2sprkkr.output_files.definitions.jxc.Coordinates">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Coordinates</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">cartesian</span> <span class="o">=</span> <span class="s2">&quot;cartesian&quot;</span>
+    <span class="n">lattice</span> <span class="o">=</span> <span class="s2">&quot;lattice&quot;</span></div>
+
+
+
+<span class="n">Selector</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;Selector&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;iq&quot;</span><span class="p">,</span> <span class="s2">&quot;it&quot;</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="JXCOutputFile">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">JXCOutputFile</span><span class="p">(</span><span class="n">OutputFile</span><span class="p">):</span>
+    <span class="n">plot_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;exchange_radius&quot;</span><span class="p">,</span> <span class="s2">&quot;iq&quot;</span><span class="p">,</span> <span class="s2">&quot;it&quot;</span><span class="p">,</span> <span class="s2">&quot;exclude_it&quot;</span><span class="p">,</span> <span class="s2">&quot;exclude_vc&quot;</span><span class="p">,</span> <span class="s2">&quot;font_size&quot;</span><span class="p">,</span> <span class="s2">&quot;axis&quot;</span><span class="p">,</span> <span class="s2">&quot;separate_plots&quot;</span><span class="p">}</span>
+
+<div class="viewcode-block" id="JXCOutputFile.is_Jij">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.is_Jij">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_Jij</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DATA</span><span class="p">()</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">15</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.is_Dij">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.is_Dij">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_Dij</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DATA</span><span class="p">()</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">14</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.iqs">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.iqs">[docs]</a>
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">iqs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="p">{</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">OCCUPATION</span><span class="p">()}</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.it_labels">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.it_labels">[docs]</a>
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">it_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">generator</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iqs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">it</span><span class="p">,</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">occ</span><span class="p">)</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">yield</span> <span class="n">it</span><span class="p">,</span> <span class="n">label</span>
+
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">generator</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.iq_to_its">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.iq_to_its">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">iq_to_its</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iq</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">iqs</span><span class="p">[</span><span class="n">iq</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.it_to_iqs">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.it_to_iqs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">it_to_iqs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">it</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">iq</span> <span class="k">for</span> <span class="n">iq</span><span class="p">,</span> <span class="n">types</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iqs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">types</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.labels_to_it">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.labels_to_it">[docs]</a>
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">labels_to_it</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">label</span><span class="p">:</span> <span class="n">it</span> <span class="k">for</span> <span class="n">it</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">it_labels</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.label_to_it">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.label_to_it">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">label_to_it</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels_to_it</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Unknown type label &#39;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">&#39;. Valid labels are: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels_to_it</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.element_to_its">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.element_to_its">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">element_to_its</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">it</span> <span class="k">for</span> <span class="n">it</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">it_labels</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">l</span> <span class="o">==</span> <span class="n">label</span> <span class="ow">or</span> <span class="n">l</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">label</span><span class="p">)]</span> <span class="o">==</span> <span class="s2">&quot;_&quot;</span><span class="p">)]</span></div>
+
+
+    <span class="nd">@cached_class_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_it_selector_regex</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s*([A-Z][a-z]*(_(\d+)))?\s*&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="JXCOutputFile.create_selector">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.create_selector">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_selector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">it</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_it</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_vc</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">selector</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">selector</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">parse_list</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">values</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">values</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">values</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">parse_it</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">values</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">values</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="o">...</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">parse_list</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+            <span class="n">out</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="n">out</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_it_selector_regex</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">it_labels</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Selector index out of range: </span><span class="si">{v}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">out</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid selector: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+                    <span class="n">out</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_to_it</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">its</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_to_its</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">its</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Selector </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2"> does not match any atomic type&quot;</span><span class="p">)</span>
+                    <span class="n">out</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">its</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">out</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">parse_iq</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">values</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">values</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="o">...</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">parse_list</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid IQ selector: </span><span class="si">{</span><span class="n">values</span><span class="si">}</span><span class="s2">. Must be (a comma-separated) list of integers.&quot;</span><span class="p">)</span>
+
+        <span class="n">iq</span> <span class="o">=</span> <span class="n">parse_iq</span><span class="p">(</span><span class="n">iq</span><span class="p">)</span>
+        <span class="n">it</span> <span class="o">=</span> <span class="n">parse_it</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+        <span class="n">exclude_it</span> <span class="o">=</span> <span class="n">parse_it</span><span class="p">(</span><span class="n">exclude_it</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">exclude_vc</span><span class="p">:</span>
+            <span class="n">exclude_vc</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">element_to_its</span><span class="p">(</span><span class="s2">&quot;Vc&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">exclude_it</span> <span class="ow">is</span> <span class="o">...</span><span class="p">:</span>
+                <span class="n">exclude_it</span> <span class="o">=</span> <span class="n">exclude_vc</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">exclude_it</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">exclude_vc</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">exclude_it</span> <span class="ow">is</span> <span class="ow">not</span> <span class="o">...</span><span class="p">:</span>
+            <span class="n">exclude_it</span> <span class="o">=</span> <span class="n">parse_it</span><span class="p">(</span><span class="n">exclude_it</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">it</span> <span class="ow">is</span> <span class="o">...</span><span class="p">:</span>
+                <span class="n">it</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">NT</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">it</span> <span class="o">=</span> <span class="n">it</span> <span class="o">-</span> <span class="n">exclude_it</span>
+        <span class="k">return</span> <span class="n">Selector</span><span class="p">(</span><span class="n">iq</span><span class="p">,</span> <span class="n">it</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.it_selector">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.it_selector">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">it_selector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">it</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_it</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_vc</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">selector</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">selector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_selector</span><span class="p">(</span><span class="n">iq</span><span class="o">=</span><span class="n">iq</span><span class="p">,</span> <span class="n">it</span><span class="o">=</span><span class="n">it</span><span class="p">,</span> <span class="n">exclude_vc</span><span class="o">=</span><span class="n">exclude_vc</span><span class="p">,</span> <span class="n">exclude_it</span><span class="o">=</span><span class="n">exclude_it</span><span class="p">)</span>
+        <span class="n">iq</span><span class="p">,</span> <span class="n">it</span> <span class="o">=</span> <span class="n">selector</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="k">if</span> <span class="n">iq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="o">...</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iq_to_its</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">iq</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">it</span> <span class="ow">is</span> <span class="ow">not</span> <span class="o">...</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">it</span> <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="o">...</span> <span class="k">else</span> <span class="nb">set</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.iq_selector">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.iq_selector">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">iq_selector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">it</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_it</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_vc</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">selector</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">selector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_selector</span><span class="p">(</span><span class="n">iq</span><span class="o">=</span><span class="n">iq</span><span class="p">,</span> <span class="n">it</span><span class="o">=</span><span class="n">it</span><span class="p">,</span> <span class="n">exclude_it</span><span class="o">=</span><span class="n">exclude_it</span><span class="p">,</span> <span class="n">exclude_vc</span><span class="o">=</span><span class="n">exclude_vc</span><span class="p">)</span>
+        <span class="n">iq</span><span class="p">,</span> <span class="n">it</span> <span class="o">=</span> <span class="n">selector</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">it_selector</span><span class="p">(</span><span class="n">selector</span><span class="o">=</span><span class="n">selector</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="o">...</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">...</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">it_to_iqs</span><span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">out</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.filtered_data">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.filtered_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filtered_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">it</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_it</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_vc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exchange_radius</span><span class="o">=</span><span class="mf">4.0</span><span class="p">):</span>
+        <span class="n">its</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">it_selector</span><span class="p">(</span><span class="n">selector</span><span class="o">=</span><span class="n">selector</span><span class="p">,</span> <span class="n">iq</span><span class="o">=</span><span class="n">iq</span><span class="p">,</span> <span class="n">it</span><span class="o">=</span><span class="n">it</span><span class="p">,</span> <span class="n">exclude_it</span><span class="o">=</span><span class="n">exclude_it</span><span class="p">,</span> <span class="n">exclude_vc</span><span class="o">=</span><span class="n">exclude_vc</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DATA</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">its</span> <span class="ow">is</span> <span class="o">...</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">its</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">its</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;IT&quot;</span><span class="p">],</span> <span class="n">its</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">&amp;=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;JT&quot;</span><span class="p">],</span> <span class="n">its</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">exchange_radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">&amp;=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;DR&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">exchange_radius</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;DR&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">exchange_radius</span>
+
+        <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile._spin_moments">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile._spin_moments">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_spin_moments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">atomic_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">moments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">atomic_type</span> <span class="ow">in</span> <span class="n">site</span><span class="o">.</span><span class="n">occupation</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">atomic_type</span> <span class="ow">in</span> <span class="n">atomic_types</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">atomic_types</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">atomic_type</span><span class="p">)</span>
+                <span class="n">moment</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">atomic_type</span><span class="o">.</span><span class="n">moments</span><span class="p">,</span> <span class="s2">&quot;spin_moment&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">moment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+                <span class="n">moments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">moment</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">moments</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile._dij_components">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile._dij_components">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_dij_components</span><span class="p">(</span><span class="n">component_axis</span><span class="p">):</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">([</span><span class="s2">&quot;DX&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">([</span><span class="s2">&quot;DY&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="p">([</span><span class="s2">&quot;DZ&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="p">([</span><span class="s2">&quot;DX&quot;</span><span class="p">,</span> <span class="s2">&quot;DY&quot;</span><span class="p">,</span> <span class="s2">&quot;DZ&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">]),</span>
+        <span class="p">}</span>
+        <span class="n">component_axis</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">:</span> <span class="s2">&quot;all&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">component_axis</span><span class="p">,</span> <span class="n">component_axis</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">components</span><span class="p">[</span><span class="n">component_axis</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid DMI axis &#39;</span><span class="si">{</span><span class="n">component_axis</span><span class="si">}</span><span class="s2">&#39;. Use one of: all, x, y, z.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.plot">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">layout</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">latex</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">show</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+        <span class="n">label_spacing</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+        <span class="n">selector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">iq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">it</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">exclude_it</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">exclude_vc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">exchange_radius</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>
+        <span class="n">font_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+        <span class="n">separate_plots</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">layout_kind</span><span class="o">=</span><span class="s2">&quot;constrained&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_layout</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">values</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+                <span class="n">cols</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+                <span class="n">rows</span> <span class="o">=</span> <span class="n">count</span> <span class="o">//</span> <span class="n">cols</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">count</span> <span class="o">%</span> <span class="n">cols</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="k">return</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">cols</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">layout</span>
+
+        <span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">it_labels</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filtered_data</span><span class="p">(</span>
+            <span class="n">selector</span><span class="o">=</span><span class="n">selector</span><span class="p">,</span>
+            <span class="n">iq</span><span class="o">=</span><span class="n">iq</span><span class="p">,</span>
+            <span class="n">it</span><span class="o">=</span><span class="n">it</span><span class="p">,</span>
+            <span class="n">exclude_it</span><span class="o">=</span><span class="n">exclude_it</span><span class="p">,</span>
+            <span class="n">exclude_vc</span><span class="o">=</span><span class="n">exclude_vc</span><span class="p">,</span>
+            <span class="n">exchange_radius</span><span class="o">=</span><span class="n">exchange_radius</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">type_indexes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">type_indexes</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">is_jij</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_Jij</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;DR&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">is_jij</span><span class="p">:</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">label</span><span class="p">(</span><span class="n">partner_index</span><span class="p">):</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">labels</span><span class="p">[</span><span class="n">type_index</span><span class="p">]</span><span class="si">}</span><span class="s2">$-$</span><span class="si">{</span><span class="n">labels</span><span class="p">[</span><span class="n">partner_index</span><span class="p">]</span><span class="si">}</span><span class="s2">$&quot;</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">value_label</span><span class="p">():</span>
+                <span class="k">return</span> <span class="sa">r</span><span class="s2">&quot;$J_</span><span class="si">{ij}</span><span class="s2">$&quot;</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">():</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Jij_</span><span class="si">{</span><span class="n">labels</span><span class="p">[</span><span class="n">type_index</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;JXX&quot;</span><span class="p">]]</span>
+
+            <span class="n">spin_mom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spin_moments</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">spin_mom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Spin moments not found.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">spin_mom</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NT</span><span class="p">():</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;Spin moments count does not match number of types - the potential do not matches the Jij data.&quot;</span>
+                <span class="p">)</span>
+                <span class="n">spin_mom</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">index</span><span class="p">,</span> <span class="n">axis_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dij_components</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">label</span><span class="p">(</span><span class="n">partner_index</span><span class="p">):</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">labels</span><span class="p">[</span><span class="n">type_index</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">labels</span><span class="p">[</span><span class="n">partner_index</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># $_{axis_labels[colindex]}$&#39;</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">value_label</span><span class="p">():</span>
+                <span class="k">return</span> <span class="sa">rf</span><span class="s2">&quot;$D_</span><span class="se">{{</span><span class="s2">ij</span><span class="se">}}</span><span class="s2">^</span><span class="se">{{</span><span class="si">{</span><span class="n">axis_labels</span><span class="p">[</span><span class="n">colindex</span><span class="p">]</span><span class="si">}</span><span class="se">}}</span><span class="s2">$&quot;</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">():</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Dij_</span><span class="si">{</span><span class="n">labels</span><span class="p">[</span><span class="n">type_index</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">spin_mom</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">extremum</span> <span class="o">=</span> <span class="nb">max</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">col</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">names</span><span class="p">))</span>
+        <span class="n">extremum</span> <span class="o">+=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">extremum</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">colorspace</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">Paired</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">NT</span><span class="p">()</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">_resolve_layout</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">type_indexes</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">names</span><span class="p">))</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="n">axis</span><span class="p">):</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">colorspace</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">partner_index</span> <span class="ow">in</span> <span class="n">type_indexes</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">other</span> <span class="o">==</span> <span class="n">partner_index</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="n">xxx</span> <span class="o">=</span> <span class="n">xx</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+                <span class="n">yyy</span> <span class="o">=</span> <span class="n">col</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">spin_mom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">sign_ij</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">spin_mom</span><span class="p">[</span><span class="n">type_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">spin_mom</span><span class="p">[</span><span class="n">partner_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+                    <span class="n">yyy</span> <span class="o">*=</span> <span class="n">sign_ij</span>
+                <span class="c1"># cycle over DX,DY,DZ (or just plot one line for all other cases)</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
+                <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xxx</span><span class="p">,</span> <span class="n">yyy</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">(</span><span class="n">partner_index</span><span class="p">))</span>
+                <span class="n">axis</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xxx</span><span class="p">,</span> <span class="n">yyy</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+            <span class="n">axis</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$r_</span><span class="si">{ij}</span><span class="s2">/a_{\mathrm</span><span class="si">{lat}</span><span class="s2">}$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">font_size</span><span class="p">)</span>
+            <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">value_label</span><span class="p">()</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot; $[meV]$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">font_size</span><span class="p">)</span>
+            <span class="n">axis</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">font_size</span><span class="p">)</span>
+            <span class="n">axis</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">font_size</span><span class="p">)</span>
+            <span class="n">axis</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">label_spacing</span><span class="p">:</span>
+                <span class="n">axis</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="n">font_size</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">labelspacing</span><span class="o">=</span><span class="n">label_spacing</span><span class="p">)</span>
+            <span class="n">axis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">axis</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="n">extremum</span><span class="p">,</span> <span class="n">extremum</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">Multiplot</span><span class="p">(</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+            <span class="n">latex</span><span class="o">=</span><span class="n">latex</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+            <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">,</span>
+            <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span>
+            <span class="n">separate_plots</span><span class="o">=</span><span class="n">separate_plots</span><span class="p">,</span>
+            <span class="n">layout_kind</span><span class="o">=</span><span class="n">layout_kind</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">mp</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">type_index</span> <span class="ow">in</span> <span class="n">type_indexes</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;IT&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">type_index</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="n">xx</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+                <span class="n">yy</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+                <span class="n">other</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;JT&quot;</span><span class="p">][</span><span class="n">mask</span><span class="p">]</span>
+
+                <span class="k">for</span> <span class="n">colindex</span><span class="p">,</span> <span class="n">cname</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">names</span><span class="p">):</span>
+                    <span class="n">col</span> <span class="o">=</span> <span class="n">yy</span><span class="p">[</span><span class="n">cname</span><span class="p">]</span>
+
+                    <span class="n">mp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">(),</span> <span class="n">plot_function</span><span class="o">=</span><span class="n">plot</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.write_uppasd_file">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.write_uppasd_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_uppasd_file</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">file_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">selector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">it</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">iq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">exclude_it</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">exclude_vc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">exchange_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">coordinates</span><span class="p">:</span> <span class="n">Coordinates</span> <span class="o">=</span> <span class="n">Coordinates</span><span class="o">.</span><span class="n">lattice</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write Jij or Dij data to file in format suitable for UppAsd programm.</span>
+<span class="sd">        If the filename is not given, the standard name for the given file type</span>
+<span class="sd">        will be used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_Jij</span><span class="p">():</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">...bindings.uppasd</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_jfile</span> <span class="k">as</span> <span class="n">write</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">...bindings.uppasd</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_dmfile</span> <span class="k">as</span> <span class="n">write</span>
+        <span class="n">write</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">file_name</span><span class="p">,</span>
+            <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">,</span>
+            <span class="n">selector</span><span class="o">=</span><span class="n">selector</span><span class="p">,</span>
+            <span class="n">iq</span><span class="o">=</span><span class="n">iq</span><span class="p">,</span>
+            <span class="n">it</span><span class="o">=</span><span class="n">it</span><span class="p">,</span>
+            <span class="n">exclude_it</span><span class="o">=</span><span class="n">exclude_it</span><span class="p">,</span>
+            <span class="n">exclude_vc</span><span class="o">=</span><span class="n">exclude_vc</span><span class="p">,</span>
+            <span class="n">exchange_radius</span><span class="o">=</span><span class="n">exchange_radius</span><span class="p">,</span>
+            <span class="n">coordinates</span><span class="o">=</span><span class="n">coordinates</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="JXCOutputFile.from_atoms">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFile.from_atoms">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_atoms</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">definition</span><span class="o">=</span><span class="n">definition</span><span class="p">)</span>
+
+        <span class="n">its</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">it</span><span class="p">(</span><span class="n">atomic_type</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">atomic_type</span> <span class="ow">in</span> <span class="n">its</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">its</span><span class="p">[</span><span class="n">atomic_type</span><span class="p">]</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">its</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">its</span><span class="p">[</span><span class="n">atomic_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span>
+            <span class="k">return</span> <span class="n">index</span>
+
+        <span class="n">first</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">duplicates</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">atomic_type</span> <span class="ow">in</span> <span class="n">site</span><span class="o">.</span><span class="n">occupation</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">atomic_type</span><span class="o">.</span><span class="n">symbol</span> <span class="ow">in</span> <span class="n">first</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">atomic_type</span><span class="o">.</span><span class="n">symbol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="p">:</span>
+                        <span class="n">duplicates</span><span class="p">[</span><span class="n">atomic_type</span><span class="o">.</span><span class="n">symbol</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">first</span><span class="p">[</span><span class="n">atomic_type</span><span class="o">.</span><span class="n">symbol</span><span class="p">]:</span> <span class="mi">1</span><span class="p">}</span>
+                    <span class="n">duplicates</span><span class="p">[</span><span class="n">atomic_type</span><span class="o">.</span><span class="n">symbol</span><span class="p">][</span><span class="n">atomic_type</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">duplicates</span><span class="p">[</span><span class="n">atomic_type</span><span class="o">.</span><span class="n">symbol</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">first</span><span class="p">[</span><span class="n">atomic_type</span><span class="o">.</span><span class="n">symbol</span><span class="p">]</span> <span class="o">=</span> <span class="n">atomic_type</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">label</span><span class="p">(</span><span class="n">atomic_type</span><span class="p">):</span>
+            <span class="n">dups</span> <span class="o">=</span> <span class="n">duplicates</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">atomic_type</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">dups</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">atomic_type</span><span class="o">.</span><span class="n">symbol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">dups</span><span class="p">[</span><span class="n">atomic_type</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">return</span> <span class="n">atomic_type</span><span class="o">.</span><span class="n">symbol</span>
+
+        <span class="n">out</span><span class="o">.</span><span class="n">OCCUPATION</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span>
+                <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">occupation</span><span class="p">),</span>
+                <span class="p">[(</span><span class="n">it</span><span class="p">(</span><span class="n">atomic_type</span><span class="p">),</span> <span class="n">label</span><span class="p">(</span><span class="n">atomic_type</span><span class="p">),</span> <span class="n">occ</span><span class="p">)</span> <span class="k">for</span> <span class="n">atomic_type</span><span class="p">,</span> <span class="n">occ</span> <span class="ow">in</span> <span class="n">site</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">items</span><span class="p">()],</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">site</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">DATA</span> <span class="o">=</span> <span class="n">data</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="JXCOutputFileDefinition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.JXCOutputFileDefinition.html#ase2sprkkr.output_files.definitions.jxc.JXCOutputFileDefinition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">JXCOutputFileDefinition</span><span class="p">(</span><span class="n">OutputFileDefinition</span><span class="p">):</span>
+    <span class="n">result_class</span> <span class="o">=</span> <span class="n">JXCOutputFile</span></div>
+
+
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pp</span>
+
+<span class="n">pp</span><span class="o">.</span><span class="n">ParserElement</span><span class="o">.</span><span class="n">verbose_stacktrace</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="create_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.jxc.create_definition.html#ase2sprkkr.output_files.definitions.jxc.create_definition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_definition</span><span class="p">():</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">table_header</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">is_Jij</span><span class="p">():</span>
+            <span class="k">return</span> <span class="s2">&quot;IT   IQ   JT    JQ   N1 N2 N3    DRX    DRY    DRZ     DR      J_xx [meV]     J_yy [meV]      J_xy [meV]     J_yx [meV]&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;IT   IQ   JT    JQ   N1 N2 N3    DRX    DRY    DRZ     DR       DX_ij [meV]    DY_ij [meV]    DZ_ij [meV]&quot;</span>
+
+    <span class="n">shared_dtype</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;IT&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;IQ&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;JT&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;JQ&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;N1&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;N2&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;N3&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;DRX&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;DRY&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;DRZ&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;DR&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">JXCOutputFileDefinition</span><span class="p">(</span>
+        <span class="s2">&quot;JXC&quot;</span><span class="p">,</span>
+        <span class="p">[</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">&quot;HEADER&quot;</span><span class="p">,</span>
+                <span class="n">RawData</span><span class="p">(</span>
+                    <span class="n">ends_with</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[ </span><span class="se">\t</span><span class="s2">]*number of sites&quot;</span><span class="p">),</span>
+                    <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2"> *******************************************************************************</span>
+<span class="s2">                                   &lt;XCPLTENSOR&gt;:</span>
+<span class="s2">                      Dzyaloshinski-Moriya couplings  Dij</span>
+<span class="s2">                      according to Phys. Rev. B 79, 045209 (2009)</span>
+<span class="s2"> *******************************************************************************</span>
+
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">&quot;NQ&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="s2">&quot;number of sites   NQ&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot; = &quot;</span><span class="p">,</span> <span class="n">delimiter_grammar</span><span class="o">=</span><span class="s2">&quot;=&quot;</span>
+            <span class="p">),</span>  <span class="c1"># , indent=10*&quot; &quot;),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NT&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="s2">&quot;number of types   NT&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot; = &quot;</span><span class="p">,</span> <span class="n">delimiter_grammar</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">10</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span><span class="p">),</span>
+            <span class="n">SeparatorDefinition</span><span class="p">(</span><span class="s2">&quot;                              site occupation:&quot;</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">&quot;OCCUPATION&quot;</span><span class="p">,</span>
+                <span class="n">Table</span><span class="p">(</span>
+                    <span class="n">IQ</span><span class="o">=</span><span class="n">Integer</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;IQ = &quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{:&gt;3}</span><span class="s2">&quot;</span><span class="p">),</span>
+                    <span class="n">NOQ</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                    <span class="n">DATA</span><span class="o">=</span><span class="n">Array</span><span class="p">(</span>
+                        <span class="n">Sequence</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">String</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{:&gt;10}</span><span class="s2">&quot;</span><span class="p">),</span> <span class="n">Real</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;x = &quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{:6.3f}</span><span class="s2">&quot;</span><span class="p">)),</span>
+                        <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;IT:&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">&quot;TABLE_HEADER&quot;</span><span class="p">,</span>
+                <span class="n">LineString</span><span class="p">(),</span>
+                <span class="n">default_value_from_container</span><span class="o">=</span><span class="n">table_header</span><span class="p">,</span>
+                <span class="n">is_hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">&quot;DATA&quot;</span><span class="p">,</span>
+                <span class="n">NumpyArray</span><span class="p">(</span>
+                    <span class="n">dtypes</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">shared_dtype</span> <span class="o">+</span> <span class="p">[(</span><span class="s2">&quot;JXX&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;JYY&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;JXY&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;JYX&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">)],</span>
+                        <span class="n">shared_dtype</span> <span class="o">+</span> <span class="p">[(</span><span class="s2">&quot;DX&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;DY&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;DZ&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">)],</span>
+                    <span class="p">]</span>
+                <span class="p">),</span>
+                <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Dzyaloshinski-Moriya couplings Dij or Jij&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">definition</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;extension&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;dat&quot;</span>
+
+    <span class="k">return</span> <span class="n">definition</span></div>
+
+
+
+<span class="n">definition</span> <span class="o">=</span> <span class="n">create_definition</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.exchange &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -91,8 +91,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.asr.exchange</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.exchange&#39;</span><span class="p">,</span>
@@ -101,10 +101,10 @@
          <span class="n">resources</span><span class="o">=</span><span class="s1">&#39;40:10h&#39;</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--gs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Ground state on which exchange calculation is based&#39;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">gs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="n">gs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate two spin configurations.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">asr.utils</span> <span class="kn">import</span> <span class="n">magnetic_atoms</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">magnetic_atoms</span>
 
     <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="n">gs</span><span class="p">,</span> <span class="n">fixdensity</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span>
@@ -167,12 +167,12 @@
 
 <div class="viewcode-block" id="get_parameters">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.exchange.get_parameters.html#ase2sprkkr.asr.exchange.get_parameters">[docs]</a>
-<span class="k">def</span> <span class="nf">get_parameters</span><span class="p">(</span><span class="n">gs</span><span class="p">,</span> <span class="n">exchange</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_parameters</span><span class="p">(</span><span class="n">gs</span><span class="p">,</span> <span class="n">exchange</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                    <span class="n">dis_cut</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">a0</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract Heisenberg parameters.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">gpaw.spinorbit</span> <span class="kn">import</span> <span class="n">soc_eigenstates</span>
-    <span class="kn">from</span> <span class="nn">ase.dft.bandgap</span> <span class="kn">import</span> <span class="n">bandgap</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.spinorbit</span><span class="w"> </span><span class="kn">import</span> <span class="n">soc_eigenstates</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.dft.bandgap</span><span class="w"> </span><span class="kn">import</span> <span class="n">bandgap</span>
 
     <span class="n">calc_gs_2mag</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span>
     <span class="n">calc_exchange</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="n">exchange</span><span class="p">)</span>
@@ -271,9 +271,9 @@
 <span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.exchange&#39;</span><span class="p">,</span>
          <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gs_2mag.gpw&#39;</span><span class="p">,</span> <span class="s1">&#39;exchange.gpw&#39;</span><span class="p">],</span>
          <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.exchange@calculate&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.gs&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect data.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
     <span class="n">N_gs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">))</span>
     <span class="n">N_exchange</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;gs_2mag.gpw&#39;</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">N_gs</span> <span class="o">==</span> <span class="n">N_exchange</span><span class="p">:</span>

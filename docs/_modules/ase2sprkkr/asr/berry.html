@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.berry &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -92,8 +92,8 @@
              
   <h1>Source code for ase2sprkkr.asr.berry</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Topological analysis of electronic structure.&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.berry&#39;</span><span class="p">,</span>
@@ -103,14 +103,14 @@
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--gs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Ground state&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--kpar&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;K-points along path&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--kperp&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;K-points orthogonal to path&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">gs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">kpar</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="n">gs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">kpar</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span>
               <span class="n">kperp</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate ground state on specified k-point grid.&quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">os</span>
-    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">gpaw.berryphase</span> <span class="kn">import</span> <span class="n">parallel_transport</span>
-    <span class="kn">from</span> <span class="nn">gpaw.mpi</span> <span class="kn">import</span> <span class="n">world</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.berryphase</span><span class="w"> </span><span class="kn">import</span> <span class="n">parallel_transport</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.mpi</span><span class="w"> </span><span class="kn">import</span> <span class="n">world</span>
 
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
     <span class="n">pbc</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
@@ -190,7 +190,7 @@
         <span class="n">results</span><span class="p">[</span><span class="s1">&#39;s0_km&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">s_km</span>
 
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;kz = \pi&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">monkhorst_pack</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ase.dft.kpoints</span><span class="w"> </span><span class="kn">import</span> <span class="n">monkhorst_pack</span>
         <span class="n">kpts</span> <span class="o">=</span> <span class="n">monkhorst_pack</span><span class="p">((</span><span class="n">kperp</span><span class="p">,</span> <span class="n">kpar</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
         <span class="n">calc</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpts</span><span class="o">=</span><span class="n">kpts</span><span class="p">)</span>
         <span class="n">calc</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
@@ -213,8 +213,8 @@
 
 <div class="viewcode-block" id="plot_phases">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.berry.plot_phases.html#ase2sprkkr.asr.berry.plot_phases">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_phases</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s1">&#39;berry&#39;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_phases</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s1">&#39;berry&#39;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pylab</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;results-asr.berry@calculate.json&#39;</span><span class="p">)</span>
     <span class="n">phit_km</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;phi</span><span class="si">%s</span><span class="s1">_km&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">]</span>
@@ -260,7 +260,7 @@
 
 <div class="viewcode-block" id="webpanel">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.berry.webpanel.html#ase2sprkkr.asr.berry.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">Topology</span> <span class="o">==</span> <span class="s1">&#39;Not checked&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[]</span>
 
@@ -283,7 +283,7 @@
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.berry.Result.html#ase2sprkkr.asr.berry.Result">[docs]</a>
 <span class="nd">@prepare_result</span>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">Topology</span><span class="p">:</span> <span class="nb">str</span>
 
@@ -296,9 +296,9 @@
          <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;results-asr.berry@calculate.json&#39;</span><span class="p">],</span>
          <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.berry@calculate&#39;</span><span class="p">],</span>
          <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-    <span class="kn">from</span> <span class="nn">ase.parallel</span> <span class="kn">import</span> <span class="n">paropen</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">paropen</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;topology.dat&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>

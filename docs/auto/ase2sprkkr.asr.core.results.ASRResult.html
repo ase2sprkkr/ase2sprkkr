@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ASRResult &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -172,7 +172,7 @@
 <h1>ASRResult<a class="headerlink" href="#asrresult" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.core.results.ASRResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.core.results.</span></span><span class="sig-name descname"><span class="pre">ASRResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/core/results.html#ASRResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.core.results.</span></span><span class="sig-name descname"><span class="pre">ASRResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/core/results.html#ASRResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult" title="Link to this definition"></a></dt>
 <dd><p>Base class for describing results generated with recipes.</p>
 <p>A results object is a container for results generated with ASR. It
 contains data and metadata describing results and the
@@ -188,7 +188,7 @@ overwrite the <code class="docutils literal notranslate"><span class="pre">forma
 contained data can be check with <code class="docutils literal notranslate"><span class="pre">in</span></code> (see “Examples” below).</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@prepare_result</span>
-<span class="gp">... </span><span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="gp">... </span><span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">a</span><span class="p">:</span> <span class="nb">int</span>
 <span class="gp">... </span>    <span class="n">key_descriptions</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="s1">&#39;Some key description.&#39;</span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">Result</span><span class="o">.</span><span class="n">fromdata</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -226,9 +226,9 @@ contained data can be check with <code class="docutils literal notranslate"><spa
 </pre></div>
 </div>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-a7732e0d844b63ab787f2c5f16c6c24bef5b77de.png" alt="Inheritance diagram of ase2sprkkr.asr.core.results.ASRResult" usemap="#inheritanceb39e4b18d5" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-3c28be54da2e014477d6f620d4c1fd5bba7ffbae.png" alt="Inheritance diagram of ase2sprkkr.asr.core.results.ASRResult" usemap="#inheritanceb39e4b18d5" class="inheritance graphviz" /></div>
 <map id="inheritanceb39e4b18d5" name="inheritanceb39e4b18d5">
-<area shape="rect" id="node1" href="#ase2sprkkr.asr.core.results.ASRResult" target="_top" title="Base class for describing results generated with recipes." alt="" coords="5,5,143,31"/>
+<area shape="rect" id="node1" href="#ase2sprkkr.asr.core.results.ASRResult" target="_top" title="Base class for describing results generated with recipes." alt="" coords="5,5,142,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -284,12 +284,12 @@ contained data can be check with <code class="docutils literal notranslate"><spa
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.core.results.ASRResult.fromdata">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/core/results.html#ASRResult.fromdata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.fromdata" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/core/results.html#ASRResult.fromdata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.fromdata" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.core.results.ASRResult.get_obj_id">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_obj_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/core/results.html#ASRResult.get_obj_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.get_obj_id" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_obj_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/core/results.html#ASRResult.get_obj_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.get_obj_id" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
@@ -299,25 +299,25 @@ contained data can be check with <code class="docutils literal notranslate"><spa
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.core.results.ASRResult.data">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.data" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.data" title="Link to this definition"></a></dt>
 <dd><p>Get result data.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.core.results.ASRResult.metadata">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ase2sprkkr.asr.core.results.MetaData.html#ase2sprkkr.asr.core.results.MetaData" title="ase2sprkkr.asr.core.results.MetaData"><span class="pre">MetaData</span></a></em><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.metadata" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ase2sprkkr.asr.core.results.MetaData.html#ase2sprkkr.asr.core.results.MetaData" title="ase2sprkkr.asr.core.results.MetaData"><span class="pre">MetaData</span></a></em><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.metadata" title="Link to this definition"></a></dt>
 <dd><p>Get result metadata.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.core.results.ASRResult.from_format">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'json'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/core/results.html#ASRResult.from_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.from_format" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'json'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/core/results.html#ASRResult.from_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.from_format" title="Link to this definition"></a></dt>
 <dd><p>Instantiate result from format.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.core.results.ASRResult.get_formats">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_formats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/core/results.html#ASRResult.get_formats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.get_formats" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_formats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/core/results.html#ASRResult.get_formats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.get_formats" title="Link to this definition"></a></dt>
 <dd><p>Get implemented result formats.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -358,7 +358,7 @@ contained data can be check with <code class="docutils literal notranslate"><spa
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.core.results.ASRResult.fromdict">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromdict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/core/results.html#ASRResult.fromdict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.fromdict" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromdict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/core/results.html#ASRResult.fromdict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.core.results.ASRResult.fromdict" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dct</strong> (<em>dict</em>)</p>

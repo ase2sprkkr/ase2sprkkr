@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.fermisurface &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -92,14 +92,14 @@
              
   <h1>Source code for ase2sprkkr.asr.fermisurface</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Fermi surfaces.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
 
 
 <div class="viewcode-block" id="bz_vertices">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.bz_vertices.html#ase2sprkkr.asr.fermisurface.bz_vertices">[docs]</a>
-<span class="k">def</span> <span class="nf">bz_vertices</span><span class="p">(</span><span class="n">cell</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">Voronoi</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bz_vertices</span><span class="p">(</span><span class="n">cell</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial</span><span class="w"> </span><span class="kn">import</span> <span class="n">Voronoi</span>
     <span class="n">icell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
     <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">indices</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="n">G</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">icell</span><span class="p">,</span> <span class="n">ind</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
@@ -116,10 +116,10 @@
 
 <div class="viewcode-block" id="find_contours">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.find_contours.html#ase2sprkkr.asr.fermisurface.find_contours">[docs]</a>
-<span class="k">def</span> <span class="nf">find_contours</span><span class="p">(</span><span class="n">eigs_nk</span><span class="p">,</span> <span class="n">bzk_kv</span><span class="p">,</span> <span class="n">s_nk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">griddata</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_contours</span><span class="p">(</span><span class="n">eigs_nk</span><span class="p">,</span> <span class="n">bzk_kv</span><span class="p">,</span> <span class="n">s_nk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">griddata</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
     <span class="n">minx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">bzk_kv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
     <span class="n">maxx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">bzk_kv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
 
@@ -158,8 +158,8 @@
 
 <div class="viewcode-block" id="webpanel">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.webpanel.html#ase2sprkkr.asr.fermisurface.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.database.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">fig</span>
 
     <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Fermi surface&#39;</span><span class="p">,</span>
              <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="n">fig</span><span class="p">(</span><span class="s1">&#39;fermi_surface.png&#39;</span><span class="p">)]],</span>
@@ -173,12 +173,12 @@
 
 <div class="viewcode-block" id="plot_fermi">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.plot_fermi.html#ase2sprkkr.asr.fermisurface.plot_fermi">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_fermi</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_fermi</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span>
                <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">svbm</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">scbm</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">lwvbm</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
                <span class="n">sfs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scalecb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ase.geometry.cell</span> <span class="kn">import</span> <span class="n">Cell</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.geometry.cell</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cell</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
     <span class="n">cell</span> <span class="o">=</span> <span class="n">Cell</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
     <span class="n">lat</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">get_bravais_lattice</span><span class="p">(</span><span class="n">pbc</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">pbc</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
@@ -191,10 +191,10 @@
 
 <div class="viewcode-block" id="add_fermi">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.add_fermi.html#ase2sprkkr.asr.fermisurface.add_fermi">[docs]</a>
-<span class="k">def</span> <span class="nf">add_fermi</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,):</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_fermi</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">colors</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
     <span class="n">verts</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results-asr.fermisurface.json&#39;</span><span class="p">][</span><span class="s1">&#39;contours&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">normalize</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">rotate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span>
@@ -221,7 +221,7 @@
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.Result.html#ase2sprkkr.asr.fermisurface.Result">[docs]</a>
 <span class="nd">@prepare_result</span>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
 
@@ -231,12 +231,12 @@
          <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">,</span>
          <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="s1">&#39;results-asr.structureinfo.json&#39;</span><span class="p">],</span>
          <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.gs@calculate&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.structureinfo&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">asr.utils.gpw2eigs</span> <span class="kn">import</span> <span class="n">gpw2eigs</span>
-    <span class="kn">from</span> <span class="nn">gpaw.kpt_descriptor</span> <span class="kn">import</span> <span class="n">to1bz</span>
-    <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span><span class="p">,</span> <span class="n">get_spin_index</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.utils.gpw2eigs</span><span class="w"> </span><span class="kn">import</span> <span class="n">gpw2eigs</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.kpt_descriptor</span><span class="w"> </span><span class="kn">import</span> <span class="n">to1bz</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.magnetic_anisotropy</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_spin_axis</span><span class="p">,</span> <span class="n">get_spin_index</span>
     <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">get_spin_axis</span><span class="p">()</span>
     <span class="n">eigs_km</span><span class="p">,</span> <span class="n">ef</span><span class="p">,</span> <span class="n">s_kvm</span> <span class="o">=</span> <span class="n">gpw2eigs</span><span class="p">(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">return_spin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                   <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">,</span>

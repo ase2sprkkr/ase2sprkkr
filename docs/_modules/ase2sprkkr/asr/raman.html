@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.raman &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -92,14 +92,14 @@
              
   <h1>Source code for ase2sprkkr.asr.raman</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Raman spectrum.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
 <div class="viewcode-block" id="webpanel">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.raman.webpanel.html#ase2sprkkr.asr.raman.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.database.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">fig</span>
 
     <span class="c1"># Make a table from the phonon modes</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.raman.json&#39;</span><span class="p">)</span>
@@ -139,22 +139,22 @@
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.raman.Result.html#ase2sprkkr.asr.raman.Result">[docs]</a>
 <span class="nd">@prepare_result</span>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
 
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.raman&#39;</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
     <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
 
 <div class="viewcode-block" id="raman">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.raman.raman.html#ase2sprkkr.asr.raman.raman">[docs]</a>
-<span class="k">def</span> <span class="nf">raman</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">raman</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
     <span class="c1"># Import the required modules</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
     <span class="c1"># All required settings</span>
     <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;broadening&#39;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>  <span class="c1"># in cm^-1</span>
@@ -170,23 +170,23 @@
         <span class="k">return</span>
 
     <span class="c1"># Lorentzian function definition</span>
-    <span class="k">def</span> <span class="nf">lor</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lor</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
         <span class="n">lor</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">g</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">((</span><span class="n">w</span><span class="o">.</span><span class="n">real</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">g</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">lor</span>
-    <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
     <span class="c1"># Gaussian function definition</span>
 
-    <span class="k">def</span> <span class="nf">gauss</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gauss</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
         <span class="n">gauss</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">g</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">w</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">g</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">gauss</span><span class="p">[</span><span class="n">gauss</span> <span class="o">&lt;</span> <span class="mf">1e-16</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">gauss</span>
 
     <span class="c1"># Compute spectrum based on a set of resonances</span>
-    <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">kB</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">kB</span>
     <span class="n">cm</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">8065.544</span>
     <span class="n">kbT</span> <span class="o">=</span> <span class="n">kB</span> <span class="o">*</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">cm</span>
 
-    <span class="k">def</span> <span class="nf">calcspectrum</span><span class="p">(</span><span class="n">wlist</span><span class="p">,</span> <span class="n">rlist</span><span class="p">,</span> <span class="n">ww</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">kbT</span><span class="o">=</span><span class="n">kbT</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calcspectrum</span><span class="p">(</span><span class="n">wlist</span><span class="p">,</span> <span class="n">rlist</span><span class="p">,</span> <span class="n">ww</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">kbT</span><span class="o">=</span><span class="n">kbT</span><span class="p">):</span>
         <span class="n">rr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">ww</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">wi</span><span class="p">,</span> <span class="n">ri</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">wlist</span><span class="p">,</span> <span class="n">rlist</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">wi</span> <span class="o">&gt;</span> <span class="mf">1e-1</span><span class="p">:</span>
@@ -196,7 +196,7 @@
         <span class="k">return</span> <span class="n">rr</span>
 
     <span class="c1"># Make a latex type formula</span>
-    <span class="k">def</span> <span class="nf">getformula</span><span class="p">(</span><span class="n">matstr</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getformula</span><span class="p">(</span><span class="n">matstr</span><span class="p">):</span>
         <span class="n">matformula</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span>
         <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">matstr</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
@@ -273,7 +273,7 @@
 
 <div class="viewcode-block" id="count_deg">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.raman.count_deg.html#ase2sprkkr.asr.raman.count_deg">[docs]</a>
-<span class="k">def</span> <span class="nf">count_deg</span><span class="p">(</span><span class="n">freqs_l</span><span class="p">,</span> <span class="n">freq_err</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">count_deg</span><span class="p">(</span><span class="n">freqs_l</span><span class="p">,</span> <span class="n">freq_err</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
 
     <span class="c1"># Degeneracy factor for modes</span>
     <span class="n">w_l</span> <span class="o">=</span> <span class="p">[</span><span class="n">freqs_l</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>

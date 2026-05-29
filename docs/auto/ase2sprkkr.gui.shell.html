@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>shell &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -82,7 +82,9 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.chdir.html">chdir</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.format_as_python_shell.html">format_as_python_shell</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.split_top_level_chunks.html">split_top_level_chunks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.CommandlineShell.html">CommandlineShell</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.JupyterLab.html">JupyterLab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.Pdb.html">Pdb</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.Python.html">Python</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.Shell.html">Shell</a></li>
 </ul>
@@ -131,11 +133,13 @@
 <h1>shell<a class="headerlink" href="#shell" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.gui.shell</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-d348dbac75c563ce4d44c1e74b1748f67113201b.png" alt="Inheritance diagram of ase2sprkkr.gui.shell.JupyterLab, ase2sprkkr.gui.shell.Python, ase2sprkkr.gui.shell.Shell" usemap="#inheritancefda3d79d99" class="inheritance graphviz" /></div>
-<map id="inheritancefda3d79d99" name="inheritancefda3d79d99">
-<area shape="rect" id="node1" href="ase2sprkkr.gui.shell.JupyterLab.html#ase2sprkkr.gui.shell.JupyterLab" target="_top" title="Run the given code in a JupyterLab notebook." alt="" coords="107,5,197,31"/>
-<area shape="rect" id="node2" href="ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell" target="_top" title="A base class for ASE2SPRKKR interactive computation using ase2sprkkr tool" alt="" coords="5,31,77,56"/>
-<area shape="rect" id="node3" href="ase2sprkkr.gui.shell.Python.html#ase2sprkkr.gui.shell.Python" target="_top" title="Run the given code in a Python shell" alt="" coords="116,55,188,80"/>
+<div class="graphviz"><img src="../_images/inheritance-be7f8d734b31e444da9f0c4801306c7f2060cc0a.png" alt="Inheritance diagram of ase2sprkkr.gui.shell.CommandlineShell, ase2sprkkr.gui.shell.JupyterLab, ase2sprkkr.gui.shell.Pdb, ase2sprkkr.gui.shell.Python, ase2sprkkr.gui.shell.Shell" usemap="#inheritance5c6a45dff8" class="inheritance graphviz" /></div>
+<map id="inheritance5c6a45dff8" name="inheritance5c6a45dff8">
+<area shape="rect" id="node1" href="ase2sprkkr.gui.shell.CommandlineShell.html#ase2sprkkr.gui.shell.CommandlineShell" target="_top" title="Run the given code in a commandline shell" alt="" coords="107,31,251,58"/>
+<area shape="rect" id="node4" href="ase2sprkkr.gui.shell.Pdb.html#ase2sprkkr.gui.shell.Pdb" target="_top" title="Run the given code in a Python shell" alt="" coords="280,5,352,33"/>
+<area shape="rect" id="node5" href="ase2sprkkr.gui.shell.Python.html#ase2sprkkr.gui.shell.Python" target="_top" title="Run the given code in a Python shell" alt="" coords="280,57,352,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell" target="_top" title="A base class for ASE2SPRKKR interactive computation using ase2sprkkr tool" alt="" coords="5,57,77,85"/>
+<area shape="rect" id="node3" href="ase2sprkkr.gui.shell.JupyterLab.html#ase2sprkkr.gui.shell.JupyterLab" target="_top" title="Run the given code in a JupyterLab notebook." alt="" coords="134,83,224,110"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -158,8 +162,14 @@
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.shell.JupyterLab.html#ase2sprkkr.gui.shell.JupyterLab" title="ase2sprkkr.gui.shell.JupyterLab"><code class="xref py py-obj docutils literal notranslate"><span class="pre">JupyterLab</span></code></a>([run])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.shell.CommandlineShell.html#ase2sprkkr.gui.shell.CommandlineShell" title="ase2sprkkr.gui.shell.CommandlineShell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CommandlineShell</span></code></a>()</p></td>
+<td><p>Run the given code in a commandline shell</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.gui.shell.JupyterLab.html#ase2sprkkr.gui.shell.JupyterLab" title="ase2sprkkr.gui.shell.JupyterLab"><code class="xref py py-obj docutils literal notranslate"><span class="pre">JupyterLab</span></code></a>([run])</p></td>
 <td><p>Run the given code in a JupyterLab notebook.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.shell.Pdb.html#ase2sprkkr.gui.shell.Pdb" title="ase2sprkkr.gui.shell.Pdb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pdb</span></code></a>()</p></td>
+<td><p>Run the given code in a Python shell</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.gui.shell.Python.html#ase2sprkkr.gui.shell.Python" title="ase2sprkkr.gui.shell.Python"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Python</span></code></a>()</p></td>
 <td><p>Run the given code in a Python shell</p></td>

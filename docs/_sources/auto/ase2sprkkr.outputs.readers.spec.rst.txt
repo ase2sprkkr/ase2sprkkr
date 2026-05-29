@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.outputs.readers.spec**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.outputs.readers.spec.SpecOutputReader  ase2sprkkr.outputs.readers.spec.SpecProcessRunner  ase2sprkkr.outputs.readers.spec.SpecResult 
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.spec.SpecOutputParser  ase2sprkkr.outputs.readers.spec.SpecOutputReader  ase2sprkkr.outputs.readers.spec.SpecResult 
       :parts: 1
 
 |
@@ -35,8 +35,8 @@ Full name: **ase2sprkkr.outputs.readers.spec**
       :toctree:
       :template: custom-class-template.rst
    
+      SpecOutputParser
       SpecOutputReader
-      SpecProcessRunner
       SpecResult
    
    

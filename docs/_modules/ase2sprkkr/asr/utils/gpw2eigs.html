@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.utils.gpw2eigs &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -95,17 +95,17 @@
 
 <div class="viewcode-block" id="calc2eigs">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.utils.gpw2eigs.calc2eigs.html#ase2sprkkr.asr.utils.gpw2eigs.calc2eigs">[docs]</a>
-<span class="k">def</span> <span class="nf">calc2eigs</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc2eigs</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">return_spin</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
               <span class="n">theta</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">symmetry_tolerance</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span>
               <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">gpaw.spinorbit</span> <span class="kn">import</span> <span class="n">soc_eigenstates</span>
-    <span class="kn">from</span> <span class="nn">gpaw.occupations</span> <span class="kn">import</span> <span class="n">create_occ_calc</span>
-    <span class="kn">from</span> <span class="nn">ase.parallel</span> <span class="kn">import</span> <span class="n">broadcast</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">.symmetry</span> <span class="kn">import</span> <span class="n">restrict_spin_projection_2d</span>
-    <span class="kn">from</span> <span class="nn">.calculator_utils</span> <span class="kn">import</span> <span class="n">get_eigenvalues</span>
-    <span class="kn">from</span> <span class="nn">.symmetry</span> <span class="kn">import</span> <span class="n">_atoms2symmetry_gpaw</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.spinorbit</span><span class="w"> </span><span class="kn">import</span> <span class="n">soc_eigenstates</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.occupations</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_occ_calc</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">broadcast</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.symmetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">restrict_spin_projection_2d</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.calculator_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_eigenvalues</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.symmetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">_atoms2symmetry_gpaw</span>
 
     <span class="n">dct</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">bands</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">get_number_of_bands</span><span class="p">())</span>
@@ -165,7 +165,7 @@
 
 <div class="viewcode-block" id="gpw2eigs">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.utils.gpw2eigs.gpw2eigs.html#ase2sprkkr.asr.utils.gpw2eigs.gpw2eigs">[docs]</a>
-<span class="k">def</span> <span class="nf">gpw2eigs</span><span class="p">(</span><span class="n">gpw</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_spin</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gpw2eigs</span><span class="p">(</span><span class="n">gpw</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_spin</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
              <span class="n">theta</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">symmetry_tolerance</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Give the eigenvalues w or w/o spinorbit coupling and the corresponding fermi energy.</span>
 
@@ -182,8 +182,8 @@
 <span class="sd">    dict or e_skn, efermi</span>
 <span class="sd">        containg eigenvalues and fermi levels w and w/o spinorbit coupling</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">mpi</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpi</span>
     <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="n">gpw</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">communicator</span><span class="o">=</span><span class="n">mpi</span><span class="o">.</span><span class="n">serial_comm</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">calc2eigs</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="n">soc</span><span class="p">,</span> <span class="n">return_spin</span><span class="o">=</span><span class="n">return_spin</span><span class="p">,</span>
                      <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">,</span>

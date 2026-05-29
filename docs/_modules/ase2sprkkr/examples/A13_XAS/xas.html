@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.examples.A13_XAS.xas &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -91,13 +91,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.examples.A13_XAS.xas</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span></span><span class="sd">&quot;&quot;&quot;X-ray absorption spectroscopy (XAS)&quot;&quot;&quot;</span>
+
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A13_XAS.xas.main.html#ase2sprkkr.examples.A13_XAS.xas.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="kn">from</span> <span class="nn">ase2sprkkr.sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
-    <span class="kn">import</span> <span class="nn">os</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting SPRKKR calculation...&quot;</span><span class="p">)</span>
 
@@ -106,19 +107,18 @@
 
     <span class="c1"># Set input parameters</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Setting up input parameters...&quot;</span><span class="p">)</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s1">&#39;xas&#39;</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">DATASET</span> <span class="o">=</span> <span class="s1">&#39;Fe&#39;</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">IT</span> <span class="o">=</span> <span class="mi">1</span>  
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">FRAMETET</span><span class="o">=</span> <span class="mf">90.0</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s2">&quot;xas&quot;</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">DATASET</span> <span class="o">=</span> <span class="s2">&quot;Fe&quot;</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">IT</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">FRAMETET</span> <span class="o">=</span> <span class="mf">90.0</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">FRAMEPHI</span> <span class="o">=</span> <span class="mf">45.0</span>
-    <span class="n">current_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">potential_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;Fe.pot_new&#39;</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>
+        <span class="n">potential_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;Fe.pot_new&quot;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>  <span class="c1"># noqa: F841</span>
             <span class="n">potential</span><span class="o">=</span><span class="n">potential_file</span><span class="p">,</span>
             <span class="n">print_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">output_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;Fe_XAS.out&#39;</span><span class="p">)</span>
+            <span class="n">output_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;Fe_XAS.out&quot;</span><span class="p">),</span>
         <span class="p">)</span>
 
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -128,7 +128,8 @@
     <span class="k">return</span> <span class="mi">0</span></div>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

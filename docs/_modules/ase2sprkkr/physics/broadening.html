@@ -1,0 +1,560 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.physics.broadening &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.physics.broadening</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.physics.broadening</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># sparse support optional</span>
+
+
+<div class="viewcode-block" id="create_gaussian_broadener">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.broadening.create_gaussian_broadener.html#ase2sprkkr.physics.broadening.create_gaussian_broadener">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_gaussian_broadener</span><span class="p">(</span>
+    <span class="n">x_in</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">sigma</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">x_out</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fwhm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.0</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="n">return_sparse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">include_dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">discrete_normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">callable</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_1d_array</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a 1D array-like&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fwhm_to_sigma</span><span class="p">(</span><span class="n">fwhm</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">fwhm</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_bin_widths</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute representative bin widths (Δx) for grid points x (uneven).</span>
+<span class="sd">        Interior point: (x[i+1] - x[i-1]) / 2</span>
+<span class="sd">        Endpoints: nearest neighbor spacing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">dx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">dx</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">dx</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x must be strictly increasing.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dx</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">gaussian_weight_matrix</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="s2">&quot;sp.csr_matrix&quot;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build weight matrix W such that y_out = W @ y_in (if include_dx=True).</span>
+
+<span class="sd">        Parameters (high level)</span>
+<span class="sd">        - x_in, x_out: input/output grids (1D). If x_out is None, x_out := x_in.</span>
+<span class="sd">        - sigma/fwhm: scalar or array of length len(x_in).</span>
+<span class="sd">        - include_dx: if True, W columns already include Δx_in factor.</span>
+<span class="sd">        - discrete_normalize: if True, normalize each kernel column using Δx_out so</span>
+<span class="sd">                             discrete sums approximate continuous integrals.</span>
+<span class="sd">        - method: &quot;auto&quot;, &quot;dense&quot;, or &quot;sparse&quot;.</span>
+<span class="sd">        - return_sparse: if True and scipy.sparse is available, returns csr matrix in sparse mode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">_ensure_1d_array</span><span class="p">(</span><span class="n">x_in</span><span class="p">,</span> <span class="s2">&quot;x_in&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">x_out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">xout</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">xout</span> <span class="o">=</span> <span class="n">_ensure_1d_array</span><span class="p">(</span><span class="n">x_out</span><span class="p">,</span> <span class="s2">&quot;x_out&quot;</span><span class="p">)</span>
+
+        <span class="c1"># sort for stable building</span>
+        <span class="n">sort_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x_sorted</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">sort_in</span><span class="p">]</span>
+
+        <span class="n">sort_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">xout</span><span class="p">)</span>
+        <span class="n">xout_sorted</span> <span class="o">=</span> <span class="n">xout</span><span class="p">[</span><span class="n">sort_out</span><span class="p">]</span>
+
+        <span class="n">dx_in</span> <span class="o">=</span> <span class="n">_compute_bin_widths</span><span class="p">(</span><span class="n">x_sorted</span><span class="p">)</span>
+        <span class="n">dx_out</span> <span class="o">=</span> <span class="n">_compute_bin_widths</span><span class="p">(</span><span class="n">xout_sorted</span><span class="p">)</span>
+
+        <span class="n">N</span> <span class="o">=</span> <span class="n">x_sorted</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">xout_sorted</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="c1"># sigma array</span>
+        <span class="k">if</span> <span class="n">sigma</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fwhm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either sigma or fwhm must be provided.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fwhm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">fwhm</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">sigma_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">_fwhm_to_sigma</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fwhm</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fwhm_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fwhm</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">fwhm_arr</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="n">N</span><span class="p">,):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;fwhm must be scalar or same length as x_in.&quot;</span><span class="p">)</span>
+                <span class="n">sigma_vals</span> <span class="o">=</span> <span class="n">_fwhm_to_sigma</span><span class="p">(</span><span class="n">fwhm_arr</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">sigma_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">sigma</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sigma_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">sigma_arr</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="n">N</span><span class="p">,):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;sigma must be scalar or same length as x_in.&quot;</span><span class="p">)</span>
+                <span class="n">sigma_vals</span> <span class="o">=</span> <span class="n">sigma_arr</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">sigma_vals</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;sigma must be non-negative.&quot;</span><span class="p">)</span>
+
+        <span class="n">approx_ops</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+            <span class="n">method_use</span> <span class="o">=</span> <span class="s2">&quot;dense&quot;</span> <span class="k">if</span> <span class="n">approx_ops</span> <span class="o">&lt;=</span> <span class="mi">10_000_000</span> <span class="k">else</span> <span class="s2">&quot;sparse&quot;</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;dense&quot;</span><span class="p">,</span> <span class="s2">&quot;sparse&quot;</span><span class="p">):</span>
+            <span class="n">method_use</span> <span class="o">=</span> <span class="n">method</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;method must be &#39;auto&#39;, &#39;dense&#39;, or &#39;sparse&#39;&quot;</span><span class="p">)</span>
+
+        <span class="n">zero_mask</span> <span class="o">=</span> <span class="n">sigma_vals</span> <span class="o">==</span> <span class="mf">0.0</span>
+
+        <span class="c1"># Dense: build K then optionally renormalize columns w.r.t. dx_out</span>
+        <span class="k">if</span> <span class="n">method_use</span> <span class="o">==</span> <span class="s2">&quot;dense&quot;</span><span class="p">:</span>
+            <span class="n">Xout</span> <span class="o">=</span> <span class="n">xout_sorted</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># (M,1)</span>
+            <span class="n">Xin</span> <span class="o">=</span> <span class="n">x_sorted</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>  <span class="c1"># (1,N)</span>
+            <span class="n">Sigma</span> <span class="o">=</span> <span class="n">sigma_vals</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>  <span class="c1"># (1,N)</span>
+            <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">):</span>
+                <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">Xout</span> <span class="o">-</span> <span class="n">Xin</span><span class="p">)</span> <span class="o">/</span> <span class="n">Sigma</span>
+                <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">diff</span> <span class="o">*</span> <span class="n">diff</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">Sigma</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">zero_mask</span><span class="p">):</span>
+                    <span class="n">K</span><span class="p">[:,</span> <span class="n">zero_mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+            <span class="c1"># discrete normalize each column if requested:</span>
+            <span class="k">if</span> <span class="n">discrete_normalize</span><span class="p">:</span>
+                <span class="c1"># column_norm = sum_j K[j,i] * dx_out_j  (approx. continuous integral)</span>
+                <span class="n">col_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">K</span> <span class="o">*</span> <span class="n">dx_out</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># shape (N,)</span>
+                <span class="c1"># avoid division by zero: for sigma==0 keep col_norm=1 (we will assign delta)</span>
+                <span class="n">col_norm_safe</span> <span class="o">=</span> <span class="n">col_norm</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">col_norm_safe</span><span class="p">[</span><span class="n">col_norm_safe</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+                <span class="n">K</span> <span class="o">=</span> <span class="n">K</span> <span class="o">/</span> <span class="n">col_norm_safe</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+
+            <span class="c1"># Now include dx_in if requested. If include_dx=False, W contains only kernel values K.</span>
+            <span class="k">if</span> <span class="n">include_dx</span><span class="p">:</span>
+                <span class="n">W_sorted</span> <span class="o">=</span> <span class="n">K</span> <span class="o">*</span> <span class="n">dx_in</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">W_sorted</span> <span class="o">=</span> <span class="n">K</span>
+
+            <span class="c1"># handle sigma==0 deltas: assign mass to nearest output bin</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">zero_mask</span><span class="p">):</span>
+                <span class="n">cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">zero_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+                    <span class="n">xi</span> <span class="o">=</span> <span class="n">x_sorted</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+                    <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">xout_sorted</span><span class="p">,</span> <span class="n">xi</span><span class="p">)</span>
+                    <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">M</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xout_sorted</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xi</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xout_sorted</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">xi</span><span class="p">):</span>
+                        <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+                    <span class="c1"># zero the column and place delta mass:</span>
+                    <span class="n">W_sorted</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="k">if</span> <span class="n">include_dx</span><span class="p">:</span>
+                        <span class="n">W_sorted</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx_in</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># kernel-only matrix: place a 1.0 at that bin so user can multiply by dx_in later</span>
+                        <span class="n">W_sorted</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+            <span class="c1"># restore output order</span>
+            <span class="n">inv_sort_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">sort_out</span><span class="p">)</span>
+            <span class="n">W</span> <span class="o">=</span> <span class="n">W_sorted</span><span class="p">[</span><span class="n">inv_sort_out</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="k">return</span> <span class="n">W</span><span class="p">,</span> <span class="n">xout</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># Sparse: similar logic but construct lists for COO format</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+                <span class="n">si</span> <span class="o">=</span> <span class="n">sigma_vals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">xi</span> <span class="o">=</span> <span class="n">x_sorted</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">dxi</span> <span class="o">=</span> <span class="n">dx_in</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">si</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="c1"># delta -&gt; nearest output row</span>
+                    <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">xout_sorted</span><span class="p">,</span> <span class="n">xi</span><span class="p">)</span>
+                    <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">M</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xout_sorted</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xi</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xout_sorted</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">xi</span><span class="p">):</span>
+                        <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+                    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                    <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dxi</span> <span class="k">if</span> <span class="n">include_dx</span> <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="n">cutoff</span> <span class="o">=</span> <span class="n">n_sigma</span> <span class="o">*</span> <span class="n">si</span>
+                <span class="n">xmin</span> <span class="o">=</span> <span class="n">xi</span> <span class="o">-</span> <span class="n">cutoff</span>
+                <span class="n">xmax</span> <span class="o">=</span> <span class="n">xi</span> <span class="o">+</span> <span class="n">cutoff</span>
+                <span class="n">j0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">xout_sorted</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+                <span class="n">j1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">xout_sorted</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">j0</span> <span class="o">&gt;=</span> <span class="n">j1</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">xseg</span> <span class="o">=</span> <span class="n">xout_sorted</span><span class="p">[</span><span class="n">j0</span><span class="p">:</span><span class="n">j1</span><span class="p">]</span>
+                <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">xseg</span> <span class="o">-</span> <span class="n">xi</span><span class="p">)</span> <span class="o">/</span> <span class="n">si</span>
+                <span class="n">Kseg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">diff</span> <span class="o">*</span> <span class="n">diff</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">si</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">discrete_normalize</span><span class="p">:</span>
+                    <span class="c1"># normalization scalar for this column</span>
+                    <span class="n">norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">Kseg</span> <span class="o">*</span> <span class="n">dx_out</span><span class="p">[</span><span class="n">j0</span><span class="p">:</span><span class="n">j1</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">norm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">norm</span> <span class="o">=</span> <span class="mf">1.0</span>
+                    <span class="n">Kseg</span> <span class="o">=</span> <span class="n">Kseg</span> <span class="o">/</span> <span class="n">norm</span>
+
+                <span class="k">if</span> <span class="n">include_dx</span><span class="p">:</span>
+                    <span class="n">wseg</span> <span class="o">=</span> <span class="n">Kseg</span> <span class="o">*</span> <span class="n">dxi</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">wseg</span> <span class="o">=</span> <span class="n">Kseg</span>
+
+                <span class="n">rows</span><span class="o">.</span><span class="n">extend</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">j0</span><span class="p">,</span> <span class="n">j1</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                <span class="n">cols</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">j1</span> <span class="o">-</span> <span class="n">j0</span><span class="p">))</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">wseg</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="n">sp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">W_sorted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+                    <span class="n">W_sorted</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span> <span class="o">+=</span> <span class="n">v</span>
+                <span class="n">inv_sort_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">sort_out</span><span class="p">)</span>
+                <span class="n">W</span> <span class="o">=</span> <span class="n">W_sorted</span><span class="p">[</span><span class="n">inv_sort_out</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="k">return</span> <span class="n">W</span><span class="p">,</span> <span class="n">xout</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">W_sorted_csr</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">)),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
+                <span class="n">inv_sort_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">sort_out</span><span class="p">)</span>
+                <span class="n">W</span> <span class="o">=</span> <span class="n">W_sorted_csr</span><span class="p">[</span><span class="n">inv_sort_out</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="k">if</span> <span class="n">return_sparse</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">W</span><span class="p">,</span> <span class="n">xout</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">W</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span> <span class="n">xout</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">W</span> <span class="o">=</span> <span class="n">gaussian_weight_matrix</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">broaden</span><span class="p">(</span><span class="n">y_orig</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply Gaussian broadening to F0 using the precomputed matrix.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        y_orig : array_like, shape (NV, Nx_orig)</span>
+<span class="sd">            Functions to broaden along the last axis (energy)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        y_broadened : ndarray, shape (NV, Nx_orig)</span>
+<span class="sd">            Broadened functions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">W</span> <span class="o">@</span> <span class="n">y_orig</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">y_orig</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,))</span>
+        <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">y_orig</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">broaden</span></div>
+
+
+
+<div class="viewcode-block" id="create_lorentz_broadener">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.broadening.create_lorentz_broadener.html#ase2sprkkr.physics.broadening.create_lorentz_broadener">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_lorentz_broadener</span><span class="p">(</span><span class="n">x_orig</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">wlortab</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nelag</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">ylag</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Lorentz broadening matrix L for uneven grid x_orig with optional energy-dependent width.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x_orig : array_like, shape (N,)</span>
+<span class="sd">        Monotonically increasing grid</span>
+<span class="sd">    gamma : float</span>
+<span class="sd">        Base Lorentz HWHM</span>
+<span class="sd">    wlortab : array_like, shape (N,), optional</span>
+<span class="sd">        Energy-dependent correction to gamma</span>
+<span class="sd">    nelag : int</span>
+<span class="sd">        Number of grid points available for YLAG extrapolation (Fortran NELAG=5)</span>
+<span class="sd">    ylag : bool, optional</span>
+<span class="sd">        If True (default), extrapolate F below x[0] for the low-energy tail using</span>
+<span class="sd">        linear Lagrange interpolation of the first two grid points, matching Fortran</span>
+<span class="sd">        VECLORBRD/YLAG (N1=2).  If False, assume constant F = F[x[0]] below x[0].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    callable</span>
+<span class="sd">        Function ``broaden_y(y)`` that applies the precomputed broadening matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x_orig</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">wlortab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">wlortab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">wlortab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">wlortab</span><span class="p">)</span>
+
+    <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">de</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># Fortran: DE = MAX(E(2)-E(1), 0.5)</span>
+
+    <span class="c1"># --- Low-energy tail: 4 intervals below x[0], matching Fortran DO J=1,4 ---</span>
+    <span class="n">j_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># shape (4,1)</span>
+    <span class="n">x1_low</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">j_arr</span> <span class="o">*</span> <span class="n">de</span>  <span class="c1"># shape (4,1)</span>
+    <span class="n">x2_low</span> <span class="o">=</span> <span class="n">x1_low</span> <span class="o">+</span> <span class="n">de</span>  <span class="c1"># shape (4,1)</span>
+    <span class="n">G_low</span> <span class="o">=</span> <span class="n">gamma</span> <span class="o">+</span> <span class="n">wlortab</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">W_low</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">((</span><span class="n">x2_low</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span> <span class="o">/</span> <span class="n">G_low</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">((</span><span class="n">x1_low</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span> <span class="o">/</span> <span class="n">G_low</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="c1"># W_low shape: (4, N)</span>
+
+    <span class="k">if</span> <span class="n">ylag</span> <span class="ow">and</span> <span class="n">N</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># YLAG with N1=2: linear extrapolation using x[0] and x[1].</span>
+        <span class="c1"># For interval j the Fortran evaluates F at X1=x[0]-j*de and X2=x[0]-(j-1)*de,</span>
+        <span class="c1"># then accumulates W*(F(X1)+F(X2)).</span>
+        <span class="c1"># Decomposed into the L matrix:</span>
+        <span class="c1">#   F(X) = F[0]*(x[1]-X)/dx01 + F[1]*(X-x[0])/dx01</span>
+        <span class="c1"># so F(X1)+F(X2) = F[0]*(2+(2j-1)*de/dx01) + F[1]*(-(2j-1)*de/dx01)</span>
+        <span class="n">dx01</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">total_coef0</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">j_arr</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">de</span> <span class="o">/</span> <span class="n">dx01</span>  <span class="c1"># shape (4, 1)</span>
+        <span class="n">total_coef1</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">j_arr</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">de</span> <span class="o">/</span> <span class="n">dx01</span>  <span class="c1"># shape (4, 1)</span>
+        <span class="n">L</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">W_low</span> <span class="o">*</span> <span class="n">total_coef0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">L</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">W_low</span> <span class="o">*</span> <span class="n">total_coef1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Constant extrapolation: F(X) = F[x[0]] for all X &lt; x[0]</span>
+        <span class="n">L</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">W_low</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># --- Main contribution ---</span>
+    <span class="n">x_edges_left</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">x_edges_right</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">G_main</span> <span class="o">=</span> <span class="n">gamma</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">wlortab</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">wlortab</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="n">atan_right</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">((</span><span class="n">x_edges_right</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span> <span class="o">/</span> <span class="n">G_main</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
+    <span class="n">atan_left</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">((</span><span class="n">x_edges_left</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span> <span class="o">/</span> <span class="n">G_main</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
+    <span class="n">W_main</span> <span class="o">=</span> <span class="p">(</span><span class="n">atan_right</span> <span class="o">-</span> <span class="n">atan_left</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+    <span class="c1"># Trapezoid split: half to left, half to right</span>
+    <span class="n">L</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">W_main</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">L</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">+=</span> <span class="n">W_main</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="c1"># --- High-energy tail (vektorizovaně) ---</span>
+    <span class="n">x1_high</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">de</span>
+    <span class="n">x2_high</span> <span class="o">=</span> <span class="n">x1_high</span> <span class="o">+</span> <span class="n">de</span>
+    <span class="n">G_high</span> <span class="o">=</span> <span class="n">gamma</span> <span class="o">+</span> <span class="n">wlortab</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">W_high</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">((</span><span class="n">x2_high</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span> <span class="o">/</span> <span class="n">G_high</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">((</span><span class="n">x1_high</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span> <span class="o">/</span> <span class="n">G_high</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">L</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">W_high</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">broaden_y</span><span class="p">(</span><span class="n">y_orig</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies the precomputed Lorentzian broadening to y_orig using matrix multiplication.</span>
+<span class="sd">        This nested function has access to the precomputed weight_matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">y_orig</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">y_orig</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,)))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">y_orig</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">broaden_y</span></div>
+
+
+
+<div class="viewcode-block" id="compute_wlortab">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.broadening.compute_wlortab.html#ase2sprkkr.physics.broadening.compute_wlortab">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_wlortab</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">n_valence</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute energy-dependent Lorentz broadening correction WLORTAB(E) as in</span>
+<span class="sd">    Fortran INILORBRD (xband plotrxas).</span>
+
+<span class="sd">    The total Lorentz half-width at energy E is: G(E) = G0 + WLORTAB(E).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    energies : array_like</span>
+<span class="sd">        Energy grid (eV), relative to E_Fermi.</span>
+<span class="sd">    n_valence : int</span>
+<span class="sd">        Number of valence electrons.  Special case: n_valence == 11 is</span>
+<span class="sd">        treated as n_valence == 1 (matching Fortran logic).</span>
+<span class="sd">        Returns zeros if n_valence is outside [1, 11].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    wlortab : ndarray, shape (len(energies),)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Polynomial coefficients from INILORBRD (Fortran)</span>
+    <span class="n">CF1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="mf">0.001766920594</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">0.184509337930</span><span class="p">,</span>
+            <span class="mf">0.409983271398</span><span class="p">,</span>
+            <span class="mf">0.067459351773</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">0.610733613427</span><span class="p">,</span>
+            <span class="mf">0.451717419499</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">0.124878965835</span><span class="p">,</span>
+            <span class="mf">0.014987644299</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">0.000661473792</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">CF11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="mf">0.048696144050</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">0.537083543337</span><span class="p">,</span>
+            <span class="mf">0.492816604919</span><span class="p">,</span>
+            <span class="mf">0.398174247185</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">0.444398434205</span><span class="p">,</span>
+            <span class="mf">0.238062954735</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">0.061552896506</span><span class="p">,</span>
+            <span class="mf">0.007317769806</span><span class="p">,</span>
+            <span class="o">-</span><span class="mf">0.000324445515</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">nval</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">n_valence</span> <span class="o">==</span> <span class="mi">11</span> <span class="k">else</span> <span class="n">n_valence</span>
+    <span class="k">if</span> <span class="n">nval</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">nval</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">energies</span><span class="p">))</span>
+
+    <span class="n">w1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">11</span> <span class="o">-</span> <span class="n">nval</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.0</span>
+    <span class="n">w11</span> <span class="o">=</span> <span class="p">(</span><span class="n">nval</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.0</span>
+    <span class="n">CFZ</span> <span class="o">=</span> <span class="n">w1</span> <span class="o">*</span> <span class="n">CF1</span> <span class="o">+</span> <span class="n">w11</span> <span class="o">*</span> <span class="n">CF11</span>
+
+    <span class="n">energies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">wlortab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">energies</span><span class="p">))</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">energies</span> <span class="o">&gt;</span> <span class="mf">2.5</span>
+    <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">loge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">energies</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+        <span class="n">pwrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumprod</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">loge</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">CFZ</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">pwrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">pwrs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">pwrs</span><span class="p">])</span>
+        <span class="n">wlortab</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">pwrs</span> <span class="o">@</span> <span class="n">CFZ</span>
+
+    <span class="c1"># For 0 &lt; E &lt;= 2.5 eV: Fortran uses YLAG(N=2, i.e. linear) from (0,0) to (2.5, poly(2.5))</span>
+    <span class="c1"># This is a simple linear ramp: wlortab(E) = wlortab(2.5) * E / 2.5</span>
+    <span class="c1"># First, evaluate poly(2.5) by linearly interpolating (N=2 YLAG) the already-filled wlortab</span>
+    <span class="c1"># at E=2.5 using the two nearest grid points.</span>
+    <span class="c1"># For simplicity (dense grid), just evaluate the polynomial directly at 2.5.</span>
+    <span class="n">idx25</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+    <span class="n">idx25</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">idx25</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># linear interpolation of the polynomial wlortab between the two surrounding grid points</span>
+    <span class="n">e_lo</span><span class="p">,</span> <span class="n">e_hi</span> <span class="o">=</span> <span class="n">energies</span><span class="p">[</span><span class="n">idx25</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">energies</span><span class="p">[</span><span class="n">idx25</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">e_hi</span> <span class="o">&gt;</span> <span class="n">e_lo</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.5</span> <span class="o">-</span> <span class="n">e_lo</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">e_hi</span> <span class="o">-</span> <span class="n">e_lo</span><span class="p">)</span>
+        <span class="n">y25</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">wlortab</span><span class="p">[</span><span class="n">idx25</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="n">wlortab</span><span class="p">[</span><span class="n">idx25</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">y25</span> <span class="o">=</span> <span class="n">wlortab</span><span class="p">[</span><span class="n">idx25</span><span class="p">]</span>
+
+    <span class="n">mask_low</span> <span class="o">=</span> <span class="p">(</span><span class="n">energies</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">energies</span> <span class="o">&lt;=</span> <span class="mf">2.5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mask_low</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="c1"># Linear from (0, 0) to (2.5, y25)</span>
+        <span class="n">wlortab</span><span class="p">[</span><span class="n">mask_low</span><span class="p">]</span> <span class="o">=</span> <span class="n">y25</span> <span class="o">*</span> <span class="n">energies</span><span class="p">[</span><span class="n">mask_low</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.5</span>
+
+    <span class="c1"># Clamp to minimum 0.0001 (Fortran: MAX(0.0001, WLORTAB(I)) for all I)</span>
+    <span class="n">wlortab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">wlortab</span><span class="p">)</span>
+    <span class="c1"># Points at E &lt;= 0 stay 0 (Fortran sets to 0.0 before clamping,</span>
+    <span class="c1"># but clamping makes them 0.0001; keep 0 to match the G=G0 behaviour for the zero-signal region)</span>
+    <span class="n">wlortab</span><span class="p">[</span><span class="n">energies</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">return</span> <span class="n">wlortab</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

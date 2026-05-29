@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>class_property &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -159,23 +159,23 @@
 <h1>class_property<a class="headerlink" href="#class-property" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.decorators.class_property">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.decorators.</span></span><span class="sig-name descname"><span class="pre">class_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/decorators.html#class_property"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.decorators.class_property" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.decorators.</span></span><span class="sig-name descname"><span class="pre">class_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/decorators.html#class_property"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.decorators.class_property" title="Link to this definition"></a></dt>
 <dd><p>Decorator that converts a method with a single cls argument into a property
 that can be accessed directly from the class. The value is not cached, see
 <a class="reference internal" href="ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.common.decorators.cached_class_property" title="ase2sprkkr.common.decorators.cached_class_property"><code class="xref py py-func docutils literal notranslate"><span class="pre">cached_class_property()</span></code></a>, if caching is desirable.</p>
 <p class="rubric">Example</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Cls</span><span class="p">:</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Cls</span><span class="p">:</span>
    <span class="nd">@class_property</span>
-   <span class="k">def</span> <span class="nf">cls_property</span><span class="p">():</span>
+   <span class="k">def</span><span class="w"> </span><span class="nf">cls_property</span><span class="p">():</span>
        <span class="k">return</span> <span class="n">some_value</span>
 
    <span class="n">x</span> <span class="o">=</span> <span class="n">Cls</span><span class="o">.</span><span class="n">cls_property</span>
 </pre></div>
 </div>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-101268683537fb528e7c2538d7bc9d7274c63c05.png" alt="Inheritance diagram of ase2sprkkr.common.decorators.class_property" usemap="#inheritance282c3bf046" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-cfacbc047572811af5b3f533959ad06d054d08b9.png" alt="Inheritance diagram of ase2sprkkr.common.decorators.class_property" usemap="#inheritance282c3bf046" class="inheritance graphviz" /></div>
 <map id="inheritance282c3bf046" name="inheritance282c3bf046">
-<area shape="rect" id="node1" href="#ase2sprkkr.common.decorators.class_property" target="_top" title="Decorator that converts a method with a single cls argument into a property" alt="" coords="5,5,196,31"/>
+<area shape="rect" id="node1" href="#ase2sprkkr.common.decorators.class_property" target="_top" title="Decorator that converts a method with a single cls argument into a property" alt="" coords="5,5,195,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>

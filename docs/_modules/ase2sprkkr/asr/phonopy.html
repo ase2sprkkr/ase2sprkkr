@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.phonopy &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -92,22 +92,22 @@
              
   <h1>Source code for ase2sprkkr.asr.phonopy</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Phonopy phonon band structure.&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">ase.parallel</span> <span class="kn">import</span> <span class="n">world</span>
-<span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
-<span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">BandPath</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">world</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.dft.kpoints</span><span class="w"> </span><span class="kn">import</span> <span class="n">BandPath</span>
 
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">DictStr</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">DictStr</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span>
                       <span class="n">read_json</span><span class="p">,</span> <span class="n">write_json</span><span class="p">,</span> <span class="n">prepare_result</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="lattice_vectors">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonopy.lattice_vectors.html#ase2sprkkr.asr.phonopy.lattice_vectors">[docs]</a>
-<span class="k">def</span> <span class="nf">lattice_vectors</span><span class="p">(</span><span class="n">N_c</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lattice_vectors</span><span class="p">(</span><span class="n">N_c</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return lattice vectors for cells in the supercell.&quot;&quot;&quot;</span>
     <span class="c1"># Lattice vectors relevative to the reference cell</span>
     <span class="n">R_cN</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="n">N_c</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
@@ -122,7 +122,7 @@
 
 <div class="viewcode-block" id="distance_to_sc">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonopy.distance_to_sc.html#ase2sprkkr.asr.phonopy.distance_to_sc">[docs]</a>
-<span class="k">def</span> <span class="nf">distance_to_sc</span><span class="p">(</span><span class="n">nd</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">dist_max</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">distance_to_sc</span><span class="p">(</span><span class="n">nd</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">dist_max</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">nd</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
             <span class="n">atoms_x</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">repeat</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
@@ -175,7 +175,7 @@
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--sc&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of repetitions in lat. vector directions [N_x, N_y, N_z]&#39;</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--calculator&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Calculator params.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">DictStr</span><span class="p">())</span>
-<span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">fsname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;phonons&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">fsname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;phonons&#39;</span><span class="p">,</span>
               <span class="n">sc</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dist_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">7.0</span><span class="p">,</span>
               <span class="n">calculator</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;gpaw&#39;</span><span class="p">,</span>
                                   <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;pw&#39;</span><span class="p">,</span> <span class="s1">&#39;ecut&#39;</span><span class="p">:</span> <span class="mi">800</span><span class="p">},</span>
@@ -189,10 +189,10 @@
                                   <span class="s1">&#39;txt&#39;</span><span class="p">:</span> <span class="s1">&#39;phonons.txt&#39;</span><span class="p">,</span>
                                   <span class="s1">&#39;charge&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate atomic forces used for phonon spectrum.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">asr.calculators</span> <span class="kn">import</span> <span class="n">get_calculator</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.calculators</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_calculator</span>
 
-    <span class="kn">from</span> <span class="nn">phonopy</span> <span class="kn">import</span> <span class="n">Phonopy</span>
-    <span class="kn">from</span> <span class="nn">phonopy.structure.atoms</span> <span class="kn">import</span> <span class="n">PhonopyAtoms</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">phonopy</span><span class="w"> </span><span class="kn">import</span> <span class="n">Phonopy</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">phonopy.structure.atoms</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhonopyAtoms</span>
     <span class="c1"># Remove empty files:</span>
     <span class="k">if</span> <span class="n">world</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">fsname</span> <span class="o">+</span> <span class="s2">&quot;.*.json&quot;</span><span class="p">):</span>
@@ -202,12 +202,12 @@
 
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">&quot;structure.json&quot;</span><span class="p">)</span>
 
-    <span class="kn">from</span> <span class="nn">ase.calculators.calculator</span> <span class="kn">import</span> <span class="n">get_calculator_class</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_calculator_class</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
     <span class="n">calc</span> <span class="o">=</span> <span class="n">get_calculator_class</span><span class="p">(</span><span class="n">name</span><span class="p">)(</span><span class="o">**</span><span class="n">calculator</span><span class="p">)</span>
 
     <span class="c1"># Set initial magnetic moments</span>
-    <span class="kn">from</span> <span class="nn">asr.utils</span> <span class="kn">import</span> <span class="n">is_magnetic</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_magnetic</span>
 
     <span class="k">if</span> <span class="n">is_magnetic</span><span class="p">():</span>
         <span class="n">gsold</span> <span class="o">=</span> <span class="n">get_calculator</span><span class="p">()(</span><span class="s2">&quot;gs.gpw&quot;</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
@@ -236,7 +236,7 @@
     <span class="c1"># displacements = phonon.get_displacements()</span>
     <span class="n">displaced_sc</span> <span class="o">=</span> <span class="n">phonon</span><span class="o">.</span><span class="n">get_supercells_with_displacements</span><span class="p">()</span>
 
-    <span class="kn">from</span> <span class="nn">ase.atoms</span> <span class="kn">import</span> <span class="n">Atoms</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.atoms</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atoms</span>
     <span class="n">scell</span> <span class="o">=</span> <span class="n">displaced_sc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">atoms_N</span> <span class="o">=</span> <span class="n">Atoms</span><span class="p">(</span><span class="n">symbols</span><span class="o">=</span><span class="n">scell</span><span class="o">.</span><span class="n">get_chemical_symbols</span><span class="p">(),</span>
                     <span class="n">scaled_positions</span><span class="o">=</span><span class="n">scell</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(),</span>
@@ -271,15 +271,15 @@
 
 <div class="viewcode-block" id="requires">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonopy.requires.html#ase2sprkkr.asr.phonopy.requires">[docs]</a>
-<span class="k">def</span> <span class="nf">requires</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">requires</span><span class="p">():</span>
     <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;results-asr.phonopy@calculate.json&quot;</span><span class="p">]</span></div>
 
 
 
 <div class="viewcode-block" id="webpanel">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonopy.webpanel.html#ase2sprkkr.asr.phonopy.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">table</span><span class="p">,</span> <span class="n">fig</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.database.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">table</span><span class="p">,</span> <span class="n">fig</span>
 
     <span class="n">phonontable</span> <span class="o">=</span> <span class="n">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s2">&quot;Property&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;minhessianeig&quot;</span><span class="p">],</span> <span class="n">key_descriptions</span><span class="p">)</span>
 
@@ -324,7 +324,7 @@
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonopy.Result.html#ase2sprkkr.asr.phonopy.Result">[docs]</a>
 <span class="nd">@prepare_result</span>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
     <span class="n">omega_kl</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
     <span class="n">minhessianeig</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">eigs_kl</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">]]</span>
@@ -358,10 +358,10 @@
     <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;asr.phonopy@calculate&quot;</span><span class="p">],</span>
 <span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s2">&quot;--rc&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Cutoff force constants matrix&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">rc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">phonopy</span> <span class="kn">import</span> <span class="n">Phonopy</span>
-    <span class="kn">from</span> <span class="nn">phonopy.structure.atoms</span> <span class="kn">import</span> <span class="n">PhonopyAtoms</span>
-    <span class="kn">from</span> <span class="nn">phonopy.units</span> <span class="kn">import</span> <span class="n">THzToEv</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">rc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">phonopy</span><span class="w"> </span><span class="kn">import</span> <span class="n">Phonopy</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">phonopy.structure.atoms</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhonopyAtoms</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">phonopy.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">THzToEv</span>
 
     <span class="n">calculateresult</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;results-asr.phonopy@calculate.json&quot;</span><span class="p">)</span>
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">&quot;structure.json&quot;</span><span class="p">)</span>
@@ -486,8 +486,8 @@
 
 <div class="viewcode-block" id="plot_phonons">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonopy.plot_phonons.html#ase2sprkkr.asr.phonopy.plot_phonons">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_phonons</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_phonons</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;results-asr.phonopy.json&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -519,9 +519,9 @@
 
 <div class="viewcode-block" id="plot_bandstructure">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.phonopy.plot_bandstructure.html#ase2sprkkr.asr.phonopy.plot_bandstructure">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_bandstructure</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-    <span class="kn">from</span> <span class="nn">ase.spectrum.band_structure</span> <span class="kn">import</span> <span class="n">BandStructure</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_bandstructure</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.spectrum.band_structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">BandStructure</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;results-asr.phonopy.json&quot;</span><span class="p">)</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>

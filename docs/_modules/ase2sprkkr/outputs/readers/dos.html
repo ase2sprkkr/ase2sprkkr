@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.outputs.readers.dos &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -91,44 +91,56 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.outputs.readers.dos</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; Density of states (DOS) reader and result. &quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Density of states (DOS) reader and result.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">KkrProcessRunner</span>
-<span class="kn">from</span> <span class="nn">.default</span> <span class="kn">import</span> <span class="n">DefaultOutputReader</span>
-<span class="kn">from</span> <span class="nn">...common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
-<span class="kn">from</span> <span class="nn">...output_files.output_files</span> <span class="kn">import</span> <span class="n">OutputFile</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..task_result</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">KkrOutputReader</span><span class="p">,</span> <span class="n">OutputFileResultValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.default</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 
 <div class="viewcode-block" id="DosResult">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.dos.DosResult.html#ase2sprkkr.outputs.readers.dos.DosResult">[docs]</a>
-<span class="k">class</span> <span class="nc">DosResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; Density of states (DOS) results provides access to the computed</span>
-<span class="sd">  density of states in the DOS output file, using the :py:attr:dos property. &quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DosResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Density of states (DOS) results provides access to the computed</span>
+<span class="sd">    density of states in the DOS output file, using the :py:attr:dos property.&quot;&quot;&quot;</span>
 
-  <span class="nd">@cached_property</span>
-  <span class="k">def</span> <span class="nf">dos_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; New (output) potential file name &quot;&quot;&quot;</span>
-      <span class="n">fname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">DATASET</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;_DOS.dos&#39;</span>
-      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
-         <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">fname</span>
-
-  <span class="nd">@cached_property</span>
-  <span class="k">def</span> <span class="nf">dos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; The new (output) potential - that contains the converged charge density etc. &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="n">OutputFile</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dos_filename</span><span class="p">,</span> <span class="n">try_only</span><span class="o">=</span><span class="s1">&#39;dos&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DosResult.dos_filename">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.dos.DosResult.html#ase2sprkkr.outputs.readers.dos.DosResult.dos_filename">[docs]</a>
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dos_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Density of states file name&quot;&quot;&quot;</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">DATASET</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_DOS.dos&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
+            <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fname</span></div>
 
 
+<div class="viewcode-block" id="DosResult.dos">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.dos.DosResult.html#ase2sprkkr.outputs.readers.dos.DosResult.dos">[docs]</a>
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The computed density of states.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_values</span><span class="p">[</span><span class="s2">&quot;dos&quot;</span><span class="p">]()</span></div>
 
-<div class="viewcode-block" id="DosProcessRunner">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.dos.DosProcessRunner.html#ase2sprkkr.outputs.readers.dos.DosProcessRunner">[docs]</a>
-<span class="k">class</span> <span class="nc">DosProcessRunner</span><span class="p">(</span><span class="n">KkrProcessRunner</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; ARPES task output reader currently do nothing, just have a special</span>
-<span class="sd">  result, that allow easy acces to spc output file &quot;&quot;&quot;</span>
 
-  <span class="n">result_class</span> <span class="o">=</span> <span class="n">DosResult</span>
-  <span class="n">reader_class</span> <span class="o">=</span> <span class="n">DefaultOutputReader</span></div>
+<div class="viewcode-block" id="DosResult.output_values">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.dos.DosResult.html#ase2sprkkr.outputs.readers.dos.DosResult.output_values">[docs]</a>
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;dos&quot;</span><span class="p">:</span> <span class="n">OutputFileResultValue</span><span class="p">(</span><span class="s2">&quot;Density of states&quot;</span><span class="p">,</span> <span class="s2">&quot;dos&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dos_filename</span><span class="p">)}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DosOutputReader">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.dos.DosOutputReader.html#ase2sprkkr.outputs.readers.dos.DosOutputReader">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DosOutputReader</span><span class="p">(</span><span class="n">KkrOutputReader</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;DOS task has no special parser, it just has a special</span>
+<span class="sd">    result, that allow easy acces to spc output file&quot;&quot;&quot;</span>
+
+    <span class="n">result_class</span> <span class="o">=</span> <span class="n">DosResult</span>
+    <span class="n">parser_class</span> <span class="o">=</span> <span class="n">DefaultOutputParser</span></div>
 
 </pre></div>
 

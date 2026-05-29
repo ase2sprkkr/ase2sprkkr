@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.calculators &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -91,13 +91,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.asr.calculators</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">read_json</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 
 <div class="viewcode-block" id="get_calculator">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.calculators.get_calculator.html#ase2sprkkr.asr.calculators.get_calculator">[docs]</a>
-<span class="k">def</span> <span class="nf">get_calculator</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_calculator</span><span class="p">():</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;params.json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;GPAW&#39;</span>
     <span class="k">else</span><span class="p">:</span>
@@ -105,19 +105,19 @@
         <span class="n">name</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;_calculator&#39;</span><span class="p">,</span> <span class="s1">&#39;GPAW&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;GPAW&#39;</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
         <span class="k">return</span> <span class="n">GPAW</span>
     <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;EMT&#39;</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">ase.calculators.emt</span> <span class="kn">import</span> <span class="n">EMT</span>
-        <span class="kn">import</span> <span class="nn">ase.io.ulm</span> <span class="k">as</span> <span class="nn">ulm</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.emt</span><span class="w"> </span><span class="kn">import</span> <span class="n">EMT</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">ase.io.ulm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ulm</span>
 
-        <span class="k">class</span> <span class="nc">ASREMT</span><span class="p">(</span><span class="n">EMT</span><span class="p">):</span>
-            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">class</span><span class="w"> </span><span class="nc">ASREMT</span><span class="p">(</span><span class="n">EMT</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
                 <span class="n">EMT</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-            <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 
-                <span class="kn">from</span> <span class="nn">ase.io.trajectory</span> <span class="kn">import</span> <span class="n">write_atoms</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io.trajectory</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_atoms</span>
                 <span class="k">with</span> <span class="n">ulm</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
                     <span class="n">write_atoms</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="s1">&#39;atoms&#39;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span>
                     <span class="n">w</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">)</span>

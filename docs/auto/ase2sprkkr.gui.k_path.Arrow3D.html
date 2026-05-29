@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Arrow3D &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -130,11 +130,11 @@
 <h1>Arrow3D<a class="headerlink" href="#arrow3d" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.gui.k_path.Arrow3D">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.gui.k_path.</span></span><span class="sig-name descname"><span class="pre">Arrow3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/gui/k_path.html#Arrow3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.gui.k_path.Arrow3D" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.gui.k_path.</span></span><span class="sig-name descname"><span class="pre">Arrow3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/gui/k_path.html#Arrow3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.gui.k_path.Arrow3D" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-099a3c9dd67967e5c48411f0c5a88dd1a608b7b6.png" alt="Inheritance diagram of ase2sprkkr.gui.k_path.Arrow3D" usemap="#inheritance82609b462a" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-f4cd89ee0d3e53d3210b3fa2ac2d17cfad86f58d.png" alt="Inheritance diagram of ase2sprkkr.gui.k_path.Arrow3D" usemap="#inheritance82609b462a" class="inheritance graphviz" /></div>
 <map id="inheritance82609b462a" name="inheritance82609b462a">
-<area shape="rect" id="node2" href="#ase2sprkkr.gui.k_path.Arrow3D" target="_top" title="k_path.Arrow3D" alt="" coords="487,5,613,31"/>
+<area shape="rect" id="node2" href="#ase2sprkkr.gui.k_path.Arrow3D" target="_top" title="k_path.Arrow3D" alt="" coords="485,5,611,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -142,41 +142,71 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.gui.k_path.Arrow3D.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/gui/k_path.html#Arrow3D.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.gui.k_path.Arrow3D.__init__" title="Link to this definition"></a></dt>
-<dd><p>There are two ways for defining an arrow:</p>
-<ul class="simple">
-<li><p>If <em>posA</em> and <em>posB</em> are given, a path connecting two points is
-created according to <em>connectionstyle</em>. The path will be
-clipped with <em>patchA</em> and <em>patchB</em> and further shrunken by
-<em>shrinkA</em> and <em>shrinkB</em>. An arrow is drawn along this
-resulting path using the <em>arrowstyle</em> parameter.</p></li>
-<li><p>Alternatively if <em>path</em> is provided, an arrow is drawn along this
-path and <em>patchA</em>, <em>patchB</em>, <em>shrinkA</em>, and <em>shrinkB</em> are ignored.</p></li>
+<dd><p><strong>Defining the arrow position and path</strong></p>
+<p>There are two ways to define the arrow position and path:</p>
+<ul>
+<li><p><strong>Start, end and connection</strong>:
+The typical approach is to define the start and end points of the
+arrow using <em>posA</em> and <em>posB</em>. The curve between these two can
+further be configured using <em>connectionstyle</em>.</p>
+<p>If given, the arrow curve is clipped by <em>patchA</em> and <em>patchB</em>,
+allowing it to start/end at the border of these patches.
+Additionally, the arrow curve can be shortened by <em>shrinkA</em> and <em>shrinkB</em>
+to create a margin between start/end (after possible clipping) and the
+drawn arrow.</p>
+</li>
+<li><p><strong>path</strong>: Alternatively if <em>path</em> is provided, an arrow is drawn along
+this Path. In this case, <em>connectionstyle</em>, <em>patchA</em>, <em>patchB</em>,
+<em>shrinkA</em>, and <em>shrinkB</em> are ignored.</p></li>
 </ul>
+<p><strong>Styling</strong></p>
+<p>The <em>arrowstyle</em> defines the styling of the arrow head, tail and shaft.
+The resulting arrows can be styled further by setting the <cite>.Patch</cite>
+properties such as <em>linewidth</em>, <em>color</em>, <em>facecolor</em>, <em>edgecolor</em>
+etc. via keyword arguments.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>posA</strong> (<em>(</em><em>float</em><em>, </em><em>float</em><em>)</em><em>, </em><em>default: None</em>) – (x, y) coordinates of arrow tail and arrow head respectively.</p></li>
-<li><p><strong>posB</strong> (<em>(</em><em>float</em><em>, </em><em>float</em><em>)</em><em>, </em><em>default: None</em>) – (x, y) coordinates of arrow tail and arrow head respectively.</p></li>
-<li><p><strong>path</strong> (<cite>~matplotlib.path.Path</cite>, default: None) – If provided, an arrow is drawn along this path and <em>patchA</em>,
-<em>patchB</em>, <em>shrinkA</em>, and <em>shrinkB</em> are ignored.</p></li>
-<li><p><strong>arrowstyle</strong> – The <cite>.ArrowStyle</cite> with which the fancy arrow is drawn.  If a
-string, it should be one of the available arrowstyle names, with
-optional comma-separated attributes.  The optional attributes are
-meant to be scaled with the <em>mutation_scale</em>.  The following arrow
-styles are available:</p></li>
+<li><p><strong>posA</strong> (<em>(</em><em>float</em><em>, </em><em>float</em><em>)</em><em>, </em><em>optional</em>) – <p>(x, y) coordinates of start and end point of the arrow.
+The actually drawn start and end positions may be modified
+through <em>patchA</em>, <em>patchB</em>, <em>shrinkA</em>, and <em>shrinkB</em>.</p>
+<p><em>posA</em>, <em>posB</em> are exclusive of <em>path</em>.</p>
+</p></li>
+<li><p><strong>posB</strong> (<em>(</em><em>float</em><em>, </em><em>float</em><em>)</em><em>, </em><em>optional</em>) – <p>(x, y) coordinates of start and end point of the arrow.
+The actually drawn start and end positions may be modified
+through <em>patchA</em>, <em>patchB</em>, <em>shrinkA</em>, and <em>shrinkB</em>.</p>
+<p><em>posA</em>, <em>posB</em> are exclusive of <em>path</em>.</p>
+</p></li>
+<li><p><strong>path</strong> (<cite>~matplotlib.path.Path</cite>, optional) – <p>If provided, an arrow is drawn along this path and <em>patchA</em>,
+<em>patchB</em>, <em>shrinkA</em>, and <em>shrinkB</em> are ignored.</p>
+<p><em>path</em> is exclusive of <em>posA</em>, <em>posB</em>.</p>
+</p></li>
+<li><p><strong>arrowstyle</strong> – <p>The styling of arrow head, tail and shaft. This can be</p>
+<ul>
+<li><p><cite>.ArrowStyle</cite> or one of its subclasses</p></li>
+<li><p>The shorthand string name (e.g. “-&gt;”) as given in the table below,
+optionally containing a comma-separated list of style parameters,
+e.g. “-&gt;, head_length=10, head_width=5”.</p></li>
+</ul>
+<p>The style parameters are scaled by <em>mutation_scale</em>.</p>
+<p>The following arrow styles are available. See also
+<span class="xref std std-doc">/gallery/text_labels_and_annotations/fancyarrow_demo</span>.</p>
+</p></li>
 </ul>
 </dd>
 </dl>
 <dl>
-<dt>connectionstyle<span class="classifier">str or <cite>.ConnectionStyle</cite> or None, optional, default: ‘arc3’</span></dt><dd><p>The <cite>.ConnectionStyle</cite> with which <em>posA</em> and <em>posB</em> are connected.
-If a string, it should be one of the available connectionstyle
-names, with optional comma-separated attributes.  The following
-connection styles are available:</p>
+<dt>connectionstyle<span class="classifier">str or <cite>.ConnectionStyle</cite> or None, optional, default: ‘arc3’</span></dt><dd><p><cite>.ConnectionStyle</cite> with which <em>posA</em> and <em>posB</em> are connected.
+This can be</p>
+<ul class="simple">
+<li><p><cite>.ConnectionStyle</cite> or one of its subclasses</p></li>
+<li><p>The shorthand string name as given in the table below, e.g. “arc3”.</p></li>
+</ul>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Class</p></th>
 <th class="head"><p>Name</p></th>
-<th class="head"><p>Attrs</p></th>
+<th class="head"><p>Parameters</p></th>
 </tr>
 </thead>
 <tbody>
@@ -202,10 +232,17 @@ connection styles are available:</p>
 </tr>
 </tbody>
 </table>
+<p>Ignored if <em>path</em> is provided.</p>
 </dd>
-<dt>patchA, patchB<span class="classifier"><cite>~matplotlib.patches.Patch</cite>, default: None</span></dt><dd><p>Head and tail patches, respectively.</p>
+<dt>patchA, patchB<span class="classifier"><cite>~matplotlib.patches.Patch</cite>, default: None</span></dt><dd><p>Optional Patches at <em>posA</em> and <em>posB</em>, respectively. If given,
+the arrow path is clipped by these patches such that head and tail
+are at the border of the patches.</p>
+<p>Ignored if <em>path</em> is provided.</p>
 </dd>
-<dt>shrinkA, shrinkB<span class="classifier">float, default: 2</span></dt><dd><p>Shrink amount, in points, of the tail and head of the arrow respectively.</p>
+<dt>shrinkA, shrinkB<span class="classifier">float, default: 2</span></dt><dd><p>Shorten the arrow path at <em>posA</em> and <em>posB</em> by this amount in points.
+This allows to add a margin between the intended start/end points and
+the arrow.</p>
+<p>Ignored if <em>path</em> is provided.</p>
 </dd>
 <dt>mutation_scale<span class="classifier">float, default: 1</span></dt><dd><p>Value with which attributes of <em>arrowstyle</em> (e.g., <em>head_length</em>)
 will be scaled.</p>
@@ -285,7 +322,7 @@ returns False).</p>
 <p>Supported properties are</p>
 <dl class="simple">
 <dt>Properties:</dt><dd><p>agg_filter: a filter function, which takes a (m, n, 3) float array and a dpi value, and returns a (m, n, 3) array and two offsets from the bottom left corner of the image
-alpha: scalar or None
+alpha: float or None
 animated: bool
 antialiased or aa: bool or None
 arrowstyle: [ ‘-’ | ‘&lt;-’ | ‘-&gt;’ | ‘&lt;-&gt;’ | ‘&lt;<a href="#id1"><span class="problematic" id="id2">|-' | '-|</span></a>&gt;’ | ‘&lt;<a href="#id3"><span class="problematic" id="id4">|-|</span></a>&gt;’ | ‘]-’ | ‘-[’ | ‘]-[’ | ‘<a href="#id5"><span class="problematic" id="id6">|-|</span></a>’ | ‘]-&gt;’ | ‘&lt;-[’ | ‘simple’ | ‘fancy’ | ‘wedge’ ]

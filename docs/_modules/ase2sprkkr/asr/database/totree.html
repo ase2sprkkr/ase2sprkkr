@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.database.totree &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -92,25 +92,25 @@
              
   <h1>Source code for ase2sprkkr.asr.database.totree</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Convert database to folder tree.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
-<span class="kn">from</span> <span class="nn">asr.utils</span> <span class="kn">import</span> <span class="n">timed_print</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timed_print</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 
 
 <div class="viewcode-block" id="make_folder_tree">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.totree.make_folder_tree.html#ase2sprkkr.asr.database.totree.make_folder_tree">[docs]</a>
-<span class="k">def</span> <span class="nf">make_folder_tree</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">folders</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_folder_tree</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">folders</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span>
                      <span class="n">copy</span><span class="p">,</span>
                      <span class="n">patterns</span><span class="p">,</span>
                      <span class="n">atomsfile</span><span class="p">,</span>
                      <span class="n">update_tree</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write folder tree to disk.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">makedirs</span><span class="p">,</span> <span class="n">link</span>
-    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">write</span>
-    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">write_json</span>
-    <span class="kn">import</span> <span class="nn">importlib</span>
-    <span class="kn">from</span> <span class="nn">fnmatch</span> <span class="kn">import</span> <span class="n">fnmatch</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="kn">import</span> <span class="n">makedirs</span><span class="p">,</span> <span class="n">link</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_json</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">fnmatch</span><span class="w"> </span><span class="kn">import</span> <span class="n">fnmatch</span>
 
     <span class="n">nfolders</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">folders</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">rowid</span><span class="p">,</span> <span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">row</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">folders</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
@@ -185,9 +185,9 @@
 
 <div class="viewcode-block" id="make_folder_dict">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.totree.make_folder_dict.html#ase2sprkkr.asr.database.totree.make_folder_dict">[docs]</a>
-<span class="k">def</span> <span class="nf">make_folder_dict</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">tree_structure</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_folder_dict</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">tree_structure</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a dictionary where key=uid and value=(folder, row).&quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">spglib</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">spglib</span>
     <span class="n">folders</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">folderlist</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">err</span> <span class="o">=</span> <span class="p">[]</span>
@@ -276,7 +276,7 @@
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--update-tree&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Update results files in existing folder tree.&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">run</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">run</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
          <span class="n">tree_structure</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
              <span class="s1">&#39;tree/</span><span class="si">{stoi}</span><span class="s1">/{reduced_formula:abc}/</span><span class="si">{row.uid}</span><span class="s1">&#39;</span>
          <span class="p">),</span>
@@ -322,8 +322,8 @@
 <span class="sd">    $ asr run &quot;database.totree database.db --sort natoms --chunks 2 --run&quot;</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-    <span class="kn">from</span> <span class="nn">ase.db</span> <span class="kn">import</span> <span class="n">connect</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">connect</span>
 
     <span class="k">if</span> <span class="n">selection</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Selecting </span><span class="si">{</span><span class="n">selection</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>

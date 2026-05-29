@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.setup.strains &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -92,13 +92,13 @@
              
   <h1>Source code for ase2sprkkr.asr.setup.strains</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Generate strained atomic structures.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
 
 
 <div class="viewcode-block" id="get_relevant_strains">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.strains.get_relevant_strains.html#ase2sprkkr.asr.setup.strains.get_relevant_strains">[docs]</a>
-<span class="k">def</span> <span class="nf">get_relevant_strains</span><span class="p">(</span><span class="n">pbc</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_relevant_strains</span><span class="p">(</span><span class="n">pbc</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pbc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
         <span class="n">ij</span> <span class="o">=</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
     <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pbc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
@@ -111,9 +111,9 @@
 
 <div class="viewcode-block" id="get_strained_folder_name">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.strains.get_strained_folder_name.html#ase2sprkkr.asr.setup.strains.get_strained_folder_name">[docs]</a>
-<span class="k">def</span> <span class="nf">get_strained_folder_name</span><span class="p">(</span><span class="n">strain_percent</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">clamped</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_strained_folder_name</span><span class="p">(</span><span class="n">strain_percent</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">clamped</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
     <span class="k">if</span> <span class="n">strain_percent</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
     <span class="n">itov_i</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]</span>
@@ -130,14 +130,14 @@
 
 <div class="viewcode-block" id="setup_strains">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.strains.setup_strains.html#ase2sprkkr.asr.setup.strains.setup_strains">[docs]</a>
-<span class="k">def</span> <span class="nf">setup_strains</span><span class="p">(</span><span class="n">strain_percent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kptdensity</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">copyparams</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">clamp_atoms</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
-    <span class="kn">from</span> <span class="nn">ase.parallel</span> <span class="kn">import</span> <span class="n">world</span>
-    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">asr.setup.params</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">setup_params</span>
-    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">chdir</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">write_json</span>
-    <span class="kn">from</span> <span class="nn">ase.calculators.calculator</span> <span class="kn">import</span> <span class="n">kpts2sizeandoffsets</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_strains</span><span class="p">(</span><span class="n">strain_percent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kptdensity</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">copyparams</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">clamp_atoms</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">world</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.setup.params</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">setup_params</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">chdir</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">write_json</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">kpts2sizeandoffsets</span>
 
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
     <span class="n">ij</span> <span class="o">=</span> <span class="n">get_relevant_strains</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">)</span>
@@ -192,7 +192,7 @@
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--copyparams/--dontcopyparams&#39;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Copy params.json from current folder into strained folders&#39;</span><span class="p">,</span>
         <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">clamped</span><span class="p">(</span><span class="n">strain_percent</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kptdensity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.0</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">clamped</span><span class="p">(</span><span class="n">strain_percent</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kptdensity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.0</span><span class="p">,</span>
             <span class="n">copyparams</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
     <span class="n">results</span> <span class="o">=</span> <span class="n">setup_strains</span><span class="p">(</span><span class="n">strain_percent</span><span class="o">=</span><span class="n">strain_percent</span><span class="p">,</span> <span class="n">kptdensity</span><span class="o">=</span><span class="n">kptdensity</span><span class="p">,</span>
                             <span class="n">copyparams</span><span class="o">=</span><span class="n">copyparams</span><span class="p">,</span> <span class="n">clamp_atoms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -206,7 +206,7 @@
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--copyparams/--dontcopyparams&#39;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Copy params.json from current folder into strained folders&#39;</span><span class="p">,</span>
         <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">strain_percent</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kptdensity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.0</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">strain_percent</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kptdensity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.0</span><span class="p">,</span>
          <span class="n">copyparams</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
     <span class="n">results</span> <span class="o">=</span> <span class="n">setup_strains</span><span class="p">(</span><span class="n">strain_percent</span><span class="o">=</span><span class="n">strain_percent</span><span class="p">,</span> <span class="n">kptdensity</span><span class="o">=</span><span class="n">kptdensity</span><span class="p">,</span>
                             <span class="n">copyparams</span><span class="o">=</span><span class="n">copyparams</span><span class="p">,</span> <span class="n">clamp_atoms</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>

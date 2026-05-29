@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LatticeData &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -79,8 +79,12 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.physics.broadening.html">broadening</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.physics.core_hole_width.html">core_hole_width</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.html">lattice_data</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.international_numbers_to_AP.html">international_numbers_to_AP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.hall_numbers_to_AP.html">hall_numbers_to_AP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.ap_number_from_spacegroup.html">ap_number_from_spacegroup</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.reorder_matrix.html">reorder_matrix</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">LatticeData</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.Pearson.html">Pearson</a></li>
@@ -128,11 +132,11 @@
 <h1>LatticeData<a class="headerlink" href="#latticedata" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.LatticeData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.physics.lattice_data.</span></span><span class="sig-name descname"><span class="pre">LatticeData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#LatticeData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.LatticeData" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.physics.lattice_data.</span></span><span class="sig-name descname"><span class="pre">LatticeData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#LatticeData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.LatticeData" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-77791902d593bf404daa614efe3ecca47f7e07ff.png" alt="Inheritance diagram of ase2sprkkr.physics.lattice_data.LatticeData" usemap="#inheritanceae96fe9bb8" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-9f51d5ecc92aadf2a31c6e502970d895851a8f2f.png" alt="Inheritance diagram of ase2sprkkr.physics.lattice_data.LatticeData" usemap="#inheritanceae96fe9bb8" class="inheritance graphviz" /></div>
 <map id="inheritanceae96fe9bb8" name="inheritanceae96fe9bb8">
-<area shape="rect" id="node1" href="#ase2sprkkr.physics.lattice_data.LatticeData" target="_top" title="lattice_data.LatticeData" alt="" coords="5,5,184,31"/>
+<area shape="rect" id="node1" href="#ase2sprkkr.physics.lattice_data.LatticeData" target="_top" title="lattice_data.LatticeData" alt="" coords="5,5,183,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -144,17 +148,17 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.LatticeData.rbas">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rbas</span></span><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.LatticeData.rbas" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rbas</span></span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#LatticeData.rbas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.LatticeData.rbas" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.LatticeData.bravais_number">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bravais_number</span></span><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.LatticeData.bravais_number" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bravais_number</span></span><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.LatticeData.bravais_number" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.LatticeData.shoenflies_symbol">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shoenflies_symbol</span></span><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.LatticeData.shoenflies_symbol" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shoenflies_symbol</span></span><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.LatticeData.shoenflies_symbol" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

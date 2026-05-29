@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.input_parameters.definitions.xas &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -91,44 +91,62 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.definitions.xas</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; XAS task input parameters definition&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">...common.grammar_types</span> <span class="kn">import</span> <span class="n">SetOf</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">flag</span>
-<span class="kn">from</span> <span class="nn">.sections</span> <span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span><span class="n">TASK</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">MODE</span>
-<span class="kn">from</span> <span class="nn">..input_parameters_definitions</span> <span class="kn">import</span> \
-    <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span><span class="p">,</span> \
-    <span class="n">InputValueDefinition</span> <span class="k">as</span> <span class="n">V</span><span class="p">,</span> \
-    <span class="n">InputSectionDefinition</span> <span class="k">as</span> <span class="n">Section</span>
+<span></span><span class="sd">&quot;&quot;&quot;XAS task input parameters definition&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">flag</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TASK</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">MODE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span><span class="p">,</span> <span class="n">InputValueDefinition</span> <span class="k">as</span> <span class="n">V</span>
 
 
 <div class="viewcode-block" id="input_parameters">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.xas.input_parameters.html#ase2sprkkr.input_parameters.definitions.xas.input_parameters">[docs]</a>
-<span class="k">def</span> <span class="nf">input_parameters</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; XAS -xas task input parameters definition&quot;&quot;&quot;</span>
-    <span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="p">(</span><span class="s1">&#39;xas&#39;</span><span class="p">,</span> <span class="p">[</span>
-              <span class="n">CONTROL</span><span class="p">(</span><span class="s1">&#39;XAS&#39;</span><span class="p">),</span>
-              <span class="n">TAU</span><span class="p">,</span>
-              <span class="n">MODE</span><span class="p">,</span>
-              <span class="n">ENERGY</span><span class="p">(</span><span class="n">defaults</span><span class="o">=</span><span class="p">{</span>
-                <span class="s1">&#39;EMAX&#39;</span><span class="p">:</span><span class="mf">4.0</span><span class="p">,</span>
-                <span class="s1">&#39;ImE&#39;</span> <span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
-                <span class="s1">&#39;GRID&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
-                <span class="s1">&#39;NE&#39;</span>  <span class="p">:</span> <span class="mi">180</span><span class="p">}),</span>
-              <span class="n">TASK</span><span class="p">(</span><span class="s1">&#39;XAS&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">([</span> <span class="n">V</span><span class="p">(</span><span class="s1">&#39;IT&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span> <span class="s2">&quot;&quot;&quot;atom type IT&quot;&quot;&quot;</span><span class="p">),</span>
-                  <span class="n">V</span><span class="p">(</span><span class="s1">&#39;CL&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span><span class="s1">&#39;2P&#39;</span><span class="p">,</span><span class="n">is_required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;initial core level shell&quot;&quot;&quot;</span><span class="p">),</span>
-                  <span class="n">V</span><span class="p">(</span><span class="s1">&#39;MECHECK&#39;</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span> <span class="p">),</span>
-                  <span class="n">V</span><span class="p">(</span><span class="s1">&#39;OUTPUT&#39;</span><span class="p">,</span><span class="n">DefKeyword</span><span class="p">({</span><span class="s1">&#39;MBARN&#39;</span><span class="p">:</span><span class="s1">&#39;output of absorption coefficient µas µ atom = µ Vuc in [Mbarn] &#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;SIGMA&#39;</span><span class="p">:</span><span class="s1">&#39;SIGMA : output as absorptive part of optical conductivity σ = µ c/4π in [10E15/s ]&#39;</span><span class="p">}),</span>
-                    <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;write extra output&#39;</span><span class="p">),</span>
-                  <span class="n">V</span><span class="p">(</span><span class="s1">&#39;FRAMETET&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                  <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Polar angle θ (FRAMETET) defining the orientation of the electric field vector of the incident light with respect to the material surface normal. Default is FRAMETET = 0, meaning the field lies along the surface normal.&#39;</span><span class="p">),</span>
-                   <span class="n">V</span><span class="p">(</span><span class="s1">&#39;FRAMEPHI&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
-                   <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Azimuthal angle φ (FRAMEPHI) defining the in-plane rotation of the electric field vector of the incident light relative to the surface reference axis. Default is FRAMEPHI = 0, corresponding to alignment with the x-axis of the surface frame.&#39;</span><span class="p">),</span>
-              <span class="p">]),</span>
-              <span class="n">SITES</span>
-          <span class="p">],</span>
-        <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;kkrgen&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;XAS -xas task input parameters definition&quot;&quot;&quot;</span>
+    <span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="p">(</span>
+        <span class="s2">&quot;xas&quot;</span><span class="p">,</span>
+        <span class="p">[</span>
+            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">&quot;XAS&quot;</span><span class="p">),</span>
+            <span class="n">TAU</span><span class="p">,</span>
+            <span class="n">MODE</span><span class="p">,</span>
+            <span class="n">ENERGY</span><span class="p">(</span><span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;EMAX&quot;</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">,</span> <span class="s2">&quot;ImE&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s2">&quot;GRID&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;NE&quot;</span><span class="p">:</span> <span class="mi">180</span><span class="p">}),</span>
+            <span class="n">TASK</span><span class="p">(</span><span class="s2">&quot;XAS&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;IT&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;atom type IT&quot;&quot;&quot;</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;CL&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;2P&quot;</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;initial core level shell&quot;&quot;&quot;</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;MECHECK&quot;</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span>
+                        <span class="s2">&quot;OUTPUT&quot;</span><span class="p">,</span>
+                        <span class="n">DefKeyword</span><span class="p">(</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;MBARN&quot;</span><span class="p">:</span> <span class="s2">&quot;output of absorption coefficient µas µ atom = µ Vuc in [Mbarn] &quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;SIGMA&quot;</span><span class="p">:</span> <span class="s2">&quot;SIGMA : output as absorptive part of optical conductivity σ = µ c/4π in [10E15/s ]&quot;</span><span class="p">,</span>
+                            <span class="p">}</span>
+                        <span class="p">),</span>
+                        <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;write extra output&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span>
+                        <span class="s2">&quot;FRAMETET&quot;</span><span class="p">,</span>
+                        <span class="nb">float</span><span class="p">,</span>
+                        <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Polar angle θ (FRAMETET) defining the orientation of the electric field vector of the incident light with respect to the material surface normal. Default is FRAMETET = 0, meaning the field lies along the surface normal.&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span>
+                        <span class="s2">&quot;FRAMEPHI&quot;</span><span class="p">,</span>
+                        <span class="nb">float</span><span class="p">,</span>
+                        <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Azimuthal angle φ (FRAMEPHI) defining the in-plane rotation of the electric field vector of the incident light relative to the surface reference axis. Default is FRAMEPHI = 0, corresponding to alignment with the x-axis of the surface frame.&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+            <span class="n">SITES</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;kkrgen&quot;</span><span class="p">,</span>
         <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Calculates X-ray absorption spectra&quot;</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Calculates X-ray absorption spectra&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">input_parameters</span></div>
 

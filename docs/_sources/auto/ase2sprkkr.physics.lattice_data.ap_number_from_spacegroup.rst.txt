@@ -1,0 +1,8 @@
+ap\_number\_from\_spacegroup
+============================
+
+Full name: **ase2sprkkr.physics.lattice\_data.ap\_number\_from\_spacegroup**
+
+.. currentmodule:: ase2sprkkr.physics.lattice_data
+
+.. autofunction:: ap_number_from_spacegroup

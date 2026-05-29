@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.bse &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -92,16 +92,16 @@
              
   <h1>Source code for ase2sprkkr.asr.bse</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Bethe Salpeter absorption spectrum.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">file_barrier</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
-<span class="kn">from</span> <span class="nn">click</span> <span class="kn">import</span> <span class="n">Choice</span>
-<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">file_barrier</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">click</span><span class="w"> </span><span class="kn">import</span> <span class="n">Choice</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
 
 
 <div class="viewcode-block" id="get_kpts_size">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bse.get_kpts_size.html#ase2sprkkr.asr.bse.get_kpts_size">[docs]</a>
-<span class="k">def</span> <span class="nf">get_kpts_size</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">kptdensity</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_kpts_size</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">kptdensity</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Try to get a reasonable monkhorst size which hits high symmetry points.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">gpaw.kpt_descriptor</span> <span class="kn">import</span> <span class="n">kpts2sizeandoffsets</span> <span class="k">as</span> <span class="n">k2so</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.kpt_descriptor</span><span class="w"> </span><span class="kn">import</span> <span class="n">kpts2sizeandoffsets</span> <span class="k">as</span> <span class="n">k2so</span>
     <span class="n">size</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">k2so</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">kptdensity</span><span class="p">)</span>
     <span class="n">size</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
@@ -127,19 +127,19 @@
         <span class="nb">type</span><span class="o">=</span><span class="n">Choice</span><span class="p">([</span><span class="s1">&#39;RPA&#39;</span><span class="p">,</span> <span class="s1">&#39;BSE&#39;</span><span class="p">,</span> <span class="s1">&#39;TDHF&#39;</span><span class="p">]))</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--bandfactor&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of unoccupied bands = (#occ. bands) * bandfactor)&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">gs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">kptdensity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.0</span><span class="p">,</span> <span class="n">ecut</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">50.0</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="n">gs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">kptdensity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.0</span><span class="p">,</span> <span class="n">ecut</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">50.0</span><span class="p">,</span>
               <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;BSE&#39;</span><span class="p">,</span> <span class="n">bandfactor</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
               <span class="n">nv_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.3</span><span class="p">,</span> <span class="n">nc_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate BSE polarizability.&quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">os</span>
-    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
-    <span class="kn">from</span> <span class="nn">ase.dft.bandgap</span> <span class="kn">import</span> <span class="n">bandgap</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">gpaw.mpi</span> <span class="kn">import</span> <span class="n">world</span>
-    <span class="kn">from</span> <span class="nn">gpaw.response.bse</span> <span class="kn">import</span> <span class="n">BSE</span>
-    <span class="kn">from</span> <span class="nn">gpaw.occupations</span> <span class="kn">import</span> <span class="n">FermiDirac</span>
-    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.dft.bandgap</span><span class="w"> </span><span class="kn">import</span> <span class="n">bandgap</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.mpi</span><span class="w"> </span><span class="kn">import</span> <span class="n">world</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.response.bse</span><span class="w"> </span><span class="kn">import</span> <span class="n">BSE</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.occupations</span><span class="w"> </span><span class="kn">import</span> <span class="n">FermiDirac</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
     <span class="n">pbc</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
@@ -266,10 +266,10 @@
 
 <div class="viewcode-block" id="absorption">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bse.absorption.html#ase2sprkkr.asr.bse.absorption">[docs]</a>
-<span class="k">def</span> <span class="nf">absorption</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-    <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">Ha</span><span class="p">,</span> <span class="n">Bohr</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">absorption</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">Ha</span><span class="p">,</span> <span class="n">Bohr</span>
 
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">toatoms</span><span class="p">()</span>
     <span class="n">pbc</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
@@ -337,10 +337,10 @@
 
 <div class="viewcode-block" id="webpanel">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bse.webpanel.html#ase2sprkkr.asr.bse.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span><span class="p">,</span> <span class="n">table</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.database.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">fig</span><span class="p">,</span> <span class="n">table</span>
 
     <span class="n">E_B</span> <span class="o">=</span> <span class="n">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s1">&#39;Property&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;E_B&#39;</span><span class="p">],</span> <span class="n">key_descriptions</span><span class="p">)</span>
 
@@ -380,7 +380,7 @@
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bse.Result.html#ase2sprkkr.asr.bse.Result">[docs]</a>
 <span class="nd">@prepare_result</span>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">E_B</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">bse_alphax_w</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
@@ -400,10 +400,10 @@
          <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;bse_polx.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;results-asr.gs.json&#39;</span><span class="p">],</span>
          <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.bse@calculate&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.gs&#39;</span><span class="p">],</span>
          <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">read_json</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_json</span>
 
     <span class="n">alphax_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;bse_polx.csv&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bse_alphax_w&#39;</span><span class="p">:</span> <span class="n">alphax_w</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)}</span>

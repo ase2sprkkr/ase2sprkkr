@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.database.rmsd &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -91,16 +91,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.asr.database.rmsd</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">asr.utils</span> <span class="kn">import</span> <span class="n">timed_print</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timed_print</span>
 
 
 <div class="viewcode-block" id="normalize_nonpbc_atoms">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.rmsd.normalize_nonpbc_atoms.html#ase2sprkkr.asr.database.rmsd.normalize_nonpbc_atoms">[docs]</a>
-<span class="k">def</span> <span class="nf">normalize_nonpbc_atoms</span><span class="p">(</span><span class="n">atoms1</span><span class="p">,</span> <span class="n">atoms2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize_nonpbc_atoms</span><span class="p">(</span><span class="n">atoms1</span><span class="p">,</span> <span class="n">atoms2</span><span class="p">):</span>
     <span class="n">atoms1</span><span class="p">,</span> <span class="n">atoms2</span> <span class="o">=</span> <span class="n">atoms1</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">atoms2</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
     <span class="n">pbc1_c</span> <span class="o">=</span> <span class="n">atoms1</span><span class="o">.</span><span class="n">get_pbc</span><span class="p">()</span>
@@ -122,12 +122,12 @@
 
 <div class="viewcode-block" id="get_rmsd">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.rmsd.get_rmsd.html#ase2sprkkr.asr.database.rmsd.get_rmsd">[docs]</a>
-<span class="k">def</span> <span class="nf">get_rmsd</span><span class="p">(</span><span class="n">atoms1</span><span class="p">,</span> <span class="n">atoms2</span><span class="p">,</span> <span class="n">adaptor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">pymatgen.analysis.structure_matcher</span> <span class="kn">import</span> <span class="n">StructureMatcher</span>
-    <span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">niggli_reduce</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_rmsd</span><span class="p">(</span><span class="n">atoms1</span><span class="p">,</span> <span class="n">atoms2</span><span class="p">,</span> <span class="n">adaptor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.analysis.structure_matcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructureMatcher</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.build</span><span class="w"> </span><span class="kn">import</span> <span class="n">niggli_reduce</span>
 
     <span class="k">if</span> <span class="n">adaptor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">pymatgen.io.ase</span> <span class="kn">import</span> <span class="n">AseAtomsAdaptor</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.io.ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">AseAtomsAdaptor</span>
         <span class="n">adaptor</span> <span class="o">=</span> <span class="n">AseAtomsAdaptor</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">matcher</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -168,7 +168,7 @@
 
 <div class="viewcode-block" id="update_rmsd">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.rmsd.update_rmsd.html#ase2sprkkr.asr.database.rmsd.update_rmsd">[docs]</a>
-<span class="k">def</span> <span class="nf">update_rmsd</span><span class="p">(</span><span class="n">rmsd_by_id</span><span class="p">,</span> <span class="n">rowid</span><span class="p">,</span> <span class="n">otherrowid</span><span class="p">,</span> <span class="n">rmsd</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_rmsd</span><span class="p">(</span><span class="n">rmsd_by_id</span><span class="p">,</span> <span class="n">rowid</span><span class="p">,</span> <span class="n">otherrowid</span><span class="p">,</span> <span class="n">rmsd</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">rowid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rmsd_by_id</span><span class="p">:</span>
         <span class="n">rmsd_by_id</span><span class="p">[</span><span class="n">rowid</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">otherrowid</span><span class="p">:</span> <span class="n">rmsd</span><span class="p">}</span>
     <span class="k">else</span><span class="p">:</span>
@@ -188,7 +188,7 @@
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--skip-distance-calc&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Skip distance calculation. Only match structures &quot;</span>
         <span class="s2">&quot;based on their reduced formula and comparison_keys.&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">databaseout</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">databaseout</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
          <span class="n">comparison_keys</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">max_rmsd</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
          <span class="n">skip_distance_calc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate RMSD between materials of a database.</span>
@@ -239,10 +239,10 @@
 <span class="sd">            - ``uid_key``: uid_key of the database.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">pymatgen.analysis.structure_matcher</span> <span class="kn">import</span> <span class="n">StructureMatcher</span>
-    <span class="kn">from</span> <span class="nn">pymatgen.io.ase</span> <span class="kn">import</span> <span class="n">AseAtomsAdaptor</span>
-    <span class="kn">from</span> <span class="nn">ase.formula</span> <span class="kn">import</span> <span class="n">Formula</span>
-    <span class="kn">from</span> <span class="nn">ase.db</span> <span class="kn">import</span> <span class="n">connect</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.analysis.structure_matcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructureMatcher</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.io.ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">AseAtomsAdaptor</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.formula</span><span class="w"> </span><span class="kn">import</span> <span class="n">Formula</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">connect</span>
     <span class="n">db</span> <span class="o">=</span> <span class="n">connect</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
     <span class="n">adaptor</span> <span class="o">=</span> <span class="n">AseAtomsAdaptor</span><span class="p">()</span>
     <span class="n">matcher</span> <span class="o">=</span> <span class="n">StructureMatcher</span><span class="p">(</span><span class="n">primitive_cell</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>

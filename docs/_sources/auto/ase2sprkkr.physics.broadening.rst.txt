@@ -1,0 +1,44 @@
+broadening
+==========
+
+Full name: **ase2sprkkr.physics.broadening**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.physics.broadening
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      compute_wlortab
+      create_gaussian_broadener
+      create_lorentz_broadener
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

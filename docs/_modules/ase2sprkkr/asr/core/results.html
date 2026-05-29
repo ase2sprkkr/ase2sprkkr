@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.core.results &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -110,19 +110,19 @@
 <span class="sd">result object through :py:func:`asr.core.results.dct_to_result`.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">jsonio</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">get_recipe_from_name</span>
-<span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">jsonio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_recipe_from_name</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 
 <div class="viewcode-block" id="read_hacked_data">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.read_hacked_data.html#ase2sprkkr.asr.core.results.read_hacked_data">[docs]</a>
-<span class="k">def</span> <span class="nf">read_hacked_data</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ObjectDescription&#39;</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_hacked_data</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ObjectDescription&#39;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix hacked results files to contain necessary metadata.&quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
@@ -146,7 +146,7 @@
 
 <div class="viewcode-block" id="read_old_data">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.read_old_data.html#ase2sprkkr.asr.core.results.read_old_data">[docs]</a>
-<span class="k">def</span> <span class="nf">read_old_data</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ObjectDescription&#39;</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_old_data</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ObjectDescription&#39;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse an old style result dictionary.&quot;&quot;&quot;</span>
     <span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
@@ -174,7 +174,7 @@
 
 <div class="viewcode-block" id="read_new_data">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.read_new_data.html#ase2sprkkr.asr.core.results.read_new_data">[docs]</a>
-<span class="k">def</span> <span class="nf">read_new_data</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ObjectDescription&#39;</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_new_data</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ObjectDescription&#39;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse a new style result dictionary.&quot;&quot;&quot;</span>
     <span class="n">object_description</span> <span class="o">=</span> <span class="n">ObjectDescription</span><span class="o">.</span><span class="n">fromdict</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">object_description</span></div>
@@ -183,7 +183,7 @@
 
 <div class="viewcode-block" id="UnknownDataFormat">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.UnknownDataFormat.html#ase2sprkkr.asr.core.results.UnknownDataFormat">[docs]</a>
-<span class="k">class</span> <span class="nc">UnknownDataFormat</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnknownDataFormat</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Unknown ASR Result format.&quot;&quot;&quot;</span>
 
     <span class="k">pass</span></div>
@@ -195,7 +195,7 @@
 
 <div class="viewcode-block" id="get_reader_function">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.get_reader_function.html#ase2sprkkr.asr.core.results.get_reader_function">[docs]</a>
-<span class="k">def</span> <span class="nf">get_reader_function</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_reader_function</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine dataformat of dct and return approriate reader.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;object_id&#39;</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
         <span class="c1"># Then this is a new-style data-format</span>
@@ -213,7 +213,7 @@
 
 <div class="viewcode-block" id="find_class_matching_version">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.find_class_matching_version.html#ase2sprkkr.asr.core.results.find_class_matching_version">[docs]</a>
-<span class="k">def</span> <span class="nf">find_class_matching_version</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_class_matching_version</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find result class that matches version.</span>
 
 <span class="sd">    Walks through the class hierarchy defined by returns.prev_version and</span>
@@ -237,7 +237,7 @@
 
 <div class="viewcode-block" id="get_object_matching_obj_id">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.get_object_matching_obj_id.html#ase2sprkkr.asr.core.results.get_object_matching_obj_id">[docs]</a>
-<span class="k">def</span> <span class="nf">get_object_matching_obj_id</span><span class="p">(</span><span class="n">asr_obj_id</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_object_matching_obj_id</span><span class="p">(</span><span class="n">asr_obj_id</span><span class="p">):</span>
     <span class="k">assert</span> <span class="n">asr_obj_id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;asr.&#39;</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Invalid object id </span><span class="si">{</span><span class="n">asr_obj_id</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="n">module</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">asr_obj_id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
@@ -250,7 +250,7 @@
 
 <div class="viewcode-block" id="object_description_to_object">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.object_description_to_object.html#ase2sprkkr.asr.core.results.object_description_to_object">[docs]</a>
-<span class="k">def</span> <span class="nf">object_description_to_object</span><span class="p">(</span><span class="n">object_description</span><span class="p">:</span> <span class="s1">&#39;ObjectDescription&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">object_description_to_object</span><span class="p">(</span><span class="n">object_description</span><span class="p">:</span> <span class="s1">&#39;ObjectDescription&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Instantiate object description.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">object_description</span><span class="o">.</span><span class="n">instantiate</span><span class="p">()</span></div>
 
@@ -258,7 +258,7 @@
 
 <div class="viewcode-block" id="dct_to_result">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.dct_to_result.html#ase2sprkkr.asr.core.results.dct_to_result">[docs]</a>
-<span class="k">def</span> <span class="nf">dct_to_result</span><span class="p">(</span><span class="n">dct</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dct_to_result</span><span class="p">(</span><span class="n">dct</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert dict representing an ASR result to corresponding result object.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dct</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -276,7 +276,7 @@
 
 <div class="viewcode-block" id="ResultEncoder">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ResultEncoder.html#ase2sprkkr.asr.core.results.ResultEncoder">[docs]</a>
-<span class="k">class</span> <span class="nc">ResultEncoder</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ResultEncoder</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract encoder base class.</span>
 
 <span class="sd">    Encodes a results object as a specific format. Optionally</span>
@@ -284,21 +284,21 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode result.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ResultEncoder.encode">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ResultEncoder.html#ase2sprkkr.asr.core.results.ResultEncoder.encode">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode result.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="ResultEncoder.decode">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ResultEncoder.html#ase2sprkkr.asr.core.results.ResultEncoder.decode">[docs]</a>
-    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formatted_results</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formatted_results</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Decode result.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">NotImplemented</span></div>
 </div>
@@ -307,21 +307,21 @@
 
 <div class="viewcode-block" id="JSONEncoder">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.JSONEncoder.html#ase2sprkkr.asr.core.results.JSONEncoder">[docs]</a>
-<span class="k">class</span> <span class="nc">JSONEncoder</span><span class="p">(</span><span class="n">ResultEncoder</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">JSONEncoder</span><span class="p">(</span><span class="n">ResultEncoder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;JSON ASRResult encoder.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="JSONEncoder.encode">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.JSONEncoder.html#ase2sprkkr.asr.core.results.JSONEncoder.encode">[docs]</a>
-    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="s1">&#39;ASRResult&#39;</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="s1">&#39;ASRResult&#39;</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode a ASRResult object as json.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">ase.io.jsonio</span> <span class="kn">import</span> <span class="n">MyEncoder</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io.jsonio</span><span class="w"> </span><span class="kn">import</span> <span class="n">MyEncoder</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">format_as</span><span class="p">(</span><span class="s1">&#39;dict&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">MyEncoder</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="JSONEncoder.decode">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.JSONEncoder.html#ase2sprkkr.asr.core.results.JSONEncoder.decode">[docs]</a>
-    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">json_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">json_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Decode json string.&quot;&quot;&quot;</span>
         <span class="n">dct</span> <span class="o">=</span> <span class="n">jsonio</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">json_string</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">fromdict</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span></div>
@@ -331,12 +331,12 @@
 
 <div class="viewcode-block" id="HTMLEncoder">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.HTMLEncoder.html#ase2sprkkr.asr.core.results.HTMLEncoder">[docs]</a>
-<span class="k">class</span> <span class="nc">HTMLEncoder</span><span class="p">(</span><span class="n">ResultEncoder</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HTMLEncoder</span><span class="p">(</span><span class="n">ResultEncoder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;HTML ASRResult encoder.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="HTMLEncoder.encode">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.HTMLEncoder.html#ase2sprkkr.asr.core.results.HTMLEncoder.encode">[docs]</a>
-    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="s1">&#39;ASRResult&#39;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="s1">&#39;ASRResult&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode a ASRResult object as html.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 </div>
@@ -345,12 +345,12 @@
 
 <div class="viewcode-block" id="WebPanelEncoder">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.WebPanelEncoder.html#ase2sprkkr.asr.core.results.WebPanelEncoder">[docs]</a>
-<span class="k">class</span> <span class="nc">WebPanelEncoder</span><span class="p">(</span><span class="n">ResultEncoder</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WebPanelEncoder</span><span class="p">(</span><span class="n">ResultEncoder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Encoder for ASE compatible webpanels.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="WebPanelEncoder.encode">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.WebPanelEncoder.html#ase2sprkkr.asr.core.results.WebPanelEncoder.encode">[docs]</a>
-    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Make basic webpanel.</span>
 
 <span class="sd">        Simply prints all attributes.</span>
@@ -372,19 +372,19 @@
 
 <div class="viewcode-block" id="DictEncoder">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.DictEncoder.html#ase2sprkkr.asr.core.results.DictEncoder">[docs]</a>
-<span class="k">class</span> <span class="nc">DictEncoder</span><span class="p">(</span><span class="n">ResultEncoder</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DictEncoder</span><span class="p">(</span><span class="n">ResultEncoder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Dict ASRResult encoder.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="DictEncoder.encode">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.DictEncoder.html#ase2sprkkr.asr.core.results.DictEncoder.encode">[docs]</a>
-    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="s1">&#39;ASRResult&#39;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="s1">&#39;ASRResult&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode ASRResult object as dict.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">todict</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="DictEncoder.decode">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.DictEncoder.html#ase2sprkkr.asr.core.results.DictEncoder.decode">[docs]</a>
-    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">dct</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">dct</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Decode dict.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">fromdict</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span></div>
 </div>
@@ -393,7 +393,7 @@
 
 <div class="viewcode-block" id="get_key_descriptions">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.get_key_descriptions.html#ase2sprkkr.asr.core.results.get_key_descriptions">[docs]</a>
-<span class="k">def</span> <span class="nf">get_key_descriptions</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_key_descriptions</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get key descriptions of object.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;key_descriptions&#39;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">key_descriptions</span>
@@ -403,7 +403,7 @@
 
 <div class="viewcode-block" id="get_object_types">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.get_object_types.html#ase2sprkkr.asr.core.results.get_object_types">[docs]</a>
-<span class="k">def</span> <span class="nf">get_object_types</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_object_types</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get type hints of object.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">typing</span><span class="o">.</span><span class="n">get_type_hints</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
 
@@ -411,7 +411,7 @@
 
 <div class="viewcode-block" id="format_key_description_pair">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.format_key_description_pair.html#ase2sprkkr.asr.core.results.format_key_description_pair">[docs]</a>
-<span class="k">def</span> <span class="nf">format_key_description_pair</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attr_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">format_key_description_pair</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attr_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a key-type-description for a docstring.</span>
 
 <span class="sd">    Parameters</span>
@@ -436,14 +436,14 @@
 
 <div class="viewcode-block" id="make_property">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.make_property.html#ase2sprkkr.asr.core.results.make_property">[docs]</a>
-<span class="k">def</span> <span class="nf">make_property</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">return_type</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_property</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">return_type</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">return_type</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">return_type</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
 
     <span class="n">getter</span><span class="o">.</span><span class="vm">__annotations__</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;return&#39;</span><span class="p">:</span> <span class="n">return_type</span><span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s1">&#39;Data was already set. You cannot overwrite/set data.&#39;</span>
@@ -456,7 +456,7 @@
 
 <div class="viewcode-block" id="prepare_result">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.prepare_result.html#ase2sprkkr.asr.core.results.prepare_result">[docs]</a>
-<span class="k">def</span> <span class="nf">prepare_result</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prepare_result</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare result class.</span>
 
 <span class="sd">    This function read key descriptions and types defined in a Result class and</span>
@@ -485,7 +485,7 @@
     <span class="p">]</span>
     <span class="n">sig</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="bp">cls</span><span class="o">.</span><span class="fm">__init__</span> <span class="o">=</span> <span class="fm">__init__</span>
@@ -498,7 +498,7 @@
 
 <div class="viewcode-block" id="UnknownASRResultFormat">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.UnknownASRResultFormat.html#ase2sprkkr.asr.core.results.UnknownASRResultFormat">[docs]</a>
-<span class="k">class</span> <span class="nc">UnknownASRResultFormat</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnknownASRResultFormat</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception when encountering unknown results version number.&quot;&quot;&quot;</span>
 
     <span class="k">pass</span></div>
@@ -507,7 +507,7 @@
 
 <div class="viewcode-block" id="MetaDataNotSetError">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.MetaDataNotSetError.html#ase2sprkkr.asr.core.results.MetaDataNotSetError">[docs]</a>
-<span class="k">class</span> <span class="nc">MetaDataNotSetError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MetaDataNotSetError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when encountering unknown metadata key.&quot;&quot;&quot;</span>
 
     <span class="k">pass</span></div>
@@ -516,7 +516,7 @@
 
 <div class="viewcode-block" id="MetaData">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.MetaData.html#ase2sprkkr.asr.core.results.MetaData">[docs]</a>
-<span class="k">class</span> <span class="nc">MetaData</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MetaData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Metadata object.</span>
 
 <span class="sd">    Examples</span>
@@ -548,7 +548,7 @@
 
 <div class="viewcode-block" id="MetaData.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.MetaData.html#ase2sprkkr.asr.core.results.MetaData.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize MetaData object.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dct</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -556,7 +556,7 @@
 
 <div class="viewcode-block" id="MetaData.set">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.MetaData.html#ase2sprkkr.asr.core.results.MetaData.set">[docs]</a>
-    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set metadata values.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">assert</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">accepted_keys</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Unknown MetaData key=</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">.&#39;</span>
@@ -565,80 +565,80 @@
 
 <div class="viewcode-block" id="MetaData.validate">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.MetaData.html#ase2sprkkr.asr.core.results.MetaData.validate">[docs]</a>
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assert integrity of metadata.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dct</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accepted_keys</span><span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">asr_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">asr_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;For example &#39;asr.gs&#39;.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s1">&#39;asr_name&#39;</span><span class="p">)</span>
 
     <span class="nd">@asr_name</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">asr_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">asr_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set asr_name.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="s1">&#39;asr_name&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return dict containing parameters.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s1">&#39;params&#39;</span><span class="p">)</span>
 
     <span class="nd">@params</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set params.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="s1">&#39;params&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return resources.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s1">&#39;resources&#39;</span><span class="p">)</span>
 
     <span class="nd">@resources</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set resources.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="s1">&#39;resources&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">code_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">code_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return code versions.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s1">&#39;code_versions&#39;</span><span class="p">)</span>
 
     <span class="nd">@code_versions</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">code_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">code_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set code_versions.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="s1">&#39;code_versions&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">creates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">creates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return list of created files.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s1">&#39;creates&#39;</span><span class="p">)</span>
 
     <span class="nd">@creates</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">creates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">creates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set creates.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="s1">&#39;creates&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">requires</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">requires</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return list of required files.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s1">&#39;requires&#39;</span><span class="p">)</span>
 
     <span class="nd">@requires</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">requires</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">requires</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set requires.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="s1">&#39;requires&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MetaData._set">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.MetaData.html#ase2sprkkr.asr.core.results.MetaData._set">[docs]</a>
-    <span class="k">def</span> <span class="nf">_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dct</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
 
 <div class="viewcode-block" id="MetaData._get">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.MetaData.html#ase2sprkkr.asr.core.results.MetaData._get">[docs]</a>
-    <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dct</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MetaDataNotSetError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Metadata key=</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> has not been set!&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dct</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
@@ -646,12 +646,12 @@
 
 <div class="viewcode-block" id="MetaData.todict">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.MetaData.html#ase2sprkkr.asr.core.results.MetaData.todict">[docs]</a>
-    <span class="k">def</span> <span class="nf">todict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">todict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Format metadata as dict.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dct</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Represent as string.&quot;&quot;&quot;</span>
         <span class="n">dct</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">todict</span><span class="p">()</span>
         <span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
@@ -659,11 +659,11 @@
             <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Represent object.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Is metadata key set.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dct</span></div>
 
@@ -671,7 +671,7 @@
 
 <div class="viewcode-block" id="obj_to_id">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.obj_to_id.html#ase2sprkkr.asr.core.results.obj_to_id">[docs]</a>
-<span class="k">def</span> <span class="nf">obj_to_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">obj_to_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a string representation of path to object.</span>
 
 <span class="sd">    Ie. if obj is the ASRResult class living in the module, asr.core.results,</span>
@@ -684,12 +684,12 @@
 
 <div class="viewcode-block" id="ObjectDescription">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ObjectDescription.html#ase2sprkkr.asr.core.results.ObjectDescription">[docs]</a>
-<span class="k">class</span> <span class="nc">ObjectDescription</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjectDescription</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Result object descriptor.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ObjectDescription.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ObjectDescription.html#ase2sprkkr.asr.core.results.ObjectDescription.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
                  <span class="n">constructor</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize instance.</span>
 
@@ -716,28 +716,28 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">object_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">object_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get object id.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;object_id&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">constructor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">constructor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get object id.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;constructor&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get extra arguments supplied to constructor.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get extra arguments supplied to constructor.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;kwargs&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="ObjectDescription.todict">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ObjectDescription.html#ase2sprkkr.asr.core.results.ObjectDescription.todict">[docs]</a>
-    <span class="k">def</span> <span class="nf">todict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">todict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert object description to dictionary.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span></div>
 
@@ -745,14 +745,14 @@
 <div class="viewcode-block" id="ObjectDescription.fromdict">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ObjectDescription.html#ase2sprkkr.asr.core.results.ObjectDescription.fromdict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">fromdict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fromdict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiate ObjectDescription from dict.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">dct</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ObjectDescription.instantiate">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ObjectDescription.html#ase2sprkkr.asr.core.results.ObjectDescription.instantiate">[docs]</a>
-    <span class="k">def</span> <span class="nf">instantiate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">instantiate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiate object.&quot;&quot;&quot;</span>
         <span class="bp">cls</span> <span class="o">=</span> <span class="n">get_object_matching_obj_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constructor</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -762,7 +762,7 @@
 
 <div class="viewcode-block" id="data_to_dict">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.data_to_dict.html#ase2sprkkr.asr.core.results.data_to_dict">[docs]</a>
-<span class="k">def</span> <span class="nf">data_to_dict</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">data_to_dict</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Recursively .todict all result instances.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dct</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">):</span>
@@ -774,7 +774,7 @@
 
 <div class="viewcode-block" id="ASRResult">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult">[docs]</a>
-<span class="k">class</span> <span class="nc">ASRResult</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ASRResult</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for describing results generated with recipes.</span>
 
 <span class="sd">    A results object is a container for results generated with ASR. It</span>
@@ -844,7 +844,7 @@
 
 <div class="viewcode-block" id="ASRResult.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">data</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{},</span>
                  <span class="n">metadata</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{},</span>
                  <span class="n">strict</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -884,29 +884,29 @@
 <div class="viewcode-block" id="ASRResult.fromdata">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult.fromdata">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">fromdata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fromdata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ASRResult.get_obj_id">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult.get_obj_id">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_obj_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_obj_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">obj_to_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get result data.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MetaData</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MetaData</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get result metadata.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span>
 
     <span class="nd">@metadata</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set result metadata.&quot;&quot;&quot;</span>
         <span class="c1"># The following line is for copying the metadata into place.</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
@@ -915,7 +915,7 @@
 <div class="viewcode-block" id="ASRResult.from_format">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult.from_format">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_format</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">input_data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_format</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">input_data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiate result from format.&quot;&quot;&quot;</span>
         <span class="n">formats</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_formats</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">formats</span><span class="p">[</span><span class="nb">format</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">input_data</span><span class="p">)</span>
@@ -925,7 +925,7 @@
 <div class="viewcode-block" id="ASRResult.get_formats">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult.get_formats">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_formats</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_formats</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get implemented result formats.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">sup_formats</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">formats</span>
@@ -938,7 +938,7 @@
 
 <div class="viewcode-block" id="ASRResult.format_as">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult.format_as">[docs]</a>
-    <span class="k">def</span> <span class="nf">format_as</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">format_as</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Format result in specific format.&quot;&quot;&quot;</span>
         <span class="n">formats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_formats</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">formats</span><span class="p">[</span><span class="nb">format</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -946,7 +946,7 @@
 
 <div class="viewcode-block" id="ASRResult.get_object_desc">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult.get_object_desc">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_object_desc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObjectDescription</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_object_desc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObjectDescription</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Make ObjectDescription of this instance.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ObjectDescription</span><span class="p">(</span>
             <span class="n">object_id</span><span class="o">=</span><span class="n">obj_to_id</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)),</span>
@@ -964,7 +964,7 @@
     <span class="c1"># To and from dict</span>
 <div class="viewcode-block" id="ASRResult.todict">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult.todict">[docs]</a>
-    <span class="k">def</span> <span class="nf">todict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">todict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">object_description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object_desc</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">object_description</span><span class="o">.</span><span class="n">todict</span><span class="p">()</span></div>
 
@@ -972,66 +972,66 @@
 <div class="viewcode-block" id="ASRResult.fromdict">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult.fromdict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">fromdict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dct</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fromdict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dct</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">obj_desc</span> <span class="o">=</span> <span class="n">ObjectDescription</span><span class="o">.</span><span class="n">fromdict</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj_desc</span><span class="o">.</span><span class="n">instantiate</span><span class="p">()</span></div>
 
 
     <span class="c1"># ---- Magic methods ----</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get item from self.data.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine if item in self.data.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
 
-    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate over keys.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="fm">__iter__</span><span class="p">()</span>
 
 <div class="viewcode-block" id="ASRResult.get">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult.get">[docs]</a>
-    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap self.data.get.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ASRResult.values">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult.values">[docs]</a>
-    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap self.data.values.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ASRResult.items">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult.items">[docs]</a>
-    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap self.data.items.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ASRResult.keys">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult.keys">[docs]</a>
-    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap self.data.keys.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__format__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__format__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode result as string.&quot;&quot;&quot;</span>
         <span class="n">formats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_formats</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">formats</span><span class="p">[</span><span class="n">fmt</span><span class="p">](</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert data to string.&quot;&quot;&quot;</span>
         <span class="n">string_parts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">string_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">string_parts</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare two result objects.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -1041,7 +1041,7 @@
 
 <div class="viewcode-block" id="HackedASRResult">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.results.HackedASRResult.html#ase2sprkkr.asr.core.results.HackedASRResult">[docs]</a>
-<span class="k">class</span> <span class="nc">HackedASRResult</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HackedASRResult</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 </pre></div>

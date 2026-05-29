@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.dimensionality &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -91,18 +91,18 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.asr.dimensionality</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">AtomsFile</span><span class="p">,</span> <span class="n">ASRResult</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
-<span class="kn">from</span> <span class="nn">ase.db.row</span> <span class="kn">import</span> <span class="n">AtomsRow</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">AtomsFile</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atoms</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.db.row</span><span class="w"> </span><span class="kn">import</span> <span class="n">AtomsRow</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
 <div class="viewcode-block" id="get_dimtypes">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.dimensionality.get_dimtypes.html#ase2sprkkr.asr.dimensionality.get_dimtypes">[docs]</a>
-<span class="k">def</span> <span class="nf">get_dimtypes</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_dimtypes</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a list of all dimensionality types.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
     <span class="n">s</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">product</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
     <span class="n">s2</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="o">*</span><span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]))[</span><span class="mi">1</span><span class="p">:]</span>
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;0123&quot;</span>
@@ -112,8 +112,8 @@
 
 <div class="viewcode-block" id="webpanel">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.dimensionality.webpanel.html#ase2sprkkr.asr.dimensionality.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">table</span><span class="p">,</span> <span class="n">fig</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.database.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">table</span><span class="p">,</span> <span class="n">fig</span>
     <span class="n">dimtable</span> <span class="o">=</span> <span class="n">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s1">&#39;Dimensionality scores&#39;</span><span class="p">,</span>
                      <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;dim_score_</span><span class="si">{</span><span class="n">dimtype</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">dimtype</span> <span class="ow">in</span> <span class="n">get_dimtypes</span><span class="p">()],</span>
                      <span class="n">key_descriptions</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -125,8 +125,8 @@
 
 <div class="viewcode-block" id="plot_dimensionality_histogram">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.dimensionality.plot_dimensionality_histogram.html#ase2sprkkr.asr.dimensionality.plot_dimensionality_histogram">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_dimensionality_histogram</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">AtomsRow</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_dimensionality_histogram</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">AtomsRow</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
     <span class="n">dimtypes</span> <span class="o">=</span> <span class="n">get_dimtypes</span><span class="p">()</span>
     <span class="n">vs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">dimtype</span> <span class="ow">in</span> <span class="n">dimtypes</span><span class="p">:</span>
@@ -147,7 +147,7 @@
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.dimensionality&#39;</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--atoms&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">AtomsFile</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make cluster and dimensionality analysis of the input structure.</span>
 
 <span class="sd">    Analyzes the primary dimensionality of the input structure and analyze</span>
@@ -155,7 +155,7 @@
 <span class="sd">    034003.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">ase.geometry.dimensionality</span> <span class="kn">import</span> <span class="n">analyze_dimensionality</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.geometry.dimensionality</span><span class="w"> </span><span class="kn">import</span> <span class="n">analyze_dimensionality</span>
     <span class="n">k_intervals</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">interval</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span>
                    <span class="k">for</span> <span class="n">interval</span> <span class="ow">in</span>
                    <span class="n">analyze_dimensionality</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>

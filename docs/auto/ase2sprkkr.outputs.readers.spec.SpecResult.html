@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SpecResult &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="sprkkr_output_reader" href="ase2sprkkr.outputs.sprkkr_output_reader.html" />
-    <link rel="prev" title="SpecProcessRunner" href="ase2sprkkr.outputs.readers.spec.SpecProcessRunner.html" /> 
+    <link rel="prev" title="SpecOutputReader" href="ase2sprkkr.outputs.readers.spec.SpecOutputReader.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -84,6 +84,7 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.bsf.html">bsf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.default.html">default</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.dos.html">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.jxc.html">jxc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.html">scf</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="ase2sprkkr.outputs.readers.spec.html">spec</a></li>
 </ul>
@@ -133,14 +134,14 @@
 <h1>SpecResult<a class="headerlink" href="#specresult" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.spec.SpecResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.readers.spec.</span></span><span class="sig-name descname"><span class="pre">SpecResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/spec.html#SpecResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.spec.SpecResult" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.readers.spec.</span></span><span class="sig-name descname"><span class="pre">SpecResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/spec.html#SpecResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.spec.SpecResult" title="Link to this definition"></a></dt>
 <dd><p>Class representing the results of a spectral function calculation.
 Provides access to the parsed data from spec.out files.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-6a6ec09efe1ea97735232ee155eb72e6b2a0e07e.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.spec.SpecResult" usemap="#inheritance106ea1a677" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-31b4ad3482543e1c863ddc8467ebb1fccdf21c20.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.spec.SpecResult" usemap="#inheritance106ea1a677" class="inheritance graphviz" /></div>
 <map id="inheritance106ea1a677" name="inheritance106ea1a677">
-<area shape="rect" id="node1" href="#ase2sprkkr.outputs.readers.spec.SpecResult" target="_top" title="Class representing the results of a spectral function calculation." alt="" coords="203,5,331,31"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="5,5,173,31"/>
+<area shape="rect" id="node1" href="#ase2sprkkr.outputs.readers.spec.SpecResult" target="_top" title="Class representing the results of a spectral function calculation." alt="" coords="202,5,329,33"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="5,5,173,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -152,25 +153,25 @@ Provides access to the parsed data from spec.out files.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.spec.SpecResult.potential_barrier">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">potential_barrier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.outputs.readers.spec.SpecResult.potential_barrier" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">potential_barrier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/spec.html#SpecResult.potential_barrier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.spec.SpecResult.potential_barrier" title="Link to this definition"></a></dt>
 <dd><p>Extract potential barrier parameters from the output.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.spec.SpecResult.lattice_constants">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lattice_constants</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.outputs.readers.spec.SpecResult.lattice_constants" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lattice_constants</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/spec.html#SpecResult.lattice_constants"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.spec.SpecResult.lattice_constants" title="Link to this definition"></a></dt>
 <dd><p>Extract lattice constants from the output.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.spec.SpecResult.basis_vectors">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">basis_vectors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.outputs.readers.spec.SpecResult.basis_vectors" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">basis_vectors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></em><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/spec.html#SpecResult.basis_vectors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.spec.SpecResult.basis_vectors" title="Link to this definition"></a></dt>
 <dd><p>Extract basis vectors from the output.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.spec.SpecResult.spectral_data">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spectral_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#ase2sprkkr.outputs.readers.spec.SpecResult.spectral_data" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spectral_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/spec.html#SpecResult.spectral_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.spec.SpecResult.spectral_data" title="Link to this definition"></a></dt>
 <dd><p>Extract the main spectral data table.</p>
 </dd></dl>
 
@@ -226,7 +227,7 @@ Provides access to the parsed data from spec.out files.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.outputs.readers.spec.SpecProcessRunner.html" class="btn btn-neutral float-left" title="SpecProcessRunner" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.outputs.readers.spec.SpecOutputReader.html" class="btn btn-neutral float-left" title="SpecOutputReader" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.outputs.sprkkr_output_reader.html" class="btn btn-neutral float-right" title="sprkkr_output_reader" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

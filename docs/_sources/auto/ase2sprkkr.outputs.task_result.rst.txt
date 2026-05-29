@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.outputs.task\_result**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.outputs.task_result.KkrProcess  ase2sprkkr.outputs.task_result.KkrProcessRunner  ase2sprkkr.outputs.task_result.TaskResult 
+.. inheritance-diagram::  ase2sprkkr.outputs.task_result.KkrOutputReader  ase2sprkkr.outputs.task_result.KkrProcess  ase2sprkkr.outputs.task_result.OutputFileResultValue  ase2sprkkr.outputs.task_result.ResultValue  ase2sprkkr.outputs.task_result.TaskResult 
       :parts: 1
 
 |
@@ -35,8 +35,10 @@ Full name: **ase2sprkkr.outputs.task\_result**
       :toctree:
       :template: custom-class-template.rst
    
+      KkrOutputReader
       KkrProcess
-      KkrProcessRunner
+      OutputFileResultValue
+      ResultValue
       TaskResult
    
    

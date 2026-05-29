@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.input_parameters.definitions.jxc &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -92,43 +92,67 @@
              
   <h1>Source code for ase2sprkkr.input_parameters.definitions.jxc</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;JXC task input parameters definition&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">.sections</span> <span class="kn">import</span> <span class="n">TASK</span><span class="p">,</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">MODE</span>
-<span class="kn">from</span> <span class="nn">..input_parameters_definitions</span> <span class="kn">import</span> \
-    <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span><span class="p">,</span> \
-    <span class="n">InputValueDefinition</span> <span class="k">as</span> <span class="n">V</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">TASK</span><span class="p">,</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">MODE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span><span class="p">,</span> <span class="n">InputValueDefinition</span> <span class="k">as</span> <span class="n">V</span>
+
+
+<div class="viewcode-block" id="_jxc_mode_warning_condition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.jxc._jxc_mode_warning_condition.html#ase2sprkkr.input_parameters.definitions.jxc._jxc_mode_warning_condition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_jxc_mode_warning_condition</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="s2">&quot;JXC task does not support SREL (scalar relativity without spin) or &quot;</span>
+        <span class="s2">&quot;NREL (no relativity at all) MODE. Please change SCF.MODE, or &quot;</span>
+        <span class="s2">&quot;the computation will fail.&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;SREL&quot;</span><span class="p">,</span> <span class="s2">&quot;NREL&quot;</span><span class="p">)</span>
+        <span class="k">else</span> <span class="kc">None</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_jxc_nonmag_warning_condition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.jxc._jxc_nonmag_warning_condition.html#ase2sprkkr.input_parameters.definitions.jxc._jxc_nonmag_warning_condition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_jxc_nonmag_warning_condition</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="s2">&quot;JXC task does not support non-magnetic computation. Please disable &quot;</span>
+        <span class="s2">&quot;CONTROL.NONMAG, or the computation will fail.&quot;</span>
+        <span class="k">if</span> <span class="n">value</span>
+        <span class="k">else</span> <span class="kc">None</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="input_parameters">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.jxc.input_parameters.html#ase2sprkkr.input_parameters.definitions.jxc.input_parameters">[docs]</a>
-<span class="k">def</span> <span class="nf">input_parameters</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; JXC -JXC task input parameters definition&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;JXC -JXC task input parameters definition&quot;&quot;&quot;</span>
     <span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="p">(</span>
-        <span class="s1">&#39;jxc&#39;</span><span class="p">,</span> <span class="p">[</span>
-              <span class="n">CONTROL</span><span class="p">(</span><span class="s1">&#39;JXC&#39;</span><span class="p">),</span>
-              <span class="n">TAU</span><span class="p">,</span>
-              <span class="n">MODE</span><span class="p">,</span>
-              <span class="n">STRCONST</span><span class="p">,</span>
-              <span class="n">ENERGY</span><span class="p">(),</span>
-              <span class="n">TASK</span><span class="p">(</span><span class="s1">&#39;JXC&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">([</span>
-                  <span class="n">V</span><span class="p">(</span><span class="s1">&#39;CLURAD&#39;</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The radius of a sphere restricting the cluster</span>
-<span class="sd">        of atoms for which the exchange coupling</span>
-<span class="sd">        constants will be calculated&quot;&quot;&quot;</span>
+        <span class="s2">&quot;jxc&quot;</span><span class="p">,</span>
+        <span class="p">[</span>
+            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">&quot;JXC&quot;</span><span class="p">),</span>
+            <span class="n">TAU</span><span class="p">,</span>
+            <span class="n">MODE</span><span class="p">,</span>
+            <span class="n">STRCONST</span><span class="p">,</span>
+            <span class="n">ENERGY</span><span class="p">(),</span>
+            <span class="n">TASK</span><span class="p">(</span><span class="s2">&quot;JXC&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">V</span><span class="p">(</span>
+                        <span class="s2">&quot;CLURAD&quot;</span><span class="p">,</span>
+                        <span class="mf">2.2</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The radius of a sphere restricting the cluster</span>
+<span class="s2">        of atoms for which the exchange coupling</span>
+<span class="s2">        constants will be calculated&quot;&quot;&quot;</span><span class="p">,</span>
                     <span class="p">)</span>
-              <span class="p">]),</span>
-              <span class="n">SITES</span>
-          <span class="p">],</span>
-        <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;kkrgen&#39;</span><span class="p">,</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+            <span class="n">SITES</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;kkrgen&quot;</span><span class="p">,</span>
         <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;JXC&quot;</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;JXC&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">input_parameters</span><span class="p">[</span><span class="s1">&#39;MODE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy_member</span><span class="p">(</span><span class="s1">&#39;MODE&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">warning_condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> \
-      <span class="s2">&quot;JXC task does not support SREL (scalar relativity without spin) or &quot;</span> \
-      <span class="s2">&quot;NREL (no relativity at all) MODE. Please change SCF.MODE, or &quot;</span> \
-      <span class="s2">&quot;the computation will fail.&quot;</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;SREL&#39;</span><span class="p">,</span> <span class="s1">&#39;NREL&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-    <span class="n">input_parameters</span><span class="p">[</span><span class="s1">&#39;CONTROL&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy_member</span><span class="p">(</span><span class="s1">&#39;NONMAG&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">warning_condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> \
-      <span class="s2">&quot;JXC task does not support non-magnetic computation. Please disable &quot;</span> \
-      <span class="s2">&quot;CONTROL.NONMAG, or the computation will fail.&quot;</span> <span class="k">if</span> <span class="n">x</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">input_parameters</span><span class="p">[</span><span class="s2">&quot;MODE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy_member</span><span class="p">(</span><span class="s2">&quot;MODE&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">warning_condition</span> <span class="o">=</span> <span class="n">_jxc_mode_warning_condition</span>
+    <span class="n">input_parameters</span><span class="p">[</span><span class="s2">&quot;CONTROL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy_member</span><span class="p">(</span><span class="s2">&quot;NONMAG&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">warning_condition</span> <span class="o">=</span> <span class="n">_jxc_nonmag_warning_condition</span>
 
     <span class="k">return</span> <span class="n">input_parameters</span></div>
 

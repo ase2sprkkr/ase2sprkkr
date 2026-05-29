@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>parse_tuple_function &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -166,21 +166,21 @@
 <span class="go">(5.0, 4.7)</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_tuple_function</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="mi">3</span><span class="p">)(</span><span class="s2">&quot;1,2&quot;</span><span class="p">)</span>   
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_tuple_function</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="mi">3</span><span class="p">)(</span><span class="s2">&quot;1,2&quot;</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="gr">ValueError</span>: <span class="n">The given value &quot;1,2&quot; should contain at least 3 values, delimited by &quot;,&quot;&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_tuple_function</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="mi">1</span><span class="p">)(</span><span class="s2">&quot;1,2&quot;</span><span class="p">)</span>   
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_tuple_function</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="mi">1</span><span class="p">)(</span><span class="s2">&quot;1,2&quot;</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="gr">ValueError</span>: <span class="n">The given value &quot;1,2&quot; should contain no more than 1 values, delimited by &quot;,&quot;&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_tuple_function</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)(</span><span class="s2">&quot;1,2&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_tuple_function</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)(</span><span class="s2">&quot;1,2&quot;</span><span class="p">)</span>
 <span class="go">(1.0, 2.0)</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_tuple_function</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)(</span><span class="s2">&quot;1,2&quot;</span><span class="p">)</span>   
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_tuple_function</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)(</span><span class="s2">&quot;1,2&quot;</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="gr">ValueError</span>: <span class="n">The given value &quot;1,2&quot; should contain no more than 1 values, delimited by &quot;,&quot;&#39;</span>
 </pre></div>

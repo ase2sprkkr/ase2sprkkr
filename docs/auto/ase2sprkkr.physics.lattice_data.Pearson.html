@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pearson &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -79,8 +79,12 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.physics.broadening.html">broadening</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.physics.core_hole_width.html">core_hole_width</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.html">lattice_data</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.international_numbers_to_AP.html">international_numbers_to_AP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.hall_numbers_to_AP.html">hall_numbers_to_AP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.ap_number_from_spacegroup.html">ap_number_from_spacegroup</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.reorder_matrix.html">reorder_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.LatticeData.html">LatticeData</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Pearson</a></li>
@@ -128,13 +132,13 @@
 <h1>Pearson<a class="headerlink" href="#pearson" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.Pearson">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.physics.lattice_data.</span></span><span class="sig-name descname"><span class="pre">Pearson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pearson_symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bravais_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centering_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">herman_mauguin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoenflies</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.physics.lattice_data.</span></span><span class="sig-name descname"><span class="pre">Pearson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pearson_symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bravais_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centering_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">herman_mauguin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoenflies</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson" title="Link to this definition"></a></dt>
 <dd><p>This class holds informations about translation symmetry of a lattice with a given
 Pearson symbol.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-d82f9788444c3e7b6d2287156f5eb01f2bd31e92.png" alt="Inheritance diagram of ase2sprkkr.physics.lattice_data.Pearson" usemap="#inheritance091299d6f3" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-3980b131c9cfb9f694ce610646aeb929d7f9a741.png" alt="Inheritance diagram of ase2sprkkr.physics.lattice_data.Pearson" usemap="#inheritance091299d6f3" class="inheritance graphviz" /></div>
 <map id="inheritance091299d6f3" name="inheritance091299d6f3">
-<area shape="rect" id="node1" href="#ase2sprkkr.physics.lattice_data.Pearson" target="_top" title="This class holds informations about translation symmetry of a lattice with a given" alt="" coords="5,29,160,55"/>
+<area shape="rect" id="node1" href="#ase2sprkkr.physics.lattice_data.Pearson" target="_top" title="This class holds informations about translation symmetry of a lattice with a given" alt="" coords="5,29,160,57"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -152,7 +156,7 @@ Pearson symbol.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.Pearson.from_symbol">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pearson_symbol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson.from_symbol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.from_symbol" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pearson_symbol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson.from_symbol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.from_symbol" title="Link to this definition"></a></dt>
 <dd><p>Return the Pearson symbol (describing the translation symmetry) that corresponds to the
 given Pearson symbol</p>
 <dl class="field-list simple">
@@ -164,7 +168,7 @@ given Pearson symbol</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.Pearson.normalize_symbol">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pearson_symbol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson.normalize_symbol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.normalize_symbol" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pearson_symbol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson.normalize_symbol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.normalize_symbol" title="Link to this definition"></a></dt>
 <dd><p>Normalize a Pearson symbol to its cannonical shape</p>
 </dd></dl>
 

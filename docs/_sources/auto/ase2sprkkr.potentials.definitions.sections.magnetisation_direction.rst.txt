@@ -24,6 +24,14 @@ Full name: **ase2sprkkr.potentials.definitions.sections.magnetisation\_direction
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _sections_magnetisation_direction_data_it_free_header
+   
    
 
 

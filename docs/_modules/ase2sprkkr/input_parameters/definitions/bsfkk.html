@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.input_parameters.definitions.bsfkk &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -91,41 +91,58 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.definitions.bsfkk</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;  bsfkk task input parameters definition&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">...common.grammar_types</span> <span class="kn">import</span> <span class="n">SetOf</span>
-<span class="kn">from</span> <span class="nn">.sections</span> <span class="kn">import</span> <span class="n">TASK</span><span class="p">,</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">MODE</span>
-<span class="kn">from</span> <span class="nn">..input_parameters_definitions</span> <span class="kn">import</span> \
-    <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span><span class="p">,</span> \
-    <span class="n">InputValueDefinition</span> <span class="k">as</span> <span class="n">V</span>
+<span></span><span class="sd">&quot;&quot;&quot;bsfkk task input parameters definition&quot;&quot;&quot;</span>
 
-<span class="n">input_parameters</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">InputParameters</span><span class="p">(</span>
-    <span class="s1">&#39;bsfkk&#39;</span><span class="p">,</span> <span class="p">[</span>
-          <span class="n">CONTROL</span><span class="p">(</span><span class="s1">&#39;BSF&#39;</span><span class="p">),</span>
-          <span class="n">TAU</span><span class="p">,</span>
-          <span class="n">TASK</span><span class="p">(</span><span class="s1">&#39;BSF&#39;</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="p">[</span>
-            <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NK1&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;number of k-points along k1&quot;</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-            <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NK2&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;number of k-points along k2&quot;</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-            <span class="n">V</span><span class="p">(</span><span class="s1">&#39;K1&#39;</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;ﬁrst k-vector to span a two-dimensional region in k-space.&quot;</span><span class="p">),</span>
-            <span class="n">V</span><span class="p">(</span><span class="s1">&#39;K2&#39;</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;second k-vector to span a two-dimensional region in k-space&quot;</span><span class="p">),</span>
-          <span class="p">]),</span>
-          <span class="n">ENERGY</span><span class="p">(</span>
-              <span class="n">emin</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="s1">&#39;the energy to compute the BSF&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-              <span class="n">emax</span> <span class="o">=</span> <span class="s1">&#39;emin&#39;</span><span class="p">,</span>
-              <span class="n">defaults</span><span class="o">=</span><span class="p">{</span>
-                <span class="s1">&#39;ImE&#39;</span> <span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
-                <span class="s1">&#39;GRID&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                <span class="s1">&#39;NE&#39;</span>  <span class="p">:</span> <span class="mi">1</span>
-              <span class="p">}),</span>
-          <span class="n">CONTROL</span><span class="p">(</span><span class="s1">&#39;BLOCHSF&#39;</span><span class="p">),</span>
-          <span class="n">TAU</span><span class="p">,</span>
-          <span class="n">MODE</span><span class="p">,</span>
-          <span class="n">STRCONST</span><span class="p">,</span>
-          <span class="n">SITES</span>
-      <span class="p">],</span>
-    <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;kkrgen&#39;</span><span class="p">,</span>
-    <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">info</span><span class="o">=</span><span class="s2">&quot;BSFKK - Bloch spectral functions in the K-K plane&quot;</span>
-<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">SetOf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">TASK</span><span class="p">,</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">MODE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span><span class="p">,</span> <span class="n">InputValueDefinition</span> <span class="k">as</span> <span class="n">V</span>
+
+
+<div class="viewcode-block" id="input_parameters">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsfkk.input_parameters.html#ase2sprkkr.input_parameters.definitions.bsfkk.input_parameters">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">InputParameters</span><span class="p">(</span>
+        <span class="s2">&quot;bsfkk&quot;</span><span class="p">,</span>
+        <span class="p">[</span>
+            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">&quot;BSF&quot;</span><span class="p">),</span>
+            <span class="n">TAU</span><span class="p">,</span>
+            <span class="n">TASK</span><span class="p">(</span>
+                <span class="s2">&quot;BSF&quot;</span><span class="p">,</span>
+                <span class="n">add</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NK1&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;number of k-points along k1&quot;</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NK2&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;number of k-points along k2&quot;</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span>
+                        <span class="s2">&quot;K1&quot;</span><span class="p">,</span>
+                        <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+                        <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;ﬁrst k-vector to span a two-dimensional region in k-space.&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span>
+                        <span class="s2">&quot;K2&quot;</span><span class="p">,</span>
+                        <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+                        <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;second k-vector to span a two-dimensional region in k-space&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                <span class="p">],</span>
+            <span class="p">),</span>
+            <span class="n">ENERGY</span><span class="p">(</span>
+                <span class="n">emin</span><span class="o">=</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="s2">&quot;the energy to compute the BSF&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                <span class="n">emax</span><span class="o">=</span><span class="s2">&quot;emin&quot;</span><span class="p">,</span>
+                <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ImE&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span> <span class="s2">&quot;GRID&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;NE&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="p">),</span>
+            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">&quot;BLOCHSF&quot;</span><span class="p">),</span>
+            <span class="n">TAU</span><span class="p">,</span>
+            <span class="n">MODE</span><span class="p">,</span>
+            <span class="n">STRCONST</span><span class="p">,</span>
+            <span class="n">SITES</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;kkrgen&quot;</span><span class="p">,</span>
+        <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;BSFKK - Bloch spectral functions in the K-K plane&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
 <span class="sd">&quot;&quot;&quot; BSFKK - Bloch spectral functions in the K-K plane task input parameters definition&quot;&quot;&quot;</span>
 </pre></div>
 

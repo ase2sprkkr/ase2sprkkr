@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>yaml.dumper &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/mods.css?v=26f6988d" />
@@ -94,14 +94,14 @@
 <span></span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BaseDumper&#39;</span><span class="p">,</span> <span class="s1">&#39;SafeDumper&#39;</span><span class="p">,</span> <span class="s1">&#39;Dumper&#39;</span><span class="p">]</span>
 
-<span class="kn">from</span> <span class="nn">.emitter</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.serializer</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.representer</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.resolver</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.emitter</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.serializer</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.representer</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.resolver</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
-<span class="k">class</span> <span class="nc">BaseDumper</span><span class="p">(</span><span class="n">Emitter</span><span class="p">,</span> <span class="n">Serializer</span><span class="p">,</span> <span class="n">BaseRepresenter</span><span class="p">,</span> <span class="n">BaseResolver</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseDumper</span><span class="p">(</span><span class="n">Emitter</span><span class="p">,</span> <span class="n">Serializer</span><span class="p">,</span> <span class="n">BaseRepresenter</span><span class="p">,</span> <span class="n">BaseResolver</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span>
             <span class="n">default_style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">canonical</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">line_break</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -117,9 +117,9 @@
                 <span class="n">default_flow_style</span><span class="o">=</span><span class="n">default_flow_style</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="n">sort_keys</span><span class="p">)</span>
         <span class="n">Resolver</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<span class="k">class</span> <span class="nc">SafeDumper</span><span class="p">(</span><span class="n">Emitter</span><span class="p">,</span> <span class="n">Serializer</span><span class="p">,</span> <span class="n">SafeRepresenter</span><span class="p">,</span> <span class="n">Resolver</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SafeDumper</span><span class="p">(</span><span class="n">Emitter</span><span class="p">,</span> <span class="n">Serializer</span><span class="p">,</span> <span class="n">SafeRepresenter</span><span class="p">,</span> <span class="n">Resolver</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span>
             <span class="n">default_style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">canonical</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">line_break</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -135,9 +135,9 @@
                 <span class="n">default_flow_style</span><span class="o">=</span><span class="n">default_flow_style</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="n">sort_keys</span><span class="p">)</span>
         <span class="n">Resolver</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<span class="k">class</span> <span class="nc">Dumper</span><span class="p">(</span><span class="n">Emitter</span><span class="p">,</span> <span class="n">Serializer</span><span class="p">,</span> <span class="n">Representer</span><span class="p">,</span> <span class="n">Resolver</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Dumper</span><span class="p">(</span><span class="n">Emitter</span><span class="p">,</span> <span class="n">Serializer</span><span class="p">,</span> <span class="n">Representer</span><span class="p">,</span> <span class="n">Resolver</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span>
             <span class="n">default_style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">canonical</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">line_break</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>

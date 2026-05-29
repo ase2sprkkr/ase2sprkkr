@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.pdos &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -92,14 +92,14 @@
              
   <h1>Source code for ase2sprkkr.asr.pdos</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Projected density of states.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
-<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atoms</span>
 
-<span class="kn">from</span> <span class="nn">asr.utils</span> <span class="kn">import</span> <span class="n">magnetic_atoms</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">magnetic_atoms</span>
 
 
 <span class="c1"># Recipe tests:</span>
@@ -152,8 +152,8 @@
 
 <div class="viewcode-block" id="webpanel">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.webpanel.html#ase2sprkkr.asr.pdos.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.database.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">fig</span>
     <span class="c1"># PDOS without spin-orbit coupling</span>
     <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Projected band structure and DOS (PBE)&#39;</span><span class="p">,</span>
              <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[],</span>
@@ -179,8 +179,8 @@
          <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.gs&#39;</span><span class="p">])</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;-k&#39;</span><span class="p">,</span> <span class="s1">&#39;--kptdensity&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;K-point density&#39;</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--emptybands&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;number of empty bands to include&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">kptdensity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">20.0</span><span class="p">,</span> <span class="n">emptybands</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">asr.utils.refinegs</span> <span class="kn">import</span> <span class="n">refinegs</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="n">kptdensity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">20.0</span><span class="p">,</span> <span class="n">emptybands</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.utils.refinegs</span><span class="w"> </span><span class="kn">import</span> <span class="n">refinegs</span>
     <span class="n">refinegs</span><span class="p">(</span><span class="n">selfc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
              <span class="n">kptdensity</span><span class="o">=</span><span class="n">kptdensity</span><span class="p">,</span> <span class="n">emptybands</span><span class="o">=</span><span class="n">emptybands</span><span class="p">,</span>
              <span class="n">gpw</span><span class="o">=</span><span class="s1">&#39;pdos.gpw&#39;</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="s1">&#39;pdos.txt&#39;</span><span class="p">)</span>
@@ -192,7 +192,7 @@
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.Result.html#ase2sprkkr.asr.pdos.Result">[docs]</a>
 <span class="nd">@prepare_result</span>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">pdos_nosoc</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
     <span class="n">pdos_soc</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
@@ -217,11 +217,11 @@
          <span class="n">tests</span><span class="o">=</span><span class="n">tests</span><span class="p">,</span>
          <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.gs&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.pdos@calculate&#39;</span><span class="p">],</span>
          <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">singleprec_dict</span>
-    <span class="kn">from</span> <span class="nn">ase.parallel</span> <span class="kn">import</span> <span class="n">parprint</span>
-    <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">singleprec_dict</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">parprint</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.magnetic_anisotropy</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_spin_axis</span>
 
     <span class="c1"># Get refined ground state with more k-points</span>
     <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;pdos.gpw&#39;</span><span class="p">)</span>
@@ -257,7 +257,7 @@
 
 <div class="viewcode-block" id="pdos">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.pdos.html#ase2sprkkr.asr.pdos.pdos">[docs]</a>
-<span class="k">def</span> <span class="nf">pdos</span><span class="p">(</span><span class="n">dos</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pdos</span><span class="p">(</span><span class="n">dos</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Do a single pdos calculation.</span>
 
 <span class="sd">    Main functionality to do a single pdos calculation.</span>
@@ -272,7 +272,7 @@
 
 <div class="viewcode-block" id="calculate_pdos">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.calculate_pdos.html#ase2sprkkr.asr.pdos.calculate_pdos">[docs]</a>
-<span class="k">def</span> <span class="nf">calculate_pdos</span><span class="p">(</span><span class="n">dos</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_pdos</span><span class="p">(</span><span class="n">dos</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the projected density of states.</span>
 
 <span class="sd">    Returns</span>
@@ -287,9 +287,9 @@
 <span class="sd">        Fermi energy</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">gpaw.mpi</span> <span class="k">as</span> <span class="nn">mpi</span>
-    <span class="kn">from</span> <span class="nn">gpaw.utilities.progressbar</span> <span class="kn">import</span> <span class="n">ProgressBar</span>
-    <span class="kn">from</span> <span class="nn">ase.utils</span> <span class="kn">import</span> <span class="n">DevNull</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">gpaw.mpi</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpi</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.utilities.progressbar</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProgressBar</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">DevNull</span>
 
     <span class="n">zs</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">()</span>
     <span class="n">chem_symbols</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_chemical_symbols</span><span class="p">()</span>
@@ -333,7 +333,7 @@
 
 <div class="viewcode-block" id="get_l_a">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.get_l_a.html#ase2sprkkr.asr.pdos.get_l_a">[docs]</a>
-<span class="k">def</span> <span class="nf">get_l_a</span><span class="p">(</span><span class="n">zs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_l_a</span><span class="p">(</span><span class="n">zs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Define which atoms and angular momentum to project onto.</span>
 
 <span class="sd">    Parameters</span>
@@ -370,7 +370,7 @@
 
 <div class="viewcode-block" id="get_ordered_syl_dict">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.get_ordered_syl_dict.html#ase2sprkkr.asr.pdos.get_ordered_syl_dict">[docs]</a>
-<span class="k">def</span> <span class="nf">get_ordered_syl_dict</span><span class="p">(</span><span class="n">dct_syl</span><span class="p">,</span> <span class="n">symbols</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_ordered_syl_dict</span><span class="p">(</span><span class="n">dct_syl</span><span class="p">,</span> <span class="n">symbols</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Order a dictionary with syl keys.</span>
 
 <span class="sd">    Parameters</span>
@@ -387,10 +387,10 @@
 <span class="sd">        Sorted dct_syl</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
 
     <span class="c1"># Setup ssili (spin, symbol index, angular momentum index) key</span>
-    <span class="k">def</span> <span class="nf">ssili</span><span class="p">(</span><span class="n">syl</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ssili</span><span class="p">(</span><span class="n">syl</span><span class="p">):</span>
         <span class="n">s</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">L</span> <span class="o">=</span> <span class="n">syl</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
         <span class="c1"># Symbols list can have multiple entries of the same symbol</span>
         <span class="c1"># ex. [&#39;O&#39;, &#39;Fe&#39;, &#39;O&#39;]. In this case &#39;O&#39; will have index 0 and</span>
@@ -405,7 +405,7 @@
 
 <div class="viewcode-block" id="get_yl_colors">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.get_yl_colors.html#ase2sprkkr.asr.pdos.get_yl_colors">[docs]</a>
-<span class="k">def</span> <span class="nf">get_yl_colors</span><span class="p">(</span><span class="n">dct_syl</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_yl_colors</span><span class="p">(</span><span class="n">dct_syl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the color indices corresponding to each symbol and angular momentum.</span>
 
 <span class="sd">    Parameters</span>
@@ -420,7 +420,7 @@
 <span class="sd">        Color strings for each symbol and angular momentum</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
 
     <span class="n">color_yl</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
     <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
@@ -437,24 +437,24 @@
 
 <div class="viewcode-block" id="plot_pdos_nosoc">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.plot_pdos_nosoc.html#ase2sprkkr.asr.pdos.plot_pdos_nosoc">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_pdos_nosoc</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_pdos_nosoc</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">plot_pdos</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="plot_pdos_soc">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.plot_pdos_soc.html#ase2sprkkr.asr.pdos.plot_pdos_soc">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_pdos_soc</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_pdos_soc</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">plot_pdos</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="plot_pdos">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.plot_pdos.html#ase2sprkkr.asr.pdos.plot_pdos">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_pdos</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_pdos</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">smooth</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">npts</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">smooth</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">npts</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">npts</span><span class="p">)</span> <span class="o">/</span> <span class="n">npts</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
 
     <span class="c1"># Check if pdos data is stored in row</span>
@@ -465,9 +465,9 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span>
 
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rcParams</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.patheffects</span> <span class="k">as</span> <span class="nn">path_effects</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">rcParams</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patheffects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">path_effects</span>
 
     <span class="c1"># Extract raw data</span>
     <span class="n">symbols</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;symbols&#39;</span><span class="p">]</span>

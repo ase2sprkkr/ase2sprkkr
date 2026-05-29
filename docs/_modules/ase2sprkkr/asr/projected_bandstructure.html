@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.projected_bandstructure &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -92,10 +92,10 @@
              
   <h1>Source code for ase2sprkkr.asr.projected_bandstructure</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Orbital projected band structure.&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
-<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
 
 
 <span class="c1"># ---------- Webpanel ---------- #</span>
@@ -103,8 +103,8 @@
 
 <div class="viewcode-block" id="webpanel">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.webpanel.html#ase2sprkkr.asr.projected_bandstructure.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.database.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">fig</span>
 
     <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Projected band structure and DOS (PBE)&#39;</span><span class="p">,</span>
              <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="n">fig</span><span class="p">(</span><span class="s1">&#39;pbe-projected-bs.png&#39;</span><span class="p">,</span> <span class="n">link</span><span class="o">=</span><span class="s1">&#39;empty&#39;</span><span class="p">)],</span>
@@ -120,7 +120,7 @@
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.Result.html#ase2sprkkr.asr.projected_bandstructure.Result">[docs]</a>
 <span class="nd">@prepare_result</span>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">weight_skni</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span>
     <span class="n">yl_i</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
@@ -144,8 +144,8 @@
                    <span class="s1">&#39;results-asr.bandstructure.json&#39;</span><span class="p">],</span>
          <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.gs&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.bandstructure&#39;</span><span class="p">],</span>
          <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
 
     <span class="c1"># Get bandstructure calculation</span>
     <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;bs.gpw&#39;</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
@@ -165,7 +165,7 @@
 
 <div class="viewcode-block" id="get_orbital_ldos">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_orbital_ldos.html#ase2sprkkr.asr.projected_bandstructure.get_orbital_ldos">[docs]</a>
-<span class="k">def</span> <span class="nf">get_orbital_ldos</span><span class="p">(</span><span class="n">calc</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_orbital_ldos</span><span class="p">(</span><span class="n">calc</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the projection weights on different orbitals.</span>
 
 <span class="sd">    Returns</span>
@@ -175,12 +175,12 @@
 <span class="sd">    yl_i : list</span>
 <span class="sd">        symbol and orbital angular momentum string (&#39;y,l&#39;) of each orbital i</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">ase.utils</span> <span class="kn">import</span> <span class="n">DevNull</span>
-    <span class="kn">from</span> <span class="nn">ase.parallel</span> <span class="kn">import</span> <span class="n">parprint</span>
-    <span class="kn">import</span> <span class="nn">gpaw.mpi</span> <span class="k">as</span> <span class="nn">mpi</span>
-    <span class="kn">from</span> <span class="nn">gpaw.utilities.dos</span> <span class="kn">import</span> <span class="n">raw_orbital_LDOS</span>
-    <span class="kn">from</span> <span class="nn">gpaw.utilities.progressbar</span> <span class="kn">import</span> <span class="n">ProgressBar</span>
-    <span class="kn">from</span> <span class="nn">asr.pdos</span> <span class="kn">import</span> <span class="n">get_l_a</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">DevNull</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">parprint</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">gpaw.mpi</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpi</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.utilities.dos</span><span class="w"> </span><span class="kn">import</span> <span class="n">raw_orbital_LDOS</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.utilities.progressbar</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProgressBar</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.pdos</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_l_a</span>
 
     <span class="n">ns</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_number_of_spins</span><span class="p">()</span>
     <span class="n">zs</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">()</span>
@@ -237,7 +237,7 @@
 
 <div class="viewcode-block" id="get_yl_ordering">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_yl_ordering.html#ase2sprkkr.asr.projected_bandstructure.get_yl_ordering">[docs]</a>
-<span class="k">def</span> <span class="nf">get_yl_ordering</span><span class="p">(</span><span class="n">yl_i</span><span class="p">,</span> <span class="n">symbols</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_yl_ordering</span><span class="p">(</span><span class="n">yl_i</span><span class="p">,</span> <span class="n">symbols</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get standardized yl ordering of keys.</span>
 
 <span class="sd">    Parameters</span>
@@ -253,7 +253,7 @@
 <span class="sd">        ordered index for each i</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Setup sili (symbol index, angular momentum index) key</span>
-    <span class="k">def</span> <span class="nf">sili</span><span class="p">(</span><span class="n">yl</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sili</span><span class="p">(</span><span class="n">yl</span><span class="p">):</span>
         <span class="n">y</span><span class="p">,</span> <span class="n">L</span> <span class="o">=</span> <span class="n">yl</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
         <span class="c1"># Symbols list can have multiple entries of the same symbol</span>
         <span class="c1"># ex. [&#39;O&#39;, &#39;Fe&#39;, &#39;O&#39;]. In this case &#39;O&#39; will have index 0 and</span>
@@ -269,7 +269,7 @@
 
 <div class="viewcode-block" id="get_bs_sampling">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_bs_sampling.html#ase2sprkkr.asr.projected_bandstructure.get_bs_sampling">[docs]</a>
-<span class="k">def</span> <span class="nf">get_bs_sampling</span><span class="p">(</span><span class="n">bsp</span><span class="p">,</span> <span class="n">npoints</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_bs_sampling</span><span class="p">(</span><span class="n">bsp</span><span class="p">,</span> <span class="n">npoints</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample band structure as evenly as possible.</span>
 
 <span class="sd">    Allways include special points.</span>
@@ -339,7 +339,7 @@
 
 <div class="viewcode-block" id="get_pie_slice">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_pie_slice.html#ase2sprkkr.asr.projected_bandstructure.get_pie_slice">[docs]</a>
-<span class="k">def</span> <span class="nf">get_pie_slice</span><span class="p">(</span><span class="n">theta0</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">36.</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pie_slice</span><span class="p">(</span><span class="n">theta0</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">36.</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a single pie slice marker.</span>
 
 <span class="sd">    Parameters</span>
@@ -373,7 +373,7 @@
 
 <div class="viewcode-block" id="get_pie_markers">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_pie_markers.html#ase2sprkkr.asr.projected_bandstructure.get_pie_markers">[docs]</a>
-<span class="k">def</span> <span class="nf">get_pie_markers</span><span class="p">(</span><span class="n">weight_xi</span><span class="p">,</span> <span class="n">scale_marker</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">36.</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pie_markers</span><span class="p">(</span><span class="n">weight_xi</span><span class="p">,</span> <span class="n">scale_marker</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">36.</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get pie markers corresponding to a 2D array of weights.</span>
 
 <span class="sd">    Parameters</span>
@@ -415,7 +415,7 @@
 
 <div class="viewcode-block" id="projected_bs_pbe">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.projected_bs_pbe.html#ase2sprkkr.asr.projected_bandstructure.projected_bs_pbe">[docs]</a>
-<span class="k">def</span> <span class="nf">projected_bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pbe-projected-bs.png&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">projected_bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pbe-projected-bs.png&#39;</span><span class="p">,</span>
                      <span class="n">npoints</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mf">36.</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
                      <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce the projected band structure.</span>
@@ -431,12 +431,12 @@
 <span class="sd">    res : int</span>
 <span class="sd">        resolution of the pie chart markers (in points around the circumference)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.patheffects</span> <span class="k">as</span> <span class="nn">path_effects</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.lines</span> <span class="kn">import</span> <span class="n">Line2D</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">ase.spectrum.band_structure</span> <span class="kn">import</span> <span class="n">BandStructure</span><span class="p">,</span> <span class="n">BandStructurePlot</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patheffects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">path_effects</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line2D</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.spectrum.band_structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">BandStructure</span><span class="p">,</span> <span class="n">BandStructurePlot</span>
     <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fontsize</span>
 
     <span class="c1"># Extract projections data</span>

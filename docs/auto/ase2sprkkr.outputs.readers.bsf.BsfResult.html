@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BsfResult &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="default" href="ase2sprkkr.outputs.readers.default.html" />
-    <link rel="prev" title="BsfProcessRunner" href="ase2sprkkr.outputs.readers.bsf.BsfProcessRunner.html" /> 
+    <link rel="prev" title="BsfOutputReader" href="ase2sprkkr.outputs.readers.bsf.BsfOutputReader.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -84,6 +84,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="ase2sprkkr.outputs.readers.bsf.html">bsf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.default.html">default</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.dos.html">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.jxc.html">jxc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.html">scf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.spec.html">spec</a></li>
 </ul>
@@ -133,14 +134,14 @@
 <h1>BsfResult<a class="headerlink" href="#bsfresult" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.bsf.BsfResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.readers.bsf.</span></span><span class="sig-name descname"><span class="pre">BsfResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/bsf.html#BsfResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.bsf.BsfResult" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.readers.bsf.</span></span><span class="sig-name descname"><span class="pre">BsfResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/bsf.html#BsfResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.bsf.BsfResult" title="Link to this definition"></a></dt>
 <dd><p>BSF result provides access to the computed Bloch spectral functions in the
 BSF output file using the <a class="reference internal" href="#ase2sprkkr.outputs.readers.bsf.BsfResult.bsf" title="ase2sprkkr.outputs.readers.bsf.BsfResult.bsf"><code class="xref py py-attr docutils literal notranslate"><span class="pre">bsf</span></code></a> property.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-b2a9238e90fc07e244405684d57a5c8764dc5e6f.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.bsf.BsfResult" usemap="#inheritance7d67437070" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-dd4b72ca6d9e0e4e9a7ba1a5d810b764e042b7a2.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.bsf.BsfResult" usemap="#inheritance7d67437070" class="inheritance graphviz" /></div>
 <map id="inheritance7d67437070" name="inheritance7d67437070">
-<area shape="rect" id="node1" href="#ase2sprkkr.outputs.readers.bsf.BsfResult" target="_top" title="BSF result provides access to the computed Bloch spectral functions in the" alt="" coords="203,5,309,31"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="5,5,173,31"/>
+<area shape="rect" id="node1" href="#ase2sprkkr.outputs.readers.bsf.BsfResult" target="_top" title="BSF result provides access to the computed Bloch spectral functions in the" alt="" coords="202,5,308,33"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="5,5,173,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -152,15 +153,20 @@ BSF output file using the <a class="reference internal" href="#ase2sprkkr.output
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.bsf.BsfResult.bsf_filename">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bsf_filename</span></span><a class="headerlink" href="#ase2sprkkr.outputs.readers.bsf.BsfResult.bsf_filename" title="Link to this definition"></a></dt>
-<dd><p>New (output) potential file name</p>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bsf_filename</span></span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/bsf.html#BsfResult.bsf_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.bsf.BsfResult.bsf_filename" title="Link to this definition"></a></dt>
+<dd><p>Bloch spectral functions file name</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.bsf.BsfResult.bsf">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bsf</span></span><a class="headerlink" href="#ase2sprkkr.outputs.readers.bsf.BsfResult.bsf" title="Link to this definition"></a></dt>
-<dd><p>The new (output) potential - that contains the converged charge density etc.</p>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bsf</span></span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/bsf.html#BsfResult.bsf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.bsf.BsfResult.bsf" title="Link to this definition"></a></dt>
+<dd><p>The computed Bloch spectral functions.</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.readers.bsf.BsfResult.output_values">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_values</span></span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/readers/bsf.html#BsfResult.output_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.readers.bsf.BsfResult.output_values" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -170,7 +176,7 @@ BSF output file using the <a class="reference internal" href="#ase2sprkkr.output
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.outputs.readers.bsf.BsfProcessRunner.html" class="btn btn-neutral float-left" title="BsfProcessRunner" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.outputs.readers.bsf.BsfOutputReader.html" class="btn btn-neutral float-left" title="BsfOutputReader" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.outputs.readers.default.html" class="btn btn-neutral float-right" title="default" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

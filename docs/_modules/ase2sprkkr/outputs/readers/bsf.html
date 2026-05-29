@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.outputs.readers.bsf &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -91,40 +91,52 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.outputs.readers.bsf</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; The Bloch spectral functions (BSF) reader and result.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;The Bloch spectral functions (BSF) reader and result.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">KkrProcessRunner</span>
-<span class="kn">from</span> <span class="nn">.default</span> <span class="kn">import</span> <span class="n">DefaultOutputReader</span>
-<span class="kn">from</span> <span class="nn">...common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
-<span class="kn">from</span> <span class="nn">...output_files.output_files</span> <span class="kn">import</span> <span class="n">OutputFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..task_result</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">KkrOutputReader</span><span class="p">,</span> <span class="n">OutputFileResultValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.default</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span>
 
 
 <div class="viewcode-block" id="BsfResult">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.bsf.BsfResult.html#ase2sprkkr.outputs.readers.bsf.BsfResult">[docs]</a>
-<span class="k">class</span> <span class="nc">BsfResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; BSF result provides access to the computed Bloch spectral functions in the</span>
-<span class="sd">  BSF output file using the :py:attr:`~bsf` property.&quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BsfResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;BSF result provides access to the computed Bloch spectral functions in the</span>
+<span class="sd">    BSF output file using the :py:attr:`~bsf` property.&quot;&quot;&quot;</span>
 
-  <span class="nd">@cached_property</span>
-  <span class="k">def</span> <span class="nf">bsf_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; New (output) potential file name &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s1">&#39;Bloch-SF&#39;</span><span class="p">)</span>
-
-  <span class="nd">@cached_property</span>
-  <span class="k">def</span> <span class="nf">bsf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; The new (output) potential - that contains the converged charge density etc. &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="n">OutputFile</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bsf_filename</span><span class="p">,</span> <span class="n">try_only</span><span class="o">=</span><span class="s1">&#39;bsf&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="BsfResult.bsf_filename">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.bsf.BsfResult.html#ase2sprkkr.outputs.readers.bsf.BsfResult.bsf_filename">[docs]</a>
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bsf_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Bloch spectral functions file name&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">&quot;Bloch-SF&quot;</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="BsfResult.bsf">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.bsf.BsfResult.html#ase2sprkkr.outputs.readers.bsf.BsfResult.bsf">[docs]</a>
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bsf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The computed Bloch spectral functions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_values</span><span class="p">[</span><span class="s2">&quot;bsf&quot;</span><span class="p">]()</span></div>
 
-<div class="viewcode-block" id="BsfProcessRunner">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.bsf.BsfProcessRunner.html#ase2sprkkr.outputs.readers.bsf.BsfProcessRunner">[docs]</a>
-<span class="k">class</span> <span class="nc">BsfProcessRunner</span><span class="p">(</span><span class="n">KkrProcessRunner</span><span class="p">):</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; ARPES task output reader currently do nothing, just have a special</span>
-<span class="sd">  result, that allow easy acces to BSF output file &quot;&quot;&quot;</span>
 
-  <span class="n">result_class</span> <span class="o">=</span> <span class="n">BsfResult</span>
-  <span class="n">reader_class</span> <span class="o">=</span> <span class="n">DefaultOutputReader</span></div>
+<div class="viewcode-block" id="BsfResult.output_values">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.bsf.BsfResult.html#ase2sprkkr.outputs.readers.bsf.BsfResult.output_values">[docs]</a>
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;bsf&quot;</span><span class="p">:</span> <span class="n">OutputFileResultValue</span><span class="p">(</span><span class="s2">&quot;Bloch spectral function&quot;</span><span class="p">,</span> <span class="s2">&quot;bsf&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bsf_filename</span><span class="p">)}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BsfOutputReader">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.bsf.BsfOutputReader.html#ase2sprkkr.outputs.readers.bsf.BsfOutputReader">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BsfOutputReader</span><span class="p">(</span><span class="n">KkrOutputReader</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;BSF task has no special parser, it just has a special</span>
+<span class="sd">    result, that allow easy acces to BSF output file&quot;&quot;&quot;</span>
+
+    <span class="n">result_class</span> <span class="o">=</span> <span class="n">BsfResult</span>
+    <span class="n">parser_class</span> <span class="o">=</span> <span class="n">DefaultOutputParser</span></div>
 
 </pre></div>
 

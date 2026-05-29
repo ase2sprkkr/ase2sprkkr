@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.outputs.readers.dos**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.outputs.readers.dos.DosProcessRunner  ase2sprkkr.outputs.readers.dos.DosResult 
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.dos.DosOutputReader  ase2sprkkr.outputs.readers.dos.DosResult 
       :parts: 1
 
 |
@@ -35,7 +35,7 @@ Full name: **ase2sprkkr.outputs.readers.dos**
       :toctree:
       :template: custom-class-template.rst
    
-      DosProcessRunner
+      DosOutputReader
       DosResult
    
    

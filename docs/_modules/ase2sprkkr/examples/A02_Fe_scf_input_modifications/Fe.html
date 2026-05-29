@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.examples.A02_Fe_scf_input_modifications.Fe &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -98,13 +98,13 @@
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A02_Fe_scf_input_modifications.Fe.main.html#ase2sprkkr.examples.A02_Fe_scf_input_modifications.Fe.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
-    <span class="kn">from</span> <span class="nn">ase2sprkkr.sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.build</span><span class="w"> </span><span class="kn">import</span> <span class="n">bulk</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span>
 
-    <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;Fe&#39;</span><span class="p">)</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s2">&quot;Fe&quot;</span><span class="p">)</span>
 
-    <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span><span class="n">mpi</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mpirun&#39;</span><span class="p">,</span><span class="s1">&#39;-np&#39;</span><span class="p">,</span><span class="s1">&#39;4&#39;</span><span class="p">])</span>
+    <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mpirun&quot;</span><span class="p">,</span> <span class="s2">&quot;-np&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">])</span>
     <span class="c1"># print out input parameters. This will be used when calling</span>
     <span class="c1"># calculator to create corresponding input file. Please note</span>
     <span class="c1"># that potential filename will be set by method calculate</span>
@@ -116,17 +116,17 @@
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NL</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NE</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
     <span class="c1"># Lest also change mixing</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">MIX</span><span class="o">=</span><span class="mf">0.20</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">ImE</span><span class="o">=</span><span class="mf">0.0</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">MIX</span> <span class="o">=</span> <span class="mf">0.20</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">ImE</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="c1"># calculator.input_parameters.ENERGY.GRID=[5,3]</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NEW INPUT PARAMETERS=======================&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;===========================================&quot;</span><span class="p">)</span>
-    <span class="n">out</span><span class="o">=</span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">])</span></div>
+    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;error&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">[</span><span class="s2">&quot;moment&quot;</span><span class="p">])</span></div>
 
 
 

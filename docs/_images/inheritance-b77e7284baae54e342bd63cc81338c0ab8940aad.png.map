@@ -1,6 +1,0 @@
-<map id="inheritancecebfe5ec0f" name="inheritancecebfe5ec0f">
-<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader" target="_top" title="default.DefaultOutputReader" alt="" coords="590,5,775,27"/>
-<area shape="rect" id="node4" href="#ase2sprkkr.outputs.readers.spec.SpecOutputReader" target="_top" title="Reader for spec.out files." alt="" coords="800,5,955,27"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputReader.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputReader" target="_top" title="sprkkr_output_reader.SprKkrOutputReader" alt="" coords="304,5,565,27"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,5,279,27"/>
-</map>

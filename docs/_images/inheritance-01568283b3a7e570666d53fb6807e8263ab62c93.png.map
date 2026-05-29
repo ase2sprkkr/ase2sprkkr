@@ -1,0 +1,7 @@
+<map id="inheritance008ac01e19" name="inheritance008ac01e19">
+<area shape="rect" id="node1" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Class, that runs a process and reads its output using the underlying" alt="" coords="21,213,155,241"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess" target="_top" title="KkrProcess" alt="" coords="41,161,135,189"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.task_result.OutputFileResultValue" target="_top" title="OutputFileResultValue" alt="" coords="5,109,171,137"/>
+<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.ResultValue.html#ase2sprkkr.outputs.task_result.ResultValue" target="_top" title="ResultValue" alt="" coords="39,57,137,85"/>
+<area shape="rect" id="node5" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="42,5,134,33"/>
+</map>

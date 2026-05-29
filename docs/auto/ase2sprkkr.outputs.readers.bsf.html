@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>bsf &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="BsfProcessRunner" href="ase2sprkkr.outputs.readers.bsf.BsfProcessRunner.html" />
+    <link rel="next" title="BsfOutputReader" href="ase2sprkkr.outputs.readers.bsf.BsfOutputReader.html" />
     <link rel="prev" title="ArpesResult" href="ase2sprkkr.outputs.readers.arpes.ArpesResult.html" /> 
 </head>
 
@@ -84,6 +84,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">bsf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.default.html">default</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.dos.html">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.jxc.html">jxc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.html">scf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.spec.html">spec</a></li>
 </ul>
@@ -132,12 +133,12 @@
 <h1>bsf<a class="headerlink" href="#bsf" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs.readers.bsf</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-d888cc2e8c12001367bbefc0eebd0a6698868fbd.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.bsf.BsfProcessRunner, ase2sprkkr.outputs.readers.bsf.BsfResult" usemap="#inheritance0018b3d681" class="inheritance graphviz" /></div>
-<map id="inheritance0018b3d681" name="inheritance0018b3d681">
-<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.bsf.BsfProcessRunner.html#ase2sprkkr.outputs.readers.bsf.BsfProcessRunner" target="_top" title="ARPES task output reader currently do nothing, just have a special" alt="" coords="175,55,313,80"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrProcessRunner.html#ase2sprkkr.outputs.task_result.KkrProcessRunner" target="_top" title="Class, that run a process and read its output using underlined" alt="" coords="5,55,145,80"/>
-<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.bsf.BsfResult.html#ase2sprkkr.outputs.readers.bsf.BsfResult" target="_top" title="BSF result provides access to the computed Bloch spectral functions in the" alt="" coords="202,5,286,31"/>
-<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="29,5,121,31"/>
+<div class="graphviz"><img src="../_images/inheritance-59ece51a3d5ea0243b9db63b4c66b0b42ae346b7.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.bsf.BsfOutputReader, ase2sprkkr.outputs.readers.bsf.BsfResult" usemap="#inheritanced92345811b" class="inheritance graphviz" /></div>
+<map id="inheritanced92345811b" name="inheritanced92345811b">
+<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.bsf.BsfOutputReader.html#ase2sprkkr.outputs.readers.bsf.BsfOutputReader" target="_top" title="BSF task has no special parser, it just has a special" alt="" coords="168,57,300,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Class, that runs a process and reads its output using the underlying" alt="" coords="5,57,139,85"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.bsf.BsfResult.html#ase2sprkkr.outputs.readers.bsf.BsfResult" target="_top" title="BSF result provides access to the computed Bloch spectral functions in the" alt="" coords="192,5,276,33"/>
+<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="26,5,118,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -146,8 +147,8 @@
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.bsf.BsfProcessRunner.html#ase2sprkkr.outputs.readers.bsf.BsfProcessRunner" title="ase2sprkkr.outputs.readers.bsf.BsfProcessRunner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BsfProcessRunner</span></code></a>(input_parameters, ...[, ...])</p></td>
-<td><p>ARPES task output reader currently do nothing, just have a special result, that allow easy acces to BSF output file</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.bsf.BsfOutputReader.html#ase2sprkkr.outputs.readers.bsf.BsfOutputReader" title="ase2sprkkr.outputs.readers.bsf.BsfOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BsfOutputReader</span></code></a>(input_parameters, ...[, ...])</p></td>
+<td><p>BSF task has no special parser, it just has a special result, that allow easy acces to BSF output file</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.bsf.BsfResult.html#ase2sprkkr.outputs.readers.bsf.BsfResult" title="ase2sprkkr.outputs.readers.bsf.BsfResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BsfResult</span></code></a>(input_parameters, calculator, ...)</p></td>
 <td><p>BSF result provides access to the computed Bloch spectral functions in the BSF output file using the <code class="xref py py-attr docutils literal notranslate"><span class="pre">bsf</span></code> property.</p></td>
@@ -161,7 +162,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.outputs.readers.arpes.ArpesResult.html" class="btn btn-neutral float-left" title="ArpesResult" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.outputs.readers.bsf.BsfProcessRunner.html" class="btn btn-neutral float-right" title="BsfProcessRunner" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.outputs.readers.bsf.BsfOutputReader.html" class="btn btn-neutral float-right" title="BsfOutputReader" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

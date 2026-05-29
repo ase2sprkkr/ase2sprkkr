@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.defectformation &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -92,8 +92,8 @@
              
   <h1>Source code for ase2sprkkr.asr.defectformation</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Defect formation energies.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
 
 
 <span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;property&#39;</span>
@@ -119,7 +119,7 @@
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Runs recipe for all defect folder within your directory when &#39;</span>
              <span class="s1">&#39;set to None. Set this option to the name of a desired defect &#39;</span>
              <span class="s1">&#39;folder in order for it to run only for this particular defect.&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">pristine</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">defect</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">pristine</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">defect</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span>
          <span class="n">defect_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate formation energy of defects.</span>
@@ -129,11 +129,11 @@
 <span class="sd">    folder of the initial structure, i.e. the folder where setup.defects was</span>
 <span class="sd">    also executed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
-    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">write_json</span><span class="p">,</span> <span class="n">read_json</span>
-    <span class="kn">from</span> <span class="nn">gpaw.defects</span> <span class="kn">import</span> <span class="n">ElectrostaticCorrections</span>
-    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_json</span><span class="p">,</span> <span class="n">read_json</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.defects</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElectrostaticCorrections</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
     <span class="n">q</span><span class="p">,</span> <span class="n">epsilons</span><span class="p">,</span> <span class="n">path_gs</span> <span class="o">=</span> <span class="n">check_and_get_general_inputs</span><span class="p">()</span>
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;unrelaxed.json&#39;</span><span class="p">)</span>
     <span class="n">nd</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_pbc</span><span class="p">()))</span>
@@ -199,13 +199,13 @@
 
 <div class="viewcode-block" id="check_and_get_general_inputs">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.check_and_get_general_inputs.html#ase2sprkkr.asr.defectformation.check_and_get_general_inputs">[docs]</a>
-<span class="k">def</span> <span class="nf">check_and_get_general_inputs</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_and_get_general_inputs</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine whether all necessary files exist.</span>
 
 <span class="sd">    Checks if all necessary input files and input parameters for</span>
 <span class="sd">    this recipe are acessible.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">read_json</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_json</span>
 
     <span class="c1"># first, get path of &#39;gs.gpw&#39; file of pristine_sc, as well as the path of</span>
     <span class="c1"># &#39;dielectricconstant.json&#39; of the pristine system</span>
@@ -236,13 +236,13 @@
 
 <div class="viewcode-block" id="find_file_in_folder">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.find_file_in_folder.html#ase2sprkkr.asr.defectformation.find_file_in_folder">[docs]</a>
-<span class="k">def</span> <span class="nf">find_file_in_folder</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">foldername</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_file_in_folder</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">foldername</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find a specific file in folder.</span>
 
 <span class="sd">    Finds a specific file within a folder starting from your current</span>
 <span class="sd">    position in the directory tree.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
     <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
     <span class="n">find_success</span> <span class="o">=</span> <span class="kc">False</span>
@@ -292,7 +292,7 @@
 
 <div class="viewcode-block" id="collect_data">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.collect_data.html#ase2sprkkr.asr.defectformation.collect_data">[docs]</a>
-<span class="k">def</span> <span class="nf">collect_data</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">collect_data</span><span class="p">():</span>
     <span class="c1"># from ase.io import jsonio</span>
     <span class="c1"># from pathlib import Path</span>
     <span class="c1"># if not Path(&#39;results_defectformation.json&#39;).is_file():</span>
@@ -330,7 +330,7 @@
 
 <div class="viewcode-block" id="line_intersection">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.line_intersection.html#ase2sprkkr.asr.defectformation.line_intersection">[docs]</a>
-<span class="k">def</span> <span class="nf">line_intersection</span><span class="p">(</span><span class="n">line1</span><span class="p">,</span> <span class="n">line2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">line_intersection</span><span class="p">(</span><span class="n">line1</span><span class="p">,</span> <span class="n">line2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get intersection between two lines.</span>
 
 <span class="sd">    Helper function to calculate intersection of two given lines.</span>
@@ -338,7 +338,7 @@
     <span class="n">xdiff</span> <span class="o">=</span> <span class="p">(</span><span class="n">line1</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">line1</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">line2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">line2</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">ydiff</span> <span class="o">=</span> <span class="p">(</span><span class="n">line1</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">line1</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">line2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">line2</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">det</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">det</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="n">div</span> <span class="o">=</span> <span class="n">det</span><span class="p">(</span><span class="n">xdiff</span><span class="p">,</span> <span class="n">ydiff</span><span class="p">)</span>
@@ -354,7 +354,7 @@
 
 <div class="viewcode-block" id="line">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.line.html#ase2sprkkr.asr.defectformation.line">[docs]</a>
-<span class="k">def</span> <span class="nf">line</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">line</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Define a line between p1 and p2.</span>
 
 <span class="sd">    Helper function to define a line.</span>
@@ -368,7 +368,7 @@
 
 <div class="viewcode-block" id="intersection">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.intersection.html#ase2sprkkr.asr.defectformation.intersection">[docs]</a>
-<span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">intersection</span><span class="p">(</span><span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get intersection between two lines L1 and L2.</span>
 
 <span class="sd">    Helper function to calculate intersection of two given lines that were</span>
@@ -388,7 +388,7 @@
 
 <div class="viewcode-block" id="plot_formation_and_transitions">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.plot_formation_and_transitions.html#ase2sprkkr.asr.defectformation.plot_formation_and_transitions">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_formation_and_transitions</span><span class="p">(</span><span class="n">defect_dict</span><span class="p">,</span> <span class="n">defectname</span><span class="p">,</span> <span class="n">gap</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_formation_and_transitions</span><span class="p">(</span><span class="n">defect_dict</span><span class="p">,</span> <span class="n">defectname</span><span class="p">,</span> <span class="n">gap</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;XXX: Do me.</span>
 
 <span class="sd">    Function to plot formation energies versus the Fermi energy and to</span>
@@ -396,8 +396,8 @@
 <span class="sd">    defect</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># from asr.utils import write_json</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
     <span class="c1"># initalize and read formation energies and charge states</span>
     <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>

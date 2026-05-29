@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.gui.shell**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.gui.shell.JupyterLab  ase2sprkkr.gui.shell.Python  ase2sprkkr.gui.shell.Shell 
+.. inheritance-diagram::  ase2sprkkr.gui.shell.CommandlineShell  ase2sprkkr.gui.shell.JupyterLab  ase2sprkkr.gui.shell.Pdb  ase2sprkkr.gui.shell.Python  ase2sprkkr.gui.shell.Shell 
       :parts: 1
 
 |
@@ -45,7 +45,9 @@ Full name: **ase2sprkkr.gui.shell**
       :toctree:
       :template: custom-class-template.rst
    
+      CommandlineShell
       JupyterLab
+      Pdb
       Python
       Shell
    

@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.common.debug &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -91,12 +91,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.common.debug</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 
 <div class="viewcode-block" id="add_debug_hook">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.debug.add_debug_hook.html#ase2sprkkr.common.debug.add_debug_hook">[docs]</a>
-<span class="k">def</span> <span class="nf">add_debug_hook</span><span class="p">(</span><span class="n">only_original</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_debug_hook</span><span class="p">(</span><span class="n">only_original</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Breaks when an unhandled exception occurs, if</span>
 <span class="sd">    the terminal is present</span>
@@ -104,19 +104,20 @@
 <span class="sd">    https://stackoverflow.com/questions/1237379/how-do-i-set-sys-excepthook-to-invoke-pdb-globally-in-python</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">):</span>
-       <span class="k">if</span> <span class="p">(</span>  <span class="c1"># hasattr(sys, &quot;ps1&quot;) or</span>
-          <span class="ow">not</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span> <span class="ow">or</span>
-          <span class="ow">not</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">()):</span>
-               <span class="c1"># stdin or stderr is redirected, just do the normal thing</span>
-               <span class="n">original_hook</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">)</span>
-       <span class="k">else</span><span class="p">:</span>
-           <span class="c1"># a terminal is attached and stderr is not redirected, debug</span>
-           <span class="kn">import</span> <span class="nn">traceback</span>
-           <span class="kn">import</span> <span class="nn">pdb</span>
-           <span class="n">traceback</span><span class="o">.</span><span class="n">print_exception</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">)</span>
-           <span class="nb">print</span>
-           <span class="n">pdb</span><span class="o">.</span><span class="n">pm</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">info</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span>  <span class="c1"># hasattr(sys, &quot;ps1&quot;) or</span>
+            <span class="ow">not</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span>
+        <span class="p">):</span>
+            <span class="c1"># stdin or stderr is redirected, just do the normal thing</span>
+            <span class="n">original_hook</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># a terminal is attached and stderr is not redirected, debug</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">pdb</span>
+
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exception</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">)</span>
+            <span class="nb">print</span>
+            <span class="n">pdb</span><span class="o">.</span><span class="n">pm</span><span class="p">()</span>
 
     <span class="n">original_hook</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">only_original</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span> <span class="o">==</span> <span class="n">sys</span><span class="o">.</span><span class="n">__excepthook__</span><span class="p">:</span>
@@ -127,12 +128,12 @@
 
 <div class="viewcode-block" id="debug_pyparsing">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.debug.debug_pyparsing.html#ase2sprkkr.common.debug.debug_pyparsing">[docs]</a>
-<span class="k">def</span> <span class="nf">debug_pyparsing</span><span class="p">(</span><span class="n">term</span><span class="p">):</span>
-    <span class="n">term</span><span class="o">.</span><span class="n">setDebug</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="s1">&#39;exprs&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">debug_pyparsing</span><span class="p">(</span><span class="n">term</span><span class="p">):</span>
+    <span class="n">term</span><span class="o">.</span><span class="n">set_debug</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="s2">&quot;exprs&quot;</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">term</span><span class="o">.</span><span class="n">exprs</span><span class="p">:</span>
             <span class="n">debug_pyparsing</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="s1">&#39;expr&#39;</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="s2">&quot;expr&quot;</span><span class="p">):</span>
         <span class="n">debug_pyparsing</span><span class="p">(</span><span class="n">term</span><span class="o">.</span><span class="n">expr</span><span class="p">)</span></div>
 
 </pre></div>

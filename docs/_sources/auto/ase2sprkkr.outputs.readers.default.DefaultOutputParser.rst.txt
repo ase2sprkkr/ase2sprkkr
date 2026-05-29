@@ -1,0 +1,36 @@
+DefaultOutputParser
+===================
+
+
+.. currentmodule:: ase2sprkkr.outputs.readers.default
+
+.. autoclass:: DefaultOutputParser
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.readers.default.DefaultOutputParser
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

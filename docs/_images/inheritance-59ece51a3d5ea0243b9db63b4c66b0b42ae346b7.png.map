@@ -1,0 +1,6 @@
+<map id="inheritanced92345811b" name="inheritanced92345811b">
+<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.bsf.BsfOutputReader.html#ase2sprkkr.outputs.readers.bsf.BsfOutputReader" target="_top" title="BSF task has no special parser, it just has a special" alt="" coords="168,57,300,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Class, that runs a process and reads its output using the underlying" alt="" coords="5,57,139,85"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.bsf.BsfResult.html#ase2sprkkr.outputs.readers.bsf.BsfResult" target="_top" title="BSF result provides access to the computed Bloch spectral functions in the" alt="" coords="192,5,276,33"/>
+<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="26,5,118,33"/>
+</map>

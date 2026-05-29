@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>scipy.interpolate._cubic &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -93,27 +93,22 @@
   <h1>Source code for scipy.interpolate._cubic</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Interpolation algorithms using piecewise cubic polynomials.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve</span><span class="p">,</span> <span class="n">solve_banded</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy._lib._array_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">array_namespace</span><span class="p">,</span> <span class="n">xp_size</span><span class="p">,</span> <span class="n">xp_capabilities</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy._lib.array_api_compat</span><span class="w"> </span><span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np_compat</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">solve</span><span class="p">,</span> <span class="n">solve_banded</span>
-
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">PPoly</span>
-<span class="kn">from</span> <span class="nn">._polyint</span> <span class="kn">import</span> <span class="n">_isscalar</span>
-
-<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">PPoly</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._polyint</span><span class="w"> </span><span class="kn">import</span> <span class="n">_isscalar</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;CubicHermiteSpline&quot;</span><span class="p">,</span> <span class="s2">&quot;PchipInterpolator&quot;</span><span class="p">,</span> <span class="s2">&quot;pchip_interpolate&quot;</span><span class="p">,</span>
            <span class="s2">&quot;Akima1DInterpolator&quot;</span><span class="p">,</span> <span class="s2">&quot;CubicSpline&quot;</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">dydx</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">dydx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare input for cubic spline interpolators.</span>
 
 <span class="sd">    All data are converted to numpy arrays and checked for correctness.</span>
@@ -122,25 +117,25 @@
 <span class="sd">    [0, number of dimensions of `y`).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">complexfloating</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">&quot;complex floating&quot;</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x` must contain real values.&quot;</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xp</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">complexfloating</span><span class="p">):</span>
-        <span class="n">dtype</span> <span class="o">=</span> <span class="nb">complex</span>
+    <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">&quot;complex floating&quot;</span><span class="p">):</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">complex128</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">float64</span>
 
     <span class="k">if</span> <span class="n">dydx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dydx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dydx</span><span class="p">)</span>
+        <span class="n">dydx</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dydx</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">dydx</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The shapes of `y` and `dydx` must be identical.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">dydx</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">complexfloating</span><span class="p">):</span>
-            <span class="n">dtype</span> <span class="o">=</span> <span class="nb">complex</span>
-        <span class="n">dydx</span> <span class="o">=</span> <span class="n">dydx</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">dydx</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">&quot;complex floating&quot;</span><span class="p">):</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">complex128</span>
+        <span class="n">dydx</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dydx</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span> <span class="o">%</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span>
     <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x` must be 1-dimensional.&quot;</span><span class="p">)</span>
@@ -150,27 +145,34 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The length of `y` along `axis`=</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2"> doesn&#39;t &quot;</span>
                          <span class="s2">&quot;match the length of `x`&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">xp</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x` must contain only finite values.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">xp</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`y` must contain only finite values.&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">dydx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">dydx</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">dydx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">xp</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">dydx</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`dydx` must contain only finite values.&quot;</span><span class="p">)</span>
 
-    <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">dx</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">dx</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x` must be strictly increasing sequence.&quot;</span><span class="p">)</span>
 
-    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dydx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dydx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">dydx</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">dydx</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">dydx</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">dydx</span>
 
 
-<span class="k">class</span> <span class="nc">CubicHermiteSpline</span><span class="p">(</span><span class="n">PPoly</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Piecewise-cubic interpolator matching values and first derivatives.</span>
+<span class="nd">@xp_capabilities</span><span class="p">(</span>
+    <span class="n">cpu_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">jax_jit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">skip_backends</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;dask.array&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;https://github.com/data-apis/array-api-extra/issues/488&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CubicHermiteSpline</span><span class="p">(</span><span class="n">PPoly</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Piecewise cubic interpolator to fit values and first derivatives (C1 smooth).</span>
 
 <span class="sd">    The result is represented as a `PPoly` instance.</span>
 
@@ -215,6 +217,7 @@
 <span class="sd">    derivative</span>
 <span class="sd">    antiderivative</span>
 <span class="sd">    integrate</span>
+<span class="sd">    solve</span>
 <span class="sd">    roots</span>
 
 <span class="sd">    See Also</span>
@@ -236,28 +239,38 @@
 <span class="sd">            on Wikipedia.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dydx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dydx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dydx</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">extrapolate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">extrapolate</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">dydx</span> <span class="o">=</span> <span class="n">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">dydx</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">dydx</span> <span class="o">=</span> <span class="n">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">dydx</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">xp</span><span class="p">)</span>
 
-        <span class="n">dxr</span> <span class="o">=</span> <span class="n">dx</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">dx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">slope</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">dxr</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">dydx</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dydx</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">slope</span><span class="p">)</span> <span class="o">/</span> <span class="n">dxr</span>
+        <span class="n">dxr</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="p">(</span><span class="n">dx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">slope</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">dxr</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">dydx</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">+</span> <span class="n">dydx</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="o">...</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">slope</span><span class="p">)</span> <span class="o">/</span> <span class="n">dxr</span>
 
-        <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-        <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span> <span class="o">/</span> <span class="n">dxr</span>
-        <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">slope</span> <span class="o">-</span> <span class="n">dydx</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dxr</span> <span class="o">-</span> <span class="n">t</span>
-        <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">dydx</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">c</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span>
+           <span class="n">t</span> <span class="o">/</span> <span class="n">dxr</span><span class="p">,</span>
+           <span class="p">(</span><span class="n">slope</span> <span class="o">-</span> <span class="n">dydx</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">/</span> <span class="n">dxr</span> <span class="o">-</span> <span class="n">t</span><span class="p">,</span>
+           <span class="n">dydx</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+           <span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+        <span class="p">))</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="n">extrapolate</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span>
 
 
-<span class="k">class</span> <span class="nc">PchipInterpolator</span><span class="p">(</span><span class="n">CubicHermiteSpline</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;PCHIP 1-D monotonic cubic interpolation.</span>
+<span class="nd">@xp_capabilities</span><span class="p">(</span>
+    <span class="n">cpu_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">jax_jit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">skip_backends</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;dask.array&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;https://github.com/data-apis/array-api-extra/issues/488&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PchipInterpolator</span><span class="p">(</span><span class="n">CubicHermiteSpline</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;PCHIP shape-preserving interpolator (C1 smooth).</span>
 
 <span class="sd">    ``x`` and ``y`` are arrays of values used to approximate some function f,</span>
 <span class="sd">    with ``y = f(x)``. The interpolant uses monotonic cubic splines</span>
@@ -270,15 +283,9 @@
 <span class="sd">        A 1-D array of monotonically increasing real values. ``x`` cannot</span>
 <span class="sd">        include duplicate values (otherwise f is overspecified)</span>
 <span class="sd">    y : ndarray, shape (..., npoints, ...)</span>
-<span class="sd">        A N-D array of real values. ``y``&#39;s length along the interpolation</span>
+<span class="sd">        An N-D array of real values. ``y``&#39;s length along the interpolation</span>
 <span class="sd">        axis must be equal to the length of ``x``. Use the ``axis``</span>
 <span class="sd">        parameter to select the interpolation axis.</span>
-
-<span class="sd">        .. deprecated:: 1.13.0</span>
-<span class="sd">            Complex data is deprecated and will raise an error in SciPy 1.15.0.</span>
-<span class="sd">            If you are trying to use the real components of the passed array,</span>
-<span class="sd">            use ``np.real`` on ``y``.</span>
-
 <span class="sd">    axis : int, optional</span>
 <span class="sd">        Axis in the ``y`` array corresponding to the x-coordinate values. Defaults</span>
 <span class="sd">        to ``axis=0``.</span>
@@ -291,7 +298,10 @@
 <span class="sd">    __call__</span>
 <span class="sd">    derivative</span>
 <span class="sd">    antiderivative</span>
+<span class="sd">    integrate</span>
+<span class="sd">    solve</span>
 <span class="sd">    roots</span>
+
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -333,33 +343,35 @@
 <span class="sd">           monotone piecewise cubic interpolants,</span>
 <span class="sd">           SIAM J. Sci. Comput., 5(2), 300-304 (1984).</span>
 <span class="sd">           :doi:`10.1137/0905021`.</span>
-<span class="sd">    .. [2] see, e.g., C. Moler, Numerical Computing with Matlab, 2004.</span>
+<span class="sd">    .. [2] C. Moler, Numerical Computing with Matlab, 2004.</span>
 <span class="sd">           :doi:`10.1137/1.9780898717952`</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">iscomplexobj</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+    <span class="c1"># PchipInterpolator is not generic in scipy-stubs</span>
+    <span class="n">__class_getitem__</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">xp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">&quot;complex floating&quot;</span><span class="p">):</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;`PchipInterpolator` only works with real values for `y`. &quot;</span>
-                   <span class="s2">&quot;Passing an array with a complex dtype for `y` is deprecated &quot;</span>
-                   <span class="s2">&quot;and will raise an error in SciPy 1.15.0. If you are trying to &quot;</span>
-                   <span class="s2">&quot;use the real components of the passed array, use `np.real` on &quot;</span>
-                   <span class="s2">&quot;the array before passing to `PchipInterpolator`.&quot;</span><span class="p">)</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">xp</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">ndim</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-        <span class="n">dk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_derivatives</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+                   <span class="s2">&quot;If you are trying to use the real components of the passed array, &quot;</span>
+                   <span class="s2">&quot;use `np.real` on the array before passing to `PchipInterpolator`.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">xv</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">ndim</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">dk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_derivatives</span><span class="p">(</span><span class="n">xv</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">xp</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dk</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="n">extrapolate</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_edge_case</span><span class="p">(</span><span class="n">h0</span><span class="p">,</span> <span class="n">h1</span><span class="p">,</span> <span class="n">m0</span><span class="p">,</span> <span class="n">m1</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_edge_case</span><span class="p">(</span><span class="n">h0</span><span class="p">,</span> <span class="n">h1</span><span class="p">,</span> <span class="n">m0</span><span class="p">,</span> <span class="n">m1</span><span class="p">,</span> <span class="n">xp</span><span class="p">):</span>
         <span class="c1"># one-sided three-point estimate for the derivative</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">h0</span> <span class="o">+</span> <span class="n">h1</span><span class="p">)</span><span class="o">*</span><span class="n">m0</span> <span class="o">-</span> <span class="n">h0</span><span class="o">*</span><span class="n">m1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">h0</span> <span class="o">+</span> <span class="n">h1</span><span class="p">)</span>
 
         <span class="c1"># try to preserve shape</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">m0</span><span class="p">)</span>
-        <span class="n">mask2</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">m0</span><span class="p">)</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">m1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">3.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">m0</span><span class="p">))</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">!=</span> <span class="n">xp</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">m0</span><span class="p">)</span>
+        <span class="n">mask2</span> <span class="o">=</span> <span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">m0</span><span class="p">)</span> <span class="o">!=</span> <span class="n">xp</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">m1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">3.</span><span class="o">*</span><span class="n">xp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">m0</span><span class="p">))</span>
         <span class="n">mmm</span> <span class="o">=</span> <span class="p">(</span><span class="o">~</span><span class="n">mask</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">mask2</span>
 
         <span class="n">d</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
@@ -368,7 +380,7 @@
         <span class="k">return</span> <span class="n">d</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_find_derivatives</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_find_derivatives</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xp</span><span class="p">):</span>
         <span class="c1"># Determine the derivatives at the points y_k, d_k, by using</span>
         <span class="c1">#  PCHIP algorithm is:</span>
         <span class="c1"># We choose the derivatives at the point x_k by</span>
@@ -389,12 +401,12 @@
 
         <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="c1"># edge case: only have two points, use linear interpolation</span>
-            <span class="n">dk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">dk</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
             <span class="n">dk</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">mk</span>
             <span class="n">dk</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mk</span>
-            <span class="k">return</span> <span class="n">dk</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">y_shape</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">xp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">dk</span><span class="p">,</span> <span class="n">y_shape</span><span class="p">)</span>
 
-        <span class="n">smk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">mk</span><span class="p">)</span>
+        <span class="n">smk</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">mk</span><span class="p">)</span>
         <span class="n">condition</span> <span class="o">=</span> <span class="p">(</span><span class="n">smk</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">smk</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">|</span> <span class="p">(</span><span class="n">mk</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">mk</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
 
         <span class="n">w1</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">hk</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">hk</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -411,13 +423,13 @@
 
         <span class="c1"># special case endpoints, as suggested in</span>
         <span class="c1"># Cleve Moler, Numerical Computing with MATLAB, Chap 3.6 (pchiptx.m)</span>
-        <span class="n">dk</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">PchipInterpolator</span><span class="o">.</span><span class="n">_edge_case</span><span class="p">(</span><span class="n">hk</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hk</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">mk</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mk</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">dk</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">PchipInterpolator</span><span class="o">.</span><span class="n">_edge_case</span><span class="p">(</span><span class="n">hk</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">hk</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">mk</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">mk</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">dk</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">PchipInterpolator</span><span class="o">.</span><span class="n">_edge_case</span><span class="p">(</span><span class="n">hk</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hk</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">mk</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mk</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xp</span><span class="o">=</span><span class="n">xp</span><span class="p">)</span>
+        <span class="n">dk</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">PchipInterpolator</span><span class="o">.</span><span class="n">_edge_case</span><span class="p">(</span><span class="n">hk</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">hk</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">mk</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">mk</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">xp</span><span class="o">=</span><span class="n">xp</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">dk</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">y_shape</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">xp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">dk</span><span class="p">,</span> <span class="n">y_shape</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">pchip_interpolate</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pchip_interpolate</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convenience function for pchip interpolation.</span>
 
@@ -435,12 +447,6 @@
 <span class="sd">        A 1-D array of real values. `yi`&#39;s length along the interpolation</span>
 <span class="sd">        axis must be equal to the length of `xi`. If N-D array, use axis</span>
 <span class="sd">        parameter to select correct axis.</span>
-
-<span class="sd">        .. deprecated:: 1.13.0</span>
-<span class="sd">            Complex data is deprecated and will raise an error in</span>
-<span class="sd">            SciPy 1.15.0. If you are trying to use the real components of</span>
-<span class="sd">            the passed array, use ``np.real`` on `yi`.</span>
-
 <span class="sd">    x : scalar or array_like</span>
 <span class="sd">        Of length M.</span>
 <span class="sd">    der : int or list, optional</span>
@@ -485,9 +491,13 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">P</span><span class="o">.</span><span class="n">derivative</span><span class="p">(</span><span class="n">nu</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">nu</span> <span class="ow">in</span> <span class="n">der</span><span class="p">]</span>
 
 
-<span class="k">class</span> <span class="nc">Akima1DInterpolator</span><span class="p">(</span><span class="n">CubicHermiteSpline</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Akima interpolator</span>
+<span class="nd">@xp_capabilities</span><span class="p">(</span><span class="n">cpu_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xfail_backends</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;dask.array&quot;</span><span class="p">,</span> <span class="s2">&quot;lacks nd fancy indexing&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;jax.numpy&quot;</span><span class="p">,</span> <span class="s2">&quot;immutable arrays&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;array_api_strict&quot;</span><span class="p">,</span> <span class="s2">&quot;fancy indexing __setitem__&quot;</span><span class="p">),</span>
+<span class="p">])</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Akima1DInterpolator</span><span class="p">(</span><span class="n">CubicHermiteSpline</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Akima &quot;visually pleasing&quot; interpolator (C1 smooth).</span>
 
 <span class="sd">    Fit piecewise cubic polynomials, given vectors x and y. The interpolation</span>
 <span class="sd">    method by Akima uses a continuously differentiable sub-spline built from</span>
@@ -502,12 +512,6 @@
 <span class="sd">        N-D array of real values. The length of ``y`` along the interpolation axis</span>
 <span class="sd">        must be equal to the length of ``x``. Use the ``axis`` parameter to</span>
 <span class="sd">        select the interpolation axis.</span>
-
-<span class="sd">        .. deprecated:: 1.13.0</span>
-<span class="sd">            Complex data is deprecated and will raise an error in SciPy 1.15.0.</span>
-<span class="sd">            If you are trying to use the real components of the passed array,</span>
-<span class="sd">            use ``np.real`` on ``y``.</span>
-
 <span class="sd">    axis : int, optional</span>
 <span class="sd">        Axis in the ``y`` array corresponding to the x-coordinate values. Defaults</span>
 <span class="sd">        to ``axis=0``.</span>
@@ -518,15 +522,17 @@
 <span class="sd">        .. versionadded:: 1.13.0</span>
 
 <span class="sd">    extrapolate : {bool, None}, optional</span>
-<span class="sd">        If bool, determines whether to extrapolate to out-of-bounds points </span>
-<span class="sd">        based on first and last intervals, or to return NaNs. If None, </span>
+<span class="sd">        If bool, determines whether to extrapolate to out-of-bounds points</span>
+<span class="sd">        based on first and last intervals, or to return NaNs. If None,</span>
 <span class="sd">        ``extrapolate`` is set to False.</span>
-<span class="sd">        </span>
+
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
 <span class="sd">    __call__</span>
 <span class="sd">    derivative</span>
 <span class="sd">    antiderivative</span>
+<span class="sd">    integrate</span>
+<span class="sd">    solve</span>
 <span class="sd">    roots</span>
 
 <span class="sd">    See Also</span>
@@ -591,7 +597,7 @@
 <span class="sd">    &gt;&gt;&gt; ax.legend()</span>
 <span class="sd">    &gt;&gt;&gt; fig.show()</span>
 
-<span class="sd">    The overshoot that occured in ``&quot;akima&quot;`` has been avoided in ``&quot;makima&quot;``.</span>
+<span class="sd">    The overshoot that occurred in ``&quot;akima&quot;`` has been avoided in ``&quot;makima&quot;``.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -603,79 +609,112 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;akima&quot;</span><span class="p">,</span> <span class="s2">&quot;makima&quot;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;akima&quot;</span><span class="p">,</span> 
+    <span class="c1"># PchipInterpolator is not generic in scipy-stubs</span>
+    <span class="n">__class_getitem__</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;akima&quot;</span><span class="p">,</span> <span class="s2">&quot;makima&quot;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;akima&quot;</span><span class="p">,</span>
                  <span class="n">extrapolate</span><span class="p">:</span><span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;akima&quot;</span><span class="p">,</span> <span class="s2">&quot;makima&quot;</span><span class="p">}:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`method`=</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2"> is unsupported.&quot;</span><span class="p">)</span>
         <span class="c1"># Original implementation in MATLAB by N. Shamsundar (BSD licensed), see</span>
         <span class="c1"># https://www.mathworks.com/matlabcentral/fileexchange/1814-akima-interpolation</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">iscomplexobj</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+        <span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">xp</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">&quot;complex floating&quot;</span><span class="p">):</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;`Akima1DInterpolator` only works with real values for `y`. &quot;</span>
-                   <span class="s2">&quot;Passing an array with a complex dtype for `y` is deprecated &quot;</span>
-                   <span class="s2">&quot;and will raise an error in SciPy 1.15.0. If you are trying to &quot;</span>
-                   <span class="s2">&quot;use the real components of the passed array, use `np.real` on &quot;</span>
-                   <span class="s2">&quot;the array before passing to `Akima1DInterpolator`.&quot;</span><span class="p">)</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                   <span class="s2">&quot;If you are trying to use the real components of the passed array, &quot;</span>
+                   <span class="s2">&quot;use `np.real` on the array before passing to &quot;</span>
+                   <span class="s2">&quot;`Akima1DInterpolator`.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="c1"># Akima extrapolation historically False; parent class defaults to True.</span>
         <span class="n">extrapolate</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">extrapolate</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">extrapolate</span>
 
-        <span class="c1"># determine slopes between breakpoints</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-        <span class="n">dx</span> <span class="o">=</span> <span class="n">dx</span><span class="p">[(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
-        <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">dx</span>
-
-        <span class="c1"># add two additional points on the left ...</span>
-        <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">m</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-        <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-        <span class="c1"># ... and on the right</span>
-        <span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
-        <span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
-
-        <span class="c1"># if m1 == m2 != m3 == m4, the slope at the breakpoint is not</span>
-        <span class="c1"># defined. This is the fill value:</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
-        <span class="c1"># get the denominator of the slope t</span>
-        <span class="n">dm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;makima&quot;</span><span class="p">:</span>
-            <span class="n">pm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">f1</span> <span class="o">=</span> <span class="n">dm</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">pm</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
-            <span class="n">f2</span> <span class="o">=</span> <span class="n">dm</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">pm</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># edge case: only have two points, use linear interpolation</span>
+            <span class="n">xv</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">ndim</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">hk</span> <span class="o">=</span> <span class="n">xv</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="o">...</span><span class="p">]</span> <span class="o">-</span> <span class="n">xv</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+            <span class="n">mk</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="o">...</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">/</span> <span class="n">hk</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">t</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">mk</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">f1</span> <span class="o">=</span> <span class="n">dm</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
-            <span class="n">f2</span> <span class="o">=</span> <span class="n">dm</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-        <span class="n">f12</span> <span class="o">=</span> <span class="n">f1</span> <span class="o">+</span> <span class="n">f2</span>
-        <span class="c1"># These are the mask of where the slope at breakpoint is defined:</span>
-        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">f12</span> <span class="o">&gt;</span> <span class="mf">1e-9</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">f12</span><span class="p">,</span> <span class="n">initial</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">))</span>
-        <span class="n">x_ind</span><span class="p">,</span> <span class="n">y_ind</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ind</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-        <span class="c1"># Set the slope at breakpoint</span>
-        <span class="n">t</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f1</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[(</span><span class="n">x_ind</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">y_ind</span><span class="p">]</span> <span class="o">+</span>
-                  <span class="n">f2</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[(</span><span class="n">x_ind</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,)</span> <span class="o">+</span> <span class="n">y_ind</span><span class="p">])</span> <span class="o">/</span> <span class="n">f12</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
+            <span class="c1"># determine slopes between breakpoints</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="n">dx</span> <span class="o">=</span> <span class="n">dx</span><span class="p">[(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">dx</span>
+
+            <span class="c1"># add two additional points on the left ...</span>
+            <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">-</span> <span class="n">m</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+            <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">-</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+            <span class="c1"># ... and on the right</span>
+            <span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">-</span> <span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+            <span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">-</span> <span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+            <span class="c1"># if m1 == m2 != m3 == m4, the slope at the breakpoint is not</span>
+            <span class="c1"># defined. This is the fill value:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="o">...</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span>
+            <span class="c1"># get the denominator of the slope t</span>
+            <span class="n">dm</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;makima&quot;</span><span class="p">:</span>
+                <span class="n">pm</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="o">...</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span>
+                <span class="n">f1</span> <span class="o">=</span> <span class="n">dm</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="o">...</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">pm</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="o">...</span><span class="p">]</span>
+                <span class="n">f2</span> <span class="o">=</span> <span class="n">dm</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">pm</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">f1</span> <span class="o">=</span> <span class="n">dm</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="o">...</span><span class="p">]</span>
+                <span class="n">f2</span> <span class="o">=</span> <span class="n">dm</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+            <span class="c1"># makima is more numerically stable for small f12,</span>
+            <span class="c1"># so a finite cutoff should not improve any behavior</span>
+            <span class="c1"># however, akima has a qualitative discontinuity near f12=0</span>
+            <span class="c1"># a finite cutoff moves it, but cannot remove it.</span>
+            <span class="c1"># the cutoff break_mult could be made a keyword argument</span>
+            <span class="c1"># method=&#39;akima&#39; also benefits from a check for m2=m3</span>
+            <span class="n">break_mult</span> <span class="o">=</span> <span class="mf">1.e-9</span>
+
+            <span class="n">f12</span> <span class="o">=</span> <span class="n">f1</span> <span class="o">+</span> <span class="n">f2</span>
+
+            <span class="c1"># These are the mask of where the slope at breakpoint is defined:</span>
+            <span class="n">mmax</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">f12</span><span class="p">)</span> <span class="k">if</span> <span class="n">xp_size</span><span class="p">(</span><span class="n">f12</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="n">xp</span><span class="o">.</span><span class="n">inf</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">f12</span> <span class="o">&gt;</span> <span class="n">break_mult</span> <span class="o">*</span> <span class="n">mmax</span><span class="p">)</span>
+
+            <span class="n">x_ind</span><span class="p">,</span> <span class="n">y_ind</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ind</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="c1"># Set the slope at breakpoint</span>
+            <span class="n">t</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[(</span><span class="n">x_ind</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">y_ind</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">f2</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">/</span> <span class="n">f12</span><span class="p">[</span><span class="n">ind</span><span class="p">])</span>
+                <span class="o">*</span> <span class="p">(</span><span class="n">m</span><span class="p">[(</span><span class="n">x_ind</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,)</span> <span class="o">+</span> <span class="n">y_ind</span><span class="p">]</span> <span class="o">-</span> <span class="n">m</span><span class="p">[(</span><span class="n">x_ind</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">y_ind</span><span class="p">])</span>
+            <span class="p">)</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="n">extrapolate</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span>
 
-    <span class="k">def</span> <span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Extending a 1-D Akima interpolator is not &quot;</span>
                                   <span class="s2">&quot;yet implemented&quot;</span><span class="p">)</span>
 
     <span class="c1"># These are inherited from PPoly, but they do not produce an Akima</span>
     <span class="c1"># interpolator. Hence stub them out.</span>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_spline</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tck</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_spline</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tck</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This method does not make sense for &quot;</span>
                                   <span class="s2">&quot;an Akima interpolator.&quot;</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_bernstein_basis</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">bp</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_bernstein_basis</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">bp</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This method does not make sense for &quot;</span>
                                   <span class="s2">&quot;an Akima interpolator.&quot;</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">CubicSpline</span><span class="p">(</span><span class="n">CubicHermiteSpline</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cubic spline data interpolator.</span>
+<span class="nd">@xp_capabilities</span><span class="p">(</span>
+    <span class="n">cpu_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">jax_jit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">skip_backends</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;dask.array&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;https://github.com/data-apis/array-api-extra/issues/488&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CubicSpline</span><span class="p">(</span><span class="n">CubicHermiteSpline</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Piecewise cubic interpolator to fit values (C2 smooth).</span>
 
 <span class="sd">    Interpolate data with a piecewise cubic polynomial which is twice</span>
 <span class="sd">    continuously differentiable [1]_. The result is represented as a `PPoly`</span>
@@ -717,7 +756,7 @@
 <span class="sd">        If `bc_type` is a 2-tuple, the first and the second value will be</span>
 <span class="sd">        applied at the curve start and end respectively. The tuple values can</span>
 <span class="sd">        be one of the previously mentioned strings (except &#39;periodic&#39;) or a</span>
-<span class="sd">        tuple `(order, deriv_values)` allowing to specify arbitrary</span>
+<span class="sd">        tuple ``(order, deriv_values)`` allowing to specify arbitrary</span>
 <span class="sd">        derivatives at curve ends:</span>
 
 <span class="sd">        * `order`: the derivative order, 1 or 2.</span>
@@ -751,6 +790,7 @@
 <span class="sd">    derivative</span>
 <span class="sd">    antiderivative</span>
 <span class="sd">    integrate</span>
+<span class="sd">    solve</span>
 <span class="sd">    roots</span>
 
 <span class="sd">    See Also</span>
@@ -840,8 +880,9 @@
 <span class="sd">    .. [2] Carl de Boor, &quot;A Practical Guide to Splines&quot;, Springer-Verlag, 1978.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bc_type</span><span class="o">=</span><span class="s1">&#39;not-a-knot&#39;</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bc_type</span><span class="o">=</span><span class="s1">&#39;not-a-knot&#39;</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">np_compat</span><span class="p">)</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
         <span class="n">bc</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_bc</span><span class="p">(</span><span class="n">bc_type</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">axis</span><span class="p">)</span>
@@ -889,8 +930,9 @@
                 <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">dxr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">slope</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dxr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">slope</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                 <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">slope</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-                <span class="n">s</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">overwrite_a</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite_b</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                          <span class="n">check_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">overwrite_a</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite_b</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                          <span class="n">check_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;periodic&#39;</span><span class="p">:</span>
                 <span class="c1"># In case when number of points is 3 we compute the derivatives</span>
                 <span class="c1"># manually</span>
@@ -950,11 +992,15 @@
                     <span class="n">b2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">a_m2_m1</span>
 
                     <span class="c1"># s1 and s2 are the solutions of (n-2, n-2) system</span>
-                    <span class="n">s1</span> <span class="o">=</span> <span class="n">solve_banded</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">Ac</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">overwrite_ab</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">b1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">s1</span> <span class="o">=</span> <span class="n">solve_banded</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">Ac</span><span class="p">,</span> <span class="n">b1</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">overwrite_ab</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                       <span class="n">overwrite_b</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">check_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="n">s1</span> <span class="o">=</span> <span class="n">s1</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">b1</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
-                    <span class="n">s2</span> <span class="o">=</span> <span class="n">solve_banded</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">Ac</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">overwrite_ab</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">b2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">s2</span> <span class="o">=</span> <span class="n">solve_banded</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">Ac</span><span class="p">,</span> <span class="n">b2</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">overwrite_ab</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                       <span class="n">overwrite_b</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">check_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="n">s2</span> <span class="o">=</span> <span class="n">s2</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">b2</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
                     <span class="c1"># computing the s[n-2] solution:</span>
                     <span class="n">s_m1</span> <span class="o">=</span> <span class="p">((</span><span class="n">b</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">a_m1_0</span> <span class="o">*</span> <span class="n">s1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">a_m1_m2</span> <span class="o">*</span> <span class="n">s1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span>
@@ -996,14 +1042,17 @@
                         <span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                         <span class="n">b</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">bc_end</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">dx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
 
-                    <span class="n">s</span> <span class="o">=</span> <span class="n">solve_banded</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">overwrite_ab</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">solve_banded</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">overwrite_ab</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                      <span class="n">overwrite_b</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="n">extrapolate</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_validate_bc</span><span class="p">(</span><span class="n">bc_type</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">expected_deriv_shape</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_bc</span><span class="p">(</span><span class="n">bc_type</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">expected_deriv_shape</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate and prepare boundary conditions.</span>
 
 <span class="sd">        Returns</span>
@@ -1052,7 +1101,7 @@
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                         <span class="s2">&quot;A specified derivative value must be &quot;</span>
                         <span class="s2">&quot;given in the form (order, value).&quot;</span>
-                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+                    <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
                 <span class="k">if</span> <span class="n">deriv_order</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The specified derivative order must &quot;</span>

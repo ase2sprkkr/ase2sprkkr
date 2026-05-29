@@ -26,6 +26,7 @@ Full name: **ase2sprkkr.physics.lattice\_data**
       :template: custom-base-template.rst
    
       international_numbers_to_AP
+      hall_numbers_to_AP
    
    
 
@@ -38,6 +39,7 @@ Full name: **ase2sprkkr.physics.lattice\_data**
       :toctree:
       :template: custom-base-template.rst
    
+      ap_number_from_spacegroup
       reorder_matrix
    
    

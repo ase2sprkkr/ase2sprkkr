@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>process_output_reader &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -97,7 +97,7 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.readline_until.html">readline_until</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.run_coro_sync.html">run_coro_sync</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.AsyncioFileReader.html">AsyncioFileReader</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.ProcessOutputReader.html">ProcessOutputReader</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.ProcessOutputParser.html">ProcessOutputParser</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
@@ -155,10 +155,10 @@
 <h1>process_output_reader<a class="headerlink" href="#process-output-reader" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.common.process_output_reader</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-4ee62672258a302f01eceaf165777a257e5814ec.png" alt="Inheritance diagram of ase2sprkkr.common.process_output_reader.AsyncioFileReader, ase2sprkkr.common.process_output_reader.ProcessOutputReader" usemap="#inheritance6bfe19aff9" class="inheritance graphviz" /></div>
-<map id="inheritance6bfe19aff9" name="inheritance6bfe19aff9">
-<area shape="rect" id="node1" href="ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader" target="_top" title="File reader that mimics asyncio StreamReader." alt="" coords="15,55,158,80"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,5,168,31"/>
+<div class="graphviz"><img src="../_images/inheritance-0dc66e4a9b1f909ff47030c75527587460361972.png" alt="Inheritance diagram of ase2sprkkr.common.process_output_reader.AsyncioFileReader, ase2sprkkr.common.process_output_reader.ProcessOutputParser" usemap="#inheritance7f96ae2254" class="inheritance graphviz" /></div>
+<map id="inheritance7f96ae2254" name="inheritance7f96ae2254">
+<area shape="rect" id="node1" href="ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader" target="_top" title="File reader that mimics asyncio StreamReader." alt="" coords="12,57,154,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,5,161,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -185,7 +185,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader" title="ase2sprkkr.common.process_output_reader.AsyncioFileReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AsyncioFileReader</span></code></a>(filename[, buffersize])</p></td>
 <td><p>File reader that mimics asyncio StreamReader.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader" title="ase2sprkkr.common.process_output_reader.ProcessOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProcessOutputReader</span></code></a>([print_output, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" title="ase2sprkkr.common.process_output_reader.ProcessOutputParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProcessOutputParser</span></code></a>([print_output, ...])</p></td>
 <td><p>Class, that run a process, optionally saves all the output of the process to a file, and pass the stdout and stderr of the process to its two async routines, read_error and read_output.</p></td>
 </tr>
 </tbody>

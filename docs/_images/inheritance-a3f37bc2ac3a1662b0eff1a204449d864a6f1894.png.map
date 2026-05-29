@@ -1,6 +1,0 @@
-<map id="inheritancecca9ce6de4" name="inheritancecca9ce6de4">
-<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.dos.DosProcessRunner.html#ase2sprkkr.outputs.readers.dos.DosProcessRunner" target="_top" title="ARPES task output reader currently do nothing, just have a special" alt="" coords="175,55,317,80"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrProcessRunner.html#ase2sprkkr.outputs.task_result.KkrProcessRunner" target="_top" title="Class, that run a process and read its output using underlined" alt="" coords="5,55,145,80"/>
-<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.dos.DosResult.html#ase2sprkkr.outputs.readers.dos.DosResult" target="_top" title="Density of states (DOS) results provides access to the computed" alt="" coords="202,5,290,31"/>
-<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="29,5,121,31"/>
-</map>

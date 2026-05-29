@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Python &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Shell" href="ase2sprkkr.gui.shell.Shell.html" />
-    <link rel="prev" title="JupyterLab" href="ase2sprkkr.gui.shell.JupyterLab.html" /> 
+    <link rel="prev" title="Pdb" href="ase2sprkkr.gui.shell.Pdb.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -82,7 +82,9 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.chdir.html">chdir</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.format_as_python_shell.html">format_as_python_shell</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.split_top_level_chunks.html">split_top_level_chunks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.CommandlineShell.html">CommandlineShell</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.JupyterLab.html">JupyterLab</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.Pdb.html">Pdb</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Python</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.Shell.html">Shell</a></li>
 </ul>
@@ -132,13 +134,14 @@
 <h1>Python<a class="headerlink" href="#python" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.gui.shell.Python">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.gui.shell.</span></span><span class="sig-name descname"><span class="pre">Python</span></span><a class="reference internal" href="../_modules/ase2sprkkr/gui/shell.html#Python"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.gui.shell.Python" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.gui.shell.</span></span><span class="sig-name descname"><span class="pre">Python</span></span><a class="reference internal" href="../_modules/ase2sprkkr/gui/shell.html#Python"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.gui.shell.Python" title="Link to this definition"></a></dt>
 <dd><p>Run the given code in a Python shell</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-666dac5e91a1a9c0b7ec9c3952e4e4b16c07f0ee.png" alt="Inheritance diagram of ase2sprkkr.gui.shell.Python" usemap="#inheritance9d9fa8863d" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-675ea07b0e7698c4666de4cff0643bf6ea0e8f94.png" alt="Inheritance diagram of ase2sprkkr.gui.shell.Python" usemap="#inheritance9d9fa8863d" class="inheritance graphviz" /></div>
 <map id="inheritance9d9fa8863d" name="inheritance9d9fa8863d">
-<area shape="rect" id="node1" href="#ase2sprkkr.gui.shell.Python" target="_top" title="Run the given code in a Python shell" alt="" coords="124,5,227,31"/>
-<area shape="rect" id="node2" href="ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell" target="_top" title="A base class for ASE2SPRKKR interactive computation using ase2sprkkr tool" alt="" coords="5,5,95,31"/>
+<area shape="rect" id="node1" href="ase2sprkkr.gui.shell.CommandlineShell.html#ase2sprkkr.gui.shell.CommandlineShell" target="_top" title="Run the given code in a commandline shell" alt="" coords="123,5,302,33"/>
+<area shape="rect" id="node3" href="#ase2sprkkr.gui.shell.Python" target="_top" title="Run the given code in a Python shell" alt="" coords="332,5,433,33"/>
+<area shape="rect" id="node2" href="ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell" target="_top" title="A base class for ASE2SPRKKR interactive computation using ase2sprkkr tool" alt="" coords="5,5,94,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -146,11 +149,6 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.gui.shell.Python.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.gui.shell.Python.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.gui.shell.Python.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/gui/shell.html#Python.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.gui.shell.Python.save" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -166,7 +164,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.gui.shell.JupyterLab.html" class="btn btn-neutral float-left" title="JupyterLab" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.gui.shell.Pdb.html" class="btn btn-neutral float-left" title="Pdb" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.gui.shell.Shell.html" class="btn btn-neutral float-right" title="Shell" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

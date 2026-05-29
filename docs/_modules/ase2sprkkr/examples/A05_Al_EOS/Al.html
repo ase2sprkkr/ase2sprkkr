@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.examples.A05_Al_EOS.Al &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -91,51 +91,51 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.examples.A05_Al_EOS.Al</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; Total energy SCF calculations as a function of Volume and corresponding</span>
-<span class="sd">equation of state fiting. &quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Total energy SCF calculations as a function of Volume and corresponding</span>
+<span class="sd">equation of state fiting.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
-<span class="kn">from</span> <span class="nn">ase2sprkkr.sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
-<span class="kn">from</span> <span class="nn">ase.io.trajectory</span> <span class="kn">import</span> <span class="n">Trajectory</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
-<span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">kJ</span>
-<span class="kn">from</span> <span class="nn">ase.eos</span> <span class="kn">import</span> <span class="n">EquationOfState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.build</span><span class="w"> </span><span class="kn">import</span> <span class="n">bulk</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.io.trajectory</span><span class="w"> </span><span class="kn">import</span> <span class="n">Trajectory</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">kJ</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.eos</span><span class="w"> </span><span class="kn">import</span> <span class="n">EquationOfState</span>
 
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A05_Al_EOS.Al.main.html#ase2sprkkr.examples.A05_Al_EOS.Al.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">al</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;Al&#39;</span><span class="p">,</span> <span class="s1">&#39;fcc&#39;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">4.0</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">al</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s2">&quot;Al&quot;</span><span class="p">,</span> <span class="s2">&quot;fcc&quot;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">4.0</span><span class="p">)</span>
     <span class="n">cell</span> <span class="o">=</span> <span class="n">al</span><span class="o">.</span><span class="n">get_cell</span><span class="p">()</span>
-    <span class="n">traj</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="s1">&#39;Al.traj&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">traj</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="s2">&quot;Al.traj&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
 
     <span class="c1"># run calculation</span>
-    <span class="n">calc</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">al</span><span class="p">,</span><span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">al</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NL</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NE</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
-    <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">MIX</span><span class="o">=</span><span class="mf">0.20</span>
-    <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">ImE</span><span class="o">=</span><span class="mf">0.0</span>
-    <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">GRID</span><span class="o">=</span><span class="mi">5</span>
+    <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">MIX</span> <span class="o">=</span> <span class="mf">0.20</span>
+    <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">ImE</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">GRID</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">FULLPOT</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">MODE</span><span class="o">.</span><span class="n">MODE</span><span class="o">=</span><span class="s1">&#39;SREL&#39;</span>
+    <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">MODE</span><span class="o">.</span><span class="n">MODE</span> <span class="o">=</span> <span class="s2">&quot;SREL&quot;</span>
 
     <span class="n">al</span><span class="o">.</span><span class="n">set_calculator</span><span class="p">(</span><span class="n">calc</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.20</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
-       <span class="n">al</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">cell</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">scale_atoms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-       <span class="n">al</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
-       <span class="n">traj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">al</span><span class="p">)</span>
+        <span class="n">al</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">cell</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">scale_atoms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">al</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+        <span class="n">traj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">al</span><span class="p">)</span>
 
     <span class="c1"># Now lets plot the result and fit EOS</span>
-    <span class="n">configs</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;Al.traj@0:&#39;</span><span class="p">)</span>  <span class="c1"># read 5 configurations</span>
+    <span class="n">configs</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">&quot;Al.traj@0:&quot;</span><span class="p">)</span>  <span class="c1"># read 5 configurations</span>
     <span class="c1"># Extract volumes and energies:</span>
     <span class="n">volumes</span> <span class="o">=</span> <span class="p">[</span><span class="n">al</span><span class="o">.</span><span class="n">get_volume</span><span class="p">()</span> <span class="k">for</span> <span class="n">al</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">]</span>
     <span class="n">energies</span> <span class="o">=</span> <span class="p">[</span><span class="n">al</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span> <span class="k">for</span> <span class="n">al</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">]</span>
     <span class="n">eos</span> <span class="o">=</span> <span class="n">EquationOfState</span><span class="p">(</span><span class="n">volumes</span><span class="p">,</span> <span class="n">energies</span><span class="p">)</span>
     <span class="n">v0</span><span class="p">,</span> <span class="n">e0</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="n">eos</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">B</span> <span class="o">/</span> <span class="n">kJ</span> <span class="o">*</span> <span class="mf">1.0e24</span><span class="p">,</span> <span class="s1">&#39;GPa&#39;</span><span class="p">)</span>
-    <span class="n">eos</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;Al-eos.png&#39;</span><span class="p">)</span></div>
+    <span class="nb">print</span><span class="p">(</span><span class="n">B</span> <span class="o">/</span> <span class="n">kJ</span> <span class="o">*</span> <span class="mf">1.0e24</span><span class="p">,</span> <span class="s2">&quot;GPa&quot;</span><span class="p">)</span>
+    <span class="n">eos</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;Al-eos.png&quot;</span><span class="p">)</span></div>
 
 
 

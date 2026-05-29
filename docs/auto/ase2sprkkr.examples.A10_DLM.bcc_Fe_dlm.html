@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>bcc_Fe_dlm &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -136,7 +136,56 @@
 <h1>bcc_Fe_dlm<a class="headerlink" href="#bcc-fe-dlm" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.examples.A10_DLM.bcc_Fe_dlm</strong></p>
 <p class="rubric">Description</p>
-<p class="rubric" id="module-ase2sprkkr.examples.A10_DLM.bcc_Fe_dlm">Functions</p>
+<p id="module-ase2sprkkr.examples.A10_DLM.bcc_Fe_dlm">Script demonstrating how to set up a disordered local moment (DLM) calculation using bcc Fe as the test case.</p>
+<p>Such calculations are used to describe the paramagnetic state of materials,
+where local magnetic moments on atoms persist, but where the net magnetisation
+of the material is zero on account of thermally induced spin fluctuations. The
+CPA is used to average over possible orientations of magnetic moment. Above the Curie
+temperature, all orientations of magnetic moment are equally probably, and the
+probability distribution of orientations of magnetic moments is uniform on the sphere.
+In the absence of spin-orbit coupling, the CPA condition for a full average (using
+an angular integral) over the sphere with uniform probability distribution can be shown
+to be mathematically equivalent to the CPA condition for a 50:50 Ising ‘alloy’ of ‘up’
+and ‘down’ magnetic moments. (Note that this equality does not strictly hold in the
+case where spin-orbit effects are present, as in a fully relativistic calculation.)</p>
+<p>A DLM calculation should be iterated to self-consistency to check whether the local
+moments ‘collapse’ (as frequently happens for elements like Cr, Ni) or whether they
+are self-sustaining (as is typical for Fe, Co).</p>
+<p>Once you have run this script and iterated to self-consistency, if you run
+<cite>tail Fe.pot_new</cite>
+you should find that, although the net magnetisation of the calculation is zero,
+the two Fe atoms have equal and opposite magnetic moments, each of magnitude
+approximately 2.16 mu_B. This confirms that the local moments are self-sustaining,
+and that bcc Fe is a ‘good’ local moment system.</p>
+<dl class="simple">
+<dt>Some appropriate references for the disordered local moment (DLM) picture are:</dt><dd><ul class="simple">
+<li><ol class="upperalpha simple">
+<li><ol class="upperalpha simple" start="10">
+<li><p>Pindor et al., J. Phys. F: Met. Phys. 13, 979 (1983)</p></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><ol class="upperalpha simple" start="10">
+<li><ol class="upperalpha simple" start="2">
+<li><p>Staunton et al., J. Magn. Magn. Mater. 45, 15-22 (1984)</p></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><ol class="upperalpha simple" start="2">
+<li><ol class="upperalpha simple" start="12">
+<li><p>Gyorffy et al., J. Phys. F: Met. Phys. 15, 1337 (1985)</p></li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</dd>
+</dl>
+<p>Author: Christopher D. Woodgate, University of Bristol, 2025</p>
+<p>Email: <a class="reference external" href="mailto:christopher&#46;woodgate&#37;&#52;&#48;bristol&#46;ac&#46;uk">christopher<span>&#46;</span>woodgate<span>&#64;</span>bristol<span>&#46;</span>ac<span>&#46;</span>uk</a></p>
+<p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.examples.A10_DLM.bcc_Fe_dlm.main.html#ase2sprkkr.examples.A10_DLM.bcc_Fe_dlm.main" title="ase2sprkkr.examples.A10_DLM.bcc_Fe_dlm.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code></a>()</p></td>

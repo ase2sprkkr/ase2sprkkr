@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AlwaysQString &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="BaseBool" href="ase2sprkkr.common.grammar_types.basic.BaseBool.html" />
-    <link rel="prev" title="DefKeyword" href="ase2sprkkr.common.grammar_types.basic.DefKeyword.html" /> 
+    <link rel="prev" title="_keyword_transform_upper" href="ase2sprkkr.common.grammar_types.basic._keyword_transform_upper.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -161,15 +161,15 @@
 <h1>AlwaysQString<a class="headerlink" href="#alwaysqstring" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.basic.AlwaysQString">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.basic.</span></span><span class="sig-name descname"><span class="pre">AlwaysQString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/basic.html#AlwaysQString"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.basic.AlwaysQString" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.basic.</span></span><span class="sig-name descname"><span class="pre">AlwaysQString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/basic.html#AlwaysQString"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.basic.AlwaysQString" title="Link to this definition"></a></dt>
 <dd><p>Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-d60930d853ae0802dffc273ae7c7a33a87575df4.png" alt="Inheritance diagram of ase2sprkkr.common.grammar_types.basic.AlwaysQString" usemap="#inheritanceba16132290" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-386ff412be467294a073d62eb7315b8bc8851665.png" alt="Inheritance diagram of ase2sprkkr.common.grammar_types.basic.AlwaysQString" usemap="#inheritanceba16132290" class="inheritance graphviz" /></div>
 <map id="inheritanceba16132290" name="inheritanceba16132290">
-<area shape="rect" id="node1" href="#ase2sprkkr.common.grammar_types.basic.AlwaysQString" target="_top" title="Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes." alt="" coords="691,5,845,31"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.basic.BaseString.html#ase2sprkkr.common.grammar_types.basic.BaseString" target="_top" title="Base type for string grammar types" alt="" coords="531,5,661,31"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" target="_top" title="grammar_type.TypedGrammarType" alt="" coords="249,5,501,31"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="5,5,220,31"/>
+<area shape="rect" id="node1" href="#ase2sprkkr.common.grammar_types.basic.AlwaysQString" target="_top" title="Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes." alt="" coords="687,5,842,33"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.basic.BaseString.html#ase2sprkkr.common.grammar_types.basic.BaseString" target="_top" title="Base type for string grammar types" alt="" coords="529,5,658,33"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" target="_top" title="grammar_type.TypedGrammarType" alt="" coords="248,5,499,33"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="5,5,219,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -217,7 +217,7 @@ is applied on the result of the
 <span class="sig-name descname"><span class="pre">_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{W:(!#-+--:&lt;-z|~)</span> <span class="pre">|</span> <span class="pre">string</span> <span class="pre">enclosed</span> <span class="pre">in</span> <span class="pre">'&quot;'}</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.basic.AlwaysQString._grammar" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>ParserElement</p>
@@ -265,7 +265,7 @@ is desirable to set even shorter string</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.common.grammar_types.basic.DefKeyword.html" class="btn btn-neutral float-left" title="DefKeyword" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.common.grammar_types.basic._keyword_transform_upper.html" class="btn btn-neutral float-left" title="_keyword_transform_upper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.common.grammar_types.basic.BaseBool.html" class="btn btn-neutral float-right" title="BaseBool" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

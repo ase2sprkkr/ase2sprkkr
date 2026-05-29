@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.grammar\_types.basic**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.grammar_types.basic.AlwaysQString  ase2sprkkr.common.grammar_types.basic.BaseBool  ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits  ase2sprkkr.common.grammar_types.basic.BaseString  ase2sprkkr.common.grammar_types.basic.BasicSeparator  ase2sprkkr.common.grammar_types.basic.BlankSeparator  ase2sprkkr.common.grammar_types.basic.Bool  ase2sprkkr.common.grammar_types.basic.Boolean  ase2sprkkr.common.grammar_types.basic.Date  ase2sprkkr.common.grammar_types.basic.Energy  ase2sprkkr.common.grammar_types.basic.FixedPointNumber  ase2sprkkr.common.grammar_types.basic.Flag  ase2sprkkr.common.grammar_types.basic.IntBool  ase2sprkkr.common.grammar_types.basic.Integer  ase2sprkkr.common.grammar_types.basic.Keyword  ase2sprkkr.common.grammar_types.basic.KeywordSeparator  ase2sprkkr.common.grammar_types.basic.LineString  ase2sprkkr.common.grammar_types.basic.Number  ase2sprkkr.common.grammar_types.basic.ObjectNumber  ase2sprkkr.common.grammar_types.basic.QString  ase2sprkkr.common.grammar_types.basic.Real  ase2sprkkr.common.grammar_types.basic.RealWithUnits  ase2sprkkr.common.grammar_types.basic.Separator  ase2sprkkr.common.grammar_types.basic.String  ase2sprkkr.common.grammar_types.basic.Unsigned 
+.. inheritance-diagram::  ase2sprkkr.common.grammar_types.basic.AlwaysQString  ase2sprkkr.common.grammar_types.basic.BaseBool  ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits  ase2sprkkr.common.grammar_types.basic.BaseString  ase2sprkkr.common.grammar_types.basic.BasicSeparator  ase2sprkkr.common.grammar_types.basic.BlankSeparator  ase2sprkkr.common.grammar_types.basic.Bool  ase2sprkkr.common.grammar_types.basic.Boolean  ase2sprkkr.common.grammar_types.basic.Char  ase2sprkkr.common.grammar_types.basic.Date  ase2sprkkr.common.grammar_types.basic.Energy  ase2sprkkr.common.grammar_types.basic.FixedPointNumber  ase2sprkkr.common.grammar_types.basic.Flag  ase2sprkkr.common.grammar_types.basic.IntBool  ase2sprkkr.common.grammar_types.basic.Integer  ase2sprkkr.common.grammar_types.basic.Keyword  ase2sprkkr.common.grammar_types.basic.KeywordSeparator  ase2sprkkr.common.grammar_types.basic.LineString  ase2sprkkr.common.grammar_types.basic.Number  ase2sprkkr.common.grammar_types.basic.ObjectNumber  ase2sprkkr.common.grammar_types.basic.QString  ase2sprkkr.common.grammar_types.basic.Real  ase2sprkkr.common.grammar_types.basic.RealWithUnits  ase2sprkkr.common.grammar_types.basic.Separator  ase2sprkkr.common.grammar_types.basic.String  ase2sprkkr.common.grammar_types.basic.Unsigned 
       :parts: 1
 
 |
@@ -50,6 +50,9 @@ Full name: **ase2sprkkr.common.grammar\_types.basic**
       :template: custom-base-template.rst
    
       DefKeyword
+      _keyword_transform_identity
+      _keyword_transform_lower
+      _keyword_transform_upper
    
    
 
@@ -70,6 +73,7 @@ Full name: **ase2sprkkr.common.grammar\_types.basic**
       BlankSeparator
       Bool
       Boolean
+      Char
       Date
       Energy
       FixedPointNumber

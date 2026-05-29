@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.core.types &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -92,22 +92,22 @@
              
   <h1>Source code for ase2sprkkr.asr.core.types</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Implement custom types for ASR.&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">click</span>
-<span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
-<span class="kn">from</span> <span class="nn">ase.io.formats</span> <span class="kn">import</span> <span class="n">UnknownFileTypeError</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">parse_dict_string</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">click</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.io.formats</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnknownFileTypeError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_dict_string</span>
 
 
 <div class="viewcode-block" id="AtomsFile">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.types.AtomsFile.html#ase2sprkkr.asr.core.types.AtomsFile">[docs]</a>
-<span class="k">class</span> <span class="nc">AtomsFile</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">ParamType</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AtomsFile</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">ParamType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read atoms object from filename and return Atoms object.&quot;&quot;&quot;</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;atomsfile&quot;</span>
 
 <div class="viewcode-block" id="AtomsFile.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.types.AtomsFile.html#ase2sprkkr.asr.core.types.AtomsFile.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">must_exist</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">must_exist</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize AtomsFile object.</span>
 
 <span class="sd">        Parameters</span>
@@ -127,7 +127,7 @@
 
 <div class="viewcode-block" id="AtomsFile.convert">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.types.AtomsFile.html#ase2sprkkr.asr.core.types.AtomsFile.convert">[docs]</a>
-    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert string to atoms object.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">read</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -141,14 +141,14 @@
 
 <div class="viewcode-block" id="DictStr">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.types.DictStr.html#ase2sprkkr.asr.core.types.DictStr">[docs]</a>
-<span class="k">class</span> <span class="nc">DictStr</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">ParamType</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DictStr</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">ParamType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read atoms object from filename and return Atoms object.&quot;&quot;&quot;</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;dictionary_string&quot;</span>
 
 <div class="viewcode-block" id="DictStr.convert">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.types.DictStr.html#ase2sprkkr.asr.core.types.DictStr.convert">[docs]</a>
-    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert string to a dictionary.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">value</span>
@@ -159,7 +159,7 @@
 
 <div class="viewcode-block" id="clickify_docstring">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.types.clickify_docstring.html#ase2sprkkr.asr.core.types.clickify_docstring">[docs]</a>
-<span class="k">def</span> <span class="nf">clickify_docstring</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">clickify_docstring</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Take a standard docstring a make it Click compatible.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">doc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>

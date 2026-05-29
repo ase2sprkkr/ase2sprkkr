@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.input_parameters.definitions.marpes &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -91,12 +91,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.definitions.marpes</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ase2sprkkr</span> <span class="kn">import</span> <span class="n">InputParameters</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParameters</span>
 
 
 <div class="viewcode-block" id="input_parameters">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.marpes.input_parameters.html#ase2sprkkr.input_parameters.definitions.marpes.input_parameters">[docs]</a>
-<span class="k">def</span> <span class="nf">input_parameters</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">():</span>
     <span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">definition</span><span class="p">(</span><span class="s1">&#39;ARPES&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">input_parameters</span><span class="p">[</span><span class="s1">&#39;TAU&#39;</span><span class="p">][</span><span class="s1">&#39;NKTAB&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="mi">555</span>
     <span class="k">return</span> <span class="n">input_parameters</span></div>

@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.utils.magnetism &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -92,14 +92,14 @@
              
   <h1>Source code for ase2sprkkr.asr.utils.magnetism</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Utility functions for magnetic properties.&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
 <div class="viewcode-block" id="is_magnetic">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.utils.magnetism.is_magnetic.html#ase2sprkkr.asr.utils.magnetism.is_magnetic">[docs]</a>
-<span class="k">def</span> <span class="nf">is_magnetic</span><span class="p">():</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_magnetic</span><span class="p">():</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
     <span class="n">magmom_a</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_initial_magnetic_moments</span><span class="p">()</span>
     <span class="n">maxmom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">magmom_a</span><span class="p">))</span>
@@ -117,7 +117,7 @@
 
 <div class="viewcode-block" id="magnetic_atoms">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.utils.magnetism.magnetic_atoms.html#ase2sprkkr.asr.utils.magnetism.magnetic_atoms">[docs]</a>
-<span class="k">def</span> <span class="nf">magnetic_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">magnetic_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">symbol</span> <span class="ow">in</span> <span class="n">mag_elements</span>
                      <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_chemical_symbols</span><span class="p">()],</span>
                     <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span></div>

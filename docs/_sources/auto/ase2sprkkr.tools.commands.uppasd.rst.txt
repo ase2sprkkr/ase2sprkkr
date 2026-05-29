@@ -5,14 +5,6 @@ Full name: **ase2sprkkr.tools.commands.uppasd**
 
 
 
-.. rubric:: Module class hierarchy
-
-.. inheritance-diagram::  ase2sprkkr.tools.commands.uppasd.JXCProcessor  ase2sprkkr.tools.commands.uppasd.Plotter  ase2sprkkr.tools.commands.uppasd.PotentialFileReader 
-      :parts: 1
-
-|
-
-
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.tools.commands.uppasd
@@ -30,26 +22,13 @@ Full name: **ase2sprkkr.tools.commands.uppasd**
       :toctree:
       :template: custom-base-template.rst
    
-      find_files_by_pattern
       parser
       run
-      write_mom_file
-      write_pos_file
    
    
 
 
    
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-      :toctree:
-      :template: custom-class-template.rst
-   
-      JXCProcessor
-      Plotter
-      PotentialFileReader
    
    
 

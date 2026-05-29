@@ -1,0 +1,901 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.output_files.definitions.rat &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../definitions.html">ase2sprkkr.output_files.definitions</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.output_files.definitions.rat</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.output_files.definitions.rat</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">..output_files_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">OutputFileValueDefinition</span> <span class="k">as</span> <span class="n">V</span><span class="p">,</span>
+    <span class="n">create_output_file_definition</span><span class="p">,</span>
+    <span class="n">OutputFileDefinition</span><span class="p">,</span>
+    <span class="n">BlankSeparator</span><span class="p">,</span>
+    <span class="n">OutputFileSectionDefinition</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rydberg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.physics.broadening</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_lorentz_broadener</span><span class="p">,</span> <span class="n">create_gaussian_broadener</span><span class="p">,</span> <span class="n">compute_wlortab</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp1d</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..output_files</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommonOutputFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">,</span> <span class="n">Char</span><span class="p">,</span> <span class="n">Table</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Complex</span><span class="p">,</span> <span class="n">Real</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.generated_configuration_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">GeneratedValueDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.configuration_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">KeywordSeparator</span><span class="p">,</span> <span class="n">SeparatorDefinition</span><span class="p">,</span> <span class="n">BaseDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...gui.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">Multiplot</span><span class="p">,</span> <span class="n">set_up_common_plot</span><span class="p">,</span> <span class="n">single_plot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span><span class="p">,</span> <span class="n">add_to_signature</span>
+
+
+<div class="viewcode-block" id="RATOutputFile">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RATOutputFile</span><span class="p">(</span><span class="n">CommonOutputFile</span><span class="p">):</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="s2">&quot;rat&quot;</span>
+    <span class="n">plot_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Output file for Bloch spectral functions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RATOutputFile.energies">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.energies">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">energies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Energies in Ev relative to E-Fermi.&quot;&quot;&quot;</span>
+        <span class="n">efermi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">EFERMI</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">i</span><span class="o">.</span><span class="n">ENERGY</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="n">efermi</span><span class="p">)</span> <span class="o">*</span> <span class="n">Rydberg</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">DATA</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span></div>
+
+
+<div class="viewcode-block" id="RATOutputFile.order">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.order">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Order of the energie dataset.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="RATOutputFile.validate_data">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.validate_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">energies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">energies</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energies</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">!=</span> <span class="n">energies</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Set of energies for GROUP=</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> differs from the ones for GROUP=0&quot;</span><span class="p">)</span>
+        <span class="n">cst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">core_state_types</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cst</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Too much KAP core-state-types&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cst</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">itr</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">cst</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">changes</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">prev</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itr</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">prev</span> <span class="o">!=</span> <span class="n">i</span><span class="p">:</span>
+                    <span class="n">changes</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">changes</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cst</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;KAP types can&#39;t be interleaved&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RATOutputFile.core_states_index">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.core_states_index">[docs]</a>
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">core_states_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return indexes of core_states in CORE_STATES table, some of them can have two lines&quot;&quot;&quot;</span>
+        <span class="n">STATES</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">CORE_STATES</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">STATES</span><span class="p">))</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">STATES</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;ICST&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">STATES</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;ICST&quot;</span><span class="p">]]</span></div>
+
+
+<div class="viewcode-block" id="RATOutputFile.core_state_types">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.core_state_types">[docs]</a>
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">core_state_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;classify the core states according to the KAP property&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">CORE_STATES</span><span class="p">[</span><span class="s2">&quot;KAP&quot;</span><span class="p">],</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RATOutputFile.core_states_energies">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.core_states_energies">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">core_states_energies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">no_core_splitting</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">states_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">core_states_index</span>
+        <span class="n">n_groups</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n_groups</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">states_index</span><span class="p">)))</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">fill_group</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">CORE_STATES</span><span class="p">[</span><span class="s2">&quot;E(Ry)&quot;</span><span class="p">][</span><span class="n">states_index</span><span class="p">]</span> <span class="o">*</span> <span class="n">Rydberg</span>
+
+        <span class="k">if</span> <span class="n">no_core_splitting</span><span class="p">:</span>
+            <span class="n">fill_group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_groups</span><span class="p">):</span>
+                <span class="n">fill_group</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="RATOutputFile.mendeleev">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.mendeleev">[docs]</a>
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mendeleev</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">mendeleev</span>
+
+        <span class="k">return</span> <span class="n">mendeleev</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">IT</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;TXT_T&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="RATOutputFile.lorentz_width">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.lorentz_width">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lorentz_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;campbell-papp&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return tuple of Lorentz widths (for the two possible KAP types).</span>
+<span class="sd">        The `source` argument is forwarded to the core_hole_width lookup.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.physics.core_hole_width</span><span class="w"> </span><span class="kn">import</span> <span class="n">core_hole_width</span>
+
+        <span class="n">atomic_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mendeleev</span><span class="o">.</span><span class="n">atomic_number</span>
+        <span class="n">nc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">NCXRAY</span><span class="p">()</span>
+        <span class="n">lc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">LCXRAY</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">core_hole_width</span><span class="p">(</span><span class="n">atomic_number</span><span class="p">,</span> <span class="n">nc</span><span class="p">,</span> <span class="n">lc</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">),</span>
+            <span class="n">core_hole_width</span><span class="p">(</span><span class="n">atomic_number</span><span class="p">,</span> <span class="n">nc</span><span class="p">,</span> <span class="n">lc</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RATOutputFile.broadener">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.broadener">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">broadener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">energies</span><span class="p">,</span> <span class="n">gauss_width</span><span class="p">,</span> <span class="n">lorentz_width</span><span class="p">,</span> <span class="n">n_valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wlortab</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">lorentz_width</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lorentz_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lorentz_width</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">n_valence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n_valence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mendeleev</span><span class="o">.</span><span class="n">nvalence</span><span class="p">()</span>
+        <span class="c1"># Accept Python floats and NumPy scalar floats here</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">lorentz_width</span><span class="p">):</span>
+            <span class="n">lorentz_width</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">lorentz_width</span><span class="p">)]</span>
+
+        <span class="c1"># Allow user to pass a precomputed wlortab array; otherwise compute from n_valence</span>
+        <span class="k">if</span> <span class="n">wlortab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">wlortab</span> <span class="o">=</span> <span class="n">compute_wlortab</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">n_valence</span><span class="p">)</span>
+
+        <span class="n">lorentz</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="kc">None</span> <span class="k">if</span> <span class="n">w</span> <span class="o">&lt;</span> <span class="mf">0.001</span> <span class="ow">and</span> <span class="n">n_valence</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">create_lorentz_broadener</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">wlortab</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">lorentz_width</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lorentz</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">lorentz</span> <span class="o">*=</span> <span class="mi">2</span>
+
+        <span class="k">if</span> <span class="n">gauss_width</span> <span class="o">&gt;</span> <span class="mf">0.001</span><span class="p">:</span>
+            <span class="n">gauss</span> <span class="o">=</span> <span class="n">create_gaussian_broadener</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">gauss_width</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;dense&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">gauss</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">broaden</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">lorentz</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">lorentz</span><span class="p">[</span><span class="n">k</span><span class="p">](</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">gauss</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">gauss</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">data</span>
+
+        <span class="k">return</span> <span class="n">broaden</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_data&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;First call the `generate_data` method to compute the data&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
+
+<div class="viewcode-block" id="RATOutputFile.plot">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">layout</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">latex</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">show</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dpi</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
+        <span class="n">separate_plots</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">interpolate_to_fermi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">interpolation_threshold</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+        <span class="n">zero_below</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">zero_below_num</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">zero_below_energy</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+        <span class="n">no_core_splitting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">merge_all</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">updown_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">gauss_width</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">lorentz_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">core_hole_width</span><span class="o">=</span><span class="s2">&quot;campbell-papp&quot;</span><span class="p">,</span>
+        <span class="n">layout_kind</span><span class="o">=</span><span class="s2">&quot;constrained&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_data</span><span class="p">(</span>
+            <span class="n">interpolate_to_fermi</span><span class="p">,</span>
+            <span class="n">interpolation_threshold</span><span class="p">,</span>
+            <span class="n">zero_below</span><span class="p">,</span>
+            <span class="n">zero_below_num</span><span class="p">,</span>
+            <span class="n">zero_below_energy</span><span class="p">,</span>
+            <span class="n">no_core_splitting</span><span class="p">,</span>
+            <span class="n">merge_all</span><span class="p">,</span>
+            <span class="n">gauss_width</span><span class="p">,</span>
+            <span class="n">lorentz_width</span><span class="p">,</span>
+            <span class="n">n_valence</span><span class="p">,</span>
+            <span class="n">core_hole_width</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">num</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;POLARIZATION&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># 1 or 2</span>
+        <span class="k">if</span> <span class="s2">&quot;SPIN&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">num</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">layout</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layout</span> <span class="o">=</span> <span class="p">(</span><span class="n">num</span> <span class="o">//</span> <span class="n">layout</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">layout</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">layout</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layout</span> <span class="o">=</span> <span class="p">(</span><span class="n">layout</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">num</span> <span class="o">//</span> <span class="n">layout</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">figsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="n">layout</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">layout</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">Multiplot</span><span class="p">(</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+            <span class="n">latex</span><span class="o">=</span><span class="n">latex</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+            <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">,</span>
+            <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span>
+            <span class="n">updown_layout</span><span class="o">=</span><span class="n">updown_layout</span><span class="p">,</span>
+            <span class="n">separate_plots</span><span class="o">=</span><span class="n">separate_plots</span><span class="p">,</span>
+            <span class="n">layout_kind</span><span class="o">=</span><span class="n">layout_kind</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">mp</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">POLARIZATION</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">_inside_plot</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">DIFFERENCE</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">_inside_plot</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;SPIN&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">SPIN</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">_inside_plot</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ORBIT</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">_inside_plot</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RATOutputFile.generate_data">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.generate_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">interpolate_to_fermi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">interpolation_threshold</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+        <span class="n">zero_below</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">zero_below_num</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">zero_below_energy</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+        <span class="n">no_core_splitting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">merge_all</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">gauss_width</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">lorentz_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">core_hole_width</span><span class="o">=</span><span class="s2">&quot;campbell-papp&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;core energies&quot;&quot;&quot;</span>
+        <span class="n">ktypes</span><span class="p">,</span> <span class="n">type_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">core_state_types</span>
+        <span class="n">n_ktypes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ktypes</span><span class="p">)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">type_map</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">core_states_index</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ktypes</span><span class="p">))]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">groups</span> <span class="o">=</span> <span class="n">groups</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">e_core</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">core_states_energies</span><span class="p">(</span><span class="n">no_core_splitting</span><span class="p">)</span>
+        <span class="n">e_core_avg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_ktypes</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_ktypes</span><span class="p">):</span>
+            <span class="n">e_core_avg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">e_core</span><span class="p">[:,</span> <span class="n">groups</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+
+        <span class="n">dcormin</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="n">border</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">n_ktypes</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">e_core</span><span class="p">:</span>
+                <span class="n">dcormin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dcormin</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">i</span><span class="p">[:</span><span class="n">border</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">-</span> <span class="n">i</span><span class="p">[</span><span class="n">border</span><span class="p">:])))</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; energies &quot;&quot;&quot;</span>
+        <span class="n">energies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">energies</span><span class="p">()</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span>
+        <span class="n">senergies</span> <span class="o">=</span> <span class="n">energies</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">senergies</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">650</span><span class="p">:</span>
+            <span class="n">n_valence</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; replace energies below e-fermi and add e-fermi energy &quot;&quot;&quot;</span>
+        <span class="n">fidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">senergies</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fidx</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">senergies</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Fermi energy not in the range of energies&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">fidx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">nef</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="nb">abs</span><span class="p">(</span><span class="n">senergies</span><span class="p">[</span><span class="n">fidx</span><span class="p">])</span> <span class="o">&lt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">senergies</span><span class="p">[</span><span class="n">fidx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]):</span>
+            <span class="n">nef</span> <span class="o">=</span> <span class="n">fidx</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nef</span> <span class="o">=</span> <span class="n">fidx</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">interpolate_to_fermi</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">senergies</span><span class="p">[</span><span class="n">nef</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">interpolation_threshold</span><span class="p">:</span>
+                <span class="n">interpolate_to_fermi</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">make_slice</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;transform order array to slice, if possible - check for subsequent numbers&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">order</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">order</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="ow">and</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">order</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">order</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">order</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                <span class="n">order</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">order</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="p">):</span>
+                <span class="k">return</span> <span class="nb">slice</span><span class="p">(</span><span class="n">order</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">order</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">order</span>
+
+        <span class="k">if</span> <span class="n">zero_below</span> <span class="ow">or</span> <span class="n">interpolate_to_fermi</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">interpolate_to_fermi</span><span class="p">:</span>
+                <span class="n">upper_half_idx_source</span> <span class="o">=</span> <span class="n">upper_half_idx</span> <span class="o">=</span> <span class="n">nef</span>
+                <span class="c1"># weights for interpolation to fermi</span>
+                <span class="k">if</span> <span class="p">((</span><span class="n">nef</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">senergies</span><span class="p">[</span><span class="n">nef</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">nef</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">senergies</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">interp_idx</span> <span class="o">=</span> <span class="n">nef</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">interp_idx</span> <span class="o">=</span> <span class="n">nef</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">senergies</span><span class="p">[</span><span class="n">nef</span><span class="p">],</span> <span class="n">senergies</span><span class="p">[</span><span class="n">interp_idx</span><span class="p">]</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span>
+                <span class="n">w1</span><span class="p">,</span> <span class="n">w2</span> <span class="o">=</span> <span class="o">-</span><span class="n">x2</span> <span class="o">/</span> <span class="n">df</span><span class="p">,</span> <span class="n">x1</span> <span class="o">/</span> <span class="n">df</span>
+                <span class="n">my_fermi</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">upper_half_idx_source</span> <span class="o">=</span> <span class="n">upper_half_idx</span> <span class="o">=</span> <span class="n">nef</span>
+                <span class="n">my_fermi</span> <span class="o">=</span> <span class="n">senergies</span><span class="p">[</span><span class="n">nef</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">zero_below</span><span class="p">:</span>
+                <span class="n">senergies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="nb">abs</span><span class="p">(</span><span class="n">zero_below_energy</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">zero_below_num</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span><span class="p">),</span>
+                        <span class="n">senergies</span><span class="p">[</span><span class="n">upper_half_idx</span><span class="p">:],</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+                <span class="n">upper_half_idx</span> <span class="o">=</span> <span class="n">zero_below_num</span>
+
+            <span class="k">if</span> <span class="n">interpolate_to_fermi</span><span class="p">:</span>
+                <span class="n">senergies</span><span class="p">[</span><span class="n">upper_half_idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">senergies</span><span class="p">)</span>
+        <span class="c1"># Energy, Group, State, Polarization</span>
+        <span class="n">STATES</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">CORE_STATES</span>
+        <span class="n">n_states</span> <span class="o">=</span> <span class="n">STATES</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;ICST&quot;</span><span class="p">]</span>
+        <span class="n">n_pol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NPOL</span><span class="p">())</span>
+
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">),</span> <span class="n">n_states</span><span class="p">,</span> <span class="n">n_pol</span><span class="p">)</span>
+        <span class="n">source_shape</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">energies</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">),</span> <span class="n">n_states</span><span class="p">,</span> <span class="n">n_pol</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">read_rdt</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Fill the below fermi with either zero or data</span>
+<span class="sd">            fill above the fermi with data</span>
+<span class="sd">            And finally, the middle fermi-energy point set as interpolation.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">source_shape</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">DATA</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                    <span class="n">source</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">DATA</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_pol</span><span class="p">))</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
+
+            <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">zero_below</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[:</span><span class="n">upper_half_idx</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">upper_half_idx</span><span class="p">:]</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="n">upper_half_idx_source</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">source</span>
+                <span class="k">if</span> <span class="n">interpolate_to_fermi</span><span class="p">:</span>
+                    <span class="n">out</span><span class="p">[</span><span class="n">upper_half_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">w1</span> <span class="o">*</span> <span class="n">source</span><span class="p">[</span><span class="n">nef</span><span class="p">]</span> <span class="o">+</span> <span class="n">w2</span> <span class="o">*</span> <span class="n">source</span><span class="p">[</span><span class="n">interp_idx</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">out</span>
+
+        <span class="n">rd</span> <span class="o">=</span> <span class="n">read_rdt</span><span class="p">(</span><span class="s2">&quot;ABSRTA&quot;</span><span class="p">)</span>
+        <span class="n">rt</span> <span class="o">=</span> <span class="n">read_rdt</span><span class="p">(</span><span class="s2">&quot;ABSRATE&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_pol</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c1"># linear dichroism - transform it to handle it as circular</span>
+            <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="n">rd</span> <span class="o">=</span> <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span>
+            <span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="n">rt</span> <span class="o">=</span> <span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span>
+            <span class="n">n_pol</span> <span class="o">=</span> <span class="mi">2</span>
+
+        <span class="c1"># If caller didn&#39;t provide explicit lorentz_width, compute using requested dataset</span>
+        <span class="k">if</span> <span class="n">lorentz_width</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lorentz_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lorentz_width</span><span class="p">(</span><span class="n">core_hole_width</span><span class="p">)</span>
+
+        <span class="n">broaden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">broadener</span><span class="p">(</span><span class="n">senergies</span><span class="p">,</span> <span class="n">gauss_width</span><span class="p">,</span> <span class="n">lorentz_width</span><span class="p">,</span> <span class="n">n_valence</span><span class="p">)</span>
+        <span class="n">borders</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">border</span><span class="p">,</span> <span class="n">n_states</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_ktypes</span><span class="p">):</span>
+            <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">:</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">broaden</span><span class="p">(</span><span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">:</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">:</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">broaden</span><span class="p">(</span><span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">:</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">i</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">merge_all</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">merge_all</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">e_core_avg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">e_core_avg</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">senergies</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">senergies</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">n_ktypes</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">no_core_splitting</span><span class="p">:</span>
+            <span class="n">merge_all</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Výpočet SD</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">shift_by_e_core_avg_diff</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">energies</span><span class="o">=</span><span class="n">senergies</span><span class="p">,</span> <span class="n">borders</span><span class="o">=</span><span class="n">borders</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ref_avg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Interpolate `data` shifted by core-energy differences onto `energies`.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            - data: array shaped (len(senergies), groups, states, n_pol)</span>
+<span class="sd">            - energies: target energy grid where the shifted spectra are evaluated</span>
+<span class="sd">            - borders: grouping borders as used elsewhere in this function</span>
+<span class="sd">            - out: optional pre-allocated output array; if None a new array is created</span>
+<span class="sd">            - out: optional pre-allocated output array; if None a new array is created.</span>
+
+<span class="sd">            Returns the output array (the same object passed as `out` when provided).</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># determine evaluation grid and output view</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">N</span><span class="p">,)</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+            <span class="n">eval_energies</span> <span class="o">=</span> <span class="n">energies</span>
+            <span class="n">out_view</span> <span class="o">=</span> <span class="n">out</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">e_core</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_ktypes</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">borders</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">borders</span><span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]):</span>
+                        <span class="k">if</span> <span class="n">ref_avg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">de</span> <span class="o">=</span> <span class="n">e_core_avg</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">e_core</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">de</span> <span class="o">=</span> <span class="n">ref_avg</span> <span class="o">-</span> <span class="n">e_core</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                        <span class="n">shifted</span> <span class="o">=</span> <span class="n">eval_energies</span> <span class="o">-</span> <span class="n">de</span>
+                        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_pol</span><span class="p">):</span>
+                            <span class="n">f</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">senergies</span><span class="p">,</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">p</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)</span>
+                            <span class="n">out_view</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">shifted</span><span class="p">)</span>
+                            <span class="c1"># values corresponding to evaluation points outside source grid</span>
+                            <span class="k">if</span> <span class="n">clip</span><span class="p">:</span>
+                                <span class="n">out_view</span><span class="p">[</span><span class="n">shifted</span> <span class="o">&lt;</span> <span class="n">senergies</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                                <span class="n">out_view</span><span class="p">[</span><span class="n">shifted</span> <span class="o">&gt;</span> <span class="n">senergies</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="n">out</span>
+
+        <span class="k">if</span> <span class="n">merge_all</span><span class="p">:</span>
+            <span class="n">ie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">senergies</span><span class="p">,</span> <span class="n">dcormin</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ie</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">senergies</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No E(i) &gt; Dcormin found&quot;</span><span class="p">)</span>
+            <span class="n">shifted_energies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">senergies</span><span class="p">[:</span><span class="n">ie</span><span class="p">],</span> <span class="n">senergies</span><span class="p">[</span><span class="n">upper_half_idx</span><span class="p">:]</span> <span class="o">-</span> <span class="n">my_fermi</span> <span class="o">+</span> <span class="n">dcormin</span><span class="p">))</span>
+            <span class="n">kref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">e_core_avg</span><span class="p">)</span>
+            <span class="n">avg</span> <span class="o">=</span> <span class="n">e_core_avg</span><span class="p">[</span><span class="n">kref</span><span class="p">]</span>
+
+            <span class="c1"># Use shift_by_e_core_avg_diff to fill ad/at on the merged energy grid</span>
+            <span class="c1"># pass ref_avg so all states are shifted to the same reference (kref)</span>
+            <span class="n">ad</span> <span class="o">=</span> <span class="n">shift_by_e_core_avg_diff</span><span class="p">(</span><span class="n">rd</span><span class="p">,</span> <span class="n">energies</span><span class="o">=</span><span class="n">shifted_energies</span><span class="p">,</span> <span class="n">borders</span><span class="o">=</span><span class="n">borders</span><span class="p">,</span> <span class="n">ref_avg</span><span class="o">=</span><span class="n">avg</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">at</span> <span class="o">=</span> <span class="n">shift_by_e_core_avg_diff</span><span class="p">(</span><span class="n">rt</span><span class="p">,</span> <span class="n">energies</span><span class="o">=</span><span class="n">shifted_energies</span><span class="p">,</span> <span class="n">borders</span><span class="o">=</span><span class="n">borders</span><span class="p">,</span> <span class="n">ref_avg</span><span class="o">=</span><span class="n">avg</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">df</span> <span class="o">=</span> <span class="n">avg</span> <span class="o">-</span> <span class="n">e_core</span>
+            <span class="n">ebot</span> <span class="o">=</span> <span class="n">shifted_energies</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+            <span class="n">iebot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">shifted_energies</span><span class="p">,</span> <span class="n">ebot</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+            <span class="n">etop</span> <span class="o">=</span> <span class="n">senergies</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+            <span class="n">ietop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">shifted_energies</span><span class="p">,</span> <span class="n">etop</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+            <span class="n">shifted_energies</span> <span class="o">=</span> <span class="n">shifted_energies</span><span class="p">[</span><span class="n">iebot</span><span class="p">:</span><span class="n">ietop</span><span class="p">]</span>
+
+            <span class="n">ad</span> <span class="o">=</span> <span class="n">ad</span><span class="p">[</span><span class="n">iebot</span><span class="p">:</span><span class="n">ietop</span><span class="p">]</span>
+            <span class="n">at</span> <span class="o">=</span> <span class="n">at</span><span class="p">[</span><span class="n">iebot</span><span class="p">:</span><span class="n">ietop</span><span class="p">]</span>
+            <span class="c1"># Recompute per-ktype `sd` on the merged energy grid (preserve per-ktype shifts)</span>
+            <span class="n">sd</span> <span class="o">=</span> <span class="n">shift_by_e_core_avg_diff</span><span class="p">(</span><span class="n">rd</span><span class="p">,</span> <span class="n">energies</span><span class="o">=</span><span class="n">shifted_energies</span><span class="p">,</span> <span class="n">borders</span><span class="o">=</span><span class="n">borders</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">senergies</span> <span class="o">=</span> <span class="n">shifted_energies</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sd</span> <span class="o">=</span> <span class="n">shift_by_e_core_avg_diff</span><span class="p">(</span><span class="n">rd</span><span class="p">)</span>
+            <span class="n">ad</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">at</span> <span class="o">=</span> <span class="n">shift_by_e_core_avg_diff</span><span class="p">(</span><span class="n">rt</span><span class="p">)</span>
+
+        <span class="c1"># ------ combine spectra with common KAPPA for core state</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">n_ktypes</span><span class="p">,</span> <span class="n">n_pol</span><span class="p">)</span>
+        <span class="n">rd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">rt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_ktypes</span><span class="p">):</span>
+            <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ad</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">:</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">at</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">:</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">IT</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+
+        <span class="n">concealment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">()[</span><span class="s2">&quot;CONC&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">nqt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">()[</span><span class="s2">&quot;NAT&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="p">(</span><span class="n">concealment</span> <span class="o">*</span> <span class="n">nqt</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">sum_groups</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">*=</span> <span class="n">weight</span>
+            <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">merge_all</span><span class="p">:</span>
+            <span class="n">rd</span> <span class="o">=</span> <span class="n">rd</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+            <span class="n">rt</span> <span class="o">=</span> <span class="n">rt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+
+        <span class="n">rd</span> <span class="o">=</span> <span class="n">sum_groups</span><span class="p">(</span><span class="n">rd</span><span class="p">)</span>
+        <span class="n">rt</span> <span class="o">=</span> <span class="n">sum_groups</span><span class="p">(</span><span class="n">rt</span><span class="p">)</span>
+
+        <span class="n">tt</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">td</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;POLARIZATION&quot;</span><span class="p">:</span> <span class="n">tt</span><span class="p">,</span> <span class="s2">&quot;DIFFERENCE&quot;</span><span class="p">:</span> <span class="n">td</span><span class="p">,</span> <span class="s2">&quot;ENERGY&quot;</span><span class="p">:</span> <span class="n">senergies</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">n_ktypes</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">_sd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_ktypes</span><span class="p">):</span>
+                <span class="n">_sd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">:</span> <span class="n">borders</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">sd</span> <span class="o">=</span> <span class="n">sum_groups</span><span class="p">(</span><span class="n">_sd</span><span class="p">)</span>  <span class="c1"># now (energy, ktype, n_pol) shape</span>
+
+            <span class="n">yd</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">sd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">sd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="n">spin</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">yd</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">yd</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="n">orb</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">yd</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">yd</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="n">out</span><span class="p">[</span><span class="s2">&quot;SPIN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spin</span>
+            <span class="n">out</span><span class="p">[</span><span class="s2">&quot;ORBIT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">orb</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">out</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Czech notes - mimics the XBAND plot</span>
+<span class="sd">        //    NCXRAY(ITXG) = principal quantum number n of the absorbing core orbital.</span>
+<span class="sd">        //    LCXRAY(ITXG) = orbital angular momentum l of that core orbital.</span>
+<span class="sd">        TODO * CORE STATES se opakuje, ale N a L musí být stejné pro všechny skupiny</span>
+<span class="sd">        ?? asi OK   * očísluje grupy tak, že jde číslem grupy chodit rovnou</span>
+<span class="sd">                    do tabulky typů</span>
+<span class="sd">        OK * vytvoří seřazenou tabulku indexů  energií E</span>
+<span class="sd">                   - ty by měly být stejné pro všechny grupy</span>
+<span class="sd">        OK * odečte od CORE_STATES.E(Ry) a ENERGY[0] Fermi enegy (EFERMI)</span>
+<span class="sd">        OK * najde energii nejblíže k FE (NEF je index, DIST vzdálenost)</span>
+
+<span class="sd">        OK * pokud DIST &gt; 1E-4 tak provede lineární interpolaci do EFERMI</span>
+<span class="sd">          z dvou nejbližších bodů (starý kód přepíše ten nejbližší bod)</span>
+<span class="sd">    energies udělány</span>
+
+<span class="sd">        OK * pro XAS/CHIXAS</span>
+<span class="sd">              - vyhodí cokoli pod Fermi level</span>
+<span class="sd">              - pokud ne NOTABEXT tak přidá samé nuly na n=50 energií pod Fermi level</span>
+<span class="sd">                do souřadnic - 25Ev * (i/n)**3</span>
+<span class="sd">        ??? * pokud je rozdíl nějakých energií menší nežli 1e-6, vynásobí tu energii 1.00001</span>
+<span class="sd">        * rozdělí CST podle KAP, mohou být jen dva typy - pole KTYP</span>
+<span class="sd">        OK - pokud poslední energie &gt; 50,  nastav NVAL=0, jinak NVAL=number_of_valence_electrons_of_the_first_atom (může být předefinováno)</span>
+
+<span class="sd">        OK * Načte wcorehole(atomic_number, N(1),L(1),IK=1,2 pro počet typů)</span>
+
+<span class="sd">        OK * core-spliting (vypnutelné parametrem) - pokud je vypnuto</span>
+<span class="sd">          CORE_STATES[i,j].E(Ry) =  CORE_STATES[0,0].E(Ry)</span>
+
+<span class="sd">        OK * ECOREAV(KTYP)  = avg(  CORE_STATES[i,j].E(Ry) for given KTYP)</span>
+<span class="sd">          - pokud ECOREAV(i) - ECOREAV(j) &lt; E(1) - E(n) (v abs)</span>
+<span class="sd">            nastav MERGE_ALL</span>
+
+<span class="sd">        OK * dormin, dcormax min a max abs(rozdílů) všech CORE_STATES[i,j].E(Ry) pro core</span>
+<span class="sd">            s ROZDILNYM KTYP. Asi jde udělat tak, že se najde min a max energií pro každý</span>
+<span class="sd">            ktyp a pak se to odečte.</span>
+
+<span class="sd">        OK  seřadí data v RD/RT (skupiny) podle energií E</span>
+<span class="sd">          RD/RT jsou  REAL(ABSRTA), REAL(ABSRATE)</span>
+<span class="sd">        OK broaodening RD a RT pro datasety dle energií</span>
+<span class="sd">          íce způsobů, dopracovat</span>
+<span class="sd">        * SD = transformace podle ECOREAV, viz line 571</span>
+<span class="sd">              - lagrange interpolace, kdy se posunou hodnoty o ECOREAV(K) - ECORE(ITXG,ICST)</span>
+<span class="sd">        * Pokud ne Meerge ALL, tak</span>
+<span class="sd">          - AD, AT je stejná interpolace RD a RT, jako výš</span>
+<span class="sd">        * Pokud Merge ALL - merging spectra, see line 620 and below</span>
+
+<span class="sd">        * sum AD a AT according to the KTYP to RD, RT</span>
+<span class="sd">          sum SD according to the KTYP (to SD)</span>
+<span class="sd">        * 845: (*not XMO/XRS) - xmo: magneto-optics, xrs: resonant-scattering</span>
+<span class="sd">                 over ITXG, NE</span>
+<span class="sd">                         SUMK(K) = SUMK(K) + 0.5*(E(I)-E(I-1))</span>
+<span class="sd">                           *(RD(I,ITXG,K,NPOL)-RD(I,ITXG,K,1))</span>
+<span class="sd">        * Pokud MergeALL, sum RD/RT over K</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RATDefinition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATDefinition.html#ase2sprkkr.output_files.definitions.rat.RATDefinition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RATDefinition</span><span class="p">(</span><span class="n">OutputFileDefinition</span><span class="p">):</span>
+    <span class="n">result_class</span> <span class="o">=</span> <span class="n">RATOutputFile</span></div>
+
+
+
+<div class="viewcode-block" id="G">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.G.html#ase2sprkkr.output_files.definitions.rat.G">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">G</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">GeneratedValueDefinition</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">get</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="generate_data_calling_function">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.generate_data_calling_function.html#ase2sprkkr.output_files.definitions.rat.generate_data_calling_function">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_data_calling_function</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+
+    <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrapped</span><span class="p">(</span>
+        <span class="n">option</span><span class="p">,</span>
+        <span class="n">_inside_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">interpolate_to_fermi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">interpolation_threshold</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+        <span class="n">zero_below</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">zero_below_num</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">zero_below_energy</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+        <span class="n">no_core_splitting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">merge_all</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">gauss_width</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">lorentz_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">core_hole_width</span><span class="o">=</span><span class="s2">&quot;campbell-papp&quot;</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_inside_plot</span><span class="p">:</span>
+            <span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">generate_data</span><span class="p">(</span>
+                <span class="n">interpolate_to_fermi</span><span class="p">,</span>
+                <span class="n">interpolation_threshold</span><span class="p">,</span>
+                <span class="n">zero_below</span><span class="p">,</span>
+                <span class="n">zero_below_num</span><span class="p">,</span>
+                <span class="n">zero_below_energy</span><span class="p">,</span>
+                <span class="n">no_core_splitting</span><span class="p">,</span>
+                <span class="n">merge_all</span><span class="p">,</span>
+                <span class="n">gauss_width</span><span class="p">,</span>
+                <span class="n">lorentz_width</span><span class="p">,</span>
+                <span class="n">n_valence</span><span class="p">,</span>
+                <span class="n">core_hole_width</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">fn</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">_inside_plot</span><span class="o">=</span><span class="n">_inside_plot</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">wrapped</span></div>
+
+
+
+<div class="viewcode-block" id="draw_plot">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.draw_plot.html#ase2sprkkr.output_files.definitions.rat.draw_plot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">draw_plot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$E-E_{\rm F}$ (eV)&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;XRAS&quot;</span><span class="p">)</span>
+    <span class="n">set_up_common_plot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="plot">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.plot.html#ase2sprkkr.output_files.definitions.rat.plot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="n">title</span><span class="p">):</span>
+
+    <span class="nd">@generate_data_calling_function</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_inside_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">just_plot</span><span class="p">(</span><span class="n">plotter</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">tit</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2"> - type </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">tit</span> <span class="o">=</span> <span class="n">title</span>
+                <span class="k">with</span> <span class="n">plotter</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="k">as</span> <span class="n">axis</span><span class="p">:</span>
+                    <span class="n">draw_plot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">tit</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="n">option</span><span class="o">.</span><span class="n">_container</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">energy</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ENERGY&quot;</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">option</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">_inside_plot</span><span class="p">:</span>
+            <span class="n">just_plot</span><span class="p">(</span><span class="n">_inside_plot</span><span class="o">.</span><span class="n">new_axis</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">Multiplot</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">mp</span><span class="p">:</span>
+                <span class="n">just_plot</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">new_axis</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">just_plot</span><span class="p">(</span><span class="n">single_plot</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">plot</span></div>
+
+
+
+<div class="viewcode-block" id="create_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.create_definition.html#ase2sprkkr.output_files.definitions.rat.create_definition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_definition</span><span class="p">():</span>
+
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">create_output_file_definition</span><span class="p">(</span>
+        <span class="n">Keyword</span><span class="p">(</span><span class="s2">&quot;RXAS&quot;</span><span class="p">),</span>
+        <span class="p">[</span>
+            <span class="n">G</span><span class="p">(</span><span class="s2">&quot;POLARIZATION&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;Polarization averaged spectra&quot;</span><span class="p">)),</span>
+            <span class="n">G</span><span class="p">(</span><span class="s2">&quot;DIFFERENCE&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;Difference spectra&quot;</span><span class="p">)),</span>
+            <span class="n">G</span><span class="p">(</span><span class="s2">&quot;SPIN&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;Spin&quot;</span><span class="p">)),</span>
+            <span class="n">G</span><span class="p">(</span><span class="s2">&quot;ORBIT&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;Orbit&quot;</span><span class="p">)),</span>
+            <span class="n">G</span><span class="p">(</span><span class="s2">&quot;ENERGY&quot;</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NTXRSGRP&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;IDIPOL&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NPOL&quot;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="n">Char</span><span class="p">(),</span> <span class="n">write_length</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
+            <span class="n">OutputFileSectionDefinition</span><span class="p">(</span>
+                <span class="s2">&quot;GROUPS&quot;</span><span class="p">,</span>
+                <span class="p">[</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;SPECTRUM&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;IT&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NCXRAY&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;LCXRAY&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+                    <span class="n">BlankSeparator</span><span class="p">(),</span>
+                    <span class="n">BlankSeparator</span><span class="p">(),</span>
+                    <span class="n">SeparatorDefinition</span><span class="p">(</span><span class="n">KeywordSeparator</span><span class="p">(</span><span class="s2">&quot;CORE STATES :&quot;</span><span class="p">)),</span>
+                    <span class="n">BlankSeparator</span><span class="p">(),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NCST&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="s2">&quot;NCST:&quot;</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NKPCOR&quot;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">written_name</span><span class="o">=</span><span class="s2">&quot;NKPCOR:&quot;</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">),</span>
+                    <span class="n">BlankSeparator</span><span class="p">(),</span>
+                    <span class="n">V</span><span class="p">(</span>
+                        <span class="s2">&quot;CORE_STATES&quot;</span><span class="p">,</span>
+                        <span class="n">Table</span><span class="p">(</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;ICST&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                <span class="s2">&quot;L&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                <span class="s2">&quot;KAP&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                <span class="s2">&quot;MUE&quot;</span><span class="p">:</span> <span class="n">Array</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;/&quot;</span><span class="p">),</span>
+                                <span class="s2">&quot;IKM&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                <span class="s2">&quot;NORM&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                                <span class="s2">&quot;E(Ry)&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                                <span class="s2">&quot;E(eV)&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                                <span class="s2">&quot;&lt;SIGMA_z&gt;&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                                <span class="s2">&quot;I0&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                            <span class="p">},</span>
+                            <span class="n">repeat_sparse</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;IKM&quot;</span><span class="p">,</span> <span class="s2">&quot;NORM&quot;</span><span class="p">],</span>
+                        <span class="p">),</span>
+                        <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">BlankSeparator</span><span class="p">(),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;N_ENERGIES&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="s2">&quot;number of energies&quot;</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;IFMT&quot;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">written_name</span><span class="o">=</span><span class="s2">&quot;output format IFMT&quot;</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;VUC&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+                    <span class="n">BlankSeparator</span><span class="p">(),</span>
+                    <span class="n">OutputFileSectionDefinition</span><span class="p">(</span>
+                        <span class="s2">&quot;DATA&quot;</span><span class="p">,</span>
+                        <span class="p">[</span>
+                            <span class="n">V</span><span class="p">(</span>
+                                <span class="s2">&quot;ENERGY&quot;</span><span class="p">,</span>
+                                <span class="n">Sequence</span><span class="p">(</span>
+                                    <span class="n">Complex</span><span class="p">(</span><span class="n">postfix</span><span class="o">=</span><span class="s2">&quot; RYD &quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">Real</span><span class="p">(</span><span class="n">postfix</span><span class="o">=</span><span class="s2">&quot; EV (REL EF)&quot;</span><span class="p">)</span>
+                                <span class="p">),</span>
+                                <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="p">),</span>
+                            <span class="n">V</span><span class="p">(</span>
+                                <span class="s2">&quot;DATA&quot;</span><span class="p">,</span>
+                                <span class="n">Table</span><span class="p">(</span>
+                                    <span class="p">{</span><span class="s2">&quot;ABSRTA&quot;</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="s2">&quot;ABSRTB&quot;</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="s2">&quot;ABSRATE&quot;</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="s2">&quot;ADD&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">},</span>
+                                    <span class="n">grouping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">numbering</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                    <span class="n">groups_as_list</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                <span class="p">),</span>
+                                <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="p">),</span>
+                        <span class="p">],</span>
+                        <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">repeated_delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">is_repeated</span><span class="o">=</span><span class="n">BaseDefinition</span><span class="o">.</span><span class="n">Repeated</span><span class="o">.</span><span class="n">LIST_SECTION</span><span class="p">,</span>
+                    <span class="p">),</span>
+                <span class="p">],</span>
+                <span class="n">is_repeated</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;RAT&quot;</span><span class="p">,</span>
+        <span class="bp">cls</span><span class="o">=</span><span class="n">RATDefinition</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Result of a X-ray spectroscopy&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">definition</span></div>
+
+
+
+<span class="n">definition</span> <span class="o">=</span> <span class="n">create_definition</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

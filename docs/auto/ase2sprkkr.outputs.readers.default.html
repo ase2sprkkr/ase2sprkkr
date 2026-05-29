@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>default &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="DefaultOutputReader" href="ase2sprkkr.outputs.readers.default.DefaultOutputReader.html" />
+    <link rel="next" title="DefaultOutputParser" href="ase2sprkkr.outputs.readers.default.DefaultOutputParser.html" />
     <link rel="prev" title="BsfResult" href="ase2sprkkr.outputs.readers.bsf.BsfResult.html" /> 
 </head>
 
@@ -84,6 +84,7 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.bsf.html">bsf</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">default</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.dos.html">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.jxc.html">jxc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.html">scf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.spec.html">spec</a></li>
 </ul>
@@ -132,15 +133,15 @@
 <h1>default<a class="headerlink" href="#default" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs.readers.default</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-638867711818ca0be204b919d839f53a8e41fa68.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.default.DefaultOutputReader, ase2sprkkr.outputs.readers.default.DefaultProcessRunner, ase2sprkkr.outputs.readers.default.DefaultResult" usemap="#inheritance9bb548154c" class="inheritance graphviz" /></div>
-<map id="inheritance9bb548154c" name="inheritance9bb548154c">
-<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader" target="_top" title="DefaultOutputReader" alt="" coords="393,104,553,129"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputReader.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputReader" target="_top" title="SprKkrOutputReader" alt="" coords="203,104,358,129"/>
-<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.default.DefaultProcessRunner.html#ase2sprkkr.outputs.readers.default.DefaultProcessRunner" target="_top" title="DefaultProcessRunner" alt="" coords="197,55,364,80"/>
-<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.KkrProcessRunner.html#ase2sprkkr.outputs.task_result.KkrProcessRunner" target="_top" title="Class, that run a process and read its output using underlined" alt="" coords="17,55,157,80"/>
-<area shape="rect" id="node5" href="ase2sprkkr.outputs.readers.default.DefaultResult.html#ase2sprkkr.outputs.readers.default.DefaultResult" target="_top" title="DefaultResult" alt="" coords="225,5,336,31"/>
-<area shape="rect" id="node6" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="41,5,133,31"/>
-<area shape="rect" id="node7" href="ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,104,168,129"/>
+<div class="graphviz"><img src="../_images/inheritance-d41a487eb18e4c66da941376c3af73a3c804488d.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.default.DefaultOutputParser, ase2sprkkr.outputs.readers.default.DefaultOutputReader, ase2sprkkr.outputs.readers.default.DefaultResult" usemap="#inheritancefac5dd3613" class="inheritance graphviz" /></div>
+<map id="inheritancefac5dd3613" name="inheritancefac5dd3613">
+<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.default.DefaultOutputParser.html#ase2sprkkr.outputs.readers.default.DefaultOutputParser" target="_top" title="DefaultOutputParser" alt="" coords="379,109,532,137"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" target="_top" title="SprKkrOutputParser" alt="" coords="196,109,344,137"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader" target="_top" title="DefaultOutputReader" alt="" coords="190,57,349,85"/>
+<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Class, that runs a process and reads its output using the underlying" alt="" coords="16,57,150,85"/>
+<area shape="rect" id="node5" href="ase2sprkkr.outputs.readers.default.DefaultResult.html#ase2sprkkr.outputs.readers.default.DefaultResult" target="_top" title="DefaultResult" alt="" coords="214,5,325,33"/>
+<area shape="rect" id="node6" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="37,5,129,33"/>
+<area shape="rect" id="node7" href="ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,109,161,137"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -150,10 +151,10 @@ default reader for the tasks without specialized reader and output.</p>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader" title="ase2sprkkr.outputs.readers.default.DefaultOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefaultOutputReader</span></code></a>([print_output, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.default.DefaultOutputParser.html#ase2sprkkr.outputs.readers.default.DefaultOutputParser" title="ase2sprkkr.outputs.readers.default.DefaultOutputParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefaultOutputParser</span></code></a>([print_output, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.default.DefaultProcessRunner.html#ase2sprkkr.outputs.readers.default.DefaultProcessRunner" title="ase2sprkkr.outputs.readers.default.DefaultProcessRunner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefaultProcessRunner</span></code></a>(input_parameters, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader" title="ase2sprkkr.outputs.readers.default.DefaultOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefaultOutputReader</span></code></a>(input_parameters, ...[, ...])</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.default.DefaultResult.html#ase2sprkkr.outputs.readers.default.DefaultResult" title="ase2sprkkr.outputs.readers.default.DefaultResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefaultResult</span></code></a>(input_parameters, calculator, ...)</p></td>
@@ -168,7 +169,7 @@ default reader for the tasks without specialized reader and output.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.outputs.readers.bsf.BsfResult.html" class="btn btn-neutral float-left" title="BsfResult" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.outputs.readers.default.DefaultOutputReader.html" class="btn btn-neutral float-right" title="DefaultOutputReader" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.outputs.readers.default.DefaultOutputParser.html" class="btn btn-neutral float-right" title="DefaultOutputParser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

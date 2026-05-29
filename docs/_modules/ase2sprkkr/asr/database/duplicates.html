@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.database.duplicates &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -91,8 +91,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.asr.database.duplicates</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.database.duplicates&#39;</span><span class="p">,</span>
@@ -111,7 +111,7 @@
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--skip-distance-calc&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Skip distance calculation. Only match structures &quot;</span>
         <span class="s2">&quot;based on their reduced formula and comparison_keys.&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
          <span class="n">databaseout</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
          <span class="n">filterstring</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&lt;=natoms,&lt;energy&#39;</span><span class="p">,</span>
          <span class="n">comparison_keys</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
@@ -154,10 +154,10 @@
 <span class="sd">              of the group.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">ase.db</span> <span class="kn">import</span> <span class="n">connect</span>
-    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">read_json</span>
-    <span class="kn">from</span> <span class="nn">asr.database.rmsd</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">rmsd</span>
-    <span class="kn">from</span> <span class="nn">asr.utils</span> <span class="kn">import</span> <span class="n">timed_print</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">connect</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_json</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.database.rmsd</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">rmsd</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timed_print</span>
     <span class="k">assert</span> <span class="n">database</span> <span class="o">!=</span> <span class="n">databaseout</span><span class="p">,</span> \
         <span class="s1">&#39;You cannot read and write from the same database.&#39;</span>
 
@@ -242,7 +242,7 @@
 
 <div class="viewcode-block" id="compare">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.duplicates.compare.html#ase2sprkkr.asr.database.duplicates.compare">[docs]</a>
-<span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">,</span> <span class="n">comparator</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compare</span><span class="p">(</span><span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">,</span> <span class="n">comparator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return value1 {comparator} value2.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">comparator</span> <span class="o">==</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">value1</span> <span class="o">&lt;=</span> <span class="n">value2</span>
@@ -259,7 +259,7 @@
 
 <div class="viewcode-block" id="filter_uids">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.duplicates.filter_uids.html#ase2sprkkr.asr.database.duplicates.filter_uids">[docs]</a>
-<span class="k">def</span> <span class="nf">filter_uids</span><span class="p">(</span><span class="n">all_rows</span><span class="p">,</span> <span class="n">duplicate_ids</span><span class="p">,</span> <span class="n">ops_and_keys</span><span class="p">,</span> <span class="n">uid_key</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">filter_uids</span><span class="p">(</span><span class="n">all_rows</span><span class="p">,</span> <span class="n">duplicate_ids</span><span class="p">,</span> <span class="n">ops_and_keys</span><span class="p">,</span> <span class="n">uid_key</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get most important rows according to filterstring.</span>
 
 <span class="sd">    Parameters</span>
@@ -303,7 +303,7 @@
 
 <div class="viewcode-block" id="parse_filter_string">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.duplicates.parse_filter_string.html#ase2sprkkr.asr.database.duplicates.parse_filter_string">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_filter_string</span><span class="p">(</span><span class="n">filterstring</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_filter_string</span><span class="p">(</span><span class="n">filterstring</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse a comma separated filter string.</span>
 
 <span class="sd">    Parameters</span>
@@ -334,7 +334,7 @@
 
 <div class="viewcode-block" id="find_duplicate_group">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.duplicates.find_duplicate_group.html#ase2sprkkr.asr.database.duplicates.find_duplicate_group">[docs]</a>
-<span class="k">def</span> <span class="nf">find_duplicate_group</span><span class="p">(</span><span class="n">uid</span><span class="p">,</span> <span class="n">rmsd_by_id</span><span class="p">,</span> <span class="n">rmsd_tol</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_duplicate_group</span><span class="p">(</span><span class="n">uid</span><span class="p">,</span> <span class="n">rmsd_by_id</span><span class="p">,</span> <span class="n">rmsd_tol</span><span class="p">,</span>
                          <span class="n">already_considered_uids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">already_considered_uids</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">already_considered_uids</span> <span class="o">=</span> <span class="p">{</span><span class="n">uid</span><span class="p">}</span>

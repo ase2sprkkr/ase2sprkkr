@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.examples.A09_EmptySpheres.empty_speheres &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -91,32 +91,38 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.examples.A09_EmptySpheres.empty_speheres</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Adding of empty spheres into the structure&quot;&quot;&quot;</span>
+
+
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A09_EmptySpheres.empty_speheres.main.html#ase2sprkkr.examples.A09_EmptySpheres.empty_speheres.main">[docs]</a>
-<span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
 
-    <span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
-    <span class="kn">from</span> <span class="nn">ase2sprkkr</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.build</span><span class="w"> </span><span class="kn">import</span> <span class="n">bulk</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span>
 
-    <span class="n">atoms</span><span class="o">=</span><span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;Cu&#39;</span><span class="p">,</span><span class="s1">&#39;fcc&#39;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span> <span class="n">orthorhombic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s2">&quot;Cu&quot;</span><span class="p">,</span> <span class="s2">&quot;fcc&quot;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span> <span class="n">orthorhombic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span>
 
-    <span class="n">calc</span><span class="o">=</span><span class="n">SPRKKR</span><span class="p">()</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">()</span>
 
-    <span class="c1">#default values</span>
-    <span class="c1">#out = calc.calculate(atoms=atoms, options={&#39;NITER&#39;: 1 }, empty_spheres=True)</span>
+    <span class="c1"># default values</span>
+    <span class="c1"># out = calc.calculate(atoms=atoms, options={&#39;NITER&#39;: 1 }, empty_spheres=True)</span>
 
-    <span class="c1">#min and max radius</span>
-    <span class="c1">#out = calc.calculate(atoms=atoms, options={&#39;NITER&#39;: 1 }, empty_spheres=(0.5, 1.5))</span>
+    <span class="c1"># min and max radius</span>
+    <span class="c1"># out = calc.calculate(atoms=atoms, options={&#39;NITER&#39;: 1 }, empty_spheres=(0.5, 1.5))</span>
 
-    <span class="c1">#custom arguments of ase2sprkkr.bindings.empty_spheres, resulting either in calling</span>
-    <span class="c1">#es_finder, if it is available, or xband empty_spheres routines, called from the function</span>
-    <span class="c1">#empty_spheres in ase2sprkkr.bindings.xband.spheres (compiled from spheres.pyx)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NITER&#39;</span><span class="p">:</span> <span class="mi">1</span> <span class="p">},</span> <span class="n">empty_spheres</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;max_radius&#39;</span><span class="p">:</span> <span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;verbose&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;max_spheres&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">})</span>
+    <span class="c1"># custom arguments of ase2sprkkr.bindings.empty_spheres, resulting either in calling</span>
+    <span class="c1"># es_finder, if it is available, or xband empty_spheres routines, called from the function</span>
+    <span class="c1"># empty_spheres in ase2sprkkr.bindings.xband.spheres (compiled from spheres.pyx)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>  <span class="c1"># noqa F841</span>
+        <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;NITER&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="n">empty_spheres</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;max_radius&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span> <span class="s2">&quot;verbose&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;max_spheres&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">}</span>
+    <span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span></div>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

@@ -7,8 +7,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>dos &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="DosProcessRunner" href="ase2sprkkr.outputs.readers.dos.DosProcessRunner.html" />
+    <link rel="next" title="DosOutputReader" href="ase2sprkkr.outputs.readers.dos.DosOutputReader.html" />
     <link rel="prev" title="DefaultResult" href="ase2sprkkr.outputs.readers.default.DefaultResult.html" /> 
 </head>
 
@@ -84,6 +84,7 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.bsf.html">bsf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.default.html">default</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.jxc.html">jxc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.html">scf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.spec.html">spec</a></li>
 </ul>
@@ -132,12 +133,12 @@
 <h1>dos<a class="headerlink" href="#dos" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs.readers.dos</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-a3f37bc2ac3a1662b0eff1a204449d864a6f1894.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.dos.DosProcessRunner, ase2sprkkr.outputs.readers.dos.DosResult" usemap="#inheritancecca9ce6de4" class="inheritance graphviz" /></div>
-<map id="inheritancecca9ce6de4" name="inheritancecca9ce6de4">
-<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.dos.DosProcessRunner.html#ase2sprkkr.outputs.readers.dos.DosProcessRunner" target="_top" title="ARPES task output reader currently do nothing, just have a special" alt="" coords="175,55,317,80"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrProcessRunner.html#ase2sprkkr.outputs.task_result.KkrProcessRunner" target="_top" title="Class, that run a process and read its output using underlined" alt="" coords="5,55,145,80"/>
-<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.dos.DosResult.html#ase2sprkkr.outputs.readers.dos.DosResult" target="_top" title="Density of states (DOS) results provides access to the computed" alt="" coords="202,5,290,31"/>
-<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="29,5,121,31"/>
+<div class="graphviz"><img src="../_images/inheritance-247f6378d485943d4c88c01d10fcca0a6bade9d4.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.dos.DosOutputReader, ase2sprkkr.outputs.readers.dos.DosResult" usemap="#inheritance89b7a52b4a" class="inheritance graphviz" /></div>
+<map id="inheritance89b7a52b4a" name="inheritance89b7a52b4a">
+<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.dos.DosOutputReader.html#ase2sprkkr.outputs.readers.dos.DosOutputReader" target="_top" title="DOS task has no special parser, it just has a special" alt="" coords="168,57,304,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Class, that runs a process and reads its output using the underlying" alt="" coords="5,57,139,85"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.dos.DosResult.html#ase2sprkkr.outputs.readers.dos.DosResult" target="_top" title="Density of states (DOS) results provides access to the computed" alt="" coords="192,5,280,33"/>
+<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="26,5,118,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -146,8 +147,8 @@
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.dos.DosProcessRunner.html#ase2sprkkr.outputs.readers.dos.DosProcessRunner" title="ase2sprkkr.outputs.readers.dos.DosProcessRunner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DosProcessRunner</span></code></a>(input_parameters, ...[, ...])</p></td>
-<td><p>ARPES task output reader currently do nothing, just have a special result, that allow easy acces to spc output file</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.dos.DosOutputReader.html#ase2sprkkr.outputs.readers.dos.DosOutputReader" title="ase2sprkkr.outputs.readers.dos.DosOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DosOutputReader</span></code></a>(input_parameters, ...[, ...])</p></td>
+<td><p>DOS task has no special parser, it just has a special result, that allow easy acces to spc output file</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.dos.DosResult.html#ase2sprkkr.outputs.readers.dos.DosResult" title="ase2sprkkr.outputs.readers.dos.DosResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DosResult</span></code></a>(input_parameters, calculator, ...)</p></td>
 <td><p>Density of states (DOS) results provides access to the computed density of states in the DOS output file, using the :py:attr:dos property.</p></td>
@@ -161,7 +162,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.outputs.readers.default.DefaultResult.html" class="btn btn-neutral float-left" title="DefaultResult" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.outputs.readers.dos.DosProcessRunner.html" class="btn btn-neutral float-right" title="DosProcessRunner" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.outputs.readers.dos.DosOutputReader.html" class="btn btn-neutral float-right" title="DosOutputReader" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

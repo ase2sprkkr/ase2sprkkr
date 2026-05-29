@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.bandstructure &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
@@ -92,8 +92,8 @@
              
   <h1>Source code for ase2sprkkr.asr.bandstructure</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Electronic band structures.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">singleprec_dict</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">singleprec_dict</span><span class="p">,</span> <span class="n">prepare_result</span>
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.bandstructure&#39;</span><span class="p">,</span>
@@ -103,11 +103,11 @@
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--kptpath&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Custom kpoint path.&#39;</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--npoints&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--emptybands&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">kptpath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">npoints</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="n">kptpath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">npoints</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span>
               <span class="n">emptybands</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate electronic band structure.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">kptpath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">bandpath</span><span class="p">(</span><span class="n">npoints</span><span class="o">=</span><span class="n">npoints</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">)</span>
@@ -132,14 +132,14 @@
 
 <div class="viewcode-block" id="bs_pbe_html">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.bs_pbe_html.html#ase2sprkkr.asr.bandstructure.bs_pbe_html">[docs]</a>
-<span class="k">def</span> <span class="nf">bs_pbe_html</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bs_pbe_html</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>
                 <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pbe-bs.html&#39;</span><span class="p">,</span>
                 <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">),</span>
                 <span class="n">show_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">plotly</span>
-    <span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="k">as</span> <span class="nn">go</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">plotly</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
     <span class="n">traces</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.bandstructure.json&#39;</span><span class="p">)</span>
@@ -166,7 +166,7 @@
         <span class="n">emax</span> <span class="o">=</span> <span class="n">ef</span> <span class="o">+</span> <span class="mi">3</span>
     <span class="n">e_skn</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_nosoc&#39;</span><span class="p">][</span><span class="s1">&#39;energies&#39;</span><span class="p">]</span>
     <span class="n">shape</span> <span class="o">=</span> <span class="n">e_skn</span><span class="o">.</span><span class="n">shape</span>
-    <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">labels_from_kpts</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.dft.kpoints</span><span class="w"> </span><span class="kn">import</span> <span class="n">labels_from_kpts</span>
     <span class="n">xcoords</span><span class="p">,</span> <span class="n">label_xcoords</span><span class="p">,</span> <span class="n">orig_labels</span> <span class="o">=</span> <span class="n">labels_from_kpts</span><span class="p">(</span><span class="n">kpts</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
     <span class="n">xcoords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">xcoords</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
     <span class="c1"># colors_s = plt.get_cmap(&#39;viridis&#39;)([0, 1])  # color for sz = 0</span>
@@ -186,7 +186,7 @@
     <span class="n">ef</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;efermi&#39;</span><span class="p">]</span>
     <span class="n">sz_mk</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;sz_mk&#39;</span><span class="p">]</span>
 
-    <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">labels_from_kpts</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.dft.kpoints</span><span class="w"> </span><span class="kn">import</span> <span class="n">labels_from_kpts</span>
     <span class="n">xcoords</span><span class="p">,</span> <span class="n">label_xcoords</span><span class="p">,</span> <span class="n">orig_labels</span> <span class="o">=</span> <span class="n">labels_from_kpts</span><span class="p">(</span><span class="n">kpts</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
 
     <span class="n">shape</span> <span class="o">=</span> <span class="n">e_mk</span><span class="o">.</span><span class="n">shape</span>
@@ -226,7 +226,7 @@
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Fermi level&#39;</span><span class="p">)</span>
     <span class="n">traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linetrace</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">pretty</span><span class="p">(</span><span class="n">kpt</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pretty</span><span class="p">(</span><span class="n">kpt</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">kpt</span> <span class="o">==</span> <span class="s1">&#39;G&#39;</span><span class="p">:</span>
             <span class="n">kpt</span> <span class="o">=</span> <span class="s1">&#39;&amp;#x393;&#39;</span>  <span class="c1"># Gamma in unicode</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">kpt</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
@@ -315,9 +315,9 @@
 
 <div class="viewcode-block" id="add_bs_pbe">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.add_bs_pbe.html#ase2sprkkr.asr.bandstructure.add_bs_pbe">[docs]</a>
-<span class="k">def</span> <span class="nf">add_bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot pbe with soc on ax.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">labels_from_kpts</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.dft.kpoints</span><span class="w"> </span><span class="kn">import</span> <span class="n">labels_from_kpts</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.bandstructure.json&#39;</span><span class="p">)</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">]</span>
     <span class="n">e_mk</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;energies&#39;</span><span class="p">]</span>
@@ -333,7 +333,7 @@
 
 <div class="viewcode-block" id="plot_with_colors">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.plot_with_colors.html#ase2sprkkr.asr.bandstructure.plot_with_colors">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_with_colors</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_with_colors</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span>
                      <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                      <span class="n">emin</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span>
                      <span class="n">emax</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
@@ -350,14 +350,14 @@
                      <span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                      <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot band-structure with colors.&quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
     <span class="c1"># if bs.ax is None:</span>
     <span class="c1">#     ax = bs.prepare_plot(ax, emin, emax, ylabel)</span>
     <span class="c1"># trying to find vertical lines and putt them in the back</span>
 
-    <span class="k">def</span> <span class="nf">vlines2back</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vlines2back</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
         <span class="n">zmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">l</span><span class="o">.</span><span class="n">get_zorder</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">()</span>
@@ -390,17 +390,17 @@
 
 <div class="viewcode-block" id="bs_pbe">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.bs_pbe.html#ase2sprkkr.asr.bandstructure.bs_pbe">[docs]</a>
-<span class="k">def</span> <span class="nf">bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>
            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pbe-bs.png&#39;</span><span class="p">,</span>
            <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
            <span class="n">show_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
            <span class="n">s</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
 
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rcParams</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.patheffects</span> <span class="k">as</span> <span class="nn">path_effects</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">ase.spectrum.band_structure</span> <span class="kn">import</span> <span class="n">BandStructure</span><span class="p">,</span> <span class="n">BandStructurePlot</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">rcParams</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patheffects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">path_effects</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.spectrum.band_structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">BandStructure</span><span class="p">,</span> <span class="n">BandStructurePlot</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.bandstructure.json&#39;</span><span class="p">)</span>
 
     <span class="n">path</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_nosoc&#39;</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">]</span>
@@ -492,13 +492,13 @@
 
 <div class="viewcode-block" id="webpanel">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.webpanel.html#ase2sprkkr.asr.bandstructure.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span>
-    <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.database.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">fig</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
 
-    <span class="k">def</span> <span class="nf">rmxclabel</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="s1">&#39;Tuple[str, str, str]&#39;</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rmxclabel</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="s1">&#39;Tuple[str, str, str]&#39;</span><span class="p">,</span>
                   <span class="n">xcs</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Tuple[str, str, str]&#39;</span><span class="p">:</span>
-        <span class="k">def</span> <span class="nf">rm</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">rm</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">xc</span> <span class="ow">in</span> <span class="n">xcs</span><span class="p">:</span>
                 <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;(</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xc</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
@@ -521,7 +521,7 @@
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.Result.html#ase2sprkkr.asr.bandstructure.Result">[docs]</a>
 <span class="nd">@prepare_result</span>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">version</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -545,15 +545,15 @@
          <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.bandstructure@calculate&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.gs&#39;</span><span class="p">,</span>
                        <span class="s1">&#39;asr.structureinfo&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.magnetic_anisotropy&#39;</span><span class="p">],</span>
          <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
-    <span class="kn">from</span> <span class="nn">ase.spectrum.band_structure</span> <span class="kn">import</span> <span class="n">get_band_structure</span>
-    <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">BandPath</span>
-    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">read_json</span>
-    <span class="kn">import</span> <span class="nn">copy</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">asr.utils.gpw2eigs</span> <span class="kn">import</span> <span class="n">gpw2eigs</span>
-    <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span><span class="p">,</span> <span class="n">get_spin_index</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.spectrum.band_structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_band_structure</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.dft.kpoints</span><span class="w"> </span><span class="kn">import</span> <span class="n">BandPath</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_json</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.utils.gpw2eigs</span><span class="w"> </span><span class="kn">import</span> <span class="n">gpw2eigs</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.magnetic_anisotropy</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_spin_axis</span><span class="p">,</span> <span class="n">get_spin_index</span>
 
     <span class="n">ref</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">get_fermi_level</span><span class="p">()</span>
     <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;bs.gpw&#39;</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>

@@ -24,6 +24,15 @@ Full name: **ase2sprkkr.potentials.definitions.sections.potential**
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _sections_potential_fullpot_condition
+      _sections_potential_fullpot_write_condition
+   
    
 
 

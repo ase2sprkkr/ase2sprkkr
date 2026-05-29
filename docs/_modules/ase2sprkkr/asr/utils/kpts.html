@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.utils.kpts &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -93,9 +93,9 @@
   <h1>Source code for ase2sprkkr.asr.utils.kpts</h1><div class="highlight"><pre>
 <div class="viewcode-block" id="get_kpts_size">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.utils.kpts.get_kpts_size.html#ase2sprkkr.asr.utils.kpts.get_kpts_size">[docs]</a>
-<span></span><span class="k">def</span> <span class="nf">get_kpts_size</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">density</span><span class="p">):</span>
+<span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_kpts_size</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">density</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Try to get a reasonable Monkhorst-Pack grid which hits high symmetry points.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">gpaw.kpt_descriptor</span> <span class="kn">import</span> <span class="n">kpts2sizeandoffsets</span> <span class="k">as</span> <span class="n">k2so</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">gpaw.kpt_descriptor</span><span class="w"> </span><span class="kn">import</span> <span class="n">kpts2sizeandoffsets</span> <span class="k">as</span> <span class="n">k2so</span>
     <span class="n">size</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">k2so</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">density</span><span class="p">)</span>
     <span class="c1"># size[2] = 1  # what do we do in general? XXX</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">size</span><span class="p">)):</span>

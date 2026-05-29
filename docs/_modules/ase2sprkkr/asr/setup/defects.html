@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.asr.setup.defects &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -92,10 +92,10 @@
              
   <h1>Source code for ase2sprkkr.asr.setup.defects</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Generate defective atomic structures.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
-<span class="kn">import</span> <span class="nn">click</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">click</span>
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.setup.defects&#39;</span><span class="p">,</span>
@@ -112,7 +112,7 @@
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Specify whether you want to incorporate anti-site defects.&#39;</span><span class="p">)</span>
 <span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--vacancies&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Specify whether you want to incorporate vacancies.&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">atomfile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;unrelaxed.json&#39;</span><span class="p">,</span> <span class="n">chargestates</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">atomfile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;unrelaxed.json&#39;</span><span class="p">,</span> <span class="n">chargestates</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
          <span class="n">supercell</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
          <span class="n">maxsize</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">intrinsic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
          <span class="n">vacancies</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
@@ -163,8 +163,8 @@
 <span class="sd">      different defect structures.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
     <span class="c1"># first, read input atomic structure and store it in ase&#39;s atoms object</span>
     <span class="n">structure</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">atomfile</span><span class="p">)</span>
@@ -198,7 +198,7 @@
 
 <div class="viewcode-block" id="setup_supercell">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.setup_supercell.html#ase2sprkkr.asr.setup.defects.setup_supercell">[docs]</a>
-<span class="k">def</span> <span class="nf">setup_supercell</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">max_lattice</span><span class="p">,</span> <span class="n">is_2D</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_supercell</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">max_lattice</span><span class="p">,</span> <span class="n">is_2D</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up the supercell of a given structure depending.</span>
 
 <span class="sd">    Set up the supercell of a given structure depending on a</span>
@@ -253,7 +253,7 @@
 
 <div class="viewcode-block" id="setup_defects">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.setup_defects.html#ase2sprkkr.asr.setup.defects.setup_defects">[docs]</a>
-<span class="k">def</span> <span class="nf">setup_defects</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">intrinsic</span><span class="p">,</span> <span class="n">charge_states</span><span class="p">,</span> <span class="n">vacancies</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_defects</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">intrinsic</span><span class="p">,</span> <span class="n">charge_states</span><span class="p">,</span> <span class="n">vacancies</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
                   <span class="n">max_lattice</span><span class="p">,</span> <span class="n">is_2D</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up all possible defects.</span>
 
@@ -277,7 +277,7 @@
 <span class="sd">        states. The dictionary is built up in the</span>
 <span class="sd">        following way: see folder structure in &#39;main()&#39;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">spglib</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">spglib</span>
 
     <span class="c1"># set up artificial array in order to check for equivalent positions later</span>
     <span class="n">cell</span> <span class="o">=</span> <span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(),</span>
@@ -372,7 +372,7 @@
 
 <div class="viewcode-block" id="create_folder_structure">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.create_folder_structure.html#ase2sprkkr.asr.setup.defects.create_folder_structure">[docs]</a>
-<span class="k">def</span> <span class="nf">create_folder_structure</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">structure_dict</span><span class="p">,</span> <span class="n">chargestates</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_folder_structure</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">structure_dict</span><span class="p">,</span> <span class="n">chargestates</span><span class="p">,</span>
                             <span class="n">intrinsic</span><span class="p">,</span> <span class="n">vacancies</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span> <span class="n">max_lattice</span><span class="p">,</span> <span class="n">is_2D</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create folder for all configurations.</span>
 
@@ -386,8 +386,8 @@
 <span class="sd">    - the content of those folders can then be used to do further</span>
 <span class="sd">      processing (e.g. relax the defect structure)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">write</span>
-    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">write_json</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">asr.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_json</span>
 
     <span class="c1"># create a json file for general parameters that are equivalent for all</span>
     <span class="c1"># the different defect systems</span>
@@ -462,7 +462,7 @@
 
 <div class="viewcode-block" id="collect_data">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.collect_data.html#ase2sprkkr.asr.setup.defects.collect_data">[docs]</a>
-<span class="k">def</span> <span class="nf">collect_data</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">collect_data</span><span class="p">():</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
 

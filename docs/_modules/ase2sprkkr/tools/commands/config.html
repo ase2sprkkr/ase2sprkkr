@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr.tools.commands.config &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
@@ -95,39 +95,57 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Tool to configuration of ASE2SPRKKR</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">__package__</span><span class="p">:</span>
-  <span class="n">__package__</span> <span class="o">=</span> <span class="s1">&#39;ase2sprkkr.tools.commands&#39;</span>
+    <span class="n">__package__</span> <span class="o">=</span> <span class="s2">&quot;ase2sprkkr.tools.commands&quot;</span>
 
 <span class="n">root_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">root_path</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">...common.tools</span> <span class="kn">import</span> <span class="n">main</span>  <span class="c1"># NOQA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span>  <span class="c1"># NOQA</span>
 
-<span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show the (current) user configuration.&#39;</span>
-<span class="n">description</span><span class="o">=</span><span class="s1">&#39;On the most modern unix/linux systems, it is in the file ~/.config/ase2sprkkr/__init__.py&#39;</span>
+<span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Show the (current) user configuration.&quot;</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;On the most modern unix/linux systems, it is in the file ~/.config/ase2sprkkr/__init__.py&quot;</span>
 
 
 <div class="viewcode-block" id="parser">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.parser.html#ase2sprkkr.tools.commands.config.parser">[docs]</a>
-<span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Just print the path to the configuration file.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-P&#39;</span><span class="p">,</span> <span class="s1">&#39;--print&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Just print the path configuration file.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--show&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Print the configuration.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--info&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show the description of the configuration options.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-S&#39;</span><span class="p">,</span> <span class="s1">&#39;--set&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Set the given configuration to the given value. Example: &quot;ase2sprkkr config -S executables.suffix 8.6&quot;.&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;VALUE&quot;</span><span class="p">))</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--edit&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Edit the file using the editor in the $EDITOR environment variable.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--default&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Put the default values into the file, if it not exists.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-D&#39;</span><span class="p">,</span> <span class="s1">&#39;--overwrite-by-default&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Put the default values into the file. Owerwrite it if it exists.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_const&#39;</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="s1">&#39;overwrite&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--show-default&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show the default values.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span></div>
+<span class="k">def</span><span class="w"> </span><span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--path&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Just print the path to the configuration file.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-P&quot;</span><span class="p">,</span> <span class="s2">&quot;--print&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Just print the path configuration file.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--show&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print the configuration.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--info&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Show the description of the configuration options.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-S&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--set&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Set the given configuration to the given value. Example: &quot;ase2sprkkr config -S executables.suffix 8.6&quot;.&#39;</span><span class="p">,</span>
+        <span class="n">metavar</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;VALUE&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s2">&quot;--edit&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Edit the file using the editor in the $EDITOR environment variable.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;--default&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Put the default values into the file, if it not exists.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-D&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--overwrite-by-default&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Put the default values into the file. Owerwrite it if it exists.&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_const&quot;</span><span class="p">,</span>
+        <span class="n">const</span><span class="o">=</span><span class="s2">&quot;overwrite&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--show-default&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Show the default values.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="default_content">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.default_content.html#ase2sprkkr.tools.commands.config.default_content">[docs]</a>
-<span class="k">def</span> <span class="nf">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;# ASE2SRPKKR configuration file</span>
 <span class="s2"># -------------------------------</span>
 
@@ -162,78 +180,83 @@
 
 <div class="viewcode-block" id="run">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.run.html#ase2sprkkr.tools.commands.config.run">[docs]</a>
-<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">os</span>
-    <span class="kn">import</span> <span class="nn">pyparsing</span>
-    <span class="kn">from</span> <span class="nn">...configuration</span> <span class="kn">import</span> <span class="n">user_preferences_file</span><span class="p">,</span> <span class="n">config</span>
-    <span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">global_args</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">...configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">user_preferences_file</span><span class="p">,</span> <span class="n">config</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+
     <span class="n">file</span> <span class="o">=</span> <span class="n">user_preferences_file</span><span class="p">()</span>
 
-    <span class="n">run</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">run</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">default</span> <span class="o">==</span> <span class="s1">&#39;overwrite&#39;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">default</span> <span class="o">==</span> <span class="s2">&quot;overwrite&quot;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration defaults have been written to file &#39;</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration file have already existed, so it have not been overwritten.&quot;</span><span class="p">)</span>
-        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Configuration file have already existed, so it have not been overwritten.&quot;</span><span class="p">)</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">print</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-           <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">show_default</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
-        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">info</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">description</span><span class="p">(</span><span class="n">verbose</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">))</span>
-        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">description</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">))</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">...common.grammar_types</span> <span class="kn">import</span> <span class="n">Variant</span>
-        <span class="kn">from</span> <span class="nn">...common.warnings</span> <span class="kn">import</span> <span class="n">DataValidityError</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">...common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Variant</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">...common.warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataValidityError</span>
+
         <span class="k">try</span><span class="p">:</span>
-          <span class="k">try</span><span class="p">:</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="n">Variant</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-          <span class="k">except</span> <span class="n">DataValidityError</span><span class="p">:</span>
-            <span class="c1">#if parsing using mixed failed, just try store string</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-          <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; have been set to &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">Variant</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">DataValidityError</span><span class="p">:</span>
+                <span class="c1"># if parsing using mixed failed, just try store string</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; have been set to &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-          <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown configuration name &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown configuration name &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">pyparsing</span><span class="o">.</span><span class="n">ParseBaseException</span><span class="p">:</span>
-          <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Suspicious configuration value &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;. If you are sure,&quot;</span>
-                 <span class="s2">&quot;please edit the configuration file manually&quot;</span><span class="p">)</span>
-        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Suspicious configuration value &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;. If you are sure,&quot;</span>
+                <span class="s2">&quot;please edit the configuration file manually&quot;</span>
+            <span class="p">)</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">show</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">pprint</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">pprint</span>
+
         <span class="n">pprint</span><span class="o">.</span><span class="n">pp</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
-        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">edit</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s1">&#39;EDITOR&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;EDITOR&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please set the EDITOR environment variable.&quot;</span><span class="p">)</span>
             <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;EDITOR&#39;</span><span class="p">],</span> <span class="n">file</span><span class="p">])</span>
-        <span class="n">run</span><span class="o">=</span><span class="kc">False</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;EDITOR&quot;</span><span class="p">],</span> <span class="n">file</span><span class="p">])</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="n">run</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
-             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# Content of the ASE2SPRKKR user configuration file&quot;</span><span class="p">)</span>
-             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#--------------------------------------------------&quot;</span><span class="p">)</span>
-             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                 <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# Content of the ASE2SPRKKR user configuration file&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#--------------------------------------------------&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
-             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# No custom user configuration found&quot;</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# No custom user configuration found&quot;</span><span class="p">)</span></div>
 
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">(</span> <span class="nb">globals</span><span class="p">()</span> <span class="p">)</span>
+    <span class="n">main</span><span class="p">(</span><span class="nb">globals</span><span class="p">())</span>
 </pre></div>
 
            </div>
