@@ -47,8 +47,9 @@ class TestInputParameters(TestCase):
         self.assertRaises(pp.ParseBaseException, lambda: self.parse(text, grammar))
 
     def test_section_delimiter_value(self):
-        grammar = cd.InputParametersDefinition.grammar_of_delimiter()
-        grammar = "a" + grammar + "b"
+        with generate_grammar():
+            grammar = cd.InputParametersDefinition.grammar_of_delimiter()
+            grammar = "a" + grammar + "b"
         for w in ["a b", "a\n b", "a\n\n b", "a\n \n b", "a \n\n b", "a\n\n\n b"]:
             self.assertRaises(pp.ParseException, lambda: grammar.parse_string(w, True))
         for w in ["a\nb", "a \nb", "a\n  \nb", "a  \n \nb", "a \n\t\nb", "a\n\n\nb"]:
