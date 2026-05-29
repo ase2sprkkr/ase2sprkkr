@@ -21,9 +21,8 @@ from ..common.decorators import cached_class_property, cache
 from .input_parameters import InputParameters, InputSection
 
 with generate_grammar():
-    endl = pp.LineEnd().set_whitespace_chars("")
-    white = pp.White(" \t")
-    section_line_ends = endl + pp.ZeroOrMore(pp.ZeroOrMore(white) +  endl) + white
+    section_line_ends = pp.Regex("(\n[ \t]*)*[ \t]")
+
 
 class InputValueDefinition(ConfigurationValueDefinition):
     """This class describes the format of one value of
