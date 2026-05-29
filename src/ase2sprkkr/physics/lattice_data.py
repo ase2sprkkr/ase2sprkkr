@@ -10,6 +10,7 @@ import numpy as np
 from ase2sprkkr.bindings.spglib import spglib_dataset
 from ase.units import Bohr
 from scipy.optimize import linear_sum_assignment
+from typing import Union
 
 
 def reorder_matrix(target, source):
@@ -872,7 +873,7 @@ hall_numbers_to_AP = {
 }
 
 
-def ap_number_from_spacegroup(spacegroup_number: int, hall_number: int | None = None, cell=None) -> int:
+def ap_number_from_spacegroup(spacegroup_number: int, hall_number: Union[int, None] = None, cell=None) -> int:
     """Return the Xband A. Perlov number for a space-group setting.
 
     The trigonal space groups 143, 144, 145, and 147 need the cell shape to
