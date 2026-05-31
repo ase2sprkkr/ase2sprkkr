@@ -25,6 +25,11 @@ class ArpesResult(TaskResult):
         return self.output_values["spc"]()
 
     @property
+    def arpes(self):
+        """ Alias of ``meth:ArpesResult.spc`` """
+        return self.spc()
+
+    @property
     def output_values(self):
         return {"spc": OutputFileResultValue("Spectroscopy", "spc", self.spc_filename)}
 
