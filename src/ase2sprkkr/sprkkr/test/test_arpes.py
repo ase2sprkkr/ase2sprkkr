@@ -1,6 +1,6 @@
 import numpy as np
+import pytest
 from ase.atoms import Atoms
-
 
 if __package__:
     from .init_tests import TestCase, patch_package
@@ -14,6 +14,7 @@ from ...potentials.potentials import Potential  # NOQA
 
 
 class TestCalculator(TestCase):
+    @pytest.mark.slow
     def test_run(self, temporary_dir):
         if not self.run_sprkkr():
             return
