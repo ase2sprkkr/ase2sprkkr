@@ -7,8 +7,72 @@ from .atomic_types import AtomicType
 from typing import Dict, Union, Optional, List, Tuple
 from numbers import Integral
 from collections.abc import Iterable
-from .sites import SiteType
+from .sites import SiteType, SitePropertyProxy
 from .radial_meshes import Mesh
+
+class SiteOccupation(SitePropertyProxy):
+    """
+    Proxy for the Occupation of a Site that automatically calls break_symmetry()
+    before any mutating operation, so that changes only affect the individual site
+    rather than all symmetry-equivalent sites.
+
+    Inherits read delegation and the transparent __class__ / isinstance() behaviour
+    from SitePropertyProxy; only mutating operations are overridden here.
+    """
+
+    def __init__(self, site):
+        super().__init__(site, lambda: site.site_type.occupation)
+
+    # --- special methods that Occupation supports but SitePropertyProxy doesn't ---
+
+    def __iter__(self):
+        return iter(self._get_target())
+
+    def __len__(self):
+        return len(self._get_target())
+
+    def __getitem__(self, name):
+        return self._get_target()[name]
+
+    # --- mutating methods: call break_symmetry() first ---
+
+    def set(
+        self,
+        dct: Union[Dict[Union[AtomicType, str], float], List[Tuple[Union[AtomicType, str], float]]],
+        update_atoms=True,
+        for_mesh=None,
+    ) -> None:
+        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        self._get_target().set(dct, update_atoms, for_mesh)
+
+    def __setitem__(self, name, value):
+        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        self._get_target()[name] = value
+
+    def __delitem__(self, name):
+        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        del self._get_target()[name]
+
+    def add(self, name, value=None):
+        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        self._get_target().add(name, value)
+
+    def replace_type(self, name, to):
+        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        self._get_target().replace_type(name, to)
+
+    def clean(self):
+        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        self._get_target().clean()
+
+    @property
+    def as_dict(self):
+        return self._get_target().as_dict
+
+    @as_dict.setter
+    def as_dict(self, x):
+        self.set(x)
+
 
 
 class Occupation:
@@ -39,7 +103,7 @@ class Occupation:
             occupation = Occupation(occupation, site, update_atoms=False)
         elif site is not None:
             if occupation.site is None:
-                occupation._site = site
+                occupation._site_type = site
             else:
                 occupation = Occupation.copy(occupation, site)
         return occupation
@@ -47,13 +111,13 @@ class Occupation:
     def __init__(
         self,
         dct: Dict[Union[AtomicType, str], float],
-        site: Optional[SiteType] = None,
+        site_type: Optional[SiteType] = None,
         mesh: Optional[Mesh] = None,
         update_atoms=False,
     ):
-        self._site = site
-        if mesh is None and site:
-            mesh = site.mesh
+        self._site_type = site_type
+        if mesh is None and site_type:
+            mesh = site_type.mesh
         self.set(dct, update_atoms, for_mesh=mesh)
 
     def copy(self, site: Optional[SiteType] = None, for_mesh=None) -> Occupation:
@@ -89,11 +153,11 @@ class Occupation:
 
     @property
     def site(self):
-        return self._site
+        return self._site_type
 
     @property
     def mesh(self):
-        (len(self._occupation) and self.atomic_type(0).mesh) or (self._site and self._site.mesh) or None
+        return (len(self._occupation) and self.atomic_type(0).mesh) or (self._site_type and self._site_type.mesh) or None
 
     def items(self):
         """dict.items() like enumeration"""
@@ -106,8 +170,8 @@ class Occupation:
         return f"Occupation {self._occupation}"
 
     def _update_atoms(self):
-        if self._site:
-            self._site.update_atoms()
+        if self._site_type:
+            self._site_type.update_atoms()
 
     def __iter__(self):
         return iter(self._occupation)

@@ -261,6 +261,65 @@ class SiteType:
         return AtomicTypesLookup()
 
 
+class SitePropertyProxy:
+    """
+    Generic proxy for a SiteType-delegated property (mesh, potential, charge,
+    moments, reference_system) that intercepts in-place attribute mutations and
+    calls site.break_symmetry() first, ensuring the change only affects the
+    individual site rather than all symmetry-equivalent sites.
+
+    Only instantiate when the underlying value is not None; return None directly
+    for None-valued properties so that ``site.potential is None`` keeps working.
+    """
+
+    def __init__(self, site, getter):
+        # bypass our own __setattr__
+        object.__setattr__(self, '_proxy_site', site)
+        object.__setattr__(self, '_proxy_getter', getter)
+
+    def _get_target(self):
+        return object.__getattribute__(self, '_proxy_getter')()
+
+    # Make isinstance() checks transparent (CPython uses __class__ for this)
+    @property
+    def __class__(self):
+        return type(self._get_target())
+
+    # --- read delegation ---
+
+    def __getattr__(self, name):
+        return getattr(self._get_target(), name)
+
+    # --- write interception ---
+
+    def __setattr__(self, name, value):
+        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        setattr(self._get_target(), name, value)
+
+    # --- special methods Python looks up on the type directly ---
+
+    def __repr__(self):
+        return repr(self._get_target())
+
+    def __str__(self):
+        return str(self._get_target())
+
+    def __bool__(self):
+        return bool(self._get_target())
+
+    def __call__(self, *args, **kwargs):
+        return self._get_target()(*args, **kwargs)
+
+    def __hash__(self):
+        return hash(self._get_target())
+
+    def __eq__(self, other):
+        target = self._get_target()
+        if isinstance(other, SitePropertyProxy):
+            other = other._get_target()
+        return target == other
+
+
 class Site:
     @staticmethod
     def create(atoms, occupation, reference_system=None, mesh=None):
@@ -352,53 +411,74 @@ class Site:
 
     @property
     def mesh(self):
-        return self._site_type.mesh
+        return SitePropertyProxy(self, lambda: self._site_type.mesh)
 
     @mesh.setter
     def mesh(self, mesh):
+        if isinstance(mesh, SitePropertyProxy):
+            mesh = mesh._get_target()
+        self.break_symmetry()
         self._site_type.mesh = mesh
 
     def remesh(self, mesh, map=None):
+        if isinstance(mesh, SitePropertyProxy):
+            mesh = mesh._get_target()
         return self._site_type.remesh(mesh, map)
 
     @property
     def potential(self):
-        return self._site_type.potential
+        p = self._site_type.potential
+        return SitePropertyProxy(self, lambda: self._site_type.potential) if p is not None else None
 
     @potential.setter
     def potential(self, potential):
+        if isinstance(potential, SitePropertyProxy):
+            potential = potential._get_target()
+        self.break_symmetry()
         self._site_type.potential = potential
 
     @property
     def charge(self):
-        return self._site_type.charge
+        c = self._site_type.charge
+        return SitePropertyProxy(self, lambda: self._site_type.charge) if c is not None else None
 
     @charge.setter
     def charge(self, charge):
+        if isinstance(charge, SitePropertyProxy):
+            charge = charge._get_target()
+        self.break_symmetry()
         self._site_type.charge = charge
 
     @property
     def moments(self):
-        return self._site_type.moments
+        m = self._site_type.moments
+        return SitePropertyProxy(self, lambda: self._site_type.moments) if m is not None else None
 
     @moments.setter
     def moments(self, moments):
+        if isinstance(moments, SitePropertyProxy):
+            moments = moments._get_target()
+        self.break_symmetry()
         self._site_type.moments = moments
 
     @property
     def occupation(self):
-        return self._site_type.occupation
+        return SiteOccupation(self)
 
     @occupation.setter
     def occupation(self, occupation):
+        self.break_symmetry()
         self._site_type.occupation = occupation
 
     @property
     def reference_system(self):
-        return self._site_type.reference_system
+        return SitePropertyProxy(self, lambda: self._site_type.reference_system)
 
     @reference_system.setter
     def reference_system(self, reference_system):
+        if isinstance(reference_system, SitePropertyProxy):
+            reference_system = reference_system._get_target()
+        self.break_symmetry()
         self._site_type.reference_system = reference_system
 
     @property
@@ -455,4 +535,4 @@ class Site:
         return self.site_type.atomic_types
 
 
-from .occupations import Occupation  # NOQA: E402
+from .occupations import Occupation, SiteOccupation  # NOQA: E402
