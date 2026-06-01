@@ -3,28 +3,28 @@ Changelog
 
 Version 3.5
 -----------
-* promote_ase_atoms can be directly imported from ase2sprkkr root package
-* changing properties via site is disallowed in the case the site_type is shared
+* `promote_ase_atoms` can be directly imported from the `ase2sprkkr` root package
+* Changing properties via `site` is disallowed in cases where `site_type` is shared
 * JXC output file parsing and plotting
 * XAS output file parsing and plotting
-* Semiinfinite structures building improved
-* Uppasd improvements: calling sd directly, input file stub writing
-* Better multiple plots layout
-* A few more values parsed for SFC task
-* Tool: Python like output for ase2sprkkr k-path tool
-* Tool: ase2sprkkr example for searching (--regex) and showing examples
-* Tool: ase2sprkkr shell --pdb for running examples in python debugger
-* Better Hall number determination from Cell
-* Docstrings for examples
-* Various bugfixies
-* SLURM work manager autodetection
+* Semi-infinite structure building improved
+* Uppasd improvements: direct calling of `sd`, input file stub writing
+* Improved layout for multiple plots
+* Additional values parsed for SFC task
+* Tool: Python-like output for `ase2sprkkr` k-path tool
+* Tool: `ase2sprkkr` example search (--regex) and example display
+* Tool: `ase2sprkkr shell --pdb` for running examples in the Python debugger
+* Improved Hall number determination from Cell
+* Docstrings added for examples
+* Various bug fixes
+* SLURM work manager auto-detection
 
-internals
+Internals
 ~~~~~~~~~
-* Ruff adoption: formated code and code cleaning
-* Pickability of the Atom objects (for better ase.view compatibility)
-* ProcessOutput and ProcessReaders refactoring
-* Actions for Outputs and OutputFiles (for GUI)
+* Adoption of Ruff: code formatting and cleanup
+* Picklability of Atom objects (for better ase.view compatibility)
+* Refactoring of ProcessOutput and ProcessReaders
+* Actions for Outputs and OutputFiles (for GUI support)
 
 Version 3.4
 -----------
