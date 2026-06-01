@@ -12,9 +12,10 @@ from .radial_meshes import Mesh
 
 class SiteOccupation(SitePropertyProxy):
     """
-    Proxy for the Occupation of a Site that automatically calls break_symmetry()
-    before any mutating operation, so that changes only affect the individual site
-    rather than all symmetry-equivalent sites.
+    Proxy for the Occupation of a Site that raises a RuntimeError before any
+    mutating operation when the site still has symmetry (i.e. shares its
+    SiteType with other sites).  Call ``site.break_symmetry()`` first and
+    then mutate freely.
 
     Inherits read delegation and the transparent __class__ / isinstance() behaviour
     from SitePropertyProxy; only mutating operations are overridden here.
@@ -34,7 +35,7 @@ class SiteOccupation(SitePropertyProxy):
     def __getitem__(self, name):
         return self._get_target()[name]
 
-    # --- mutating methods: call break_symmetry() first ---
+    # --- mutating methods: check for symmetry first ---
 
     def set(
         self,
@@ -42,27 +43,27 @@ class SiteOccupation(SitePropertyProxy):
         update_atoms=True,
         for_mesh=None,
     ) -> None:
-        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        self._check_mutation_allowed()
         self._get_target().set(dct, update_atoms, for_mesh)
 
     def __setitem__(self, name, value):
-        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        self._check_mutation_allowed()
         self._get_target()[name] = value
 
     def __delitem__(self, name):
-        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        self._check_mutation_allowed()
         del self._get_target()[name]
 
     def add(self, name, value=None):
-        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        self._check_mutation_allowed()
         self._get_target().add(name, value)
 
     def replace_type(self, name, to):
-        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        self._check_mutation_allowed()
         self._get_target().replace_type(name, to)
 
     def clean(self):
-        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        self._check_mutation_allowed()
         self._get_target().clean()
 
     @property

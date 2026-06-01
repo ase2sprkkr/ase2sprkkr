@@ -280,6 +280,14 @@ class SitePropertyProxy:
     def _get_target(self):
         return object.__getattribute__(self, '_proxy_getter')()
 
+    def _check_mutation_allowed(self):
+        """Raise if the proxied site still shares its SiteType with other sites.
+
+        Delegates to :meth:`Site._check_mutation_allowed`, which is the single
+        authoritative place for this logic.
+        """
+        object.__getattribute__(self, '_proxy_site')._check_mutation_allowed()
+
     # Make isinstance() checks transparent (CPython uses __class__ for this)
     @property
     def __class__(self):
@@ -293,7 +301,7 @@ class SitePropertyProxy:
     # --- write interception ---
 
     def __setattr__(self, name, value):
-        object.__getattribute__(self, '_proxy_site').break_symmetry()
+        self._check_mutation_allowed()
         setattr(self._get_target(), name, value)
 
     # --- special methods Python looks up on the type directly ---
@@ -409,6 +417,22 @@ class Site:
         if self.has_symmetry:
             self.site_type = self.site_type.copy()
 
+    def _check_mutation_allowed(self):
+        """Raise if this site's SiteType is shared with other symmetry-equivalent sites.
+
+        This is the single authoritative place for the symmetry check used by
+        both the Site property setters and by :class:`SitePropertyProxy`.
+        When the check fails the caller is directed to call :meth:`break_symmetry`
+        first so they understand how to resolve the situation.
+        """
+        if self.has_symmetry:
+            raise RuntimeError(
+                "Cannot modify a shared site property while the site has symmetry. "
+                "Call site.break_symmetry() first to create an independent copy, or"
+                "if you want to modify all symmetry-equivalent sites simultaneously, "
+                "use the appropriate attribute or method on the SiteType."
+            )
+
     @property
     def mesh(self):
         return SitePropertyProxy(self, lambda: self._site_type.mesh)
@@ -417,7 +441,7 @@ class Site:
     def mesh(self, mesh):
         if isinstance(mesh, SitePropertyProxy):
             mesh = mesh._get_target()
-        self.break_symmetry()
+        self._check_mutation_allowed()
         self._site_type.mesh = mesh
 
     def remesh(self, mesh, map=None):
@@ -434,7 +458,7 @@ class Site:
     def potential(self, potential):
         if isinstance(potential, SitePropertyProxy):
             potential = potential._get_target()
-        self.break_symmetry()
+        self._check_mutation_allowed()
         self._site_type.potential = potential
 
     @property
@@ -446,7 +470,7 @@ class Site:
     def charge(self, charge):
         if isinstance(charge, SitePropertyProxy):
             charge = charge._get_target()
-        self.break_symmetry()
+        self._check_mutation_allowed()
         self._site_type.charge = charge
 
     @property
@@ -458,7 +482,7 @@ class Site:
     def moments(self, moments):
         if isinstance(moments, SitePropertyProxy):
             moments = moments._get_target()
-        self.break_symmetry()
+        self._check_mutation_allowed()
         self._site_type.moments = moments
 
     @property
@@ -467,7 +491,7 @@ class Site:
 
     @occupation.setter
     def occupation(self, occupation):
-        self.break_symmetry()
+        self._check_mutation_allowed()
         self._site_type.occupation = occupation
 
     @property
@@ -478,7 +502,7 @@ class Site:
     def reference_system(self, reference_system):
         if isinstance(reference_system, SitePropertyProxy):
             reference_system = reference_system._get_target()
-        self.break_symmetry()
+        self._check_mutation_allowed()
         self._site_type.reference_system = reference_system
 
     @property
