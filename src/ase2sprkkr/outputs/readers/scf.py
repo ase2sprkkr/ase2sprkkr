@@ -299,6 +299,8 @@ class ScfOutputParser(SprKkrOutputParser):
                     out["energy"]["ECTOP"] = float(line.split(b"=")[1])
 
                 line = await readline_until(stdout, lambda line: b"SPRKKR-run for: " in line)
+                if not line:
+                    raise EOFError()
                 line = line.strip()
                 if first and self.print_info:
                     print(line)
