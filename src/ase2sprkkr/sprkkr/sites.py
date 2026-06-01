@@ -428,9 +428,13 @@ class Site:
         if self.has_symmetry:
             raise RuntimeError(
                 "Cannot modify a shared site property while the site has symmetry. "
-                "Call site.break_symmetry() first to create an independent copy, or"
+                "Call site.break_symmetry() first to create an independent copy, or "
                 "if you want to modify all symmetry-equivalent sites simultaneously, "
-                "use the appropriate attribute or method on the SiteType."
+                "use the appropriate attribute or method on the SiteType. E.g. \n"
+                ">>> atoms.sites[2].site_type.mesh = new_mesh \n"
+                " will change the mesh for all sites sharing the same SiteType, while \n"
+                ">>> atoms.sites[2].break_symmetry(); atoms.sites[2].site_type.mesh = new_mesh " \
+                "will only change the mesh for the individual site."
             )
 
     @property
