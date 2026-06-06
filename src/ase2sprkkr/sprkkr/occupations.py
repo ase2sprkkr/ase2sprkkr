@@ -322,7 +322,7 @@ class Occupation:
         if none:
             for i in none:
                 self._occupation[i] = (to - suma) / len(none)
-        elif suma > to or except_from:
+        elif suma > to or (except_from and len(self._occupation) > 1):
             ratio = to / suma
 
             for i in self._occupation:
