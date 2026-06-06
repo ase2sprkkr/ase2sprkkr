@@ -122,6 +122,7 @@ class Shell:
 
     def run_example(self, example, dir):
         ex = Example.by_number(example)
+        dir = str(dir)
         ex.copy(dir)
 
         content = ex.body_of_main()
