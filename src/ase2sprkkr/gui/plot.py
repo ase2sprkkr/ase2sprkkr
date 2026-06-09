@@ -293,7 +293,9 @@ class Multiplot:
 
         if isinstance(layout, numbers.Integral):
             layout = min(layout, number_of_plots)
+            layout = max(layout, 1)
             layout = ((number_of_plots - 1) // layout + 1, layout)
+
         elif layout[0] is None:
             layout = ((number_of_plots - 1)  // layout[1] + 1, layout[1])
         elif layout[1] is None:
