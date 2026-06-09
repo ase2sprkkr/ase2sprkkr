@@ -36,6 +36,12 @@ class BaseGeneratedValueDefinition(RealItemDefinition):
     def __repr__(self):
         return f"<{self.name} (generated)>"
 
+    def _generic_info(self):
+        return f"Calculated value {self.name}"
+
+    def data_description(self, verbose: Union[bool, str, int] = False, show_hidden: bool = False, prefix: str = ""):
+        return ""
+
 
 class GeneratedValueDefinition(BaseGeneratedValueDefinition):
     @add_to_signature(RealItemDefinition.__init__, prepend=True)
