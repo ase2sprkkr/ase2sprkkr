@@ -24,7 +24,7 @@ class RATOutputFile(CommonOutputFile):
     plot_parameters = {}
 
     """
-    Output file for Bloch spectral functions
+    Output file for XAS (X-ray Absorption Spectroscopy) and related spectra (XMCD, spin and orbital sum-rule integrands).
     """
 
     def energies(self, group=0):
@@ -181,7 +181,7 @@ class RATOutputFile(CommonOutputFile):
             core_hole_width,
         )
 
-        num = data["SPECTRA"].shape[0]  # 1 or 2
+        num = data["XAS"].shape[0]  # 1 or 2
         if "SPIN" in data:
             num += 1
         num = num * 2
@@ -202,8 +202,8 @@ class RATOutputFile(CommonOutputFile):
             number_of_plots=num,
             **kwargs,
         ) as mp:
-            self.SPECTRA.plot(multiplot=mp, data_generated=True, **kwargs)
-            self.DIFFERENCE.plot(multiplot=mp, data_generated=True, **kwargs)
+            self.XAS.plot(multiplot=mp, data_generated=True, **kwargs)
+            self.XMCD.plot(multiplot=mp, data_generated=True, **kwargs)
             if "SPIN" in data:
                 self.SPIN.plot(multiplot=mp, data_generated=True, **kwargs)
                 self.ORBIT.plot(multiplot=mp, data_generated=True, **kwargs)
@@ -489,7 +489,7 @@ class RATOutputFile(CommonOutputFile):
         tt = 0.5 * (rd[:, :, -1] + rd[:, :, 0]).T
         td = 0.5 * (rd[:, :, -1] - rd[:, :, 0]).T
 
-        out = {"SPECTRA": tt, "DIFFERENCE": td, "ENERGY": senergies}
+        out = {"XAS": tt, "XMCD": td, "ENERGY": senergies}
 
         if n_ktypes > 1:
             _sd = np.empty(shape)
@@ -573,10 +573,25 @@ def G(name, **kwargs):
     return GeneratedValueDefinition(name, get, **kwargs)
 
 
-def draw_plot(axis, x, y, title, **kwargs):
+_ylabel_base = {
+    "XAS": r"$\mu(E)$",
+    "XMCD":    r"$\Delta\mu(E)$",
+    "SPIN":    r"$\Delta\mu_{\mathrm{spin\,SR}}(E)$",
+    "ORBIT":   r"$\Delta\mu_{\mathrm{orb\,SR}}(E)$",
+}
+
+_kunit_labels = {
+    1: "Mb",
+    2: r"$10^{15}\,\mathrm{s}^{-1}$",
+}
+
+
+def draw_plot(axis, x, y, title, name=None, kunit=1, **kwargs):
     axis.set_title(title)
     axis.set_xlabel(r"$E-E_{\rm F}$ (eV)")
-    axis.set_ylabel(r"XRAS")
+    base = _ylabel_base.get(name, "")
+    unit = _kunit_labels.get(kunit, "Mb")
+    axis.set_ylabel(f"{base} ({unit})" if base else f"({unit})")
     set_up_common_plot(axis, **kwargs)
     axis.plot(x, y)
 
@@ -621,10 +636,12 @@ def plot(
             else:
                 tit = title
             with plotter(title, kwargs) as (axis, kw):
-                draw_plot(axis, energy, d, tit, **kw)
+                draw_plot(axis, energy, d, tit, name=option.name, kunit=kunit, **kw)
 
     title = option.info
-    data = option._container.data
+    c = option._container
+    kunit = c.GROUPS[0].IFMT()[1]
+    data = c.data
     energy = data["ENERGY"]
     data = data[option.name]
     if len(data.shape) == 1:
@@ -647,10 +664,10 @@ def create_definition():
     definition = create_output_file_definition(
         Keyword("RXAS"),
         [
-            G("SPECTRA", plot=(plot, nktypes), info="Polarization averaged spectra"),
-            G("DIFFERENCE", plot=(plot, nktypes), info="Difference spectra"),
-            G("SPIN", plot=plot,info="Spin"),
-            G("ORBIT", plot=plot, info="Orbit"),
+            G("XAS", plot=(plot, nktypes), info="Polarization averaged X-ray absorption spectra"),
+            G("XMCD", plot=(plot, nktypes), info="X-ray Magnetic Circular Dichroism"),
+            G("SPIN", plot=plot, info="XMCD spin sum-rule integrand: 3(\u0394\u03bc\u208a \u2212 2\u0394\u03bc\u208b)"),
+            G("ORBIT", plot=plot, info="XMCD orbital sum-rule integrand: 2(\u0394\u03bc\u208a + \u0394\u03bc\u208b)"),
             G("ENERGY"),
             V("NTXRSGRP", int),
             V("IDIPOL", int),
