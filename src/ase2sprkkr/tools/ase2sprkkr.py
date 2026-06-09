@@ -126,7 +126,7 @@ def run():
         where = unknowns.get(args.ase2sprkkr_command, None)
         if where is None:
              eparser = parsers.get(module, parser)
-             msg = f" ! ERROR: Unknown argument(s) '{", ".join(remainder)}' for the '{eparser.prog}' command. !"
+             msg = f" ! ERROR: Unknown argument(s) '{', '.join(remainder)}' for the '{eparser.prog}' command. !"
              parser_error(eparser, msg)
         else:
             where = getattr(args, where)
