@@ -202,13 +202,42 @@ class RATOutputFile(CommonOutputFile):
             number_of_plots=num,
             **kwargs,
         ) as mp:
-            self.POLARIZATION.plot(_inside_plot=mp, **kwargs)
-            self.DIFFERENCE.plot(_inside_plot=mp, **kwargs)
+            self.POLARIZATION.plot(multiplot=mp, data_generated=True, **kwargs)
+            self.DIFFERENCE.plot(multiplot=mp, data_generated=True, **kwargs)
             if "SPIN" in data:
-                self.SPIN.plot(_inside_plot=mp, **kwargs)
-                self.ORBIT.plot(_inside_plot=mp, **kwargs)
+                self.SPIN.plot(multiplot=mp, data_generated=True, **kwargs)
+                self.ORBIT.plot(multiplot=mp, data_generated=True, **kwargs)
+
 
     def generate_data(
+        self,
+        interpolate_to_fermi=True,
+        interpolation_threshold=1e-4,
+        zero_below=True,
+        zero_below_num=50,
+        zero_below_energy=25,
+        no_core_splitting=False,
+        merge_all=None,
+        gauss_width=0.0,
+        lorentz_width=None,
+        n_valence=None,
+        core_hole_width="campbell-papp",
+    ):
+        key = {**locals()}
+        del key['self']
+        ckey = getattr(self, '_data_key', None)
+        if ckey:
+            for i,v in key.items():
+                if ckey[i] != v:
+                    break
+            else:
+                return self._data
+
+        self._data = self.compute_data(**key)
+        self._data_key = key
+        return self._data
+
+    def compute_data(
         self,
         interpolate_to_fermi=True,
         interpolation_threshold=1e-4,
@@ -474,7 +503,6 @@ class RATOutputFile(CommonOutputFile):
             out["SPIN"] = spin
             out["ORBIT"] = orb
 
-        self._data = out
         return out
 
         """
@@ -545,12 +573,17 @@ def G(name, **kwargs):
     return GeneratedValueDefinition(name, get, **kwargs)
 
 
-def generate_data_calling_function(fn):
+def draw_plot(axis, x, y, title, **kwargs):
+    axis.set_title(title)
+    axis.set_xlabel(r"$E-E_{\rm F}$ (eV)")
+    axis.set_ylabel(r"XRAS")
+    set_up_common_plot(axis, **kwargs)
+    axis.plot(x, y)
 
-    @add_to_signature(fn)
-    def wrapped(
+
+def plot(
         option,
-        _inside_plot=False,
+        multiplot=False,
         interpolate_to_fermi=True,
         interpolation_threshold=1e-4,
         zero_below=True,
@@ -563,78 +596,61 @@ def generate_data_calling_function(fn):
         n_valence=None,
         core_hole_width="campbell-papp",
         *args,
-        **kwargs,
-    ):
+        data_generated=False,
+        **kwargs):
 
-        if not _inside_plot:
-            option._container.generate_data(
-                interpolate_to_fermi,
-                interpolation_threshold,
-                zero_below,
-                zero_below_num,
-                zero_below_energy,
-                no_core_splitting,
-                merge_all,
-                gauss_width,
-                lorentz_width,
-                n_valence,
-                core_hole_width,
-            )
+    if not data_generated:
+        option._container.generate_data(
+            interpolate_to_fermi,
+            interpolation_threshold,
+            zero_below,
+            zero_below_num,
+            zero_below_energy,
+            no_core_splitting,
+            merge_all,
+            gauss_width,
+            lorentz_width,
+            n_valence,
+            core_hole_width,
+        )
 
-        fn(option, *args, _inside_plot=_inside_plot, **kwargs)
+    def just_plot(plotter, kwargs=kwargs):
+        for i, d in enumerate(data):
+            if len(data) > 1:
+                tit = f"{title} - type {i + 1}"
+            else:
+                tit = title
+            with plotter(title, kwargs) as (axis, kw):
+                draw_plot(axis, energy, d, tit, **kw)
 
-    return wrapped
+    title = option.info
+    data = option._container.data
+    energy = data["ENERGY"]
+    data = data[option.name]
+    if len(data.shape) == 1:
+        data = data[None]
 
+    if multiplot:
+        just_plot(multiplot.new_axis, kwargs)
+    elif len(data.shape) and len(data) > 1:
+        kwargs["layout"] = (2, 1)
+        with Multiplot(**kwargs) as mp:
+            just_plot(mp.new_axis, {})
+    else:
+        just_plot(single_plot, kwargs)
 
-def draw_plot(axis, x, y, title, **kwargs):
-    axis.set_title(title)
-    axis.set_xlabel(r"$E-E_{\rm F}$ (eV)")
-    axis.set_ylabel(r"XRAS")
-    set_up_common_plot(axis, **kwargs)
-    axis.plot(x, y)
-
-
-def plot(title):
-
-    @generate_data_calling_function
-    def plot(option, axis=None, _inside_plot=False, **kwargs):
-        def just_plot(plotter):
-            for i, d in enumerate(data):
-                if len(data) > 1:
-                    tit = f"{title} - type {i + 1}"
-                else:
-                    tit = title
-                with plotter(title) as axis:
-                    draw_plot(axis, energy, d, tit, **kwargs)
-
-        c = option._container
-        data = c.data
-        energy = data["ENERGY"]
-        data = data[option.name]
-        if len(data.shape) == 1:
-            data = data[None]
-
-        if _inside_plot:
-            just_plot(_inside_plot.new_axis)
-        elif len(data.shape) and len(data) > 1:
-            kwargs["layout"] = (2, 1)
-            with Multiplot(**kwargs) as mp:
-                just_plot(mp.new_axis)
-        else:
-            just_plot(single_plot)
-
-    return plot
-
+def nktypes(option):
+    return len(option._container.core_state_types[0])
 
 def create_definition():
 
     definition = create_output_file_definition(
         Keyword("RXAS"),
         [
-            G("POLARIZATION", plot=plot("Polarization averaged spectra")),
-            G("DIFFERENCE", plot=plot("Difference spectra")),
-            G("SPIN", plot=plot("Spin")),
-            G("ORBIT", plot=plot("Orbit")),
+            G("POLARIZATION", plot=(plot, nktypes), info="Polarization averaged spectra"),
+            G("DIFFERENCE", plot=(plot, nktypes), info="Difference spectra"),
+            G("SPIN", plot=plot,info="Spin"),
+            G("ORBIT", plot=plot, info="Orbit"),
             G("ENERGY"),
             V("NTXRSGRP", int),
             V("IDIPOL", int),

@@ -66,7 +66,7 @@ def create_rc_context(latex: Optional[bool] = None):
 
 @contextmanager
 def single_plot(
-    filename: Optional[str] = None, show: Optional[bool] = None, window_title=None, dpi=600, latex=None, figsize=(6, 4)
+    filename: Optional[str] = None, show: Optional[bool] = None, window_title=None, dpi=600, latex=None, figsize=(6, 4), **kwargs
 ):
     """
     Creates single plot according to the given function a either show it or save it.
@@ -89,7 +89,7 @@ def single_plot(
         if window_title:
             fig.canvas.manager.set_window_title(window_title)
         plt.subplots_adjust(left=0.15, right=0.95, bottom=0.17, top=0.93)
-        yield ax
+        yield ax, kwargs
         finish_plot(fig, filename, show, dpi)
 
 
@@ -171,7 +171,7 @@ def plotting_function(func):
             if callback:
                 callback(axis)
         else:
-            with single_plot(filename=filename, show=show, dpi=dpi, latex=latex, figsize=figsize) as axis:
+            with single_plot(filename=filename, show=show, dpi=dpi, latex=latex, figsize=figsize) as (axis, _):
                 func(*args, axis=axis, **kwargs)
                 if callback:
                     callback(axis)
@@ -346,21 +346,26 @@ class Multiplot:
                 if show:
                     plt.show()
 
-    def plot(self, option, name=None, plot_function=None, **kwargs):
+    def plot(self, option, name=None, filename=None, plot_function=None, **kwargs):
+        if not plot_function:
+            if option.number_of_plots() > 1:
+                 option.plot(filename=filename, multiplot=self, **kwargs)
+                 return
+
+            def plot_function(**kwargs):
+                return option.plot(**kwargs)
+
         name = name or getattr(option, "name", None) or str(option)
-        with self.new_axis(name=name) as axis:
-            kw = self.kwargs.copy()
-            kw.update(self.specific_kwargs.get(self.index, {}))
-            kw.update(kwargs)
-            if not plot_function:
-
-                def plot_function(**kwargs):
-                    return option.plot(**kwargs)
-
+        with self.new_axis(name=name, filename=filename, **kwargs) as (axis, kw):
             plot_function(axis=axis, **kw)
 
     @contextmanager
-    def new_axis(self, name=None):
+    def new_axis(self, name=None, filename=None, **kwargs):
+        for k, v in self.kwargs.items():
+             kwargs.setdefault(k, v)
+        for k, v in self.specific_kwargs.get(self.index, {}).items():
+             kwargs.setdefault(k, v)
+
         if self.separate_plots:
             if self.index >= self.number:
                 raise StopIteration()
@@ -372,18 +377,19 @@ class Multiplot:
                 else:
                     return f"{root}{suffix}"
 
-            filename = self.filename
-            if filename:
-                if name is None:
-                    fname = str(self.index + 1)
-                else:
-                    fname = re.sub(r'[<>:"/\\|?*\x00-\x1f\x7f ]', "_", name)
-                    fname = re.sub(r"_+", "_", fname)
+            if filename is None:
+                filename = self.filename
+                if filename:
+                    if name is None:
+                        fname = str(self.index + 1)
+                    else:
+                        fname = re.sub(r'[<>:"/\\|?*\x00-\x1f\x7f ]', "_", name)
+                        fname = re.sub(r"_+", "_", fname)
 
-                if "{name}" in filename:
-                    filename = filename.replace("{name}", fname)
-                else:
-                    filename = append_before_ext(filename, "_" + fname)
+                    if "{name}" in filename:
+                        filename = filename.replace("{name}", fname)
+                    else:
+                        filename = append_before_ext(filename, "_" + fname)
 
             with single_plot(
                 filename,
@@ -392,20 +398,20 @@ class Multiplot:
                 self.dpi,
                 self.latex,
                 self.figsize,
-            ) as axis:
-                yield axis
+            ) as (axis, _):
+                yield axis, kwargs
         else:
             try:
                 axis = self.free_axes.pop()
             except IndexError:
                 raise StopIteration()
-            yield axis
+            yield axis, kwargs
         self.index += 1
 
     def __iter__(self):
         while True:
-            with self.new_axis() as ax:
-                yield ax
+            with self.new_axis() as out:
+                yield out
 
 
 def change_default_kwargs(f, **kwargs):

@@ -144,6 +144,7 @@ def parser(parser):
 def run(args, global_args):
     from ...output_files.output_files import OutputFile
     from pathlib import Path
+    from ...gui.plot import Multiplot
 
     kwargs = vars(args)
 
@@ -163,14 +164,16 @@ def run(args, global_args):
 
     for output in outputs:
 
-        def plot(what, **kw):
+        def plot(fn, of, value=None):
             nonlocal error
             try:
-                what.plot(**kw)
+                fn()
             except Exception as e:
                 if global_args["debug"]:
                     raise
-                print(f"File {kw.get('filename') or output} can not be plotted due to: \n {e} ")
+                if value:
+                    value=f" value '{value}'"
+                print(f"File '{fn}'{value} can not be plotted due to: \n {e} ")
                 error = 1
 
         of = OutputFile.from_file(output, unknown=False)
@@ -195,20 +198,35 @@ def run(args, global_args):
             fn = None
 
         if value:
-            for name in value:
-                if fn is not None and len(value) > 1:
-                    kwargs["filename"] = append_id_to_filename(fn, name)
-                try:
-                    val = of[name.upper()]
-                except KeyError:
-                    raise ValueError(f"There is no value named '{name.upper()}' in the output file.")
-                if not hasattr(val, "plot"):
-                    raise ValueError(f"Value '{name.upper()}' does not know, how it should be plotted.")
-                plot(val, **kwargs)
+
+            def vals():
+                for name in value:
+                    try:
+                        val = of[name.upper()]
+                    except KeyError:
+                        if global_args["debug"]:
+                            raise
+                        error = 1
+                        print(f"There is no value named '{name.upper()}' in the output file '{output}'.")
+                        continue
+                    if not hasattr(val, "plot"):
+                        msg = f"Value '{name.upper()}' does not know, how it should be plotted."
+                        if global_args["debug"]:
+                            raise ValueError(msg)
+                        else:
+                            print(msg)
+                            continue
+                    yield val
+
+            vals = [ i for i in vals() ]
+            ln = sum( i.number_of_plots() for i in vals )
+            with Multiplot(**kwargs, number_of_plots=len(value), layout=min(ln, 2)) as mp:
+                for val in vals:
+                    plot(lambda: mp.plot(val), output, value)
         else:
             if not hasattr(of, "plot"):
                 raise ValueError(f"File '{of}' does not know, how it should be plotted.")
-            plot(of, filename=fn, **kwargs)
+            plot(lambda: of.plot(filename=fn, **kwargs), output)
 
     return error
 
