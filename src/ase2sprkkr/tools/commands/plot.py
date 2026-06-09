@@ -190,8 +190,9 @@ def run(args, global_args):
                 raise ValueError(f"Argument '--{x}' is not valid for {of}")
 
         if filename:
-            if len(outputs):
-                fn = f"{filename}_{Path(output).stem}"
+            if len(outputs) > 1:
+                fn = Path(filename)
+                fn = str(fn.with_suffix("")) + f"_{Path(output).stem}{fn.suffix}"
             else:
                 fn = filename
         else:
@@ -220,7 +221,7 @@ def run(args, global_args):
 
             vals = [ i for i in vals() ]
             ln = sum( i.number_of_plots() for i in vals )
-            with Multiplot(**kwargs, number_of_plots=len(value), layout=min(ln, 2)) as mp:
+            with Multiplot(**kwargs, number_of_plots=len(value), filename=fn, layout=min(ln, 2)) as mp:
                 for val in vals:
                     plot(lambda: mp.plot(val), output, value)
         else:
