@@ -27,6 +27,7 @@ license-files = ["LICENCE"]
 dependencies = [
     "ase>=3.22.0",
     "asr",
+		"colorama",
     "spglib",
     "pyparsing>=3.0",
     "mendeleev",

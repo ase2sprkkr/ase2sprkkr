@@ -28,8 +28,15 @@ def fix_package():
 
 def run():
 
-    parser = argparse.ArgumentParser(
-        description="ASE2SPRKKR tool: tool for visualising SPRKKR result",
+    class Parser(argparse.ArgumentParser):
+        def error(self, message):
+            raise ValueError(message)
+
+        def exit(self, status=0, message=None):
+            raise ValueError(message or "")
+
+    parser = Parser(
+        description="ASE2SPRKKR tool — command-line interface for ASE2SPRKKR functionalities",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="You can install autocompleting for bash and zsh by running/adding to the .bashrc: \n"
         'eval "$(register-python-argcomplete ase2sprkkr)"',
@@ -54,6 +61,7 @@ def run():
     unknowns = {}
 
     aliases = {}
+    parsers = {}
     for name, m in modules.items():
         name = name.replace("_", "-")
         alias = getattr(m, "aliases", None)
@@ -70,15 +78,44 @@ def run():
         if hasattr(m, "unknowns"):
             unknowns[name] = m.unknowns
         m.parser(sub)
+        parsers[name] = sub
 
     argcomplete.autocomplete(parser)
 
-    args, remainder = parser.parse_known_args()
+    def parser_error(parser, msg):
+        from colorama import init, Fore, Style
+        init()
+        print()
+        print(Fore.RED + msg + Style.RESET_ALL)
+        print()
+        print('-'*30)
+        print()
+        parser.print_help()
+        print()
+        exit(-2)
+
+    try:
+        args, remainder = parser.parse_known_args()
+    except ValueError as e:
+        import re
+        msg = str(e)
+        msg = re.sub(r"^argument ase2sprkkr_command: invalid choice:", "ase2sprkkr: unknown command:", msg)
+        msg = f" ! {msg} !"
+        parser_error(parser, msg)
+
+    module = args.ase2sprkkr_command
+    if module:
+        module = aliases.get(module, module).replace("-", "_")
 
     if remainder:
         where = unknowns.get(args.ase2sprkkr_command, None)
         if where is None:
-            parser.parse_args()
+            if module:
+                msg = f" ! ERROR: Unknown argument(s) '{", ".join(remainder)}' for the 'ase2sprkkr {module}' command. !"
+                parser_error(parsers[module], msg)
+            else:
+                msg = f" ! ERROR: Unknown argument(s) '{", ".join(remainder)}' for the 'ase2sprkkr' command. !"
+                parser_error(parser, msg)
         else:
             where = getattr(args, where)
             where += remainder
@@ -106,9 +143,8 @@ def run():
         if help:
             parser.print_help()
     else:
-        module = args.ase2sprkkr_command
-        action = modules[aliases.get(module, module).replace("-", "_")].run
         del args.ase2sprkkr_command
+        action = modules[module].run
         action(args, global_args)
 
 
