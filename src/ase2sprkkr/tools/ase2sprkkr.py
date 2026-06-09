@@ -28,12 +28,18 @@ def fix_package():
 
 def run():
 
+
+    class ArgparseError(ValueError):
+        def __init__(self, parser, msg):
+            super().__init__(msg)
+            self.parser = parser
+
     class Parser(argparse.ArgumentParser):
         def error(self, message):
-            raise ValueError(message)
+            raise ArgparseError(self, message)
 
         def exit(self, status=0, message=None):
-            raise ValueError(message or "")
+            raise ArgparseError(self, message or "")
 
     parser = Parser(
         description="ASE2SPRKKR tool — command-line interface for ASE2SPRKKR functionalities",
@@ -47,7 +53,7 @@ def run():
     # parser.add_argument('--no-user-profile', '-U', help='Do not load the user profile file.', action='store_true')
 
     subs = parser.add_subparsers(
-        dest="ase2sprkkr_command", description="Run ase2sprkkr <subcommand> -h for futhrer info"
+        dest="ase2sprkkr_command", description="Run ase2sprkkr <subcommand> -h for futhrer info",
     )
 
     # os.environ['ASE2SPRKKR_NO_USER_PROFILE'] = '1'
@@ -96,12 +102,21 @@ def run():
 
     try:
         args, remainder = parser.parse_known_args()
-    except ValueError as e:
+    except ArgparseError as e:
         import re
         msg = str(e)
-        msg = re.sub(r"^argument ase2sprkkr_command: invalid choice:", "ase2sprkkr: unknown command:", msg)
+
+        def enhance():
+            match = re.match(r"^argument ase2sprkkr_command: invalid choice: (.*)", msg)
+            if match:
+                return "ase2sprkkr: unknown command:" + match.group(1)
+            if msg.startswith('the following arguments are required:'):
+                return f"{e.parser.prog}: " + msg
+            return msg
+
+        msg = enhance()
         msg = f" ! {msg} !"
-        parser_error(parser, msg)
+        parser_error(e.parser, msg)
 
     module = args.ase2sprkkr_command
     if module:
@@ -110,12 +125,9 @@ def run():
     if remainder:
         where = unknowns.get(args.ase2sprkkr_command, None)
         if where is None:
-            if module:
-                msg = f" ! ERROR: Unknown argument(s) '{", ".join(remainder)}' for the 'ase2sprkkr {module}' command. !"
-                parser_error(parsers[module], msg)
-            else:
-                msg = f" ! ERROR: Unknown argument(s) '{", ".join(remainder)}' for the 'ase2sprkkr' command. !"
-                parser_error(parser, msg)
+             eparser = parsers.get(module, parser)
+             msg = f" ! ERROR: Unknown argument(s) '{", ".join(remainder)}' for the '{eparser.prog}' command. !"
+             parser_error(eparser, msg)
         else:
             where = getattr(args, where)
             where += remainder
