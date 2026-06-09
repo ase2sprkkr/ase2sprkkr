@@ -149,11 +149,9 @@ class DOSOutputFile(CommonOutputFile):
         n_types = self.n_types()
         if n_types > 1:
             n_types += 1
-        if isinstance(layout, int):
-            layout = ((n_types - 1) // layout + 1, min(layout, n_types))
-        print(layout)
         with Multiplot(
-            layout=layout, figsize=figsize, latex=latex, filename=filename, show=show, dpi=dpi, **kwargs
+            layout=layout, figsize=figsize, latex=latex, filename=filename, show=show, dpi=dpi,
+            number_of_plots=n_types, **kwargs
         ) as mp:
             for dos in self.iterate_dos(spin, l, total=n_types > 1):
                 mp.plot(dos)

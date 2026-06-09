@@ -184,14 +184,10 @@ class RATOutputFile(CommonOutputFile):
         num = data["POLARIZATION"].shape[0]  # 1 or 2
         if "SPIN" in data:
             num += 1
-        num = num * 2 - 1
-        if layout[0] is None:
-            layout = (num // layout[1] + 1, layout[1])
-        elif layout[1] is None:
-            layout = (layout[0], num // layout[0])
+        num = num * 2
 
         if figsize is None:
-            figsize = (layout[0] * 4, layout[1] * 4)
+            figsize = lambda layout: (layout[0] * 4, layout[1] * 4)
 
         with Multiplot(
             layout=layout,
@@ -203,6 +199,7 @@ class RATOutputFile(CommonOutputFile):
             updown_layout=updown_layout,
             separate_plots=separate_plots,
             layout_kind=layout_kind,
+            number_of_plots=num,
             **kwargs,
         ) as mp:
             self.POLARIZATION.plot(_inside_plot=mp, **kwargs)

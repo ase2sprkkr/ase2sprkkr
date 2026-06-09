@@ -9,6 +9,7 @@ from matplotlib.colors import ListedColormap
 from typing import Optional
 import numpy as np
 import os
+import numbers
 import re
 import functools
 from contextlib import contextmanager
@@ -280,6 +281,7 @@ class Multiplot:
         dpi=600,
         separate_plots=False,
         layout_kind="constrained",
+        number_of_plots=None,
         **kwargs,
     ):
         self.separate_plots = separate_plots
@@ -288,6 +290,17 @@ class Multiplot:
         self.dpi = dpi
         self.latex = latex
         self.layout_kind = layout_kind  #'constrained', 'tight', 'adjust', {dict for adjust}
+
+        if isinstance(layout, numbers.Integral):
+            layout = min(layout, number_of_plots)
+            layout = ((number_of_plots - 1) // layout + 1, layout)
+        elif layout[0] is None:
+            layout = ((number_of_plots - 1)  // layout[1] + 1, layout[1])
+        elif layout[1] is None:
+            layout = (layout[0], (number_of_plots -1) // layout[0] + 1)
+
+        if callable(figsize):
+            figsize = figsize(layout)
 
         if separate_plots:
             self.figsize = figsize
