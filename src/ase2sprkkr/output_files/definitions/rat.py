@@ -181,7 +181,7 @@ class RATOutputFile(CommonOutputFile):
             core_hole_width,
         )
 
-        num = data["POLARIZATION"].shape[0]  # 1 or 2
+        num = data["SPECTRA"].shape[0]  # 1 or 2
         if "SPIN" in data:
             num += 1
         num = num * 2
@@ -202,7 +202,7 @@ class RATOutputFile(CommonOutputFile):
             number_of_plots=num,
             **kwargs,
         ) as mp:
-            self.POLARIZATION.plot(multiplot=mp, data_generated=True, **kwargs)
+            self.SPECTRA.plot(multiplot=mp, data_generated=True, **kwargs)
             self.DIFFERENCE.plot(multiplot=mp, data_generated=True, **kwargs)
             if "SPIN" in data:
                 self.SPIN.plot(multiplot=mp, data_generated=True, **kwargs)
@@ -489,7 +489,7 @@ class RATOutputFile(CommonOutputFile):
         tt = 0.5 * (rd[:, :, -1] + rd[:, :, 0]).T
         td = 0.5 * (rd[:, :, -1] - rd[:, :, 0]).T
 
-        out = {"POLARIZATION": tt, "DIFFERENCE": td, "ENERGY": senergies}
+        out = {"SPECTRA": tt, "DIFFERENCE": td, "ENERGY": senergies}
 
         if n_ktypes > 1:
             _sd = np.empty(shape)
@@ -647,7 +647,7 @@ def create_definition():
     definition = create_output_file_definition(
         Keyword("RXAS"),
         [
-            G("POLARIZATION", plot=(plot, nktypes), info="Polarization averaged spectra"),
+            G("SPECTRA", plot=(plot, nktypes), info="Polarization averaged spectra"),
             G("DIFFERENCE", plot=(plot, nktypes), info="Difference spectra"),
             G("SPIN", plot=plot,info="Spin"),
             G("ORBIT", plot=plot, info="Orbit"),
