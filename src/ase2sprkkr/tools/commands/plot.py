@@ -173,7 +173,7 @@ def run(args, global_args):
                 print(f"File {kw.get('filename') or output} can not be plotted due to: \n {e} ")
                 error = 1
 
-        of = OutputFile.from_file(output)
+        of = OutputFile.from_file(output, unknown=False)
 
         if show_values:
             print(f"In file {output}, there are values to plot:")
