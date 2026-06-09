@@ -127,7 +127,7 @@ class TestPolarizationSpectrum:
     def test_peak_position(self, generated_data, ref_xas):
         ref_pol, _ = ref_xas
         e = generated_data["ENERGY"]
-        py = generated_data["POLARIZATION"][0]
+        py = generated_data["XAS"][0]
         ref = ref_pol[:, 1]
         py_peak_e = e[np.argmax(py)]
         ref_peak_e = ref_pol[np.argmax(ref), 0]
@@ -135,7 +135,7 @@ class TestPolarizationSpectrum:
 
     def test_peak_amplitude(self, generated_data, ref_xas):
         ref_pol, _ = ref_xas
-        py = generated_data["POLARIZATION"][0]
+        py = generated_data["XAS"][0]
         ref = ref_pol[:, 1]
         ratio = py.max() / ref.max()
         assert 0.80 < ratio < 1.20, f"Peak amplitude ratio {ratio:.3f} outside [0.80, 1.20]"
@@ -144,7 +144,7 @@ class TestPolarizationSpectrum:
         """Median point-wise ratio of Python/Reference should be close to 1."""
         ref_pol, _ = ref_xas
         e = generated_data["ENERGY"]
-        py = generated_data["POLARIZATION"][0]
+        py = generated_data["XAS"][0]
         ref = ref_pol[:, 1]
         # evaluate Python at reference energy points
         f = interp1d(e, py, bounds_error=False, fill_value=0)
@@ -158,7 +158,7 @@ class TestPolarizationSpectrum:
         """RMS relative error over significant region should be below 15 %."""
         ref_pol, _ = ref_xas
         e = generated_data["ENERGY"]
-        py = generated_data["POLARIZATION"][0]
+        py = generated_data["XAS"][0]
         ref = ref_pol[:, 1]
         f = interp1d(e, py, bounds_error=False, fill_value=0)
         py_at_ref = f(ref_pol[:, 0])
@@ -170,7 +170,7 @@ class TestPolarizationSpectrum:
         """Check key shape features: trough below peak, secondary hump, tail."""
         ref_pol, _ = ref_xas
         e = generated_data["ENERGY"]
-        py = generated_data["POLARIZATION"][0]
+        py = generated_data["XAS"][0]
 
         # Main peak > 1.0 Mb
         assert py.max() > 1.0, f"Peak {py.max():.3f} Mb < 1.0 Mb"
@@ -192,7 +192,7 @@ class TestDifferenceSpectrum:
 
     def test_difference_is_zero(self, generated_data, ref_xas):
         _, ref_diff_arr = ref_xas
-        py_diff = generated_data["DIFFERENCE"][0]
+        py_diff = generated_data["XMCD"][0]
         py_max = np.max(np.abs(py_diff))
         ref_diff = ref_diff_arr[:, 1]
         ref_max = np.max(np.abs(ref_diff))
@@ -225,6 +225,6 @@ class TestSumRuleSpectra:
         ref_scale = max(np.max(np.abs(ref_spin)), np.max(np.abs(ref_orb)))
 
         # Both should be negligible compared to the polarization-averaged XAS peak
-        xas_peak = generated_data["POLARIZATION"][0].max()
+        xas_peak = generated_data["XAS"][0].max()
         assert py_scale / xas_peak < 1e-5, f"Python SPIN/ORBIT not near zero: {py_scale:.2e} vs XAS peak {xas_peak:.3f}"
         assert ref_scale <= 100.1, f"Reference sumrule unexpectedly large: {ref_scale:.1f}"
