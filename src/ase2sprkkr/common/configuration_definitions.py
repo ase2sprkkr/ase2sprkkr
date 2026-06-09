@@ -480,8 +480,14 @@ class RealItemDefinition(BaseDefinition):
 
     def enrich(self, option):
         if self.plot:
-            option.plot = lambda **kwargs: self.plot(option, **kwargs)
+            if not isinstance(self.plot, tuple):
+                plot = (self.plot, lambda self,**kwargs: 1)
+            else:
+                plot = self.plot
+            option.plot = lambda **kwargs: plot[0](option, **kwargs)
+            option.number_of_plots = lambda **kwargs: plot[1](option, **kwargs)
             option.plot.__doc__ = " Plot the data."
+            option.number_of_plots.__doc__ = " Return the number of plots to draw."
 
     @property
     def formated_name(self):
