@@ -56,6 +56,14 @@ def parser(parser):
         default=[],
         required=False,
     )
+    parser.add_argument(
+        "-V",
+        "--show-values",
+        dest="show_values",
+        help="Show, which values can be plotted.",
+        action="store_true",
+        default=False
+    )
 
     parser.add_argument(
         "-s",
@@ -147,6 +155,8 @@ def run(args, global_args):
     del kwargs["filename"]
     kwargs.update(dict(kwargs["args"]))
     del kwargs["args"]
+    show_values = kwargs['show_values']
+    del kwargs['show_values']
     kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
     error = None
@@ -164,6 +174,14 @@ def run(args, global_args):
                 error = 1
 
         of = OutputFile.from_file(output)
+
+        if show_values:
+            print(f"In file {output}, there are values to plot:")
+            for i in of:
+                if hasattr(i, "plot") and callable(i.plot):
+                   print(f"   {i.name:<15} {i._definition.info(False)}")
+            continue
+
         for x in ["layer"]:
             if x in kwargs and x not in of.plot_parameters:
                 raise ValueError(f"Argument '--{x}' is not valid for {of}")
