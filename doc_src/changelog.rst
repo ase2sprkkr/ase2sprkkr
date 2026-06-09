@@ -14,6 +14,7 @@ Version 3.5
 * Tool: Python-like output for `ase2sprkkr` k-path tool
 * Tool: `ase2sprkkr` example search (--regex) and example display
 * Tool: `ase2sprkkr shell --pdb` for running examples in the Python debugger
+* Tool: `ase2sprkkr plot -V <filename>` for showing plottable values in a file
 * Improved Hall number determination from Cell
 * Docstrings added for examples
 * Various bug fixes
