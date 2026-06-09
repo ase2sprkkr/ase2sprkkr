@@ -37,6 +37,9 @@ class DOS(Arithmetic):
             out.dos = out.dos.copy()
         return out
 
+    def number_of_plots(self):
+        return 1
+
     @property
     def shape(self):
         return self.dos.shape
