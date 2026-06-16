@@ -497,7 +497,7 @@ class RealItemDefinition(BaseDefinition):
         return name
 
     def has_name(self, name, lower_case=False):
-        return name in self.lower_case_names if lower_case else self.all_names
+        return name in (self.lower_case_names if lower_case else self.all_names)
 
     def validate_warning(self, value):
         if self.warning_condition:

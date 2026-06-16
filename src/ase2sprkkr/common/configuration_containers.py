@@ -278,17 +278,16 @@ class ConfigurationContainer(BaseConfigurationContainer):
             child = None
 
         def values():
-            try:
-                yield self._members[name]
-                return
-            except KeyError:
-                n = name.lower() if lower_case else name
-                if unknown == "find":
-                    for i in self:
-                        yield from i._find_members(n, is_option, lower_case)
-                elif lower_case:
-                    v = self._lowercase_members[n]
-                    yield v
+            n = name
+            out = self._members.get(n)
+            if not out and lower_case:
+                n = n.lower()
+                out = self._lowercase_members.get(name)
+            if out:
+                yield out
+            elif unknown == "find":
+                 for i in self:
+                     yield from i._find_members(n, is_option, lower_case)
 
         if child:
             for v in values():
