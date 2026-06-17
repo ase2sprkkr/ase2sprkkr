@@ -130,3 +130,6 @@ class TestPotential(TestCase):
         self.assertEqual(pot.MESH_INFORMATION.DATA()[0][0], pot.atoms.sites[0].mesh.r1)
         self.assertNotEqual(1.0, pot.atoms.sites[0].mesh.r1)
         self.assertNotEqual(2.0, pot.MESH_INFORMATION.DATA()[0][0])
+
+    def test_single_type(self):
+        pot = Potential.from_file(os.path.join(os.path.dirname(__file__), "../examples/Au_single_type.pot"))
