@@ -7,6 +7,7 @@ import asyncio
 import functools
 import subprocess
 import os
+import sys
 import numpy as np
 from .decorators import maybeclassmethod
 
@@ -123,7 +124,8 @@ class ProcessOutputReader:
           line=await stderr.readline()
           if not line:
              return
-          print(line.decode('utf8'))
+          if self.print_output is True:
+             print(line.decode('utf8'), end='', file=sys.stderr)
 
   async def read_output(self, stdout, *args):
       raise NotImplementedError('Please, redefine BaseProcess.read_output coroutine')
