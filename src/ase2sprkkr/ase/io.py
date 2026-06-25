@@ -5,7 +5,7 @@ def read_sprkkr(fd, index=None, **kwargs):
     out = Potential.from_file(fd).atoms
     if index is not None:
         return [out][index]
-    return
+    return out
 
 
 read_SPRKKR = read_sprkkr
