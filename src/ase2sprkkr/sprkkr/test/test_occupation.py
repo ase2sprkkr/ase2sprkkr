@@ -24,6 +24,9 @@ class Test(TestCase):
         SPRKKRAtoms.promote_ase_atoms(atoms)
         with pytest.raises(RuntimeError):
            atoms.sites[0].occupation['Fe'] = 0.5
-        atoms.sites[0].site_type.occupation['Fe'] = 0.5
+        atoms.sites[0].site_type.occupation['Fe'] = 0.4
+        atoms.sites[0].site_type.occupation['Ni'] = 0.6
+        assert atoms.symbols[0] == 'Ni'
         atoms.sites[0].break_symmetry()
-        atoms.sites[0].occupation['Fe'] = 0.5
+        atoms.sites[0].occupation['Fe'] = 0.7
+        assert atoms.symbols[0] == 'Fe'
