@@ -1,3 +1,16 @@
+#First, register the io format by the old way
+try:
+    from ase.utils.plugins import ExternalIOFormat
+    SPRKKRFormat = ExternalIOFormat(
+        desc="SPRKKR potential file",
+        module="ase2sprkkr.ase.io",
+        code="+F",  # read & write, file-based
+        ext=["pot", "pot_new"],
+    )
+except ImportError:
+    pass
+
+#Then the new way
 try:
     from ase._4.plugins.calculator import CalculatorPlugin
     from ase._4.plugins.io import IOFormatPlugin
@@ -69,12 +82,3 @@ except ImportError:
 
             registered = True
             register_calculator_class("sprkkr", SPRKKR)
-
-
-from ase.utils.plugins import ExternalIOFormat
-SPRKKRFormat = ExternalIOFormat(
-    desc="SPRKKR potential file",
-    module="ase2sprkkr.ase.io",
-    code="+F",  # read & write, file-based
-    ext=["pot", "pot_new"],
-)
