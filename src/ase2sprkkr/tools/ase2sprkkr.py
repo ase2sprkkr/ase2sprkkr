@@ -17,9 +17,9 @@ def fix_package():
     global __package__
 
     if not __package__:
-        path = str(Path(__file__).resolve().parents[1])
+        path = str(Path(__file__).resolve().parents[2])
         sys.path.append(path)
-        spec = importlib.util.spec_from_file_location("ase2sprkkr", os.path.join(path, "__init__.py"))
+        spec = importlib.util.spec_from_file_location("ase2sprkkr", os.path.join(path, "ase2sprkkr", "__init__.py"))
         ase2sprkkr = importlib.util.module_from_spec(spec)
         sys.modules["ase2sprkkr"] = ase2sprkkr
         spec.loader.exec_module(ase2sprkkr)
