@@ -81,8 +81,14 @@ def run(args, global_args):
         shell.add_output_file(i)
 
     with dire as dr:
-        if args.example:
-            shell.run_example(args.example, dr)
+        if args.example is not None:
+            try:
+                shell.run_example(args.example, dr)
+            except FileNotFoundError:
+                if global_args['debug']:
+                    raise
+                print(f"No such example {args.example}")
+                exit(-1)
 
         if args.save:
             shell.save(args.save)
