@@ -526,6 +526,67 @@ MODE = Section(
             is_required=False,
             is_always_added=False,
         ),
+        V(
+            "OP",
+            DefKeyword({
+              "NONE": "Use just DFT approach.",
+              "DMFT": "Density mean field theory",
+              "LDA+U": "Hubbard correction",
+              "BROOKS": "Brooks orbital polarization correction",
+              "SIGMA": "Self-energy–based many-body approach",
+            }),
+            info = "Beyond-DFT methods",
+            is_required = False,
+            is_always_added = False
+        ),
+        V(
+            "LOPT",
+            SetOf(Keyword("d", "f", "n")),
+            info = "Correlated orbital manifold (d or f shell) where the Hubbard U correction is applied",
+            is_required = False,
+            is_always_added = False
+        ),
+        V(
+            "IEREF",
+            DefKeyword({
+              0: "EREF = EBAND_LOP/NOS_LOP, e.g. centre of mass for LOP band (Don't work well for f-states)",
+              1: "EREF = resonance energy of the phase shift.",
+              2: "EREF = energy where the single-site DOS shows a maximum for the desired d or f states",
+              -1: "EREF taken from input",
+            }),
+            info = "How is the reference energy EREF defined for the Hubbard correction?",
+            is_required = False,
+            is_always_added = False
+        ),
+        V(
+            "EREF",
+            0.7,
+            info="The default value for the Hubbard correction reference energy, used if IEREF = -1",
+            is_required = False,
+            is_always_added = False
+        ),
+        V(
+            "UMODE",
+            DefKeyword({
+              "ROTI": 'Fully rotational invariant(Lichtenstein et al.)',
+              "DUDA": 'Spherically averaged (Dudarev et al.) (U_eff = U - J)',
+            }),
+            info="Choice of DFT+U formulation",
+            is_required = False,
+            is_always_added = False
+        ),
+        V( "UEFF",
+            SetOf(float),
+            info="Array of U parameter (on-site Coulomb repulsions) for each atomic type",
+            is_required = False,
+            is_always_added = False
+        ),
+        V( "JEFF",
+            SetOf(float),
+            info="Array of J parameter (Hund’s exchange interaction) for each atomic type",
+            is_required = False,
+            is_always_added = False
+        ),
     ],
     is_expert=True,
     is_optional=True,
