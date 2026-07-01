@@ -7,6 +7,7 @@ Version 3.5
 * Changing properties via `site` is disallowed in cases where `site_type` is shared
 * JXC output file parsing and plotting
 * XAS output file parsing and plotting
+* Beyond-DFT parammeters (DFTM, DFT+U,...)
 * Semi-infinite structure building improved
 * Uppasd improvements: direct calling of `sd`, input file stub writing
 * Improved layout for multiple plots
