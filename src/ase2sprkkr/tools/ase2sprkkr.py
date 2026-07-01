@@ -28,7 +28,6 @@ def fix_package():
 
 def run():
 
-
     class ArgparseError(ValueError):
         def __init__(self, parser, msg):
             super().__init__(msg)
@@ -88,6 +87,51 @@ def run():
 
     argcomplete.autocomplete(parser)
 
+
+    def execute():
+
+        module = args.ase2sprkkr_command
+        if module:
+            module = aliases.get(module, module).replace("-", "_")
+
+        if remainder:
+            where = unknowns.get(args.ase2sprkkr_command, None)
+            if where is None:
+                 eparser = parsers.get(module, parser)
+                 msg = f" ! ERROR: Unknown argument(s) '{', '.join(remainder)}' for the '{eparser.prog}' command. !"
+                 parser_error(eparser, msg)
+            else:
+                where = getattr(args, where)
+                where += remainder
+
+        help = True
+        if args.debug:
+            from ase2sprkkr.common.debug import add_debug_hook
+
+            add_debug_hook()
+
+        global_args = {}
+        for i in ["debug", "profile"]:
+            global_args[i] = getattr(args, i)
+            delattr(args, i)
+
+        if args.version:
+            import ase2sprkkr.version
+
+            print(ase2sprkkr.version.__version__)
+            help = False
+        else:
+            del args.version
+
+        if args.ase2sprkkr_command is None:
+            if help:
+                parser.print_help()
+        else:
+            del args.ase2sprkkr_command
+            action = modules[module].run
+            action(args, global_args)
+
+
     def parser_error(parser, msg):
         from colorama import init, Fore, Style
         init()
@@ -118,57 +162,14 @@ def run():
         msg = f" ! {msg} !"
         parser_error(e.parser, msg)
 
-    module = args.ase2sprkkr_command
-    if module:
-        module = aliases.get(module, module).replace("-", "_")
-
-    if remainder:
-        where = unknowns.get(args.ase2sprkkr_command, None)
-        if where is None:
-             eparser = parsers.get(module, parser)
-             msg = f" ! ERROR: Unknown argument(s) '{', '.join(remainder)}' for the '{eparser.prog}' command. !"
-             parser_error(eparser, msg)
-        else:
-            where = getattr(args, where)
-            where += remainder
-
-    help = True
-    if args.debug:
-        from ase2sprkkr.common.debug import add_debug_hook
-
-        add_debug_hook()
-
-    global_args = {}
-    for i in ["debug", "profile"]:
-        global_args[i] = getattr(args, i)
-        delattr(args, i)
-
-    if args.version:
-        import ase2sprkkr.version
-
-        print(ase2sprkkr.version.__version__)
-        help = False
-    else:
-        del args.version
-
-    if args.ase2sprkkr_command is None:
-        if help:
-            parser.print_help()
-    else:
-        del args.ase2sprkkr_command
-        action = modules[module].run
-        action(args, global_args)
-
-
-if __name__ == "__main__":
-    if "-P" in sys.argv or "--profile" in sys.argv:
+    if args.profile:
         import cProfile
         import io
         import pstats
 
         pr = cProfile.Profile()
         pr.enable()
-        run()
+        execute()
         pr.disable()
         s = io.StringIO()
         sortby = pstats.SortKey.CUMULATIVE
@@ -176,4 +177,9 @@ if __name__ == "__main__":
         ps.print_stats(0.1)
         print(s.getvalue())
     else:
-        run()
+        execute()
+
+
+
+if __name__ == "__main__":
+    run()
