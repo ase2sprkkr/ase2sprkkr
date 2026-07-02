@@ -77,6 +77,31 @@ class TestPotential(TestCase):
     if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
         SPRKKR().calculate(potential=p, **self.calc_args(options={'NITER':1,'NKTAB':5, 'NE':5}))
 
+  def test_potential_data_single_type(self):
+    """Regression test for NumpyArray reshape bug on NT=1 (single atom type) systems.
+
+    np.genfromtxt squeezes a single-row DATA block to shape (N,) instead of
+    (1, N).  The previous ``v.shape = (2, -1)`` silently reinterpreted the
+    flat array, splitting it at the midpoint rather than at the row boundary.
+    The fix uses ``np.atleast_2d(v).reshape(self.shape)`` so that single-row
+    and multi-row blocks are handled consistently.
+    """
+    path = os.path.join(os.path.dirname(__file__), '..', 'examples', 'Au_single_type.pot')
+    p = Potential.from_file(path)
+    self.assertEqual(p['GLOBAL SYSTEM PARAMETER']['NT'](), 1)
+    site = p.atoms.sites[0]
+    self.assertTrue(site.potential is not None)
+    self.assertTrue(site.charge is not None)
+    # DATA shape must be (2, N) — two spin-channel rows, N radial points
+    self.assertEqual(site.potential.raw_value.ndim, 2)
+    self.assertEqual(site.potential.raw_value.shape[0], 2)
+    self.assertEqual(site.charge.raw_value.ndim, 2)
+    self.assertEqual(site.charge.raw_value.shape[0], 2)
+    # vt[0] (innermost point) must be a large negative value (deep atomic
+    # potential) — confirms the two rows were not transposed or split wrongly
+    assert site.potential.vt[0] < -1e6, "vt[0] should be a large negative atomic potential"
+    assert np.allclose(site.potential.bt, 0., atol=1e-6), "bt should be ~0 for non-magnetic Au"
+
   def test_examples(self):
     path = os.path.join(os.path.dirname(__file__), '..','examples')
     i = 0
