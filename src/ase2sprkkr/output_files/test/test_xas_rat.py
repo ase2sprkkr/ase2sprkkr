@@ -200,6 +200,21 @@ class TestDifferenceSpectrum:
         assert ref_max < 1e-6, f"Reference difference is non-trivial: max={ref_max:.2e} Mb"
         assert py_max < 1e-6, f"Python difference is non-trivial: max={py_max:.2e} Mb"
 
+    def test_three_input_polarizations_default_to_mcd(self):
+        """Like XBand, RXAS must use + and - unless MLD is requested."""
+        from ase2sprkkr.output_files.definitions.rat import RATOutputFile
+
+        of = RATOutputFile.from_file(RAT_FILE)
+        common = dict(gauss_width=0.0, core_hole_width="fuggle-inglesfield")
+        mcd = of.compute_data(**common)
+        mld = of.compute_data(**common, mld=True)
+
+        # Cu's + and - spectra are identical to floating-point precision.  Its
+        # z spectrum differs slightly, making this sensitive to selecting the
+        # wrong pair of the three input polarizations.
+        assert np.max(np.abs(mcd["XMCD"])) < 1e-14
+        assert np.max(np.abs(mld["XMCD"])) > 1e-10
+
 
 class TestSumRuleSpectra:
     """SPIN and ORBIT spectra (sum rules).

@@ -163,6 +163,7 @@ class RATOutputFile(CommonOutputFile):
         lorentz_width=None,
         n_valence=None,
         core_hole_width="campbell-papp",
+        mld=False,
         layout_kind="constrained",
         **kwargs,
     ):
@@ -179,6 +180,7 @@ class RATOutputFile(CommonOutputFile):
             lorentz_width,
             n_valence,
             core_hole_width,
+            mld,
         )
 
         num = data["XAS"].shape[0]  # 1 or 2
@@ -222,6 +224,7 @@ class RATOutputFile(CommonOutputFile):
         lorentz_width=None,
         n_valence=None,
         core_hole_width="campbell-papp",
+        mld=False,
     ):
         key = {**locals()}
         del key['self']
@@ -250,6 +253,7 @@ class RATOutputFile(CommonOutputFile):
         lorentz_width=None,
         n_valence=None,
         core_hole_width="campbell-papp",
+        mld=False,
     ):
         """core energies"""
         ktypes, type_map = self.core_state_types
@@ -366,11 +370,18 @@ class RATOutputFile(CommonOutputFile):
         rt = read_rdt("ABSRATE")
 
         if n_pol == 3:
-            # linear dichroism - transform it to handle it as circular
-            rd[:, :, :, 1] = 0.5 * (rd[:, :, :, 0] + rd[:, :, :, 1])
-            rd = rd[:, :, :, 1:]
-            rt[:, :, :, 1] = 0.5 * (rt[:, :, :, 0] + rt[:, :, :, 1])
-            rt = rt[:, :, :, 1:]
+            if mld:
+                # XBand's MLD mode compares the average of the two circular
+                # polarizations with the z polarization.
+                rd[:, :, :, 1] = 0.5 * (rd[:, :, :, 0] + rd[:, :, :, 1])
+                rd = rd[:, :, :, 1:]
+                rt[:, :, :, 1] = 0.5 * (rt[:, :, :, 0] + rt[:, :, :, 1])
+                rt = rt[:, :, :, 1:]
+            else:
+                # RDRXAS reads all three columns, but XBand's default MCD
+                # mode subsequently sets NPOL=2 and uses the + and - columns.
+                rd = rd[:, :, :, :2]
+                rt = rt[:, :, :, :2]
             n_pol = 2
 
         # If caller didn't provide explicit lorentz_width, compute using requested dataset
