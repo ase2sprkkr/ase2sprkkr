@@ -90,6 +90,17 @@ def ref_sumrule():
     return spin, orb  # (spin SSR, orbital OSR) – normalised to max=100
 
 
+class TestPlotCaptions:
+    def test_subject_is_derived_from_header_tables(self):
+        from ase2sprkkr.output_files.definitions.rat import RATOutputFile
+
+        of = RATOutputFile.from_file(RAT_FILE)
+        assert of.absorbing_element == "Cu"
+        assert of.system_formula == "Cu"
+        assert of.spectrum_subject == "of Cu in Cu"
+        assert of.xray_edge == r"L_{2,3}"
+
+
 # ---------------------------------------------------------------------------
 # Tests
 # ---------------------------------------------------------------------------
@@ -214,6 +225,8 @@ class TestDifferenceSpectrum:
         # wrong pair of the three input polarizations.
         assert np.max(np.abs(mcd["XMCD"])) < 1e-14
         assert np.max(np.abs(mld["XMCD"])) > 1e-10
+        assert mcd["DICHROISM"] == "XMCD"
+        assert mld["DICHROISM"] == "MLD"
 
 
 class TestSumRuleSpectra:

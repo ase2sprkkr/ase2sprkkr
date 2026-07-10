@@ -32,6 +32,38 @@ class RATOutputFile(CommonOutputFile):
         efermi = self.EFERMI()
         return np.array([(i.ENERGY()[0].real - efermi) * Rydberg for i in self.GROUPS[group].DATA.values()])
 
+    @property
+    def absorbing_element(self):
+        """Chemical symbol of the element whose core spectrum is plotted."""
+        type_index = self.GROUPS[0].IT() - 1
+        return str(self.TYPES[type_index]["TXT_T"]).strip()
+
+    @property
+    def system_formula(self):
+        """Build the system formula from the atom types and their multiplicities."""
+        parts = []
+        for atom_type in self.TYPES():
+            symbol = str(atom_type["TXT_T"]).strip()
+            count = int(atom_type["NAT"])
+            parts.append(symbol if count == 1 else f"{symbol}{count}")
+        return "".join(parts)
+
+    @property
+    def spectrum_subject(self):
+        return f"of {self.absorbing_element} in {self.system_formula}"
+
+    @property
+    def xray_edge(self):
+        """Spectroscopic label of the absorbing core edge, for example L₂,₃."""
+        n = self.GROUPS[0].NCXRAY()
+        l = self.GROUPS[0].LCXRAY()
+        shells = "KLMNOPQ"
+        shell = shells[n - 1] if 1 <= n <= len(shells) else f"n={n}"
+        if n == 1:
+            return shell
+        subshell = "1" if l == 0 else f"{2 * l},{2 * l + 1}"
+        return rf"{shell}_{{{subshell}}}"
+
     def order(self):
         """Order of the energie dataset."""
 
@@ -500,7 +532,7 @@ class RATOutputFile(CommonOutputFile):
         tt = 0.5 * (rd[:, :, -1] + rd[:, :, 0]).T
         td = 0.5 * (rd[:, :, -1] - rd[:, :, 0]).T
 
-        out = {"XAS": tt, "XMCD": td, "ENERGY": senergies}
+        out = {"XAS": tt, "XMCD": td, "ENERGY": senergies, "DICHROISM": "MLD" if mld else "XMCD"}
 
         if n_ktypes > 1:
             _sd = np.empty(shape)
@@ -597,10 +629,13 @@ _kunit_labels = {
 }
 
 
-def draw_plot(axis, x, y, title, name=None, kunit=1, **kwargs):
+def draw_plot(axis, x, y, title, name=None, kunit=1, edge=None, **kwargs):
     axis.set_title(title)
     axis.set_xlabel(r"$E-E_{\rm F}$ (eV)")
     base = _ylabel_base.get(name, "")
+    if edge and base:
+        math = base[1:-1] if base.startswith("$") and base.endswith("$") else base
+        base = rf"${edge}\;{math}$"
     unit = _kunit_labels.get(kunit, "Mb")
     axis.set_ylabel(f"{base} ({unit})" if base else f"({unit})")
     set_up_common_plot(axis, **kwargs)
@@ -621,6 +656,7 @@ def plot(
         lorentz_width=None,
         n_valence=None,
         core_hole_width="campbell-papp",
+        mld=False,
         *args,
         data_generated=False,
         **kwargs):
@@ -638,6 +674,7 @@ def plot(
             lorentz_width,
             n_valence,
             core_hole_width,
+            mld,
         )
 
     def just_plot(plotter, kwargs=kwargs):
@@ -647,12 +684,18 @@ def plot(
             else:
                 tit = title
             with plotter(title, kwargs) as (axis, kw):
-                draw_plot(axis, energy, d, tit, name=option.name, kunit=kunit, **kw)
+                draw_plot(axis, energy, d, tit, name=option.name, kunit=kunit, edge=c.xray_edge, **kw)
 
-    title = option.info
     c = option._container
     kunit = c.GROUPS[0].IFMT()[1]
     data = c.data
+    titles = {
+        "XAS": "XAS",
+        "XMCD": data["DICHROISM"],
+        "SPIN": "XMCD spin sum-rule integrand",
+        "ORBIT": "XMCD orbital sum-rule integrand",
+    }
+    title = f"{titles.get(option.name, option.info)} {c.spectrum_subject}"
     energy = data["ENERGY"]
     data = data[option.name]
     if len(data.shape) == 1:
