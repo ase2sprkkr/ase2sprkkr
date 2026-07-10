@@ -140,5 +140,5 @@ def vacuum_like(atoms):
     out = atoms.copy()
     SPRKKRAtoms.promote_ase_atoms(out)
     for site in out.sites:
-        site.occupation = {"Vc": 1.0}
+        site.site_type.occupation = {"Vc": 1.0}
     return out
