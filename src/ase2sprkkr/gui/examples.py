@@ -66,7 +66,7 @@ class Example:
             if p.name != "__init__.py":
                 return p
 
-        raise FileNotFoundError("No .py script found inside example directory.")
+        raise FileNotFoundError(f"No .py script found inside example directory {self.dir}.")
 
     @cached_property
     def docstring(self):
