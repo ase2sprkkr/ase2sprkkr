@@ -1,5 +1,4 @@
 import numpy as np
-import pymatgen.core
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from matplotlib import rc
@@ -7,6 +6,7 @@ from matplotlib.backend_bases import MouseEvent
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
 from ase import Atoms
+from ase.dft.bz import bz_vertices
 
 
 class Arrow3D(FancyArrowPatch):
@@ -39,6 +39,18 @@ The author does not take responsibility if your results are wrong :)
 
 def dot_norm(a, b):
     return np.dot(a, b) / np.sqrt(np.dot(a, a) * np.dot(b, b))
+
+
+def brillouin_zone(cell):
+    """Return reciprocal basis and faces of the first Brillouin zone.
+
+    ASE reciprocal vectors omit the conventional factor of 2π.  This is the
+    same coordinate convention previously obtained indirectly by giving
+    Pymatgen a direct lattice multiplied by 2π.
+    """
+    reciprocal_basis = np.asarray(cell.reciprocal())
+    faces = [vertices for vertices, _normal in bz_vertices(reciprocal_basis)]
+    return reciprocal_basis, faces
 
 
 def k_path_gui(atoms: Atoms, verbose=False):
@@ -79,41 +91,17 @@ def k_path_gui(atoms: Atoms, verbose=False):
             path_line.set_data([], [])
             path_line.set_3d_properties([])
 
-    # Create a pymatgen object. Pymatgen does not recognize empty cells so I change them to H.
-
     cell = atoms.cell
-    positions = atoms.positions
     ALAT = cell.get_bravais_lattice().a
     cell = cell.copy() / ALAT
-
-    pmg_Z_full = atoms.get_atomic_numbers()
-    pmg_Z_full[pmg_Z_full == 0] = 1
-
-    # pymatgen does not support vacuum
-    pmg_structure = pymatgen.core.Structure(
-        cell * 2 * np.pi, pmg_Z_full, positions * 2 * np.pi, coords_are_cartesian=True
-    )
+    rec_basis, BZ = brillouin_zone(cell)
     if verbose:
-        a0 = 1e10
-        pmg_cell = a0 * cell
-        pmg_coords = a0 * positions
-        print(pymatgen.core.Structure(pmg_cell, pmg_Z_full, pmg_coords, coords_are_cartesian=True))
+        print("Normalized direct lattice:\n", np.asarray(cell))
+        print("Reciprocal lattice:\n", rec_basis)
 
-    BZ_pmg = pmg_structure.lattice.get_brillouin_zone()
-
-    kx_BZ_pmg = []
-    ky_BZ_pmg = []
-    kz_BZ_pmg = []
-
-    for face in BZ_pmg:
-        for vertex in face:
-            kx_BZ_pmg.append(vertex[0])
-            ky_BZ_pmg.append(vertex[1])
-            kz_BZ_pmg.append(vertex[2])
-
-    vert_BZ_pmg = np.array([np.array(kx_BZ_pmg), np.array(ky_BZ_pmg), np.array(kz_BZ_pmg)]).T
-    d, d_i = np.unique(vert_BZ_pmg, axis=0, return_index=True)
-    pmg_BZ_unique_verts = vert_BZ_pmg[d_i]
+    vertices = np.concatenate(BZ)
+    _, unique_indices = np.unique(np.round(vertices, decimals=12), axis=0, return_index=True)
+    bz_unique_vertices = vertices[np.sort(unique_indices)]
 
     #############################
     #                           #
@@ -168,7 +156,6 @@ def k_path_gui(atoms: Atoms, verbose=False):
     set_equal_lims(ax_kkr)
 
     # Draw KKR structure BZ
-    BZ = pmg_structure.lattice.get_brillouin_zone()
     for face in BZ:
         x = np.zeros(len(face))
         y = np.zeros(len(face))
@@ -189,7 +176,6 @@ def k_path_gui(atoms: Atoms, verbose=False):
     draw_reciprocal_basis = True
     draw_k_basis = True
 
-    rec_basis = pmg_structure.lattice.reciprocal_lattice.matrix
     if draw_reciprocal_basis:
         arrow = Arrow3D(
             [0, rec_basis[0, 0]],
@@ -271,8 +257,8 @@ def k_path_gui(atoms: Atoms, verbose=False):
     colors.append(c_gamma)
 
     # 2. Vertices of BZ
-    highsymmpts = np.append(highsymmpts, pmg_BZ_unique_verts, axis=0)
-    for i in range(len(pmg_BZ_unique_verts)):
+    highsymmpts = np.append(highsymmpts, bz_unique_vertices, axis=0)
+    for i in range(len(bz_unique_vertices)):
         sz.append(sz_vertex)
         colors.append(c_vertex)
 

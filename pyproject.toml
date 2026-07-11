@@ -51,6 +51,9 @@ jupyter = [
 mendeleev = [
     "mendeleev",
 ]
+es_finder = [
+    "pymatgen",
+]
 
 [project.urls]
 Homepage = "https://ase2sprkkr.github.io/ase2sprkkr/"

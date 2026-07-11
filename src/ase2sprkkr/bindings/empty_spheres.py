@@ -1,6 +1,7 @@
 from collections import namedtuple
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 import numpy as np
+import warnings
 
 
 class EmptySpheresResult(namedtuple("EmptySpheresResult", "positions radii")):
@@ -9,14 +10,39 @@ class EmptySpheresResult(namedtuple("EmptySpheresResult", "positions radii")):
 
 
 def empty_spheres(atoms, method="auto", **kwargs):
-    """Returns centres of empty spheres to add"""
+    """Return centres and radii of empty spheres to add.
+
+    ``method='auto'`` uses the optional es_finder backend when both es_finder
+    and Pymatgen are importable, otherwise it uses the ase2sprkkr "in-house"
+    method taken from XBand.
+    es_finder is not publicly available package. An explicitly requested but
+    unavailable es_finder backend also falls back to the in-house implementation,
+    after emitting a warning.
+    """
+    es_finder_available = es_finder.is_enabled
+
     if method == "auto":
-        if es_finder.is_enabled:
-            method = "es_finder"
+        method = "es_finder" if es_finder_available else "inhouse"
+
     if method == "es_finder":
-        return es_finder.empty_spheres(atoms, **kwargs)
-    else:
+        if not es_finder_available:
+            warnings.warn(
+                "The es_finder method requires both es_finder and pymatgen, "
+                "but at least one of them is not installed. Falling back to "
+                "the inhouse empty-spheres method. Install optional support "
+                'for pymatgen with: python -m pip install "ase2sprkkr[es_finder]"; '
+                "es_finder itself must also be installed.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+            method = "inhouse"
+        else:
+            return es_finder.empty_spheres(atoms, **kwargs)
+
+    if method in ("inhouse", "xband"):
         return spheres.empty_spheres(atoms, **kwargs)
+
+    raise ValueError("Unknown empty-spheres method {!r}; use 'auto', 'es_finder', or 'inhouse'".format(method))
 
 
 def empty_spheres_atoms(atoms, round_zero=True, **kwargs):
