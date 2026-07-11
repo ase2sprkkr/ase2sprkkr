@@ -84,6 +84,8 @@ sdist.include = [
 	"src/ase2sprkkr/input_parameters/examples/*.in",
 	"src/ase2sprkkr/potentials/examples/*.pot",
 	"src/ase2sprkkr/output_files/examples/*.bsf",
+	"src/ase2sprkkr/output_files/examples/*.rat",
+	"src/ase2sprkkr/output_files/examples/*.dat",
 	"src/ase2sprkkr/output_files/examples/*.spc",
 	"src/ase2sprkkr/output_files/examples/*.dos",
 	"src/ase2sprkkr/outputs/examples/*.out",
