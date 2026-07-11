@@ -50,19 +50,19 @@ def parser(parser):
 
 
 def run(args, global_args):
-    from ...gui.shell import Python, JupyterLab, Pdb
+    from ...gui.shell import Python, JupyterLab, JupyterDependencyError, Pdb
     import os
     from ...common.directory import Directory
 
-    if args.jupyter:
-        shell = JupyterLab
-        kwargs = {"run": args.run}
-    elif args.pdb:
-        shell = Pdb
-    else:
-        shell = Python
-    kwargs = {}
-    shell = shell(**kwargs)
+    try:
+        if args.jupyter:
+            shell = JupyterLab(run=args.run)
+        elif args.pdb:
+            shell = Pdb()
+        else:
+            shell = Python()
+    except JupyterDependencyError as exc:
+        raise SystemExit(str(exc)) from None
 
     change_dir = True
     if args.directory:

@@ -8,12 +8,30 @@ from ase2sprkkr.gui.examples import Example
 import subprocess
 from pathlib import Path
 
-try:
-    import nbformat
-    from nbformat.v4 import new_notebook, new_code_cell
-    from nbconvert.preprocessors import ExecutePreprocessor
-except ImportError:
-    nbformat = None
+
+JUPYTER_INSTALL_COMMAND = 'python -m pip install "ase2sprkkr[jupyter]"'
+
+
+class JupyterDependencyError(ImportError):
+    """Raised when the optional dependencies for Jupyter support are absent."""
+
+    def __init__(self):
+        super().__init__(
+            "Jupyter support is not installed. Install the optional dependency with:\n\n"
+            f"    {JUPYTER_INSTALL_COMMAND}"
+        )
+
+
+def load_jupyter_dependencies():
+    """Import and return modules needed only by the Jupyter shell."""
+    try:
+        import nbformat
+        from nbformat.v4 import new_notebook, new_code_cell
+        from nbconvert.preprocessors import ExecutePreprocessor
+        import jupyterlab  # noqa: F401
+    except ImportError as exc:
+        raise JupyterDependencyError() from exc
+    return nbformat, new_notebook, new_code_cell, ExecutePreprocessor
 
 
 def split_top_level_chunks(code: str):
@@ -179,70 +197,64 @@ class Pdb(CommandlineShell):
         pdb.runctx(code, {}, {})
 
 
-if nbformat is None:
-    JupyterLab = None
-else:
+class JupyterLab(Shell):
+    """Run the given code in a JupyterLab notebook."""
 
-    class JupyterLab(Shell):
-        """Run the given code in a JupyterLab notebook."""
+    def __init__(self, run=False):
+        (
+            self.nbformat,
+            self.new_notebook,
+            self.new_code_cell,
+            self.ExecutePreprocessor,
+        ) = load_jupyter_dependencies()
+        self.saved = False
+        self.run = run
+        super().__init__()
 
-        def __init__(self, run=False):
-            self.saved = False
-            self.run = run
-            super().__init__()
+    def save(self, filename):
+        """Save the notebook to disk."""
+        filename = Path(filename)
+        filename.parent.mkdir(parents=True, exist_ok=True)
 
-        def save(self, filename):
-            """Save the notebook to disk."""
-            filename = Path(filename)
-            filename.parent.mkdir(parents=True, exist_ok=True)
+        nb = self.new_notebook()
+        for cmd in self.code:
+            nb.cells.append(self.new_code_cell(cmd))
 
-            nb = new_notebook()
-            for cmd in self.code:
-                nb.cells.append(new_code_cell(cmd))
+        if self.run:
+            ep = self.ExecutePreprocessor(timeout=600)
+            ep.preprocess(nb, {"metadata": {"path": self.dir}})
 
-            if self.run:
-                ep = ExecutePreprocessor(timeout=600)
-                ep.preprocess(nb, {"metadata": {"path": self.dir}})
+        with open(filename, "w", encoding="utf-8") as f:
+            self.nbformat.write(nb, f)
+        self.saved = filename
 
-            with open(filename, "w", encoding="utf-8") as f:
-                nbformat.write(nb, f)
-            self.saved = filename
+    def open(self):
+        print("\n Opening JupyterLab... Press CTRL+C to stop the Jupyter computational kernel.\n")
+        dr = Path(self.dir or ".")
 
-        def open(self):
-            print("\n Opening JupyterLab... Press CTRL+C to stop the Jupyter computational kernel.\n")
-            dr = Path(self.dir or ".")
+        if not self.saved:
+            self.save(dr / "notebook.ipynb")
 
-            if not self.saved:
-                self.save(dr / "notebook.ipynb")
-
+        with chdir(self.dir):
+            cmd = ["jupyter-lab", "--NotebookApp.shutdown_no_activity_timeout=60", self.saved]
             try:
-                import jupyterlab  # noqa F401
-            except ImportError:
-                raise Exception("Jupyter lab not installed, please install (e.g. using pip install jupyter-lab")
-
-            with chdir(self.dir):
-                cmd = ["jupyter-lab", "--NotebookApp.shutdown_no_activity_timeout=60", self.saved]
-                # Launch JupyterLab
+                proc = subprocess.Popen(
+                    cmd,
+                    cwd=self.dir,
+                    stdin=None,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    start_new_session=False,
+                )
+                proc.wait()
+            except KeyboardInterrupt:
+                print("Terminating the kernel")
+                proc.terminate()
                 try:
-                    proc = subprocess.Popen(
-                        cmd,
-                        cwd=self.dir,
-                        stdin=None,  # inherit parent's stdin
-                        # stdout=None, # inherit parent's stdout
-                        stdout=subprocess.DEVNULL,
-                        stderr=subprocess.DEVNULL,
-                        # stderr=None, # inherit parent's stderr
-                        start_new_session=False,  # important: do not detach
-                    )
+                    proc.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    proc.kill()
                     proc.wait()
-                except KeyboardInterrupt:
-                    print("Terminating the kernel")
-                    proc.terminate()
-                    try:
-                        proc.wait(timeout=5)  # wait gracefully
-                    except subprocess.TimeoutExpired:
-                        proc.kill()  # force kill
-                        proc.wait()  # wait gracefully
 
 
 """

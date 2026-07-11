@@ -26,28 +26,27 @@ license-files = ["LICENCE"]
 
 dependencies = [
     "ase>=3.22.0",
-    "asr",
 		"colorama",
     "spglib",
     "pyparsing>=3.0",
     "mendeleev",
     "platformdirs",
     "packaging",
-    "cython",
-    "setuptools",
-    "unyts",
     "pytest",
     "pyyaml",
     "requests",
     "argcomplete",
     "unyt",
-    "nbformat",
-    "nbconvert",
-    "jupyterlab",
-    "phonopy<2.22; python_version < '3.9'",
     "numpy<2.0; python_version < '3.10'",
     "numpy>=2.1; python_version >= '3.10'",
     "networkx<3.3; python_version >= '3.14'",
+]
+
+[project.optional-dependencies]
+jupyter = [
+    "jupyterlab",
+    "nbformat",
+    "nbconvert",
 ]
 
 [project.urls]
