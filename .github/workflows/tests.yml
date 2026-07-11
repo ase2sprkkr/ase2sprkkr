@@ -22,6 +22,10 @@ jobs:
          echo "text.usetex : False" >> ~/.config/matplotlib/matplotlibrc
     - run: ./install_dependencies.sh
     - name: Diagnose installed compiled extensions
+      # The repository contains a compatibility symlink
+      # ``ase2sprkkr -> src/ase2sprkkr``.  Running Python in the checkout would
+      # put that source package before site-packages and hide wheel extensions.
+      working-directory: /tmp
       run: |
         python3 - <<'PY'
         import importlib.metadata
@@ -47,4 +51,6 @@ jobs:
         assert hasattr(spheres, "empty_spheres")
         assert hasattr(symmetry, "find_symmetry")
         PY
-    - run: DO_NOT_RUN_SPRKKR=1 ./run_tests
+    - name: Test installed wheel
+      working-directory: /tmp
+      run: DO_NOT_RUN_SPRKKR=1 "$GITHUB_WORKSPACE/run_tests"
