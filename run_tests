@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# The wheel installed by the preceding build step must be tested.  A CI-wide
+# PYTHONPATH pointing at ``src`` would shadow its compiled extension modules.
+unset PYTHONPATH
+
 # Fail early and explicitly if the wheel did not provide its compiled modules.
 # A same-named source directory can otherwise be imported as a namespace
 # package, producing a misleading late "has no attribute" failure.
