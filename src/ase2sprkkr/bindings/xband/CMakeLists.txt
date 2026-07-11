@@ -30,7 +30,7 @@ python_add_library(symmetry MODULE symmetry.c WITH_SOABI)
 target_link_libraries(symmetry PRIVATE symmetry_lib)
 
 install(TARGETS symmetry
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/ase2sprkkr/bindings/xband)
+    LIBRARY DESTINATION ase2sprkkr/bindings/xband)
 
 
 set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -finit-integer=0")
@@ -66,5 +66,4 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 install(TARGETS spheres
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/ase2sprkkr/bindings/xband)
-
+    LIBRARY DESTINATION ase2sprkkr/bindings/xband)
