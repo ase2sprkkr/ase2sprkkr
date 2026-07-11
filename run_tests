@@ -1,4 +1,22 @@
 #!/bin/bash
 set -e
 
+# Fail early and explicitly if the wheel did not provide its compiled modules.
+# A same-named source directory can otherwise be imported as a namespace
+# package, producing a misleading late "has no attribute" failure.
+python3 - <<'PY'
+from ase2sprkkr.bindings.xband import spheres, symmetry
+
+for module, required_function in (
+    (spheres, "empty_spheres"),
+    (symmetry, "find_symmetry"),
+):
+    if not hasattr(module, required_function):
+        raise RuntimeError(
+            f"Compiled extension {module.__name__} was not loaded: "
+            f"module={module!r}, file={getattr(module, '__file__', None)!r}, "
+            f"missing function={required_function!r}"
+        )
+PY
+
 python3 -m ase2sprkkr.tools.ase2sprkkr test "$@"
