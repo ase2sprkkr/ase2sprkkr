@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>dot_norm &mdash; ASE2SPRKKR  documentation</title>
+  <title>brillouin_zone &mdash; ASE2SPRKKR  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="k_path_gui" href="ase2sprkkr.gui.k_path.k_path_gui.html" />
-    <link rel="prev" title="brillouin_zone" href="ase2sprkkr.gui.k_path.brillouin_zone.html" /> 
+    <link rel="next" title="dot_norm" href="ase2sprkkr.gui.k_path.dot_norm.html" />
+    <link rel="prev" title="k_path" href="ase2sprkkr.gui.k_path.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -76,8 +76,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.gui.examples.html">examples</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.gui.k_path.html">k_path</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.k_path.brillouin_zone.html">brillouin_zone</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">dot_norm</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">brillouin_zone</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.k_path.dot_norm.html">dot_norm</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.k_path.k_path_gui.html">k_path_gui</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.k_path.k_path_to_string.html">k_path_to_string</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.k_path.Arrow3D.html">Arrow3D</a></li>
@@ -116,9 +116,9 @@
           <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
           <li class="breadcrumb-item"><a href="ase2sprkkr.gui.html">gui</a></li>
           <li class="breadcrumb-item"><a href="ase2sprkkr.gui.k_path.html">k_path</a></li>
-      <li class="breadcrumb-item active">dot_norm</li>
+      <li class="breadcrumb-item active">brillouin_zone</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/auto/ase2sprkkr.gui.k_path.dot_norm.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/auto/ase2sprkkr.gui.k_path.brillouin_zone.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -126,13 +126,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="dot-norm">
-<h1>dot_norm<a class="headerlink" href="#dot-norm" title="Link to this heading"></a></h1>
-<p>Full name: <strong>ase2sprkkr.gui.k_path.dot_norm</strong></p>
+  <section id="brillouin-zone">
+<h1>brillouin_zone<a class="headerlink" href="#brillouin-zone" title="Link to this heading"></a></h1>
+<p>Full name: <strong>ase2sprkkr.gui.k_path.brillouin_zone</strong></p>
 <dl class="py function">
-<dt class="sig sig-object py" id="ase2sprkkr.gui.k_path.dot_norm">
-<span class="sig-prename descclassname"><span class="pre">ase2sprkkr.gui.k_path.</span></span><span class="sig-name descname"><span class="pre">dot_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/gui/k_path.html#dot_norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.gui.k_path.dot_norm" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="ase2sprkkr.gui.k_path.brillouin_zone">
+<span class="sig-prename descclassname"><span class="pre">ase2sprkkr.gui.k_path.</span></span><span class="sig-name descname"><span class="pre">brillouin_zone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/gui/k_path.html#brillouin_zone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.gui.k_path.brillouin_zone" title="Link to this definition"></a></dt>
+<dd><p>Return reciprocal basis and faces of the first Brillouin zone.</p>
+<p>ASE reciprocal vectors omit the conventional factor of 2π.  This is the
+same coordinate convention previously obtained indirectly by giving
+Pymatgen a direct lattice multiplied by 2π.</p>
+</dd></dl>
 
 </section>
 
@@ -140,8 +144,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.gui.k_path.brillouin_zone.html" class="btn btn-neutral float-left" title="brillouin_zone" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.gui.k_path.k_path_gui.html" class="btn btn-neutral float-right" title="k_path_gui" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.gui.k_path.html" class="btn btn-neutral float-left" title="k_path" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.gui.k_path.dot_norm.html" class="btn btn-neutral float-right" title="dot_norm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

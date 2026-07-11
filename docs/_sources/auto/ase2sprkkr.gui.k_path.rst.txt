@@ -30,6 +30,7 @@ Full name: **ase2sprkkr.gui.k\_path**
       :toctree:
       :template: custom-base-template.rst
    
+      brillouin_zone
       dot_norm
       k_path_gui
       k_path_to_string

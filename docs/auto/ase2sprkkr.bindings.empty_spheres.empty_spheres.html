@@ -133,7 +133,13 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.empty_spheres.empty_spheres">
 <span class="sig-prename descclassname"><span class="pre">ase2sprkkr.bindings.empty_spheres.</span></span><span class="sig-name descname"><span class="pre">empty_spheres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/empty_spheres.html#empty_spheres"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.empty_spheres.empty_spheres" title="Link to this definition"></a></dt>
-<dd><p>Returns centres of empty spheres to add</p>
+<dd><p>Return centres and radii of empty spheres to add.</p>
+<p><code class="docutils literal notranslate"><span class="pre">method='auto'</span></code> uses the optional es_finder backend when both es_finder
+and Pymatgen are importable, otherwise it uses the ase2sprkkr “in-house”
+method taken from XBand.
+es_finder is not publicly available package. An explicitly requested but
+unavailable es_finder backend also falls back to the in-house implementation,
+after emitting a warning.</p>
 </dd></dl>
 
 </section>

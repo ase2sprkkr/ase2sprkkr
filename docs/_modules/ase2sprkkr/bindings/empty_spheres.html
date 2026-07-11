@@ -94,6 +94,7 @@
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..sprkkr.sprkkr_atoms</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 
 <div class="viewcode-block" id="EmptySpheresResult">
@@ -107,14 +108,39 @@
 <div class="viewcode-block" id="empty_spheres">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.empty_spheres.html#ase2sprkkr.bindings.empty_spheres.empty_spheres">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns centres of empty spheres to add&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return centres and radii of empty spheres to add.</span>
+
+<span class="sd">    ``method=&#39;auto&#39;`` uses the optional es_finder backend when both es_finder</span>
+<span class="sd">    and Pymatgen are importable, otherwise it uses the ase2sprkkr &quot;in-house&quot;</span>
+<span class="sd">    method taken from XBand.</span>
+<span class="sd">    es_finder is not publicly available package. An explicitly requested but</span>
+<span class="sd">    unavailable es_finder backend also falls back to the in-house implementation,</span>
+<span class="sd">    after emitting a warning.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">es_finder_available</span> <span class="o">=</span> <span class="n">es_finder</span><span class="o">.</span><span class="n">is_enabled</span>
+
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">es_finder</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">:</span>
-            <span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;es_finder&quot;</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;es_finder&quot;</span> <span class="k">if</span> <span class="n">es_finder_available</span> <span class="k">else</span> <span class="s2">&quot;inhouse&quot;</span>
+
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;es_finder&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">es_finder</span><span class="o">.</span><span class="n">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">spheres</span><span class="o">.</span><span class="n">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">es_finder_available</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;The es_finder method requires both es_finder and pymatgen, &quot;</span>
+                <span class="s2">&quot;but at least one of them is not installed. Falling back to &quot;</span>
+                <span class="s2">&quot;the inhouse empty-spheres method. Install optional support &quot;</span>
+                <span class="s1">&#39;for pymatgen with: python -m pip install &quot;ase2sprkkr[es_finder]&quot;; &#39;</span>
+                <span class="s2">&quot;es_finder itself must also be installed.&quot;</span><span class="p">,</span>
+                <span class="ne">RuntimeWarning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;inhouse&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">es_finder</span><span class="o">.</span><span class="n">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;inhouse&quot;</span><span class="p">,</span> <span class="s2">&quot;xband&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">spheres</span><span class="o">.</span><span class="n">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown empty-spheres method </span><span class="si">{!r}</span><span class="s2">; use &#39;auto&#39;, &#39;es_finder&#39;, or &#39;inhouse&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">method</span><span class="p">))</span></div>
 
 
 
