@@ -86,6 +86,7 @@ sdist.include = [
 	"src/ase2sprkkr/output_files/examples/*.bsf",
 	"src/ase2sprkkr/output_files/examples/*.spc",
 	"src/ase2sprkkr/output_files/examples/*.dos",
+	"src/ase2sprkkr/output_files/test/xas_Cu_L23*.agr",
 	"src/ase2sprkkr/outputs/examples/*.out",
 	"src/ase2sprkkr/examples/README",
 
