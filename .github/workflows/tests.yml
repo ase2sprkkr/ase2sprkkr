@@ -21,4 +21,5 @@ jobs:
          mkdir -p ~/.config/matplotlib
          echo "text.usetex : False" >> ~/.config/matplotlib/matplotlibrc
     - run: ./install_dependencies.sh
-    - run: DO_NOT_RUN_SPRKKR=1 ./run_tests
+    - name: Test installed wheel
+      run: DO_NOT_RUN_SPRKKR=1 "$GITHUB_WORKSPACE/run_tests"
