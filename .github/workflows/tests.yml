@@ -21,4 +21,30 @@ jobs:
          mkdir -p ~/.config/matplotlib
          echo "text.usetex : False" >> ~/.config/matplotlib/matplotlibrc
     - run: ./install_dependencies.sh
+    - name: Diagnose installed compiled extensions
+      run: |
+        python3 - <<'PY'
+        import importlib.metadata
+        import sys
+        import ase2sprkkr
+        import ase2sprkkr.bindings.xband as xband
+        from ase2sprkkr.bindings.xband import spheres, symmetry
+
+        distribution = importlib.metadata.distribution("ase2sprkkr")
+        installed_extensions = sorted(
+            str(path) for path in distribution.files or ()
+            if "bindings/xband" in str(path) and str(path).endswith((".so", ".pyd"))
+        )
+        print("ase2sprkkr:", ase2sprkkr.__file__)
+        print("ase2sprkkr.__path__:", list(ase2sprkkr.__path__))
+        print("xband:", xband.__file__)
+        print("xband.__path__:", list(xband.__path__))
+        print("spheres:", spheres, getattr(spheres, "__file__", None))
+        print("symmetry:", symmetry, getattr(symmetry, "__file__", None))
+        print("installed extensions:", installed_extensions)
+        print("sys.path:", sys.path)
+
+        assert hasattr(spheres, "empty_spheres")
+        assert hasattr(symmetry, "find_symmetry")
+        PY
     - run: DO_NOT_RUN_SPRKKR=1 ./run_tests
