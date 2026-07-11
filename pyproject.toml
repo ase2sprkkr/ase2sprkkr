@@ -29,7 +29,7 @@ dependencies = [
 		"colorama",
     "spglib",
     "pyparsing>=3.0",
-    "mendeleev",
+    "elementy",
     "platformdirs",
     "packaging",
     "pytest",
@@ -47,6 +47,9 @@ jupyter = [
     "jupyterlab",
     "nbformat",
     "nbconvert",
+]
+mendeleev = [
+    "mendeleev",
 ]
 
 [project.urls]

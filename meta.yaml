@@ -27,7 +27,7 @@ requirements:
     - ase
     - spglib
     - pyparsing
-    - mendeleev
+    - elementy
     - platformdirs
     - packaging
 

@@ -6,6 +6,7 @@ from .radial import RadialPotential, RadialCharge
 from .moments import Moments
 from typing import Dict
 import numpy as np
+from ase.data import atomic_numbers, chemical_symbols
 
 
 class AtomicType:
@@ -31,7 +32,10 @@ class AtomicType:
             try:
                 import mendeleev
             except ImportError as e:
-                raise ImportError("Cannot import Mendeleev package to guess the atomic type properties") from e
+                raise ImportError(
+                    "The optional Mendeleev integration is not installed. Install it with:\n\n"
+                    '    python -m pip install "ase2sprkkr[mendeleev]"'
+                ) from e
             AtomicType._mendeleev_module = mendeleev
         return AtomicType._mendeleev_module.element(self.atomic_number or self.symbol)
 
@@ -76,7 +80,7 @@ class AtomicType:
         if atomic_number is None and symbol is None:
             raise ValueError("Unknown atomic type")
 
-        if "_" in symbol:
+        if symbol and "_" in symbol:
             symbol = symbol.split("_", 1)[0]
 
         if symbol == "Vc" or atomic_number == 0 or (symbol == "X" and atomic_number is None):
@@ -84,12 +88,16 @@ class AtomicType:
             self._atomic_number = 0
         else:
             if symbol is None:
+                if atomic_number < 1 or atomic_number >= len(chemical_symbols):
+                    raise ValueError(f"Unknown atomic number: {atomic_number}")
                 self._atomic_number = atomic_number
-                self._symbol = symbol if symbol is not None else self.mendeleev.symbol
+                self._symbol = chemical_symbols[atomic_number]
             else:
                 self._symbol = symbol
-                self._atomic_number = None
-                self._atomic_number = atomic_number if atomic_number is not None else self.mendeleev.atomic_number
+                try:
+                    self._atomic_number = atomic_number if atomic_number is not None else atomic_numbers[symbol]
+                except KeyError as exc:
+                    raise ValueError(f"Unknown chemical element: {symbol!r}") from exc
 
         self._n_electrons = n_electrons
         self._n_valence = n_valence
@@ -159,9 +167,12 @@ n_semicore: {self._n_semicore}""")
 
     @atomic_number.setter
     def atomic_number(self, v):
-        self._atomic_number = int(v)
+        v = int(v)
+        if v < 0 or v >= len(chemical_symbols):
+            raise ValueError(f"Unknown atomic number: {v}")
+        self._atomic_number = v
         self._clear_symbol_cache()
-        self._symbol = self.mendeleev.symbol if v else "Vc"
+        self._symbol = chemical_symbols[v] if v else "Vc"
 
     @property
     def symbol(self):
@@ -172,7 +183,10 @@ n_semicore: {self._n_semicore}""")
         self._symbol = v
         self._atomic_number = None
         self._clear_symbol_cache()
-        self._atomic_number = self.mendeleev.atomic_number if v not in ["X", "Vc"] else 0
+        try:
+            self._atomic_number = atomic_numbers[v] if v not in ["X", "Vc"] else 0
+        except KeyError as exc:
+            raise ValueError(f"Unknown chemical element: {v!r}") from exc
 
     @property
     def n_electrons(self):
@@ -197,7 +211,9 @@ n_semicore: {self._n_semicore}""")
             return self.n_electrons - self._n_core
         if self.n_electrons == 0:
             return 0
-        return self.mendeleev.nvalence()
+        from ..physics.atomic_data import valence_electrons
+
+        return valence_electrons(self.symbol)
 
     @n_valence.setter
     def n_valence(self, v):

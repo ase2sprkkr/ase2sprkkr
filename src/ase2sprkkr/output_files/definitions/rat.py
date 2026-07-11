@@ -113,12 +113,6 @@ class RATOutputFile(CommonOutputFile):
 
         return out
 
-    @cached_property
-    def mendeleev(self):
-        import mendeleev
-
-        return mendeleev.element(self.TYPES[self.GROUPS[0].IT() - 1]["TXT_T"])
-
     def lorentz_width(self, source="campbell-papp"):
         """
         Return tuple of Lorentz widths (for the two possible KAP types).
@@ -126,7 +120,9 @@ class RATOutputFile(CommonOutputFile):
         """
         from ase2sprkkr.physics.core_hole_width import core_hole_width
 
-        atomic_number = self.mendeleev.atomic_number
+        from ase.data import atomic_numbers
+
+        atomic_number = atomic_numbers[self.absorbing_element]
         nc = self.GROUPS[0].NCXRAY()
         lc = self.GROUPS[0].LCXRAY()
         return (
@@ -138,7 +134,9 @@ class RATOutputFile(CommonOutputFile):
         if lorentz_width is None:
             lorentz_width = self.lorentz_width()
         if n_valence is None:
-            n_valence = self.mendeleev.nvalence()
+            from ase2sprkkr.physics.atomic_data import valence_electrons
+
+            n_valence = valence_electrons(self.absorbing_element)
         # Accept Python floats and NumPy scalar floats here
         if np.isscalar(lorentz_width):
             lorentz_width = [float(lorentz_width)]
