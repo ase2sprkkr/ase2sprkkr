@@ -22,13 +22,11 @@ jobs:
          echo "text.usetex : False" >> ~/.config/matplotlib/matplotlibrc
     - run: ./install_dependencies.sh
     - name: Diagnose installed compiled extensions
-      # The repository contains a compatibility symlink
-      # ``ase2sprkkr -> src/ase2sprkkr``.  Running Python in the checkout would
-      # put that source package before site-packages and hide wheel extensions.
-      working-directory: /tmp
       run: |
+        cd "$RUNNER_TEMP"
         python3 - <<'PY'
         import importlib.metadata
+        import os
         import sys
         import ase2sprkkr
         import ase2sprkkr.bindings.xband as xband
@@ -39,6 +37,7 @@ jobs:
             str(path) for path in distribution.files or ()
             if "bindings/xband" in str(path) and str(path).endswith((".so", ".pyd"))
         )
+        print("cwd:", os.getcwd())
         print("ase2sprkkr:", ase2sprkkr.__file__)
         print("ase2sprkkr.__path__:", list(ase2sprkkr.__path__))
         print("xband:", xband.__file__)
@@ -52,5 +51,4 @@ jobs:
         assert hasattr(symmetry, "find_symmetry")
         PY
     - name: Test installed wheel
-      working-directory: /tmp
       run: DO_NOT_RUN_SPRKKR=1 "$GITHUB_WORKSPACE/run_tests"

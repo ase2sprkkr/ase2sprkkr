@@ -5,11 +5,20 @@ set -e
 # PYTHONPATH pointing at ``src`` would shadow its compiled extension modules.
 unset PYTHONPATH
 
+# The repository root contains ``ase2sprkkr -> src/ase2sprkkr``.  Since the
+# current directory is always sys.path[0], run from a fresh directory so that
+# this compatibility symlink cannot shadow the installed wheel.
+TEST_WORKDIR=$(mktemp -d)
+cd "$TEST_WORKDIR"
+
 # Fail early and explicitly if the wheel did not provide its compiled modules.
 # A same-named source directory can otherwise be imported as a namespace
 # package, producing a misleading late "has no attribute" failure.
 python3 - <<'PY'
+import os
 from ase2sprkkr.bindings.xband import spheres, symmetry
+
+print(f"Testing installed ASE2SPRKKR from cwd={os.getcwd()}")
 
 for module, required_function in (
     (spheres, "empty_spheres"),
