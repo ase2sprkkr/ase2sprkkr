@@ -20,6 +20,7 @@ Version 3.5
 * Docstrings added for examples
 * Various bug fixes
 * SLURM work manager auto-detection
+* Examples from ASE2SPRKKR article were added
 
 Internals
 ~~~~~~~~~
