@@ -69,7 +69,6 @@
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
@@ -81,12 +80,14 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">shell</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.chdir.html">chdir</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.format_as_python_shell.html">format_as_python_shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.load_jupyter_dependencies.html">load_jupyter_dependencies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.split_top_level_chunks.html">split_top_level_chunks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.CommandlineShell.html">CommandlineShell</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.JupyterLab.html">JupyterLab</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.Pdb.html">Pdb</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.Python.html">Python</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.Shell.html">Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.shell.JupyterDependencyError.html">ase2sprkkr.gui.shell.JupyterDependencyError</a></li>
 </ul>
 </li>
 </ul>
@@ -154,7 +155,10 @@
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.gui.shell.format_as_python_shell.html#ase2sprkkr.gui.shell.format_as_python_shell" title="ase2sprkkr.gui.shell.format_as_python_shell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_as_python_shell</span></code></a>(code_str)</p></td>
 <td><p>Format Python code as it would appear in a Python shell.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.shell.split_top_level_chunks.html#ase2sprkkr.gui.shell.split_top_level_chunks" title="ase2sprkkr.gui.shell.split_top_level_chunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_top_level_chunks</span></code></a>(code)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.shell.load_jupyter_dependencies.html#ase2sprkkr.gui.shell.load_jupyter_dependencies" title="ase2sprkkr.gui.shell.load_jupyter_dependencies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_jupyter_dependencies</span></code></a>()</p></td>
+<td><p>Import and return modules needed only by the Jupyter shell.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.gui.shell.split_top_level_chunks.html#ase2sprkkr.gui.shell.split_top_level_chunks" title="ase2sprkkr.gui.shell.split_top_level_chunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_top_level_chunks</span></code></a>(code)</p></td>
 <td><p>Split Python code into top-level chunks.</p></td>
 </tr>
 </tbody>
@@ -176,6 +180,14 @@
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell" title="ase2sprkkr.gui.shell.Shell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Shell</span></code></a>()</p></td>
 <td><p>A base class for ASE2SPRKKR interactive computation using ase2sprkkr tool</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Exceptions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.shell.JupyterDependencyError.html#ase2sprkkr.gui.shell.JupyterDependencyError" title="ase2sprkkr.gui.shell.JupyterDependencyError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">JupyterDependencyError</span></code></a>()</p></td>
+<td><p>Raised when the optional dependencies for Jupyter support are absent.</p></td>
 </tr>
 </tbody>
 </table>

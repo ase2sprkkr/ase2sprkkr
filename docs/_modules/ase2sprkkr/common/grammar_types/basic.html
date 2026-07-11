@@ -111,19 +111,19 @@
 
 
 <div class="viewcode-block" id="Char">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Char.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Char">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Char.html#ase2sprkkr.common.grammar_types.basic.Char">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Char</span><span class="p">(</span><span class="n">TypedGrammarType</span><span class="p">):</span>
     <span class="n">datatype</span> <span class="o">=</span> <span class="nb">str</span>
 
 <div class="viewcode-block" id="Char._validate">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Char.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Char._validate">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Char.html#ase2sprkkr.common.grammar_types.basic.Char._validate">[docs]</a>
     <span class="nd">@add_to_parent_validation</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="s2">&quot;Char has to have length one&quot;</span></div>
 
 
 <div class="viewcode-block" id="Char.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Char.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Char.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Char.html#ase2sprkkr.common.grammar_types.basic.Char.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;char&gt;&quot;</span></div>
 
@@ -133,12 +133,12 @@
 
 
 <div class="viewcode-block" id="Number">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Number">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Number</span><span class="p">(</span><span class="n">TypedGrammarType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for a number - descendants of this class can have minimal and/or maximal possible value.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Number.__init__">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Number.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number.__init__">[docs]</a>
     <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">GrammarType</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">min</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -156,7 +156,7 @@
 
 
 <div class="viewcode-block" id="Number._validate">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Number._validate">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number._validate">[docs]</a>
     <span class="nd">@add_to_parent_validation</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">min</span> <span class="o">&gt;</span> <span class="n">value</span><span class="p">:</span>
@@ -169,12 +169,12 @@
 
 
 <div class="viewcode-block" id="FixedPointNumber">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.FixedPointNumber">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.common.grammar_types.basic.FixedPointNumber">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FixedPointNumber</span><span class="p">(</span><span class="n">Number</span><span class="p">):</span>
     <span class="n">numpy_type</span> <span class="o">=</span> <span class="nb">int</span>
 
 <div class="viewcode-block" id="FixedPointNumber.convert">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.FixedPointNumber.convert">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.common.grammar_types.basic.FixedPointNumber.convert">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="n">value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">:</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">.warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">SuspiciousValueWarning</span>
@@ -188,7 +188,7 @@
 
 
 <div class="viewcode-block" id="FixedPointNumber._validate">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.FixedPointNumber._validate">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.common.grammar_types.basic.FixedPointNumber._validate">[docs]</a>
     <span class="nd">@add_to_parent_validation</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
@@ -199,21 +199,21 @@
 
 
 <div class="viewcode-block" id="Unsigned">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Unsigned">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.common.grammar_types.basic.Unsigned">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Unsigned</span><span class="p">(</span><span class="n">FixedPointNumber</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Unsigned integer (zero is possible)&quot;&quot;&quot;</span>
 
     <span class="n">_grammar</span> <span class="o">=</span> <span class="n">replace_whitechars</span><span class="p">(</span><span class="n">ppc</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
 <div class="viewcode-block" id="Unsigned._validate">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Unsigned._validate">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.common.grammar_types.basic.Unsigned._validate">[docs]</a>
     <span class="nd">@add_to_parent_validation</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="s2">&quot;A positive value required&quot;</span></div>
 
 
 <div class="viewcode-block" id="Unsigned.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Unsigned.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.common.grammar_types.basic.Unsigned.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;+int&gt;&quot;</span></div>
 
@@ -223,7 +223,7 @@
 
 
 <div class="viewcode-block" id="ObjectNumber">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.ObjectNumber.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.ObjectNumber">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.ObjectNumber.html#ase2sprkkr.common.grammar_types.basic.ObjectNumber">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ObjectNumber</span><span class="p">(</span><span class="n">Unsigned</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An abstract class, that describe an unsigned integer, that reffers to an object.</span>
 <span class="sd">    User can give the object either using the object, or by the number. Descendant classes</span>
@@ -234,7 +234,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ObjectNumber.convert">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.ObjectNumber.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.ObjectNumber.convert">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.ObjectNumber.html#ase2sprkkr.common.grammar_types.basic.ObjectNumber.convert">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">value</span>
@@ -242,7 +242,7 @@
 
 
 <div class="viewcode-block" id="ObjectNumber._validate">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.ObjectNumber.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.ObjectNumber._validate">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.ObjectNumber.html#ase2sprkkr.common.grammar_types.basic.ObjectNumber._validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="n">why</span><span class="p">)</span></div>
 </div>
@@ -250,14 +250,14 @@
 
 
 <div class="viewcode-block" id="Integer">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Integer.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Integer">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Integer.html#ase2sprkkr.common.grammar_types.basic.Integer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Integer</span><span class="p">(</span><span class="n">FixedPointNumber</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Signed integer&quot;&quot;&quot;</span>
 
     <span class="n">_grammar</span> <span class="o">=</span> <span class="n">replace_whitechars</span><span class="p">(</span><span class="n">ppc</span><span class="o">.</span><span class="n">signed_integer</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
 <div class="viewcode-block" id="Integer.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Integer.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Integer.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Integer.html#ase2sprkkr.common.grammar_types.basic.Integer.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;int&gt;&quot;</span></div>
 </div>
@@ -265,7 +265,7 @@
 
 
 <div class="viewcode-block" id="BaseBool">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseBool.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BaseBool">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseBool.html#ase2sprkkr.common.grammar_types.basic.BaseBool">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseBool</span><span class="p">(</span><span class="n">TypedGrammarType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A base type for all kind of boolean values.&quot;&quot;&quot;</span>
 
@@ -275,20 +275,20 @@
 
 
 <div class="viewcode-block" id="Bool">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Bool.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Bool">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Bool.html#ase2sprkkr.common.grammar_types.basic.Bool">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Bool</span><span class="p">(</span><span class="n">BaseBool</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A bool type, whose value is represented by a letter (T or F)&quot;&quot;&quot;</span>
 
     <span class="n">_grammar</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Bool.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Bool.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Bool.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Bool.html#ase2sprkkr.common.grammar_types.basic.Bool.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;T|F&gt;&quot;</span></div>
 
 
 <div class="viewcode-block" id="Bool._string">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Bool.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Bool._string">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Bool.html#ase2sprkkr.common.grammar_types.basic.Bool._string">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;T&quot;</span> <span class="k">if</span> <span class="n">val</span> <span class="k">else</span> <span class="s2">&quot;F&quot;</span></div>
 </div>
@@ -296,7 +296,7 @@
 
 
 <div class="viewcode-block" id="Boolean">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Boolean.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Boolean">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Boolean.html#ase2sprkkr.common.grammar_types.basic.Boolean">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Boolean</span><span class="p">(</span><span class="n">BaseBool</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A bool type, whose value is represented by a letter (T or F)&quot;&quot;&quot;</span>
 
@@ -306,13 +306,13 @@
     <span class="p">)</span>
 
 <div class="viewcode-block" id="Boolean.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Boolean.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Boolean.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Boolean.html#ase2sprkkr.common.grammar_types.basic.Boolean.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;True|False|0|1|yes|no&gt;&quot;</span></div>
 
 
 <div class="viewcode-block" id="Boolean._string">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Boolean.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Boolean._string">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Boolean.html#ase2sprkkr.common.grammar_types.basic.Boolean._string">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;True&quot;</span> <span class="k">if</span> <span class="n">val</span> <span class="k">else</span> <span class="s2">&quot;False&quot;</span></div>
 </div>
@@ -320,7 +320,7 @@
 
 
 <div class="viewcode-block" id="IntBool">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.IntBool.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.IntBool">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.IntBool.html#ase2sprkkr.common.grammar_types.basic.IntBool">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">IntBool</span><span class="p">(</span><span class="n">BaseBool</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A bool type, whose value is represented by a letter (1 or 0)&quot;&quot;&quot;</span>
 
@@ -328,7 +328,7 @@
     <span class="n">_rev_grammar</span> <span class="o">=</span> <span class="n">_grammar</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="IntBool.__init__">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.IntBool.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.IntBool.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.IntBool.html#ase2sprkkr.common.grammar_types.basic.IntBool.__init__">[docs]</a>
     <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">TypedGrammarType</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">reversed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -342,13 +342,13 @@
 
 
 <div class="viewcode-block" id="IntBool.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.IntBool.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.IntBool.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.IntBool.html#ase2sprkkr.common.grammar_types.basic.IntBool.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;1|0&gt;&quot;</span></div>
 
 
 <div class="viewcode-block" id="IntBool._string">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.IntBool.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.IntBool._string">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.IntBool.html#ase2sprkkr.common.grammar_types.basic.IntBool._string">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;1&quot;</span> <span class="k">if</span> <span class="n">val</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reversed</span> <span class="k">else</span> <span class="s2">&quot;0&quot;</span></div>
 </div>
@@ -356,14 +356,14 @@
 
 
 <div class="viewcode-block" id="Real">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Real">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Real</span><span class="p">(</span><span class="n">Number</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A real value&quot;&quot;&quot;</span>
 
     <span class="n">_grammar</span> <span class="o">=</span> <span class="n">replace_whitechars</span><span class="p">(</span><span class="n">ppc</span><span class="o">.</span><span class="n">fnumber</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
 <div class="viewcode-block" id="Real.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Real.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;float&gt;&quot;</span></div>
 
@@ -373,7 +373,7 @@
     <span class="n">nan</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Real.__init__">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Real.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real.__init__">[docs]</a>
     <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">Number</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nan</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nan</span> <span class="o">=</span> <span class="n">nan</span>
@@ -383,7 +383,7 @@
 
 
 <div class="viewcode-block" id="Real.convert">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Real.convert">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real.convert">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)):</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">.warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">SuspiciousValueWarning</span>
@@ -399,7 +399,7 @@
 
 
 <div class="viewcode-block" id="Date">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Date.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Date">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Date.html#ase2sprkkr.common.grammar_types.basic.Date">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Date</span><span class="p">(</span><span class="n">Number</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A date value of the form &#39;DD.MM.YYYY&#39;&quot;&quot;&quot;</span>
 
@@ -408,13 +408,13 @@
     <span class="p">)</span>
 
 <div class="viewcode-block" id="Date.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Date.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Date.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Date.html#ase2sprkkr.common.grammar_types.basic.Date.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;dd.mm.yyyy&gt;&quot;</span></div>
 
 
 <div class="viewcode-block" id="Date._string">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Date.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Date._string">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Date.html#ase2sprkkr.common.grammar_types.basic.Date._string">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y&quot;</span><span class="p">)</span></div>
 
@@ -425,7 +425,7 @@
 
 
 <div class="viewcode-block" id="BaseRealWithUnits">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BaseRealWithUnits">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseRealWithUnits</span><span class="p">(</span><span class="n">Real</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The base class for float value, which can have units append.</span>
 <span class="sd">    The value is converted automatically to the base units.</span>
@@ -435,14 +435,14 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; The grammar for units is cached &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="BaseRealWithUnits.unit_strings">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BaseRealWithUnits.unit_strings">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.unit_strings">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">unit_strings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">):</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
 
 
 <div class="viewcode-block" id="BaseRealWithUnits._grammar_units">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BaseRealWithUnits._grammar_units">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits._grammar_units">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_grammar_units</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="p">):</span>
         <span class="n">i</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="n">units</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar_cache</span><span class="p">:</span>
@@ -462,13 +462,13 @@
 
 
 <div class="viewcode-block" id="BaseRealWithUnits._grammar">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BaseRealWithUnits._grammar">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits._grammar">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_name</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grammar_units</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="BaseRealWithUnits.convert">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BaseRealWithUnits.convert">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.convert">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unyt_quantity</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">value</span>
@@ -480,7 +480,7 @@
 
 
 <div class="viewcode-block" id="BaseRealWithUnits._validate">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BaseRealWithUnits._validate">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits._validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unyt_quantity</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">:</span>
@@ -496,7 +496,7 @@
 
 
 <div class="viewcode-block" id="BaseRealWithUnits._string">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BaseRealWithUnits._string">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits._string">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_unit</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">default_unit</span><span class="p">])</span>
@@ -507,7 +507,7 @@
 
 
 <div class="viewcode-block" id="BaseRealWithUnits.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BaseRealWithUnits.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;float&gt;[</span><span class="si">{}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">)))</span></div>
 
@@ -517,12 +517,12 @@
 
 
 <div class="viewcode-block" id="RealWithUnits">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.RealWithUnits.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.RealWithUnits">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.RealWithUnits.html#ase2sprkkr.common.grammar_types.basic.RealWithUnits">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RealWithUnits</span><span class="p">(</span><span class="n">BaseRealWithUnits</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A float value with user-defined units&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="RealWithUnits.__init__">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.RealWithUnits.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.RealWithUnits.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.RealWithUnits.html#ase2sprkkr.common.grammar_types.basic.RealWithUnits.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">default_unit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="n">units</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">default_unit</span> <span class="o">=</span> <span class="n">default_unit</span>
@@ -532,7 +532,7 @@
 
 
 <div class="viewcode-block" id="Energy">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Energy.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Energy">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Energy.html#ase2sprkkr.common.grammar_types.basic.Energy">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Energy</span><span class="p">(</span><span class="n">BaseRealWithUnits</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The grammar type for energy. The default units are Rydberg, one can specify eV.&quot;&quot;&quot;</span>
 
@@ -548,7 +548,7 @@
 
 
 <div class="viewcode-block" id="BaseString">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BaseString">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseString.html#ase2sprkkr.common.grammar_types.basic.BaseString">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseString</span><span class="p">(</span><span class="n">TypedGrammarType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base type for string grammar types&quot;&quot;&quot;</span>
 
@@ -556,7 +556,7 @@
     <span class="n">datatype_name</span> <span class="o">=</span> <span class="s2">&quot;string&quot;</span>
 
 <div class="viewcode-block" id="BaseString._validate">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BaseString._validate">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseString.html#ase2sprkkr.common.grammar_types.basic.BaseString._validate">[docs]</a>
     <span class="nd">@add_to_parent_validation</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">why</span> <span class="o">==</span> <span class="s2">&quot;parse&quot;</span><span class="p">:</span>
@@ -570,14 +570,14 @@
 
 
 <div class="viewcode-block" id="String">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.String.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.String">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.String.html#ase2sprkkr.common.grammar_types.basic.String">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">String</span><span class="p">(</span><span class="n">BaseString</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Just a string (without whitespaces and few special chars)&quot;&quot;&quot;</span>
 
     <span class="n">_grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">printables</span><span class="p">,</span> <span class="n">exclude_chars</span><span class="o">=</span><span class="s2">&quot;,;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
 <div class="viewcode-block" id="String.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.String.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.String.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.String.html#ase2sprkkr.common.grammar_types.basic.String.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;str&gt;&quot;</span></div>
 </div>
@@ -585,14 +585,14 @@
 
 
 <div class="viewcode-block" id="AlwaysQString">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AlwaysQString">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.common.grammar_types.basic.AlwaysQString">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AlwaysQString</span><span class="p">(</span><span class="n">BaseString</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes.&quot;&quot;&quot;</span>
 
     <span class="n">_grammar</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">printables</span><span class="p">,</span> <span class="n">exclude_chars</span><span class="o">=</span><span class="s1">&#39;&quot;,;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">QuotedString</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
 <div class="viewcode-block" id="AlwaysQString._validate">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AlwaysQString._validate">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.common.grammar_types.basic.AlwaysQString._validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;String expected&quot;</span>
@@ -600,14 +600,14 @@
 
 
 <div class="viewcode-block" id="AlwaysQString._string">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AlwaysQString._string">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.common.grammar_types.basic.AlwaysQString._string">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&quot;&#39;</span></div>
 
 
 <div class="viewcode-block" id="AlwaysQString.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AlwaysQString.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.common.grammar_types.basic.AlwaysQString.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;&quot;&lt;str&gt;&quot;&#39;</span></div>
 </div>
@@ -615,12 +615,12 @@
 
 
 <div class="viewcode-block" id="QString">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.QString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.QString">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.QString.html#ase2sprkkr.common.grammar_types.basic.QString">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">QString</span><span class="p">(</span><span class="n">AlwaysQString</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Either a quoted string, or just a word (without whitespaces or special chars)&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="QString._string">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.QString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.QString._string">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.QString.html#ase2sprkkr.common.grammar_types.basic.QString._string">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[\S</span><span class="se">\&quot;</span><span class="s2">]+$&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -631,14 +631,14 @@
 
 
 <div class="viewcode-block" id="LineString">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.LineString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.LineString">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.LineString.html#ase2sprkkr.common.grammar_types.basic.LineString">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LineString</span><span class="p">(</span><span class="n">BaseString</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A string, that takes all up to the end of the line&quot;&quot;&quot;</span>
 
     <span class="n">_grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">SkipTo</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">LineEnd</span><span class="p">()</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">StringEnd</span><span class="p">())</span>
 
 <div class="viewcode-block" id="LineString.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.LineString.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.LineString.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.LineString.html#ase2sprkkr.common.grammar_types.basic.LineString.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;str....&gt;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
 </div>
@@ -646,35 +646,35 @@
 
 
 <div class="viewcode-block" id="_keyword_transform_upper">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic._keyword_transform_upper.html#ase2sprkkr.sprkkr.sprkkr_grammar_types._keyword_transform_upper">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic._keyword_transform_upper.html#ase2sprkkr.common.grammar_types.basic._keyword_transform_upper">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_keyword_transform_upper</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="_keyword_transform_lower">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic._keyword_transform_lower.html#ase2sprkkr.sprkkr.sprkkr_grammar_types._keyword_transform_lower">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic._keyword_transform_lower.html#ase2sprkkr.common.grammar_types.basic._keyword_transform_lower">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_keyword_transform_lower</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="_keyword_transform_identity">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic._keyword_transform_identity.html#ase2sprkkr.sprkkr.sprkkr_grammar_types._keyword_transform_identity">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic._keyword_transform_identity.html#ase2sprkkr.common.grammar_types.basic._keyword_transform_identity">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_keyword_transform_identity</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">value</span></div>
 
 
 
 <div class="viewcode-block" id="Keyword">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.common.grammar_types.basic.Keyword">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Keyword</span><span class="p">(</span><span class="n">GrammarType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A value, that can take values from the predefined set of strings.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Keyword.__init__">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.common.grammar_types.basic.Keyword.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">keywords</span><span class="p">,</span> <span class="n">aliases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;upper&quot;</span><span class="p">,</span> <span class="n">quote</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">aliases</span> <span class="o">=</span> <span class="n">aliases</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">quote</span> <span class="o">=</span> <span class="n">quote</span>
@@ -698,7 +698,7 @@
 
 
 <div class="viewcode-block" id="Keyword._build_grammar">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword._build_grammar">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.common.grammar_types.basic.Keyword._build_grammar">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_build_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_grammar</span> <span class="o">=</span> <span class="p">(</span>
@@ -711,7 +711,7 @@
 
 
 <div class="viewcode-block" id="Keyword._parse_keyword_token">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword._parse_keyword_token">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.common.grammar_types.basic.Keyword._parse_keyword_token">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_parse_keyword_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
 
@@ -726,7 +726,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_build_grammar</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Keyword.items">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword.items">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.common.grammar_types.basic.Keyword.items">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
@@ -736,13 +736,13 @@
 
 
 <div class="viewcode-block" id="Keyword._validate">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword._validate">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.common.grammar_types.basic.Keyword._validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span> <span class="ow">or</span> <span class="s2">&quot;Required one of [&quot;</span> <span class="o">+</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span></div>
 
 
 <div class="viewcode-block" id="Keyword._string">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword._string">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.common.grammar_types.basic.Keyword._string">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quote</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">quote</span><span class="si">}{</span><span class="n">val</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">quote</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -751,7 +751,7 @@
 
 
 <div class="viewcode-block" id="Keyword.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.common.grammar_types.basic.Keyword.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;FixedValue(</span><span class="si">{</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">))</span><span class="si">}</span><span class="s2">)&quot;</span>
@@ -762,14 +762,14 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar_name</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Keyword.convert">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword.convert">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.common.grammar_types.basic.Keyword.convert">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">aliases</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Keyword.additional_description">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword.additional_description">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.common.grammar_types.basic.Keyword.additional_description">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">additional_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="n">ad</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">additional_description</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="p">:</span>
@@ -786,7 +786,7 @@
 
 
 <div class="viewcode-block" id="DefKeyword">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.DefKeyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.DefKeyword">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.DefKeyword.html#ase2sprkkr.common.grammar_types.basic.DefKeyword">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">DefKeyword</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A value, that can take values from the predefined set of strings, the first one is the default value.</span>
@@ -800,7 +800,7 @@
 
 
 <div class="viewcode-block" id="Flag">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Flag.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Flag">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Flag.html#ase2sprkkr.common.grammar_types.basic.Flag">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Flag</span><span class="p">(</span><span class="n">BaseBool</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A boolean value, which is True, if a name of the value appears in the input file.</span>
@@ -809,25 +809,25 @@
     <span class="n">_grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Flag.grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Flag.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Flag.grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Flag.html#ase2sprkkr.common.grammar_types.basic.Flag.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Flag.str">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Flag.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Flag.str">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Flag.html#ase2sprkkr.common.grammar_types.basic.Flag.str">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;(Flag)&quot;</span></div>
 
 
 <div class="viewcode-block" id="Flag.missing_value">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Flag.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Flag.missing_value">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Flag.html#ase2sprkkr.common.grammar_types.basic.Flag.missing_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">missing_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Flag._validate">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Flag.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Flag._validate">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Flag.html#ase2sprkkr.common.grammar_types.basic.Flag._validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">value</span> <span class="ow">is</span> <span class="kc">True</span>
@@ -840,7 +840,7 @@
 
 
 <div class="viewcode-block" id="BasicSeparator">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BasicSeparator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BasicSeparator">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BasicSeparator.html#ase2sprkkr.common.grammar_types.basic.BasicSeparator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BasicSeparator</span><span class="p">(</span><span class="n">GrammarType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic type for separators - fake items in</span>
 <span class="sd">    input/output file, which has no value&quot;&quot;&quot;</span>
@@ -848,7 +848,7 @@
     <span class="n">has_value</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="BasicSeparator._validate">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BasicSeparator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BasicSeparator._validate">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BasicSeparator.html#ase2sprkkr.common.grammar_types.basic.BasicSeparator._validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;You can not set a value to a separator&quot;</span></div>
 </div>
@@ -856,32 +856,32 @@
 
 
 <div class="viewcode-block" id="KeywordSeparator">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.KeywordSeparator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.KeywordSeparator">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.KeywordSeparator.html#ase2sprkkr.common.grammar_types.basic.KeywordSeparator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">KeywordSeparator</span><span class="p">(</span><span class="n">BasicSeparator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Separator with an exact string&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="KeywordSeparator.__init__">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.KeywordSeparator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.KeywordSeparator.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.KeywordSeparator.html#ase2sprkkr.common.grammar_types.basic.KeywordSeparator.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">keyword</span> <span class="o">=</span> <span class="n">keyword</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="KeywordSeparator._grammar">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.KeywordSeparator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.KeywordSeparator._grammar">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.KeywordSeparator.html#ase2sprkkr.common.grammar_types.basic.KeywordSeparator._grammar">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Keyword</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot; </span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="KeywordSeparator._grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.KeywordSeparator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.KeywordSeparator._grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.KeywordSeparator.html#ase2sprkkr.common.grammar_types.basic.KeywordSeparator._grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">keyword</span></div>
 
 
 <div class="viewcode-block" id="KeywordSeparator._string">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.KeywordSeparator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.KeywordSeparator._string">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.KeywordSeparator.html#ase2sprkkr.common.grammar_types.basic.KeywordSeparator._string">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">keyword</span></div>
 </div>
@@ -889,21 +889,21 @@
 
 
 <div class="viewcode-block" id="Separator">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Separator">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.common.grammar_types.basic.Separator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Separator</span><span class="p">(</span><span class="n">BasicSeparator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Special class for a separator inside a section.</span>
 <span class="sd">    By default, it is a line of stars.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Separator._grammar">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Separator._grammar">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.common.grammar_types.basic.Separator._grammar">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">separator_grammar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">char</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Separator.__init__">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Separator.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.common.grammar_types.basic.Separator.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">char</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">79</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">char</span> <span class="o">=</span> <span class="n">char</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span>
@@ -913,13 +913,13 @@
 
 
 <div class="viewcode-block" id="Separator._grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Separator._grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.common.grammar_types.basic.Separator._grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="si">}</span><span class="s2">...</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span></div>
 
 
 <div class="viewcode-block" id="Separator._string">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Separator._string">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.common.grammar_types.basic.Separator._string">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">char</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span></div>
 </div>
@@ -927,20 +927,20 @@
 
 
 <div class="viewcode-block" id="BlankSeparator">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BlankSeparator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BlankSeparator">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BlankSeparator.html#ase2sprkkr.common.grammar_types.basic.BlankSeparator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BlankSeparator</span><span class="p">(</span><span class="n">BasicSeparator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Special class for a blank separator. In fact (with a delimiter) it is a blank line.&quot;&quot;&quot;</span>
 
     <span class="n">_grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">])</span>
 
 <div class="viewcode-block" id="BlankSeparator._grammar_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BlankSeparator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BlankSeparator._grammar_name">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BlankSeparator.html#ase2sprkkr.common.grammar_types.basic.BlankSeparator._grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="BlankSeparator._string">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BlankSeparator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BlankSeparator._string">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BlankSeparator.html#ase2sprkkr.common.grammar_types.basic.BlankSeparator._string">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 </div>

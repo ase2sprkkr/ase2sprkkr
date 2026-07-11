@@ -109,10 +109,10 @@
 
 
 <div class="viewcode-block" id="ResultValue">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.ResultValue.html#ase2sprkkr.outputs.readers.scf.ResultValue">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.ResultValue.html#ase2sprkkr.outputs.task_result.ResultValue">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ResultValue</span><span class="p">:</span>
 <div class="viewcode-block" id="ResultValue.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.ResultValue.html#ase2sprkkr.outputs.readers.scf.ResultValue.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.ResultValue.html#ase2sprkkr.outputs.task_result.ResultValue.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span></div>
@@ -122,13 +122,13 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
 
 <div class="viewcode-block" id="ResultValue.value_label">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.ResultValue.html#ase2sprkkr.outputs.readers.scf.ResultValue.value_label">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.ResultValue.html#ase2sprkkr.outputs.task_result.ResultValue.value_label">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">value_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span></div>
 
 
 <div class="viewcode-block" id="ResultValue.actions">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.ResultValue.html#ase2sprkkr.outputs.readers.scf.ResultValue.actions">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.ResultValue.html#ase2sprkkr.outputs.task_result.ResultValue.actions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[]</span></div>
 </div>
@@ -136,10 +136,10 @@
 
 
 <div class="viewcode-block" id="OutputFileResultValue">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.readers.scf.OutputFileResultValue">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.task_result.OutputFileResultValue">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OutputFileResultValue</span><span class="p">:</span>
 <div class="viewcode-block" id="OutputFileResultValue.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.readers.scf.OutputFileResultValue.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.task_result.OutputFileResultValue.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
@@ -150,19 +150,19 @@
         <span class="k">return</span> <span class="n">OutputFile</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">try_only</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
 
 <div class="viewcode-block" id="OutputFileResultValue.definition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.readers.scf.OutputFileResultValue.definition">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.task_result.OutputFileResultValue.definition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">OutputFile</span><span class="o">.</span><span class="n">definitions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="OutputFileResultValue.value_label">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.readers.scf.OutputFileResultValue.value_label">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.task_result.OutputFileResultValue.value_label">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">value_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2"> file&gt;&quot;</span></div>
 
 
 <div class="viewcode-block" id="OutputFileResultValue.actions">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.readers.scf.OutputFileResultValue.actions">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.task_result.OutputFileResultValue.actions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="s2">&quot;save&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="p">()</span><span class="o">.</span><span class="n">result_class</span><span class="o">.</span><span class="n">can_be_plotted</span><span class="p">():</span>
@@ -171,7 +171,7 @@
 
 
 <div class="viewcode-block" id="OutputFileResultValue.save">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.readers.scf.OutputFileResultValue.save">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.task_result.OutputFileResultValue.save">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">PyQT6.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QFileDialog</span>
@@ -185,13 +185,13 @@
 
 
 <div class="viewcode-block" id="OutputFileResultValue.plot">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.readers.scf.OutputFileResultValue.plot">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.task_result.OutputFileResultValue.plot">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="OutputFileResultValue.open">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.readers.scf.OutputFileResultValue.open">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputFileResultValue.html#ase2sprkkr.outputs.task_result.OutputFileResultValue.open">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">startfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
@@ -204,12 +204,12 @@
 
 
 <div class="viewcode-block" id="TaskResult">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.scf.TaskResult">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TaskResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A base class for a result of a runned task (kkrscf executable)&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TaskResult.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.scf.TaskResult.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">,</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters</span> <span class="o">=</span> <span class="n">input_parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_calculator</span> <span class="o">=</span> <span class="n">calculator</span>
@@ -223,7 +223,7 @@
 
 
 <div class="viewcode-block" id="TaskResult.directory">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.scf.TaskResult.directory">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.directory">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">directory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">file_name</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
@@ -237,7 +237,7 @@
 
 
 <div class="viewcode-block" id="TaskResult.path_to">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.scf.TaskResult.path_to">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.path_to">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">path_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;return full path to a given file</span>
 
@@ -258,7 +258,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">task_name</span>
 
 <div class="viewcode-block" id="TaskResult.input_parameters">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.scf.TaskResult.input_parameters">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.input_parameters">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters</span><span class="p">:</span>
@@ -268,7 +268,7 @@
 
 
 <div class="viewcode-block" id="TaskResult.input_parameters_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.scf.TaskResult.input_parameters_file">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.input_parameters_file">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">input_parameters_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;input&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">]):</span>
@@ -276,7 +276,7 @@
 
 
 <div class="viewcode-block" id="TaskResult.potential_filename">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.scf.TaskResult.potential_filename">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.potential_filename">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">potential_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;New (output) potential file name&quot;&quot;&quot;</span>
@@ -291,7 +291,7 @@
 
 
 <div class="viewcode-block" id="TaskResult.potential">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.scf.TaskResult.potential">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.potential">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The new (output) potential - that contains the converged charge density etc.&quot;&quot;&quot;</span>
@@ -299,7 +299,7 @@
 
 
 <div class="viewcode-block" id="TaskResult.new_task">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.scf.TaskResult.new_task">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.new_task">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">new_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculator</span><span class="o">.</span><span class="n">copy_with_potential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
         <span class="n">out</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">task</span>
@@ -309,7 +309,7 @@
 
 
 <div class="viewcode-block" id="TaskResult.complete">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.scf.TaskResult.complete">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.complete">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">complete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">return_code</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">error</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">return_code</span> <span class="o">=</span> <span class="n">return_code</span></div>
@@ -324,7 +324,7 @@
         <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot; TASK\s+ = ([A-Z]+)\s+\n&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TaskResult.from_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.scf.TaskResult.from_file">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult.from_file">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">read_output_for</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
@@ -352,10 +352,10 @@
 
 
 <div class="viewcode-block" id="KkrProcess">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.readers.scf.KkrProcess">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">KkrProcess</span><span class="p">:</span>
 <div class="viewcode-block" id="KkrProcess.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.readers.scf.KkrProcess.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">output_parser</span><span class="p">,</span> <span class="n">coroutine</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reader</span> <span class="o">=</span> <span class="n">reader</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_parser</span> <span class="o">=</span> <span class="n">output_parser</span>
@@ -365,7 +365,7 @@
 
 
 <div class="viewcode-block" id="KkrProcess.run">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.readers.scf.KkrProcess.run">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
         <span class="k">try</span><span class="p">:</span>
@@ -378,13 +378,13 @@
 
 
 <div class="viewcode-block" id="KkrProcess.stop_the_process">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.readers.scf.KkrProcess.stop_the_process">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess.stop_the_process">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">stop_the_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_parser</span><span class="o">.</span><span class="n">stop_the_process</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="KkrProcess.run_async">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.readers.scf.KkrProcess.run_async">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess.run_async">[docs]</a>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">result</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">return_code</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">coroutine</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">return_code</span><span class="p">)</span>
@@ -394,7 +394,7 @@
 
 
 <div class="viewcode-block" id="KkrOutputReader">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.readers.scf.KkrOutputReader">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">KkrOutputReader</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class, that runs a process and reads its output using the underlying</span>
 <span class="sd">    output parser (see :class:`ase2sprkkr.common.process_output_reader.ProcessOutputParser`)</span>
@@ -404,7 +404,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="KkrOutputReader.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.readers.scf.KkrOutputReader.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">,</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">read_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">input_parameters</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Input parameters, that command to read the output (thus probably the ones, that</span>
@@ -418,7 +418,7 @@
 
 
 <div class="viewcode-block" id="KkrOutputReader._create_result">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.readers.scf.KkrOutputReader._create_result">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader._create_result">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an object that stores results of the KKR output parsing.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_class</span><span class="p">(</span>
@@ -427,7 +427,7 @@
 
 
 <div class="viewcode-block" id="KkrOutputReader._create_process">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.readers.scf.KkrOutputReader._create_process">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader._create_process">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coroutine</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an object that can run the desired process (either reading from file or running a process)</span>
 
@@ -440,7 +440,7 @@
 
 
 <div class="viewcode-block" id="KkrOutputReader.create_process">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.readers.scf.KkrOutputReader.create_process">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader.create_process">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an object that takes care of running the command and parsing the results&quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_result</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">input_file</span><span class="p">)</span>
@@ -449,7 +449,7 @@
 
 
 <div class="viewcode-block" id="KkrOutputReader.read_from_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.readers.scf.KkrOutputReader.read_from_file">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader.read_from_file">[docs]</a>
     <span class="nd">@maybeclassmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_code</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an object that takes care of reading and parsing of the output of a sprkkr process&quot;&quot;&quot;</span>
@@ -464,7 +464,7 @@
 
 
 <div class="viewcode-block" id="KkrOutputReader.class_for_task">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.readers.scf.KkrOutputReader.class_for_task">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader.class_for_task">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">class_for_task</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">task</span><span class="p">:</span>

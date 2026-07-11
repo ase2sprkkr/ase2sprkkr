@@ -1,0 +1,6 @@
+ase2sprkkr.gui.shell.JupyterDependencyError
+===========================================
+
+.. currentmodule:: ase2sprkkr.gui.shell
+
+.. autoexception:: JupyterDependencyError

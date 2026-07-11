@@ -100,8 +100,91 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integral</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.sites</span><span class="w"> </span><span class="kn">import</span> <span class="n">SiteType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sites</span><span class="w"> </span><span class="kn">import</span> <span class="n">SiteType</span><span class="p">,</span> <span class="n">SitePropertyProxy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.radial_meshes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span>
+
+<div class="viewcode-block" id="SiteOccupation">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.SiteOccupation.html#ase2sprkkr.sprkkr.occupations.SiteOccupation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SiteOccupation</span><span class="p">(</span><span class="n">SitePropertyProxy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Proxy for the Occupation of a Site that raises a RuntimeError before any</span>
+<span class="sd">    mutating operation when the site still has symmetry (i.e. shares its</span>
+<span class="sd">    SiteType with other sites).  Call ``site.break_symmetry()`` first and</span>
+<span class="sd">    then mutate freely.</span>
+
+<span class="sd">    Inherits read delegation and the transparent __class__ / isinstance() behaviour</span>
+<span class="sd">    from SitePropertyProxy; only mutating operations are overridden here.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SiteOccupation.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.SiteOccupation.html#ase2sprkkr.sprkkr.occupations.SiteOccupation.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">site</span><span class="o">.</span><span class="n">site_type</span><span class="o">.</span><span class="n">occupation</span><span class="p">)</span></div>
+
+
+    <span class="c1"># --- special methods that Occupation supports but SitePropertyProxy doesn&#39;t ---</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_target</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_target</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_target</span><span class="p">()[</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="c1"># --- mutating methods: check for symmetry first ---</span>
+
+<div class="viewcode-block" id="SiteOccupation.set">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.SiteOccupation.html#ase2sprkkr.sprkkr.occupations.SiteOccupation.set">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">dct</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">AtomicType</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">AtomicType</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">float</span><span class="p">]]],</span>
+        <span class="n">update_atoms</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">for_mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_mutation_allowed</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_target</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">update_atoms</span><span class="p">,</span> <span class="n">for_mesh</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_mutation_allowed</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_target</span><span class="p">()[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_mutation_allowed</span><span class="p">()</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_target</span><span class="p">()[</span><span class="n">name</span><span class="p">]</span>
+
+<div class="viewcode-block" id="SiteOccupation.add">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.SiteOccupation.html#ase2sprkkr.sprkkr.occupations.SiteOccupation.add">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_mutation_allowed</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_target</span><span class="p">()</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SiteOccupation.replace_type">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.SiteOccupation.html#ase2sprkkr.sprkkr.occupations.SiteOccupation.replace_type">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">replace_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">to</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_mutation_allowed</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_target</span><span class="p">()</span><span class="o">.</span><span class="n">replace_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">to</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SiteOccupation.clean">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.SiteOccupation.html#ase2sprkkr.sprkkr.occupations.SiteOccupation.clean">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_mutation_allowed</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_target</span><span class="p">()</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_target</span><span class="p">()</span><span class="o">.</span><span class="n">as_dict</span>
+
+    <span class="nd">@as_dict</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+
 
 
 <div class="viewcode-block" id="Occupation">
@@ -139,7 +222,7 @@
             <span class="n">occupation</span> <span class="o">=</span> <span class="n">Occupation</span><span class="p">(</span><span class="n">occupation</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">update_atoms</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">site</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">occupation</span><span class="o">.</span><span class="n">site</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">occupation</span><span class="o">.</span><span class="n">_site</span> <span class="o">=</span> <span class="n">site</span>
+                <span class="n">occupation</span><span class="o">.</span><span class="n">_site_type</span> <span class="o">=</span> <span class="n">site</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">occupation</span> <span class="o">=</span> <span class="n">Occupation</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">occupation</span><span class="p">,</span> <span class="n">site</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">occupation</span></div>
@@ -150,13 +233,13 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">dct</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">AtomicType</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
-        <span class="n">site</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SiteType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">site_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SiteType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">mesh</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mesh</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">update_atoms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_site</span> <span class="o">=</span> <span class="n">site</span>
-        <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">site</span><span class="p">:</span>
-            <span class="n">mesh</span> <span class="o">=</span> <span class="n">site</span><span class="o">.</span><span class="n">mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span> <span class="o">=</span> <span class="n">site_type</span>
+        <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">site_type</span><span class="p">:</span>
+            <span class="n">mesh</span> <span class="o">=</span> <span class="n">site_type</span><span class="o">.</span><span class="n">mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">update_atoms</span><span class="p">,</span> <span class="n">for_mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">)</span></div>
 
 
@@ -199,11 +282,11 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">site</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">atomic_type</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mesh</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_site</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site</span><span class="o">.</span><span class="n">mesh</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">atomic_type</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mesh</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">mesh</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Occupation.items">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.items">[docs]</a>
@@ -221,8 +304,8 @@
 <div class="viewcode-block" id="Occupation._update_atoms">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation._update_atoms">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_site</span><span class="o">.</span><span class="n">update_atoms</span><span class="p">()</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_site_type</span><span class="o">.</span><span class="n">update_atoms</span><span class="p">()</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -393,7 +476,7 @@
         <span class="k">if</span> <span class="n">none</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">none</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">to</span> <span class="o">-</span> <span class="n">suma</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">none</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">suma</span> <span class="o">&gt;</span> <span class="n">to</span> <span class="ow">or</span> <span class="n">except_from</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">suma</span> <span class="o">&gt;</span> <span class="n">to</span> <span class="ow">or</span> <span class="p">(</span><span class="n">except_from</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">ratio</span> <span class="o">=</span> <span class="n">to</span> <span class="o">/</span> <span class="n">suma</span>
 
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">:</span>

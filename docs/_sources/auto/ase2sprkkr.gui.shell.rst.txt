@@ -32,6 +32,7 @@ Full name: **ase2sprkkr.gui.shell**
    
       chdir
       format_as_python_shell
+      load_jupyter_dependencies
       split_top_level_chunks
    
    
@@ -55,6 +56,13 @@ Full name: **ase2sprkkr.gui.shell**
 
 
    
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      JupyterDependencyError
    
    
 

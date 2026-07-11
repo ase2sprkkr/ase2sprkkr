@@ -450,6 +450,8 @@
                     <span class="n">out</span><span class="p">[</span><span class="s2">&quot;energy&quot;</span><span class="p">][</span><span class="s2">&quot;ECTOP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;=&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
 
                 <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readline_until</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s2">&quot;SPRKKR-run for: &quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">EOFError</span><span class="p">()</span>
                 <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">first</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_info</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>

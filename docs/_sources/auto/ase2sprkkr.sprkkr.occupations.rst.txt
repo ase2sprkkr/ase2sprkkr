@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.sprkkr.occupations**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.sprkkr.occupations.Occupation 
+.. inheritance-diagram::  ase2sprkkr.sprkkr.occupations.Occupation  ase2sprkkr.sprkkr.occupations.SiteOccupation 
       :parts: 1
 
 |
@@ -36,6 +36,7 @@ Full name: **ase2sprkkr.sprkkr.occupations**
       :template: custom-class-template.rst
    
       Occupation
+      SiteOccupation
    
    
 

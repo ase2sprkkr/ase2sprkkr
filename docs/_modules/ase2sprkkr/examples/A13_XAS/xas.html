@@ -91,41 +91,67 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.examples.A13_XAS.xas</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;X-ray absorption spectroscopy (XAS)&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Calculate and plot Ni L2,3 XAS and XMCD spectra of Ni2FeGa.&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="make_ni2fega">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A13_XAS.xas.make_ni2fega.html#ase2sprkkr.examples.A13_XAS.xas.make_ni2fega">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_ni2fega</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the ordered primitive Ni2FeGa Heusler cell.&quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+
+    <span class="n">cell</span> <span class="o">=</span> <span class="mf">5.748</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">SPRKKRAtoms</span><span class="p">(</span>
+        <span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Ni&quot;</span><span class="p">,</span> <span class="s2">&quot;Ni&quot;</span><span class="p">,</span> <span class="s2">&quot;Fe&quot;</span><span class="p">,</span> <span class="s2">&quot;Ga&quot;</span><span class="p">],</span>
+        <span class="n">scaled_positions</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">],</span>
+        <span class="p">],</span>
+        <span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="p">,</span>
+        <span class="n">pbc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A13_XAS.xas.main.html#ase2sprkkr.examples.A13_XAS.xas.main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">glob</span><span class="w"> </span><span class="kn">import</span> <span class="n">glob</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutputFile</span><span class="p">,</span> <span class="n">SPRKKR</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting SPRKKR calculation...&quot;</span><span class="p">)</span>
+    <span class="c1"># XAS is a post-SCF task, so first obtain a converged potential.  Keeping</span>
+    <span class="c1"># this step here makes the example independent of every other example.</span>
+    <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">make_ni2fega</span><span class="p">())</span>
+    <span class="n">scf_result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
 
-    <span class="c1"># Initialize calculator</span>
-    <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">()</span>
+    <span class="c1"># IT=1 selects Ni and CL=&#39;2p&#39; selects the spin-orbit split L2,3 edge.</span>
+    <span class="n">xas_options</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;CONTROL.DATASET&quot;</span><span class="p">:</span> <span class="s2">&quot;Ni2FeGa&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;TAU.NKTAB&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+        <span class="s2">&quot;TASK.IT&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;TASK.CL&quot;</span><span class="p">:</span> <span class="s2">&quot;2p&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;TASK.FRAMETET&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;TASK.FRAMEPHI&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;ENERGY.NE&quot;</span><span class="p">:</span> <span class="mi">180</span><span class="p">,</span>
+        <span class="s2">&quot;ENERGY.GRID&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="s2">&quot;ENERGY.EMAX&quot;</span><span class="p">:</span> <span class="mf">40.0</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>
+        <span class="n">potential</span><span class="o">=</span><span class="n">scf_result</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">,</span>
+        <span class="n">input_parameters</span><span class="o">=</span><span class="s2">&quot;xas&quot;</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">xas_options</span><span class="p">,</span>
+    <span class="p">)</span>
 
-    <span class="c1"># Set input parameters</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Setting up input parameters...&quot;</span><span class="p">)</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s2">&quot;xas&quot;</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">DATASET</span> <span class="o">=</span> <span class="s2">&quot;Fe&quot;</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">IT</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">FRAMETET</span> <span class="o">=</span> <span class="mf">90.0</span>
-    <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">FRAMEPHI</span> <span class="o">=</span> <span class="mf">45.0</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">potential_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;Fe.pot_new&quot;</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>  <span class="c1"># noqa: F841</span>
-            <span class="n">potential</span><span class="o">=</span><span class="n">potential_file</span><span class="p">,</span>
-            <span class="n">print_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">output_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;Fe_XAS.out&quot;</span><span class="p">),</span>
-        <span class="p">)</span>
-
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error during calculation: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">raise</span>
-
-    <span class="k">return</span> <span class="mi">0</span></div>
+    <span class="c1"># SPR-KKR writes one RAT file for each selected absorbing edge.</span>
+    <span class="n">rat_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s2">&quot;Ni2FeGa_XAS_*.rat&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rat_files</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected one XAS RAT file, found </span><span class="si">{</span><span class="n">rat_files</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">OutputFile</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">rat_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span></div>
 
 
 

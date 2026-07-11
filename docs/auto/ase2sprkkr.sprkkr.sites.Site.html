@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="SiteType" href="ase2sprkkr.sprkkr.sites.SiteType.html" />
+    <link rel="next" title="SitePropertyProxy" href="ase2sprkkr.sprkkr.sites.SitePropertyProxy.html" />
     <link rel="prev" title="sites" href="ase2sprkkr.sprkkr.sites.html" /> 
 </head>
 
@@ -69,7 +69,6 @@
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
@@ -94,6 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.html">reference_systems</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html">sites</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Site</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.SitePropertyProxy.html">SitePropertyProxy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.SiteType.html">SiteType</a></li>
 </ul>
 </li>
@@ -195,6 +195,16 @@
 <span class="sig-name descname"><span class="pre">break_symmetry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sites.html#Site.break_symmetry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.Site.break_symmetry" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.Site._check_mutation_allowed">
+<span class="sig-name descname"><span class="pre">_check_mutation_allowed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sites.html#Site._check_mutation_allowed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.Site._check_mutation_allowed" title="Link to this definition"></a></dt>
+<dd><p>Raise if this site’s SiteType is shared with other symmetry-equivalent sites.</p>
+<p>This is the single authoritative place for the symmetry check used by
+both the Site property setters and by <a class="reference internal" href="ase2sprkkr.sprkkr.sites.SitePropertyProxy.html#ase2sprkkr.sprkkr.sites.SitePropertyProxy" title="ase2sprkkr.sprkkr.sites.SitePropertyProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">SitePropertyProxy</span></code></a>.
+When the check fails the caller is directed to call <a class="reference internal" href="#ase2sprkkr.sprkkr.sites.Site.break_symmetry" title="ase2sprkkr.sprkkr.sites.Site.break_symmetry"><code class="xref py py-meth docutils literal notranslate"><span class="pre">break_symmetry()</span></code></a>
+first so they understand how to resolve the situation.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.Site.mesh">
 <em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mesh</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.Site.mesh" title="Link to this definition"></a></dt>
@@ -293,7 +303,7 @@ copy the exiting one.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.sprkkr.sites.html" class="btn btn-neutral float-left" title="sites" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.sprkkr.sites.SiteType.html" class="btn btn-neutral float-right" title="SiteType" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.sprkkr.sites.SitePropertyProxy.html" class="btn btn-neutral float-right" title="SitePropertyProxy" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -69,7 +69,6 @@
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
@@ -256,6 +255,39 @@ INPUT PARAMETERS jxc contains:
             MGAM : Real  (optional)       the (third) angle characterizing the orientation of the magnetic moment direction n.
             C : Real ≝ 1.0  (optional, add non-default, array)  Scale the speed of light for a given atom type.
             SOC : Real ≝ 1.0  (optional, add non-default, array)  Scale the strength of the spin-orbit coupling for atom type.
+            OP : AnyOf(NONE,DMFT,LDA+U,BROOKS,SIGMA) ≝ NONE  (optional, add non-default)
+
+                Possible values:
+                  NONE      Use just DFT approach.
+                  DMFT      Density mean field theory
+                  LDA+U     Hubbard correction
+                  BROOKS    Brooks orbital polarization correction
+                  SIGMA     Self-energy–based many-body approach
+
+                Beyond-DFT methods
+
+            LOPT : Array(of AnyOf(D,F,N))  (optional, add non-default)  Correlated orbital manifold (d or f shell) where the Hubbard U correction is applied
+            IEREF : AnyOf(0,1,2,-1) ≝ 0  (optional, add non-default)
+
+                Possible values:
+                  0         EREF = EBAND_LOP/NOS_LOP, e.g. centre of mass for LOP band (Don&#39;t work well for f-states)
+                  1         EREF = resonance energy of the phase shift.
+                  2         EREF = energy where the single-site DOS shows a maximum for the desired d or f states
+                  -1        EREF taken from input
+
+                How is the reference energy EREF defined for the Hubbard correction?
+
+            EREF : Real ≝ 0.7  (optional, add non-default)  The default value for the Hubbard correction reference energy, used if IEREF = -1
+            UMODE : AnyOf(ROTI,DUDA) ≝ ROTI  (optional, add non-default)
+
+                Possible values:
+                  ROTI      Fully rotational invariant(Lichtenstein et al.)
+                  DUDA      Spherically averaged (Dudarev et al.) (U_eff = U - J)
+
+                Choice of DFT+U formulation
+
+            UEFF : Array(of Real)  (optional, add non-default)  Array of U parameter (on-site Coulomb repulsions) for each atomic type
+            JEFF : Array(of Real)  (optional, add non-default)  Array of J parameter (Hund’s exchange interaction) for each atomic type
 
             This section contains options that describe, how to consider relativity and/or spin. If the MODE is not specified otherwise the programs of the SPRKKR-package assume that a magnetic system should be treated in a fully relativistic way. By setting the parameter SP-SREL a slightly faster scalar relativistic calculation can be done instead for a magnetic system.
 

@@ -670,6 +670,67 @@
             <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">is_always_added</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span>
+            <span class="s2">&quot;OP&quot;</span><span class="p">,</span>
+            <span class="n">DefKeyword</span><span class="p">({</span>
+              <span class="s2">&quot;NONE&quot;</span><span class="p">:</span> <span class="s2">&quot;Use just DFT approach.&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;DMFT&quot;</span><span class="p">:</span> <span class="s2">&quot;Density mean field theory&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;LDA+U&quot;</span><span class="p">:</span> <span class="s2">&quot;Hubbard correction&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;BROOKS&quot;</span><span class="p">:</span> <span class="s2">&quot;Brooks orbital polarization correction&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;SIGMA&quot;</span><span class="p">:</span> <span class="s2">&quot;Self-energy–based many-body approach&quot;</span><span class="p">,</span>
+            <span class="p">}),</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Beyond-DFT methods&quot;</span><span class="p">,</span>
+            <span class="n">is_required</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">is_always_added</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span>
+            <span class="s2">&quot;LOPT&quot;</span><span class="p">,</span>
+            <span class="n">SetOf</span><span class="p">(</span><span class="n">Keyword</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">)),</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Correlated orbital manifold (d or f shell) where the Hubbard U correction is applied&quot;</span><span class="p">,</span>
+            <span class="n">is_required</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">is_always_added</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span>
+            <span class="s2">&quot;IEREF&quot;</span><span class="p">,</span>
+            <span class="n">DefKeyword</span><span class="p">({</span>
+              <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;EREF = EBAND_LOP/NOS_LOP, e.g. centre of mass for LOP band (Don&#39;t work well for f-states)&quot;</span><span class="p">,</span>
+              <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;EREF = resonance energy of the phase shift.&quot;</span><span class="p">,</span>
+              <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;EREF = energy where the single-site DOS shows a maximum for the desired d or f states&quot;</span><span class="p">,</span>
+              <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;EREF taken from input&quot;</span><span class="p">,</span>
+            <span class="p">}),</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;How is the reference energy EREF defined for the Hubbard correction?&quot;</span><span class="p">,</span>
+            <span class="n">is_required</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">is_always_added</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span>
+            <span class="s2">&quot;EREF&quot;</span><span class="p">,</span>
+            <span class="mf">0.7</span><span class="p">,</span>
+            <span class="n">info</span><span class="o">=</span><span class="s2">&quot;The default value for the Hubbard correction reference energy, used if IEREF = -1&quot;</span><span class="p">,</span>
+            <span class="n">is_required</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">is_always_added</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span>
+            <span class="s2">&quot;UMODE&quot;</span><span class="p">,</span>
+            <span class="n">DefKeyword</span><span class="p">({</span>
+              <span class="s2">&quot;ROTI&quot;</span><span class="p">:</span> <span class="s1">&#39;Fully rotational invariant(Lichtenstein et al.)&#39;</span><span class="p">,</span>
+              <span class="s2">&quot;DUDA&quot;</span><span class="p">:</span> <span class="s1">&#39;Spherically averaged (Dudarev et al.) (U_eff = U - J)&#39;</span><span class="p">,</span>
+            <span class="p">}),</span>
+            <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Choice of DFT+U formulation&quot;</span><span class="p">,</span>
+            <span class="n">is_required</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">is_always_added</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span> <span class="s2">&quot;UEFF&quot;</span><span class="p">,</span>
+            <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span>
+            <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Array of U parameter (on-site Coulomb repulsions) for each atomic type&quot;</span><span class="p">,</span>
+            <span class="n">is_required</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">is_always_added</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span> <span class="s2">&quot;JEFF&quot;</span><span class="p">,</span>
+            <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span>
+            <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Array of J parameter (Hund’s exchange interaction) for each atomic type&quot;</span><span class="p">,</span>
+            <span class="n">is_required</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">is_always_added</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="p">),</span>
     <span class="p">],</span>
     <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>

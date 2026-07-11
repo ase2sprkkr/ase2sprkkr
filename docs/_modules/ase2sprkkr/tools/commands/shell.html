@@ -148,19 +148,19 @@
 <div class="viewcode-block" id="run">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.shell.run.html#ase2sprkkr.tools.commands.shell.run">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">global_args</span><span class="p">):</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">...gui.shell</span><span class="w"> </span><span class="kn">import</span> <span class="n">Python</span><span class="p">,</span> <span class="n">JupyterLab</span><span class="p">,</span> <span class="n">Pdb</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">...gui.shell</span><span class="w"> </span><span class="kn">import</span> <span class="n">Python</span><span class="p">,</span> <span class="n">JupyterLab</span><span class="p">,</span> <span class="n">JupyterDependencyError</span><span class="p">,</span> <span class="n">Pdb</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">...common.directory</span><span class="w"> </span><span class="kn">import</span> <span class="n">Directory</span>
 
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">jupyter</span><span class="p">:</span>
-        <span class="n">shell</span> <span class="o">=</span> <span class="n">JupyterLab</span>
-        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;run&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">run</span><span class="p">}</span>
-    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">pdb</span><span class="p">:</span>
-        <span class="n">shell</span> <span class="o">=</span> <span class="n">Pdb</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">shell</span> <span class="o">=</span> <span class="n">Python</span>
-    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">shell</span> <span class="o">=</span> <span class="n">shell</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">jupyter</span><span class="p">:</span>
+            <span class="n">shell</span> <span class="o">=</span> <span class="n">JupyterLab</span><span class="p">(</span><span class="n">run</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">run</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">pdb</span><span class="p">:</span>
+            <span class="n">shell</span> <span class="o">=</span> <span class="n">Pdb</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shell</span> <span class="o">=</span> <span class="n">Python</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">JupyterDependencyError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 
     <span class="n">change_dir</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
@@ -179,8 +179,14 @@
         <span class="n">shell</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="n">dire</span> <span class="k">as</span> <span class="n">dr</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">example</span><span class="p">:</span>
-            <span class="n">shell</span><span class="o">.</span><span class="n">run_example</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">example</span><span class="p">,</span> <span class="n">dr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">example</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">shell</span><span class="o">.</span><span class="n">run_example</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">example</span><span class="p">,</span> <span class="n">dr</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">global_args</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]:</span>
+                    <span class="k">raise</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No such example </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">example</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">save</span><span class="p">:</span>
             <span class="n">shell</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">save</span><span class="p">)</span>

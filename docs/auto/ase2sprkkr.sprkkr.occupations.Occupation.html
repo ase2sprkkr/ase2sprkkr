@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="radial" href="ase2sprkkr.sprkkr.radial.html" />
+    <link rel="next" title="SiteOccupation" href="ase2sprkkr.sprkkr.occupations.SiteOccupation.html" />
     <link rel="prev" title="occupations" href="ase2sprkkr.sprkkr.occupations.html" /> 
 </head>
 
@@ -69,7 +69,6 @@
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
@@ -90,6 +89,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.moments.html">moments</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html">occupations</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Occupation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.SiteOccupation.html">SiteOccupation</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html">radial</a></li>
@@ -140,7 +140,7 @@
 <h1>Occupation<a class="headerlink" href="#occupation" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.occupations.</span></span><span class="sig-name descname"><span class="pre">Occupation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.occupations.</span></span><span class="sig-name descname"><span class="pre">Occupation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation" title="Link to this definition"></a></dt>
 <dd><p>Occupation of the atomic site, given by AtomicType : value</p>
 <p>The value determine the probability, that a given atomic type will
 be found on a given place (which can be used e.g. for computing
@@ -157,19 +157,19 @@ alloys).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dct</strong> (<em>Dict</em><em>[</em><em>Union</em><em>[</em><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType" title="ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType"><em>AtomicType</em></a><em>, </em><em>str</em><em>]</em><em>, </em><em>float</em><em>]</em>)</p></li>
-<li><p><strong>site</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType" title="ase2sprkkr.sprkkr.sites.SiteType"><em>SiteType</em></a><em>]</em>)</p></li>
+<li><p><strong>site_type</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType" title="ase2sprkkr.sprkkr.sites.SiteType"><em>SiteType</em></a><em>]</em>)</p></li>
 <li><p><strong>mesh</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.sprkkr.radial_meshes.Mesh" title="ase2sprkkr.sprkkr.radial_meshes.Mesh"><em>Mesh</em></a><em>]</em>)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dct</strong> (<em>Dict</em><em>[</em><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.atomic_types.AtomicType" title="ase2sprkkr.sprkkr.atomic_types.AtomicType"><em>AtomicType</em></a><em> | </em><em>str</em><em>, </em><em>float</em><em>]</em>)</p></li>
-<li><p><strong>site</strong> (<a class="reference internal" href="ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType" title="ase2sprkkr.sprkkr.sites.SiteType"><em>SiteType</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>site_type</strong> (<a class="reference internal" href="ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType" title="ase2sprkkr.sprkkr.sites.SiteType"><em>SiteType</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>mesh</strong> (<a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.sprkkr.radial_meshes.Mesh" title="ase2sprkkr.sprkkr.radial_meshes.Mesh"><em>Mesh</em></a><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
@@ -398,7 +398,7 @@ If there are None values, the remainder to the ‘to’ value is equally divided
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.sprkkr.occupations.html" class="btn btn-neutral float-left" title="occupations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.sprkkr.radial.html" class="btn btn-neutral float-right" title="radial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.sprkkr.occupations.SiteOccupation.html" class="btn btn-neutral float-right" title="SiteOccupation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

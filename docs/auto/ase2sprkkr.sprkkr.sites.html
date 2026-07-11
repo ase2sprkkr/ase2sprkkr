@@ -69,7 +69,6 @@
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
@@ -94,6 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.html">reference_systems</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">sites</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.Site.html">Site</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.SitePropertyProxy.html">SitePropertyProxy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.SiteType.html">SiteType</a></li>
 </ul>
 </li>
@@ -140,10 +140,11 @@
 <h1>sites<a class="headerlink" href="#sites" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.sprkkr.sites</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-71c04dd65cd0e698f8293f4edd2457e2a5b8f317.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.sites.Site, ase2sprkkr.sprkkr.sites.SiteType" usemap="#inheritance66ed0e6153" class="inheritance graphviz" /></div>
-<map id="inheritance66ed0e6153" name="inheritance66ed0e6153">
-<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site" target="_top" title="Site" alt="" coords="8,57,80,85"/>
-<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType" target="_top" title="Definition of an atomic site." alt="" coords="5,5,82,33"/>
+<div class="graphviz"><img src="../_images/inheritance-411a13ee662f167c5989c12333b8b11c29440eb0.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.sites.Site, ase2sprkkr.sprkkr.sites.SitePropertyProxy, ase2sprkkr.sprkkr.sites.SiteType" usemap="#inheritancec24ce61b85" class="inheritance graphviz" /></div>
+<map id="inheritancec24ce61b85" name="inheritancec24ce61b85">
+<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site" target="_top" title="Site" alt="" coords="38,109,110,137"/>
+<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.sites.SitePropertyProxy.html#ase2sprkkr.sprkkr.sites.SitePropertyProxy" target="_top" title="Generic proxy for a SiteType&#45;delegated property (mesh, potential, charge," alt="" coords="5,57,144,85"/>
+<area shape="rect" id="node3" href="ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType" target="_top" title="Definition of an atomic site." alt="" coords="36,5,113,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -155,7 +156,10 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site" title="ase2sprkkr.sprkkr.sites.Site"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Site</span></code></a>(site_type)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType" title="ase2sprkkr.sprkkr.sites.SiteType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SiteType</span></code></a>(atoms, occupation[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sites.SitePropertyProxy.html#ase2sprkkr.sprkkr.sites.SitePropertyProxy" title="ase2sprkkr.sprkkr.sites.SitePropertyProxy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SitePropertyProxy</span></code></a>(site, getter)</p></td>
+<td><p>Generic proxy for a SiteType-delegated property (mesh, potential, charge, moments, reference_system) that intercepts in-place attribute mutations and calls site.break_symmetry() first, ensuring the change only affects the individual site rather than all symmetry-equivalent sites.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType" title="ase2sprkkr.sprkkr.sites.SiteType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SiteType</span></code></a>(atoms, occupation[, ...])</p></td>
 <td><p>Definition of an atomic site.</p></td>
 </tr>
 </tbody>

@@ -52,7 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#version-3-5">Version 3.5</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#internals">internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#internals">Internals</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-3-4">Version 3.4</a></li>
@@ -146,28 +146,33 @@
 <section id="version-3-5">
 <h2>Version 3.5<a class="headerlink" href="#version-3-5" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>promote_ase_atoms can be directly imported from ase2sprkkr root package</p></li>
+<li><p><cite>promote_ase_atoms</cite> can be directly imported from the <cite>ase2sprkkr</cite> root package</p></li>
+<li><p>Changing properties via <cite>site</cite> is disallowed in cases where <cite>site_type</cite> is shared</p></li>
 <li><p>JXC output file parsing and plotting</p></li>
 <li><p>XAS output file parsing and plotting</p></li>
-<li><p>Semiinfinite structures building improved</p></li>
-<li><p>Uppasd improvements: calling sd directly, input file stub writing</p></li>
-<li><p>Better multiple plots layout</p></li>
-<li><p>A few more values parsed for SFC task</p></li>
-<li><p>Tool: Python like output for ase2sprkkr k-path tool</p></li>
-<li><p>Tool: ase2sprkkr example for searching (–regex) and showing examples</p></li>
-<li><p>Tool: ase2sprkkr shell –pdb for running examples in python debugger</p></li>
-<li><p>Better Hall number determination from Cell</p></li>
-<li><p>Docstrings for examples</p></li>
-<li><p>Various bugfixies</p></li>
-<li><p>SLURM work manager autodetection</p></li>
+<li><p>Beyond-DFT parammeters (DFTM, DFT+U,…)</p></li>
+<li><p>Semi-infinite structure building improved</p></li>
+<li><p>Uppasd improvements: direct calling of <cite>sd</cite>, input file stub writing</p></li>
+<li><p>Improved layout for multiple plots</p></li>
+<li><p>Additional values parsed for SFC task</p></li>
+<li><p>Tool: Python-like output for <cite>ase2sprkkr</cite> k-path tool</p></li>
+<li><p>Tool: <cite>ase2sprkkr</cite> example search (–regex) and example display</p></li>
+<li><p>Tool: <cite>ase2sprkkr shell –pdb</cite> for running examples in the Python debugger</p></li>
+<li><p>Tool: <cite>ase2sprkkr plot -V &lt;filename&gt;</cite> for showing plottable values in a file</p></li>
+<li><p>Improved Hall number determination from Cell</p></li>
+<li><p>Docstrings added for examples</p></li>
+<li><p>Various bug fixes</p></li>
+<li><p>SLURM work manager auto-detection</p></li>
+<li><p>Examples from ASE2SPRKKR article were added</p></li>
+<li><p>Runtime dependencies were revisited</p></li>
 </ul>
 <section id="internals">
-<h3>internals<a class="headerlink" href="#internals" title="Link to this heading"></a></h3>
+<h3>Internals<a class="headerlink" href="#internals" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Ruff adoption: formated code and code cleaning</p></li>
-<li><p>Pickability of the Atom objects (for better ase.view compatibility)</p></li>
-<li><p>ProcessOutput and ProcessReaders refactoring</p></li>
-<li><p>Actions for Outputs and OutputFiles (for GUI)</p></li>
+<li><p>Adoption of Ruff: code formatting and cleanup</p></li>
+<li><p>Picklability of Atom objects (for better ase.view compatibility)</p></li>
+<li><p>Refactoring of ProcessOutput and ProcessReaders</p></li>
+<li><p>Actions for Outputs and OutputFiles (for GUI support)</p></li>
 </ul>
 </section>
 </section>

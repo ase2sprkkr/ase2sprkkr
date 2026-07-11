@@ -241,7 +241,7 @@
     <span class="n">out</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
-        <span class="n">site</span><span class="o">.</span><span class="n">occupation</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Vc&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+        <span class="n">site</span><span class="o">.</span><span class="n">site_type</span><span class="o">.</span><span class="n">occupation</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Vc&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">out</span></div>
 
 </pre></div>

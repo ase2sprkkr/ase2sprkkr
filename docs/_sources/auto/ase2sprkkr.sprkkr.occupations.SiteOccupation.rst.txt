@@ -1,0 +1,36 @@
+SiteOccupation
+==============
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.occupations
+
+.. autoclass:: SiteOccupation
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.occupations.SiteOccupation
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

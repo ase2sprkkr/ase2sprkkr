@@ -120,7 +120,7 @@
     <span class="n">plot_parameters</span> <span class="o">=</span> <span class="p">{}</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Output file for Bloch spectral functions</span>
+<span class="sd">    Output file for XAS (X-ray Absorption Spectroscopy) and related spectra (XMCD, spin and orbital sum-rule integrands).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="RATOutputFile.energies">
@@ -130,6 +130,38 @@
         <span class="n">efermi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">EFERMI</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">i</span><span class="o">.</span><span class="n">ENERGY</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="n">efermi</span><span class="p">)</span> <span class="o">*</span> <span class="n">Rydberg</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">DATA</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span></div>
 
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">absorbing_element</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Chemical symbol of the element whose core spectrum is plotted.&quot;&quot;&quot;</span>
+        <span class="n">type_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">IT</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="n">type_index</span><span class="p">][</span><span class="s2">&quot;TXT_T&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">system_formula</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the system formula from the atom types and their multiplicities.&quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">atom_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">():</span>
+            <span class="n">symbol</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">atom_type</span><span class="p">[</span><span class="s2">&quot;TXT_T&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">atom_type</span><span class="p">[</span><span class="s2">&quot;NAT&quot;</span><span class="p">])</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">symbol</span> <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">symbol</span><span class="si">}{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spectrum_subject</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">absorbing_element</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">system_formula</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">xray_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Spectroscopic label of the absorbing core edge, for example L₂,₃.&quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">NCXRAY</span><span class="p">()</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">LCXRAY</span><span class="p">()</span>
+        <span class="n">shells</span> <span class="o">=</span> <span class="s2">&quot;KLMNOPQ&quot;</span>
+        <span class="n">shell</span> <span class="o">=</span> <span class="n">shells</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shells</span><span class="p">)</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">shell</span>
+        <span class="n">subshell</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span> <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">rf</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">shell</span><span class="si">}</span><span class="s2">_</span><span class="se">{{</span><span class="si">{</span><span class="n">subshell</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="RATOutputFile.order">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.order">[docs]</a>
@@ -195,15 +227,6 @@
         <span class="k">return</span> <span class="n">out</span></div>
 
 
-<div class="viewcode-block" id="RATOutputFile.mendeleev">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.mendeleev">[docs]</a>
-    <span class="nd">@cached_property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">mendeleev</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">mendeleev</span>
-
-        <span class="k">return</span> <span class="n">mendeleev</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">IT</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;TXT_T&quot;</span><span class="p">])</span></div>
-
-
 <div class="viewcode-block" id="RATOutputFile.lorentz_width">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.lorentz_width">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">lorentz_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;campbell-papp&quot;</span><span class="p">):</span>
@@ -213,7 +236,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.physics.core_hole_width</span><span class="w"> </span><span class="kn">import</span> <span class="n">core_hole_width</span>
 
-        <span class="n">atomic_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mendeleev</span><span class="o">.</span><span class="n">atomic_number</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ase.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">atomic_numbers</span>
+
+        <span class="n">atomic_number</span> <span class="o">=</span> <span class="n">atomic_numbers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">absorbing_element</span><span class="p">]</span>
         <span class="n">nc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">NCXRAY</span><span class="p">()</span>
         <span class="n">lc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">LCXRAY</span><span class="p">()</span>
         <span class="k">return</span> <span class="p">(</span>
@@ -228,7 +253,9 @@
         <span class="k">if</span> <span class="n">lorentz_width</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">lorentz_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lorentz_width</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">n_valence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">n_valence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mendeleev</span><span class="o">.</span><span class="n">nvalence</span><span class="p">()</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.physics.atomic_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">valence_electrons</span>
+
+            <span class="n">n_valence</span> <span class="o">=</span> <span class="n">valence_electrons</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">absorbing_element</span><span class="p">)</span>
         <span class="c1"># Accept Python floats and NumPy scalar floats here</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">lorentz_width</span><span class="p">):</span>
             <span class="n">lorentz_width</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">lorentz_width</span><span class="p">)]</span>
@@ -288,6 +315,7 @@
         <span class="n">lorentz_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">n_valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">core_hole_width</span><span class="o">=</span><span class="s2">&quot;campbell-papp&quot;</span><span class="p">,</span>
+        <span class="n">mld</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">layout_kind</span><span class="o">=</span><span class="s2">&quot;constrained&quot;</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
@@ -304,19 +332,16 @@
             <span class="n">lorentz_width</span><span class="p">,</span>
             <span class="n">n_valence</span><span class="p">,</span>
             <span class="n">core_hole_width</span><span class="p">,</span>
+            <span class="n">mld</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">num</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;POLARIZATION&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># 1 or 2</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;XAS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># 1 or 2</span>
         <span class="k">if</span> <span class="s2">&quot;SPIN&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
             <span class="n">num</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="n">num</span> <span class="o">=</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="n">layout</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">layout</span> <span class="o">=</span> <span class="p">(</span><span class="n">num</span> <span class="o">//</span> <span class="n">layout</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">layout</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="n">layout</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">layout</span> <span class="o">=</span> <span class="p">(</span><span class="n">layout</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">num</span> <span class="o">//</span> <span class="n">layout</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">2</span>
 
         <span class="k">if</span> <span class="n">figsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="n">layout</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">layout</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="n">figsize</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">layout</span><span class="p">:</span> <span class="p">(</span><span class="n">layout</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">layout</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="n">Multiplot</span><span class="p">(</span>
             <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span>
@@ -328,13 +353,15 @@
             <span class="n">updown_layout</span><span class="o">=</span><span class="n">updown_layout</span><span class="p">,</span>
             <span class="n">separate_plots</span><span class="o">=</span><span class="n">separate_plots</span><span class="p">,</span>
             <span class="n">layout_kind</span><span class="o">=</span><span class="n">layout_kind</span><span class="p">,</span>
+            <span class="n">number_of_plots</span><span class="o">=</span><span class="n">num</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span> <span class="k">as</span> <span class="n">mp</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">POLARIZATION</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">_inside_plot</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">DIFFERENCE</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">_inside_plot</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">XAS</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">multiplot</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span> <span class="n">data_generated</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">XMCD</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">multiplot</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span> <span class="n">data_generated</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">if</span> <span class="s2">&quot;SPIN&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">SPIN</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">_inside_plot</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">ORBIT</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">_inside_plot</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">SPIN</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">multiplot</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span> <span class="n">data_generated</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ORBIT</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">multiplot</span><span class="o">=</span><span class="n">mp</span><span class="p">,</span> <span class="n">data_generated</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="RATOutputFile.generate_data">
@@ -352,6 +379,39 @@
         <span class="n">lorentz_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">n_valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">core_hole_width</span><span class="o">=</span><span class="s2">&quot;campbell-papp&quot;</span><span class="p">,</span>
+        <span class="n">mld</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="nb">locals</span><span class="p">()}</span>
+        <span class="k">del</span> <span class="n">key</span><span class="p">[</span><span class="s1">&#39;self&#39;</span><span class="p">]</span>
+        <span class="n">ckey</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_data_key&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ckey</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">key</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">ckey</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">v</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_data</span><span class="p">(</span><span class="o">**</span><span class="n">key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_key</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span></div>
+
+
+<div class="viewcode-block" id="RATOutputFile.compute_data">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.RATOutputFile.html#ase2sprkkr.output_files.definitions.rat.RATOutputFile.compute_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">interpolate_to_fermi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">interpolation_threshold</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+        <span class="n">zero_below</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">zero_below_num</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">zero_below_energy</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+        <span class="n">no_core_splitting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">merge_all</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">gauss_width</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">lorentz_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">core_hole_width</span><span class="o">=</span><span class="s2">&quot;campbell-papp&quot;</span><span class="p">,</span>
+        <span class="n">mld</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;core energies&quot;&quot;&quot;</span>
         <span class="n">ktypes</span><span class="p">,</span> <span class="n">type_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">core_state_types</span>
@@ -468,11 +528,18 @@
         <span class="n">rt</span> <span class="o">=</span> <span class="n">read_rdt</span><span class="p">(</span><span class="s2">&quot;ABSRATE&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">n_pol</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="c1"># linear dichroism - transform it to handle it as circular</span>
-            <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">])</span>
-            <span class="n">rd</span> <span class="o">=</span> <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span>
-            <span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">])</span>
-            <span class="n">rt</span> <span class="o">=</span> <span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span>
+            <span class="k">if</span> <span class="n">mld</span><span class="p">:</span>
+                <span class="c1"># XBand&#39;s MLD mode compares the average of the two circular</span>
+                <span class="c1"># polarizations with the z polarization.</span>
+                <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">rd</span> <span class="o">=</span> <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span>
+                <span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">rt</span> <span class="o">=</span> <span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># RDRXAS reads all three columns, but XBand&#39;s default MCD</span>
+                <span class="c1"># mode subsequently sets NPOL=2 and uses the + and - columns.</span>
+                <span class="n">rd</span> <span class="o">=</span> <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">rt</span> <span class="o">=</span> <span class="n">rt</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
             <span class="n">n_pol</span> <span class="o">=</span> <span class="mi">2</span>
 
         <span class="c1"># If caller didn&#39;t provide explicit lorentz_width, compute using requested dataset</span>
@@ -591,7 +658,7 @@
         <span class="n">tt</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
         <span class="n">td</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">rd</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
 
-        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;POLARIZATION&quot;</span><span class="p">:</span> <span class="n">tt</span><span class="p">,</span> <span class="s2">&quot;DIFFERENCE&quot;</span><span class="p">:</span> <span class="n">td</span><span class="p">,</span> <span class="s2">&quot;ENERGY&quot;</span><span class="p">:</span> <span class="n">senergies</span><span class="p">}</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;XAS&quot;</span><span class="p">:</span> <span class="n">tt</span><span class="p">,</span> <span class="s2">&quot;XMCD&quot;</span><span class="p">:</span> <span class="n">td</span><span class="p">,</span> <span class="s2">&quot;ENERGY&quot;</span><span class="p">:</span> <span class="n">senergies</span><span class="p">,</span> <span class="s2">&quot;DICHROISM&quot;</span><span class="p">:</span> <span class="s2">&quot;MLD&quot;</span> <span class="k">if</span> <span class="n">mld</span> <span class="k">else</span> <span class="s2">&quot;XMCD&quot;</span><span class="p">}</span>
 
         <span class="k">if</span> <span class="n">n_ktypes</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">_sd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
@@ -605,7 +672,6 @@
             <span class="n">out</span><span class="p">[</span><span class="s2">&quot;SPIN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spin</span>
             <span class="n">out</span><span class="p">[</span><span class="s2">&quot;ORBIT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">orb</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">out</span>
         <span class="k">return</span> <span class="n">out</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -684,14 +750,40 @@
 
 
 
-<div class="viewcode-block" id="generate_data_calling_function">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.generate_data_calling_function.html#ase2sprkkr.output_files.definitions.rat.generate_data_calling_function">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">generate_data_calling_function</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+<span class="n">_ylabel_base</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;XAS&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$\mu(E)$&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;XMCD&quot;</span><span class="p">:</span>    <span class="sa">r</span><span class="s2">&quot;$\Delta\mu(E)$&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SPIN&quot;</span><span class="p">:</span>    <span class="sa">r</span><span class="s2">&quot;$\Delta\mu_{\mathrm{spin\,SR}}(E)$&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ORBIT&quot;</span><span class="p">:</span>   <span class="sa">r</span><span class="s2">&quot;$\Delta\mu_{\mathrm{orb\,SR}}(E)$&quot;</span><span class="p">,</span>
+<span class="p">}</span>
 
-    <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">wrapped</span><span class="p">(</span>
+<span class="n">_kunit_labels</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;Mb&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$10^</span><span class="si">{15}</span><span class="s2">\,\mathrm</span><span class="si">{s}</span><span class="s2">^{-1}$&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="draw_plot">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.draw_plot.html#ase2sprkkr.output_files.definitions.rat.draw_plot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">draw_plot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kunit</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">edge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$E-E_{\rm F}$ (eV)&quot;</span><span class="p">)</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">_ylabel_base</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">edge</span> <span class="ow">and</span> <span class="n">base</span><span class="p">:</span>
+        <span class="n">math</span> <span class="o">=</span> <span class="n">base</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">base</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">base</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">edge</span><span class="si">}</span><span class="s2">\;</span><span class="si">{</span><span class="n">math</span><span class="si">}</span><span class="s2">$&quot;</span>
+    <span class="n">unit</span> <span class="o">=</span> <span class="n">_kunit_labels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">kunit</span><span class="p">,</span> <span class="s2">&quot;Mb&quot;</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">unit</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">if</span> <span class="n">base</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">unit</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="n">set_up_common_plot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="plot">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.plot.html#ase2sprkkr.output_files.definitions.rat.plot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
         <span class="n">option</span><span class="p">,</span>
-        <span class="n">_inside_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">multiplot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">interpolate_to_fermi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">interpolation_threshold</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
         <span class="n">zero_below</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -703,75 +795,65 @@
         <span class="n">lorentz_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">n_valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">core_hole_width</span><span class="o">=</span><span class="s2">&quot;campbell-papp&quot;</span><span class="p">,</span>
+        <span class="n">mld</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="o">*</span><span class="n">args</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="n">data_generated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">_inside_plot</span><span class="p">:</span>
-            <span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">generate_data</span><span class="p">(</span>
-                <span class="n">interpolate_to_fermi</span><span class="p">,</span>
-                <span class="n">interpolation_threshold</span><span class="p">,</span>
-                <span class="n">zero_below</span><span class="p">,</span>
-                <span class="n">zero_below_num</span><span class="p">,</span>
-                <span class="n">zero_below_energy</span><span class="p">,</span>
-                <span class="n">no_core_splitting</span><span class="p">,</span>
-                <span class="n">merge_all</span><span class="p">,</span>
-                <span class="n">gauss_width</span><span class="p">,</span>
-                <span class="n">lorentz_width</span><span class="p">,</span>
-                <span class="n">n_valence</span><span class="p">,</span>
-                <span class="n">core_hole_width</span><span class="p">,</span>
-            <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">data_generated</span><span class="p">:</span>
+        <span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">generate_data</span><span class="p">(</span>
+            <span class="n">interpolate_to_fermi</span><span class="p">,</span>
+            <span class="n">interpolation_threshold</span><span class="p">,</span>
+            <span class="n">zero_below</span><span class="p">,</span>
+            <span class="n">zero_below_num</span><span class="p">,</span>
+            <span class="n">zero_below_energy</span><span class="p">,</span>
+            <span class="n">no_core_splitting</span><span class="p">,</span>
+            <span class="n">merge_all</span><span class="p">,</span>
+            <span class="n">gauss_width</span><span class="p">,</span>
+            <span class="n">lorentz_width</span><span class="p">,</span>
+            <span class="n">n_valence</span><span class="p">,</span>
+            <span class="n">core_hole_width</span><span class="p">,</span>
+            <span class="n">mld</span><span class="p">,</span>
+        <span class="p">)</span>
 
-        <span class="n">fn</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">_inside_plot</span><span class="o">=</span><span class="n">_inside_plot</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">just_plot</span><span class="p">(</span><span class="n">plotter</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">tit</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2"> - type </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tit</span> <span class="o">=</span> <span class="n">title</span>
+            <span class="k">with</span> <span class="n">plotter</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">kw</span><span class="p">):</span>
+                <span class="n">draw_plot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">tit</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">option</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">kunit</span><span class="o">=</span><span class="n">kunit</span><span class="p">,</span> <span class="n">edge</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">xray_edge</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">wrapped</span></div>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">option</span><span class="o">.</span><span class="n">_container</span>
+    <span class="n">kunit</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">GROUPS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">IFMT</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">titles</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;XAS&quot;</span><span class="p">:</span> <span class="s2">&quot;XAS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;XMCD&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;DICHROISM&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;SPIN&quot;</span><span class="p">:</span> <span class="s2">&quot;XMCD spin sum-rule integrand&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ORBIT&quot;</span><span class="p">:</span> <span class="s2">&quot;XMCD orbital sum-rule integrand&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">titles</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">option</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">option</span><span class="o">.</span><span class="n">info</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">spectrum_subject</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ENERGY&quot;</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">option</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">multiplot</span><span class="p">:</span>
+        <span class="n">just_plot</span><span class="p">(</span><span class="n">multiplot</span><span class="o">.</span><span class="n">new_axis</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">Multiplot</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">mp</span><span class="p">:</span>
+            <span class="n">just_plot</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">new_axis</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">just_plot</span><span class="p">(</span><span class="n">single_plot</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="draw_plot">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.draw_plot.html#ase2sprkkr.output_files.definitions.rat.draw_plot">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">draw_plot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">axis</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
-    <span class="n">axis</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$E-E_{\rm F}$ (eV)&quot;</span><span class="p">)</span>
-    <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;XRAS&quot;</span><span class="p">)</span>
-    <span class="n">set_up_common_plot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="plot">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.plot.html#ase2sprkkr.output_files.definitions.rat.plot">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="n">title</span><span class="p">):</span>
-
-    <span class="nd">@generate_data_calling_function</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_inside_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">just_plot</span><span class="p">(</span><span class="n">plotter</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">tit</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2"> - type </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">tit</span> <span class="o">=</span> <span class="n">title</span>
-                <span class="k">with</span> <span class="n">plotter</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="k">as</span> <span class="n">axis</span><span class="p">:</span>
-                    <span class="n">draw_plot</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">tit</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-        <span class="n">c</span> <span class="o">=</span> <span class="n">option</span><span class="o">.</span><span class="n">_container</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">data</span>
-        <span class="n">energy</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ENERGY&quot;</span><span class="p">]</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">option</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">_inside_plot</span><span class="p">:</span>
-            <span class="n">just_plot</span><span class="p">(</span><span class="n">_inside_plot</span><span class="o">.</span><span class="n">new_axis</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="k">with</span> <span class="n">Multiplot</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">mp</span><span class="p">:</span>
-                <span class="n">just_plot</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">new_axis</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">just_plot</span><span class="p">(</span><span class="n">single_plot</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">plot</span></div>
-
+<div class="viewcode-block" id="nktypes">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.rat.nktypes.html#ase2sprkkr.output_files.definitions.rat.nktypes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">nktypes</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">core_state_types</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="create_definition">
@@ -781,10 +863,10 @@
     <span class="n">definition</span> <span class="o">=</span> <span class="n">create_output_file_definition</span><span class="p">(</span>
         <span class="n">Keyword</span><span class="p">(</span><span class="s2">&quot;RXAS&quot;</span><span class="p">),</span>
         <span class="p">[</span>
-            <span class="n">G</span><span class="p">(</span><span class="s2">&quot;POLARIZATION&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;Polarization averaged spectra&quot;</span><span class="p">)),</span>
-            <span class="n">G</span><span class="p">(</span><span class="s2">&quot;DIFFERENCE&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;Difference spectra&quot;</span><span class="p">)),</span>
-            <span class="n">G</span><span class="p">(</span><span class="s2">&quot;SPIN&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;Spin&quot;</span><span class="p">)),</span>
-            <span class="n">G</span><span class="p">(</span><span class="s2">&quot;ORBIT&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;Orbit&quot;</span><span class="p">)),</span>
+            <span class="n">G</span><span class="p">(</span><span class="s2">&quot;XAS&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">nktypes</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Polarization averaged X-ray absorption spectra&quot;</span><span class="p">),</span>
+            <span class="n">G</span><span class="p">(</span><span class="s2">&quot;XMCD&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">nktypes</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;X-ray Magnetic Circular Dichroism&quot;</span><span class="p">),</span>
+            <span class="n">G</span><span class="p">(</span><span class="s2">&quot;SPIN&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;XMCD spin sum-rule integrand: 3(</span><span class="se">\u0394\u03bc\u208a</span><span class="s2"> </span><span class="se">\u2212</span><span class="s2"> 2</span><span class="se">\u0394\u03bc\u208b</span><span class="s2">)&quot;</span><span class="p">),</span>
+            <span class="n">G</span><span class="p">(</span><span class="s2">&quot;ORBIT&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;XMCD orbital sum-rule integrand: 2(</span><span class="se">\u0394\u03bc\u208a</span><span class="s2"> + </span><span class="se">\u0394\u03bc\u208b</span><span class="s2">)&quot;</span><span class="p">),</span>
             <span class="n">G</span><span class="p">(</span><span class="s2">&quot;ENERGY&quot;</span><span class="p">),</span>
             <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NTXRSGRP&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
             <span class="n">V</span><span class="p">(</span><span class="s2">&quot;IDIPOL&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>

@@ -101,12 +101,36 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">nbformat</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">nbformat.v4</span><span class="w"> </span><span class="kn">import</span> <span class="n">new_notebook</span><span class="p">,</span> <span class="n">new_code_cell</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">nbconvert.preprocessors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExecutePreprocessor</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">nbformat</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="n">JUPYTER_INSTALL_COMMAND</span> <span class="o">=</span> <span class="s1">&#39;python -m pip install &quot;ase2sprkkr[jupyter]&quot;&#39;</span>
+
+
+<div class="viewcode-block" id="JupyterDependencyError">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.JupyterDependencyError.html#ase2sprkkr.gui.shell.JupyterDependencyError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">JupyterDependencyError</span><span class="p">(</span><span class="ne">ImportError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when the optional dependencies for Jupyter support are absent.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="s2">&quot;Jupyter support is not installed. Install the optional dependency with:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">JUPYTER_INSTALL_COMMAND</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="load_jupyter_dependencies">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.load_jupyter_dependencies.html#ase2sprkkr.gui.shell.load_jupyter_dependencies">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_jupyter_dependencies</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Import and return modules needed only by the Jupyter shell.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">nbformat</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">nbformat.v4</span><span class="w"> </span><span class="kn">import</span> <span class="n">new_notebook</span><span class="p">,</span> <span class="n">new_code_cell</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">nbconvert.preprocessors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExecutePreprocessor</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">jupyterlab</span>  <span class="c1"># noqa: F401</span>
+    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">JupyterDependencyError</span><span class="p">()</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">return</span> <span class="n">nbformat</span><span class="p">,</span> <span class="n">new_notebook</span><span class="p">,</span> <span class="n">new_code_cell</span><span class="p">,</span> <span class="n">ExecutePreprocessor</span></div>
+
 
 
 <div class="viewcode-block" id="split_top_level_chunks">
@@ -237,6 +261,7 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell.run_example">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run_example</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
         <span class="n">ex</span> <span class="o">=</span> <span class="n">Example</span><span class="o">.</span><span class="n">by_number</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
+        <span class="nb">dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
         <span class="n">ex</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
 
         <span class="n">content</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">body_of_main</span><span class="p">()</span>
@@ -313,80 +338,74 @@
 
 
 
-<span class="k">if</span> <span class="n">nbformat</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">JupyterLab</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="k">else</span><span class="p">:</span>
-
 <div class="viewcode-block" id="JupyterLab">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.JupyterLab.html#ase2sprkkr.gui.shell.JupyterLab">[docs]</a>
-    <span class="k">class</span><span class="w"> </span><span class="nc">JupyterLab</span><span class="p">(</span><span class="n">Shell</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the given code in a JupyterLab notebook.&quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">JupyterLab</span><span class="p">(</span><span class="n">Shell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the given code in a JupyterLab notebook.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="JupyterLab.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.JupyterLab.html#ase2sprkkr.gui.shell.JupyterLab.__init__">[docs]</a>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">saved</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="n">run</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nbformat</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_notebook</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_code_cell</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ExecutePreprocessor</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">load_jupyter_dependencies</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saved</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="n">run</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="JupyterLab.save">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.JupyterLab.html#ase2sprkkr.gui.shell.JupyterLab.save">[docs]</a>
-        <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Save the notebook to disk.&quot;&quot;&quot;</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-            <span class="n">filename</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the notebook to disk.&quot;&quot;&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">filename</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="n">nb</span> <span class="o">=</span> <span class="n">new_notebook</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">:</span>
-                <span class="n">nb</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_code_cell</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
+        <span class="n">nb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_notebook</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">:</span>
+            <span class="n">nb</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">new_code_cell</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">:</span>
-                <span class="n">ep</span> <span class="o">=</span> <span class="n">ExecutePreprocessor</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
-                <span class="n">ep</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="p">}})</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">:</span>
+            <span class="n">ep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ExecutePreprocessor</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+            <span class="n">ep</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="p">}})</span>
 
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">nbformat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">saved</span> <span class="o">=</span> <span class="n">filename</span></div>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nbformat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saved</span> <span class="o">=</span> <span class="n">filename</span></div>
 
 
 <div class="viewcode-block" id="JupyterLab.open">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.gui.shell.JupyterLab.html#ase2sprkkr.gui.shell.JupyterLab.open">[docs]</a>
-        <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Opening JupyterLab... Press CTRL+C to stop the Jupyter computational kernel.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">dr</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span> <span class="ow">or</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Opening JupyterLab... Press CTRL+C to stop the Jupyter computational kernel.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span> <span class="ow">or</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">dr</span> <span class="o">/</span> <span class="s2">&quot;notebook.ipynb&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">dr</span> <span class="o">/</span> <span class="s2">&quot;notebook.ipynb&quot;</span><span class="p">)</span>
 
+        <span class="k">with</span> <span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="p">):</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;jupyter-lab&quot;</span><span class="p">,</span> <span class="s2">&quot;--NotebookApp.shutdown_no_activity_timeout=60&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved</span><span class="p">]</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="kn">import</span><span class="w"> </span><span class="nn">jupyterlab</span>  <span class="c1"># noqa F401</span>
-            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Jupyter lab not installed, please install (e.g. using pip install jupyter-lab&quot;</span><span class="p">)</span>
-
-            <span class="k">with</span> <span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="p">):</span>
-                <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;jupyter-lab&quot;</span><span class="p">,</span> <span class="s2">&quot;--NotebookApp.shutdown_no_activity_timeout=60&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved</span><span class="p">]</span>
-                <span class="c1"># Launch JupyterLab</span>
+                <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+                    <span class="n">cmd</span><span class="p">,</span>
+                    <span class="n">cwd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="p">,</span>
+                    <span class="n">stdin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+                    <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+                    <span class="n">start_new_session</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Terminating the kernel&quot;</span><span class="p">)</span>
+                <span class="n">proc</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
-                        <span class="n">cmd</span><span class="p">,</span>
-                        <span class="n">cwd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="p">,</span>
-                        <span class="n">stdin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># inherit parent&#39;s stdin</span>
-                        <span class="c1"># stdout=None, # inherit parent&#39;s stdout</span>
-                        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
-                        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
-                        <span class="c1"># stderr=None, # inherit parent&#39;s stderr</span>
-                        <span class="n">start_new_session</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># important: do not detach</span>
-                    <span class="p">)</span>
-                    <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-                <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Terminating the kernel&quot;</span><span class="p">)</span>
-                    <span class="n">proc</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># wait gracefully</span>
-                    <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">:</span>
-                        <span class="n">proc</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>  <span class="c1"># force kill</span>
-                        <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>  <span class="c1"># wait gracefully</span></div>
+                    <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">:</span>
+                    <span class="n">proc</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+                    <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span></div>
 </div>
 
 
