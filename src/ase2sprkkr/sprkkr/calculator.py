@@ -19,7 +19,7 @@ from ase.calculators.calculator import Calculator, all_changes
 
 from .sprkkr_atoms import SPRKKRAtoms
 from ..potentials.potentials import Potential
-from ..common.directory import Directory
+from ..common.file_utils import Directory
 from ..ase.symbols import filename_from_symbols
 from ..bindings.empty_spheres import add_empty_spheres
 import copy

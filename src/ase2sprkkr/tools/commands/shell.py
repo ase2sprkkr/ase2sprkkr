@@ -52,7 +52,7 @@ def parser(parser):
 def run(args, global_args):
     from ...gui.shell import Python, JupyterLab, JupyterDependencyError, Pdb
     import os
-    from ...common.directory import Directory
+    from ...common.file_utils import Directory
 
     try:
         if args.jupyter:

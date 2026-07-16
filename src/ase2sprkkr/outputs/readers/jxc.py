@@ -117,7 +117,7 @@ class JxcResult(TaskResult):
             **{k: v for k, v in locals().items() if k not in ("self", "kwargs", "executable")}, **kwargs
         )
         import subprocess
-        from ...common.directory import Directory
+        from ...common.file_utils import Directory
 
         with Directory(directory).chdir():
             subprocess.run([executable])
