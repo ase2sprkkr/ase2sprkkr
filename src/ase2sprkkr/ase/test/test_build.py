@@ -52,6 +52,18 @@ class TestBuild(TestCase):
             stack([atoms, a2], axis=2).positions, np.concatenate([atoms.positions, a2.positions + atoms.cell[2]])
         )
 
+    def test_stack_empty_atoms(self):
+        atoms = bulk("Cu", "sc", a=2.0)
+        empty = atoms * (1, 1, 0)
+
+        middle_empty = stack([atoms, empty, atoms], axis=2)
+        self.assertEqual(middle_empty.positions, (atoms * (1, 1, 2)).positions)
+        self.assertEqual(middle_empty.cell, (atoms * (1, 1, 2)).cell)
+
+        trailing_empty = stack([atoms, atoms, empty], axis=2)
+        self.assertEqual(trailing_empty.positions, (atoms * (1, 1, 2)).positions)
+        self.assertEqual(trailing_empty.cell[2], 2 * atoms.cell[2])
+
     def test_minimal_surface_layers(self):
         atoms = bulk("Cu", "fcc", cubic=True)
 

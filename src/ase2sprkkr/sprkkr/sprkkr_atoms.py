@@ -276,7 +276,9 @@ class SPRKKRAtoms(Atoms):
         super().extend(other)
         if "spacegroup_kinds" in self.arrays:
             sk = self.arrays["spacegroup_kinds"]
-            shift = np.max(sk[:ln])
+            # There is no existing kind to shift by when extending an empty
+            # promoted Atoms object (for example for a zero-repeat region).
+            shift = np.max(sk[:ln]) if ln else 0
             sk[ln:] += shift
             if "occupancy" in self.info or "occupancy" in other.info:
                 self.info.setdefault("occupancy", {})

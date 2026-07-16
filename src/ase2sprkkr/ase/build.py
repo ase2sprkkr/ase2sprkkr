@@ -236,7 +236,10 @@ def stack(
         update_origin(i)
         out += a
         out.pbc *= a.pbc
-        positions = out.positions[-len(a) :]
+        # ``-0`` is ``0`` in Python, so slicing with ``[-len(a):]`` for an
+        # empty Atoms object selects every position already in ``out``.  The
+        # origin shift below would then move all previously stacked atoms.
+        positions = out.positions[-len(a) :] if len(a) else out.positions[0:0]
 
         # scaling of the incompatibile cells
         do_scale = []
