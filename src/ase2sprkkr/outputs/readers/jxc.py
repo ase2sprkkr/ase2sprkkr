@@ -3,7 +3,7 @@
 import warnings
 import re
 
-from ..task_result import TaskResult, KkrOutputReader, OutputFileResultValue
+from ..task_result import TaskResult, KkrOutputReader
 from ..sprkkr_output_reader import SprKkrOutputParser
 from ...common.decorators import cached_property
 from ...bindings.uppasd import write_pos_file, write_mom_file, write_inpsd_file
@@ -28,7 +28,7 @@ class JxcResult(TaskResult):
     @cached_property
     def dmi(self):
         """Dzyaloshinski-Moriya vectors."""
-        return self.output_values["dmi"]()
+        return self.output_values["dmi"].parsed_file()
 
     @cached_property
     def dij_filename(self):
@@ -41,7 +41,7 @@ class JxcResult(TaskResult):
     @cached_property
     def dij(self):
         """Exchange tensors."""
-        return self.output_values["dij"]()
+        return self.output_values["dij"].parsed_file()
 
     @cached_property
     def jxc_filename(self):
@@ -54,17 +54,15 @@ class JxcResult(TaskResult):
     @cached_property
     def jxc(self):
         """Exchange couplings."""
-        return self.output_values["jxc"]()
+        return self.output_values["jxc"].parsed_file()
 
     @property
     def output_values(self):
         files = {"jxc": "Exchange couplings", "dij": "Exchange tensors", "dmi": "Dzyaloshinski-Moriya vectors"}
-
-        return {
-            key: OutputFileResultValue(name, "jxc", getattr(self, f"{key}_filename"))
-            for key, name in files.items()
-            if key in self.files
-        }
+        for key in files:
+            if key in self.files:
+                self.files.set_file_type(key, "jxc")
+        return self.files
 
     def write_uppasd_files(
         self,
@@ -85,7 +83,7 @@ class JxcResult(TaskResult):
                 file_name = locals()[key + "_file"]
                 if file_name is False:
                     continue
-                output_file = self.output_values[key]()
+                output_file = self.output_values[key].parsed_file()
                 output_file.write_uppasd_file(file_name=file_name, directory=directory)
                 argname = args[key]
                 if argname in kwargs:
@@ -154,7 +152,7 @@ class JxcOutputParser(SprKkrOutputParser):
             if match.group("file"):
                 file_type = file_types.get(match.group("file_type"), None)
                 if file_type is not None:
-                    result.files[file_type] = match.group("file_name").decode("utf8")
+                    result.files.add_file(file_type, match.group("file_name").decode("utf8"), "jxc")
                 else:
                     warnings.warn(f"Unexpected file type in JXC output: {line}")
             if match.group("curie_temp"):

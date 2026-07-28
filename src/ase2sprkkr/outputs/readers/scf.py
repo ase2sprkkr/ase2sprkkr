@@ -11,7 +11,8 @@ from ..output_definitions import (
     OutputNonameValueDefinition as VN,
 )
 from ...common.grammar_types import Table, integer, string, Real, RealWithUnits, String, Sequence, Array
-from ..task_result import TaskResult, ResultValue
+from ..task_result import TaskResult
+from ..result_options import DataOutputOption, create_output_section, generated_output
 from ...common.process_output_reader import readline, readline_until
 from ..sprkkr_output_reader import SprKkrOutputParser
 from ...common.decorators import cached_property
@@ -20,29 +21,6 @@ from ...common.formats import fortran_format
 from ...common.grammar import replace_whitechars
 from ..task_result import KkrOutputReader
 from ...potentials.potentials import Potential
-
-
-class IterationValue(ResultValue):
-    def __init__(self, name, value, plot):
-        super().__init__(name, value)
-        self._plot = plot
-
-    def plot(self):
-        self._plot()
-
-    def actions(self):
-        return ["plot"]
-
-
-class DataValue(ResultValue):
-    def value_label(self):
-        return "<data...>"
-
-    def actions(self):
-        return ["data"]
-
-    def data(self):
-        return self._value
 
 
 def plot_iterations(
@@ -155,15 +133,24 @@ class ScfResult(TaskResult):
 
     @cached_property
     def output_values(self):
-        return {
-            "converged": ResultValue("Converged", str(self.last_iteration.converged())),
-            "iterations": ResultValue("Number of iterations", len(self.iterations)),
-            "fermi energy": IterationValue(
-                "Fermi energy", self.last_iteration.energy.EF(), lambda: self.plot(("energy", "EF"))
-            ),
-            "error": IterationValue("Error", self.last_iteration.error(), lambda: self.plot("error")),
-            "data": DataValue("Data", self),
-        }
+        return create_output_section(
+            "OUTPUT_VALUES",
+            [
+                generated_output("Converged", lambda _c: str(self.last_iteration.converged())),
+                generated_output("Number of iterations", lambda _c: len(self.iterations)),
+                generated_output(
+                    "Fermi energy",
+                    lambda _c: self.last_iteration.energy.EF(),
+                    plot=lambda _option, **kwargs: self.plot(("energy", "EF"), **kwargs),
+                ),
+                generated_output(
+                    "Error",
+                    lambda _c: self.last_iteration.error(),
+                    plot=lambda _option, **kwargs: self.plot("error", **kwargs),
+                ),
+                generated_output("Data", lambda _c: self, result_class=DataOutputOption),
+            ],
+        )
 
     def plot(self, what=["error", ("energy", "ETOT"), ("energy", "EMIN")], filename=None, logscale=None, **kwargs):
         """Plot the development of the given value(s) during iterations.
@@ -278,7 +265,7 @@ class ScfOutputParser(SprKkrOutputParser):
 
     async def read_output(self, stdout, result):
         await self.read_commons(stdout, result)
-        result.files["converged"] = result.files["potential"] + "_new"
+        result.files.add_file("converged", result.files["potential"]() + "_new")
         iterations = scf_section.create_object()
         try:
             first = True

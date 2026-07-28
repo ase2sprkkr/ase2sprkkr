@@ -9,7 +9,7 @@ from ...common.decorators import cached_property
 class DefaultResult(TaskResult):
     @cached_property
     def output_values(self):
-        return {}
+        return self.files
 
 
 class DefaultOutputParser(SprKkrOutputParser):

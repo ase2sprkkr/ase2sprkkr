@@ -7,6 +7,7 @@ and that are results of parsing of a configuration file.
 """
 
 from .configuration import Configuration
+from .file_utils import filename_from_file
 import itertools
 from typing import Union, Any, Dict
 from .warnings import warnings, DataValidityError
@@ -686,7 +687,7 @@ class RootConfigurationContainer(ConfigurationContainer):
         if clear_first:
             self.clear(True)
         self.set(values, unknown="add")
-        self._filename = getattr(file, "name", file if isinstance(file, str) else None)
+        self._filename = filename_from_file(file, None)
 
     def find(self, name, unknown="find", is_option=True, lower_case=True, first=True):
         """Find a configuration value of a given name in the owned sections"""

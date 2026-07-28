@@ -1,6 +1,6 @@
 """Density of states (DOS) reader and result."""
 
-from ..task_result import TaskResult, KkrOutputReader, OutputFileResultValue
+from ..task_result import TaskResult, KkrOutputReader
 from .default import DefaultOutputParser
 from ...common.decorators import cached_property
 import os
@@ -21,11 +21,13 @@ class DosResult(TaskResult):
     @cached_property
     def dos(self):
         """The computed density of states."""
-        return self.output_values["dos"]()
+        return self.output_values["dos"].parsed_file()
 
     @cached_property
     def output_values(self):
-        return {"dos": OutputFileResultValue("Density of states", "dos", self.dos_filename)}
+        if "dos" not in self.files:
+            self.files.add_file("dos", self.dos_filename, "dos")
+        return self.files
 
 
 class DosOutputReader(KkrOutputReader):

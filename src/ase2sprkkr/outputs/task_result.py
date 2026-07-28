@@ -6,72 +6,11 @@ import importlib
 from . import readers
 from ..common.decorators import cached_property, cached_class_property, maybeclassmethod
 from ..common.process_output_reader import run_coro_sync
+from ..common.file_utils import filename_from_file
 from ..potentials.potentials import Potential
 from ..input_parameters import input_parameters as input_parameters
-from ..output_files.output_files import OutputFile
+from .result_options import create_files_section
 from pathlib import Path
-import platform
-import subprocess
-import shutil
-
-
-class ResultValue:
-    def __init__(self, name, value):
-        self.name = name
-        self._value = value
-
-    def __call__(self):
-        return self._value
-
-    def value_label(self):
-        return self._value
-
-    def actions(self):
-        return []
-
-
-class OutputFileResultValue:
-    def __init__(self, name, type, filename):
-        self.name = name
-        self.type = type
-        self.filename = filename
-
-    def __call__(self):
-        return OutputFile.from_file(self.filename, try_only=self.type)
-
-    def definition(self):
-        return OutputFile.definitions[self.type]
-
-    def value_label(self):
-        return f"<{self.type} file>"
-
-    def actions(self):
-        out = ["open", "save"]
-        if self.definition().result_class.can_be_plotted():
-            out.append("plot")
-        return out
-
-    def save(self, parent=None):
-        try:
-            from PyQT6.QtWidgets import QFileDialog
-        except ImportError:
-            raise Exception("PyQt6 is required for saving the output file")
-
-        file_path, _ = QFileDialog.getSaveFileName(
-            parent, "Save File", "", f" (*.{self.definition().extension});;All Files (*)"
-        )
-        shutil.copy(self.filename(), file_path)
-
-    def plot(self, parent=None):
-        self().plot()
-
-    def open(self, parent=None):
-        if platform.system() == "Windows":
-            os.startfile(self.filename)
-        elif platform.system() == "Darwin":  # macOS
-            subprocess.run(["open", self.filename])
-        else:  # Linux
-            subprocess.run(["xdg-open", self.filename])
 
 
 class TaskResult:
@@ -80,35 +19,39 @@ class TaskResult:
     def __init__(self, input_parameters, calculator, directory, output_file=None, input_file=None):
         self._input_parameters = input_parameters
         self._calculator = calculator
-        self.files = {}
+        self.files = create_files_section(self)
+        self._directory = filename_from_file(directory, None, realpath=True)
 
-        self.output_file = output_file
-        if output_file:
-            self.files["output"] = output_file
-        self._directory = os.path.realpath(directory) if directory else None
-        self.input_file = input_file
+        output_filename = filename_from_file(output_file, None)
+        self.output_file = None
+        if output_filename is not None:
+            if self._directory is None and os.path.isabs(output_filename):
+                self._directory = os.path.dirname(output_filename)
+            self.output_file = output_filename
+            if os.path.isabs(output_filename):
+                output_filename = os.path.relpath(output_filename, self.directory)
+                self.output_file = output_filename
+            self.files.add_file("output", self.output_file)
+
+        input_filename = filename_from_file(input_file, None)
+        if input_filename and os.path.isabs(input_filename):
+            input_filename = os.path.relpath(input_filename, self.directory)
+        self.input_file = input_filename
 
     @cached_property
     def directory(self):
-        def file_name(f):
-            if isinstance(f, str):
-                return f
-            if hasattr(f, "name"):
-                return f.name
-            return f
-
-        return self._directory or os.path.dirname(file_name(self.files.get("output")) or "") or os.getcwd()
+        return self._directory or os.getcwd()
 
     def path_to(self, file):
         """return full path to a given file
 
         ..doctest::
         >>> t = TaskResult(None, None, "/example")
-        >>> t.files["input"] = "input.txt"
+        >>> t.files.add_file("input", "input.txt")
         >>> t.path_to("input")
         '/example/input.txt'
         """
-        file = self.files[file]
+        file = self.files[file]()
         if Path(file).is_absolute():
             return file
         return os.path.join(self.directory, file)
@@ -126,15 +69,17 @@ class TaskResult:
 
     @cached_property
     def input_parameters_file(self):
-        if "input" in self.files and os.path.isfile(self.files["input"]):
-            return self.files["input"]
+        if "input" in self.files:
+            filename = self.path_to("input")
+            if os.path.isfile(filename):
+                return filename
 
     @cached_property
     def potential_filename(self):
         """New (output) potential file name"""
         potfil = self.input_parameters.CONTROL.POTFIL()
         if not potfil:
-            potfil = self.files.get("potential", None)
+            potfil = self.files["potential"]() if "potential" in self.files else None
         if not potfil:
             raise ValueError("Please set CONTROL.POTFIL of the input_parameters to read the potential")
         if self.directory:
@@ -253,7 +198,7 @@ class KkrOutputReader:
 
     def create_process(self, cmd, outfile, input_file=None, callback=None, **kwargs):
         """Create an object that takes care of running the command and parsing the results"""
-        result = self._create_result(getattr(outfile, "name", None), input_file)
+        result = self._create_result(filename_from_file(outfile, None), input_file)
         coroutine = self.parser.run_async(cmd, outfile, self.directory, [result], **kwargs)
         return self._create_process(coroutine, result, callback=callback)
 
@@ -261,12 +206,11 @@ class KkrOutputReader:
     def read_from_file(self, cls, output, error=None, return_code=0, input_file=None, directory=None):
         """Creates an object that takes care of reading and parsing of the output of a sprkkr process"""
         if self is None:
-            self = cls(None, None, directory or os.path.dirname(output))
-        if directory:
-            output = os.path.join(directory, output) if output else None
-
+            self = cls(None, None, directory)
         result = self._create_result(output, input_file)
-        coroutine = self.parser.read_output_file(output, error, [result], return_code)
+        output_source = output if hasattr(output, "read") else result.path_to("output")
+
+        coroutine = self.parser.read_output_file(output_source, error, [result], return_code)
         return self._create_process(coroutine, result).run()
 
     @staticmethod

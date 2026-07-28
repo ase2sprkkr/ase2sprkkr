@@ -55,13 +55,13 @@ class NomadEntry:
             p2 = value.output.path_to("converged")
             if p1 != p2 and not filecmp.cmp(p1, p2):
                 raise ValueError(
-                    f"The task {self.output.files['output']} does not use potential from {value.output.files['output']}"
+                    f"The task {self.output.files['output']()} does not use potential from {value.output.files['output']()}"
                 )
             self.archive.add_symlink(os.path.join("..", value.file("converged")), self.file("potential"))
         self._depends_on = value
 
     def file(self, name):
-        return os.path.join(os.path.dirname(self.name), os.path.basename(self.output.files[name]))
+        return os.path.join(os.path.dirname(self.name), os.path.basename(self.output.files[name]()))
 
     @cached_property
     def task_name(self):
@@ -128,10 +128,10 @@ class NomadArchive:
 
     def _add_entry(self, output, depends):
 
-        if not output.files["output"]:
+        if not output.files["output"]():
             raise ValueError("Output file name has to be specified")
 
-        file = os.path.basename(output.files["output"])
+        file = os.path.basename(output.files["output"]())
         folder = folder_base = os.path.splitext(file)[0]
         counter = 1
         while folder in self.entries:

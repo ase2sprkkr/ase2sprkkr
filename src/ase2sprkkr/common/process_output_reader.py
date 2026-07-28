@@ -10,6 +10,7 @@ import os
 import numpy as np
 from threading import Thread
 from .decorators import maybeclassmethod
+from .file_utils import filename_from_file
 
 
 class ProcessOutputParser:
@@ -207,8 +208,15 @@ class AsyncioFileReader:
 
     def __init__(self, filename, buffersize=8192):
         self.file = None  # just to set it in case the open fail
-        self.file = open(filename, "rb") if isinstance(filename, str) else filename
+        self.file = open(os.fspath(filename), "rb") if isinstance(filename, (str, bytes, os.PathLike)) else filename
         self.buffersize = buffersize
+
+    def __fspath__(self):
+        """Return the path of the underlying file."""
+        filename = filename_from_file(self.file, None)
+        if filename is None:
+            raise TypeError("The underlying stream has no filesystem path")
+        return filename
 
     def close(self):
         if self.file:

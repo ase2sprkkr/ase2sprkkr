@@ -1,4 +1,5 @@
 from ..common.process_output_reader import ProcessOutputParser, readline_until
+from ..common.file_utils import filename_from_file
 import os
 import datetime
 import re
@@ -44,16 +45,16 @@ class SprKkrOutputParser(ProcessOutputParser):
                     if rhs.startswith("(") and ")" in rhs:
                         rhs = rhs.split(")", 1)[1].strip()
 
-                    result.files[name] = rhs
+                    result.files.add_file(name, rhs)
 
                 line = (await stdout.readline()).decode("utf8").strip()
 
             # Fallback for input file
             if "input" not in result.files:
-                if hasattr(stdout, "file") and hasattr(stdout.file, "name"):
-                    filename = stdout.file.name
+                filename = filename_from_file(stdout, None)
+                if filename:
                     if filename.endswith(".out") and os.path.exists(filename[:-4] + ".inp"):
-                        result.files["input"] = filename[:-4] + ".inp"
+                        result.files.add_file("input", filename[:-4] + ".inp")
 
         except EOFError as e:
             raise EOFError("Unexpected end of output -- the program exited prematurely.") from e

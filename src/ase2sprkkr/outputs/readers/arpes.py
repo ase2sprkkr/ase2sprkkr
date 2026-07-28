@@ -1,6 +1,6 @@
 """The ARPES reader and result."""
 
-from ..task_result import TaskResult, KkrOutputReader, OutputFileResultValue
+from ..task_result import TaskResult, KkrOutputReader
 from .default import DefaultOutputParser
 from ...common.decorators import cached_property
 import os
@@ -22,7 +22,7 @@ class ArpesResult(TaskResult):
     @cached_property
     def spc(self):
         """Spectroscopy results."""
-        return self.output_values["spc"]()
+        return self.output_values["spc"].parsed_file()
 
     @property
     def arpes(self):
@@ -31,7 +31,9 @@ class ArpesResult(TaskResult):
 
     @property
     def output_values(self):
-        return {"spc": OutputFileResultValue("Spectroscopy", "spc", self.spc_filename)}
+        if "spc" not in self.files:
+            self.files.add_file("spc", self.spc_filename, "spc")
+        return self.files
 
 
 class ArpesOutputReader(KkrOutputReader):

@@ -1,6 +1,6 @@
 """The Bloch spectral functions (BSF) reader and result."""
 
-from ..task_result import TaskResult, KkrOutputReader, OutputFileResultValue
+from ..task_result import TaskResult, KkrOutputReader
 from .default import DefaultOutputParser
 from ...common.decorators import cached_property
 
@@ -17,11 +17,13 @@ class BsfResult(TaskResult):
     @cached_property
     def bsf(self):
         """The computed Bloch spectral functions."""
-        return self.output_values["bsf"]()
+        return self.output_values["bsf"].parsed_file()
 
     @cached_property
     def output_values(self):
-        return {"bsf": OutputFileResultValue("Bloch spectral function", "bsf", self.bsf_filename)}
+        if "bsf" not in self.files:
+            self.files.add_file("bsf", self.bsf_filename, "bsf")
+        return self.files
 
 
 class BsfOutputReader(KkrOutputReader):

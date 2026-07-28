@@ -1,7 +1,29 @@
 import contextlib
 import tempfile
 import os
+from io import BufferedIOBase
 
+_RAISE = object()
+
+def filename_from_file(file, default=_RAISE, realpath=False):
+    """Return a filesystem name for a path or a file backed by one.
+
+    If the object has no filename, return ``default`` or raise ``TypeError``
+    when no default was supplied.
+    """
+    if isinstance(file, BufferedIOBase):
+        file = getattr(file, "name", file)
+    try:
+        out = os.fspath(file)
+    except TypeError:
+        if default is _RAISE:
+            raise
+        return default
+
+    if realpath:
+        out = os.path.realpath(out)
+
+    return out
 
 class Directory:
     @staticmethod
@@ -21,6 +43,9 @@ class Directory:
         self.path = dir
         if self.dir == ".":
             self.chdir = contextlib.suppress
+
+    def __fspath__(self):
+        return self.path
 
     def __str__(self):
         return str(self.path) if self.path is not False else "<tempdir>"
