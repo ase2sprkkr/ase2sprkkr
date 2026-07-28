@@ -111,3 +111,43 @@ inheritance_node_attrs = { 'style' : '"filled"', 'fillcolor' : 'lightgray' }
 
 def inheritance_style_callback(class_names, current_module, styles):
     styles['graph']['rankdir'] = 'TB' if len(class_names) <= 2 else 'LR'
+
+
+### -----------
+### Autosummary
+### -----------
+
+_BASIC_TYPES = [
+    "Boolean",
+    "Date",
+    "Energy",
+    "Flag",
+    "Integer",
+    "QString",
+    "Real",
+    "Separator",
+    "String",
+    "Unsigned",
+]
+
+_BASIC_MODULE = "ase2sprkkr.common.grammar_types.basic"
+
+autosummary_filename_map = {
+    # Preserve the established uppercase function pages.
+    "ase2sprkkr.ase.io.read_sprkkr":
+        "ase2sprkkr.ase.io.read_sprkkr-lowercase",
+    "ase2sprkkr.ase.io.write_sprkkr":
+        "ase2sprkkr.ase.io.write_sprkkr-lowercase",
+
+    # Instances corresponding to classes.
+    "ase2sprkkr.common.configuration_definitions.gather":
+        "ase2sprkkr.common.configuration_definitions.gather-instance",
+    "ase2sprkkr.common.configuration_definitions.switch":
+        "ase2sprkkr.common.configuration_definitions.switch-instance",
+}
+
+autosummary_filename_map.update({
+    f"{_BASIC_MODULE}.{name.lower()}":
+        f"{_BASIC_MODULE}.{name.lower()}-instance"
+    for name in _BASIC_TYPES
+})

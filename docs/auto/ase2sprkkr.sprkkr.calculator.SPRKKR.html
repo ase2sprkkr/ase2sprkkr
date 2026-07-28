@@ -419,7 +419,7 @@ See the __init__ method for the meaning of other options.</p></li>
 <li><p><strong>output_file</strong> (<em>str</em><em> or </em><em>bool</em><em> or </em><em>None</em>) – A filename or a filename template (see FilenameTemplator class) where to save the output
 None means to use the default value from the Calculator.
 See the __init__ method for the meaning of other options.</p></li>
-<li><p><strong>directory</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>bool</em><em>, </em><a class="reference internal" href="ase2sprkkr.common.directory.Directory.html#ase2sprkkr.common.directory.Directory" title="ase2sprkkr.common.directory.Directory"><em>Directory</em></a><em>, </em><em>None</em><em>]</em>) – Path, to which the relative names of the files above will be resolved.
+<li><p><strong>directory</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>bool</em><em>, </em><a class="reference internal" href="ase2sprkkr.common.file_utils.Directory.html#ase2sprkkr.common.file_utils.Directory" title="ase2sprkkr.common.file_utils.Directory"><em>Directory</em></a><em>, </em><em>None</em><em>]</em>) – Path, to which the relative names of the files above will be resolved.
 False means temporary directory (usefull just for testing).
 None means use the (default) value specified by creating the calculator.</p></li>
 <li><p><strong>create_subdirs</strong> (<em>boolean</em>) – If true, create directories if they don’t exists.</p></li>
@@ -478,7 +478,7 @@ E.g. mpi = [ ‘mpirun’, ‘-np’, ‘4’ ], mpi = 4</p></li>
 <li><p><strong>---------</strong></p></li>
 <li><p><strong>parameters</strong> (<em>For the other</em>)</p></li>
 <li><p><strong>method</strong> (<em>see the save_input</em><em>(</em><em>)</em>)</p></li>
-<li><p><strong>directory</strong> (<em>str</em><em> | </em><em>bool</em><em> | </em><a class="reference internal" href="ase2sprkkr.common.directory.Directory.html#ase2sprkkr.common.directory.Directory" title="ase2sprkkr.common.directory.Directory"><em>Directory</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>directory</strong> (<em>str</em><em> | </em><em>bool</em><em> | </em><a class="reference internal" href="ase2sprkkr.common.file_utils.Directory.html#ase2sprkkr.common.file_utils.Directory" title="ase2sprkkr.common.file_utils.Directory"><em>Directory</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>create_subdirs</strong> (<em>bool</em>)</p></li>
 <li><p><strong>empty_spheres</strong> (<em>str</em><em> | </em><em>bool</em><em> | </em><em>None</em>)</p></li>
 </ul>
@@ -527,7 +527,7 @@ any combination of these six: ‘positions’, ‘numbers’, ‘cell’,
 </dl>
 <p>}</p>
 </p></li>
-<li><p><strong>directory</strong> (<em>str</em><em> | </em><em>bool</em><em> | </em><a class="reference internal" href="ase2sprkkr.common.directory.Directory.html#ase2sprkkr.common.directory.Directory" title="ase2sprkkr.common.directory.Directory"><em>Directory</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>directory</strong> (<em>str</em><em> | </em><em>bool</em><em> | </em><a class="reference internal" href="ase2sprkkr.common.file_utils.Directory.html#ase2sprkkr.common.file_utils.Directory" title="ase2sprkkr.common.file_utils.Directory"><em>Directory</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>create_subdirs</strong> (<em>bool</em>)</p></li>
 <li><p><strong>empty_spheres</strong> (<em>str</em><em> | </em><em>bool</em><em> | </em><em>None</em>)</p></li>
 <li><p><strong>mpi</strong> (<em>bool</em>)</p></li>

@@ -1,0 +1,36 @@
+DataOutputOption
+================
+
+
+.. currentmodule:: ase2sprkkr.outputs.result_options
+
+.. autoclass:: DataOutputOption
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.result_options.DataOutputOption
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

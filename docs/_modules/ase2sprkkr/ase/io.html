@@ -95,7 +95,7 @@
 
 
 <div class="viewcode-block" id="read_sprkkr">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.io.read_sprkkr.html#ase2sprkkr.ase.io.read_sprkkr">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.io.read_sprkkr-lowercase.html#ase2sprkkr.ase.io.read_sprkkr">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">read_sprkkr</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span><span class="o">.</span><span class="n">atoms</span>
     <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -108,7 +108,7 @@
 
 
 <div class="viewcode-block" id="write_sprkkr">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.io.write_sprkkr.html#ase2sprkkr.ase.io.write_sprkkr">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.io.write_sprkkr-lowercase.html#ase2sprkkr.ase.io.write_sprkkr">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">write_sprkkr</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">pot</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">pot</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span></div>

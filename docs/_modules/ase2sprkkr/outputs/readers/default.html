@@ -100,22 +100,22 @@
 
 
 <div class="viewcode-block" id="DefaultResult">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultResult.html#ase2sprkkr.outputs.readers.bsf.DefaultResult">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultResult.html#ase2sprkkr.outputs.readers.arpes.DefaultResult">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DefaultResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
 <div class="viewcode-block" id="DefaultResult.output_values">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultResult.html#ase2sprkkr.outputs.readers.bsf.DefaultResult.output_values">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultResult.html#ase2sprkkr.outputs.readers.arpes.DefaultResult.output_values">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">output_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{}</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span></div>
 </div>
 
 
 
 <div class="viewcode-block" id="DefaultOutputParser">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputParser.html#ase2sprkkr.outputs.readers.bsf.DefaultOutputParser">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputParser.html#ase2sprkkr.outputs.readers.arpes.DefaultOutputParser">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DefaultOutputParser</span><span class="p">(</span><span class="n">SprKkrOutputParser</span><span class="p">):</span>
 <div class="viewcode-block" id="DefaultOutputParser.read_output">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputParser.html#ase2sprkkr.outputs.readers.bsf.DefaultOutputParser.read_output">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputParser.html#ase2sprkkr.outputs.readers.arpes.DefaultOutputParser.read_output">[docs]</a>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_commons</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
         <span class="c1"># just consume the whole rest of output</span>
@@ -129,7 +129,7 @@
 
 
 <div class="viewcode-block" id="DefaultOutputReader">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.bsf.DefaultOutputReader">[docs]</a>
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.arpes.DefaultOutputReader">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DefaultOutputReader</span><span class="p">(</span><span class="n">KkrOutputReader</span><span class="p">):</span>
     <span class="n">result_class</span> <span class="o">=</span> <span class="n">DefaultResult</span>
     <span class="n">parser_class</span> <span class="o">=</span> <span class="n">DefaultOutputParser</span></div>

@@ -334,7 +334,10 @@
         <span class="n">update_origin</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="n">out</span> <span class="o">+=</span> <span class="n">a</span>
         <span class="n">out</span><span class="o">.</span><span class="n">pbc</span> <span class="o">*=</span> <span class="n">a</span><span class="o">.</span><span class="n">pbc</span>
-        <span class="n">positions</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="p">:]</span>
+        <span class="c1"># ``-0`` is ``0`` in Python, so slicing with ``[-len(a):]`` for an</span>
+        <span class="c1"># empty Atoms object selects every position already in ``out``.  The</span>
+        <span class="c1"># origin shift below would then move all previously stacked atoms.</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="p">:]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">else</span> <span class="n">out</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># scaling of the incompatibile cells</span>
         <span class="n">do_scale</span> <span class="o">=</span> <span class="p">[]</span>

@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="physics" href="ase2sprkkr.physics.html" />
-    <link rel="prev" title="ResultValue" href="ase2sprkkr.outputs.task_result.ResultValue.html" /> 
+    <link rel="prev" title="KkrProcess" href="ase2sprkkr.outputs.task_result.KkrProcess.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -79,12 +79,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.result_options.html">result_options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.html">sprkkr_output_reader</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.outputs.task_result.html">task_result</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html">KkrOutputReader</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.KkrProcess.html">KkrProcess</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.OutputFileResultValue.html">OutputFileResultValue</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.ResultValue.html">ResultValue</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">TaskResult</a></li>
 </ul>
 </li>
@@ -156,7 +155,7 @@
 <dd><p>return full path to a given file</p>
 <p>..doctest::
 &gt;&gt;&gt; t = TaskResult(None, None, “/example”)
-&gt;&gt;&gt; t.files[“input”] = “input.txt”
+&gt;&gt;&gt; t.files.add_file(“input”, “input.txt”)
 &gt;&gt;&gt; t.path_to(“input”)
 ‘/example/input.txt’</p>
 </dd></dl>
@@ -221,7 +220,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.outputs.task_result.ResultValue.html" class="btn btn-neutral float-left" title="ResultValue" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.outputs.task_result.KkrProcess.html" class="btn btn-neutral float-left" title="KkrProcess" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.physics.html" class="btn btn-neutral float-right" title="physics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
