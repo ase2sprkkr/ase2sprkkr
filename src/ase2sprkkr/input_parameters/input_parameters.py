@@ -229,7 +229,7 @@ class InputParameters(ConfigurationFile):
         """
         cls = self._definition.result_reader
 
-        if not directory and calculator.directory:
+        if not directory and calculator and calculator.directory:
             directory = calculator.directory
 
         if cls is None:
