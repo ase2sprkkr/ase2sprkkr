@@ -132,25 +132,48 @@ class ScfResult(TaskResult):
         return self.last_iteration.energy
 
     @cached_property
-    def output_values(self):
+    def _scf_output_values(self):
         return create_output_section(
             "OUTPUT_VALUES",
             [
-                generated_output("Converged", lambda _c: str(self.last_iteration.converged())),
-                generated_output("Number of iterations", lambda _c: len(self.iterations)),
+                generated_output(
+                    "Converged",
+                    lambda _c: str(self.last_iteration.converged()),
+                    info="Whether the final SCF iteration reached convergence.",
+                ),
+                generated_output(
+                    "Number of iterations",
+                    lambda _c: len(self.iterations),
+                    info="Number of completed SCF iterations.",
+                ),
                 generated_output(
                     "Fermi energy",
                     lambda _c: self.last_iteration.energy.EF(),
                     plot=lambda _option, **kwargs: self.plot(("energy", "EF"), **kwargs),
+                    info="Fermi energy at the final SCF iteration.",
                 ),
                 generated_output(
                     "Error",
                     lambda _c: self.last_iteration.error(),
                     plot=lambda _option, **kwargs: self.plot("error", **kwargs),
+                    info="Convergence error at the final SCF iteration.",
+                    display_name="Convergence error",
                 ),
-                generated_output("Data", lambda _c: self, result_class=DataOutputOption),
+                generated_output(
+                    "Data",
+                    lambda _c: self,
+                    result_class=DataOutputOption,
+                    info="Complete parsed SCF result data.",
+                    display_name="SCF result data",
+                ),
             ],
         )
+
+    @property
+    def output_values(self):
+        output_values = super().output_values
+        output_values.update(self._scf_output_values.items())
+        return output_values
 
     def plot(self, what=["error", ("energy", "ETOT"), ("energy", "EMIN")], filename=None, logscale=None, **kwargs):
         """Plot the development of the given value(s) during iterations.

@@ -3,13 +3,10 @@ default reader for the tasks without specialized reader and output."""
 
 from ..task_result import TaskResult, KkrOutputReader
 from ..sprkkr_output_reader import SprKkrOutputParser
-from ...common.decorators import cached_property
 
 
 class DefaultResult(TaskResult):
-    @cached_property
-    def output_values(self):
-        return self.files
+    pass
 
 
 class DefaultOutputParser(SprKkrOutputParser):

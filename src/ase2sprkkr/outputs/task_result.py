@@ -107,6 +107,19 @@ class TaskResult:
     def atoms(self):
         return self.potential.atoms
 
+    @property
+    def output_values(self):
+        """Files and other values exposed as the public result summary."""
+        return self._ordered_output_files()
+
+    def _ordered_output_files(self):
+        """Put task result files before common input/output bookkeeping files."""
+        files = self.files.items()
+        task_files = {name: value for name, value in files.items() if value.file_type}
+        common_files = {name: value for name, value in files.items() if not value.file_type}
+        task_files.update(common_files)
+        return task_files
+
     @cached_class_property
     def _match_task_regex(self):
         return re.compile(r" TASK\s+ = ([A-Z]+)\s+\n")

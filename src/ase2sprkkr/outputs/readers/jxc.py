@@ -62,7 +62,7 @@ class JxcResult(TaskResult):
         for key in files:
             if key in self.files:
                 self.files.set_file_type(key, "jxc")
-        return self.files
+        return super().output_values
 
     def write_uppasd_files(
         self,

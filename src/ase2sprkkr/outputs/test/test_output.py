@@ -1,4 +1,5 @@
 import os
+import pytest
 from io import BytesIO
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -6,6 +7,8 @@ from ..task_result import TaskResult
 from ...common.file_utils import filename_from_file
 from ...common.options import Option
 from ..readers.scf import ScfOutputParser, ScfResult, atomic_types_definition
+from ..readers.bsf import BsfResult
+from ..readers.dos import DosResult
 from ..readers.jxc import JxcOutputReader
 
 if __package__:
@@ -82,8 +85,40 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
             assert values["Converged"]._definition.is_generated
             self.assertEqual(values["Number of iterations"](), len(out.iterations))
             self.assertEqual(values["Fermi energy"].actions(), ("plot",))
+            self.assertEqual(values["Fermi energy"].info, "Fermi energy at the final SCF iteration.")
+            self.assertEqual(values["Error"].display_name, "Convergence error")
+            self.assertEqual(values["Data"].display_name, "SCF result data")
             self.assertEqual(values["Data"].actions(), ("data",))
             assert values["Data"].data() is out
+            assert values["potential"] is out.files["potential"]
+
+    def test_result_file_types_are_inferred_without_duplicate_aliases(self):
+        dos = DosResult(None, None, None)
+        dos_file = dos.files.add_file("DOS", "result.dos")
+        assert dos.output_values["DOS"] is dos_file
+        assert dos_file.name == "DOS"
+        assert dos_file.display_name == "Density of states (DOS)"
+        assert dos_file.file_type == "dos"
+        assert dos_file.info == "Density-of-states data produced by the calculation."
+        assert "plot" in dos_file.actions()
+        assert list(dos.files.items()) == ["DOS"]
+        assert next(iter(dos.output_values)) == "DOS"
+
+        missing_dos = DosResult(None, None, None)
+        with pytest.raises(FileNotFoundError, match="DOS result file is not listed"):
+            missing_dos.output_values
+
+        bsf = BsfResult(None, None, None)
+        bsf_file = bsf.files.add_file("Bloch-SF", "result.bsf")
+        assert bsf.output_values["Bloch-SF"] is bsf_file
+        assert bsf_file.file_type == "bsf"
+        assert "plot" in bsf_file.actions()
+        assert list(bsf.files.items()) == ["Bloch-SF"]
+        assert next(iter(bsf.output_values)) == "Bloch-SF"
+
+        missing_bsf = BsfResult(None, None, None)
+        with pytest.raises(FileNotFoundError, match="BSF result file is not listed"):
+            missing_bsf.output_values
 
     def test_jxc(self):
         path = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "examples"))

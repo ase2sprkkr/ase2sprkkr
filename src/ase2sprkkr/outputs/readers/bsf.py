@@ -17,13 +17,19 @@ class BsfResult(TaskResult):
     @cached_property
     def bsf(self):
         """The computed Bloch spectral functions."""
-        return self.output_values["bsf"].parsed_file()
+        return self._bsf_file.parsed_file()
 
     @cached_property
+    def _bsf_file(self):
+        try:
+            return self.files.set_file_type("Bloch-SF", "bsf")
+        except KeyError as exc:
+            raise FileNotFoundError("BSF result file is not listed in the SPR-KKR output.") from exc
+
+    @property
     def output_values(self):
-        if "bsf" not in self.files:
-            self.files.add_file("bsf", self.bsf_filename, "bsf")
-        return self.files
+        self._bsf_file
+        return super().output_values
 
 
 class BsfOutputReader(KkrOutputReader):

@@ -21,13 +21,19 @@ class DosResult(TaskResult):
     @cached_property
     def dos(self):
         """The computed density of states."""
-        return self.output_values["dos"].parsed_file()
+        return self._dos_file.parsed_file()
 
     @cached_property
+    def _dos_file(self):
+        try:
+            return self.files.set_file_type("DOS", "dos")
+        except KeyError as exc:
+            raise FileNotFoundError("DOS result file is not listed in the SPR-KKR output.") from exc
+
+    @property
     def output_values(self):
-        if "dos" not in self.files:
-            self.files.add_file("dos", self.dos_filename, "dos")
-        return self.files
+        self._dos_file
+        return super().output_values
 
 
 class DosOutputReader(KkrOutputReader):
