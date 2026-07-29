@@ -48,6 +48,7 @@ class TaskResult:
         ..doctest::
         >>> t = TaskResult(None, None, "/example")
         >>> t.files.add_file("input", "input.txt")
+        <Option input of type String with value = input.txt>
         >>> t.path_to("input")
         '/example/input.txt'
         """
