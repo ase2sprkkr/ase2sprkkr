@@ -419,8 +419,29 @@ class ValueDefinition(RealItemDefinition):
                 )
             self.validate_type(item).validate(value, self.get_path, why=why)
             self.validate_warning(value)
+            if why != "set":
+                self.validate_numbering(opt, value)
         except ValueError as e:
             DataValidityError.warn(str(e))
+
+    def validate_numbering(self, opt, value, *, raise_error=False):
+        """Validate the cardinality of a conditionally numbered value."""
+        repeated = self.is_repeated
+        if repeated.numbering_condition is None or value is None or repeated.numbering_for(opt):
+            return
+        try:
+            length = len(value)
+        except TypeError:
+            return
+        if length <= 1:
+            return
+        message = (
+            f"{opt._get_path()} is unnumbered for the current configuration "
+            f"and therefore can contain only one value; got {length}"
+        )
+        if raise_error:
+            raise DataValidityError(message)
+        DataValidityError.warn(message)
 
     def convert_and_validate(self, opt, value, why="set", item=False):
         with warnings.catch_warnings():
@@ -534,11 +555,11 @@ class ValueDefinition(RealItemDefinition):
     def _save_to_file(self, file, option, always=False, name_in_grammar=None, delimiter=""):
         value, write = option._written_value(always)
         if write:
-            return self.write(file, value, name_in_grammar, delimiter=delimiter)
+            return self.write(file, value, name_in_grammar, delimiter=delimiter, option=option)
         else:
             return
 
-    def write(self, file, value, name_in_grammar=None, delimiter=""):
+    def write(self, file, value, name_in_grammar=None, delimiter="", option=None):
         """
         Write the option to the open file
 
@@ -553,6 +574,11 @@ class ValueDefinition(RealItemDefinition):
         """
         if name_in_grammar is None:
             name_in_grammar = self.name_in_grammar
+
+        if self.is_repeated.numbering_condition is not None:
+            if option is None:
+                raise ValueError("Writing a NUMBERED_IF value requires its runtime Option")
+            self.validate_numbering(option, value, raise_error=True)
 
         def write(name, value):
             if name_in_grammar:
@@ -570,7 +596,7 @@ class ValueDefinition(RealItemDefinition):
 
         name = self.formated_name
         if self.is_repeated:
-            nmb = self.is_repeated.is_numbered
+            nmb = self.is_repeated.numbering_for(option)
             if self.is_repeated.type == self.Repeated.Type.DICT:
                 if nmb == self.Repeated.Numbering.WITH_DEFAULT:
                     written = ((name + (str(i) if i != "def" else ""), v) for i, v in value.items())
@@ -652,6 +678,11 @@ class ValueDefinition(RealItemDefinition):
            { name of the argument of the __init__ function : name of the object attribute }
         """
         out = super()._get_init_args_for_copy(**kwargs)
+        if self.is_repeated.is_array:
+            # ``self.type`` is the storage Array wrapper added by __init__.
+            # Passing it back to the constructor would wrap it for a second
+            # time; the grammar type is the original per-item type.
+            out["type"] = self.grammar_type
         if self.is_fixed:
             out["fixed_value"] = out["default_value"]
         if "name_value_delimiter" in self.__dict__:

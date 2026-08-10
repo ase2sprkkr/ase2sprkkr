@@ -255,6 +255,8 @@ class Option(BaseOption):
                 except DataValidityError:
                     if not error == "ignore":
                         raise
+                if error != "section":
+                    d.validate_numbering(self, self._value)
             self._post_set()
         for w in recorded_warnings:
             w.message.args = (

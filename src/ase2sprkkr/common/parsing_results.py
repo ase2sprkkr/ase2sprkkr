@@ -103,6 +103,18 @@ class ArrayKey(SubKey):
             out.value[i] = val
 
 
+class DefArrayKey(ArrayKey):
+    """Dense-array key accepting both ``NAME`` and ``NAME<number>``.
+
+    The unnumbered spelling denotes the first array item, just as ``NAME1``
+    does.  Consequently, using both spellings in one input is reported as a
+    duplicate rather than producing two values.
+    """
+
+    def convert(self, sub):
+        return 1 if sub == "def" else int(sub)
+
+
 class RepeatedKey(Key):
     class ResultClass(Result):
         def __init__(self):

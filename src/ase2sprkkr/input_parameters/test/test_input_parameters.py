@@ -510,6 +510,84 @@ XSITES NR=3 FLAG
         ip = ipd.read_from_string(data)
         self.assertEqual(t(data), t(ip.ENERGY.to_string()))
 
+    def test_numbered_if(self):
+        compact = lambda value: re.sub(r"\s+", " ", value).strip()  # noqa E731
+        ipd = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "ENERGY": [
+                    V("MODE", 0),
+                    V(
+                        "KA",
+                        int,
+                        is_repeated=V.Repeated.NUMBERED_IF(lambda option: option._container.MODE() == 1),
+                    ),
+                ]
+            }
+        )
+
+        # Parsing accepts both spellings independent of the current mode and
+        # normalizes the spelling when the complete configuration is written.
+        ip = ipd.read_from_string("ENERGY MODE=0 KA1=4")
+        assert np.array_equal(ip.ENERGY.KA(), [4])
+        assert compact(ip.to_string()) == "ENERGY MODE=0 KA=4"
+
+        ip = ipd.read_from_string("ENERGY KA=4 MODE=1")
+        assert np.array_equal(ip.ENERGY.KA(), [4])
+        assert compact(ip.to_string()) == "ENERGY MODE=1 KA1=4"
+
+        ip = ipd.read_from_string("ENERGY MODE=1 KA1=4 KA2=5")
+        assert np.array_equal(ip.ENERGY.KA(), [4, 5])
+        assert compact(ip.to_string()) == "ENERGY MODE=1 KA1=4 KA2=5"
+
+        with pytest.warns(DataValidityError, match="can contain only one value"):
+            unnumbered = ipd.read_from_string("ENERGY KA1=4 KA2=5 MODE=0")
+        assert np.array_equal(unnumbered.ENERGY.KA(), [4, 5])
+        with pytest.raises(DataValidityError, match="can contain only one value"):
+            unnumbered.to_string(validate=False)
+
+        # An overlong value remains stored so changing the selector can make it
+        # valid, but writing it unnumbered is forbidden.
+        ip.ENERGY.MODE = 0
+        with pytest.raises(DataValidityError):
+            ip.to_string(validate=False)
+        ip.ENERGY.MODE = 1
+        assert compact(ip.to_string()) == "ENERGY MODE=1 KA1=4 KA2=5"
+
+        ip = ipd.create_object()
+        # Setting an overlong value while it is unnumbered warns immediately.
+        with pytest.warns(DataValidityError, match="can contain only one value"):
+            ip.ENERGY.KA = [7, 8]
+        assert np.array_equal(ip.ENERGY.KA(), [7, 8])
+        with pytest.raises(DataValidityError, match="can contain only one value"):
+            ip.to_string(validate=False)
+
+        # The two spellings denote the same first item, not two different ones.
+        with pytest.raises(pp.ParseBaseException):
+            ipd.read_from_string("ENERGY MODE=0 KA=4 KA1=5")
+
+        copied = ipd.copy()
+        ip = copied.read_from_string("ENERGY MODE=1 KA=3")
+        assert compact(ip.to_string()) == "ENERGY MODE=1 KA1=3"
+
+        # KA-like vector items retain the outer repetition dimension as well.
+        vector_ipd = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "ENERGY": [
+                    V("MODE", 0),
+                    V(
+                        "KA",
+                        gt.SetOf(int, length=3),
+                        is_repeated=V.Repeated.NUMBERED_IF(lambda option: option._container.MODE() == 1),
+                    ),
+                ]
+            }
+        )
+        vector = vector_ipd.read_from_string("ENERGY MODE=0 KA={1,2,3}")
+        assert vector.ENERGY.KA().shape == (1, 3)
+        assert compact(vector.to_string()) == "ENERGY MODE=0 KA={1,2,3}"
+        vector.ENERGY.MODE = 1
+        assert compact(vector.to_string()) == "ENERGY MODE=1 KA1={1,2,3}"
+
     #
     def test_sparse_numbered(self):
         input_parameters_def = cd.InputParametersDefinition.definition_from_dict(

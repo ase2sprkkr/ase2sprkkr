@@ -15,8 +15,6 @@ import inspect
 from typing import Dict, Union, Any
 import itertools
 from . import backward_compatibility  # NOQA
-from enum import Enum, nonmember
-import numpy as np
 import re
 
 from .warnings import DataValidityWarning
@@ -24,7 +22,7 @@ from .options import Dummy, DummyStub
 from .decorators import cached_class_property, cached_property
 from .grammar import generate_grammar
 from .grammar_types.basic import Separator, KeywordSeparator
-from .parsing_results import Key, ArrayKey, DictKey, RepeatedKey, DefDictKey, IgnoredKey
+from .repetition import Repeated
 
 
 def _definition_write_condition_always_true(_):
@@ -70,111 +68,8 @@ class BaseDefinition:
     validate_section = None
     """ Can be redefined for validating whole section """
 
-    class Repeated(Enum):
-        @nonmember
-        class Type(Enum):
-            """Type of repetition."""
-
-            NO = None
-            # No repetition allowed
-            ARRAY = np.ndarray
-            # The item can be repeated, the result is an (dense) array of values
-            LIST = list
-            # The item can be repeated, the result is an (dense) array of values
-            DICT = dict
-            # The item can be repeated, the result is a (sparse) dict of values
-
-            def __bool__(self):
-                return self.value
-
-        @nonmember
-        class Numbering(Enum):
-            """Is the output numbered or not?"""
-
-            NO = 0
-            # No numbering, just repeating (if allowed)
-            YES = 1
-            # Yes, number
-            WITH_DEFAULT = 2
-            # Numbered output, default value without number
-
-            def __bool__(self):
-                return self.value > 0
-
-            @property
-            def has_default(self):
-                return self.value == 2
-
-        def __init__(
-            self,
-            type: Type,
-            key_type: Union[Key, callable] = Key.NONE,
-            is_numbered: Numbering = Numbering.NO,
-            has_header: bool = True,
-        ):
-            """
-            Params
-            ------
-            type
-              Type of the repetition (and the resulting storage)
-
-            key_type
-              If grammar emits a special type for keys (name of the option), pass it here.
-              Such special keys takes care of aggregating the values into the propper storage (dict, list,...)
-
-            is_numbered
-              Whether the repeated occurences are numbered or not and how. Numbered
-              means, that there can be values in the form
-              NAME1=... NAME2=.... etc...
-            """
-
-            self.type = type
-            self.key_type = key_type
-            self.is_numbered = is_numbered
-            self.has_header = True
-
-        def __bool__(self):
-            return self.type != self.Type.NO
-
-        @classmethod
-        def create(cls, val, grammar_type=None):
-            if val is False:
-                return cls.NO
-            if val is True:
-                if hasattr(grammar_type, "is_numpy_array") and grammar_type.is_numpy_array:
-                    return cls.ARRAY
-                else:
-                    return cls.REPEATED
-            if isinstance(val, str):
-                return cls[val]
-            return val
-
-        @property
-        def is_array(self):
-            return self.type in (self.Type.ARRAY, self.Type.LIST)
-
-        @property
-        def is_dict(self):
-            return self.type == self.Type.DICT
-
-        NO = Type.NO
-        # No repetition at all
-        IGNORED = (Type.NO, IgnoredKey)
-        # The value is completely ignored
-        REPEATED = (Type.LIST, RepeatedKey)
-        # Values can be repeated, the result is array of values
-        ARRAY = (Type.ARRAY, RepeatedKey)
-        # Values can be repeated, the result is array of values
-        LIST_SECTION = (Type.LIST, Key.NONE, Numbering.NO, False)
-        # Repeated sections has no header, and they solves their repetition themselves
-        DICT_SECTION = (Type.DICT, Key.NONE, Numbering.NO, False)
-        # with access like dict. However - how the keys are stored id the result? Maybe broken
-        NUMBERED = (Type.ARRAY, ArrayKey, Numbering.YES)
-        # Values are given in form "{NAME}{INDEX}", the result is array of values
-        DICT = (Type.DICT, DictKey, Numbering.YES)
-        # Values are given in form "{NAME}{INDEX}", the result is dict of values
-        DEFAULTDICT = (Type.DICT, DefDictKey, Numbering.WITH_DEFAULT)
-        # Same as NUMBERED_DICT, with non-numbered item possible, serving as default value
+    Repeated = Repeated
+    """Supported repetition modes; retained here as part of the public definition API."""
 
     #
     #
@@ -571,6 +466,7 @@ class RealItemDefinition(BaseDefinition):
         Return grammar for the name (and possible alternative names etc.)
         """
         if self.name_in_grammar:
+            numbering = self.is_repeated.grammar_numbering
             if self.name_regex:
                 reg = pp.Regex(self.name_regex)
                 if self.do_not_skip_whitespaces_before_name:
@@ -578,7 +474,7 @@ class RealItemDefinition(BaseDefinition):
                 names = [pp.Regex(self.name_regex)]
             else:
                 names = self.all_names_in_grammar()
-                keyword = pp.CaselessLiteral if self.is_repeated.is_numbered else pp.CaselessKeyword
+                keyword = pp.CaselessLiteral if numbering else pp.CaselessKeyword
                 if self.do_not_skip_whitespaces_before_name:
                     names = [keyword(i).leave_whitespace() for i in names]
                 else:
@@ -590,9 +486,9 @@ class RealItemDefinition(BaseDefinition):
             else:
                 name = names[0]
             if self.is_repeated:
-                if self.is_repeated.is_numbered:
+                if numbering:
                     idx = pp.Word(pp.nums)
-                    if self.is_repeated.is_numbered.has_default:
+                    if numbering.has_default:
                         name += pp.Optional(idx, default="def")
                     else:
                         name += idx
