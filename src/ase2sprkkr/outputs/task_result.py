@@ -6,11 +6,10 @@ import importlib
 from . import readers
 from ..common.decorators import cached_property, cached_class_property, maybeclassmethod
 from ..common.process_output_reader import run_coro_sync
-from ..common.file_utils import filename_from_file
+from ..common.file_utils import FilePath, filename_from_file
 from ..potentials.potentials import Potential
 from ..input_parameters import input_parameters as input_parameters
 from .result_options import create_files_section
-from pathlib import Path
 
 
 class TaskResult:
@@ -27,16 +26,11 @@ class TaskResult:
         if output_filename is not None:
             if self._directory is None and os.path.isabs(output_filename):
                 self._directory = os.path.dirname(output_filename)
-            self.output_file = output_filename
-            if os.path.isabs(output_filename):
-                output_filename = os.path.relpath(output_filename, self.directory)
-                self.output_file = output_filename
+            self.output_file = FilePath(output_filename, self.directory)
             self.files.add_file("output", self.output_file)
 
         input_filename = filename_from_file(input_file, None)
-        if input_filename and os.path.isabs(input_filename):
-            input_filename = os.path.relpath(input_filename, self.directory)
-        self.input_file = input_filename
+        self.input_file = FilePath(input_filename, self.directory) if input_filename is not None else None
 
     @cached_property
     def directory(self):
@@ -52,10 +46,7 @@ class TaskResult:
         >>> t.path_to("input")
         '/example/input.txt'
         """
-        file = self.files[file]()
-        if Path(file).is_absolute():
-            return file
-        return os.path.join(self.directory, file)
+        return os.fspath(self.files[file]())
 
     @property
     def task_name(self):

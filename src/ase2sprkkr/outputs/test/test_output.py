@@ -4,8 +4,9 @@ from io import BytesIO
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from ..task_result import TaskResult
-from ...common.file_utils import filename_from_file
+from ...common.file_utils import FilePath, filename_from_file
 from ...common.options import Option
+from ...input_parameters.input_parameters import InputParameters
 from ..readers.scf import ScfOutputParser, ScfResult, atomic_types_definition
 from ..readers.bsf import BsfResult
 from ..readers.dos import DosResult
@@ -27,9 +28,18 @@ class TestOutput(TestCase):
             with open(filename, "rb") as output:
                 assert filename_from_file(output) == filename
                 assert filename_from_file(Path(filename)) == filename
-                result = TaskResult(None, None, directory, output_file=output)
+                input_filename = os.path.join(directory, "result.inp")
+                result = TaskResult(None, None, directory, output_file=output, input_file=input_filename)
+                assert isinstance(result.output_file, FilePath)
+                assert isinstance(result.input_file, FilePath)
+                assert str(result.output_file) == "result.out"
+                assert os.fspath(result.output_file) == filename
+                assert os.fspath(result.input_file) == input_filename
                 assert result.path_to("output") == filename
                 assert isinstance(result.files["output"], Option)
+                assert isinstance(result.files["output"](), FilePath)
+                assert str(result.files["output"]()) == "result.out"
+                assert os.fspath(result.files["output"]()) == filename
                 assert result.files["output"].path() == filename
                 assert "open" in result.files["output"].actions()
 
@@ -67,6 +77,16 @@ class TestOutput(TestCase):
  E_band         0.11559127 [Ry]
 dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000"""
         )  # NOQA: E122
+
+    def test_read_output_from_displayed_relative_path(self):
+        directory = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "examples"))
+        filename = FilePath("scf.out", directory)
+
+        result = InputParameters.create("scf").read_output_from_file(filename)
+
+        assert str(result.output_file) == "scf.out"
+        assert os.fspath(result.output_file) == os.path.join(directory, "scf.out")
+        assert result.path_to("output") == os.path.join(directory, "scf.out")
 
     def test_output(self):
         path = os.path.join(os.path.dirname(__file__), "..", "examples", "scf.out")
@@ -127,7 +147,9 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
         assert result.dij_filename == os.path.join(path, "Fe_JXC_XCPLTEN_Dij.dat")
         assert result.dmi_filename == os.path.join(path, "Fe_JXC_DMIVEC_Dij.dat")
         assert isinstance(result.output_values["jxc"], Option)
-        assert result.output_values["jxc"]() == "Fe_JXC_XCPLTEN_Jij.dat"
+        assert isinstance(result.output_values["jxc"](), FilePath)
+        assert str(result.output_values["jxc"]()) == "Fe_JXC_XCPLTEN_Jij.dat"
+        assert os.fspath(result.output_values["jxc"]()) == os.path.join(path, "Fe_JXC_XCPLTEN_Jij.dat")
         assert callable(result.output_values["jxc"].parsed_file)
         assert result.mean_field_curie_temperature == 763.4
 

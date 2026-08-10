@@ -9,6 +9,7 @@ from ..common.container_definitions import SectionDefinition
 from ..common.generated_configuration_definitions import GeneratedValueDefinition
 from ..common.options import Option
 from ..common.configuration_containers import Section
+from ..common.file_utils import FilePath
 from ..common.value_definitions import ValueDefinition
 from ..output_files.output_files import OutputFile
 
@@ -91,7 +92,7 @@ class OutputFileOption(OutputOption):
 
     def path(self):
         owner = getattr(self._container, "result", None)
-        return owner.path_to(self.name) if owner is not None else self()
+        return owner.path_to(self.name) if owner is not None else os.fspath(self())
 
     @property
     def file_type(self):
@@ -104,7 +105,7 @@ class OutputFileOption(OutputOption):
         return OutputFile.definitions[self.file_type]
 
     def value_label(self):
-        return f"<{self.file_type} file>" if self.file_type else self()
+        return f"<{self.file_type} file>" if self.file_type else str(self())
 
     def actions(self):
         out = ["open", "open_directory", "save"]
@@ -151,6 +152,11 @@ class OutputFileDefinition(ValueDefinition):
     def __init__(self, name, file_type=None):
         self.file_type = file_type
         super().__init__(name, str, is_optional=True)
+
+    def convert_and_validate(self, option, value, why="set", item=False):
+        owner = getattr(option._container, "result", None)
+        directory = owner.directory if owner is not None else None
+        return FilePath(value, directory)
 
 
 class OutputFilesSection(Section):

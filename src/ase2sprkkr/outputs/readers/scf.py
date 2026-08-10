@@ -1,5 +1,6 @@
 """SCF (selfconsisten cycle) reader and result."""
 
+import os
 import re
 import pyparsing as pp
 import unyt
@@ -288,7 +289,8 @@ class ScfOutputParser(SprKkrOutputParser):
 
     async def read_output(self, stdout, result):
         await self.read_commons(stdout, result)
-        result.files.add_file("converged", result.files["potential"]() + "_new")
+        potential_file = result.files["potential"]()
+        result.files.add_file("converged", os.fspath(potential_file) + "_new")
         iterations = scf_section.create_object()
         try:
             first = True

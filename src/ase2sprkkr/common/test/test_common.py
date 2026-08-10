@@ -1,4 +1,5 @@
 import inspect
+import os
 import tempfile
 import asyncio
 
@@ -10,9 +11,20 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 from ..decorators import add_to_signature  # NOQA: E402
 from ..process_output_reader import AsyncioFileReader  # NOQA: E402
+from ..file_utils import FilePath  # NOQA: E402
 
 
 class TestCommon(TestCase):
+    def test_file_path(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = FilePath("results/output.out", directory)
+            absolute = os.path.join(directory, "results", "output.out")
+
+            self.assertEqual("results/output.out", str(path))
+            self.assertEqual(absolute, os.fspath(path))
+            self.assertEqual(absolute, os.path.abspath(path))
+            self.assertEqual(path, FilePath(absolute, directory))
+
     def test_common(self):
 
         def f(a, b=2, **kwargs):
