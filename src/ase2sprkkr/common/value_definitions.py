@@ -414,7 +414,7 @@ class ValueDefinition(RealItemDefinition):
                         raise ValueError(req)
                 return True
             if self.is_fixed and not np.array_equal(self.default_value, value):
-                ValueError(
+                raise ValueError(
                     f"The value of {opt._get_path()} is required to be {self.default_value}, cannot set it to {value}"
                 )
             self.validate_type(item).validate(value, self.get_path, why=why)

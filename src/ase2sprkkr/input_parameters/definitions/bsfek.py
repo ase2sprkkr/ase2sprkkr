@@ -12,7 +12,7 @@ def input_parameters():
     out = InputParameters(
         "bsfek",
         [
-            CONTROL("BSF"),
+            CONTROL("BLOCHSF"),
             TAU,
             TASK("BSF").copy(
                 [
@@ -85,8 +85,6 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
                 emax=(-1.0, "The highest E-value", None),
                 defaults={"GRID": 3, "NE": 200, "ImE": 0.001},
             ),
-            CONTROL("BLOCHSF"),
-            TAU,
             MODE,
             STRCONST,
             SITES,

@@ -15,6 +15,13 @@ if True:
 
 
 class TestDefinitions(TestCase):
+    def test_bsfkk_ne_is_fixed(self):
+        ip = InputParameters.create("BSFKK")
+
+        assert ip.ENERGY.NE().tolist() == [1]
+        with pytest.raises(DataValidityError):
+            ip.ENERGY.NE = 2
+
     def change_task(self):
         ip = InputParameters.create_task("DOS")
         ip.ENERGY.EMIN = 2

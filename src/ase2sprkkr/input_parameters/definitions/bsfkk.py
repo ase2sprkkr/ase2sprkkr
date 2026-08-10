@@ -9,7 +9,7 @@ def input_parameters():
     return InputParameters(
         "bsfkk",
         [
-            CONTROL("BSF"),
+            CONTROL("BLOCHSF"),
             TAU,
             TASK(
                 "BSF",
@@ -33,10 +33,17 @@ def input_parameters():
             ENERGY(
                 emin=(0.7, "the energy to compute the BSF", None),
                 emax="emin",
-                defaults={"ImE": 0.001, "GRID": 3, "NE": 1},
+                add=[
+                    V(
+                        "NE",
+                        SetOf(int),
+                        fixed_value=1,
+                        is_required=True,
+                        info="Number of points in energy-mesh",
+                    )
+                ],
+                defaults={"ImE": 0.001, "GRID": 3},
             ),
-            CONTROL("BLOCHSF"),
-            TAU,
             MODE,
             STRCONST,
             SITES,
