@@ -43,12 +43,16 @@ class IgnoredKey(Key):
 
 
 class ValidateKey(Key):
-    """This key is totaly and silently ignored. Use it
-    for the keys, that should be written, but not read.
+    """Keep a named deferred validation without storing the parsed value.
+
+    The name makes duplicate validation-only items detectable and records that
+    the corresponding input item was explicitly present.
     """
 
     def add(self, too, val):
-        too.checks.append(val)
+        if self.key in too.checks:
+            raise pp.ParseException(f"Duplicate key {self.key}")
+        too.checks[self.key] = val
 
 
 class SubKey(Key):
@@ -125,11 +129,11 @@ class RepeatedKey(Key):
 
 
 class Values(dict):
-    """Result of dict_from_parsed: dictionary with list of checks on the parsed values."""
+    """Result of dict_from_parsed: dictionary with named deferred checks."""
 
     def __init__(self):
         super().__init__()
-        self.checks = []
+        self.checks = {}
         self.process = []
 
     def to_dict(self):
@@ -171,7 +175,7 @@ def dict_from_parsed(values):
     for key in out.process:
         out[key] = out[key].result()
 
-    for i in out.checks:
+    for i in out.checks.values():
         try:
             i(out)
         except Exception as e:

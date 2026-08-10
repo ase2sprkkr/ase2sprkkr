@@ -386,7 +386,11 @@ class ContainerDefinition(RealItemDefinition):
 
             def _validate(s, loc, value):
                 # just pass the dict to the validate function
-                is_ok = self.validate(MergeSectionDefinitionAdaptor(value[0], self), "parse")
+                data = MergeSectionDefinitionAdaptor(value[0], self)
+                for item in self.members():
+                    if item.validate_parsed:
+                        item.validate_parsed(data)
+                is_ok = self.validate(data, "parse")
                 if is_ok is not True:
                     if is_ok is None:
                         is_ok = f"Validation of parsed data of {self.name} section failed"

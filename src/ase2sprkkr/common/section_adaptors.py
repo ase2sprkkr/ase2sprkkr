@@ -60,6 +60,9 @@ class MergeSectionDefinitionAdaptor:
             except KeyError:
                 return default
 
+    def was_parsed(self, name):
+        return name in self.values or name in getattr(self.values, "checks", ())
+
     def is_dangerous(self, name):
         if name in self.values:
             return isinstance(self.values, options.DangerousValue)

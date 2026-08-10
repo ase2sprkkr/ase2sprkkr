@@ -68,6 +68,9 @@ class BaseDefinition:
     validate_section = None
     """ Can be redefined for validating whole section """
 
+    validate_parsed = None
+    """Can be redefined for checks that require knowing which input items were explicitly parsed."""
+
     Repeated = Repeated
     """Supported repetition modes; retained here as part of the public definition API."""
 

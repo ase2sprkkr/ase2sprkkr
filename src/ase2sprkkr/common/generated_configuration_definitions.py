@@ -135,6 +135,14 @@ class Length(InheritingValueModifier):
                 else:
                     DataValidityError.warn(f"Lengths of {ii} and {i} should not differ")
 
+    def validate_parsed(self, section):
+        present = section.was_parsed(self.name)
+        allowed = self.allowed(section)
+        if present and not allowed:
+            raise pp.ParseException(f"Option {self.get_path()} is not allowed for the current configuration")
+        if not present and allowed and not self.is_optional:
+            raise pp.ParseException(f"Required option {self.get_path()} is missing")
+
     def validate_parse(self, data, ln):
         err = []
         for i in self._length_of:
@@ -149,7 +157,8 @@ class Length(InheritingValueModifier):
 
         def validate(data, ln):
             data = MergeSectionDefinitionAdaptor(data, self.container)
-            self.validate_section(data, length=ln)
+            if self.allowed(data):
+                self.validate_section(data, length=ln)
 
         return out.set_parse_action(lambda x: (ValidateKey(x[0]), lambda d: validate(d, x[1])))
 

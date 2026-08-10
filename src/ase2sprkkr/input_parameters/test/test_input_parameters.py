@@ -1,6 +1,7 @@
 import pyparsing as pp
 import io
 import re
+import warnings
 import numpy as np
 import pytest
 from functools import partial
@@ -890,6 +891,40 @@ XSITES NR=3 FLAG
         ip.ENERGY.K1[1] = [3, 3, 3]
         ip.ENERGY.NK = 3
         assert (ip.ENERGY.K1() == [[1, 2, 3], [3, 3, 3], [1, 2, 3]]).all()
+
+    def test_conditional_length(self):
+        mode_is_one = lambda definition, section: section.get("MODE") == 1  # noqa E731
+        ipd = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("VALUES", gt.Array(int), is_optional=True),
+                    V("NVALUES", Length("VALUES"), condition=mode_is_one),
+                    V("MODE", 1),
+                ]
+            }
+        )
+
+        active = ipd.read_from_string("CONTROL VALUES=1 2 3 NVALUES=3 MODE=1")
+        assert active.CONTROL.NVALUES() == 3
+        assert "NVALUES=3" in active.to_string()
+
+        with pytest.warns(DataValidityError):
+            ipd.read_from_string("CONTROL VALUES=1 2 3 NVALUES=2 MODE=1")
+
+        with pytest.raises(pp.ParseBaseException):
+            ipd.read_from_string("CONTROL VALUES=1 2 3 NVALUES=3 MODE=2")
+
+        with pytest.raises(pp.ParseBaseException):
+            ipd.read_from_string("CONTROL VALUES=1 2 3 NVALUES=2 MODE=2")
+
+        with pytest.raises(pp.ParseBaseException):
+            ipd.read_from_string("CONTROL VALUES=1 2 3 MODE=1")
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", DataValidityError)
+            inactive = ipd.read_from_string("CONTROL VALUES=1 2 3 MODE=2")
+        assert inactive.CONTROL["NVALUES"]() == 3
+        assert "NVALUES" not in inactive.to_string()
 
     #
     def test_switch(self):
