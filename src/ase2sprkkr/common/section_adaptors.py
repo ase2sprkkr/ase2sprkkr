@@ -14,8 +14,8 @@ class SectionAdaptor:
     def __init__(self, container):
         self.container = container
 
-    def __hasitem__(self, name):
-        return self.container__hasitem__(name)
+    def __contains__(self, name):
+        return name in self.container
 
     def __getitem__(self, name):
         return self.container.__getitem__(name)()
@@ -42,8 +42,8 @@ class MergeSectionDefinitionAdaptor:
         self.values = values
         self.definition = definition
 
-    def __hasitem__(self, name):
-        return self.values.__hasitem__(name) or self.definition.__hasitem__(name)
+    def __contains__(self, name):
+        return name in self.values or name in self.definition
 
     def __getitem__(self, name):
         try:
@@ -81,8 +81,8 @@ class MergeSectionAdaptor:
         self.values = values
         self.section = section
 
-    def __hasitem__(self, name):
-        return self.values.__hasitem__(name) or self.section.__hasitem__(name)
+    def __contains__(self, name):
+        return name in self.values or name in self.section
 
     def __getitem__(self, name):
         try:

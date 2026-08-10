@@ -581,7 +581,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
         else:
             with warnings.catch_warnings():
                 warnings.simplefilter("error", DataValidityError)
-                self._validate_section(why)
+                self._validate_section(why, section_adaptor)
 
     def _validate_section(self, why: str = "save", section_adaptor=None):
         if section_adaptor is None:

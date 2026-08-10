@@ -18,6 +18,7 @@ if True:  # Just a linter worshiping
     from .. import input_parameters_definitions as cd
     from .. import input_parameters as input_parameters
     from ...common.configuration_containers import Section, CustomSection
+    from ...common.section_adaptors import SectionAdaptor, MergeSectionAdaptor, MergeSectionDefinitionAdaptor
     from ...common.options import Option, CustomOption
     from ...common.configuration_definitions import gather, switch
     from ...common.generated_configuration_definitions import Length
@@ -876,6 +877,14 @@ XSITES NR=3 FLAG
         assert (ip.ENERGY.K1() == [1, 1]).all()
         ip.ENERGY.NK = 2
 
+        section = ip.ENERGY
+        old_k1 = section.K1().copy()
+        old_k2 = section.K2().copy()
+        with pytest.raises(DataValidityError):
+            section.set(K1=[1, 1, 1], K2=[2, 2])
+        assert (section.K1() == old_k1).all()
+        assert (section.K2() == old_k2).all()
+
         ipd = cd.InputParametersDefinition.definition_from_dict(
             {
                 "ENERGY": [
@@ -891,6 +900,25 @@ XSITES NR=3 FLAG
         ip.ENERGY.K1[1] = [3, 3, 3]
         ip.ENERGY.NK = 3
         assert (ip.ENERGY.K1() == [[1, 2, 3], [3, 3, 3], [1, 2, 3]]).all()
+
+    def test_section_adaptor_membership(self):
+        ipd = cd.InputParametersDefinition.definition_from_dict({"CONTROL": [V("VALUE", 1)]})
+        section = ipd.create_object().CONTROL
+        definition = ipd["CONTROL"]
+
+        current = SectionAdaptor(section)
+        assert "VALUE" in current
+        assert "EXTRA" not in current
+
+        merged = MergeSectionAdaptor({"EXTRA": 2}, section)
+        assert "VALUE" in merged
+        assert "EXTRA" in merged
+        assert "MISSING" not in merged
+
+        parsed = MergeSectionDefinitionAdaptor({"EXTRA": 2}, definition)
+        assert "VALUE" in parsed
+        assert "EXTRA" in parsed
+        assert "MISSING" not in parsed
 
     def test_conditional_length(self):
         mode_is_one = lambda definition, section: section.get("MODE") == 1  # noqa E731
