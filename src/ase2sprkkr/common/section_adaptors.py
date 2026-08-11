@@ -27,45 +27,59 @@ class SectionAdaptor:
             return default
 
     def is_dangerous(self, name):
-        return getattr(self.container, name).is_dangerous()
+        return self.container[name].is_dangerous()
 
     def __repr__(self):
         return f"<Adaptor for {self.container}>"
 
 
 class MergeSectionDefinitionAdaptor:
-    """This class returns a read-only dict-like class
-    that merge values from a dict (e.g. newly parsed data) and from the
-    definition of a section"""
+    """Read-only view merging parsed data with configuration definitions.
 
-    def __init__(self, values, definition):
+    Nested container values are exposed as adaptors sharing the same ``root``,
+    which allows deferred conditions to inspect sibling sections.
+    """
+
+    def __init__(self, values, definition, root=None, parent=None):
         self.values = values
         self.definition = definition
+        self.parent = parent
+        self.root = root or self
 
     def __contains__(self, name):
         return name in self.values or name in self.definition
 
     def __getitem__(self, name):
         try:
-            return self.values[name]
+            definition = self.definition[name]
         except KeyError:
-            return self.definition[name].get_value()
+            return self.values[name]
+        try:
+            value = self.values[name]
+        except KeyError:
+            if hasattr(definition, "_members"):
+                value = {}
+            else:
+                return definition.get_value()
+
+        if hasattr(definition, "_members"):
+            if isinstance(value, list):
+                return [self.__class__(item, definition, self.root, self) for item in value]
+            return self.__class__(value, definition, self.root, self)
+        return value
 
     def get(self, name, default=None):
         try:
-            return self.values[name]
-        except KeyError:
-            try:
-                return self.definition[name].get_value()
-            except KeyError:
-                return default
+            return self[name]
+        except (KeyError, TypeError):
+            return default
 
     def was_parsed(self, name):
         return name in self.values or name in getattr(self.values, "checks", ())
 
     def is_dangerous(self, name):
         if name in self.values:
-            return isinstance(self.values, options.DangerousValue)
+            return isinstance(self.values[name], options.DangerousValue)
         return False
 
     def __repr__(self):
@@ -101,8 +115,8 @@ class MergeSectionAdaptor:
 
     def is_dangerous(self, name):
         if name in self.values:
-            return isinstance(self.values, options.DangerousValue)
-        return getattr(self.section, name).is_dangerous()
+            return isinstance(self.values[name], options.DangerousValue)
+        return self.section[name].is_dangerous()
 
     def __repr__(self):
         return f"Section {self.section.name} with added {self.values}"

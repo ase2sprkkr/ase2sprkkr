@@ -175,12 +175,6 @@ def dict_from_parsed(values):
     for key in out.process:
         out[key] = out[key].result()
 
-    for i in out.checks.values():
-        try:
-            i(out)
-        except Exception as e:
-            errors.append(e)
-
     if duplicates:
         duplicates = ", ".join((i.upper() for i in duplicates))
         errors.append(pp.ParseException(f"There are duplicate items named {duplicates}"))

@@ -156,7 +156,8 @@ class Length(InheritingValueModifier):
         out = super()._create_grammar()
 
         def validate(data, ln):
-            data = MergeSectionDefinitionAdaptor(data, self.container)
+            if not isinstance(data, MergeSectionDefinitionAdaptor):
+                data = MergeSectionDefinitionAdaptor(data, self.container)
             if self.allowed(data):
                 self.validate_section(data, length=ln)
 

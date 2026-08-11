@@ -382,23 +382,6 @@ class ContainerDefinition(RealItemDefinition):
 
         values.set_parse_action(lambda x: dict_from_parsed(x.asList()))
 
-        if self.validate:
-
-            def _validate(s, loc, value):
-                # just pass the dict to the validate function
-                data = MergeSectionDefinitionAdaptor(value[0], self)
-                for item in self.members():
-                    if item.validate_parsed:
-                        item.validate_parsed(data)
-                is_ok = self.validate(data, "parse")
-                if is_ok is not True:
-                    if is_ok is None:
-                        is_ok = f"Validation of parsed data of {self.name} section failed"
-                    raise pp.ParseException(s, loc, is_ok)
-                return value
-
-            values.add_parse_action(_validate)
-
         if self.is_repeated:
             rdelim = delimiter
             if self.repeated_delimiter:
@@ -407,6 +390,52 @@ class ContainerDefinition(RealItemDefinition):
             values.add_parse_action(lambda x: [x.asList()])
 
         return values
+
+    def _validate_parsed_tree(self, values, root=None, parent=None):
+        """Validate a fully parsed value tree.
+
+        Nested container grammars only collect values and deferred checks.  This
+        method is invoked by the outermost grammar, after all sibling sections
+        are available, so conditions may safely inspect values anywhere in the
+        parsed configuration.
+        """
+        data = MergeSectionDefinitionAdaptor(values, self, root=root, parent=parent)
+        if root is None:
+            root = data
+
+        checks = getattr(values, "checks", {})
+        for item in self.members():
+            if isinstance(item, ContainerDefinition):
+                if item.name not in values:
+                    continue
+                child_values = values[item.name]
+                if item.is_repeated and isinstance(child_values, list):
+                    for child in child_values:
+                        item._validate_parsed_tree(child, root, data)
+                else:
+                    item._validate_parsed_tree(child_values, root, data)
+                continue
+
+            if item.validate_parsed:
+                item.validate_parsed(data)
+            check = checks.get(item.name)
+            if check:
+                check(data)
+
+        is_ok = self.validate(data, "parse")
+        if is_ok is not True:
+            if is_ok is None:
+                is_ok = f"Validation of parsed data of {self.name} section failed"
+            raise pp.ParseException(is_ok)
+
+    def _finalize_grammar(self, grammar):
+        """Add semantic validation to the outermost requested grammar only."""
+
+        def validate(s, loc, tokens):
+            self._validate_parsed_tree(self.parse_return(tokens, True))
+            return tokens
+
+        return grammar.add_parse_action(validate)
 
     def _allow_duplicates_of(self, name):
         """Can a given element (identified by name) have more values in the parsed results?

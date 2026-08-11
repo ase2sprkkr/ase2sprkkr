@@ -127,7 +127,9 @@ class BaseDefinition:
          for the given-option value (i.e. a type requirement or other constraints).
         """
         with generate_grammar():
-            return self._grammar and self._grammar(allow_dangerous)
+            out = self._grammar and self._grammar(allow_dangerous)
+            finalize = getattr(self, "_finalize_grammar", None)
+            return finalize(out) if out is not None and finalize else out
 
     @property
     def _grammar(self):

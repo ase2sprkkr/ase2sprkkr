@@ -19,7 +19,7 @@ if True:  # Just a linter worshiping
     from .. import input_parameters as input_parameters
     from ...common.configuration_containers import Section, CustomSection
     from ...common.section_adaptors import SectionAdaptor, MergeSectionAdaptor, MergeSectionDefinitionAdaptor
-    from ...common.options import Option, CustomOption
+    from ...common.options import Option, CustomOption, DangerousValue
     from ...common.configuration_definitions import gather, switch
     from ...common.generated_configuration_definitions import Length
     from ...common.warnings import DataValidityError
@@ -909,16 +909,21 @@ XSITES NR=3 FLAG
         current = SectionAdaptor(section)
         assert "VALUE" in current
         assert "EXTRA" not in current
+        section["VALUE"].set_dangerous("not-an-integer")
+        assert current.is_dangerous("VALUE")
 
-        merged = MergeSectionAdaptor({"EXTRA": 2}, section)
+        dangerous = DangerousValue("unchecked")
+        merged = MergeSectionAdaptor({"EXTRA": dangerous}, section)
         assert "VALUE" in merged
         assert "EXTRA" in merged
         assert "MISSING" not in merged
+        assert merged.is_dangerous("EXTRA")
 
-        parsed = MergeSectionDefinitionAdaptor({"EXTRA": 2}, definition)
+        parsed = MergeSectionDefinitionAdaptor({"EXTRA": dangerous}, definition)
         assert "VALUE" in parsed
         assert "EXTRA" in parsed
         assert "MISSING" not in parsed
+        assert parsed.is_dangerous("EXTRA")
 
     def test_conditional_length(self):
         mode_is_one = lambda definition, section: section.get("MODE") == 1  # noqa E731
@@ -952,6 +957,48 @@ XSITES NR=3 FLAG
             warnings.simplefilter("error", DataValidityError)
             inactive = ipd.read_from_string("CONTROL VALUES=1 2 3 MODE=2")
         assert inactive.CONTROL["NVALUES"]() == 3
+        assert "NVALUES" not in inactive.to_string()
+
+    def test_cross_section_conditional_length(self):
+        def mode_is_one(definition, section):
+            if isinstance(section, MergeSectionDefinitionAdaptor):
+                return section.root["SECTION_B"].get("MODE") == 1
+            if isinstance(section, SectionAdaptor):
+                section = section.container
+            elif isinstance(section, MergeSectionAdaptor):
+                section = section.section
+            return section._container.SECTION_B.MODE() == 1
+
+        ipd = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "SECTION_A": [
+                    V("VALUES", gt.Array(int), is_optional=True),
+                    V("NVALUES", Length("VALUES"), condition=mode_is_one),
+                ],
+                "SECTION_B": [V("MODE", 1)],
+            }
+        )
+
+        active = ipd.read_from_string("SECTION_A VALUES=1 2 3 NVALUES=3\nSECTION_B MODE=1")
+        assert active.SECTION_A.NVALUES() == 3
+        assert "NVALUES=3" in active.to_string()
+
+        with pytest.warns(DataValidityError):
+            ipd.read_from_string("SECTION_A VALUES=1 2 3 NVALUES=2\nSECTION_B MODE=1")
+
+        with pytest.raises(pp.ParseBaseException):
+            ipd.read_from_string("SECTION_A VALUES=1 2 3 NVALUES=3\nSECTION_B MODE=2")
+
+        with pytest.raises(pp.ParseBaseException):
+            ipd.read_from_string("SECTION_A VALUES=1 2 3 NVALUES=2\nSECTION_B MODE=2")
+
+        with pytest.raises(pp.ParseBaseException):
+            ipd.read_from_string("SECTION_A VALUES=1 2 3\nSECTION_B MODE=1")
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", DataValidityError)
+            inactive = ipd.read_from_string("SECTION_A VALUES=1 2 3\nSECTION_B MODE=2")
+        assert inactive.SECTION_A["NVALUES"]() == 3
         assert "NVALUES" not in inactive.to_string()
 
     #
