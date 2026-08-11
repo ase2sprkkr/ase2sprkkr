@@ -368,7 +368,7 @@ class RealItemDefinition(BaseDefinition):
         """ A longer help text describing the content for the users. """
         if result_class:
             self.result_class = result_class
-        self.warning_condition = None
+        self.warning_condition = warning_condition
         self.name_format = name_format
         self.plot = plot
 

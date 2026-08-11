@@ -45,6 +45,6 @@ def input_parameters():
         mpi=True,
         info="TORQUE",
     )
-    input_parameters["MODE"].copy_member("MODE").warning_condition = _torque_mode_warning_condition
-    input_parameters["CONTROL"].copy_member("NONMAG").warning_condition = _torque_nonmag_warning_condition
+    input_parameters["MODE"].copy_member("MODE", warning_condition=_torque_mode_warning_condition)
+    input_parameters["CONTROL"].copy_member("NONMAG", warning_condition=_torque_nonmag_warning_condition)
     return input_parameters

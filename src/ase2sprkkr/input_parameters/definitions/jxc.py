@@ -50,7 +50,7 @@ def input_parameters():
         mpi=True,
         info="JXC",
     )
-    input_parameters["MODE"].copy_member("MODE").warning_condition = _jxc_mode_warning_condition
-    input_parameters["CONTROL"].copy_member("NONMAG").warning_condition = _jxc_nonmag_warning_condition
+    input_parameters["MODE"].copy_member("MODE", warning_condition=_jxc_mode_warning_condition)
+    input_parameters["CONTROL"].copy_member("NONMAG", warning_condition=_jxc_nonmag_warning_condition)
 
     return input_parameters

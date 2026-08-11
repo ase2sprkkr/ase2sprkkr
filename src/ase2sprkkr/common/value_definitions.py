@@ -63,6 +63,7 @@ class ValueDefinition(RealItemDefinition):
         expert=None,
         write_condition=None,
         condition=None,
+        warning_condition=None,
         result_class=None,
         delimiter=None,
         delimiter_grammar=None,
@@ -255,6 +256,7 @@ class ValueDefinition(RealItemDefinition):
             name_format=name_format,
             write_condition=write_condition,
             condition=condition,
+            warning_condition=warning_condition,
             result_class=result_class,
         )
 

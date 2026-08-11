@@ -61,6 +61,7 @@ class ContainerDefinition(RealItemDefinition):
         is_repeated=False,
         repeated_delimiter=None,
         write_condition=None,
+        warning_condition=None,
     ):
         """
         Definition of container (e.g. section of an input file).
@@ -90,6 +91,7 @@ class ContainerDefinition(RealItemDefinition):
             name_regex=name_regex,
             result_class=result_class,
             write_condition=write_condition,
+            warning_condition=warning_condition,
         )
 
         if not isinstance(members, dict):
@@ -279,7 +281,7 @@ class ContainerDefinition(RealItemDefinition):
         out["members"] = members
         return out
 
-    def copy_member(self, name) -> BaseDefinition:
+    def copy_member(self, name, **kwargs) -> BaseDefinition:
         """Copy a member, allowing to redefine its properties.
 
         Returns
@@ -287,7 +289,7 @@ class ContainerDefinition(RealItemDefinition):
         new_member: BaseDefinition
           The newly created member
         """
-        out = self._members[name].copy()
+        out = self._members[name].copy(**kwargs)
         self._members[name] = out
         return out
 

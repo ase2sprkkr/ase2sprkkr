@@ -22,13 +22,17 @@ if True:  # Just a linter worshiping
     from ...common.options import Option, CustomOption, DangerousValue
     from ...common.configuration_definitions import gather, switch
     from ...common.generated_configuration_definitions import Length
-    from ...common.warnings import DataValidityError
+    from ...common.warnings import DataValidityError, DataValidityWarning
 
 V = cd.InputValueDefinition
 
 
 def ar(x):
     return np.atleast_1d(x)
+
+
+def _warning_if_two(value):
+    return "VALUE should not be two" if value == 2 else None
 
 
 class TestInputParameters(TestCase):
@@ -150,6 +154,17 @@ class TestInputParameters(TestCase):
         input_parameters_def["ENERGY"].write_condition = lambda o: False
         self.assertEqual(id.to_string(), "")
         #
+
+    def test_warning_condition(self):
+        definition = V("VALUE", 1, warning_condition=_warning_if_two)
+        copied = definition.copy()
+        assert copied.warning_condition is _warning_if_two
+
+        ipd = cd.InputParametersDefinition.definition_from_dict({"CONTROL": [copied]})
+        parameters = ipd.create_object()
+        parameters.CONTROL.VALUE = 1
+        with pytest.warns(DataValidityWarning, match="VALUE should not be two"):
+            parameters.CONTROL.VALUE = 2
 
     @pytest.mark.slow
     def test_input_parameters_definition(self):
