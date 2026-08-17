@@ -383,6 +383,7 @@ SCF = Section(
         V("ALG", DefKeyword({"BROYDEN2": "Broyden’s second method",
                              "TCHEBY": "Tchebychev",
                              "ANDERSON": "Anderson mixing",
+                             "PULAY": "Anderson-Pulay mixing"
                             }),
           info="Mixing algorithm"),
         V("EFGUESS", float, is_required=False, info="Skip the Fermi energy search in the beginning."),

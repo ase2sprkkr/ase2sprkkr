@@ -1,5 +1,7 @@
 import pyparsing as pp
+import inspect
 import io
+import pickle
 import re
 import warnings
 import numpy as np
@@ -18,11 +20,19 @@ if True:  # Just a linter worshiping
     from .. import input_parameters_definitions as cd
     from .. import input_parameters as input_parameters
     from ...common.configuration_containers import Section, CustomSection
-    from ...common.section_adaptors import SectionAdaptor, MergeSectionAdaptor, MergeSectionDefinitionAdaptor
+    from ...common.configuration_transaction import (
+        ConfigurationTransaction,
+        PostChangeHookError,
+    )
+    from ...common.backward_compatibility import ExceptionGroup
     from ...common.options import Option, CustomOption, DangerousValue
     from ...common.configuration_definitions import gather, switch
-    from ...common.generated_configuration_definitions import Length
-    from ...common.warnings import DataValidityError, DataValidityWarning
+    from ...common.generated_configuration_definitions import GeneratedValueDefinition, Length, NumpyViewDefinition
+    from ...common.warnings import (
+        DataValidityError,
+        DataValidityErrors,
+        DataValidityWarning,
+    )
 
 V = cd.InputValueDefinition
 
@@ -31,8 +41,78 @@ def ar(x):
     return np.atleast_1d(x)
 
 
-def _warning_if_two(value):
-    return "VALUE should not be two" if value == 2 else None
+def _validator_warning_if_two(option, values, why):
+    assert values is option._container
+    if option() == 2:
+        return DataValidityWarning(f"{why}: VALUE should not be two")
+
+
+def _validator_error_if_three(option, values, why):
+    if option() == 3:
+        return DataValidityError(f"{why}: VALUE must not be three")
+
+
+def _warning_condition_if_two(value):
+    if value == 2:
+        return "VALUE should not be two"
+
+
+def _section_validator_warning(section, values, why):
+    assert values is section
+    if values["VALUE"]() == 4:
+        return DataValidityWarning(f"{why}: section received its runtime object")
+
+
+def _root_validator_warning(root, values, why):
+    assert values is root
+    if values["CONTROL"]["VALUE"]() == 5:
+        return DataValidityWarning(f"{why}: root received its runtime object")
+
+
+def _root_validator_matching_values(root, values, why):
+    if values["SECTION_A"]["VALUE"]() != values["SECTION_B"]["MODE"]():
+        return DataValidityError(f"{why}: values in SECTION_A and SECTION_B must match")
+
+
+def _root_validator_reject_all(root, values, why):
+    return DataValidityError(f"{why}: root validator rejects the configuration")
+
+
+def _repeated_validator_reject_two(section, values, why):
+    if values["VALUE"]() == 2:
+        return DataValidityError(f"{why}: repeated VALUE must not be two")
+
+
+def _generated_source_length_validator(root, values, why):
+    source = values["CONTROL"]["VALUES"]()
+    if source is not None and len(source) > 1:
+        return DataValidityError(f"{why}: generated setter produced too many values")
+
+
+def _get_cross_section_generated(section, key=None):
+    target = section._get_root_container().find("SECTION_B.VALUE")
+    return target()
+
+
+def _set_cross_section_generated(section, value, key=None):
+    transaction = ConfigurationTransaction.current(section)
+    target = section._get_root_container().find("SECTION_B.VALUE")
+    target.stage(transaction, value)
+
+
+def _reject_cross_section_two(root, values, why):
+    if values["SECTION_B"]["VALUE"]() == 2:
+        return DataValidityError(f"{why}: cross-section generated value must not be two")
+
+
+def _reject_negative_raw_data(root, values, why):
+    raw = values["DATA"]["RAW"]()
+    if raw is not None and np.any(raw < 0):
+        return DataValidityError(f"{why}: raw data must not be negative")
+
+
+def _required_in_mode_one(option):
+    return option._container["MODE"]() == 1
 
 
 class TestInputParameters(TestCase):
@@ -119,7 +199,7 @@ class TestInputParameters(TestCase):
 
     def test_is_required(self):
         ipd = cd.InputParametersDefinition.definition_from_dict(
-            {"ENERGY": [V("E", 1), V("F", int, None, is_required=lambda o: o._container.E() != 2)]}
+            {"ENERGY": [V("E", 1), V("F", int, None, is_required=lambda option: option._container["E"]() != 2)]}
         )
 
         ip = ipd.create_object()
@@ -155,16 +235,1366 @@ class TestInputParameters(TestCase):
         self.assertEqual(id.to_string(), "")
         #
 
-    def test_warning_condition(self):
-        definition = V("VALUE", 1, warning_condition=_warning_if_two)
+    def test_validators(self):
+        definition = V(
+            "VALUE",
+            1,
+            validators=(_validator_warning_if_two, _validator_error_if_three),
+        )
         copied = definition.copy()
-        assert copied.warning_condition is _warning_if_two
+        assert copied.validators == (_validator_warning_if_two, _validator_error_if_three)
+        pickle.dumps(copied)
 
         ipd = cd.InputParametersDefinition.definition_from_dict({"CONTROL": [copied]})
+
         parameters = ipd.create_object()
-        parameters.CONTROL.VALUE = 1
-        with pytest.warns(DataValidityWarning, match="VALUE should not be two"):
+        with pytest.warns(DataValidityWarning, match="set: VALUE should not be two") as caught:
             parameters.CONTROL.VALUE = 2
+        assert len(caught) == 1
+
+        parameters = ipd.create_object()
+        with pytest.warns(DataValidityWarning, match="set: VALUE should not be two") as caught:
+            parameters.set(VALUE=2)
+        assert len(caught) == 1
+
+        with pytest.warns(DataValidityWarning, match="parse: VALUE should not be two") as caught:
+            parameters = ipd.read_from_string("CONTROL\n\tVALUE=2\n")
+        assert len(caught) == 1
+
+        with pytest.warns(DataValidityWarning, match="save: VALUE should not be two") as caught:
+            parameters.to_string(validate="save")
+        assert len(caught) == 1
+
+        parameters = ipd.create_object()
+        with pytest.raises(DataValidityError, match="set: VALUE must not be three"):
+            parameters.CONTROL.VALUE = 3
+        assert parameters.CONTROL.VALUE() == 1
+
+        with pytest.raises(DataValidityError, match="set: VALUE must not be three"):
+            parameters.set(VALUE=3)
+        assert parameters.CONTROL.VALUE() == 1
+
+        with pytest.warns(DataValidityError, match="set: VALUE must not be three"):
+            parameters.set(
+                VALUE=3,
+                retain_invalid="typed",
+                report_invalid="warn",
+            )
+        assert parameters.CONTROL.VALUE() == 3
+
+        parameters = ipd.create_object()
+        with pytest.warns(DataValidityError, match="set: VALUE must not be three"):
+            parameters.CONTROL.VALUE.set(
+                3,
+                retain_invalid="typed",
+                report_invalid="warn",
+            )
+        assert parameters.CONTROL.VALUE() == 3
+
+        with pytest.warns(DataValidityError, match="parse: VALUE must not be three"):
+            invalid = ipd.read_from_string("CONTROL\n\tVALUE=3\n")
+        with pytest.warns(DataValidityError, match="save: VALUE must not be three"):
+            invalid.validate("save", report_invalid="warn")
+        with pytest.warns(DataValidityError, match="save: VALUE must not be three"):
+            found = invalid.check_for_errors()
+        assert len(found) == 1
+        assert isinstance(found[0].message, DataValidityError)
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            found = invalid.check_for_errors(print=False)
+        assert not caught
+        assert len(found) == 1
+        assert isinstance(found[0].message, DataValidityError)
+        with pytest.raises(DataValidityError, match="parse: VALUE must not be three"):
+            invalid.validate("parse", report_invalid="raise")
+        with pytest.raises(ValueError, match="Unknown validation reason"):
+            invalid.validate("warning")
+
+        section = cd.InputSectionDefinition(
+            "CONTROL",
+            [V("VALUE", 1)],
+            validators=_section_validator_warning,
+        )
+        root = cd.InputParametersDefinition(
+            [section],
+            validators=_root_validator_warning,
+            is_optional=True,
+            info="root info",
+            description="root description",
+        )
+        copied_root = root.copy()
+        signature = inspect.signature(cd.InputParametersDefinition)
+        for argument in ("info", "description", "validators", "is_optional"):
+            assert argument in signature.parameters
+        assert copied_root.validators == (_root_validator_warning,)
+        assert copied_root.is_optional is True
+        assert copied_root._info == "root info"
+        assert copied_root._description == "root description"
+        pickle.dumps(copied_root)
+        parameters = root.create_object()
+        with pytest.warns(DataValidityWarning, match="set: section received its runtime object") as caught:
+            parameters.CONTROL.VALUE = 4
+        assert len(caught) == 1
+        with pytest.warns(DataValidityWarning, match="set: root received its runtime object") as caught:
+            parameters.CONTROL.VALUE = 5
+        assert len(caught) == 1
+
+        warning_definition = V(
+            "VALUE",
+            1,
+            warning_condition=_warning_condition_if_two,
+        )
+        warning_copy = warning_definition.copy()
+        assert warning_copy.warning_condition is _warning_condition_if_two
+        pickle.dumps(warning_copy)
+        warning_parameters = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [warning_copy]}
+        ).create_object()
+        with pytest.warns(DataValidityWarning, match="VALUE should not be two"):
+            warning_parameters.CONTROL.VALUE = 2
+
+    def test_cross_section_validator_for_proposed_values(self):
+        root = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition("SECTION_A", [V("VALUE", 0)]),
+                cd.InputSectionDefinition("SECTION_B", [V("MODE", 0)]),
+            ],
+            validators=_root_validator_matching_values,
+        )
+        parameters = root.create_object()
+
+        parameters.set({"SECTION_A.VALUE": 1, "SECTION_B.MODE": 1})
+        assert parameters.SECTION_A.VALUE() == 1
+        assert parameters.SECTION_B.MODE() == 1
+
+        with pytest.raises(DataValidityError, match="values in SECTION_A and SECTION_B must match"):
+            parameters.set({"SECTION_A.VALUE": 2, "SECTION_B.MODE": 3})
+        assert parameters.SECTION_A.VALUE() == 1
+        assert parameters.SECTION_B.MODE() == 1
+
+        parameters.set(SECTION_A={"VALUE": 4}, SECTION_B={"MODE": 4})
+        assert parameters.SECTION_A.VALUE() == 4
+        assert parameters.SECTION_B.MODE() == 4
+
+    def test_set_runs_unconditional_root_validator(self):
+        root = cd.InputParametersDefinition(
+            [cd.InputSectionDefinition("CONTROL", [V("VALUE", 1)])],
+            validators=_root_validator_reject_all,
+        )
+        parameters = root.create_object()
+
+        with pytest.raises(DataValidityError, match="root validator rejects"):
+            parameters.CONTROL.VALUE = 2
+
+        assert parameters.CONTROL.VALUE() == 1
+
+    def test_transaction_converts_each_value_once(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUE", 1)]}
+        )
+        parameters = definition.create_object()
+        option = parameters.CONTROL.VALUE
+        value_definition = option._definition
+        original_convert = value_definition.convert_value
+        packed = []
+
+        def count_conversion(option, value, item=False):
+            packed.append(value)
+            return original_convert(option, value, item)
+
+        value_definition.convert_value = count_conversion
+        option.set(2)
+
+        assert packed == [2]
+        assert option() == 2
+
+    def test_transaction_commit_uses_the_validated_values(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("FIRST", 1), V("SECOND", 1)]}
+        )
+        parameters = definition.create_object()
+        option = parameters.CONTROL.SECOND
+        value_definition = option._definition
+        original_convert = value_definition.convert_value
+        calls = 0
+
+        def fail_on_second_conversion(option, value, item=False):
+            nonlocal calls
+            calls += 1
+            if calls == 2:
+                raise RuntimeError("value was converted again during commit")
+            return original_convert(option, value, item)
+
+        value_definition.convert_value = fail_on_second_conversion
+        parameters.CONTROL.set(FIRST=2, SECOND=2)
+
+        assert calls == 1
+        assert parameters.CONTROL.FIRST() == 2
+        assert parameters.CONTROL.SECOND() == 2
+
+    def test_numbered_item_assignment_converts_new_value_once(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("VALUES", int, is_repeated=V.Repeated.DICT),
+                ]
+            }
+        )
+        option = definition.create_object().CONTROL.VALUES
+        value_definition = option._definition
+        original_convert = value_definition.convert_value
+        converted = []
+
+        def count_conversion(option, value, item=False):
+            converted.append(value)
+            return original_convert(option, value, item)
+
+        value_definition.convert_value = count_conversion
+        option[1] = 7
+
+        assert converted == [7]
+        assert option[1] == 7
+
+    def test_post_change_hook_errors_are_aggregated_after_commit(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("FIRST", 1), V("SECOND", 1)]}
+        )
+        parameters = definition.create_object()
+        observed = []
+
+        def reject_first(option):
+            observed.append((option.name, ConfigurationTransaction.current(option)))
+            raise RuntimeError("first hook failed")
+
+        def reject_second(option):
+            observed.append((option.name, ConfigurationTransaction.current(option)))
+            raise ValueError("second hook failed")
+
+        parameters.CONTROL.FIRST.add_hook(reject_first)
+        parameters.CONTROL.SECOND.add_hook(reject_second)
+
+        with pytest.raises(PostChangeHookError, match="already committed") as caught:
+            parameters.CONTROL.set(FIRST=2, SECOND=2)
+
+        assert observed == [("FIRST", None), ("SECOND", None)]
+        assert [type(error) for error in caught.value.exceptions] == [
+            RuntimeError,
+            ValueError,
+        ]
+        assert isinstance(caught.value, ExceptionGroup)
+        assert parameters.CONTROL.FIRST() == 2
+        assert parameters.CONTROL.SECOND() == 2
+
+    def test_validation_and_post_change_hook_errors_are_reported_together(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("VALUE", 1, validators=_validator_error_if_three),
+                ]
+            }
+        )
+        parameters = definition.create_object()
+
+        def reject(_option):
+            raise RuntimeError("hook failed")
+
+        parameters.CONTROL.VALUE.add_hook(reject)
+
+        with pytest.raises(DataValidityErrors) as caught:
+            parameters.CONTROL.VALUE.set(
+                3,
+                retain_invalid="typed",
+                report_invalid="raise",
+            )
+
+        validation_error, hook_error = caught.value.exceptions
+        assert isinstance(validation_error, DataValidityError)
+        assert isinstance(hook_error, PostChangeHookError)
+        assert isinstance(hook_error.exceptions[0], RuntimeError)
+        assert isinstance(
+            caught.value.subgroup(DataValidityError),
+            DataValidityErrors,
+        )
+        assert not isinstance(
+            caught.value.subgroup(PostChangeHookError),
+            DataValidityErrors,
+        )
+        assert parameters.CONTROL.VALUE() == 3
+
+    def test_failed_indexed_array_hook_does_not_roll_back_value(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUES", gt.Array(int), [1, 2])]}
+        )
+        parameters = definition.create_object()
+
+        def reject(_option):
+            raise RuntimeError("hook rejected indexed assignment")
+
+        parameters.CONTROL.VALUES.add_hook(reject)
+
+        with pytest.raises(PostChangeHookError, match="already committed"):
+            parameters.CONTROL.VALUES[0] = 9
+
+        assert np.array_equal(parameters.CONTROL.VALUES(), [9, 2])
+        assert parameters.CONTROL.VALUES.is_set()
+
+    def test_indexed_array_materializes_default_without_modifying_definition(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUES", gt.Array(int), [1, 2])]}
+        )
+        first = definition.create_object()
+        second = definition.create_object()
+
+        first.CONTROL.VALUES[0] = 9
+
+        assert np.array_equal(first.CONTROL.VALUES(), [9, 2])
+        assert np.array_equal(second.CONTROL.VALUES(), [1, 2])
+        assert np.array_equal(
+            definition["CONTROL"]["VALUES"].default_value,
+            [1, 2],
+        )
+
+    def test_indexed_array_materializes_result(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUES", gt.Array(int), [1, 2])]}
+        )
+        option = definition.create_object().CONTROL.VALUES
+        option.result = np.array([3, 4])
+
+        option[0] = 8
+
+        assert np.array_equal(option(), [8, 4])
+        assert option._value is not None
+        assert not hasattr(option, "_result")
+
+    def test_transaction_context_manager_commits_or_rolls_back(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUE", 1)]}
+        )
+        parameters = definition.create_object()
+        option = parameters.CONTROL.VALUE
+
+        with ConfigurationTransaction(parameters) as transaction:
+            option.stage(transaction, 2)
+            assert option() == 2
+        assert option() == 2
+
+        with pytest.raises(RuntimeError):
+            with ConfigurationTransaction(parameters) as transaction:
+                option.stage(transaction, 3)
+                assert option() == 3
+                raise RuntimeError("abort")
+        assert option() == 2
+
+    def test_transaction_mutation_requires_context(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUE", 1)]}
+        )
+        parameters = definition.create_object()
+        transaction = ConfigurationTransaction(parameters)
+
+        with pytest.raises(RuntimeError, match="context manager"):
+            parameters.CONTROL.VALUE.stage(transaction, 2)
+        assert parameters.CONTROL.VALUE() == 1
+
+        with transaction:
+            parameters.CONTROL.VALUE.stage(transaction, 2)
+        assert parameters.CONTROL.VALUE() == 2
+
+        with pytest.raises(RuntimeError, match="context manager"):
+            parameters.CONTROL.VALUE.stage(transaction, 3)
+        assert parameters.CONTROL.VALUE() == 2
+
+        with transaction:
+            parameters.CONTROL.VALUE.stage(transaction, 3)
+        assert parameters.CONTROL.VALUE() == 3
+        assert transaction._changes == []
+
+        with transaction:
+            parameters.CONTROL.VALUE.stage(transaction, 4)
+            transaction.abort()
+        assert parameters.CONTROL.VALUE() == 3
+
+        assert not hasattr(transaction, "commit")
+        assert not hasattr(transaction, "rollback")
+
+    def test_transaction_use_joins_active_transaction(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUE", 1)]}
+        )
+        parameters = definition.create_object()
+
+        with ConfigurationTransaction.use(parameters) as transaction:
+            assert parameters._active_transaction is transaction
+            with ConfigurationTransaction.use(parameters.CONTROL) as nested:
+                assert nested is transaction
+                parameters.CONTROL.VALUE.set(2)
+            boundaries = [
+                change
+                for change in transaction._changes
+                if isinstance(change, ConfigurationTransaction._Boundary)
+            ]
+            assert len(boundaries) > 1
+            assert boundaries[0]._active
+            assert not boundaries[-1]._active
+
+        assert parameters.CONTROL.VALUE() == 2
+        assert not hasattr(parameters, "_active_transaction")
+
+    def test_caught_nested_set_rolls_back_only_nested_changes(self):
+        def reject_two(option, values, _why):
+            if option() == 2:
+                return DataValidityError("two rejected")
+
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("FIRST", 1),
+                    V("SECOND", 1, validators=reject_two),
+                ]
+            }
+        )
+        parameters = definition.create_object()
+
+        with ConfigurationTransaction(parameters):
+            parameters.CONTROL.FIRST.set(2)
+            with pytest.raises(DataValidityError, match="two rejected"):
+                parameters.CONTROL.SECOND.set(2)
+
+        assert parameters.CONTROL.FIRST() == 2
+        assert parameters.CONTROL.SECOND() == 1
+
+    def test_uncaught_nested_set_rolls_back_the_whole_transaction(self):
+        def reject_two(option, values, _why):
+            if option() == 2:
+                return DataValidityError("two rejected")
+
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("FIRST", 1),
+                    V("SECOND", 1, validators=reject_two),
+                ]
+            }
+        )
+        parameters = definition.create_object()
+
+        with pytest.raises(DataValidityError, match="two rejected"):
+            with ConfigurationTransaction(parameters):
+                parameters.CONTROL.FIRST.set(2)
+                parameters.CONTROL.SECOND.set(2)
+
+        assert parameters.CONTROL.FIRST() == 1
+        assert parameters.CONTROL.SECOND() == 1
+
+    def test_transaction_savepoint_rolls_back_only_its_changes(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("FIRST", 1), V("SECOND", 1)]}
+        )
+        parameters = definition.create_object()
+
+        with ConfigurationTransaction(parameters) as transaction:
+            parameters.CONTROL.FIRST.stage(transaction, 2)
+            with pytest.raises(RuntimeError, match="abort savepoint"):
+                with transaction.savepoint():
+                    parameters.CONTROL.SECOND.stage(transaction, 3)
+                    raise RuntimeError("abort savepoint")
+
+            assert parameters.CONTROL.FIRST() == 2
+            assert parameters.CONTROL.SECOND() == 1
+
+        assert parameters.CONTROL.FIRST() == 2
+        assert parameters.CONTROL.SECOND() == 1
+
+    def test_transaction_savepoint_rolls_back_repeated_option_change(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUE", 1)]}
+        )
+        parameters = definition.create_object()
+
+        with ConfigurationTransaction(parameters) as transaction:
+            parameters.CONTROL.VALUE.stage(transaction, 2)
+            with pytest.raises(RuntimeError, match="abort savepoint"):
+                with transaction.savepoint():
+                    parameters.CONTROL.VALUE.stage(transaction, 3)
+                    raise RuntimeError("abort savepoint")
+
+            assert parameters.CONTROL.VALUE() == 2
+
+        assert parameters.CONTROL.VALUE() == 2
+
+    def test_option_hook_is_coalesced_and_runs_outside_transaction(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUE", 1)]}
+        )
+        parameters = definition.create_object()
+        calls = []
+        parameters.CONTROL.VALUE.add_hook(
+            lambda option: calls.append(
+                (option(), ConfigurationTransaction.current(option))
+            )
+        )
+
+        with ConfigurationTransaction(parameters) as transaction:
+            parameters.CONTROL.VALUE.stage(transaction, 2)
+            parameters.CONTROL.VALUE.stage(transaction, 3)
+
+        assert calls == [(3, None)]
+
+    def test_option_stage_registers_its_change(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUE", 1)]}
+        )
+        option = definition.create_object().CONTROL.VALUE
+
+        with ConfigurationTransaction(option) as transaction:
+            with transaction.savepoint() as savepoint:
+                assert option.stage(transaction, 2)
+                assert isinstance(transaction._changes[-1], Option.Change)
+                option.stage(transaction, 3)
+                savepoint.rollback()
+        assert option() == 1
+
+    def test_unknown_member_is_converted_before_transaction_commit(self):
+        section = cd.InputSectionDefinition("CONTROL", [V("KNOWN", 1)])
+        section.custom_class = CustomOption.factory(V, int)
+        parameters = cd.InputParametersDefinition([section]).create_object()
+
+        with pytest.raises(DataValidityError):
+            parameters.CONTROL.set(
+                {"KNOWN": 2, "EXTRA": "not-an-integer"},
+                unknown="add",
+            )
+
+        assert parameters.CONTROL.KNOWN() == 1
+        assert "EXTRA" not in parameters.CONTROL
+
+    def test_add_with_invalid_value_rolls_back_custom_member(self):
+        section = cd.InputSectionDefinition("CONTROL", [V("KNOWN", 1)])
+        section.custom_class = CustomOption.factory(V, int)
+        definition = cd.InputParametersDefinition([section])
+
+        def reject_extra(_root, values, _why):
+            if "EXTRA" in values["CONTROL"]:
+                return DataValidityError("custom member rejected")
+
+        definition.validators = (reject_extra,)
+        parameters = definition.create_object()
+
+        with pytest.raises(DataValidityError, match="custom member rejected"):
+            parameters.CONTROL.add("EXTRA", 2)
+
+        assert "EXTRA" not in parameters.CONTROL
+
+    def test_discard_and_ignore_unconvertible_staged_values(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUE", 1)]}
+        )
+        parameters = definition.create_object()
+
+        parameters.set(
+            VALUE="not-an-integer",
+            retain_invalid="none",
+            report_invalid="ignore",
+        )
+
+        assert parameters.CONTROL.VALUE() == 1
+
+    def test_discarded_invalid_value_does_not_add_custom_member(self):
+        section = cd.InputSectionDefinition("CONTROL", [V("KNOWN", 1)])
+        section.custom_class = CustomOption.factory(V, int)
+        parameters = cd.InputParametersDefinition([section]).create_object()
+
+        parameters.CONTROL.set(
+            {"EXTRA": "not-an-integer"},
+            unknown="add",
+            retain_invalid="none",
+            report_invalid="ignore",
+        )
+
+        assert "EXTRA" not in parameters.CONTROL
+
+    def test_typed_and_unconvertible_invalid_values_are_distinguished(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUE", gt.Unsigned(), 1)]}
+        )
+
+        parameters = definition.create_object()
+        with pytest.warns(DataValidityError, match="positive"):
+            parameters.set(
+                VALUE=-1,
+                retain_invalid="none",
+                report_invalid="warn",
+            )
+        assert parameters.CONTROL.VALUE() == 1
+
+        with pytest.warns(DataValidityError, match="positive"):
+            parameters.set(
+                VALUE=-1,
+                retain_invalid="typed",
+                report_invalid="warn",
+            )
+        assert parameters.CONTROL.VALUE() == -1
+        assert not parameters.CONTROL.VALUE.is_dangerous()
+
+        parameters = definition.create_object()
+        with pytest.warns(DataValidityError, match="unsigned integer"):
+            parameters.set(
+                VALUE="not-an-integer",
+                retain_invalid="typed",
+                report_invalid="warn",
+            )
+        assert parameters.CONTROL.VALUE() == 1
+
+        with pytest.warns(DataValidityError, match="unsigned integer"):
+            parameters.set(
+                VALUE="not-an-integer",
+                retain_invalid="all",
+                report_invalid="warn",
+            )
+        assert parameters.CONTROL.VALUE() == "not-an-integer"
+        assert parameters.CONTROL.VALUE.is_dangerous()
+        assert "VALUE=not-an-integer" in parameters.to_string(validate=False)
+
+        array_definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUES", gt.Array(gt.Unsigned()), [1])]}
+        )
+        array = array_definition.create_object()
+        with pytest.warns(DataValidityError, match="positive"):
+            array.set(
+                VALUES=[-1],
+                retain_invalid="typed",
+                report_invalid="warn",
+            )
+        assert np.array_equal(array.CONTROL.VALUES(), [-1])
+
+        array = array_definition.create_object()
+        with pytest.warns(DataValidityError):
+            array.set(
+                VALUES=["not-an-integer"],
+                retain_invalid="typed",
+                report_invalid="warn",
+            )
+        assert np.array_equal(array.CONTROL.VALUES(), [1])
+
+        batch = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("VALID", 1),
+                    V("INVALID", gt.Unsigned(), 1),
+                ]
+            }
+        ).create_object()
+        with pytest.warns(DataValidityError):
+            batch.set(
+                VALID=2,
+                INVALID="not-an-integer",
+                retain_invalid="none",
+                report_invalid="warn",
+            )
+        assert batch.CONTROL.VALID() == 2
+        assert batch.CONTROL.INVALID() == 1
+
+    def test_retention_and_reporting_are_independent(self):
+        typed = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUE", gt.Unsigned(), 1)]}
+        ).create_object()
+
+        with pytest.raises(DataValidityError, match="positive"):
+            typed.set(
+                VALUE=-1,
+                retain_invalid="typed",
+                report_invalid="raise",
+            )
+        assert typed.CONTROL.VALUE() == -1
+
+        semantic = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("VALUE", 1, validators=_validator_error_if_three)
+                ]
+            }
+        ).create_object()
+        with pytest.warns(DataValidityError, match="must not be three"):
+            semantic.set(
+                VALUE=3,
+                retain_invalid="none",
+                report_invalid="warn",
+            )
+        assert semantic.CONTROL.VALUE() == 1
+
+        with pytest.raises(DataValidityError, match="must not be three"):
+            semantic.set(
+                VALUE=3,
+                retain_invalid="typed",
+                report_invalid="raise",
+            )
+        assert semantic.CONTROL.VALUE() == 3
+
+        required = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUE", int, None)]}
+        ).create_object()
+        required.CONTROL.VALUE = 1
+        with pytest.warns(DataValidityError, match="must have a value"):
+            required.CONTROL.VALUE.set(
+                None,
+                retain_invalid="none",
+                report_invalid="warn",
+            )
+        assert required.CONTROL.VALUE() == 1
+
+        with pytest.raises(DataValidityError, match="must have a value"):
+            required.CONTROL.VALUE.set(
+                None,
+                retain_invalid="typed",
+                report_invalid="raise",
+            )
+        assert required.CONTROL.VALUE() is None
+
+    def test_strict_batch_collects_all_value_errors_before_raising(self):
+        parameters = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("FIRST", gt.Unsigned(), 1),
+                    V("SECOND", gt.Unsigned(), 2),
+                    V("THIRD", int, 3),
+                    V("FOURTH", int, 4),
+                ]
+            }
+        ).create_object()
+
+        with pytest.raises(DataValidityErrors) as caught:
+            parameters.CONTROL.set(
+                FIRST=-1,
+                SECOND=-2,
+                THIRD="not-an-integer",
+                FOURTH="also-not-an-integer",
+            )
+
+        assert len(caught.value.exceptions) == 4
+        assert parameters.CONTROL.FIRST() == 1
+        assert parameters.CONTROL.SECOND() == 2
+        assert parameters.CONTROL.THIRD() == 3
+        assert parameters.CONTROL.FOURTH() == 4
+
+    def test_repeated_dictionary_collects_all_errors_atomically(self):
+        parameters = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V(
+                        "VALUES",
+                        gt.Unsigned(),
+                        is_optional=True,
+                        is_repeated=V.Repeated.DICT,
+                    )
+                ]
+            }
+        ).create_object()
+
+        with pytest.raises(DataValidityErrors) as caught:
+            parameters.CONTROL.VALUES = {1: -1, 2: -2}
+
+        assert len(caught.value.exceptions) == 2
+        assert parameters.CONTROL.VALUES(all_values=True) is None
+
+    def test_repeated_values_use_invalid_value_policy(self):
+        definition = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition(
+                    "ROWS",
+                    [V("VALUE", gt.Unsigned(), 1)],
+                    is_repeated=True,
+                )
+            ]
+        )
+        parameters = definition.create_object()
+
+        with pytest.warns(DataValidityError, match="positive"):
+            parameters.ROWS.set(
+                [{"VALUE": -1}],
+                retain_invalid="typed",
+                report_invalid="warn",
+            )
+        assert parameters.ROWS[0].VALUE() == -1
+
+        with pytest.warns(DataValidityError, match="unsigned integer"):
+            parameters.ROWS.set(
+                [{"VALUE": "not-an-integer"}],
+                retain_invalid="all",
+                report_invalid="warn",
+            )
+        assert parameters.ROWS[0].VALUE() == "not-an-integer"
+        assert parameters.ROWS[0].VALUE.is_dangerous()
+
+    def test_dotted_unknown_member_is_not_added(self):
+        section = cd.InputSectionDefinition("CONTROL", [V("KNOWN", 1)])
+        section.custom_class = CustomOption.factory(V, int)
+        parameters = cd.InputParametersDefinition([section]).create_object()
+
+        with pytest.raises(KeyError, match="dotted path"):
+            parameters.CONTROL.set(
+                {"EXTRA.CHILD": 1},
+                unknown="add",
+            )
+
+        assert "EXTRA" not in parameters.CONTROL
+
+    def test_unknown_add_accepts_only_non_dotted_names(self):
+        parameters = cd.InputParametersDefinition(
+            [cd.InputSectionDefinition("CONTROL", [V("KNOWN", 1)])]
+        ).create_object()
+
+        with pytest.raises(KeyError, match="EXTRA.VALUE"):
+            parameters.get_member("EXTRA.VALUE")
+        assert list(parameters.get_members("EXTRA.VALUE")) == []
+        with pytest.raises(KeyError, match="dotted path"):
+            parameters.set("EXTRA.VALUE", 2, unknown="add")
+        assert "EXTRA" not in parameters
+
+        parameters.set({"EXTRA": {"VALUE": 2}}, unknown="add")
+        assert parameters.EXTRA.VALUE() == 2
+
+    def test_failed_read_rolls_back_clear_and_parsed_values_together(self):
+        def reject_parsed_two(_root, values, why):
+            if why == "parse" and values["CONTROL"]["VALUE"]() == 2:
+                raise RuntimeError("parsed value rejected")
+
+        definition = cd.InputParametersDefinition(
+            [cd.InputSectionDefinition("CONTROL", [V("VALUE", 0)])],
+            validators=reject_parsed_two,
+        )
+        parameters = definition.create_object()
+        parameters.CONTROL.VALUE = 1
+
+        with pytest.raises(RuntimeError, match="parsed value rejected"):
+            parameters.read_from_file(io.StringIO("CONTROL\n\tVALUE=2\n"))
+
+        assert parameters.CONTROL.VALUE() == 1
+        assert not hasattr(parameters, "_parsed_values")
+        assert not hasattr(parameters.CONTROL, "_parsed_values")
+
+    def test_exact_resolution_stops_at_option(self):
+        parameters = cd.InputParametersDefinition(
+            [cd.InputSectionDefinition("CONTROL", [V("KNOWN", 1)])]
+        ).create_object()
+
+        with pytest.raises(KeyError, match="CONTROL.KNOWN.CHILD"):
+            parameters.get_member("CONTROL.KNOWN.CHILD")
+        assert list(parameters.get_members("CONTROL.KNOWN.CHILD")) == []
+        with pytest.raises(KeyError, match="CONTROL.KNOWN.CHILD"):
+            parameters.set("CONTROL.KNOWN.CHILD", 2, unknown="add")
+
+    def test_unknown_add_does_not_replace_existing_member(self):
+        definition = cd.InputParametersDefinition(
+            [cd.InputSectionDefinition("CONTROL", [V("VALUE", 1)])]
+        )
+        parameters = definition.create_object()
+        original = parameters.CONTROL
+
+        with pytest.raises(TypeError, match="already in"):
+            parameters.set({"CONTROL": 2}, unknown="add")
+
+        assert parameters.CONTROL is original
+
+    def test_transaction_uses_standard_container_access(self):
+        definition = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition(
+                    "OUTER",
+                    [cd.InputSectionDefinition("INNER", [V("VALUE", 1)])],
+                )
+            ]
+        )
+        parameters = definition.create_object()
+
+        with ConfigurationTransaction(parameters):
+            assert parameters["OUTER"]["INNER"]["VALUE"]() == 1
+
+    def test_post_change_hook_cannot_mutate_its_configuration(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("FIRST", 1), V("SECOND", 1)]}
+        )
+        parameters = definition.create_object()
+
+        def mutate(_option):
+            parameters.CONTROL.SECOND.set(2)
+
+        parameters.CONTROL.FIRST.add_hook(mutate)
+
+        with pytest.raises(PostChangeHookError, match="already committed") as caught:
+            parameters.CONTROL.FIRST.set(2)
+
+        assert len(caught.value.exceptions) == 1
+        assert "post-change hooks" in str(caught.value.exceptions[0])
+        assert parameters.CONTROL.FIRST() == 2
+        assert parameters.CONTROL.SECOND() == 1
+
+    def test_rolled_back_savepoint_does_not_register_hook(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("FIRST", 1),
+                    V("SECOND", 2),
+                ]
+            }
+        )
+        parameters = definition.create_object()
+
+        calls = []
+        parameters.CONTROL.FIRST.add_hook(lambda option: calls.append(option()))
+        parameters.CONTROL.SECOND.add_hook(lambda option: calls.append(option()))
+
+        with ConfigurationTransaction(parameters) as transaction:
+            parameters.CONTROL.FIRST.stage(transaction, 3)
+            with transaction.savepoint() as savepoint:
+                parameters.CONTROL.SECOND.stage(transaction, 4)
+                savepoint.rollback()
+
+        assert calls == [3]
+        assert parameters.CONTROL.FIRST() == 3
+        assert parameters.CONTROL.SECOND() == 2
+
+    def test_clear_is_validated_and_rolled_back(self):
+        def reject_missing(option, values, _why):
+            if option() is None:
+                return DataValidityError("missing value rejected")
+
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V(
+                        "FIRST",
+                        int,
+                        None,
+                        is_optional=True,
+                        is_required=False,
+                        validators=reject_missing,
+                    ),
+                    V("SECOND", 1),
+                ]
+            }
+        )
+        parameters = definition.create_object()
+        parameters.CONTROL.FIRST = 1
+
+        with pytest.raises(DataValidityError, match="missing value rejected"):
+            parameters.CONTROL.FIRST.clear()
+        assert parameters.CONTROL.FIRST() == 1
+
+        with pytest.raises(DataValidityError, match="missing value rejected"):
+            parameters.CONTROL.clear()
+        assert parameters.CONTROL.FIRST() == 1
+        assert parameters.CONTROL.SECOND() == 1
+
+        required_definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("REQUIRED", int, None, is_required=True)]}
+        )
+        required = required_definition.create_object()
+        required.CONTROL.REQUIRED = 1
+
+        with pytest.raises(DataValidityError, match="must have a value"):
+            required.CONTROL.clear()
+
+        assert required.CONTROL.REQUIRED() == 1
+
+    def test_setting_none_uses_required_clear_semantics(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("REQUIRED", int, None, is_required=True)]}
+        )
+        parameters = definition.create_object()
+        parameters.CONTROL.REQUIRED.set(2)
+
+        with pytest.raises(DataValidityError, match="must have a value"):
+            parameters.CONTROL.REQUIRED.set(None)
+
+        assert parameters.CONTROL.REQUIRED() == 2
+
+    def test_container_clear_skips_generated_setters(self):
+        generated_clears = []
+
+        def get_generated(section, key=None):
+            return section["SOURCE"]()
+
+        def set_generated(section, value, key=None):
+            generated_clears.append(value)
+            transaction = ConfigurationTransaction.current(section)
+            section["SOURCE"].stage(transaction, value)
+
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("SOURCE", int, None, is_optional=True),
+                    GeneratedValueDefinition(
+                        "GENERATED", get_generated, set_generated
+                    ),
+                ]
+            }
+        )
+        parameters = definition.create_object()
+        parameters.CONTROL.SOURCE = 1
+
+        parameters.CONTROL.clear()
+
+        assert parameters.CONTROL.SOURCE() is None
+        assert generated_clears == []
+
+        parameters.CONTROL.SOURCE = 2
+        parameters.CONTROL.GENERATED.clear()
+
+        assert parameters.CONTROL.SOURCE() is None
+        assert generated_clears == [None]
+
+    def test_repeated_clear_is_validated_and_rolled_back(self):
+        def reject_empty(_root, values, _why):
+            if len(values["ROWS"]) == 0:
+                return DataValidityError("empty rows rejected")
+
+        definition = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition(
+                    "ROWS",
+                    [V("VALUE", 1)],
+                    is_repeated=True,
+                )
+            ],
+            validators=reject_empty,
+        )
+        parameters = definition.create_object()
+        parameters.ROWS.set([{"VALUE": 2}])
+
+        with pytest.raises(DataValidityError, match="empty rows rejected"):
+            parameters.ROWS.clear()
+
+        assert len(parameters.ROWS) == 1
+        assert parameters.ROWS[0].VALUE() == 2
+
+    def test_empty_repeated_section_as_dict(self):
+        definition = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition(
+                    "ROWS",
+                    [V("VALUE", 1)],
+                    is_repeated=True,
+                )
+            ]
+        )
+
+        assert definition.create_object().ROWS.as_dict(False) is None
+
+    def test_option_validation_uses_its_container_values(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("MODE", 1),
+                    V(
+                        "DEPENDENT",
+                        int,
+                        2,
+                        is_required=_required_in_mode_one,
+                    ),
+                ]
+            }
+        )
+        parameters = definition.create_object()
+
+        parameters.CONTROL.DEPENDENT.validate("save")
+
+    def test_setting_selector_validates_dependent_required_values(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("MODE", 2),
+                    V(
+                        "DEPENDENT",
+                        int,
+                        None,
+                        is_optional=True,
+                        is_required=_required_in_mode_one,
+                    ),
+                ]
+            }
+        )
+        parameters = definition.create_object()
+
+        with pytest.raises(DataValidityError, match="DEPENDENT"):
+            parameters.CONTROL.MODE = 1
+
+        assert parameters.CONTROL.MODE() == 2
+
+    def test_unconditional_required_values_are_save_time_completeness_checks(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("REQUIRED", int, None), V("OTHER", 1)]}
+        )
+        parameters = definition.create_object()
+
+        parameters.CONTROL.OTHER = 2
+
+        assert parameters.CONTROL.OTHER() == 2
+        with pytest.raises(DataValidityError, match="REQUIRED"):
+            parameters.validate("save")
+
+    def test_disabled_section_is_not_validated(self):
+        disabled = cd.InputSectionDefinition(
+            "DISABLED", [V("REQUIRED", int, None)]
+        )
+        disabled.condition = lambda _definition, _container: False
+        definition = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition("ACTIVE", [V("VALUE", 1)]),
+                disabled,
+            ]
+        )
+
+        definition.create_object().validate("save")
+
+    def test_copy_does_not_revalidate_existing_values(self):
+        definition = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition(
+                    "CONTROL",
+                    [V("VALUE", 1, validators=_validator_error_if_three)],
+                )
+            ],
+        )
+        with pytest.warns(DataValidityError, match="VALUE must not be three"):
+            parameters = definition.read_from_string("CONTROL\n\tVALUE=3\n")
+
+        copied = parameters.copy()
+
+        assert copied.CONTROL.VALUE() == 3
+
+        with pytest.warns(DataValidityError):
+            parameters.CONTROL.VALUE.set(
+                "not-an-integer",
+                retain_invalid="all",
+                report_invalid="warn",
+            )
+
+        copied = parameters.copy(copy_values=True)
+
+        assert copied.CONTROL.VALUE() == "not-an-integer"
+        assert copied.CONTROL.VALUE.is_dangerous()
+
+        custom = cd.InputParametersDefinition([]).create_object()
+        custom.set({"EXTRA": {"VALUE": 2}}, unknown="add")
+
+        copied_custom = custom.copy()
+
+        assert type(copied_custom.EXTRA) is type(custom.EXTRA)
+        assert type(copied_custom.EXTRA.VALUE) is type(custom.EXTRA.VALUE)
+
+    def test_repeated_and_generated_sets_are_transactional(self):
+        repeated = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition(
+                    "ROWS",
+                    [V("VALUE", 0)],
+                    is_repeated=True,
+                    validators=_repeated_validator_reject_two,
+                )
+            ]
+        ).create_object()
+        repeated.ROWS.set([{"VALUE": 1}])
+        with pytest.raises(DataValidityError, match="repeated VALUE must not be two"):
+            repeated.ROWS.set([{"VALUE": 2}])
+        assert repeated.ROWS[0].VALUE() == 1
+
+        with pytest.raises(DataValidityError, match="repeated VALUE must not be two"):
+            repeated.set(ROWS=[{"VALUE": 2}])
+        assert repeated.ROWS[0].VALUE() == 1
+
+        generated = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("NVALUES", Length("VALUES", default_values=1)),
+                    V("VALUES", gt.Array(int), is_optional=True),
+                ]
+            }
+        )
+        generated.validators = (_generated_source_length_validator,)
+        parameters = generated.create_object()
+        parameters.CONTROL.NVALUES = 1
+        with pytest.raises(DataValidityError, match="generated setter produced too many values"):
+            parameters.CONTROL.NVALUES = 2
+        assert np.array_equal(parameters.CONTROL.VALUES(), [1])
+
+    def test_dictionary_repeated_set_replaces_or_merges_values(self):
+        definition = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition(
+                    "ROWS",
+                    [V("VALUE", 0), V("OTHER", 0)],
+                    is_repeated=V.Repeated.DICT_SECTION,
+                )
+            ]
+        )
+        parameters = definition.create_object()
+        parameters.ROWS.set(
+            {1: {"VALUE": 1, "OTHER": 10}, 2: {"VALUE": 2}}
+        )
+
+        parameters.ROWS.set({1: {"VALUE": 3}})
+
+        assert list(parameters.ROWS) == [1]
+        assert parameters.ROWS[1].VALUE() == 3
+        assert parameters.ROWS[1].OTHER() == 0
+
+        parameters.ROWS.set(
+            {1: {"VALUE": 1, "OTHER": 10}, 2: {"VALUE": 2}}
+        )
+        parameters.ROWS.set({1: {"VALUE": 3}}, merge=True)
+
+        assert list(parameters.ROWS) == [1, 2]
+        assert parameters.ROWS[1].VALUE() == 3
+        assert parameters.ROWS[1].OTHER() == 10
+        assert parameters.ROWS[2].VALUE() == 2
+
+        parameters.ROWS._definition.validators = (_repeated_validator_reject_two,)
+        with pytest.raises(DataValidityError, match="repeated VALUE must not be two"):
+            parameters.ROWS.set({1: {"VALUE": 2}}, merge=True)
+
+        assert list(parameters.ROWS) == [1, 2]
+        assert parameters.ROWS[1].VALUE() == 3
+        assert parameters.ROWS[2].VALUE() == 2
+
+    def test_list_repeated_set_replaces_or_merges_values(self):
+        definition = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition(
+                    "ROWS",
+                    [V("VALUE", 0)],
+                    is_repeated=True,
+                )
+            ]
+        )
+        parameters = definition.create_object()
+        parameters.ROWS.set([{"VALUE": 1}, {"VALUE": 2}])
+
+        parameters.ROWS.set([{"VALUE": 3}])
+        assert [parameters.ROWS[i].VALUE() for i in parameters.ROWS] == [3]
+
+        parameters.ROWS.set([{"VALUE": 1}, {"VALUE": 2}])
+        parameters.ROWS.set([{"VALUE": 3}], merge=True)
+        assert [parameters.ROWS[i].VALUE() for i in parameters.ROWS] == [
+            1,
+            2,
+            3,
+        ]
+
+    def test_list_repeated_parse_merge_attaches_metadata_to_new_rows(self):
+        def validate_parsed(option):
+            parsed = getattr(option._container, "_parsed_values", None)
+            if option() == 2 and parsed is None:
+                raise RuntimeError("new row has no parse metadata")
+            if parsed is not None and parsed["VALUE"] != option():
+                raise RuntimeError("parse metadata belongs to another row")
+
+        value = V("VALUE", 0)
+        value.validate_parsed = validate_parsed
+        definition = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition(
+                    "ROWS", [value], is_repeated=True
+                )
+            ]
+        )
+        parameters = definition.create_object()
+        parameters.ROWS.set([{"VALUE": 1}])
+
+        parameters.ROWS.set(
+            [{"VALUE": 2}], merge=True, validation_reason="parse"
+        )
+
+        assert [parameters.ROWS[i].VALUE() for i in parameters.ROWS] == [1, 2]
+
+    def test_generated_setter_uses_mutable_cross_section_proposal(self):
+        definition = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition(
+                    "SECTION_A",
+                    [
+                        GeneratedValueDefinition(
+                            "GENERATED",
+                            _get_cross_section_generated,
+                            _set_cross_section_generated,
+                        )
+                    ],
+                ),
+                cd.InputSectionDefinition("SECTION_B", [V("VALUE", 0)]),
+            ],
+            validators=_reject_cross_section_two,
+        )
+        parameters = definition.create_object()
+
+        parameters.SECTION_A.GENERATED = 1
+        assert parameters.SECTION_A.GENERATED() == 1
+        assert parameters.SECTION_B.VALUE() == 1
+
+        with pytest.raises(DataValidityError, match="cross-section generated value must not be two"):
+            parameters.SECTION_A.GENERATED = 2
+        assert parameters.SECTION_B.VALUE() == 1
+
+        repeated_definition = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition(
+                    "ROWS",
+                    [
+                        GeneratedValueDefinition(
+                            "GENERATED",
+                            _get_cross_section_generated,
+                            _set_cross_section_generated,
+                        )
+                    ],
+                    is_repeated=True,
+                ),
+                cd.InputSectionDefinition("SECTION_B", [V("VALUE", 0)]),
+            ],
+            validators=_reject_cross_section_two,
+        )
+        repeated = repeated_definition.create_object()
+        repeated.ROWS.set([{"GENERATED": 1}])
+        assert repeated.SECTION_B.VALUE() == 1
+        assert len(repeated.ROWS) == 1
+
+        with pytest.raises(DataValidityError, match="cross-section generated value must not be two"):
+            repeated.ROWS.set([{"GENERATED": 2}, {"GENERATED": 2}])
+        assert repeated.SECTION_B.VALUE() == 1
+        assert len(repeated.ROWS) == 1
+
+    def test_generated_numpy_view_mutates_without_rollback(self):
+        definition = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition(
+                    "DATA",
+                    [
+                        V("RAW", gt.Array(float), is_optional=True),
+                        NumpyViewDefinition("VIEW", "RAW"),
+                    ],
+                )
+            ],
+            validators=_reject_negative_raw_data,
+        )
+        parameters = definition.create_object()
+        parameters.DATA.RAW = [1.0, 2.0, 3.0]
+
+        with pytest.raises(ValueError):
+            parameters.DATA.VIEW[:] = [4.0, 5.0]
+        assert np.array_equal(parameters.DATA.RAW(), [1.0, 2.0, 3.0])
+
+        with pytest.raises(DataValidityError, match="raw data must not be negative"):
+            parameters.DATA.VIEW[1] = -2.0
+        assert np.array_equal(parameters.DATA.RAW(), [1.0, -2.0, 3.0])
+
+    def test_missing_sections_are_validation_results(self):
+        definition = cd.InputParametersDefinition(
+            [cd.InputSectionDefinition("REQUIRED", [V("VALUE", int, None)])]
+        )
+        found = definition.create_object().check_for_errors(print=False)
+        assert any(
+            isinstance(issue.message, DataValidityError)
+            and "Non-optional section REQUIRED" in str(issue.message)
+            for issue in found
+        )
 
     @pytest.mark.slow
     def test_input_parameters_definition(self):
@@ -433,6 +1863,25 @@ XSITES NR=3 FLAG
         ips = input_parameters_def.create_object()
 
         ips.set({"ENERGY.Ime": 5.0, "NE": 10, "ENERGY": 7.0})
+        assert ips.find("energy") is ips.ENERGY.ENERGY
+        assert ips.find("energy.ime") is ips.ENERGY.Ime
+        assert ips.get_member("ENERGY") is ips.ENERGY
+        assert ips.get_member("energy.ime") is ips.ENERGY.Ime
+        assert ips.get_member(
+            "ENERGY",
+            accept=lambda member: member._definition.accept_value(6.0),
+        ) is ips.ENERGY.ENERGY
+        with pytest.raises(KeyError, match="MISSING"):
+            ips.find("MISSING")
+        assert (
+            next(
+                ips.get_members(
+                    "ENERGY",
+                    accept=lambda member: member._definition.accept_value(6.0),
+                )
+            )
+            is ips.ENERGY.ENERGY
+        )
         self.assertEqual(ips.ENERGY.Ime(), 5.0)
         self.assertEqual(ips.ENERGY.NE(), 10)
         self.assertEqual(ips.ENERGY.ENERGY(), 7.0)
@@ -445,7 +1894,9 @@ XSITES NR=3 FLAG
         ips.set("ENERGY.ENERGYY", 7.0, unknown="ignore")
         self.assertFalse("ENERGYY" in ips.ENERGY)
         self.assertRaises(KeyError, lambda: ips.set("ENERGY.ENERGYY", 7.0, unknown="fail"))
-        ips.set("ENERGY.ENERGYY", 7.0, unknown="add")
+        with pytest.raises(KeyError, match="dotted path"):
+            ips.set("ENERGY.ENERGYY", 7.0, unknown="add")
+        ips.ENERGY.set("ENERGYY", 7.0, unknown="add")
         self.assertEqual(ips.ENERGY.ENERGYY(), 7.0)
 
     #
@@ -536,7 +1987,7 @@ XSITES NR=3 FLAG
                     V(
                         "KA",
                         int,
-                        is_repeated=V.Repeated.NUMBERED_IF(lambda option: option._container.MODE() == 1),
+                        is_repeated=V.Repeated.NUMBERED_IF(lambda option: option._container["MODE"]() == 1),
                     ),
                 ]
             }
@@ -562,21 +2013,18 @@ XSITES NR=3 FLAG
         with pytest.raises(DataValidityError, match="can contain only one value"):
             unnumbered.to_string(validate=False)
 
-        # An overlong value remains stored so changing the selector can make it
-        # valid, but writing it unnumbered is forbidden.
-        ip.ENERGY.MODE = 0
-        with pytest.raises(DataValidityError):
-            ip.to_string(validate=False)
-        ip.ENERGY.MODE = 1
+        # A change that would make the stored value invalid is rejected before
+        # modifying the configuration.
+        with pytest.raises(DataValidityError, match="can contain only one value"):
+            ip.ENERGY.MODE = 0
+        assert ip.ENERGY.MODE() == 1
         assert compact(ip.to_string()) == "ENERGY MODE=1 KA1=4 KA2=5"
 
         ip = ipd.create_object()
-        # Setting an overlong value while it is unnumbered warns immediately.
-        with pytest.warns(DataValidityError, match="can contain only one value"):
-            ip.ENERGY.KA = [7, 8]
-        assert np.array_equal(ip.ENERGY.KA(), [7, 8])
+        # Setting an overlong value while it is unnumbered is rejected.
         with pytest.raises(DataValidityError, match="can contain only one value"):
-            ip.to_string(validate=False)
+            ip.ENERGY.KA = [7, 8]
+        assert ip.ENERGY.KA() is None
 
         # The two spellings denote the same first item, not two different ones.
         with pytest.raises(pp.ParseBaseException):
@@ -594,7 +2042,7 @@ XSITES NR=3 FLAG
                     V(
                         "KA",
                         gt.SetOf(int, length=3),
-                        is_repeated=V.Repeated.NUMBERED_IF(lambda option: option._container.MODE() == 1),
+                        is_repeated=V.Repeated.NUMBERED_IF(lambda option: option._container["MODE"]() == 1),
                     ),
                 ]
             }
@@ -857,9 +2305,7 @@ XSITES NR=3 FLAG
             }
         )
         ip = ipd.create_object()
-        with pytest.warns(DataValidityError):
-            ip.ENERGY.K1 = [1, 2, 3]
-        ip.ENERGY.K2 = [2, 2, 3]
+        ip.ENERGY.set(K1=[1, 2, 3], K2=[2, 2, 3])
         assert t(ip.to_string()) == "ENERGY A=1 NK=3 K1=1 2 3 K2=2 2 3"
         ip2 = ipd.read_from_string(ip.to_string())
         assert ip2.ENERGY.NK() == 3
@@ -867,10 +2313,14 @@ XSITES NR=3 FLAG
         with pytest.raises(DataValidityError):
             ip2.ENERGY.NK = 7
 
-        with pytest.warns(DataValidityError):
-            ip.ENERGY.K2 = [2, 2]
         with pytest.raises(DataValidityError):
-            ip.to_string()
+            ip.ENERGY.K2 = [2, 2]
+        assert np.array_equal(ip.ENERGY.K2(), [2, 2, 3])
+
+        with pytest.warns(DataValidityError):
+            invalid = ipd.read_from_string("ENERGY A=1 NK=3 K1=1 2 3 K2=2 2")
+        with pytest.raises(DataValidityError):
+            invalid.to_string(validate="save")
 
         ipd = cd.InputParametersDefinition.definition_from_dict(
             {
@@ -916,32 +2366,102 @@ XSITES NR=3 FLAG
         ip.ENERGY.NK = 3
         assert (ip.ENERGY.K1() == [[1, 2, 3], [3, 3, 3], [1, 2, 3]]).all()
 
-    def test_section_adaptor_membership(self):
+    def test_standard_container_access_during_transactions(self):
         ipd = cd.InputParametersDefinition.definition_from_dict({"CONTROL": [V("VALUE", 1)]})
         section = ipd.create_object().CONTROL
         definition = ipd["CONTROL"]
+        assert not definition.is_option
+        assert definition["VALUE"].is_option
 
-        current = SectionAdaptor(section)
-        assert "VALUE" in current
-        assert "EXTRA" not in current
+        assert "VALUE" in section
+        assert section["VALUE"]() == 1
+        assert "EXTRA" not in section
         section["VALUE"].set_dangerous("not-an-integer")
-        assert current.is_dangerous("VALUE")
+        assert section["VALUE"].is_dangerous()
 
         dangerous = DangerousValue("unchecked")
-        merged = MergeSectionAdaptor({"EXTRA": dangerous}, section)
-        assert "VALUE" in merged
-        assert "EXTRA" in merged
-        assert "MISSING" not in merged
-        assert merged.is_dangerous("EXTRA")
+        with ConfigurationTransaction(section) as transaction:
+            with transaction.savepoint() as savepoint:
+                section.stage_value(
+                    transaction, "EXTRA", dangerous, unknown="add"
+                )
+                assert "VALUE" in section
+                assert "EXTRA" in section
+                assert "MISSING" not in section
+                assert section["EXTRA"].is_dangerous()
+                savepoint.rollback()
+        assert "EXTRA" not in section
 
-        parsed = MergeSectionDefinitionAdaptor({"EXTRA": dangerous}, definition)
-        assert "VALUE" in parsed
-        assert "EXTRA" in parsed
-        assert "MISSING" not in parsed
-        assert parsed.is_dangerous("EXTRA")
+        generated_ipd = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUES", gt.Array(int)), V("NVALUES", Length("VALUES"))]}
+        )
+        generated_section = generated_ipd.create_object().CONTROL
+        with ConfigurationTransaction(generated_section) as transaction:
+            with transaction.savepoint() as savepoint:
+                generated_section["VALUES"].stage(transaction, [1, 2, 3])
+                assert generated_section.NVALUES() == 3
+                savepoint.rollback()
+
+        copied_generated = generated_ipd.copy().create_object()
+        copied_generated.CONTROL.VALUES = [1, 2]
+        assert copied_generated.CONTROL.NVALUES() == 2
+
+    def test_generated_option_uses_its_runtime_section(self):
+        def generated_getter(section, _key=None):
+            return section["SOURCE"]()
+
+        def generated_setter(section, value, _key=None):
+            transaction = ConfigurationTransaction.current(section)
+            section["SOURCE"].stage(transaction, value)
+
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {
+                "CONTROL": [
+                    V("SOURCE", 1),
+                    GeneratedValueDefinition(
+                        "GENERATED", generated_getter, generated_setter
+                    ),
+                ]
+            }
+        )
+        parameters = definition.create_object()
+        assert parameters.CONTROL.GENERATED() == 1
+        parameters.CONTROL.GENERATED.set(2)
+        assert parameters.CONTROL.SOURCE() == 2
+
+    def test_parse_validation_sees_keyword_assignments(self):
+        def parsed_keywords(section, _values, why):
+            if why == "parse":
+                assert "MODE" in section._parsed_values
+
+        definition = cd.InputParametersDefinition(
+            [
+                cd.InputSectionDefinition(
+                    "CONTROL",
+                    [V("MODE", 1)],
+                    validators=parsed_keywords,
+                )
+            ]
+        )
+        parameters = definition.create_object()
+        parameters.CONTROL.set(validation_reason="parse", MODE=2)
+        assert parameters.CONTROL.MODE() == 2
+        assert not hasattr(parameters.CONTROL, "_parsed_values")
+
+    def test_adding_empty_custom_member_is_validated(self):
+        def reject_extra(root, _values, _why):
+            if "EXTRA" in root:
+                return DataValidityError("EXTRA is not allowed")
+
+        definition = cd.InputParametersDefinition([], validators=reject_extra)
+        parameters = definition.create_object()
+
+        with pytest.raises(DataValidityError, match="EXTRA is not allowed"):
+            parameters.add("EXTRA")
+        assert "EXTRA" not in parameters
 
     def test_conditional_length(self):
-        mode_is_one = lambda definition, section: section.get("MODE") == 1  # noqa E731
+        mode_is_one = lambda definition, section: section["MODE"]() == 1  # noqa E731
         ipd = cd.InputParametersDefinition.definition_from_dict(
             {
                 "CONTROL": [
@@ -954,6 +2474,7 @@ XSITES NR=3 FLAG
 
         active = ipd.read_from_string("CONTROL VALUES=1 2 3 NVALUES=3 MODE=1")
         assert active.CONTROL.NVALUES() == 3
+        assert not hasattr(active.CONTROL, "_parsed_values")
         assert "NVALUES=3" in active.to_string()
 
         with pytest.warns(DataValidityError):
@@ -976,13 +2497,7 @@ XSITES NR=3 FLAG
 
     def test_cross_section_conditional_length(self):
         def mode_is_one(definition, section):
-            if isinstance(section, MergeSectionDefinitionAdaptor):
-                return section.root["SECTION_B"].get("MODE") == 1
-            if isinstance(section, SectionAdaptor):
-                section = section.container
-            elif isinstance(section, MergeSectionAdaptor):
-                section = section.section
-            return section._container.SECTION_B.MODE() == 1
+            return section._get_root_container()["SECTION_B"]["MODE"]() == 1
 
         ipd = cd.InputParametersDefinition.definition_from_dict(
             {

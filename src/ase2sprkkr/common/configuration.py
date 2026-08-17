@@ -2,9 +2,26 @@
 and configuration containers - :class:`Sections<ase2sprkkr.common.configuration_containers.Section>`.
 """
 
-from typing import Union
-from .warnings import DataValidityWarning, DataValidityError
+from contextlib import contextmanager
+from typing import Generator, List, Literal, Optional, Tuple, Union
+from .configuration_transaction import (
+    ConfigurationTransaction,
+    PostChangeHookError,
+)
+from .warnings import (
+    DataValidityError,
+    DataValidityErrors,
+    DataValidityWarning,
+    InvalidValuePolicy,
+    ReportInvalidPolicy,
+    RetainInvalidPolicy,
+    ValidationReason,
+    ValidationResult,
+)
 import warnings
+
+
+UnknownMemberPolicy = Optional[Literal["find", "add", "ignore", "fail"]]
 
 
 class Configuration:
@@ -56,6 +73,11 @@ class Configuration:
         I.E. the object, that represents the whole configuration or problem-definition file
         """
         return self._container._get_root_container() if self._container else self
+
+    def clear(self) -> None:
+        """Transactionally clear this item and validate the resulting tree."""
+        with self._mutation("set") as (transaction, _invalid):
+            self.stage_clear(transaction)
 
     @property
     def name(self):
@@ -166,22 +188,90 @@ class Configuration:
         out = out + " " + d.name.upper()
         return out
 
-    def check_for_errors(self, validate="save", print=True):
-        with warnings.catch_warnings(record=True) as lst:
+    def check_for_errors(
+        self, why: str = "save", print: bool = True
+    ) -> List[warnings.WarningMessage]:
+        """Return validation warnings for phase ``why`` and optionally print them."""
+        with warnings.catch_warnings(record=True) as found:
             warnings.simplefilter("always", DataValidityWarning)
-            self._validate(validate)
-        if lst and print:
-            for warning in lst:
+            self.validate(why, report_invalid="warn")
+        if print:
+            for warning in found:
                 warnings.showwarning(
-                    message=warning.message, category=warning.category, filename=warning.filename, lineno=warning.lineno
+                    message=warning.message,
+                    category=warning.category,
+                    filename=warning.filename,
+                    lineno=warning.lineno,
                 )
+        return found
 
-    def validate(self, why="save"):
-        if why == "warning":
-            return self._validate(why)
-        with warnings.catch_warnings():
-            warnings.simplefilter("error", DataValidityError)
-            self._validate(why)
+    def validate(
+        self,
+        why: ValidationReason = "save",
+        report_invalid: Optional[ReportInvalidPolicy] = None,
+    ) -> List[ValidationResult]:
+        """Validate this configuration.
+
+        Parameters
+        ----------
+        why
+          Validation phase: ``set``, ``parse`` or ``save``.
+
+        report_invalid
+          ``"raise"``, ``"warn"`` or ``"ignore"``. By default, errors
+          warn after parsing and raise while setting or saving.
+
+        """
+        if why not in ("set", "parse", "save"):
+            raise ValueError(f"Unknown validation reason: {why!r}")
+        if report_invalid is None:
+            report_invalid = "warn" if why == "parse" else "raise"
+        results = ValidationResult.collect(self._validate, why)
+        ValidationResult.report(results, report_invalid)
+        return results
+
+    @contextmanager
+    def _mutation(
+        self,
+        why: ValidationReason,
+        retain_invalid: Optional[RetainInvalidPolicy] = None,
+        report_invalid: Optional[ReportInvalidPolicy] = None,
+    ) -> Generator[
+        Tuple[ConfigurationTransaction, InvalidValuePolicy], None, None
+    ]:
+        """Stage, validate and finish one policy-controlled mutation.
+
+        ``why`` is the validation phase. ``retain_invalid`` and
+        ``report_invalid`` have the values documented by
+        :class:`InvalidValuePolicy`.
+        """
+        policy = InvalidValuePolicy(why, retain_invalid, report_invalid)
+        hook_error = None
+
+        try:
+            with ConfigurationTransaction.use(self) as transaction:
+                yield transaction, policy
+                root = self._get_root_container()
+                policy.add_semantic(
+                    ValidationResult.collect(root._validate, why)
+                )
+                if policy.rollback:
+                    transaction.abort()
+        except PostChangeHookError as error:
+            hook_error = error
+
+        try:
+            policy.report()
+        except DataValidityError as validation_error:
+            if hook_error is not None:
+                raise DataValidityErrors(
+                    "Configuration validation and post-change hooks failed",
+                    (validation_error, hook_error),
+                ) from None
+            raise
+
+        if hook_error is not None:
+            raise hook_error
 
     def save_to_file(self, file, *, validate: Union[str, bool] = "save"):
         """Save the configuration to a file in a given format.
@@ -196,14 +286,18 @@ class Configuration:
           File to read the data from
 
         validate
-          Validate the data in the container first and raise an exception,
-          if there is an error (e.g. the the data are not complete).
-          The string value can be used to select the type of validation
-          ``save`` means the full check (same as the default value ``True``),
-          use ``set`` to allow some missing values.
+          Validation mode. ``True`` and ``"save"`` perform strict save
+          validation, ``False`` skips validation, and ``"warning"`` performs
+          save validation without raising :class:`DataValidityError` results.
+          ``"set"`` can be used to allow values that are only required when
+          saving.
         """
-        if validate == "warning":
-            self.check_for_errors("save")
+        if validate is True:
+            self.validate("save")
+        elif validate is False:
+            pass
+        elif validate == "warning":
+            self.validate("save", report_invalid="warn")
         else:
             self.validate(validate)
 
@@ -236,13 +330,5 @@ class Configuration:
         s = StringIO()
         self.save_to_file(s, validate=validate)
         return s.getvalue()
-
-    def _find_member(self, name, lower_case: bool = False, is_option=None):
-        item = self._find_members(name, lower_case, is_option)
-        try:
-            return next(item)
-        except StopIteration:
-            return None
-
 
 _help_warning_printed = False

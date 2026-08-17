@@ -15,6 +15,16 @@ if True:
 
 
 class TestDefinitions(TestCase):
+    def test_bsfek_k_path_is_checked_when_saving(self):
+        ip = InputParameters.create("BSFEK")
+        ip.CONTROL.POTFIL = "x"
+
+        with pytest.raises(DataValidityError, match="TASK.KPATH or TASK.KA"):
+            ip.validate("save")
+
+        ip.TASK.KPATH = 1
+        ip.validate("save")
+
     def test_bsfkk_ne_is_fixed(self):
         ip = InputParameters.create("BSFKK")
 

@@ -2,6 +2,7 @@ import inspect
 import os
 import tempfile
 import asyncio
+import warnings
 
 if __package__:
     from .init_tests import TestCase, patch_package
@@ -12,9 +13,96 @@ __package__, __name__ = patch_package(__package__, __name__)
 from ..decorators import add_to_signature  # NOQA: E402
 from ..process_output_reader import AsyncioFileReader  # NOQA: E402
 from ..file_utils import FilePath  # NOQA: E402
+from ..backward_compatibility import (  # NOQA: E402
+    ExceptionGroup,
+    _FallbackExceptionGroup,
+)
+from ..warnings import (  # NOQA: E402
+    catch_warnings_of,
+    DataValidityError,
+    DataValidityErrors,
+    DataValidityWarning,
+    ValidationResult,
+)
 
 
 class TestCommon(TestCase):
+    def test_validation_result(self):
+        warning = DataValidityWarning("warning")
+        error = DataValidityError("error")
+        assert isinstance(warning, ValidationResult)
+        assert isinstance(error, ValidationResult)
+
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            ValidationResult.emit([warning, error])
+        self.assertEqual([warning, error], [item.message for item in caught])
+
+        self.assertRaises(TypeError, lambda: ValidationResult.emit(UserWarning("not a validation result")))
+
+    def test_validation_collection_does_not_capture_other_warnings(self):
+        validation = DataValidityWarning("validation")
+        error = DataValidityError("error")
+
+        def emit():
+            ValidationResult.emit(validation)
+            warnings.warn("ordinary", UserWarning)
+            raise error
+
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            results = ValidationResult.collect(emit)
+
+        self.assertEqual([validation, error], results)
+        self.assertEqual(["ordinary"], [str(item.message) for item in caught])
+
+    def test_catch_warnings_of_catches_only_requested_category(self):
+        validation = DataValidityWarning("validation")
+
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            with catch_warnings_of(ValidationResult) as selected:
+                warnings.warn(validation)
+                warnings.warn("ordinary", UserWarning)
+
+        self.assertEqual([validation], selected)
+        self.assertEqual(["ordinary"], [str(item.message) for item in caught])
+
+    def test_validation_reporting_warns_before_raising_errors(self):
+        first = DataValidityError("first")
+        later = DataValidityWarning("later")
+        second = DataValidityError("second")
+
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            with self.assertRaises(DataValidityErrors) as raised:
+                ValidationResult.report([first, later, second], "raise")
+
+        assert isinstance(raised.value, DataValidityError)
+        assert isinstance(raised.value, ExceptionGroup)
+        self.assertEqual((first, second), raised.value.exceptions)
+        assert isinstance(
+            raised.value.derive((first,)), DataValidityErrors
+        )
+        self.assertEqual([later], [item.message for item in caught])
+
+        with self.assertRaises(DataValidityError) as raised:
+            ValidationResult.report([first], "raise")
+        assert raised.value is first
+
+    def test_fallback_exception_group_can_split_nested_groups(self):
+        first = ValueError("first")
+        second = TypeError("second")
+        nested = _FallbackExceptionGroup("nested", (second,))
+        group = _FallbackExceptionGroup("all", (first, nested))
+
+        selected = group.subgroup(ValueError)
+        assert selected.exceptions == (first,)
+
+        selected, remainder = group.split(TypeError)
+        assert selected.exceptions[0].exceptions == (second,)
+        assert remainder.exceptions == (first,)
+
     def test_file_path(self):
         with tempfile.TemporaryDirectory() as directory:
             path = FilePath("results/output.out", directory)

@@ -1,11 +1,14 @@
 """Definitions of the supported configuration-item repetition modes."""
 
 from enum import Enum, nonmember
-from typing import Union
+from typing import Callable, TYPE_CHECKING, Union
 
 import numpy as np
 
 from .parsing_results import ArrayKey, DefArrayKey, DefDictKey, DictKey, IgnoredKey, Key, RepeatedKey
+
+if TYPE_CHECKING:
+    from .options import Option
 
 
 class Repeated(Enum):
@@ -63,13 +66,15 @@ class Repeated(Enum):
         """Condition controlling output numbering, if there is one."""
         return None
 
-    def numbering_for(self, option):
+    def numbering_for(self, option: "Option") -> "Repeated.Numbering":
         """Return the numbering to use when writing ``option``."""
         return self.is_numbered
 
     @staticmethod
-    def NUMBERED_IF(condition):
-        """Create a dense repeated value numbered when ``condition(option)`` is true."""
+    def NUMBERED_IF(
+        condition: Callable[["Option"], bool]
+    ) -> "RepeatedNumberedIf":
+        """Create a dense repetition numbered when ``condition(option)`` is true."""
         return RepeatedNumberedIf(condition)
 
     @classmethod
@@ -108,8 +113,8 @@ class RepeatedNumberedIf:
 
     The parser accepts both ``NAME`` and ``NAME<number>`` because the option
     controlling the condition may occur later in the input. Values are always
-    stored as an array; ``condition(option)`` only controls validation and the
-    spelling used for output.
+    stored as an array; ``condition(option)`` only controls validation
+    and the spelling used for output.
     """
 
     type = Repeated.Type.ARRAY
@@ -118,7 +123,8 @@ class RepeatedNumberedIf:
     grammar_numbering = Repeated.Numbering.WITH_DEFAULT
     has_header = True
 
-    def __init__(self, condition):
+    def __init__(self, condition: Callable[["Option"], bool]) -> None:
+        """Store the one-argument runtime numbering ``condition``."""
         if not callable(condition):
             raise TypeError("The NUMBERED_IF condition has to be callable")
         self.numbering_condition = condition
@@ -134,5 +140,10 @@ class RepeatedNumberedIf:
     def is_dict(self):
         return False
 
-    def numbering_for(self, option):
-        return Repeated.Numbering.YES if self.numbering_condition(option) else Repeated.Numbering.NO
+    def numbering_for(self, option: "Option") -> Repeated.Numbering:
+        """Evaluate numbering for runtime ``option``."""
+        return (
+            Repeated.Numbering.YES
+            if self.numbering_condition(option)
+            else Repeated.Numbering.NO
+        )

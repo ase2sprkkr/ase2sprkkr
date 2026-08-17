@@ -1,10 +1,25 @@
 """DOS task input parameters definition"""
 
+from typing import Any, Optional
+
 from ...common.grammar_types import SetOf, Integer
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
 from ...common.generated_configuration_definitions import Length
 from ...common.configuration_definitions import if_not_defined
+from ...common.warnings import DataValidityError
+
+
+def _validate_k_path(
+    section: Any, values: Any, why: str
+) -> Optional[DataValidityError]:
+    """Require a complete k-path when parsing or saving, not while editing."""
+    if why == "set" or values["KPATH"]() is not None:
+        return None
+    if values["KA"]() is None or values["KE"]() is None:
+        return DataValidityError(
+            "Please, specify either TASK.KPATH or TASK.KA and TASK.KE"
+        )
 
 
 def input_parameters():
@@ -60,25 +75,29 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
                                 "NKDIR",
                                 Length("KA", "KE", default_values=[[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]]),
                                 info="Number of directions treated in k-spaces",
-                                is_required="Please, specify either TASK.KPATH or TASK.KA and TASK.KE",
+                                is_optional=False,
+                                is_required=False,
                             ),
                             V(
                                 "KA",
                                 SetOf(float, length=3),
                                 is_repeated="NUMBERED",
                                 info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR",
-                                is_required="Please, specify either TASK.KPATH or TASK.KA and TASK.KE",
+                                is_optional=False,
+                                is_required=False,
                             ),
                             V(
                                 "KE",
                                 SetOf(float, length=3),
                                 is_repeated="NUMBERED",
                                 info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR",
-                                is_required="Please, specify either TASK.KPATH or TASK.KA and TASK.KE",
+                                is_optional=False,
+                                is_required=False,
                             ),
                         ],
                     ),
-                ]
+                ],
+                validators=_validate_k_path,
             ),
             ENERGY(
                 emin=(-0.2, "The lowest E-value", None),

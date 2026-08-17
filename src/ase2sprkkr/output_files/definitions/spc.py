@@ -88,17 +88,23 @@ def create_definition():
     def i(j):
         return slice(None), j
 
-    def determinant(data, c):
-        if c.MODE() == "energy":
-            return data[:, 7].reshape(c.NE(), c.NT())
-        return data[:, 6].reshape(c.NE(), c.NT())
+    def determinant(data: np.ndarray, section: object) -> np.ndarray:
+        """Reshape determinant ``data`` using dimensions from ``section``."""
+        if section["MODE"]() == "energy":
+            return data[:, 7].reshape(section["NE"](), section["NT"]())
+        return data[:, 6].reshape(section["NE"](), section["NT"]())
 
     def ii(j):
-        def fn(data, c):
-            first = c.NE if c.MODE() == "energy" else c.NP
-            return data[:, j].reshape(first(), c.NT())
+        def fn(data: np.ndarray, section: object) -> np.ndarray:
+            """Select column ``j`` from ``data`` and shape it from ``section``."""
+            first = section["NE"]() if section["MODE"]() == "energy" else section["NP"]()
+            return data[:, j].reshape(first, section["NT"]())
 
         return fn
+
+    def mode(section: object, _key: object = None) -> str:
+        """Derive the output mode from ``section``."""
+        return "energy" if section["NE"]() > 1 else "kx_ky"
 
     definition = create_output_file_definition(
         "ARPES",
@@ -107,7 +113,7 @@ def create_definition():
             V("NP", int),
             V("COMMENT", Prefixed("#"), name_in_grammar=False),
             V("RAW_DATA", NumpyArray(written_shape=(-1, 8)), name_in_grammar=False),
-            GV("MODE", lambda c, k=None: "energy" if c.NE() > 1 else "kx_ky"),
+            GV("MODE", mode),
             *switch(
                 "MODE",
                 {

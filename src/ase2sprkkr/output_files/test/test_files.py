@@ -92,14 +92,22 @@ class TestOutput(TestCase):
                     return {"parsed": True}
 
             class DummyOutput(OutputFile):
-                def clear(self, deep):
-                    object.__setattr__(self, "cleared", deep)
+                def stage_clear(self, transaction, *, check_required=True):
+                    object.__setattr__(self, "cleared", not check_required)
+                    return True
 
-                def set(self, values, unknown="add"):
-                    object.__setattr__(self, "set_values", (values, unknown))
+                def stage(self, transaction, values, *, unknown="add", invalid=None):
+                    object.__setattr__(
+                        self, "set_values", (values, unknown, invalid.why)
+                    )
+                    return True
+
+                def _validate(self, why):
+                    pass
 
             out = object.__new__(DummyOutput)
             object.__setattr__(out, "_definition", DummyDefinition())
+            object.__setattr__(out, "_container", None)
             object.__setattr__(out, "_filename", None)
             object.__setattr__(out, "_potential", None)
             object.__setattr__(out, "_potential_filename", None)
@@ -110,7 +118,7 @@ class TestOutput(TestCase):
             self.assertEqual(Path(out._filename).name, "Fe_JXC_XCPLTEN_Jij.dat")
             self.assertEqual(Path(out.potential_filename).name, "Fe.pot")
             self.assertTrue(out.cleared)
-            self.assertEqual(out.set_values, ({"parsed": True}, "add"))
+            self.assertEqual(out.set_values, ({"parsed": True}, "add", "parse"))
 
             out.set_potential_filename(directory / "manual.pot_new")
             self.assertEqual(Path(out.potential_filename).name, "manual.pot_new")

@@ -5,6 +5,7 @@ there are a generic classes for these sections.
 from ..sprkkr.configuration import ConfigurationSection, RepeatedConfigurationSection
 from ..sprkkr.io_data import ReadIoData, WriteIoData
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
+from ..common.configuration_transaction import ConfigurationTransaction
 from ..common.warnings import DataValidityWarning
 
 
@@ -54,7 +55,8 @@ class PotentialSectionTrait:
         return self._definition.depends_on()
 
     def reset(self):
-        self.clear(True)
+        with ConfigurationTransaction.use(self) as transaction:
+            self.stage_clear(transaction, check_required=False)
 
 
 class PotentialSection(PotentialSectionTrait, ConfigurationSection):

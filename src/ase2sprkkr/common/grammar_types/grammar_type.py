@@ -447,12 +447,16 @@ class TypedGrammarType(GrammarType):
         return allowed_types.get(dt, (dt,))
 
     def convert(self, value):
+        if value is None:
+            return None
         if isinstance(value, self.datatype):
             return value
         for i in self.allowed_types:
             if isinstance(value, i):
                 return self.datatype(value)
-        return value
+        raise ValueError(
+            self.type_validation(value, self.allowed_types, self.datatype_name)
+        )
 
     @cached_class_property
     def datatype_name(cls):

@@ -139,30 +139,30 @@ class ScfResult(TaskResult):
             [
                 generated_output(
                     "Converged",
-                    lambda _c: str(self.last_iteration.converged()),
+                    lambda _section: str(self.last_iteration.converged()),
                     info="Whether the final SCF iteration reached convergence.",
                 ),
                 generated_output(
                     "Number of iterations",
-                    lambda _c: len(self.iterations),
+                    lambda _section: len(self.iterations),
                     info="Number of completed SCF iterations.",
                 ),
                 generated_output(
                     "Fermi energy",
-                    lambda _c: self.last_iteration.energy.EF(),
+                    lambda _section: self.last_iteration.energy.EF(),
                     plot=lambda _option, **kwargs: self.plot(("energy", "EF"), **kwargs),
                     info="Fermi energy at the final SCF iteration.",
                 ),
                 generated_output(
                     "Error",
-                    lambda _c: self.last_iteration.error(),
+                    lambda _section: self.last_iteration.error(),
                     plot=lambda _option, **kwargs: self.plot("error", **kwargs),
                     info="Convergence error at the final SCF iteration.",
                     display_name="Convergence error",
                 ),
                 generated_output(
                     "Data",
-                    lambda _c: self,
+                    lambda _section: self,
                     result_class=DataOutputOption,
                     info="Complete parsed SCF result data.",
                     display_name="SCF result data",
