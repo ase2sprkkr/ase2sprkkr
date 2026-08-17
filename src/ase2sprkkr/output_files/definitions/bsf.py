@@ -185,7 +185,7 @@ def create_definition():
         return np.linspace(start - fermi, end - fermi, num) * Rydberg
 
     def i(type):
-        def index(data, c):
+        def index(data: np.ndarray, section: object) -> np.ndarray:
             """
             Returns data in the shape
             ('NE/NK1','NQ_EFF', 'NK(2)')
@@ -203,13 +203,16 @@ def create_definition():
                        NE, type, NQ, NK   types(I)
                   k-k: NK, type, NQ, NK   types(u,d)
                        NK, NQ, NK   types(I)
-            """
-            nq = c.NQ_EFF()
 
-            ekrel = c.MODE() == "EK-REL"
-            nk2 = c.NK() if ekrel else c.NK2()
-            if c.KEYWORD() == "BSF":
-                nk1 = c.NE() if ekrel else c.NK1()
+            ``data`` is the flat source array and ``section`` supplies its
+            runtime dimensions and BSF mode.
+            """
+            nq = section["NQ_EFF"]()
+
+            ekrel = section["MODE"]() == "EK-REL"
+            nk2 = section["NK"]() if ekrel else section["NK2"]()
+            if section["KEYWORD"]() == "BSF":
+                nk1 = section["NE"]() if ekrel else section["NK1"]()
                 limit = nq * nk1 * nk2 * 2
                 if type >= 0:
                     return data[:limit].reshape(nk1, 2, nq, nk2)[:, type]
@@ -217,9 +220,9 @@ def create_definition():
                     return data[limit:].reshape(nk1, nq, nk2)
             else:
                 if ekrel:
-                    return data.reshape(c.NE(), 4, nq, nk2)[:, type + 1]
+                    return data.reshape(section["NE"](), 4, nq, nk2)[:, type + 1]
                 else:
-                    return data.reshape(4, c.NK1(), nq, nk2)[type + 1]
+                    return data.reshape(4, section["NK1"](), nq, nk2)[type + 1]
 
         return index
 

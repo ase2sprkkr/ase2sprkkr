@@ -209,9 +209,11 @@ class Array(GrammarType):
     def convert(self, value):
         if self.as_list:
             if callable(self.as_list):
-                return value if isinstance(value, self.as_list) else self.as_list(value)
+                value = value if isinstance(value, self.as_list) else self.as_list(value)
+                return self.as_list(self.type.convert(item) for item in value)
             else:
-                return list(value) if isinstance(value, tuple) else value
+                value = list(value) if isinstance(value, tuple) else value
+                return [self.type.convert(item) for item in value]
 
         type, shape = self.type.numpy_dtype()
         type = numpy_types.get(type, type)
@@ -225,21 +227,13 @@ class Array(GrammarType):
 
             if self._dtype_condition(type, shape):
 
-                def validate(v):
-                    self.type.validate(v)
-                    return v
-
-                value = (validate(self.type.convert(i)) for i in value)
+                value = (self.type.convert(i) for i in value)
                 out = np.fromiter(value, dtype=(type, shape), count=ln)
             else:
                 value = [self.type.convert(i) for i in value]
                 out = np.asarray(value)
             return out
         elif type is not value.dtype and np.dtype(type) is not value.dtype:
-            for i in value:
-                self.type.validate(self.type.convert(i))
-                # check conversion of only first row is sufficient
-                break
             value = value.astype((type, shape))
         return value
 

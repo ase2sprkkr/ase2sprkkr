@@ -17,7 +17,7 @@ from ..sprkkr.configuration import (
 )
 from ..common.grammar_types import mixed, flag
 from ..common.grammar import generate_grammar, delimitedList
-from ..common.decorators import cached_class_property, cache
+from ..common.decorators import add_to_signature, cached_class_property, cache
 from .input_parameters import InputParameters, InputSection
 
 with generate_grammar():
@@ -106,6 +106,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     def _generic_info(self):
         return f"Input parameters for task {self.name}"
 
+    @add_to_signature(ConfigurationFileDefinition.__init__, prepend=True)
     def __init__(self, name, members=None, executable="kkrscf", mpi=True, result_reader=None, **kwargs):
         """
         Parameters

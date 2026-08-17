@@ -400,7 +400,12 @@ class InputParameters(ConfigurationFile):
         self._definition = self.definition(task)
         self._init_members_from_the_definition()
         if retain_values:
-            self.set(vals, unknown="ignore", error="ignore")
+            self.set(
+                vals,
+                unknown="ignore",
+                retain_invalid="none",
+                report_invalid="ignore",
+            )
 
     def save_to_file(self, file, atoms=None, *, validate="save"):
         if self._definition.save_hook:

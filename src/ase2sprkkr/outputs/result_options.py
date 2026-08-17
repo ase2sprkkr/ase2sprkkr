@@ -4,6 +4,7 @@ import os
 import platform
 import shutil
 import subprocess
+from typing import Any, Tuple
 
 from ..common.container_definitions import SectionDefinition
 from ..common.generated_configuration_definitions import GeneratedValueDefinition
@@ -11,6 +12,7 @@ from ..common.options import Option
 from ..common.configuration_containers import Section
 from ..common.file_utils import FilePath
 from ..common.value_definitions import ValueDefinition
+from ..common.warnings import ValidationResult
 from ..output_files.output_files import OutputFile
 
 
@@ -153,10 +155,20 @@ class OutputFileDefinition(ValueDefinition):
         self.file_type = file_type
         super().__init__(name, str, is_optional=True)
 
-    def convert_and_validate(self, option, value, why="set", item=False):
+    def convert_value(self, option: Option, value: Any, item: bool = False) -> FilePath:
+        """Resolve ``value`` relative to the result owning ``option``.
+
+        ``item`` is accepted for the common value-definition conversion API.
+        """
         owner = getattr(option._container, "result", None)
         directory = owner.directory if owner is not None else None
         return FilePath(value, directory)
+
+    def validate_converted(
+        self, option: Option, value: Any, why: str = "set", item: bool = False
+    ) -> Tuple[ValidationResult, ...]:
+        """Accept converted ``value``; remaining arguments match the common API."""
+        return ()
 
 
 class OutputFilesSection(Section):

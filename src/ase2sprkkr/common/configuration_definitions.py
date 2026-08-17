@@ -12,21 +12,37 @@ e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 
 import pyparsing as pp
 import inspect
-from typing import Dict, Union, Any
+from typing import Callable, Dict, Iterable, Optional, Union, Any
 import itertools
 from . import backward_compatibility  # NOQA
 import re
 
-from .warnings import DataValidityWarning
 from .options import Dummy, DummyStub
 from .decorators import cached_class_property, cached_property
 from .grammar import generate_grammar
 from .grammar_types.basic import Separator, KeywordSeparator
 from .repetition import Repeated
+from .warnings import DataValidityWarning, ValidationResult
+
+
+Validator = Callable[[Any, Any, str], Any]
+_NO_GENERATED_KEY = object()
 
 
 def _definition_write_condition_always_true(_):
     return True
+
+
+def _validate_warning_condition(item: Any, _container: Any, _why: str) -> Any:
+    """Run the legacy one-value warning condition as an ordinary validator."""
+    condition = item._definition.warning_condition
+    if condition is None:
+        return None
+    value = item() if item._definition.is_option else item
+    result = condition(value)
+    if result is None or isinstance(result, ValidationResult):
+        return result
+    return DataValidityWarning(result)
 
 
 class NotAllowed:
@@ -65,14 +81,17 @@ class BaseDefinition:
           to hide the inactive members
     """
 
-    validate_section = None
-    """ Can be redefined for validating whole section """
-
     validate_parsed = None
     """Can be redefined for checks that require knowing which input items were explicitly parsed."""
 
     Repeated = Repeated
     """Supported repetition modes; retained here as part of the public definition API."""
+
+    is_option = True
+    """Whether this definition creates a leaf option rather than a container."""
+
+    is_generated = False
+    """Whether the runtime option computes its value from other values."""
 
     #
     #
@@ -104,7 +123,9 @@ class BaseDefinition:
         return name == (self.name_lcase if lower_case else self.name)
 
     def allowed(self, container):
-        return not self.condition or self.condition(self, container)
+        if not self.condition:
+            return True
+        return self.condition(self, container)
 
     def add_grammar_hook(self, hook):
         """Added hooks process the grammar of the option/container.
@@ -206,7 +227,9 @@ class BaseDefinition:
         if "_copy_args" not in self.__class__.__dict__:
             args = inspect.getfullargspec(self.__class__.__init__).args[1:]
             self.__class__._copy_args = {
-                v: "_" + v if "_" + v in self.__dict__ else v for v in args if v not in self._copy_excluded_args
+                value: "_" + value if "_" + value in self.__dict__ else value
+                for value in args
+                if value not in self._copy_excluded_args
             }
         return self.__class__._copy_args
 
@@ -294,7 +317,8 @@ class RealItemDefinition(BaseDefinition):
         condition=None,
         write_condition=None,
         result_class=None,
-        warning_condition=None,
+        warning_condition: Optional[Callable[[Any], Any]] = None,
+        validators: Optional[Union[Validator, Iterable[Validator]]] = (),
         plot=None,
     ):
         """
@@ -346,7 +370,15 @@ class RealItemDefinition(BaseDefinition):
             Redefine the class that holds data for this option/section.
 
          warning_condition
-            If this lambda returns a non-none during validation, a warning will be issued.
+            A one-value warning condition executed through the validator
+            pipeline.
+
+         validators
+            A callable or an iterable of callables accepting the runtime item,
+            its containing runtime section, and the validation reason (``set``,
+            ``parse`` or ``save``). Validators return a
+            :class:`DataValidityWarning`, :class:`DataValidityError`, an
+            iterable of such issues, or None.
         """
         if isinstance(name, (tuple, list)):
             self.all_names = name
@@ -369,6 +401,14 @@ class RealItemDefinition(BaseDefinition):
         if result_class:
             self.result_class = result_class
         self.warning_condition = warning_condition
+        if validators is None:
+            self.validators = ()
+        elif callable(validators):
+            self.validators = (validators,)
+        else:
+            self.validators = tuple(validators)
+            if not all(callable(validator) for validator in self.validators):
+                raise TypeError("validators must be callable")
         self.name_format = name_format
         self.plot = plot
 
@@ -399,11 +439,31 @@ class RealItemDefinition(BaseDefinition):
     def has_name(self, name, lower_case=False):
         return name in (self.lower_case_names if lower_case else self.all_names)
 
-    def validate_warning(self, value):
-        if self.warning_condition:
-            out = self.warning_condition(value)
-            if out is not None:
-                DataValidityWarning.warn(out)
+    def run_validators(self, item: Any, container: Any, why: str) -> None:
+        """Run validators for runtime ``item`` in ``container`` during ``why``."""
+        for validator in itertools.chain(self.intrinsic_validators, self.validators):
+            ValidationResult.emit(validator(item, container, why))
+
+    def get_generated(self, option: Any, key: Any = _NO_GENERATED_KEY) -> Any:
+        """Invoke a generated getter using its section-oriented API."""
+        if key is _NO_GENERATED_KEY:
+            return self.getter(option._container)
+        return self.getter(option._container, key)
+
+    def stage_generated(
+        self,
+        option: Any,
+        transaction: Any,
+        value: Any,
+        key: Any = _NO_GENERATED_KEY,
+    ) -> None:
+        """Invoke a generated setter using its section-oriented API."""
+        if key is _NO_GENERATED_KEY:
+            self.setter(option._container, value)
+        else:
+            self.setter(option._container, value, key)
+
+    intrinsic_validators = (_validate_warning_condition,)
 
     def all_names_in_grammar(self):
         if not self.name_in_grammar:

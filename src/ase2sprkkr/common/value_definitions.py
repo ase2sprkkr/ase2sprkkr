@@ -1,17 +1,51 @@
-from .configuration_definitions import RealItemDefinition
-from .options import Option, DangerousValue
+from .configuration_definitions import RealItemDefinition, Validator
+from .options import Option
+from .dangerous_values import DangerousValue
 from .grammar_types import GrammarType, type_from_type, type_from_value, Array, QString
 
 import builtins
-from typing import Union, Dict, Any
+import copy as copy_module
+from typing import Iterable, List, Optional, Sequence, Tuple, Union, Dict, Any
 import numpy as np
 import pyparsing as pp
-from .warnings import warnings, DataValidityError
+from .warnings import warnings, DataValidityError, ValidationResult
+
+
+def _validate_required(
+    option: Option, container: Any, why: str
+) -> Optional[DataValidityError]:
+    """Validate requiredness of ``option`` in ``container`` for phase ``why``."""
+    requirement = option._definition.is_required
+    if why == "set" and not callable(requirement):
+        return None
+    required = option.is_required()
+    if not required or (required == "save" and why != "save"):
+        return None
+    value = option(unpack=False, all_values=True)
+    if value is not None or isinstance(value, DangerousValue):
+        return None
+    if required is True or required == "save":
+        message = f"The value is required for {option._get_path()}, it can't be None"
+    else:
+        message = required
+    return DataValidityError(message)
+
+
+def _validate_numbering(
+    option: Option, container: Any, why: str
+) -> Optional[DataValidityError]:
+    """Validate conditional numbering of ``option`` for phase ``why``."""
+    if option._definition.is_repeated.numbering_condition is None:
+        return None
+    value = option(unpack=False, all_values=True)
+    return option._definition.numbering_issue(option, value)
 
 
 class ValueModifier:
     """If this class is given as a type of a Value, it will modify the definition
     of value somehow. It is responsibile to set the True type of the value"""
+
+    validators = ()
 
 
 class InheritingValueModifier(ValueModifier):
@@ -20,18 +54,81 @@ class InheritingValueModifier(ValueModifier):
     _enriching_classes = {}
 
     def modify_definition(self, definition):
-        dcls = definition.__class__
-        cls = self._enriching_classes.get(dcls)
-        if not cls:
-            scls = self.__class__
-            self._enriching_classes[dcls] = cls = type(scls.__name__ + dcls.__name__, (scls, dcls), {})
-
-        definition.__class__ = cls
+        modifiers = (*getattr(definition, "_modifiers", ()), self)
+        base_classes = getattr(
+            definition, "_base_classes", (definition.__class__,)
+        )
+        base_classes = (type(self), *base_classes)
+        definition.__class__ = self._modified_class(base_classes)
+        definition._modifiers = modifiers
         return self.type
+
+    def copy(self, **kwargs: Any) -> Any:
+        """Copy a modified definition together with its modifier objects."""
+        out = super().copy(**kwargs)
+        out._modifiers = tuple(
+            copy_module.copy(modifier) for modifier in self._modifiers
+        )
+        modifier_validators = (
+            validator
+            for modifier in out._modifiers
+            for validator in modifier.validators
+        )
+        out.validators += tuple(
+            validator
+            for validator in modifier_validators
+            if validator not in out.validators
+        )
+        return out
+
+    @classmethod
+    def _modified_class(cls, base_classes: Tuple[type, ...]) -> type:
+        """Return the cached dynamic class combining ``base_classes``."""
+        modified = cls._enriching_classes.get(base_classes)
+        if modified is None:
+            modified = type(
+                "".join(item.__name__ for item in base_classes),
+                base_classes,
+                {
+                    "__init__": base_classes[-1].__init__,
+                    "__reduce_ex__": _reduce_modified_definition,
+                    "_base_classes": base_classes,
+                },
+            )
+            cls._enriching_classes[base_classes] = modified
+        return modified
+
+
+def _reduce_modified_definition(
+    definition: "ValueDefinition", protocol: int
+) -> tuple:
+    """Describe ``definition`` for pickle protocol ``protocol``."""
+    state = definition.__dict__.copy()
+    modifiers = state.pop("_modifiers")
+    return (
+        _rebuild_modified_definition,
+        (definition._base_classes, modifiers),
+        state,
+    )
+
+
+def _rebuild_modified_definition(
+    base_classes: Tuple[type, ...], modifiers: Sequence[ValueModifier]
+) -> "ValueDefinition":
+    """Reapply ``base_classes`` and ``modifiers`` before restoring state."""
+    definition_class = base_classes[-1]
+    instance = definition_class.__new__(definition_class)
+    instance.__class__ = InheritingValueModifier._modified_class(base_classes)
+    instance._modifiers = modifiers
+    return instance
 
 
 class ValueDefinition(RealItemDefinition):
     result_class = Option
+    intrinsic_validators = RealItemDefinition.intrinsic_validators + (
+        _validate_required,
+        _validate_numbering,
+    )
 
     name_in_grammar = None
     is_generated = False
@@ -64,6 +161,7 @@ class ValueDefinition(RealItemDefinition):
         write_condition=None,
         condition=None,
         warning_condition=None,
+        validators: Optional[Union[Validator, Iterable[Validator]]] = (),
         result_class=None,
         delimiter=None,
         delimiter_grammar=None,
@@ -118,8 +216,10 @@ class ValueDefinition(RealItemDefinition):
           see the ``required`` parameter.
 
         is_required: bool or callable or str
-          Required option can not be set to None (however, a required one
-          can be still be optional, if it has a default values).
+          Required options must have a value when parsing or saving (however,
+          a required option can still be optional in the grammar if it has a
+          default value). Callable requiredness is also checked while setting,
+          so changing a selector cannot leave its dependent option invalid.
           If required = None, it is set to True if both the conditions are met:
 
            * the value is not expert
@@ -128,8 +228,8 @@ class ValueDefinition(RealItemDefinition):
           If required is str, it means the same as True, the string will be
           used as error message.
 
-          If it is callable, it is evaluated on demand, with the Option as the
-          argument of the function.
+          If it is callable, it is evaluated on demand with the Option as its
+          argument. The runtime section is available as ``option._container``.
 
         is_hidden: bool
           The value is hidden from the user (no container.name access to the value).
@@ -147,6 +247,10 @@ class ValueDefinition(RealItemDefinition):
         is_always_added
           If False, add the value, only if its value is not the default value.
           Default None means False for expert values, True for the others.
+
+        validators: callable or iterable of callables
+          Semantic validators receiving the option, its runtime section and
+          validation reason.
 
         name_in_grammar: bool or None
           The value in the conf file is prefixed by <name><name_value_delimiter>
@@ -208,8 +312,9 @@ class ValueDefinition(RealItemDefinition):
             default_value = fixed_value
             self.is_fixed = True
 
-        if isinstance(type, ValueModifier):
-            type = type.modify_definition(self)
+        modifier = type if isinstance(type, ValueModifier) else None
+        if modifier:
+            type = modifier.modify_definition(self)
 
         if default_value is None and not isinstance(type, (GrammarType, builtins.type)):
             self.type = type_from_value(type, type_map=self.type_from_type_map)
@@ -257,8 +362,11 @@ class ValueDefinition(RealItemDefinition):
             write_condition=write_condition,
             condition=condition,
             warning_condition=warning_condition,
+            validators=validators,
             result_class=result_class,
         )
+        if modifier:
+            self.validators += modifier.validators
 
         if self.name_in_grammar is None:
             self.name_in_grammar = self.type.name_in_grammar
@@ -403,57 +511,63 @@ class ValueDefinition(RealItemDefinition):
     def validate(self, opt, value, why="set", item=False):
         try:
             if value is None:
-                req = opt.is_required
-                if req:
-                    if req == "save":
-                        if why != "save":
-                            return True
-                        else:
-                            req = True
-                    if req is True:
-                        raise ValueError(f"The value is required for {opt._get_path()}, it can't be None")
-                    else:
-                        raise ValueError(req)
                 return True
             if self.is_fixed and not np.array_equal(self.default_value, value):
                 raise ValueError(
                     f"The value of {opt._get_path()} is required to be {self.default_value}, cannot set it to {value}"
                 )
             self.validate_type(item).validate(value, self.get_path, why=why)
-            self.validate_warning(value)
-            if why != "set":
-                self.validate_numbering(opt, value)
         except ValueError as e:
             DataValidityError.warn(str(e))
 
-    def validate_numbering(self, opt, value, *, raise_error=False):
-        """Validate the cardinality of a conditionally numbered value."""
+    def numbering_issue(
+        self, opt: Option, value: Any
+    ) -> Optional[DataValidityError]:
+        """Return an error for invalid conditional numbering, if any."""
         repeated = self.is_repeated
         if repeated.numbering_condition is None or value is None or repeated.numbering_for(opt):
-            return
+            return None
         try:
             length = len(value)
         except TypeError:
-            return
+            return None
         if length <= 1:
-            return
+            return None
         message = (
             f"{opt._get_path()} is unnumbered for the current configuration "
             f"and therefore can contain only one value; got {length}"
         )
-        if raise_error:
-            raise DataValidityError(message)
-        DataValidityError.warn(message)
+        return DataValidityError(message)
 
-    def convert_and_validate(self, opt, value, why="set", item=False):
+    def convert_value(self, opt: Option, value: Any, item: bool = False) -> Any:
+        """Convert ``value`` for ``opt``; ``item`` selects element conversion."""
         with warnings.catch_warnings():
             warnings.simplefilter("error", DataValidityError)
             try:
-                value = self.validate_type(item).convert(value)
-                self.validate(opt, value, why, item)
-                return value
-            except ValueError as v:
-                DataValidityError.warn(str(v))
+                return self.validate_type(item).convert(value)
+            except DataValidityError:
+                raise
+            except (TypeError, ValueError) as error:
+                raise DataValidityError(str(error)) from error
+
+    def validate_converted(
+        self, opt: Option, value: Any, why: str = "set", item: bool = False
+    ) -> List[ValidationResult]:
+        """Validate converted ``value`` for ``opt`` and phase ``why``.
+
+        ``item`` selects element validation rather than whole-value validation.
+        """
+        return ValidationResult.collect(self.validate, opt, value, why, item)
+
+    def convert_and_validate(
+        self, opt: Option, value: Any, why: str = "set", item: bool = False
+    ) -> Any:
+        """Strictly convert and validate ``value`` using the supplied arguments."""
+        value = self.convert_value(opt, value, item)
+        ValidationResult.report(
+            self.validate_converted(opt, value, why, item), "raise"
+        )
+        return value
 
     @property
     def value_name_format(self):
@@ -580,7 +694,9 @@ class ValueDefinition(RealItemDefinition):
         if self.is_repeated.numbering_condition is not None:
             if option is None:
                 raise ValueError("Writing a NUMBERED_IF value requires its runtime Option")
-            self.validate_numbering(option, value, raise_error=True)
+            issue = self.numbering_issue(option, value)
+            if issue:
+                raise issue
 
         def write(name, value):
             if name_in_grammar:

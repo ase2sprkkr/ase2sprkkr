@@ -1,7 +1,17 @@
+from __future__ import annotations
+
 from .configuration_containers import BaseConfigurationContainer
-from typing import Union, Any, Dict
-from .warnings import DataValidityError
+from .configuration import UnknownMemberPolicy
+from typing import Any, Iterable, Mapping, Optional, Union
+from .warnings import (
+    DataValidityError,
+    InvalidValuePolicy,
+    ReportInvalidPolicy,
+    RetainInvalidPolicy,
+    ValidationReason,
+)
 from .configuration_definitions import BaseDefinition
+from .configuration_transaction import ConfigurationTransaction
 import numpy as np
 
 
@@ -12,6 +22,32 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
     sections, sections are then grouped in a configuration file object.
     This is a base class for these containers.
     """
+
+    class ContentsChange:
+        """Original structure of a staged repeated section."""
+
+        def __init__(
+            self,
+            section: "RepeatedConfigurationContainer",
+            proposed: "RepeatedConfigurationContainer",
+        ) -> None:
+            """Capture ``section`` before installing ``proposed`` children."""
+            self.section = section
+            self.old_values = section._values
+            self.old_parents = tuple(
+                (child, child._container) for child in proposed.values()
+            )
+
+        def commit(self) -> None:
+            pass
+
+        def rollback(self) -> None:
+            section = self.section
+            section._values = self.old_values
+            for child, parent in self.old_parents:
+                child._container = parent
+            for child in section.values():
+                child._container = section
 
     def __init__(self, definition, container=None):
         """Create the container and its members, according to the definition"""
@@ -50,26 +86,23 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             return isinstance(name, int) and abs(name) < len(self) or name == -ln
         return name in self._values
 
-    def clear(self, do_not_check_required=False, call_hooks=True, generated=None):
+    def stage_clear(
+        self,
+        transaction: ConfigurationTransaction,
+        *,
+        check_required: bool = True,
+    ) -> bool:
+        """Stage an empty collection in ``transaction``.
+
+        ``check_required`` is accepted for the common staged-clear protocol.
         """
-        Erase all values (or reset to default) from all options in the container
-        (ad subcontainers)
-
-        Parameters
-        ----------
-        do_not_check_required: bool
-          Do not check validity of the values after clearing. If ``False`` (default)
-          is passed as this argument, the required option without a default value
-          (or a section containing such value) throw an exception, which prevents the
-          clearing (neverthenless, previous values in the section will be cleared anyway).
-
-        call_hooks: bool
-          If False, the cleared values do not raise theirs hooks
-
-        generated: bool
-          If True
-        """
-        self._values = [] if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION else {}
+        empty = (
+            []
+            if self._definition.is_repeated
+            == BaseDefinition.Repeated.LIST_SECTION
+            else {}
+        )
+        return self.stage(transaction, empty)
 
     def get(self, name=None, unknown="find"):
         """
@@ -93,51 +126,73 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         if name is None:
             return self.as_dict()
         if "." in name:
-            section, name = name.split(".")
+            section, name = name.split(".", 1)
             return self._values[section].get(name)
-        if name in self._values:
+        try:
             val = self._values[name]
-        else:
-            val = None
-        if not val:
-            raise ValueError(f"No {name} member of {self}")
+        except (IndexError, KeyError, TypeError):
+            raise KeyError(f"No {name} member of {self}") from None
         return val.get()
 
-    def set(self, values: Union[Dict[str, Any], str, None] = {}, value=None, *, unknown="find", error=None, **kwargs):
-        self._set(values, value, unknown=unknown, error=error, **kwargs)
+    def set(
+        self,
+        values: Optional[Union[Mapping[Any, Any], Iterable[Any], str]] = None,
+        value: Any = None,
+        *,
+        unknown: UnknownMemberPolicy = "find",
+        validation_reason: ValidationReason = "set",
+        retain_invalid: Optional[RetainInvalidPolicy] = None,
+        report_invalid: Optional[ReportInvalidPolicy] = None,
+        merge: bool = False,
+        **kwargs: Any,
+    ) -> None:
+        """Set repeated values and validate the complete proposal.
 
-    def _set(self, values: Union[Dict[str, Any], str, None] = {}, value=None, *, unknown="find", error=None, **kwargs):
+        By default, replace the complete collection. With ``merge=True``,
+        append values to a list-like collection or update a dictionary-like
+        collection by key.
+
+        Invalid-value retention and reporting are controlled independently by
+        ``retain_invalid`` (``"none"``, ``"typed"`` or ``"all"``) and
+        ``report_invalid`` (``"raise"``, ``"warn"`` or ``"ignore"``).
+        ``values`` supplies the children, or one child name paired with
+        ``value``. ``unknown`` controls child assignment lookup and
+        ``validation_reason`` selects ``"set"`` or ``"parse"`` validation.
         """
-        Set the value(s) of parameter(s). Usage:
+        with self._mutation(
+            validation_reason, retain_invalid, report_invalid
+        ) as (transaction, invalid):
+            self.stage(
+                transaction,
+                values,
+                value,
+                unknown=unknown,
+                invalid=invalid,
+                merge=merge,
+                **kwargs,
+            )
 
-        > input_parameters.set({'NITER': 5, 'NE': [10]})
-        or
-        > input_parameters.set(NITER=5, NE=[10])
+    def stage(
+        self,
+        transaction: ConfigurationTransaction,
+        values: Optional[Union[Mapping[Any, Any], Iterable[Any], str]] = None,
+        value: Any = None,
+        *,
+        unknown: UnknownMemberPolicy = "find",
+        invalid: Optional[InvalidValuePolicy] = None,
+        merge: bool = False,
+        **kwargs: Any,
+    ) -> bool:
+        """Stage repeated ``values`` in ``transaction``.
 
-        Parameters
-        ----------
-
-        values:
-          Dictionary of values to be set, or the name of the value, if the value is given.
-
-        value:
-          Value to be set. Setting this argument require to pass string name to the values argument.
-
-        unkwnown: 'add', 'find' or None
-          How to handle unknown (not known by the definition) parameters.
-          If 'find', try to find the values in descendant containers.
-          If 'add', add unknown values as custom values.
-          If None, throw an exception.
-          Keyword only argument.
-
-        **kwargs: dict
-          The values to be set (an alternative syntax as syntactical sugar)
+        ``unknown`` and ``invalid`` control descendant assignment. ``merge``
+        updates the current collection instead of replacing it; ``kwargs`` are
+        forwarded to descendant staging.
         """
-
-        def st(child, value):
-            child.set(value, unknown=unknown, error=error, **kwargs)
-
-        if values.__class__ is str:
+        proposed = self._definition.create_object(self._container)
+        if merge:
+            proposed._values = self._values.copy()
+        if isinstance(values, str):
             if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
                 values = [value]
             else:
@@ -146,23 +201,42 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             raise ValueError(
                 "If value argument of Container.set method is given, the values have to be string name of the value"
             )
-
-        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
-            self._values = []
-            for v in values:
-                st(self.add(), v)
-            return
+        elif values is None:
+            values = ()
 
         try:
             items = values.items()
         except AttributeError:
             items = enumerate(values)
 
-        for k, v in items:
-            if k not in self._values:
-                st(self.add(k), v)
+        for key, child_values in items:
+            if (
+                merge
+                and proposed._definition.is_repeated
+                == BaseDefinition.Repeated.DICT_SECTION
+                and key in proposed._values
+            ):
+                child = proposed._values[key]
             else:
-                st(self._values[k], v)
+                child = proposed.add(
+                    None
+                    if proposed._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION
+                    else key
+                )
+            child.stage(
+                transaction,
+                child_values,
+                unknown=unknown,
+                invalid=invalid,
+                **kwargs,
+            )
+
+        change = self.ContentsChange(self, proposed)
+        self._values = proposed._values
+        for child in self.values():
+            child._container = self
+        transaction.push(change)
+        return True
 
     def __iter__(self):
         """Iterate over all members of the container"""
@@ -200,7 +274,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         """
         if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
             out = [v.as_dict(only_changed, generated, copy) for v in self]
-            if out[-1] is not None:
+            if out and out[-1] is not None:
                 for i in range(len(out) - 1, 0, -1):
                     if out[i] is not None:
                         out = out[: i + 1]
@@ -248,7 +322,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
                 out = True
         return out
 
-    def _validate(self, why: str = "save"):
+    def _validate(self, why: str):
         """Validate the configuration data. Raise an exception, if the validation fail.
 
         Parameters
@@ -261,8 +335,8 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         """
         if why == "save" and not self._definition.is_optional and not self.has_any_value():
             DataValidityError.warn(f"Non-optional section {self._definition.name} has no value to save")
-        for o in self.values():
-            o._validate(why)
+        for item in self.values():
+            item._validate(why)
 
     def values_of(self, name):
         ln = len(self)

@@ -608,8 +608,9 @@ class RATDefinition(OutputFileDefinition):
 
 
 def G(name, **kwargs):
-    def get(self, option):
-        return self.option._container.data[name]
+    def get(section: object, _key: object = None):
+        """Read ``name`` from the runtime output section."""
+        return section.data[name]
 
     return GeneratedValueDefinition(name, get, **kwargs)
 

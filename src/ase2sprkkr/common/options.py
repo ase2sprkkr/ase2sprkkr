@@ -1,56 +1,25 @@
 """The classes for storing one configuration value."""
 
 from __future__ import annotations
-from ..common.grammar_types import mixed, GrammarType
-from .configuration import Configuration
+
+import copy
+from typing import Any, Optional, Union
+
+from ..common.grammar_types import mixed
+from .configuration import Configuration, UnknownMemberPolicy
 from ..common.misc import as_integer
-from .decorators import warnings_from_here
-from .warnings import DataValidityError
-import warnings
+from .dangerous_values import DangerousValue
+from .configuration_transaction import ConfigurationTransaction
+from .warnings import (
+    DataValidityError,
+    InvalidValuePolicy,
+    ReportInvalidPolicy,
+    RetainInvalidPolicy,
+)
 
 
-class DangerousValue:
-    """This class is used to store (encapsulate) a value, which should not be validated
-    - to  overcame sometimes too strict enforment of the options values.
-    """
-
-    def __init__(self, value, value_type: GrammarType | None = None, validate: bool = True):
-        """
-        Parameters
-        ----------
-        value
-          A value to be stored
-
-        value_type
-          A grammar type, that the value should satisfy (commonly a mixed type).
-          Can be None - when the only requirement to the value is that it can be
-          stringified.
-
-        validate
-          Should be the value validated or not (e.g. the value parsed by grammar
-          has been already validated, so there is no need to do it again)
-        """
-
-        if validate:
-            if value_type:
-                with warnings.catch_warnings():
-                    warnings.simplefilter("error", DataValidityError)
-                    value = value_type.convert(value)
-                    value_type.validate(value)
-            else:
-                value = str(value)
-        self.value = value
-        self.value_type = value_type
-
-    def __call__(self):
-        """Return the actual value."""
-        return self.value
-
-    def write_value(self, file):
-        if self.value_type:
-            self.value_type.write(file, self.value)
-        else:
-            file.write(self.value)
+class _DiscardInvalidValue(Exception):
+    """The proposed value was reported but must not be staged."""
 
 
 class BaseOption(Configuration):
@@ -74,12 +43,19 @@ class BaseOption(Configuration):
     def _as_dict(self, get):
         return None
 
-    def clear(self, do_not_check_required=False, call_hooks=True, generated=True):
-        pass
+    def stage_clear(
+        self,
+        transaction: ConfigurationTransaction,
+        *,
+        check_required: bool = True,
+    ) -> bool:
+        """Return false because a placeholder has no state to stage."""
+        return False
 
 
 class Dummy(BaseOption):
-    def _validate(self, why="save"):
+    def _validate(self, why: str) -> bool:
+        """Accept validation phase ``why`` because a dummy has no value."""
         return True
 
     def has_any_value(self):
@@ -118,6 +94,47 @@ class Option(BaseOption):
     '1J'
     """
 
+    class Change:
+        """Original state and finalization of a staged option value."""
+
+        _MISSING_RESULT = object()
+
+        def __init__(self, option: "Option") -> None:
+            """Capture the current state and hook of ``option``."""
+            self.option = option
+            self.hook = option._hook
+            self.old_value = option._value
+            self.old_result = getattr(
+                option, "_result", self._MISSING_RESULT
+            )
+
+        def commit(self) -> Any:
+            if self.hook:
+                return self.option, self.hook
+
+        def rollback(self) -> None:
+            self.option._value = self.old_value
+            if self.old_result is self._MISSING_RESULT:
+                self.option.__dict__.pop("_result", None)
+            else:
+                self.option._result = self.old_result
+
+    class IndexedChange(Change):
+        """Rollback state for an in-place indexed value change."""
+
+        def __init__(self, option: "Option", key: Any) -> None:
+            """Capture ``key`` and the surrounding state of ``option``."""
+            super().__init__(option)
+            self.key = key
+            self.target = option(unpack=False, all_values=True)
+            self.old_item = copy.deepcopy(self.target[key])
+
+        def rollback(self) -> None:
+            self.target[self.key] = self.old_item
+            super().rollback()
+
+    _NO_KEY = object()
+
     def __init__(self, definition, container=None, value=None):
         """ "
         Parameters
@@ -139,7 +156,7 @@ class Option(BaseOption):
     def _value_or_default(self):
         d = self._definition
         if d.is_generated:
-            return d.getter(self._container)
+            return d.get_generated(self)
         if hasattr(self, "_result"):
             return self._result
         if self._value is not None:
@@ -205,76 +222,127 @@ class Option(BaseOption):
         """
         return self._definition.get_value(self)
 
-    def set(self, value, *, unknown=None, error=None):
-        self._set(value, unknown=unknown, error=error)
-        if self._container and not error:
-            self._container._validate_section()
+    def set(
+        self,
+        value: Any,
+        *,
+        unknown: UnknownMemberPolicy = None,
+        retain_invalid: Optional[RetainInvalidPolicy] = None,
+        report_invalid: Optional[ReportInvalidPolicy] = None,
+    ) -> None:
+        """Set a value using independent retention and reporting policies.
 
-    @warnings_from_here(stacklevel=2)
-    def _set(self, value, *, unknown=None, error=None):
+        ``retain_invalid`` accepts ``"none"``, ``"typed"`` or ``"all"``.
+        The latter stores unconvertible values as :class:`DangerousValue`.
+        ``report_invalid`` accepts ``"raise"``, ``"warn"`` or ``"ignore"``.
+        ``unknown`` is accepted for the common container/option assignment
+        interface; leaf options do not perform member lookup.
         """
-        Set the value of the option.
-
-        Parameters
-        ----------
-        value: mixed
-          The new value of the option.
-
-        unknown: str or None
-          A dummy argument to make the method compatibile with
-          ase2sprkkr.sprkkr.common.configuration_containers.ConfigurationContainer.set()
-
-        error:
-        """
-        with warnings.catch_warnings(record=True) as recorded_warnings:
-            d = self._definition
-            if d.is_generated:
-                return d.setter(self._container, value)
-
-            if value is None:
+        with self._mutation(
+            "set", retain_invalid, report_invalid
+        ) as (transaction, invalid):
+            if value is None and not self._definition.is_generated:
                 try:
-                    return self.clear()
-                except ValueError:
-                    if not error == "ignore":
-                        raise
-                    return
-            elif d.is_repeated.is_dict:
-                if isinstance(value, dict):
-                    self.clear(do_not_check_required=value, call_hooks=False)
-                    for k, v in value.items():
-                        self._set_item(k, v, error)
-                else:
-                    try:
-                        self._set_item("def", value, error)
-                    except ValueError:
-                        for i, v in enumerate(value):
-                            self._set_item(i + 1, v)
+                    self.stage_clear(transaction)
+                except DataValidityError as issue:
+                    if invalid.retain_typed:
+                        invalid.add(issue)
+                        self.stage(transaction, None)
+                    else:
+                        invalid.discard(issue)
             else:
+                self.stage(
+                    transaction, value, unknown=unknown, invalid=invalid
+                )
+
+    def stage(
+        self,
+        transaction: ConfigurationTransaction,
+        value: Any,
+        *,
+        unknown: UnknownMemberPolicy = None,
+        invalid: Optional[InvalidValuePolicy] = None,
+        key: Any = _NO_KEY,
+    ) -> bool:
+        """Stage ``value`` or indexed ``key`` in ``transaction``.
+
+        ``invalid`` controls conversion-error retention and reporting;
+        ``unknown`` is accepted for compatibility with container staging.
+        """
+        definition = self._definition
+        if definition.is_generated:
+            if key is self._NO_KEY:
+                definition.stage_generated(self, transaction, value)
+            else:
+                definition.stage_generated(self, transaction, value, key)
+            return True
+        if key is not self._NO_KEY:
+            return self._stage_item(transaction, key, value)
+
+        def pack(item: Any) -> Any:
+            if invalid is None:
+                return self._pack_value(item)
+            return self._pack_proposed_value(item, invalid)
+
+        try:
+            if value is None:
+                converted = None
+            elif not definition.is_repeated.is_dict:
+                converted = pack(value)
+            elif isinstance(value, dict):
+                converted = {}
+                rejected = False
+                for item_key, item in value.items():
+                    try:
+                        converted[item_key] = pack(item)
+                    except _DiscardInvalidValue:
+                        rejected = True
+                if rejected:
+                    raise _DiscardInvalidValue
+            else:
+                current = self(unpack=False, all_values=True)
+                converted = dict(current) if isinstance(current, dict) else {}
                 try:
-                    self._value = self._pack_value(value)
-                except DataValidityError:
-                    if not error == "ignore":
-                        raise
-                if error != "section":
-                    d.validate_numbering(self, self._value)
-            self._post_set()
-        for w in recorded_warnings:
-            w.message.args = (
-                f"During setting the value {value} to {self.get_path()}, "
-                f"the following warning have been issued:\n {w.message}",
-                *w.message.args[1:],
-            )
+                    converted["def"] = pack(value)
+                except (TypeError, ValueError):
+                    converted.update(
+                        (index, pack(item))
+                        for index, item in enumerate(value, 1)
+                    )
+        except _DiscardInvalidValue:
+            return False
 
-            warnings.warn_explicit(
-                message=w.message, category=w.category, filename=w.filename, lineno=w.lineno, source=w.source
-            )
+        change = self.Change(self)
+        self._value = converted
+        self.__dict__.pop("_result", None)
+        transaction.push(change)
+        return True
 
-    def _post_set(self):
-        """Thus should be called after all modifications"""
-        if hasattr(self, "_result"):
-            del self._result
-        if self._hook:
-            self._hook(self)
+    def _stage_item(
+        self, transaction: ConfigurationTransaction, key: Any, value: Any
+    ) -> bool:
+        """Stage converted ``value`` at ``key`` in ``transaction``."""
+        definition = self._definition
+        converted = definition.convert_and_validate(self, value, item=True)
+
+        if self._value is None or hasattr(self, "_result"):
+            current = copy.deepcopy(self._value_or_default())
+            current = self._unpack_value(current)
+            change = self.Change(self)
+            self._value = self._pack_value(current)
+            self.__dict__.pop("_result", None)
+            target = self._value
+        else:
+            change = self.IndexedChange(self, key)
+            target = self._value
+
+        try:
+            target[key] = converted
+        except Exception:
+            change.rollback()
+            raise
+        transaction.push(change)
+        return True
 
     def add_hook(self, hook):
         self._hook = hook
@@ -287,64 +355,59 @@ class Option(BaseOption):
         """Set an item of a numbered array. If the Option is not a numbered array, throw an Exception."""
         d = self._definition
         if d.is_generated:
-            d.setter(self._container, value, name)
+            with self._mutation("set") as (transaction, _invalid):
+                self.stage(transaction, value, key=name)
             return
 
         d.check_array_access()
         if not d.is_repeated.is_dict:
-            self()[name] = d.convert_and_validate(self, value, item=True)
-            self.validate(why="set")
-        else:
-            if isinstance(name, (list, tuple)):
-                for n in name:
-                    self._set_item(n, value)
-            elif isinstance(name, slice):
+            with self._mutation("set") as (transaction, _invalid):
+                self.stage(transaction, value, key=name)
+            return
+
+        current = self(unpack=False, all_values=True)
+        proposed = {} if current is None else d.copy_value(current, all_values=True)
+
+        def set_item(key: Any, item: Any) -> None:
+            if not (d.is_repeated.is_numbered.has_default and key == "def"):
                 try:
-                    cnt = len(value)
-                    step = name.step or 1
-                    start = name.start or 1
-                    stop = name.stop or start + step * cnt
-                    for i, v in zip(range(start, stop, step), value):
-                        self._set_item(i, v)
-                except (TypeError, ValueError):
-                    if slice.stop is None:
-                        raise KeyError(
-                            "To get/set values in a numbered array using slice with one value, you have to specify the end index of the slice"
-                        )
-                    for n in range(name.start or 1, name.stop, name.step or 1):
-                        self._set_item(n, value)
+                    key = as_integer(key)
+                except TypeError as exc:
+                    raise KeyError("Numbered array indexes can be only integers, lists or slices") from exc
+                if key < 1:
+                    raise KeyError("Numbered array indexes has to be greater than zero")
+            if item is None:
+                proposed.pop(key, None)
             else:
-                self._set_item(name, value)
-        self._post_set()
+                proposed[key] = item
 
-    def _set_item(self, name, value, error=None):
-        """Set a single item of a numbered array. For internal use - so no sanity checks"""
-        if self._value is None:
-            self._value = {}
-        if not (self._definition.is_repeated.is_numbered.has_default and name == "def"):
+        if isinstance(name, (list, tuple)):
+            for key in name:
+                set_item(key, value)
+        elif isinstance(name, slice):
             try:
-                name = as_integer(name)
-            except TypeError as e:
-                raise KeyError("Numbered array indexes can be only integers, lists or slices") from e
-            if name < 1:
-                raise KeyError("Numbered array indexes has to be greater than zero")
-
-        if value is None:
-            del self._value[name]
-            if not self._value:
-                self._value = None
+                count = len(value)
+                step = name.step or 1
+                start = name.start or 1
+                stop = name.stop or start + step * count
+                for key, item in zip(range(start, stop, step), value):
+                    set_item(key, item)
+            except (TypeError, ValueError):
+                if name.stop is None:
+                    raise KeyError(
+                        "To set a numbered array slice to one value, the slice end has to be specified"
+                    )
+                for key in range(name.start or 1, name.stop, name.step or 1):
+                    set_item(key, value)
         else:
-            try:
-                self._value[name] = self._pack_value(value)
-            except ValueError:
-                if error != "ignore":
-                    raise
+            set_item(name, value)
+        self.set(proposed or None)
 
     def __getitem__(self, name):
         """Get an item of a numbered array. If the Option is not a numbered array, throw an Exception."""
         d = self._definition
         if d.is_generated:
-            return d.getter(self._container, name)
+            return d.get_generated(self, name)
         d.check_array_access()
         if not d.is_repeated.is_dict:
             return self()[name]
@@ -393,10 +456,39 @@ class Option(BaseOption):
         """Validate the value, if it's to be."""
         if isinstance(value, DangerousValue):
             """ The dangerous value is immutable, checked during its creation """
-            pass
-        else:
-            value = self._definition.convert_and_validate(self, value)
-        return value
+            return value
+        return self._definition.convert_and_validate(self, value)
+
+    def _pack_proposed_value(
+        self, value: Any, invalid: InvalidValuePolicy
+    ) -> Any:
+        """Pack ``value`` according to ``invalid`` retention policy."""
+        if isinstance(value, DangerousValue):
+            return value
+        definition = self._definition
+        try:
+            converted = definition.convert_value(self, value)
+        except DataValidityError as issue:
+            if invalid.retain_all:
+                invalid.add(issue)
+                return DangerousValue(
+                    value,
+                    getattr(definition, "type_of_dangerous", None),
+                    validate=False,
+                )
+            invalid.discard(issue)
+            raise _DiscardInvalidValue from issue
+
+        issues = definition.validate_converted(self, converted)
+        retain = invalid.retain_typed or not any(
+            isinstance(issue, DataValidityError) for issue in issues
+        )
+        record = invalid.add if retain else invalid.discard
+        for issue in issues:
+            record(issue)
+        if not retain:
+            raise _DiscardInvalidValue
+        return converted
 
     def __hasitem__(self, name):
         d = self._definition
@@ -438,21 +530,27 @@ class Option(BaseOption):
         if hasattr(self, "_result"):
             del self._result
 
-    def clear(self, do_not_check_required=False, call_hooks=True, generated=True):
-        """Clear the value: set it to None"""
+    def stage_clear(
+        self,
+        transaction: ConfigurationTransaction,
+        *,
+        check_required: bool = True,
+    ) -> bool:
+        """Stage clearing in ``transaction`` without global validation.
+
+        ``check_required`` rejects clearing a required option without a default.
+        """
         if self._definition.is_generated:
-            if not generated:
-                return
-            self._definition.setter(self._container, None)
-        else:
-            if not self._definition.type.has_value:
-                return
-            if self._definition.default_value is None and not do_not_check_required and self.is_required:
-                raise DataValidityError(f"Option {self._get_path()} must have a value.")
-            self._value = None
-            self.clear_result()
-        if call_hooks:
-            self._post_set()
+            return self.stage(transaction, None)
+        if not self._definition.type.has_value:
+            return False
+        if (
+            self._definition.default_value is None
+            and check_required
+            and self.is_required()
+        ):
+            raise DataValidityError(f"Option {self._get_path()} must have a value.")
+        return self.stage(transaction, None)
 
     def is_changed(self) -> bool:
         """True, if the value is set and the value differs from the default"""
@@ -500,8 +598,8 @@ class Option(BaseOption):
             return value, False
         return value, True
 
-    @property
-    def is_required(self):
+    def is_required(self) -> Union[bool, str]:
+        """Return requiredness for this option."""
         r = self._definition.is_required
         if not r:
             return False
@@ -509,27 +607,44 @@ class Option(BaseOption):
             return r(self)
         return r
 
-    def _validate(self, why="save"):
+    def _validate(self, why: str) -> None:
+        """Validate this option for phase ``why``."""
         d = self._definition
-        if (not d.is_validated if d.is_validated is not None else d.is_generated) or not d.type.has_value:
+        container = self._container
+        if why == "parse" and d.validate_parsed:
+            d.validate_parsed(self)
+        if not d.allowed(container):
             return
+        validate_value = (
+            why == "save"
+            and d.type.has_value
+            and (
+                d.is_validated
+                if d.is_validated is not None
+                else not d.is_generated
+            )
+        )
 
-        def vali(value):
-            if isinstance(value, DangerousValue):
-                return
-            d.validate(self, value, why)
+        if not validate_value:
+            d.run_validators(self, container, why)
+            return
 
         value = self(unpack=False, all_values=True)
         if d.is_repeated.is_dict:
             if value is None:
-                vali(value)
+                validation_items = (value,)
             elif isinstance(value, DangerousValue):
-                return
+                validation_items = ()
             else:
-                for i in value.values():
-                    vali(i)
+                validation_items = tuple(value.values())
         else:
-            vali(value)
+            validation_items = (value,)
+
+        for item in validation_items:
+            if not isinstance(item, DangerousValue):
+                d.validate(self, item, why)
+
+        d.run_validators(self, container, why)
 
     @property
     def name(self):

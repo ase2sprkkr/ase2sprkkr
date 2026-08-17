@@ -1,15 +1,13 @@
-from .configuration_definitions import RealItemDefinition, BaseDefinition
+from .configuration_definitions import RealItemDefinition, BaseDefinition, Validator
 from .grammar import delimitedList
 from .misc import dict_first_item
 from .repeated_configuration_containers import RepeatedConfigurationContainer
 from .configuration_containers import Section
-from .section_adaptors import MergeSectionDefinitionAdaptor
-from .decorators import cache
+from .decorators import add_to_signature, cache
 from .parsing_results import dict_from_parsed
 
 import pyparsing as pp
-from typing import Union
-from collections.abc import Iterable
+from typing import Iterable, Optional, Union
 import re
 from io import StringIO
 
@@ -24,6 +22,9 @@ class ContainerDefinition(RealItemDefinition):
 
     force_order = False
     """ Force order of its members """
+
+    is_option = False
+    """Container definitions create sections or configuration roots, not options."""
 
     value_name_format = None
     """ The (print) format, how the name is written """
@@ -62,6 +63,7 @@ class ContainerDefinition(RealItemDefinition):
         repeated_delimiter=None,
         write_condition=None,
         warning_condition=None,
+        validators: Optional[Union[Validator, Iterable[Validator]]] = (),
     ):
         """
         Definition of container (e.g. section of an input file).
@@ -77,6 +79,9 @@ class ContainerDefinition(RealItemDefinition):
 
         force_order: bool
           If True, the items has to retain the order, if False, the items can be in the input file in any order.
+
+        validators: callable or iterable of callables
+          Semantic validators passed to :class:`RealItemDefinition`.
         """
 
         super().__init__(
@@ -92,6 +97,7 @@ class ContainerDefinition(RealItemDefinition):
             result_class=result_class,
             write_condition=write_condition,
             warning_condition=warning_condition,
+            validators=validators,
         )
 
         if not isinstance(members, dict):
@@ -393,52 +399,6 @@ class ContainerDefinition(RealItemDefinition):
 
         return values
 
-    def _validate_parsed_tree(self, values, root=None, parent=None):
-        """Validate a fully parsed value tree.
-
-        Nested container grammars only collect values and deferred checks.  This
-        method is invoked by the outermost grammar, after all sibling sections
-        are available, so conditions may safely inspect values anywhere in the
-        parsed configuration.
-        """
-        data = MergeSectionDefinitionAdaptor(values, self, root=root, parent=parent)
-        if root is None:
-            root = data
-
-        checks = getattr(values, "checks", {})
-        for item in self.members():
-            if isinstance(item, ContainerDefinition):
-                if item.name not in values:
-                    continue
-                child_values = values[item.name]
-                if item.is_repeated and isinstance(child_values, list):
-                    for child in child_values:
-                        item._validate_parsed_tree(child, root, data)
-                else:
-                    item._validate_parsed_tree(child_values, root, data)
-                continue
-
-            if item.validate_parsed:
-                item.validate_parsed(data)
-            check = checks.get(item.name)
-            if check:
-                check(data)
-
-        is_ok = self.validate(data, "parse")
-        if is_ok is not True:
-            if is_ok is None:
-                is_ok = f"Validation of parsed data of {self.name} section failed"
-            raise pp.ParseException(is_ok)
-
-    def _finalize_grammar(self, grammar):
-        """Add semantic validation to the outermost requested grammar only."""
-
-        def validate(s, loc, tokens):
-            self._validate_parsed_tree(self.parse_return(tokens, True))
-            return tokens
-
-        return grammar.add_parse_action(validate)
-
     def _allow_duplicates_of(self, name):
         """Can a given element (identified by name) have more values in the parsed results?
         (However, not all definitions have to specify allow_duplicates, just the ones
@@ -549,13 +509,6 @@ class ContainerDefinition(RealItemDefinition):
 
     def read_from_string(self, string, allow_dangerous=False, **kwargs):
         return self.read_from_file(StringIO(string), allow_dangerous, **kwargs)
-
-    def validate(self, container, why: str = "save"):
-        self.validate_warning(container)
-        for i in self.members():
-            if i.validate_section and i.allowed(container):
-                i.validate_section(container)
-        return True
 
     repeated_class = RepeatedConfigurationContainer
     """ Class for the repeated sections """
@@ -697,6 +650,7 @@ class ConfigurationRootDefinition(ContainerDefinition):
 
         return cls((gen(i) for i in defs))
 
+    @add_to_signature(ContainerDefinition.__init__, prepend=True)
     def __init__(self, name, members=[], **kwargs):
         if not members and not isinstance(name, str):
             members = name
