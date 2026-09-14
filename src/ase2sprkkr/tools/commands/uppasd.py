@@ -63,6 +63,7 @@ def parser(parser):
     group.add_argument(
         "--include-vacuum", action="store_true", help="Include vacuum sites in selector matching and exported outputs"
     )
+    parser.add_argument('-q', '--quiet', default=False, help='Suppress all messages during writing')
 
 
 def run(args, global_args):
@@ -72,6 +73,11 @@ def run(args, global_args):
     from ...output_files.output_files import OutputFile  # NOQA
     from ...output_files.definitions.jxc import JXCOutputFile  # NOQA
     from ...potentials.potentials import Potential  # NOQA
+
+    if args.quiet:
+
+        def print(*x):
+            pass
 
     def _load_jxc_output(filename, potential):
         output = OutputFile.from_file(filename, try_only="jxc", unknown=False)

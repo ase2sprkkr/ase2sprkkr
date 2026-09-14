@@ -82,6 +82,7 @@ class TestUppasdCommand(TestCase):
             include=["Fe"],
             include_vacuum=True,
             font_size=14,
+            quiet=True,
         )
 
         uppasd.run(args, {"debug": True})
@@ -135,6 +136,7 @@ class TestUppasdCommand(TestCase):
             include=None,
             include_vacuum=False,
             font_size=14,
+            quiet=True,
         )
 
         uppasd.run(args, {"debug": True})
