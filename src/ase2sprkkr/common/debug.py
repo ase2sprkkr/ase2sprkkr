@@ -30,10 +30,49 @@ def add_debug_hook(only_original=False):
         sys.excepthook = info
 
 
-def debug_pyparsing(term):
-    term.set_debug(True)
+def backtrace_pyparsing(term, fn):
+    fn(term)
     if hasattr(term, "exprs"):
         for i in term.exprs:
             debug_pyparsing(i)
-    elif hasattr(term, "expr"):
-        debug_pyparsing(term.expr)
+    else:
+        term = getattr(term, "expr", None)
+        if term:
+            debug_pyparsing(term)
+
+
+def debug_pyparsing(term):
+    backtrace_pyparsing(term, lambda term: term.set_debug(True))
+
+
+def check_whitespaces(term, chars={'\t', ' ', '\r'}):
+
+    def check(term):
+        if term.whiteChars != chars:
+            raise ValueError('Bad white chars')
+        backtrace_pyparsing(term, check)
+
+
+def print_grammar(expr, indent=0, stack=None):
+    if stack is None:
+        stack = set()
+
+    prefix = "  " * indent
+
+    if id(expr) in stack:
+        print(f"{prefix}{type(expr).__name__}: {expr}  <recursive>")
+        return
+
+    print(f"{prefix}{type(expr).__name__}: {expr}")
+
+    stack.add(id(expr))
+    try:
+        if hasattr(expr, "exprs"):
+            for child in expr.exprs:
+                print_grammar(child, indent + 1, stack)
+
+        elif hasattr(expr, "expr"):
+            if expr.expr is not None:
+                print_grammar(expr.expr, indent + 1, stack)
+    finally:
+        stack.remove(id(expr))
