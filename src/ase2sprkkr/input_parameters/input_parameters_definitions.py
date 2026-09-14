@@ -29,11 +29,11 @@ class InputValueDefinition(ConfigurationValueDefinition):
     a task configuration"""
 
     @cached_class_property
-    def grammar_of_delimiter():
-        return pp.Suppress("=").set_name("=")
+    def delimiter():
+        with generate_grammar():
+            return pp.Suppress("=").set_name("=")
 
     prefix = "\t"
-    name_value_delimiter = "="
 
     type_from_type_map = {bool: flag}
     type_of_dangerous = mixed
@@ -52,13 +52,11 @@ class InputSectionDefinition(ConfigurationSectionDefinition):
     custom_class = staticmethod(CustomConfigurationValue.factory(InputValueDefinition, mixed))
     """ Factory for custom values in the input sections. """
 
-    delimiter = "\n"
-    """ options are delimited by newline in ouptut. """
-
     @cached_class_property
-    def grammar_of_delimiter():
-        out = (pp.Optional(section_line_ends) + pp.WordStart()).suppress()
-        return out
+    def delimiter():
+        with generate_grammar():
+            out = (pp.Optional(section_line_ends) + pp.WordStart()).suppress()
+            return out.set_name("\n")
 
     do_not_skip_whitespaces_before_name = True
 
@@ -82,25 +80,29 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     configuration_type_name = "INPUT PARAMETERS"
     """ Name of the container type in the runtime documentation """
 
-    delimiter = "\n"
-    """ Sections are delimited by newline in the output """
-
     @cached_class_property
-    def grammar_of_delimiter():
-        def ws(x):
-            return x.set_whitespace_chars("")
+    def delimiter():
+        with generate_grammar():
+            def ws(x):
+                return x.set_whitespace_chars("")
 
-        out = (
-            pp.Optional(section_line_ends) + pp.OneOrMore(ws(pp.LineEnd())) + pp.FollowedBy(ws(pp.Regex(r"[^\s]")))
-        ).suppress()
-        out.set_name("<newline><printable>")
-        return out
+            after_consumed_line_end = pp.Empty().add_condition(
+                lambda s, loc, _t: loc > 0 and s[:loc].rstrip(" \t\r").endswith("\n")
+            )
+
+            out = (
+                pp.Optional(section_line_ends)
+                + pp.OneOrMore(ws(pp.LineEnd()))
+                + pp.FollowedBy(ws(pp.Regex(r"[^\s]")))
+                | after_consumed_line_end
+            ).suppress()
+            return out.set_name("\n")
 
     @classmethod
     @cache
     def custom_value_grammar(cls):
         value = cls.child_class.custom_member_grammar()
-        delim = cls.child_class.grammar_of_delimiter()
+        delim = cls.child_class.delimiter
         return delimitedList(value, delim).set_parse_action(lambda x: dict_from_parsed(x.asList()))
 
     def _generic_info(self):

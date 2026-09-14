@@ -96,9 +96,9 @@ class TestOutput(TestCase):
                     object.__setattr__(self, "cleared", not check_required)
                     return True
 
-                def stage(self, transaction, values, *, unknown="add", invalid=None):
+                def stage(self, transaction, values, *, unknown="add"):
                     object.__setattr__(
-                        self, "set_values", (values, unknown, invalid.why)
+                        self, "set_values", (values, unknown, transaction.policy.why)
                     )
                     return True
 

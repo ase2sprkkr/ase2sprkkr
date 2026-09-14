@@ -19,9 +19,9 @@ import re
 
 from .options import Dummy, DummyStub
 from .decorators import cached_class_property, cached_property
-from .grammar import generate_grammar
+from .grammar import as_delimiter, generate_grammar, Suppress, TokenConverter
 from .grammar_types.basic import Separator, KeywordSeparator
-from .repetition import Repeated
+from .repetition import Repeated, RepeatedItemGrammar
 from .warnings import DataValidityWarning, ValidationResult
 
 
@@ -148,9 +148,7 @@ class BaseDefinition:
          for the given-option value (i.e. a type requirement or other constraints).
         """
         with generate_grammar():
-            out = self._grammar and self._grammar(allow_dangerous)
-            finalize = getattr(self, "_finalize_grammar", None)
-            return finalize(out) if out is not None and finalize else out
+            return self._grammar and self._grammar(allow_dangerous)
 
     @property
     def _grammar(self):
@@ -247,11 +245,6 @@ class BaseDefinition:
         """Creates Section/Option/.... object (whose properties I define)"""
         return self.result_class(self, container)
 
-    can_be_repeated = False
-    """ If True, the item can be repeated in the parsed file. The results will
-  appear multiple times in the resulting dictionary after the parse.
-  This attribute/property function is to be redefined in descendants.
-  """
     is_independent_on_the_predecessor = True
 
     _copy_excluded_args = ["container", "grammar_hooks"]
@@ -317,9 +310,14 @@ class RealItemDefinition(BaseDefinition):
         condition=None,
         write_condition=None,
         result_class=None,
+        is_repeated=False,
+        repeated_delimiter=None,
+        repeated_count=None,
+        repeated_with_name=None,
         warning_condition: Optional[Callable[[Any], Any]] = None,
         validators: Optional[Union[Validator, Iterable[Validator]]] = (),
         plot=None,
+        indent=None
     ):
         """
         Parameters
@@ -369,6 +367,20 @@ class RealItemDefinition(BaseDefinition):
          result_class
             Redefine the class that holds data for this option/section.
 
+         is_repeated: bool or string
+          The section can be repeated.
+          If a non-empty string is given, the values are divided by the string.
+
+         repeated_delimiter: string
+            The delimiter used between repeated instances of self, if not repeated_with_name
+
+         repeated_count: string or int or callable
+            The number of repetitions. If string, the repetition is given from the parsed values. If callable,
+            the function is called on the values of given options.
+
+         repeated_with_name: bool
+            If True, the whole value-name pair is repeated
+
          warning_condition
             A one-value warning condition executed through the validator
             pipeline.
@@ -379,21 +391,28 @@ class RealItemDefinition(BaseDefinition):
             ``parse`` or ``save``). Validators return a
             :class:`DataValidityWarning`, :class:`DataValidityError`, an
             iterable of such issues, or None.
+
+          indent
+            Vytiskne daný string před názvem
         """
         if isinstance(name, (tuple, list)):
             self.all_names = name
             name = name[0]
         else:
             self.all_names = (name,)
+        if written_name:
+            self.all_names = ( *self.all_names, written_name )
         super().__init__(name, is_optional, condition)
-
         self.written_name = written_name or self.name
+
+
         """ The name of the option/section """
         self.name_regex = name_regex
         self.is_expert = is_expert
         self.is_hidden = is_hidden
         self.write_condition = write_condition or _definition_write_condition_always_true
-        self.name_in_grammar = self.__class__.name_in_grammar if name_in_grammar is None else name_in_grammar
+        if name_in_grammar is not None:
+            self.__dict__['name_in_grammar'] = name_in_grammar
         self._info = info
         """ A short help text describing the content for the users. """
         self._description = description
@@ -409,10 +428,41 @@ class RealItemDefinition(BaseDefinition):
             self.validators = tuple(validators)
             if not all(callable(validator) for validator in self.validators):
                 raise TypeError("validators must be callable")
+        if indent:
+            if name_format is not None:
+                raise ValueError("You can not specify both name_format and indent")
+            name_format= indent + "{}"
         self.name_format = name_format
         self.plot = plot
 
+        self.is_repeated = self.Repeated.create(is_repeated, self.default_repeated_type)
+        if self.is_repeated.is_numbered and repeated_with_name and not self.name_in_grammar:
+            raise ValueError("Repeated numbered items have to have its name in the grammar")
+        self._repeated_delimiter = (
+            as_delimiter(repeated_delimiter) if repeated_delimiter is not None else None
+        )
+        self.repeated_count = RepeatedItemGrammar.create(is_repeated, repeated_count)
+        self.repeated_with_name = repeated_with_name
+
+    default_repeated_type = Repeated.REPEATED
+
     all_names = None  # remove the property
+
+    @property
+    def repeated_delimiter(self):
+        if self._repeated_delimiter is not None:
+            return self._repeated_delimiter
+        if self.repeated_with_name and self.container:
+            return self.container.delimiter
+        return pp.Empty().set_name("")
+
+    def added_to_container(self, container):
+        """Hook called when this item is assigned to a parent container.
+
+        Used to attach grammar hooks for dynamic repeated-count behavior.
+        """
+        self.repeated_count.apply_hooks(container)
+        super().added_to_container(container)
 
     @cached_property
     def lower_case_names(self):
@@ -468,8 +518,6 @@ class RealItemDefinition(BaseDefinition):
     def all_names_in_grammar(self):
         if not self.name_in_grammar:
             return
-        if self.written_name:
-            yield self.written_name
         yield from self.all_names
 
     def allow_duplication(self):
@@ -530,38 +578,34 @@ class RealItemDefinition(BaseDefinition):
         """
         Return grammar for the name (and possible alternative names etc.)
         """
-        if self.name_in_grammar:
-            numbering = self.is_repeated.grammar_numbering
-            if self.name_regex:
-                reg = pp.Regex(self.name_regex)
-                if self.do_not_skip_whitespaces_before_name:
-                    reg.leave_whitespace()
-                names = [pp.Regex(self.name_regex)]
-            else:
-                names = self.all_names_in_grammar()
-                keyword = pp.CaselessLiteral if numbering else pp.CaselessKeyword
-                if self.do_not_skip_whitespaces_before_name:
-                    names = [keyword(i).leave_whitespace() for i in names]
-                else:
-                    names = [keyword(i) for i in names]
-            if len(names) > 1:
-                name = pp.Or(names)
-                if self.do_not_skip_whitespaces_before_name:
-                    name = name.leave_whitespace()
-            else:
-                name = names[0]
-            if self.is_repeated:
-                if numbering:
-                    idx = pp.Word(pp.nums)
-                    if numbering.has_default:
-                        name += pp.Optional(idx, default="def")
-                    else:
-                        name += idx
-                    name += pp.WordEnd(pp.alphanums + "_")
-            name.set_parse_action(lambda x: self.is_repeated.key_type(self.name, *x.asList()[1:]))
+        numbering = self.is_repeated.grammar_numbering
+        if self.name_regex:
+            reg = pp.Regex(self.name_regex)
+            if self.do_not_skip_whitespaces_before_name:
+                reg.leave_whitespace()
+            names = [pp.Regex(self.name_regex)]
         else:
-            name = pp.Empty().set_parse_action(lambda x: self.name)
-
+            names = self.all_names_in_grammar()
+            keyword = pp.CaselessLiteral if numbering else pp.CaselessKeyword
+            if self.do_not_skip_whitespaces_before_name:
+                names = [keyword(i).leave_whitespace() for i in names]
+            else:
+                names = [keyword(i) for i in names]
+        if len(names) > 1:
+            name = pp.Or(names)
+            if self.do_not_skip_whitespaces_before_name:
+                name = name.leave_whitespace()
+        else:
+            name = names[0]
+        if self.is_repeated:
+            if numbering:
+                idx = pp.Word(pp.nums)
+                if numbering.has_default:
+                    name += pp.Optional(idx, default="def")
+                else:
+                    name += idx
+                name += pp.WordEnd(pp.alphanums + "_")
+        name.set_parse_action(lambda x: self.is_repeated.key_type(self.name, *x.asList()[1:]))
         return name
 
     def _tuple_with_my_name(self, expr, delimiter=None, has_value: bool = True, name_in_grammar=None):
@@ -577,22 +621,35 @@ class RealItemDefinition(BaseDefinition):
           If False, do not add the parsed value to the results.
           This can be used e.g. for separators (see :class:`ase2sprkkr.common.grammar_types.Separator`) etc.
         """
+        from ase2sprkkr.common.value_definitions import ValueDefinition
         if self.name_in_grammar if name_in_grammar is None else name_in_grammar:
             name = self._grammar_of_name()
             if delimiter:
                 name += delimiter
+            name.suppress()
             out = name - expr
+            if has_value:
+                out.add_parse_action(lambda x: tuple(x) )
+            else:
+                out = Suppress(out)
         else:
-            name = pp.Empty().set_parse_action(lambda x: self.name)
-            out = name + expr
-        if has_value:
-            return out.set_parse_action(lambda x: tuple(x))
-        else:
-            return out.suppress()
+            if has_value:
+                out = TokenConverter(expr)
+
+                def tupled(x):
+                    v = x[0]
+                    if isinstance(v, pp.ParseResults):
+                        v = v.asList()
+                    return (self.is_repeated.key_type(self.name), v)
+
+                out.add_parse_action(tupled)
+            else:
+                out = Suppress(out)
+        return out
 
     do_not_skip_whitespaces_before_name = False
 
-    _copy_excluded_args = BaseDefinition._copy_excluded_args + ["expert"]
+    _copy_excluded_args = BaseDefinition._copy_excluded_args + ["expert", "indent"]
 
 
 class VirtualDefinition(BaseDefinition):
@@ -716,7 +773,7 @@ class Gather:
             names = None
         if names:
             value._definition.write_name(file, names, delimiter)
-            delimiter = self.items[0].name_value_delimiter
+            delimiter = str(self.items[0].delimiter)
         else:
             delimiter = ""
 
@@ -954,6 +1011,6 @@ class SeparatorDefinition(VirtualDefinition):
             if self.condition and self.condition(value):
                 return False
         if delimiter:
-            file.write(delimiter)
+            file.write(str(delimiter))
         self.separator_type.write(file, None)
         return True

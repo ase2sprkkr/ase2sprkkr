@@ -1,5 +1,18 @@
 import pyparsing as pp
 
+""" This module contains classes and functions related to gathering the output
+of parsing section. It takes care of multiplicity of values etc...
+
+The basic behavior is to use ``func:Key.NONE`` - that just returns the key -
+name of the option. For more complex needs, the key type can be a class:
+then the class is constructed during parsing, and possible arguemnts are
+passed to the class, e.g.
+
+::text
+  MDIRQ1
+
+is parsed as ArrayKey("MDIRQ", 1).
+"""
 
 class Result:
     """When data are parsed, some (repeated) options can yield
@@ -9,7 +22,12 @@ class Result:
         return self.value
 
 
-class Key:
+class KeyType(type):
+
+    def __repr__(self):
+        return f"<class f{self.__name__}>"
+
+class Key(metaclass=KeyType):
     """A base class for items, that have to be treated in a special way"""
 
     @staticmethod
@@ -22,6 +40,10 @@ class Key:
         self.key = key
 
     def get(self, too):
+        """ Support method for repeated keys - which gathers the values during processing
+        into Result class, checking the type. And after processing the whole dictionary,
+        the gathered Result is transformed to the real result value. """
+
         if self.key in too:
             out = too[self.key]
             if out.__class__ is not self.ResultClass:
@@ -32,6 +54,9 @@ class Key:
         too.process.append(self.key)
         return out
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__}:{self.key}>"
+
 
 class IgnoredKey(Key):
     """This key is totaly and silently ignored. Use it
@@ -41,6 +66,8 @@ class IgnoredKey(Key):
     def add(self, too, val):
         return
 
+    def __repr__(self):
+        return f"<Ignored>"
 
 class ValidateKey(Key):
     """Keep a named deferred validation without storing the parsed value.
@@ -65,6 +92,8 @@ class SubKey(Key):
     def convert(self, sub):
         return int(sub)
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__}:{self.key}[{self.sub}]>"
 
 class DictKey(SubKey):
     class ResultClass(Result):
@@ -133,7 +162,9 @@ class Values(dict):
 
     def __init__(self):
         super().__init__()
+        #Set for uniqueness checks
         self.checks = {}
+        #These values needs postprocess
         self.process = []
 
     def to_dict(self):

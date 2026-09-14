@@ -21,6 +21,7 @@ from ..common.grammar_types import (
 )
 import pyparsing as pp
 from .output_files import OutputFile
+from ..common.grammar import generate_grammar
 
 
 class OutputFileValueDefinition(ConfigurationValueDefinition):
@@ -28,11 +29,11 @@ class OutputFileValueDefinition(ConfigurationValueDefinition):
     a header of an output file"""
 
     @cached_class_property
-    def grammar_of_delimiter():
-        return pp.Empty().set_name(" ")
+    def delimiter():
+        with generate_grammar():
+            return pp.Empty().set_name("\t")
 
     prefix = " "
-    name_value_delimiter = "\t"
 
     type_from_type_map = {str: line_string}
     type_of_dangerous = pot_mixed
@@ -43,8 +44,10 @@ class OutputFileSection(ConfigurationSection):
 
 
 class OutputFileSectionDefinition(ConfigurationSectionDefinition):
-    delimiter = "\n"
-    grammar_of_delimiter = pp.Suppress("\n").set_whitespace_chars(" \r\t")
+    @cached_class_property
+    def delimiter():
+        with generate_grammar():
+            return pp.Suppress("\n").set_whitespace_chars(" \r\t").set_name("\n")
     custom_class = None
     force_order = True
 
@@ -82,11 +85,8 @@ class OutputFileDefinition(ConfigurationFileDefinition):
     custom_class = None
     """ No custom members in the output files """
 
-    delimiter = "\n"
+    delimiter = line_end
     """ options are delimited by newline in ouptut. """
-
-    grammar_of_delimiter = line_end
-    """ section are delimited by newlines """
 
     result_class = OutputFile
 

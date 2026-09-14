@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import numpy as np
 from typing import Any, Optional, Union
 
 from ..common.grammar_types import mixed
@@ -186,7 +187,11 @@ class Option(BaseOption):
         if isinstance(value, DangerousValue) and unpack:
             value = value()
         if d.is_repeated.is_dict and not all_values:
-            value = value.get("def", self.default_value)
+            value = (
+                value.get("def", self.default_value)
+                if value is not None
+                else self.default_value
+            )
         if unpack:
             value = self._unpack_value(value)
         return value
@@ -240,19 +245,12 @@ class Option(BaseOption):
         """
         with self._mutation(
             "set", retain_invalid, report_invalid
-        ) as (transaction, invalid):
+        ) as (transaction, _policy):
             if value is None and not self._definition.is_generated:
-                try:
-                    self.stage_clear(transaction)
-                except DataValidityError as issue:
-                    if invalid.retain_typed:
-                        invalid.add(issue)
-                        self.stage(transaction, None)
-                    else:
-                        invalid.discard(issue)
+                self.stage_clear(transaction)
             else:
                 self.stage(
-                    transaction, value, unknown=unknown, invalid=invalid
+                    transaction, value, unknown=unknown
                 )
 
     def stage(
@@ -261,69 +259,100 @@ class Option(BaseOption):
         value: Any,
         *,
         unknown: UnknownMemberPolicy = None,
-        invalid: Optional[InvalidValuePolicy] = None,
         key: Any = _NO_KEY,
     ) -> bool:
         """Stage ``value`` or indexed ``key`` in ``transaction``.
 
-        ``invalid`` controls conversion-error retention and reporting;
-        ``unknown`` is accepted for compatibility with container staging.
+        Conversion and validation issues are recorded in the policy owned by
+        ``transaction``. ``unknown`` is accepted for compatibility with
+        container staging.
         """
+        policy = transaction.policy
         definition = self._definition
         if definition.is_generated:
             if key is self._NO_KEY:
                 definition.stage_generated(self, transaction, value)
             else:
                 definition.stage_generated(self, transaction, value, key)
+            transaction._finish_stage()
             return True
         if key is not self._NO_KEY:
             return self._stage_item(transaction, key, value)
 
         def pack(item: Any) -> Any:
-            if invalid is None:
-                return self._pack_value(item)
-            return self._pack_proposed_value(item, invalid)
+            return self._pack_proposed_value(item, policy)
 
         try:
             if value is None:
                 converted = None
-            elif not definition.is_repeated.is_dict:
-                converted = pack(value)
-            elif isinstance(value, dict):
-                converted = {}
-                rejected = False
-                for item_key, item in value.items():
+            elif definition.is_repeated.is_dict:
+                if isinstance(value, dict):
+                    converted = {}
+                    rejected = False
+                    for item_key, item in value.items():
+                        try:
+                            converted[item_key] = pack(item)
+                        except _DiscardInvalidValue:
+                            rejected = True
+                    if rejected:
+                        raise _DiscardInvalidValue
+                else:
+                    current = self(unpack=False, all_values=True)
+                    converted = dict(current) if isinstance(current, dict) else {}
                     try:
-                        converted[item_key] = pack(item)
-                    except _DiscardInvalidValue:
-                        rejected = True
-                if rejected:
-                    raise _DiscardInvalidValue
+                        converted["def"] = pack(value)
+                    except (TypeError, ValueError):
+                        converted.update(
+                            (index, pack(item))
+                            for index, item in enumerate(value, 1)
+                        )
+            elif definition.is_repeated:
+                if isinstance(value, (str, bytes)):
+                    value = (value,)
+                else:
+                    try:
+                        iter(value)
+                    except TypeError:
+                        value = (value,)
+                converted_items = [pack(item) for item in value]
+                if (
+                    isinstance(value, np.ndarray)
+                    or definition.type.array_access
+                    or len(converted_items) > 1
+                ):
+                    converted = np.asarray(converted_items)
+                else:
+                    converted = converted_items
             else:
-                current = self(unpack=False, all_values=True)
-                converted = dict(current) if isinstance(current, dict) else {}
-                try:
-                    converted["def"] = pack(value)
-                except (TypeError, ValueError):
-                    converted.update(
-                        (index, pack(item))
-                        for index, item in enumerate(value, 1)
-                    )
+                converted = pack(value)
         except _DiscardInvalidValue:
+            transaction._finish_stage()
             return False
 
         change = self.Change(self)
         self._value = converted
         self.__dict__.pop("_result", None)
         transaction.push(change)
+        transaction._finish_stage()
         return True
 
     def _stage_item(
-        self, transaction: ConfigurationTransaction, key: Any, value: Any
+        self, transaction: ConfigurationTransaction,
+        key: Any,
+        value: Any,
     ) -> bool:
         """Stage converted ``value`` at ``key`` in ``transaction``."""
         definition = self._definition
-        converted = definition.convert_and_validate(self, value, item=True)
+        policy = transaction.policy
+        try:
+            converted = self._pack_proposed_value(
+                value,
+                policy,
+                item=not definition.is_repeated and definition.type.array_access,
+            )
+        except _DiscardInvalidValue:
+            transaction._finish_stage()
+            return False
 
         if self._value is None or hasattr(self, "_result"):
             current = copy.deepcopy(self._value_or_default())
@@ -341,7 +370,10 @@ class Option(BaseOption):
         except Exception:
             change.rollback()
             raise
+
         transaction.push(change)
+        self.__dict__.pop("_result", None)
+        transaction._finish_stage()
         return True
 
     def add_hook(self, hook):
@@ -355,13 +387,13 @@ class Option(BaseOption):
         """Set an item of a numbered array. If the Option is not a numbered array, throw an Exception."""
         d = self._definition
         if d.is_generated:
-            with self._mutation("set") as (transaction, _invalid):
+            with self._mutation("set") as (transaction, _policy):
                 self.stage(transaction, value, key=name)
             return
 
         d.check_array_access()
         if not d.is_repeated.is_dict:
-            with self._mutation("set") as (transaction, _invalid):
+            with self._mutation("set") as (transaction, _policy):
                 self.stage(transaction, value, key=name)
             return
 
@@ -448,8 +480,12 @@ class Option(BaseOption):
         """Unpack potentionally dangerous values."""
         if isinstance(value, DangerousValue):
             value = value()
-        if self._definition.is_repeated.is_dict and isinstance(value, dict):
-            value = {i: v() if isinstance(v, DangerousValue) else v for i, v in value.items()}
+        r = self._definition.is_repeated
+        if r:
+            if r.is_dict and isinstance(value, dict):
+                value = {i: v() if isinstance(v, DangerousValue) else v for i, v in value.items()}
+            elif isinstance(value, list):
+                value = [v() if isinstance(v, DangerousValue) else v for v in value]
         return value
 
     def _pack_value(self, value):
@@ -460,30 +496,34 @@ class Option(BaseOption):
         return self._definition.convert_and_validate(self, value)
 
     def _pack_proposed_value(
-        self, value: Any, invalid: InvalidValuePolicy
+        self,
+        value: Any,
+        policy: InvalidValuePolicy,
+        *,
+        item: bool = False,
     ) -> Any:
-        """Pack ``value`` according to ``invalid`` retention policy."""
+        """Pack ``value`` according to the transaction's policy."""
         if isinstance(value, DangerousValue):
             return value
         definition = self._definition
         try:
-            converted = definition.convert_value(self, value)
+            converted = definition.convert_value(self, value, item=item)
         except DataValidityError as issue:
-            if invalid.retain_all:
-                invalid.add(issue)
+            if policy.retain_all:
+                policy.add(issue)
                 return DangerousValue(
                     value,
                     getattr(definition, "type_of_dangerous", None),
                     validate=False,
                 )
-            invalid.discard(issue)
+            policy.discard(issue)
             raise _DiscardInvalidValue from issue
 
-        issues = definition.validate_converted(self, converted)
-        retain = invalid.retain_typed or not any(
+        issues = definition.validate_converted(self, converted, item=item)
+        retain = policy.retain_typed or not any(
             isinstance(issue, DataValidityError) for issue in issues
         )
-        record = invalid.add if retain else invalid.discard
+        record = policy.add if retain else policy.discard
         for issue in issues:
             record(issue)
         if not retain:
@@ -540,6 +580,7 @@ class Option(BaseOption):
 
         ``check_required`` rejects clearing a required option without a default.
         """
+        policy = transaction.policy
         if self._definition.is_generated:
             return self.stage(transaction, None)
         if not self._definition.type.has_value:
@@ -549,7 +590,15 @@ class Option(BaseOption):
             and check_required
             and self.is_required()
         ):
-            raise DataValidityError(f"Option {self._get_path()} must have a value.")
+            issue = DataValidityError(
+                f"Option {self._get_path()} must have a value."
+            )
+            if policy.retain_typed:
+                policy.add(issue)
+                return self.stage(transaction, None)
+            policy.discard(issue)
+            transaction._finish_stage()
+            return False
         return self.stage(transaction, None)
 
     def is_changed(self) -> bool:
@@ -610,6 +659,7 @@ class Option(BaseOption):
     def _validate(self, why: str) -> None:
         """Validate this option for phase ``why``."""
         d = self._definition
+
         container = self._container
         if why == "parse" and d.validate_parsed:
             d.validate_parsed(self)
@@ -630,13 +680,17 @@ class Option(BaseOption):
             return
 
         value = self(unpack=False, all_values=True)
-        if d.is_repeated.is_dict:
+        if d.is_repeated:
+            if value is not None:
+                d.repeated_count.validate(self, len(value), why)
             if value is None:
                 validation_items = (value,)
             elif isinstance(value, DangerousValue):
                 validation_items = ()
-            else:
+            elif d.is_repeated.is_dict:
                 validation_items = tuple(value.values())
+            else:
+                validation_items = value
         else:
             validation_items = (value,)
 

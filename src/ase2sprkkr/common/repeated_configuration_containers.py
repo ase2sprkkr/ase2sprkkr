@@ -5,7 +5,6 @@ from .configuration import UnknownMemberPolicy
 from typing import Any, Iterable, Mapping, Optional, Union
 from .warnings import (
     DataValidityError,
-    InvalidValuePolicy,
     ReportInvalidPolicy,
     RetainInvalidPolicy,
     ValidationReason,
@@ -161,13 +160,12 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         """
         with self._mutation(
             validation_reason, retain_invalid, report_invalid
-        ) as (transaction, invalid):
+        ) as (transaction, _policy):
             self.stage(
                 transaction,
                 values,
                 value,
                 unknown=unknown,
-                invalid=invalid,
                 merge=merge,
                 **kwargs,
             )
@@ -179,13 +177,12 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         value: Any = None,
         *,
         unknown: UnknownMemberPolicy = "find",
-        invalid: Optional[InvalidValuePolicy] = None,
         merge: bool = False,
         **kwargs: Any,
     ) -> bool:
         """Stage repeated ``values`` in ``transaction``.
 
-        ``unknown`` and ``invalid`` control descendant assignment. ``merge``
+        ``unknown`` controls descendant assignment. ``merge``
         updates the current collection instead of replacing it; ``kwargs`` are
         forwarded to descendant staging.
         """
@@ -227,7 +224,6 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
                 transaction,
                 child_values,
                 unknown=unknown,
-                invalid=invalid,
                 **kwargs,
             )
 
@@ -335,8 +331,12 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         """
         if why == "save" and not self._definition.is_optional and not self.has_any_value():
             DataValidityError.warn(f"Non-optional section {self._definition.name} has no value to save")
-        for item in self.values():
+
+        values = self.values()
+        self._definition.repeated_count.validate(self, len(values), why)
+        for item in values:
             item._validate(why)
+
 
     def values_of(self, name):
         ln = len(self)

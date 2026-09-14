@@ -5,7 +5,7 @@ I.e. these sections can has any content (they are readed up to the section separ
 
 from ..common.grammar_types import GrammarType
 from ..sprkkr.configuration import ConfigurationValueDefinition, CustomConfigurationValue
-from ..common.grammar import separator_pattern
+from ..common.grammar import generate_grammar, line_end, separator_pattern
 from ..common.decorators import cached_class_property
 
 import re
@@ -22,7 +22,7 @@ class CustomPotentialSectionDefinition(ConfigurationValueDefinition):
 
     prefix = ""
 
-    name_value_delimiter = "\n"
+    delimiter = line_end
     """ The content of the section is delimited from the name by a newline """
 
 
@@ -40,7 +40,7 @@ class CustomSectionToken(pp.Token):
         result = self.pattern.search(instr, loc)
         if result:
             out = instr[loc : result.start()]
-            loc = result.start()
+            loc = result.start() + 1
         else:
             out = instr[loc:]
             loc = len(instr)
@@ -55,11 +55,16 @@ class SectionString(GrammarType):
     This grammar_type as used as a value type for the custom section.
     """
 
-    delimiter_pattern = "(?:[ \t\r]*(?:\n[ \t\r]*)*)*\n" + separator_pattern("*") + "(?:[ \t\r]*(?:\n[ \t\r]*))*\n"
+    delimiter_pattern = (
+        "(?:[ \t\r]*\n)*[ \t\r]*"
+        + separator_pattern("*")
+        + "(?:[ \t\r]*(?:\n[ \t\r]*))*\n"
+    )
 
     @cached_class_property
-    def grammar_of_delimiter():
-        return pp.Regex(SectionString.delimiter_pattern).set_name("*" * 79 + "<newline>").suppress()
+    def delimiter():
+        with generate_grammar():
+            return pp.Regex(SectionString.delimiter_pattern).suppress().set_name("*" * 79 + "\n")
 
     @cached_class_property
     def _grammar():

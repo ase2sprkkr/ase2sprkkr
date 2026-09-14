@@ -15,10 +15,6 @@ if True:
 
 class TestOccupancy(TestCase):
     def test(self, temporary_dir):
-
-        print("ASE version:", ase.__version__)
-        print("ASE2SPRKKR version:", ase2sprkkr.__version__)
-
         Cu = bulk("Cu", a=3.6)
 
         atoms = SPRKKRAtoms.promote_ase_atoms(Cu)

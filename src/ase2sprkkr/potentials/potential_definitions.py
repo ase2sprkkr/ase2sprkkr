@@ -7,7 +7,7 @@ sprkkr.common.configuration_definitions
 """
 
 import pyparsing as pp
-from ..common.grammar import line_end
+from ..common.grammar import generate_grammar, line_end
 from ..common.grammar_types import separator, pot_mixed
 from ..common.configuration_definitions import SeparatorDefinition
 from ..sprkkr.configuration import (
@@ -29,11 +29,11 @@ class PotValueDefinition(ConfigurationValueDefinition):
     """
 
     @cached_class_property
-    def grammar_of_delimiter():
-        return pp.Empty().set_name(" ")
+    def delimiter():
+        with generate_grammar():
+            return pp.Empty().set_name("\t")
 
     prefix = ""
-    name_value_delimiter = "\t"
 
     def __init__(self, *args, is_required=None, **kwargs):
         super().__init__(*args, is_required=is_required, **kwargs)
@@ -66,11 +66,8 @@ class PotSectionDefinition(ConfigurationSectionDefinition):
     custom_class = staticmethod(CustomConfigurationValue.factory(PotValueDefinition, pot_mixed))
     """ Adding a custom values is allowed """
 
-    delimiter = "\n"
+    delimiter = line_end
     """ options are delimited by newline in ouptut. """
-
-    grammar_of_delimiter = line_end
-    """ items are separated by newline """
 
     def depends_on(self):
         """The order of processing of sections during reading can be different than the order during a write. So, if the function should not be processed before given named sections, name then.
@@ -141,13 +138,10 @@ class PotentialDefinition(ConfigurationFileDefinition):
     force_order = True
     """ The order of items in potential file is fixed """
 
-    delimiter = "*" * 79 + "\n"
-    """ Sections delimiter """
-
     @cached_class_property
-    def grammar_of_delimiter():
-        """Grammar of the sections delimiter"""
-        return SectionString.grammar_of_delimiter()
+    def delimiter():
+        """Grammar and written representation of the sections delimiter."""
+        return SectionString.delimiter
 
     custom_class = CustomPotentialSection
     """ Unknown sections will be of this type """

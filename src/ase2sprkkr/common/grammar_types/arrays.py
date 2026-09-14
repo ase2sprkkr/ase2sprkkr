@@ -464,7 +464,7 @@ class SpecialColumn:
 
     def __repr__(self):
         if not self.column:
-            return "<Special column not present>"
+            return "<No>"
         return f"<Special column{' ' if self.label else ''}{self.label} of type {self.column}>"
 
 
@@ -787,7 +787,6 @@ class Table(GrammarType):
             grammar.add_parse_action(data_grouping)
         else:
             grammar.add_parse_action(tabelize)
-
         return grammar
 
     def _string(self, data):

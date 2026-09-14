@@ -6,6 +6,7 @@ from types import TracebackType
 from typing import Any, Callable, Dict, Optional, Sequence, Type, TYPE_CHECKING
 
 from .backward_compatibility import ExceptionGroup
+from .warnings import InvalidValuePolicy
 
 if TYPE_CHECKING:
     from .configuration import Configuration
@@ -68,13 +69,26 @@ class ConfigurationTransaction:
             self._transaction._rollback_after(self)
             self._rollback_requested = True
 
-    def __init__(self, configuration: "Configuration") -> None:
-        """Create a transaction for ``configuration`` and its root tree."""
+    def __init__(
+        self,
+        configuration: "Configuration",
+        policy: Optional[InvalidValuePolicy] = None,
+    ) -> None:
+        """Create a transaction for ``configuration`` and its root tree.
+
+        ``policy`` is shared by every staged value in a high-level mutation.
+        When omitted, the transaction uses a strict policy for direct,
+        low-level staging.
+        """
         self._container = configuration._get_root_container()
         if getattr(self._container, "_running_post_change_hooks", False):
             raise RuntimeError(
                 "A configuration cannot be changed from its post-change hooks"
             )
+        self.policy = policy or InvalidValuePolicy(
+            "set", retain_invalid="none", report_invalid="raise"
+        )
+        self._defer_validation = policy is not None
         self._changes = []
 
     @classmethod
@@ -87,18 +101,36 @@ class ConfigurationTransaction:
 
     @classmethod
     def use(
-        cls, configuration: "Configuration"
+        cls,
+        configuration: "Configuration",
+        policy: Optional[InvalidValuePolicy] = None,
     ) -> "ConfigurationTransaction":
         """Return a context for the transaction applicable to ``configuration``.
 
         An active transaction is entered as a nested savepoint; otherwise a
         new transaction is returned. A failed nested operation rolls back only
         its own changes unless its exception escapes the outer transaction.
+        ``policy`` is used only when a new transaction is created; nested
+        operations share the policy of the active transaction.
         """
         transaction = cls.current(configuration)
         if transaction is not None:
             return transaction
-        return cls(configuration)
+        return cls(configuration, policy=policy)
+
+    def _finish_stage(self) -> None:
+        """Report a standalone stage immediately.
+
+        Transactions created directly are strict low-level transactions. A
+        policy supplied by :meth:`Configuration._mutation` is reported only
+        after the complete mutation, so its results can be aggregated.
+        """
+        if self._defer_validation:
+            return
+        try:
+            self.policy.report()
+        finally:
+            self.policy.results.clear()
 
     def __enter__(self) -> "ConfigurationTransaction":
         self._Boundary(self).__enter__()
