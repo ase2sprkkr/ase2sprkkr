@@ -39,7 +39,7 @@ NLMTOP-POT         4
         self.assertTrue(cmg.parse_string(sec + "\n")[0][1].endswith("to je konec"))
 
         with generate_grammar():
-            cmgs = delimitedList(cmg, SectionString.grammar_of_delimiter())
+            cmgs = delimitedList(cmg, SectionString.delimiter())
         out = cmgs.parse_string(sec + "\n************************\n" + sec, True)
         self.assertEqual(2, len(out))
 

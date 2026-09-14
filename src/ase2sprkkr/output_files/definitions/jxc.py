@@ -479,8 +479,8 @@ def create_definition():
             ),
             V(
                 "NQ", int, written_name="number of sites   NQ", delimiter=" = ", delimiter_grammar="="
-            ),  # , indent=10*" "),
-            V("NT", int, written_name="number of types   NT", delimiter=" = ", delimiter_grammar="=", indent=10 * " "),
+            ),
+          V("NT", int, written_name="number of types   NT", delimiter=" = ", delimiter_grammar="="),
             SeparatorDefinition("                              site occupation:"),
             V(
                 "OCCUPATION",

@@ -1,14 +1,17 @@
 from .configuration_definitions import RealItemDefinition, BaseDefinition, Validator
-from .grammar import delimitedList
+from .grammar import as_delimiter, delimitedList
 from .misc import dict_first_item
 from .repeated_configuration_containers import RepeatedConfigurationContainer
 from .configuration_containers import Section
+from .repetition import Repeated
 from .decorators import add_to_signature, cache
 from .parsing_results import dict_from_parsed
+
 
 import pyparsing as pp
 from typing import Iterable, Optional, Union
 import re
+import inspect
 from io import StringIO
 
 
@@ -22,6 +25,8 @@ class ContainerDefinition(RealItemDefinition):
 
     force_order = False
     """ Force order of its members """
+
+    delimiter = pp.Empty().set_name("")
 
     is_option = False
     """Container definitions create sections or configuration roots, not options."""
@@ -61,6 +66,8 @@ class ContainerDefinition(RealItemDefinition):
         result_class=None,
         is_repeated=False,
         repeated_delimiter=None,
+        repeated_count=None,
+        repeated_with_name=False,
         write_condition=None,
         warning_condition=None,
         validators: Optional[Union[Validator, Iterable[Validator]]] = (),
@@ -73,9 +80,6 @@ class ContainerDefinition(RealItemDefinition):
         ----------
         has_hidden_members: bool
           If true, this section is not intended for a direct editing
-        is_repeated: bool or string
-          The section can be repeated. The name of the section appears only once on the beginning (this differs from ValueDefinition.is_repeated #TODO - merge the meaning of the swtich).
-          If a non-empty string is given, the values are divided by the string.
 
         force_order: bool
           If True, the items has to retain the order, if False, the items can be in the input file in any order.
@@ -95,6 +99,10 @@ class ContainerDefinition(RealItemDefinition):
             description=description,
             name_regex=name_regex,
             result_class=result_class,
+            is_repeated=is_repeated,
+            repeated_delimiter=repeated_delimiter,
+            repeated_count=repeated_count,
+            repeated_with_name=repeated_with_name,
             write_condition=write_condition,
             warning_condition=warning_condition,
             validators=validators,
@@ -113,10 +121,10 @@ class ContainerDefinition(RealItemDefinition):
         self.has_hidden_members = has_hidden_members
         if force_order is not None:
             self.force_order = force_order
-        self.repeated_delimiter = is_repeated if isinstance(is_repeated, str) else repeated_delimiter
-        if not isinstance(is_repeated, self.Repeated):
-            is_repeated = self.Repeated.LIST_SECTION if is_repeated or repeated_delimiter else self.Repeated.NO
-        self.is_repeated = is_repeated
+        if isinstance(self.delimiter, str):
+            self.delimiter = as_delimiter(self.delimiter)
+
+    default_repeated_type = Repeated.LIST_SECTION
 
     configuration_type_name = "SECTION"
     """ Name of the container type in the runtime documentation """
@@ -304,7 +312,7 @@ class ContainerDefinition(RealItemDefinition):
             custom_value = self.custom_member_grammar(self.excluded_names_condition())
         else:
             custom_value = None
-        delimiter = delimiter or self.grammar_of_delimiter
+        delimiter = delimiter or self.delimiter
 
         def repeated_grammars():
             """If the item can be repeated, do it here - we don't know, whether there is a fixed order in any way
@@ -314,9 +322,8 @@ class ContainerDefinition(RealItemDefinition):
                 g = i._grammar and i._grammar(allow_dangerous)
                 if not g:
                     continue
-                if i.can_be_repeated:
-                    dlmtr = delimiter if i.can_be_repeated is True else i.can_be_repeated
-                    g = delimitedList(g, dlmtr)
+                if i.is_repeated and i.repeated_with_name:
+                    g = i.repeated_count.grammar(g, i.repeated_delimiter if i.repeated_delimiter is not None else delimiter)
                 yield i, g
 
         def grammars():
@@ -389,14 +396,12 @@ class ContainerDefinition(RealItemDefinition):
                 values = first + pp.Optional(delimiter + values)
 
         values.set_parse_action(lambda x: dict_from_parsed(x.asList()))
-
-        if self.is_repeated:
-            rdelim = delimiter
-            if self.repeated_delimiter:
-                rdelim = rdelim + pp.Literal(self.repeated_delimiter)
-            values = pp.DelimitedList(values, rdelim)
-            values.add_parse_action(lambda x: [x.asList()])
-
+        if self.write_last_delimiter:
+            values = values + pp.Optional(delimiter)
+        if self.is_repeated and not self.repeated_with_name:
+            values = self.repeated_count.grammar(values, self.repeated_delimiter)
+            #values = pp.Group(values, aslist=True).set_name(f"<{self.name}[]>")
+            values = pp.Group(values, aslist=True).set_name(f"<{self.name}[]>")
         return values
 
     def _allow_duplicates_of(self, name):
@@ -407,7 +412,7 @@ class ContainerDefinition(RealItemDefinition):
         return self[name].allow_duplication()
 
     def _create_grammar(self, allow_dangerous=False):
-        delimiter = self.grammar_of_delimiter
+        delimiter = self.delimiter
         values = self._grammar_of_values(allow_dangerous, delimiter)
         out = self._tuple_with_my_name(values, delimiter)
         out.set_name(self.name)
@@ -419,7 +424,7 @@ class ContainerDefinition(RealItemDefinition):
         """Return the grammar for the custom child with delimiter.
         The delimiter can delimite it either from the previous child or from the section name."""
 
-        return cls.child_class.grammar_of_delimiter + cls.custom_value_grammar()
+        return cls.child_class.delimiter + cls.custom_value_grammar()
 
     custom_name_characters = pp.alphanums + "_-()"
     """ Which characters can appears in an unknown child (value/section) name """
@@ -559,16 +564,16 @@ class ContainerDefinition(RealItemDefinition):
             name_in_grammar = self.name_in_grammar
 
         if delimiter:
-            file.write(delimiter)
+            file.write(str(delimiter))
         if name_in_grammar:
             file.write(self.formated_name)
-            file.write("\n")
+            file.write(str(self.delimiter))
 
         members = iter(value)
         if self.write_last_delimiter:
             for o in members:
                 if o._save_to_file(file, always):
-                    file.write(self.delimiter)
+                    file.write(str(self.delimiter))
         else:
             delimiter = ""
             for o in members:
@@ -601,7 +606,7 @@ class SectionDefinition(ContainerDefinition):
     def delimited_custom_value_grammar(cls):
         gt = cls.custom_class.grammar_type
         # here the child (Value) class delimiter should be used
-        out = cls.child_class.grammar_of_delimiter + gt.grammar()
+        out = cls.child_class.delimiter + gt.grammar()
         optional, df, _ = gt.missing_value()
         if optional:
             out = out | pp.Empty().set_parse_action(lambda x: df)

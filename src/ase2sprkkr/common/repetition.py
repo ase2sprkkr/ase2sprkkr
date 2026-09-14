@@ -2,10 +2,12 @@
 
 from enum import Enum, nonmember
 from typing import Callable, TYPE_CHECKING, Union
-
+from pyparsing import DelimitedList
+import inspect
 import numpy as np
 
 from .parsing_results import ArrayKey, DefArrayKey, DefDictKey, DictKey, IgnoredKey, Key, RepeatedKey
+from .grammar import Forward
 
 if TYPE_CHECKING:
     from .options import Option
@@ -78,13 +80,11 @@ class Repeated(Enum):
         return RepeatedNumberedIf(condition)
 
     @classmethod
-    def create(cls, value, grammar_type=None):
+    def create(cls, value, default):
         if value is False:
             return cls.NO
         if value is True:
-            if hasattr(grammar_type, "is_numpy_array") and grammar_type.is_numpy_array:
-                return cls.ARRAY
-            return cls.REPEATED
+            return default
         if isinstance(value, str):
             return cls[value]
         return value
@@ -147,3 +147,172 @@ class RepeatedNumberedIf:
             if self.numbering_condition(option)
             else Repeated.Numbering.NO
         )
+
+
+def _exact_number(x):
+        return x,x
+
+
+class RepeatedItemGrammar:
+    """ Base class for repetition handling grammar constructors """
+    @staticmethod
+    def create(repeated, count):
+        if not repeated:
+            return NotRepeatedItemGrammar.I
+        if count is None:
+            return AnyRepeatedItemGrammar.I
+        if isinstance(count, int):
+            return ConstRepeatedItemGrammar(count)
+        if isinstance(count, RepeatedItemGrammar):
+            return count
+        return VariableRepeatedItemGrammar(count)
+
+    def apply_hooks(self, container):
+        """ Apply any grammar hooks to the container - use for dynamic parsing. """
+        pass
+
+    def grammar(self, grammar, delimiter):
+        """ Returns a grammar for repeated item """
+        raise NotImplementedError()
+
+    def copy(self):
+        return self
+
+    def validate(self, item, count, why):
+        """ Validate the number of items in the container """
+        pass
+
+    @staticmethod
+    def _delimited_list(grammar, delimiter, min=None, max=None):
+        return DelimitedList(grammar, delimiter, min=min, max=max).set_parse_action(lambda x: x.as_list())
+
+class NotRepeatedItemGrammar(RepeatedItemGrammar):
+    """ Crammar constructor for ordinaryu not-repeated item"""
+
+    def grammar(self, grammar, delimiter):
+        return grammar
+
+    def apply_hooks(self, container):
+        pass
+
+NotRepeatedItemGrammar.I = NotRepeatedItemGrammar()
+
+
+class AnyRepeatedItemGrammar(RepeatedItemGrammar):
+    """ Grammar constructor for item with any number of repetition """
+
+    def grammar(self, grammar, delimiter):
+        return self._delimited_list(grammar, delimiter or '')
+
+AnyRepeatedItemGrammar.I = AnyRepeatedItemGrammar()
+
+class ValidatedRepeatedItemGrammar(RepeatedItemGrammar):
+
+    def limits(self, item):
+        raise NotImplementedError()
+
+    def validate(self, item, count, why):
+        lower, upper = self.limits(item)
+
+        if lower is not None and count < lower:
+            if upper is None:
+                return DataValidityError(
+                    f"Item {item._get_path()} has to occur at least {lower} times"
+                )
+            elif lower == upper:
+                return DataValidityError(
+                    f"Item {item._get_path()} has to occur exactly {lower} times"
+                )
+            else:
+                return DataValidityError(
+                    f"Item {item._get_path()} has to occur between "
+                    f"{lower} and {upper} times"                )
+
+        if upper is not None and count > upper:
+            if lower is None:
+                return DataValidityError(
+                    f"Item {item._get_path()} has to occur at most {upper} times"
+                )
+            elif lower == upper:
+                return DataValidityError(
+                    f"Item {item._get_path()} has to occur exactly {lower} times"
+                )
+            else:
+                return DataValidityError(
+                    f"Item {item._get_path()} has to occur between "
+                    f"{lower} and {upper} times"
+                )
+
+
+class ConstRepeatedItemGrammar(ValidatedRepeatedItemGrammar):
+    """ Grammar constructor for item with const number of items """
+
+    def __init__(self, count):
+        self.count = count, count if isinstance(count, int) else count
+
+    def limits(self, item):
+        return self.count
+
+    def grammar(self, grammar, delimiter):
+        return self._delimited_list(grammar, delimiter or '', self.count[0], self.count[1])
+
+
+class VariableRepeatedItemGrammar(RepeatedItemGrammar):
+    """ Grammar constructor for an item with variable number of items """
+
+    def __init__(self, count):
+        self.count = count
+        if isinstance(count, str):
+            self.names = [ count ]
+            self.fn = _exact_number
+        elif callable(count):
+            sig = inspect.signature(count)
+            self.names = list(sig.parameters)
+            self.fn = count
+        else:
+            raise TypeError("repeated_count must be an int, str, or callable.")
+        self.args = { i:None for i in self.names }
+        self.forward = None
+
+    def call(self, *args):
+        out = self.fn(*args)
+        if isinstance(out, int):
+            return out, out
+        return out
+
+    def limits(self, item):
+        container = item._container
+        return self.fn(*(container[name]() for name in self.names))
+
+    def apply_hooks(self, container):
+
+        for name in self.names[:-1]:
+
+            def parse_action(s, l, t, name=name):
+                self.args[name] = t[0][1]
+
+            def grammar_hook(grammar, parse_action=parse_action):
+                grammar.add_parse_action(parse_action)
+
+            container[i].add_grammar_hook(grammar_hook)
+
+        def parse_action(s, l, t):
+            self.args[self.names[-1]] = t[0][1]
+            count = self.call(*self.args.values())
+            self.forward << self._delimited_list(self.grammar, self.delimiter, count[0], count[1])
+
+        def grammar_hook(grammar):
+            grammar.add_parse_action(parse_action)
+
+        container[self.names[-1]].add_grammar_hook(grammar_hook)
+
+    def grammar(self, grammar, delimiter):
+
+        if not self.forward:
+            self.forward = Forward()
+        self.grammar = grammar
+        self.delimiter = delimiter or ''
+        return self.forward
+
+    def copy(self):
+        return VariableRepeatedItemGrammar(self.count)

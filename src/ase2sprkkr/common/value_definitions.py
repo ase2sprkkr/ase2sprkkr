@@ -2,13 +2,17 @@ from .configuration_definitions import RealItemDefinition, Validator
 from .options import Option
 from .dangerous_values import DangerousValue
 from .grammar_types import GrammarType, type_from_type, type_from_value, Array, QString
+from .warnings import warnings, DataValidityError, ValidationResult
+from .repetition import Repeated
+from .decorators import cached_property
+from .grammar import as_delimiter
 
 import builtins
 import copy as copy_module
 from typing import Iterable, List, Optional, Sequence, Tuple, Union, Dict, Any
 import numpy as np
 import pyparsing as pp
-from .warnings import warnings, DataValidityError, ValidationResult
+
 
 
 def _validate_required(
@@ -125,6 +129,7 @@ def _rebuild_modified_definition(
 
 class ValueDefinition(RealItemDefinition):
     result_class = Option
+    delimiter = pp.Empty().set_name("")
     intrinsic_validators = RealItemDefinition.intrinsic_validators + (
         _validate_required,
         _validate_numbering,
@@ -154,6 +159,8 @@ class ValueDefinition(RealItemDefinition):
         is_required=None,
         is_expert=False,
         is_repeated: Union[bool, str, RealItemDefinition.Repeated] = False,
+        repeated_delimiter=None,
+        repeated_count=None,
         is_always_added: bool = None,
         name_in_grammar=None,
         name_format=None,
@@ -243,6 +250,17 @@ class ValueDefinition(RealItemDefinition):
           Whether the value can apper more than once in the output. The result
           can be then (dense) array or (sparse) dict,
           see :class:`ValueDefinition.Repeated`.
+
+        repeated_delimiter: string
+            The delimiter used between repeated instances of self, if not repeated_with_name
+
+        repeated_count: string or int or callable
+            The number of repetitions. If string, the repetition is given from the parsed values. If callable,
+            the function is called on the values of given options.
+
+        repeated_with_name: bool
+            If True, the whole value-name pair is repeated
+
 
         is_always_added
           If False, add the value, only if its value is not the default value.
@@ -336,8 +354,6 @@ class ValueDefinition(RealItemDefinition):
         )
         self.type.used_in_definition(self)
 
-        self.is_repeated = self.Repeated.create(is_repeated)
-
         self.grammar_type = self.type
         if self.is_repeated.is_array:
             self.type = Array(self.type)
@@ -364,28 +380,32 @@ class ValueDefinition(RealItemDefinition):
             warning_condition=warning_condition,
             validators=validators,
             result_class=result_class,
+            is_repeated=is_repeated,
+            repeated_delimiter=repeated_delimiter,
+            repeated_count=repeated_count,
+            repeated_with_name=True,
+            indent=indent
         )
         if modifier:
             self.validators += modifier.validators
 
-        if self.name_in_grammar is None:
-            self.name_in_grammar = self.type.name_in_grammar
-
-        if self.is_repeated.is_numbered and not self.name_in_grammar:
-            raise ValueError("Repeated numbered values have to have its name in the grammar")
-
         if delimiter is not None:
-            if delimiter_grammar is None:
-                self.grammar_of_delimiter = pp.Suppress(delimiter)
-            self.name_value_delimiter = delimiter
-        if delimiter_grammar is not None:
-            self.grammar_of_delimiter = pp.Suppress(delimiter_grammar)
+            self.delimiter = as_delimiter(
+                delimiter if delimiter_grammar is None else delimiter_grammar,
+                None if delimiter_grammar is None else delimiter,
+            )
 
     configuration_type_name = "OPTION"
+
+    default_repeated_type = Repeated.REPEATED
 
     type_from_type_map = {}
     """ Redefine this in descendants, if you need to create different types that the defaults to be
   'guessed' from the default values """
+
+    @cached_property
+    def name_in_grammar(self):
+        return self.type.name_in_grammar
 
     @property
     def default_value(self):
@@ -637,7 +657,7 @@ class ValueDefinition(RealItemDefinition):
 
         name_in_grammar = name_in_grammar if name_in_grammar is not None else self.name_in_grammar
         if (name_value_delimiter is None and name_in_grammar) or name_value_delimiter is True:
-            name_value_delimiter = self.grammar_of_delimiter
+            name_value_delimiter = self.delimiter
 
         body = self._grammar_of_value(name_value_delimiter, allow_dangerous)
 
@@ -701,13 +721,13 @@ class ValueDefinition(RealItemDefinition):
         def write(name, value):
             if name_in_grammar:
                 if delimiter:
-                    file.write(delimiter)
+                    file.write(str(delimiter))
                 self.write_name(file, name)
-                self.write_value(file, value, self.name_value_delimiter)
+                self.write_value(file, value, str(self.delimiter))
                 return True
             else:
                 if delimiter:
-                    deli = delimiter + self.prefix
+                    deli = str(delimiter) + self.prefix
                 else:
                     deli = self.prefix
                 return self.write_value(file, value, deli)
@@ -764,14 +784,14 @@ class ValueDefinition(RealItemDefinition):
             write_value = True
 
         if write_value:
-            file.write(delimiter)
+            file.write(str(delimiter))
             type.write(file, value)
             return True
         else:
             return False
 
     def write_name(self, file, name, delimiter=""):
-        file.write(delimiter + self.prefix)
+        file.write(str(delimiter) + self.prefix)
         file.write(name)
 
     def remove(self, name):
@@ -780,10 +800,6 @@ class ValueDefinition(RealItemDefinition):
 
     def _generic_info(self):
         return f"Configuration value {self.name}"
-
-    @property
-    def can_be_repeated(self):
-        return bool(self.is_repeated)
 
     def _get_init_args_for_copy(self, **kwargs) -> Dict[str, Any]:
         """
@@ -803,10 +819,8 @@ class ValueDefinition(RealItemDefinition):
             out["type"] = self.grammar_type
         if self.is_fixed:
             out["fixed_value"] = out["default_value"]
-        if "name_value_delimiter" in self.__dict__:
-            out["delimiter"] = self.name_value_delimiter
-        if "grammar_of_delimiter" in self.__dict__:
-            out["delimiter_grammar"] = self.delimiter_grammar
+        if "delimiter" in self.__dict__:
+            out["delimiter"] = self.delimiter
         return out
 
     _copy_excluded_args = RealItemDefinition._copy_excluded_args + [
@@ -814,7 +828,6 @@ class ValueDefinition(RealItemDefinition):
         "result_is_visible",
         "delimiter",
         "delimiter_grammar",
-        "indent",
     ]
 
     def copy_value(self, value, all_values=False):

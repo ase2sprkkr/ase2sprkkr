@@ -134,7 +134,7 @@ class TestInputParameters(TestCase):
 
     def test_section_delimiter_value(self):
         with generate_grammar():
-            grammar = cd.InputParametersDefinition.grammar_of_delimiter()
+            grammar = cd.InputParametersDefinition.delimiter()
             grammar = "a" + grammar + "b"
         for w in ["a b", "a\n b", "a\n\n b", "a\n \n b", "a \n\n b", "a\n\n\n b"]:
             self.assertRaises(pp.ParseException, lambda: grammar.parse_string(w, True))
@@ -585,6 +585,19 @@ class TestInputParameters(TestCase):
                 assert option() == 3
                 raise RuntimeError("abort")
         assert option() == 2
+
+    def test_direct_stage_uses_transaction_validation_policy(self):
+        definition = cd.InputParametersDefinition.definition_from_dict(
+            {"CONTROL": [V("VALUE", int, 1)]}
+        )
+        parameters = definition.create_object()
+        option = parameters.CONTROL.VALUE
+
+        with pytest.raises(DataValidityError):
+            with ConfigurationTransaction(parameters) as transaction:
+                option.stage(transaction, "not an integer")
+
+        assert option() == 1
 
     def test_transaction_mutation_requires_context(self):
         definition = cd.InputParametersDefinition.definition_from_dict(

@@ -249,7 +249,8 @@ class Configuration:
         hook_error = None
 
         try:
-            with ConfigurationTransaction.use(self) as transaction:
+            with ConfigurationTransaction.use(self, policy) as transaction:
+                policy = transaction.policy
                 yield transaction, policy
                 root = self._get_root_container()
                 policy.add_semantic(

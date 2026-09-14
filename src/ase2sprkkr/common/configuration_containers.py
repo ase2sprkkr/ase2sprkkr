@@ -16,7 +16,6 @@ from typing import Callable, Iterator, Mapping, Optional, Union, Any
 from .configuration_transaction import ConfigurationTransaction
 from .warnings import (
     DataValidityError,
-    InvalidValuePolicy,
     ReportInvalidPolicy,
     RetainInvalidPolicy,
     ValidationReason,
@@ -457,13 +456,12 @@ class ConfigurationContainer(BaseConfigurationContainer):
         """
         with self._mutation(
             validation_reason, retain_invalid, report_invalid
-        ) as (transaction, invalid):
+        ) as (transaction, _policy):
             self.stage(
                 transaction,
                 values,
                 value,
                 unknown=unknown,
-                invalid=invalid,
                 **kwargs,
             )
 
@@ -474,7 +472,6 @@ class ConfigurationContainer(BaseConfigurationContainer):
         value: Any = None,
         *,
         unknown: UnknownMemberPolicy = "find",
-        invalid: Optional[InvalidValuePolicy] = None,
         **kwargs: Any,
     ) -> bool:
         """
@@ -506,9 +503,6 @@ class ConfigurationContainer(BaseConfigurationContainer):
         transaction: ConfigurationTransaction
           Transaction receiving the staged changes.
 
-        invalid: InvalidValuePolicy or None
-          Conversion and validation policy; ``None`` performs strict packing.
-
         **kwargs: dict
           The values to be set (an alternative syntax as syntactical sugar)
         """
@@ -537,7 +531,8 @@ class ConfigurationContainer(BaseConfigurationContainer):
                 assignments = dict(assignments)
                 assignments.update(kwargs)
 
-        if invalid is not None and invalid.why == "parse":
+        policy = transaction.policy
+        if policy.why == "parse":
             transaction.push(self.ParsedValuesChange(self, assignments))
 
         changed = False
@@ -547,7 +542,6 @@ class ConfigurationContainer(BaseConfigurationContainer):
                 name,
                 assignment,
                 unknown=unknown,
-                invalid=invalid,
             ) or changed
         return changed
 
@@ -558,7 +552,6 @@ class ConfigurationContainer(BaseConfigurationContainer):
         value: Any,
         *,
         unknown: UnknownMemberPolicy = "find",
-        invalid: Optional[InvalidValuePolicy] = None,
     ) -> bool:
         """Resolve ``name`` and stage ``value`` using the supplied policies."""
 
@@ -584,13 +577,13 @@ class ConfigurationContainer(BaseConfigurationContainer):
                 ) from None
         else:
             return member.stage(
-                transaction, value, unknown=unknown, invalid=invalid
+                transaction, value, unknown=unknown
             )
 
         with transaction.savepoint() as savepoint:
             change = transaction.push(self.stage_member(name))
             changed = change.member.stage(
-                transaction, value, unknown="add", invalid=invalid
+                transaction, value, unknown="add"
             )
             if not changed:
                 savepoint.rollback()
@@ -608,11 +601,11 @@ class ConfigurationContainer(BaseConfigurationContainer):
         value: value
           Value of the added value
         """
-        with self._mutation("set") as (transaction, invalid):
+        with self._mutation("set") as (transaction, _policy):
             change = transaction.push(self.stage_member(name))
             if value is not None:
                 change.member.stage(
-                    transaction, value, unknown="add", invalid=invalid
+                    transaction, value, unknown="add"
                 )
 
     def stage_member(self, name: str) -> "ConfigurationContainer.MemberChange":
@@ -877,14 +870,13 @@ class RootConfigurationContainer(ConfigurationContainer):
           Allow to load dangerous_values, i.e. the values that do not pass the requirements for the input values (e.g. of a different type or constraint-violating)
         """
         values = self._definition.parse_file(file, allow_dangerous=allow_dangerous)
-        with self._mutation("parse") as (transaction, invalid):
+        with self._mutation("parse") as (transaction, _policy):
             if clear_first:
                 self.stage_clear(transaction, check_required=False)
             self.stage(
                 transaction,
                 values,
                 unknown="add",
-                invalid=invalid,
             )
         self._filename = filename_from_file(file, None)
 

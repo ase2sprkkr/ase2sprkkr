@@ -10,7 +10,9 @@ import numpy as np
 from ase.units import Rydberg
 from ase2sprkkr.physics.broadening import create_lorentz_broadener, create_gaussian_broadener, compute_wlortab
 from scipy.interpolate import interp1d
+import pyparsing as pp
 
+from ...common.grammar import generate_grammar
 from ..output_files import CommonOutputFile
 from ...common.grammar_types import Array, Keyword, Char, Table, Sequence, Complex, Real
 from ...common.generated_configuration_definitions import GeneratedValueDefinition
@@ -787,7 +789,7 @@ def create_definition():
                             ),
                         ],
                         name_in_grammar=False,
-                        repeated_delimiter="\n",
+                        repeated_delimiter=pp.Regex("[ \t]*\n").set_name("\n"),
                         is_repeated=BaseDefinition.Repeated.LIST_SECTION,
                     ),
                 ],
@@ -802,5 +804,5 @@ def create_definition():
 
     return definition
 
-
-definition = create_definition()
+with generate_grammar():
+    definition = create_definition()

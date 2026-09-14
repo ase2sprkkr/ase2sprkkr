@@ -48,6 +48,17 @@ with generate_grammar():
     """ Grammar for an optional quote """
 
 
+def as_delimiter(grammar, written=None):
+    """Return a suppressed delimiter grammar named by its written form."""
+    if isinstance(grammar, str):
+        if written is None:
+            written = grammar
+        grammar = pp.Suppress(grammar) if grammar else pp.Empty()
+    if written is not None:
+        grammar = grammar.set_name(written)
+    return grammar
+
+
 def separator_pattern(char):
     return f"[{char}]" * 11 + "*"
 
@@ -141,6 +152,41 @@ class SkipToRegex(pp.Token):
                 loc = result.start()
             return loc, pp.ParseResults(out)
         raise pp.ParseException(instr, loc, "Pattern {self.pattern} not found", self)
+
+class Transparent(pp.ParseElementEnhance):
+    """ Pyparsing ParseElementEnhance wrongly takes care about whitespaces, if there is
+    nested Forward with whitespaces not already set. So we have to use out own lightweight
+    replacement.
+    """
+
+    def preParse(self, instring, loc):
+        return loc
+
+    def parseImpl(self, instring, loc, do_actions=True):
+        return self.expr._parse(instring, loc, do_actions)
+
+    def __str__(self):
+        return f"{self.__class__.__name__}({self.expr})"
+
+class Suppress(Transparent):
+
+    def __init__(self, expr):
+        super().__init__(expr)
+        self.add_parse_action(lambda x:[])
+
+
+        self.set_name('Suppress')
+
+class TokenConverter(Transparent):
+    pass
+
+class Forward(Transparent):
+
+    def __init__(self, expr=None):
+        super().__init__(expr)
+
+    def __lshift__(self, other):
+        self.expr = other
 
 
 pp.ParserElement.add_condition_ex = add_condition_ex
