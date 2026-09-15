@@ -15,9 +15,29 @@ if True:
 
 
 class TestDefinitions(TestCase):
+    def test_bsf_definitions_are_shared(self):
+        definition = InputParameters.definition("BSF")
+        assert definition is InputParameters.definition("BSFEK")
+        assert definition is InputParameters.definition("BSFKK")
+
+    def test_bsf_mode_is_inferred_when_parsing(self):
+        definition = InputParameters.definition("BSFEK")
+        for name in ("BSFEK", "BSFKK"):
+            ip = InputParameters.create(name)
+            ip.CONTROL.POTFIL = "x"
+            if name == "BSFEK":
+                ip.TASK.KPATH = 1
+            parsed = definition.read_from_string(ip.to_string(validate=True))
+            assert ip.name == "bsf"
+            assert parsed.name == "bsf"
+            self.assertEqual(ip.to_dict(), parsed.to_dict())
+
     def test_bsfek_k_path_is_checked_when_saving(self):
         ip = InputParameters.create("BSFEK")
         ip.CONTROL.POTFIL = "x"
+
+        assert ip.name == "bsf"
+        assert ip.ENERGY.NE().tolist() == [200]
 
         with pytest.raises(DataValidityError, match="TASK.KPATH or TASK.KA"):
             ip.validate("save")
@@ -28,9 +48,17 @@ class TestDefinitions(TestCase):
     def test_bsfkk_ne_is_fixed(self):
         ip = InputParameters.create("BSFKK")
 
+        assert ip.name == "bsf"
         assert ip.ENERGY.NE().tolist() == [1]
         with pytest.raises(DataValidityError):
             ip.ENERGY.NE = 2
+
+    def test_bsf_modes_cannot_be_mixed(self):
+        ip = InputParameters.create("BSFEK")
+        ip.TASK.KPATH = 1
+
+        with pytest.raises(DataValidityError, match="BSFEK and BSFKK"):
+            ip.TASK["K1"].set([1.0, 0.0, 0.0])
 
     def change_task(self):
         ip = InputParameters.create_task("DOS")
@@ -59,7 +87,7 @@ class TestDefinitions(TestCase):
             try:
                 out = ip.to_string(validate=True)
             except DataValidityError:
-                if i in "BSFEK":
+                if i == "BSFEK":
                     ip.TASK.KPATH = 1
                     out = ip.to_string(validate=True)
                     with pytest.raises(Exception):
@@ -70,7 +98,7 @@ class TestDefinitions(TestCase):
                 else:
                     raise
             else:
-                if i in "BSFEK":
+                if i == "BSFEK":
                     raise Exception("This tasks should not be runnable using the defaults argument")
 
             ip2 = df.read_from_string(out)

@@ -351,7 +351,9 @@ class InputParameters(ConfigurationFile):
         input_parameters: InputParameters
           Input parameters with the default values for the given task.
         """
-        return InputParameters(cls.definition(name))
+        out = cls(cls.definition(name))
+        out._requested_task_name = name.upper()
+        return out
 
     @classmethod
     def default_parameters(cls):
@@ -398,6 +400,7 @@ class InputParameters(ConfigurationFile):
         if retain_values:
             vals = self.to_dict(only_changed=True)
         self._definition = self.definition(task)
+        self._requested_task_name = task.upper()
         self._init_members_from_the_definition()
         if retain_values:
             self.set(
