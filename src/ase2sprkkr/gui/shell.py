@@ -161,13 +161,24 @@ class Python(CommandlineShell):
 
     def open(self, temp=False):
 
+        import linecache
+
         print("\n Opening python shell...\n")
 
         with chdir(self.dir):
             local_ns = {}
-            for cmd in self.code:
+            for i, cmd in enumerate(self.code):
                 print(format_as_python_shell(cmd))
-                exec(cmd, globals(), local_ns)
+                filename = f"<interactive-{i}>"
+                lines = cmd.splitlines(keepends=True)
+                linecache.cache[filename] = (
+                    len(cmd),  # size
+                    None,  # mtime (None is fine)
+                    lines,  # list of lines WITH newline chars
+                    filename,
+                )
+                compiled = compile(cmd, filename, "exec")
+                exec(compiled, globals(), local_ns)
                 print("\n")
             code.interact(local=local_ns)
 

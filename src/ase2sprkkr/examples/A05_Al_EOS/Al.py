@@ -1,16 +1,17 @@
 """Total energy SCF calculations as a function of Volume and corresponding
 equation of state fiting."""
 
-from ase.build import bulk
-from ase2sprkkr.sprkkr.calculator import SPRKKR
-from ase.io.trajectory import Trajectory
-import numpy as np
-from ase.io import read
-from ase.units import kJ
-from ase.eos import EquationOfState
-
-
 def main():
+
+    from ase.build import bulk
+    from ase2sprkkr.sprkkr.calculator import SPRKKR
+    from ase.io.trajectory import Trajectory
+    import numpy as np
+    from ase.io import read
+    from ase.units import kJ
+    from ase.eos import EquationOfState
+
+
     al = bulk("Al", "fcc", a=4.0)
     cell = al.get_cell()
     traj = Trajectory("Al.traj", "w")

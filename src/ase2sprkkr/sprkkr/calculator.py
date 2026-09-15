@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import os
 import sys
-from ase.calculators.calculator import Calculator, all_changes
+from ase.calculators.calculator import BaseCalculator, all_changes
 
 from .sprkkr_atoms import SPRKKRAtoms
 from ..potentials.potentials import Potential
@@ -36,7 +36,7 @@ from ..common.misc import config_property, first_non_none
 from ..configuration import config
 
 
-class SPRKKR(Calculator):
+class SPRKKR(BaseCalculator):
     """
     ASE calculator for SPR-KKR.
 
@@ -53,16 +53,15 @@ class SPRKKR(Calculator):
 
     def __init__(
         self,
-        restart=None,
         label=None,
-        atoms=None,
         directory=".",
+        atoms=None,
+        potential=None,
         input_file=True,
         output_file=True,
         potential_file=True,
         input_parameters=None,
         options={},
-        potential=None,
         print_output=None,
         mpi: Optional[bool] = None,
         empty_spheres: Optional[Union[str, bool, Dict]] = None,
@@ -170,7 +169,7 @@ class SPRKKR(Calculator):
         self.atoms = atoms
         self.potential = potential
 
-        super().__init__(restart, label=label, atoms=atoms)
+        super().__init__(use_cache=False)
         if directory is False:
             self._directory = directory
         else:
@@ -195,6 +194,7 @@ class SPRKKR(Calculator):
         self.executable_suffix = executable_suffix
         self.executable_dir = executable_dir
         self.mpi = mpi
+        self.label = label
         self._counter = 0
         # For %c template in file names
 
@@ -228,24 +228,6 @@ class SPRKKR(Calculator):
         if value is not None:
             value = InputParameters.create_input_parameters(value)
         self._input_parameters = value
-
-    @property
-    def potential(self) -> Potential:
-        """The potential associated with the calculator. It will be used in
-        calculate and save_input methods, if it is not explicitly overriden by
-        the potential argument.
-        By default, the potential is created from atoms object (if it is set).
-
-        Return
-        ------
-        potential: ase2sprkkr.potential.potentials.Potential
-
-        """
-        if self._potential is None:
-            if not self._atoms:
-                return None
-            self._potential = Potential.from_atoms(self._atoms)
-        return self._potential
 
     def set(self, options: Union[Dict[str, Any], str, None] = {}, value=None, *, unknown="find", **kwargs):
         """
@@ -292,6 +274,24 @@ class SPRKKR(Calculator):
         """
         return self.input_parameters.get(name)
 
+    @property
+    def potential(self) -> Potential:
+        """The potential associated with the calculator. It will be used in
+        calculate and save_input methods, if it is not explicitly overriden by
+        the potential argument.
+        By default, the potential is created from atoms object (if it is set).
+
+        Return
+        ------
+        potential: ase2sprkkr.potential.potentials.Potential
+
+        """
+        if self._potential is None:
+            if not self._atoms:
+                return None
+            self._potential = Potential.from_atoms(self._atoms)
+        return self._potential
+
     @potential.setter
     def potential(self, pot):
         self._potential = pot
@@ -327,6 +327,16 @@ class SPRKKR(Calculator):
                 self._potential = None
             elif self._potential is not True:
                 self._potential.atoms = atoms
+
+    @property
+    def directory(self):
+        return self._directory
+
+    @directory.setter
+    def directory(self, directory: Union[bool, str, os.PathLike]):
+        if not isinstance(directory, bool):
+            directory = str(Path(directory))  # Normalize path.
+        self._directory = directory
 
     def _advance_counter(self):
         """Advance counter for generating filenames with %c counter placeholder"""
