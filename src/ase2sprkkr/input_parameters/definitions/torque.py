@@ -5,6 +5,7 @@ from ..input_parameters_definitions import InputParametersDefinition as InputPar
 
 
 def _torque_mode_warning_condition(value):
+    breakpoint()
     return (
         "Torque task does not support SREL (scalar relativity without spin) or "
         "NREL (no relativity at all) MODE. Please change SCF.MODE, or "
@@ -25,12 +26,13 @@ def _torque_nonmag_warning_condition(value):
 
 def input_parameters():
     """Torque -Torque task input parameters definition"""
+    mmode = MODE["MODE"].copy(warning_condition=_torque_mode_warning_condition)
     input_parameters = InputParameters(
         "torque",
         [
             CONTROL("TORQUE"),
             TAU,
-            MODE,
+            MODE.copy(add = [ mmode ]),
             STRCONST,
             ENERGY(defaults={"EMIN": -0.2, "ImE": 0.0, "GRID": 8, "NE": 36}),
             TASK("TORQUE").copy(
@@ -45,6 +47,5 @@ def input_parameters():
         mpi=True,
         info="TORQUE",
     )
-    input_parameters["MODE"].copy_member("MODE", warning_condition=_torque_mode_warning_condition)
-    input_parameters["CONTROL"].copy_member("NONMAG", warning_condition=_torque_nonmag_warning_condition)
+    input_parameters["CONTROL"]["NONMAG"].add_warning_condition=_torque_nonmag_warning_condition
     return input_parameters
