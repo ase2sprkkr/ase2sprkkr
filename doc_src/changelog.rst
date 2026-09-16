@@ -1,8 +1,17 @@
 Changelog
 =========
 
+Version 4.0.0-beta
+-------------
+* Merged-BSF task support
+  * Conditionaly numbered value
+  * Conditional length item in grammar
+  * Some checks are done on tree level to allow cross-section conditions
+
 Version 3.6
 -----------
+* Added support for ANDERSON mixing (experimental), BSF task improved
+* A better debugging in `ase2sprkkr shell`
 * `promote_ase_atoms` can be directly imported from the `ase2sprkkr` root package
 * Changing properties via `site` is disallowed in cases where `site_type` is shared
 * JXC output file parsing and plotting
@@ -23,7 +32,6 @@ Version 3.6
 * SLURM work manager auto-detection
 * Examples from ASE2SPRKKR article were added
 * Runtime dependencies were revisited
-* BaseCalculator is used as a base class for SPRKKRCalculator
 
 Internals
 ~~~~~~~~~
@@ -31,6 +39,11 @@ Internals
 * Picklability of Atom objects (for better ase.view compatibility)
 * Refactoring of ProcessOutput and ProcessReaders
 * Actions for Outputs and OutputFiles (for GUI support)
+* BaseCalculator is used as a base class for SPRKKRCalculator
+* Improvements for GUI:
+  * ResultValues are implemented as Options, to reuse existing functionality in GUI
+  * Better result files handling
+  * Files in results provide both relative and absolute path
 
 Version 3.4
 -----------
