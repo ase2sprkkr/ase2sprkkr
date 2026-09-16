@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 import tempfile
 from ase.units import Rydberg as Ry
+import pytest
 
 if __package__:
     from .init_tests import TestCase, patch_package
@@ -20,6 +21,8 @@ if True:
 
 
 class TestOutput(TestCase):
+
+    @pytest.mark.slow
     def test_output(self):
         dire = path_join(dirname(dirname(__file__)), "examples")
         for i in listdir(dire):
