@@ -47,5 +47,5 @@ def input_parameters():
         mpi=True,
         info="TORQUE",
     )
-    input_parameters["CONTROL"]["NONMAG"].add_warning_condition=_torque_nonmag_warning_condition
+    input_parameters["CONTROL"]["NONMAG"].warning_condition=_torque_nonmag_warning_condition
     return input_parameters

@@ -51,5 +51,5 @@ def input_parameters():
         mpi=True,
         info="JXC",
     )
-    input_parameters["CONTROL"]["NONMAG"] = warning_condition=_jxc_nonmag_warning_condition
+    input_parameters["CONTROL"]["NONMAG"].warning_condition=_jxc_nonmag_warning_condition
     return input_parameters
