@@ -41,9 +41,9 @@ class TestRepeatedCountParsing(TestCase):
         root = IP([parent])
 
         # repeated-header style: two ITEM blocks each with one unnamed integer
-        data = "PARENT\n\tITEM\n\t\t10\n\tITEM\n\t\t20\n"
+        data = "PARENT\n\tN=2\n\tITEM\n\t\t10\n\tITEM\n\t\t20\n"
         parsed = root.read_from_string(data)
-        data = "PARENT\n\tITEM\n\t\t10\n\tITEM\n\t\t20\n\tITEM\n\t\t30\n"
+        data = "PARENT\n\tN=2\n\tITEM\n\t\t10\n\tITEM\n\t\t20\n\tITEM\n\t\t30\n"
         parsed = root.read_from_string(data)
 
         p = parsed.PARENT
@@ -60,7 +60,7 @@ class TestRepeatedCountParsing(TestCase):
         root = IP([parent])
 
         # repeated-header style: two ITEM blocks each with one unnamed integer
-        data = "PARENT\n\tITEM\n\t\t10\n\tITEM\n\t\t20\n"
+        data = "PARENT\n\tN=2\n\tITEM\n\t\t10\n\tITEM\n\t\t20\n"
         parsed = root.read_from_string(data)
         p = parsed.PARENT
         items = p.ITEM
@@ -74,7 +74,7 @@ class TestRepeatedCountParsing(TestCase):
             parent.parse(data_few)
 
         # too many items -> expect parse error
-        data_many = "PARENT\n\tITEM\n\t\t10\n\tITEM\n\t\t20\n\tITEM\n\t\t30\n"
+        data_many = "PARENT\n\tN=2\n\tITEM\n\t\t10\n\tITEM\n\t\t20\n\tITEM\n\t\t30\n"
         with self.assertRaises(Exception):
             parent.parse(data_many)
 
