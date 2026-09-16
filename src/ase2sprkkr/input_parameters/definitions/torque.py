@@ -5,7 +5,6 @@ from ..input_parameters_definitions import InputParametersDefinition as InputPar
 
 
 def _torque_mode_warning_condition(value):
-    breakpoint()
     return (
         "Torque task does not support SREL (scalar relativity without spin) or "
         "NREL (no relativity at all) MODE. Please change SCF.MODE, or "
