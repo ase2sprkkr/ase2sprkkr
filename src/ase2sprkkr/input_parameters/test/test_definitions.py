@@ -11,10 +11,17 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 if True:
     from ..input_parameters import InputParameters
-    from ...common.warnings import DataValidityError
+    from ...common.warnings import DataValidityError, DataValidityWarning
 
 
 class TestDefinitions(TestCase):
+    @staticmethod
+    def set_bsfkk_grid(ip):
+        ip.TASK.NK1 = 10
+        ip.TASK.K1 = [1.0, 0.0, 0.0]
+        ip.TASK.NK2 = 10
+        ip.TASK.K2 = [0.0, 1.0, 0.0]
+
     def test_bsf_definitions_are_shared(self):
         definition = InputParameters.definition("BSF")
         assert definition is InputParameters.definition("BSFEK")
@@ -27,6 +34,9 @@ class TestDefinitions(TestCase):
             ip.CONTROL.POTFIL = "x"
             if name == "BSFEK":
                 ip.TASK.KPATH = 1
+            else:
+                self.set_bsfkk_grid(ip)
+                ip.TASK.KA = [[0.0, 0.0, 0.0]]
             parsed = definition.read_from_string(ip.to_string(validate=True))
             assert ip.name == "bsf"
             assert parsed.name == "bsf"
@@ -45,20 +55,92 @@ class TestDefinitions(TestCase):
         ip.TASK.KPATH = 1
         ip.validate("save")
 
-    def test_bsfkk_ne_is_fixed(self):
-        ip = InputParameters.create("BSFKK")
+    def test_bsf_mode_is_selected_by_ne(self):
+        bsfkk = InputParameters.create("BSFKK")
 
-        assert ip.name == "bsf"
-        assert ip.ENERGY.NE().tolist() == [1]
-        with pytest.raises(DataValidityError):
-            ip.ENERGY.NE = 2
+        assert bsfkk.name == "bsf"
+        assert bsfkk.ENERGY.NE().tolist() == [1]
+        with pytest.warns(DataValidityWarning, match="BSFEK.*BSFKK"):
+            bsfkk.ENERGY.NE = 2
+        assert bsfkk.ENERGY.NE().tolist() == [2]
+
+        bsfek = InputParameters.create("BSFEK")
+        assert bsfek.ENERGY.NE().tolist() == [200]
+        with pytest.warns(DataValidityWarning, match="BSFKK.*BSFEK"):
+            bsfek.ENERGY.NE = 1
+        assert bsfek.ENERGY.NE().tolist() == [1]
 
     def test_bsf_modes_cannot_be_mixed(self):
         ip = InputParameters.create("BSFEK")
         ip.TASK.KPATH = 1
 
-        with pytest.raises(DataValidityError, match="BSFEK and BSFKK"):
+        with pytest.raises(DataValidityError, match="cannot be used in BSFEK"):
             ip.TASK["K1"].set([1.0, 0.0, 0.0])
+
+        ip = InputParameters.create("BSFKK")
+        with pytest.raises(DataValidityError, match="cannot be used in BSFKK"):
+            ip.TASK["KPATH"].set(1)
+
+    def test_bsf_mode_conflict_warns_when_parsing(self):
+        definition = InputParameters.definition("BSF")
+
+        bsfek = InputParameters.create("BSFEK")
+        bsfek.CONTROL.POTFIL = "x"
+        bsfek.TASK.KPATH = 1
+        text = bsfek.to_string(validate=True).replace(
+            "\tKPATH=1", "\tKPATH=1\n\tNK1=10"
+        )
+        with pytest.warns(DataValidityError, match="cannot be used in BSFEK"):
+            definition.read_from_string(text)
+
+        bsfkk = InputParameters.create("BSFKK")
+        bsfkk.CONTROL.POTFIL = "x"
+        self.set_bsfkk_grid(bsfkk)
+        text = bsfkk.to_string(validate=True).replace(
+            "\tNK1=10", "\tNK=300\n\tNK1=10"
+        )
+        with pytest.warns(DataValidityError, match="cannot be used in BSFKK"):
+            definition.read_from_string(text)
+
+    def test_bsfkk_grid_is_required(self):
+        ip = InputParameters.create("BSFKK")
+        ip.CONTROL.POTFIL = "x"
+
+        with pytest.raises(DataValidityError, match="NK1.*NK2.*K1.*K2.*required"):
+            ip.validate("save")
+
+        self.set_bsfkk_grid(ip)
+        ip.validate("save")
+
+    def test_bsf_ka_numbering_depends_on_mode(self):
+        bsfkk = InputParameters.create("BSFKK")
+        bsfkk.CONTROL.POTFIL = "x"
+        self.set_bsfkk_grid(bsfkk)
+        bsfkk.TASK.KA = [[0.0, 0.0, 0.0]]
+        out = bsfkk.to_string(validate=True)
+        assert "\n\tKA={0.0,0.0,0.0}" in out
+        assert "\n\tKA1=" not in out
+
+        parsed = InputParameters.definition("BSF").read_from_string(out)
+        self.assertEqual(bsfkk.to_dict(), parsed.to_dict())
+
+        bsfek = InputParameters.create("BSFEK")
+        bsfek.CONTROL.POTFIL = "x"
+        bsfek.TASK.NKDIR = 1
+        out = bsfek.to_string(validate=True)
+        assert "\n\tKA1=" in out
+        assert "\n\tKE1=" in out
+
+    def test_bsf_path_limits(self):
+        ip = InputParameters.create("BSFEK")
+        for path in (6, 7, 10):
+            ip.TASK.KPATH = path
+        with pytest.raises(DataValidityError, match="one of 1-7 or 10"):
+            ip.TASK.KPATH = 8
+
+        ip.TASK.KPATH = None
+        with pytest.raises(DataValidityError, match="NKDIR cannot be greater than 9"):
+            ip.TASK.NKDIR = 10
 
     def change_task(self):
         ip = InputParameters.create_task("DOS")
@@ -94,6 +176,9 @@ class TestDefinitions(TestCase):
                         ip.TASK.NKDIR = 2
                     ip.TASK.KPATH = None
                     ip.TASK.NKDIR = 2
+                    out = ip.to_string(validate=True)
+                elif i in ("BSF", "BSFKK"):
+                    self.set_bsfkk_grid(ip)
                     out = ip.to_string(validate=True)
                 else:
                     raise
