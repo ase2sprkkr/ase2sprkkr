@@ -118,7 +118,8 @@ def spglib_dataset(
                 angle_tolerance=angular_precision,
             )
         except SpglibError as exc:
-            warnings.warn(str(exc), RuntimeWarning, stacklevel=2)
+            if str(exc) != "spacegroup search failed":
+                warnings.warn(str(exc), RuntimeWarning, stacklevel=2)
             sg_dataset = None
         if sg_dataset:
             dataset = spglib_dataset_wrapper(sg_dataset)
