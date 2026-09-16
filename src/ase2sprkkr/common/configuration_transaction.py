@@ -15,6 +15,10 @@ if TYPE_CHECKING:
 class PostChangeHookError(RuntimeError, ExceptionGroup):
     """One or more post-change hooks failed after a successful commit."""
 
+    def __init__(self, message: str, exceptions: Sequence[Exception]) -> None:
+        """Initialize the exception-group base explicitly for Python 3.8."""
+        ExceptionGroup.__init__(self, message, exceptions)
+
     def derive(self, exceptions: Sequence[Exception]) -> ExceptionGroup:
         """Create the same group type for the selected ``exceptions``."""
         return type(self)(self.message, exceptions)

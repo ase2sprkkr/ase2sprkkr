@@ -157,6 +157,10 @@ class DataValidityError(DataValidityWarning):
 class DataValidityErrors(DataValidityError, ExceptionGroup):
     """An exception group containing at least one validity error."""
 
+    def __init__(self, message: str, exceptions: Sequence[Exception]) -> None:
+        """Initialize the exception-group base explicitly for Python 3.8."""
+        ExceptionGroup.__init__(self, message, exceptions)
+
     def derive(self, exceptions: Sequence[Exception]) -> ExceptionGroup:
         """Preserve this type while the derived group has a validity error."""
         if any(isinstance(error, DataValidityError) for error in exceptions):
