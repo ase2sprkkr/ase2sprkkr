@@ -60,13 +60,13 @@ class TestDefinitions(TestCase):
 
         assert bsfkk.name == "bsf"
         assert bsfkk.ENERGY.NE().tolist() == [1]
-        with pytest.warns(DataValidityWarning, match="BSFEK.*BSFKK"):
+        with pytest.warns(DataValidityWarning, match="BSF-EK.*BSF-KK"):
             bsfkk.ENERGY.NE = 2
         assert bsfkk.ENERGY.NE().tolist() == [2]
 
         bsfek = InputParameters.create("BSFEK")
         assert bsfek.ENERGY.NE().tolist() == [200]
-        with pytest.warns(DataValidityWarning, match="BSFKK.*BSFEK"):
+        with pytest.warns(DataValidityWarning, match="BSF-KK.*BSF-EK"):
             bsfek.ENERGY.NE = 1
         assert bsfek.ENERGY.NE().tolist() == [1]
 
@@ -74,11 +74,11 @@ class TestDefinitions(TestCase):
         ip = InputParameters.create("BSFEK")
         ip.TASK.KPATH = 1
 
-        with pytest.raises(DataValidityError, match="cannot be used in BSFEK"):
+        with pytest.raises(DataValidityError, match="cannot be used in BSF-EK"):
             ip.TASK["K1"].set([1.0, 0.0, 0.0])
 
         ip = InputParameters.create("BSFKK")
-        with pytest.raises(DataValidityError, match="cannot be used in BSFKK"):
+        with pytest.raises(DataValidityError, match="cannot be used in BSF-KK"):
             ip.TASK["KPATH"].set(1)
 
     def test_bsf_mode_conflict_warns_when_parsing(self):
@@ -90,7 +90,7 @@ class TestDefinitions(TestCase):
         text = bsfek.to_string(validate=True).replace(
             "\tKPATH=1", "\tKPATH=1\n\tNK1=10"
         )
-        with pytest.warns(DataValidityError, match="cannot be used in BSFEK"):
+        with pytest.warns(DataValidityError, match="cannot be used in BSF-EK"):
             definition.read_from_string(text)
 
         bsfkk = InputParameters.create("BSFKK")
@@ -99,7 +99,7 @@ class TestDefinitions(TestCase):
         text = bsfkk.to_string(validate=True).replace(
             "\tNK1=10", "\tNK=300\n\tNK1=10"
         )
-        with pytest.warns(DataValidityError, match="cannot be used in BSFKK"):
+        with pytest.warns(DataValidityError, match="cannot be used in BSF-KK"):
             definition.read_from_string(text)
 
     def test_bsfkk_grid_is_required(self):
