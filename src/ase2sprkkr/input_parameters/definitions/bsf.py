@@ -1,7 +1,7 @@
 """BSF input-parameters definition."""
 
 from functools import cache
-from typing import Any, Optional
+from typing import Any, List, Optional
 
 from ...common.generated_configuration_definitions import Length
 from ...common.grammar_types import Integer, SetOf
@@ -88,7 +88,7 @@ def _emax_default(option):
 
 def _validate_bsf(
     parameters: Any, _values: Any, why: str
-) -> Optional[list[DataValidityWarning]]:
+) -> Optional[List[DataValidityWarning]]:
     issues = []
     mode = bsf_mode(parameters)
     hint = _mode_hint(parameters)
