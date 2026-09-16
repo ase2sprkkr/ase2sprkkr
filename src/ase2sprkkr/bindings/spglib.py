@@ -4,15 +4,23 @@ Wrapper for spglib for computing symmetry of a primitive cell
 
 from __future__ import annotations
 from typing import List, Union, Optional
-from ..sprkkr.atoms_region import AtomsRegion
 import spglib
 import numpy as np
+import warnings
 from ase import Atoms
+
+from ..sprkkr.atoms_region import AtomsRegion
 from ..common.unique_values import UniqueValuesMapping
 from ..sprkkr.occupations import Occupation
 
-if hasattr(spglib, "set_error_handling"):
-    spglib.set_error_handling(False)
+
+if hasattr(spglib, "error") and hasattr(spglib.error, "OLD_ERROR_HANDLING"):
+    spglib.error.OLD_ERROR_HANDLING = False
+
+try:
+    SpglibError = spglib.SpglibError
+except AttributeError:
+    SpglibError = Exception
 
 
 def spglib_dataset_wrapper(dataset):
@@ -103,11 +111,15 @@ def spglib_dataset(
             equivalent_sites = equivalent_sites.normalize(start_from=0).mapping
 
     def dataset(equivalent_sites):
-        sg_dataset = spglib.get_symmetry_dataset(
-            (atoms.get_cell(), atoms.get_scaled_positions(), equivalent_sites),
-            symprec=precision,
-            angle_tolerance=angular_precision,
-        )
+        try:
+            sg_dataset = spglib.get_symmetry_dataset(
+                (atoms.get_cell(), atoms.get_scaled_positions(), equivalent_sites),
+                symprec=precision,
+                angle_tolerance=angular_precision,
+            )
+        except SpglibError as exc:
+            warnings.warn(str(exc), RuntimeWarning, stacklevel=2)
+            sg_dataset = None
         if sg_dataset:
             dataset = spglib_dataset_wrapper(sg_dataset)
         else:
