@@ -3,11 +3,9 @@
 from functools import cache
 from typing import Any, Optional
 
-import numpy as np
-
 from ...common.generated_configuration_definitions import Length
 from ...common.grammar_types import Integer, SetOf
-from ...common.warnings import DataValidityError
+from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters import InputSection
 from ..input_parameters_definitions import (
     InputParametersDefinition as InputParameters,
@@ -18,14 +16,9 @@ from .sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 EK = "EK"
 KK = "KK"
-MIXED = "MIXED"
 
-
-def _explicit_modes(parameters):
-    task = parameters["TASK"]
-    ek = any(task[name].is_set() for name in ("NK", "KPATH", "NKDIR", "KA", "KE"))
-    kk = any(task[name].is_set() for name in ("NK1", "NK2", "K1", "K2"))
-    return ek, kk
+EK_TASK_ITEMS = ("NK", "KPATH", "NKDIR", "KE")
+KK_TASK_ITEMS = ("NK1", "NK2", "K1", "K2")
 
 
 def _mode_hint(parameters):
@@ -38,15 +31,11 @@ def _mode_hint(parameters):
 
 
 def bsf_mode(parameters):
-    """Return the BSF mode selected by explicit values or a creation hint."""
-    ek, kk = _explicit_modes(parameters)
-    if ek and kk:
-        return MIXED
-    if ek:
-        return EK
-    if kk:
-        return KK
-    return _mode_hint(parameters) or KK
+    """Return the BSF mode selected by the number of energy points."""
+    ne = parameters["ENERGY"]["NE"]()
+    if ne is None or len(ne) == 0:
+        return _mode_hint(parameters) or KK
+    return EK if ne[0] > 1 else KK
 
 
 def _root(container):
@@ -65,8 +54,16 @@ def _kk_item(_definition, container):
     return bsf_mode(_root(container)) != EK
 
 
+def _ka_item(definition, container):
+    return _kk_item(definition, container) or _ek_vectors_item(definition, container)
+
+
+def _ka_numbered(option):
+    return bsf_mode(_root(option)) == EK
+
+
 def _ne_default(option):
-    return [200] if bsf_mode(_root(option)) == EK else [1]
+    return [200] if _mode_hint(_root(option)) == EK else [1]
 
 
 def _emin_default(option):
@@ -91,34 +88,55 @@ def _emax_default(option):
 
 def _validate_bsf(
     parameters: Any, _values: Any, why: str
-) -> Optional[DataValidityError]:
-    ek, kk = _explicit_modes(parameters)
-    if ek and kk:
-        return DataValidityError(
-            "TASK contains parameters for both BSFEK and BSFKK"
-        )
-
-    explicit_mode = EK if ek else KK if kk else None
+) -> Optional[list[DataValidityWarning]]:
+    issues = []
+    mode = bsf_mode(parameters)
     hint = _mode_hint(parameters)
-    if hint and explicit_mode and hint != explicit_mode:
-        return DataValidityError(
-            f"TASK parameters select BSF{explicit_mode}, but {hint} mode was requested"
+    if hint and hint != mode:
+        issues.append(
+            DataValidityWarning(
+                f"ENERGY.NE selects BSF-{mode}, but BSF-{hint} was requested"
+            )
         )
 
-    mode = explicit_mode or hint or KK
+    task = parameters["TASK"]
+    incompatible = KK_TASK_ITEMS if mode == EK else EK_TASK_ITEMS
+    incompatible = [name for name in incompatible if task[name].is_set()]
+    if incompatible:
+        issues.append(
+            DataValidityError(
+                f"TASK.{', TASK.'.join(incompatible)} cannot be used in BSF-{mode} mode. "
+                 "The mode is chosen by setting number of energies in ENERGY.NE."
+            )
+        )
+
     if mode == EK:
-        if why == "set":
-            return None
-        task = parameters["TASK"]
-        if task["KPATH"]() is None and (
+        if why != "set" and task["KPATH"]() is None and (
             task["KA"]() is None or task["KE"]() is None
         ):
-            return DataValidityError(
-                "Please, specify either TASK.KPATH or TASK.KA and TASK.KE"
+            issues.append(
+                DataValidityError(
+                    "Please, specify either TASK.KPATH or TASK.KA and TASK.KE"
+                )
             )
-    elif not np.array_equal(parameters["ENERGY"]["NE"](), [1]):
-        return DataValidityError("ENERGY.NE has to be 1 for BSFKK")
-    return None
+        nkdir = task["NKDIR"]()
+        if nkdir is not None and nkdir > 9:
+            issues.append(DataValidityError("TASK.NKDIR cannot be greater than 9"))
+    elif why != "set":
+        missing = [name for name in KK_TASK_ITEMS if task[name]() is None]
+        if missing:
+            issues.append(
+                DataValidityError(
+                    f"TASK.{', TASK.'.join(missing)} are required in BSFKK mode"
+                )
+            )
+    return issues or None
+
+
+def _validate_kpath(option, _container, _why):
+    value = option()
+    if value is not None and value not in (*range(1, 8), 10):
+        return DataValidityError("TASK.KPATH has to be one of 1-7 or 10")
 
 
 def _task_definition():
@@ -128,8 +146,9 @@ def _task_definition():
             V("NK", 300, condition=_ek_item, info="total number of k-points"),
             V(
                 "KPATH",
-                Integer(min=1, max=5),
+                Integer(min=1, max=10),
                 condition=_ek_item,
+                validators=_validate_kpath,
                 info="Predefined path in k-space",
                 description="""
 Bravais-lattice KPATH path
@@ -178,8 +197,8 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
             V(
                 "KA",
                 SetOf(float, length=3),
-                condition=_ek_vectors_item,
-                is_repeated="NUMBERED",
+                condition=_ka_item,
+                is_repeated=V.Repeated.NUMBERED_IF(_ka_numbered),
                 info=(
                     "First k-vector segment in k-space in multiples of 2π/a and "
                     "rectangular coordinates with * = 1, ...,NKDIR"
