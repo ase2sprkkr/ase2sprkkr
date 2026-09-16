@@ -1,6 +1,21 @@
 Changelog
 =========
 
+Version 3.5.1
+-------------
+* The base class of SPRKKR calculator is now BaseCalculator
+* Added support for ANDERSON mixing, BSF task improved
+* Merged-BSF task support
+  * Conditionaly numbered value
+  * Conditional length item in grammar
+  * Some checks are done on tree level to allow cross-section conditions
+* Improvements for GUI:
+  * ResultValues are implemented as Options, to reuse existing functionality in GUI
+  * Better result files handling
+  * Files in results provide both relative and absolute path
+* A better debugging in `ase2sprkkr shell`
+
+
 Version 3.5
 -----------
 * `promote_ase_atoms` can be directly imported from the `ase2sprkkr` root package
