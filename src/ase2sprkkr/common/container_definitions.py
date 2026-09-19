@@ -268,6 +268,21 @@ class ContainerDefinition(RealItemDefinition):
     def __contains__(self, key):
         return key in self._members
 
+    def get_member(self, name):
+        """Return the definition at the given explicit dotted path.
+
+        A leading ``..`` selects the parent container, so ``..N`` resolves
+        ``N`` in the direct parent and ``....N`` resolves it two levels up.
+        """
+        if name.startswith(".."):
+            if self.container is None:
+                raise KeyError(f"No parent of {self}")
+            return self.container.get_member(name[2:])
+        if "." in name:
+            section_name, child_name = name.split(".", 1)
+            return self._members[section_name].get_member(child_name)
+        return self._members[name]
+
     def remove(self, name):
         del self._members[name]
         return self
