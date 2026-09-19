@@ -128,3 +128,29 @@ class TestRepeatedCountParsing(TestCase):
         data_many = "PARENT\n\tN=2\n\tITEM\n\t\t1\n\tITEM\n\t\t2\n\tITEM\n\t\t3\n\tITEM\n\t\t4\n\tITEM\n\t\t5\n"
         with self.assertRaises(Exception):
             parent.parse(data_many)
+
+    def test_repeated_count_callable_with_multiple_dependencies(self):
+        def total(N, M):
+            return int(N) + int(M)
+
+        item = S(
+            "ITEM",
+            members=[V("VAL", int, name_in_grammar=False)],
+            is_repeated=Repeated.REPEATED,
+            repeated_count=total,
+            repeated_with_name=True,
+        )
+        parent = S("PARENT", members=[V("N", int), V("M", int), item])
+        root = IP([parent])
+
+        parsed = root.read_from_string(
+            "PARENT\n\tN=2\n\tM=1\n"
+            "\tITEM\n\t\t10\n"
+            "\tITEM\n\t\t20\n"
+            "\tITEM\n\t\t30\n"
+        )
+
+        self.assertEqual(
+            [instance["VAL"]() for instance in parsed.PARENT.ITEM.values()],
+            [10, 20, 30],
+        )
