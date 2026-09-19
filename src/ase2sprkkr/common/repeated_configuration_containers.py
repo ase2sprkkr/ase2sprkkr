@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from .configuration_containers import BaseConfigurationContainer
-from .configuration import UnknownMemberPolicy
-from typing import Any, Iterable, Mapping, Optional, Union
+from .configuration import Configuration, UnknownMemberPolicy
+from typing import Any, Callable, Iterable, Iterator, Mapping, Optional, Union
 from .warnings import (
     DataValidityError,
     ReportInvalidPolicy,
@@ -84,6 +84,60 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             ln = len(self._values)
             return isinstance(name, int) and abs(name) < len(self) or name == -ln
         return name in self._values
+
+    def _member_key(self, name):
+        """Convert a path component to an index or stored dictionary key."""
+        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
+            try:
+                return int(name)
+            except (TypeError, ValueError):
+                return name
+        try:
+            if name in self._values:
+                return name
+        except TypeError:
+            pass
+        if isinstance(name, str):
+            try:
+                return int(name)
+            except ValueError:
+                pass
+        return name
+
+    def _get_members(
+        self,
+        name: Any,
+        unknown: UnknownMemberPolicy,
+        is_option: Optional[bool],
+        lower_case: bool,
+        *,
+        accept: Optional[Callable[[Configuration], bool]],
+    ) -> Iterator[Configuration]:
+        """Return the repeated item selected by its index or key."""
+        child_name = None
+        if isinstance(name, str) and "." in name:
+            name, child_name = name.split(".", 1)
+        try:
+            member = self._values[self._member_key(name)]
+        except (IndexError, KeyError, TypeError):
+            return
+
+        if child_name is not None:
+            if not member._definition.is_option:
+                yield from member.get_members(
+                    child_name,
+                    unknown,
+                    is_option,
+                    lower_case,
+                    accept=accept,
+                )
+            return
+
+        if (
+            (is_option is None or member._definition.is_option is is_option)
+            and (accept is None or accept(member))
+        ):
+            yield member
 
     def stage_clear(
         self,

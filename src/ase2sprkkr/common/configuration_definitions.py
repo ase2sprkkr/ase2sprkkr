@@ -375,8 +375,9 @@ class RealItemDefinition(BaseDefinition):
             The delimiter used between repeated instances of self, if not repeated_with_name
 
          repeated_count: string or int or callable
-            The number of repetitions. If string, the repetition is given from the parsed values. If callable,
-            the function is called on the values of given options.
+            The number of repetitions. If string, the repetition is given from the parsed value at that exact
+            path; ``..`` selects the parent section (for example ``..NPAN``). If callable, the function is called
+            on the values of the local options named by its parameters.
 
          repeated_with_name: bool
             If True, the whole value-name pair is repeated

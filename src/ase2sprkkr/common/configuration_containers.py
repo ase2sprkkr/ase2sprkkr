@@ -8,6 +8,7 @@ and that are results of parsing of a configuration file.
 
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from .configuration import Configuration, UnknownMemberPolicy
 from .file_utils import filename_from_file
 import copy
@@ -28,7 +29,7 @@ class DisabledAttributeError(AttributeError):
     """
 
 
-class BaseConfigurationContainer(Configuration):
+class BaseConfigurationContainer(Configuration, ABC):
     """Configuration container, that holds members, either in classical way
     (see :class:ConfigurationContainer) or treat them in a special way
     """
@@ -66,6 +67,81 @@ class BaseConfigurationContainer(Configuration):
             if i.has_any_value():
                 return True
         return False
+
+    def get_members(
+        self,
+        name: Any = None,
+        unknown: UnknownMemberPolicy = "find",
+        is_option: Optional[bool] = None,
+        lower_case: bool = True,
+        *,
+        accept: Optional[Callable[[Configuration], bool]] = None,
+    ) -> Iterator[Configuration]:
+        """Return members selected by a path.
+
+        ``None`` and leading parent operators are common to all containers;
+        each concrete container implements lookup of its own members in
+        :meth:`_get_members`.
+        """
+        if name is None:
+            yield self
+            return
+        if isinstance(name, str) and name.startswith(".."):
+            if self._container is not None:
+                yield from self._container.get_members(
+                    name[2:],
+                    unknown,
+                    is_option,
+                    lower_case,
+                    accept=accept,
+                )
+            return
+        yield from self._get_members(
+            name,
+            unknown,
+            is_option,
+            lower_case,
+            accept=accept,
+        )
+
+    @abstractmethod
+    def _get_members(
+        self,
+        name: Any,
+        unknown: UnknownMemberPolicy,
+        is_option: Optional[bool],
+        lower_case: bool,
+        *,
+        accept: Optional[Callable[[Configuration], bool]],
+    ) -> Iterator[Configuration]:
+        """Return members owned directly or indirectly by this container."""
+        raise NotImplementedError
+
+    def get_member(
+        self,
+        name: Any,
+        *,
+        unknown: UnknownMemberPolicy = "find",
+        is_option: Optional[bool] = None,
+        lower_case: bool = True,
+        accept: Optional[Callable[[Configuration], bool]] = None,
+    ) -> Configuration:
+        """Return the first matching member, raising ``KeyError`` if absent.
+
+        ``unknown``, ``is_option``, ``lower_case`` and ``accept`` have the same
+        meaning as in :meth:`get_members`.
+        """
+        members = self.get_members(
+            name,
+            unknown,
+            is_option,
+            lower_case,
+            accept=accept,
+        )
+        try:
+            return next(members)
+        except StopIteration:
+            raise KeyError(f"No member with name {name} in {self}") from None
 
     @property
     def definition(self):
@@ -300,14 +376,14 @@ class ConfigurationContainer(BaseConfigurationContainer):
             ) or changed
         return changed
 
-    def get_members(
+    def _get_members(
         self,
-        name: Optional[str] = None,
-        unknown: UnknownMemberPolicy = "find",
-        is_option: Optional[bool] = None,
-        lower_case: bool = True,
+        name: str,
+        unknown: UnknownMemberPolicy,
+        is_option: Optional[bool],
+        lower_case: bool,
         *,
-        accept: Optional[Callable[[Configuration], bool]] = None,
+        accept: Optional[Callable[[Configuration], bool]],
     ) -> Iterator[Configuration]:
         """
         Get all the members of given name. According to ``unknown`` parameter,
@@ -315,9 +391,8 @@ class ConfigurationContainer(BaseConfigurationContainer):
 
         Parameters
         ----------
-        name: None or str
-          If None, return contained values as a dictionary.
-          Otherwise, return the value of the member with the given name.
+        name: str
+          Name or dotted path of the requested member.
 
         unknown: str or None
           If unknown == 'find' and there is no member with a given name,
@@ -338,9 +413,6 @@ class ConfigurationContainer(BaseConfigurationContainer):
         ------
         value: mixed
         """
-        if name is None:
-            yield self
-            return
         if "." in name:
             section_name, child_name = name.split(".", 1)
             members = self.get_members(
@@ -379,32 +451,6 @@ class ConfigurationContainer(BaseConfigurationContainer):
                 ):
                     if accept is None or accept(found_member):
                         yield found_member
-
-    def get_member(
-        self,
-        name: str,
-        *,
-        unknown: UnknownMemberPolicy = "find",
-        is_option: Optional[bool] = None,
-        lower_case: bool = True,
-        accept: Optional[Callable[[Configuration], bool]] = None,
-    ) -> Configuration:
-        """Return the first matching member, raising ``KeyError`` if absent.
-
-        ``unknown``, ``is_option``, ``lower_case`` and ``accept`` have the same
-        meaning as in :meth:`get_members`.
-        """
-        members = self.get_members(
-            name,
-            unknown,
-            is_option,
-            lower_case,
-            accept=accept,
-        )
-        try:
-            return next(members)
-        except StopIteration:
-            raise KeyError(f"No member with name {name} in {self}") from None
 
     def get(self, name=None, unknown="find", is_option=True):
         """
