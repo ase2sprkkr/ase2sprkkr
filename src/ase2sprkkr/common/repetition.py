@@ -294,7 +294,7 @@ class VariableRepeatedItemGrammar(RepeatedItemGrammar):
             def grammar_hook(grammar, parse_action=parse_action):
                 grammar.add_parse_action(parse_action)
 
-            container[i].add_grammar_hook(grammar_hook)
+            container[name].add_grammar_hook(grammar_hook)
 
         def parse_action(s, l, t):
             self.args[self.names[-1]] = t[0][1]
