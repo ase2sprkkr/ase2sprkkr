@@ -150,6 +150,13 @@ class BaseDefinition:
         with generate_grammar():
             return self._grammar and self._grammar(allow_dangerous)
 
+    def _get_root_definition(self):
+        """Return the root of the definition tree containing this item."""
+        root = self
+        while root.container is not None:
+            root = root.container
+        return root
+
     @property
     def _grammar(self):
         """Return the grammar. Descendants can redefine this method e.g. to allow
