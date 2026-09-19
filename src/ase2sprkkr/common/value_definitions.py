@@ -255,8 +255,9 @@ class ValueDefinition(RealItemDefinition):
             The delimiter used between repeated instances of self, if not repeated_with_name
 
         repeated_count: string or int or callable
-            The number of repetitions. If string, the repetition is given from the parsed values. If callable,
-            the function is called on the values of given options.
+            The number of repetitions. If string, the repetition is given from the parsed value at that exact
+            path; ``..`` selects the parent section (for example ``..NPAN``). If callable, the function is called
+            on the values of the local options named by its parameters.
 
         repeated_with_name: bool
             If True, the whole value-name pair is repeated
@@ -510,7 +511,7 @@ class ValueDefinition(RealItemDefinition):
     def added_to_container(self, container):
         """Hook called, when the object is assigned to the container (currently from the container
         constructor)"""
-        self.container = container
+        super().added_to_container(container)
         self.type.added_to_container(container)
 
     def validate_type(self, item: bool):

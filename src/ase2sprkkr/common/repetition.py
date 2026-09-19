@@ -273,6 +273,7 @@ class VariableRepeatedItemGrammar(RepeatedItemGrammar):
             raise TypeError("repeated_count must be an int, str, or callable.")
         self.args = { i:None for i in self.names }
         self.forward = None
+        self.hooks = []
 
     def call(self, *args):
         out = self.fn(*args)
@@ -281,12 +282,29 @@ class VariableRepeatedItemGrammar(RepeatedItemGrammar):
         return out
 
     def limits(self, item):
-        container = item._container
-        return self.fn(*(container[name]() for name in self.names))
+        return self.call(
+            *(
+                item._container.get_member(name, unknown="fail")()
+                for name in self.names
+            )
+        )
+
+    def _remove_hooks(self):
+        for source, hook in self.hooks:
+            source.remove_grammar_hook(hook)
+        self.hooks = []
 
     def apply_hooks(self, container):
+        self._remove_hooks()
+        if container is None:
+            return
 
-        for name in self.names[:-1]:
+        try:
+            sources = [container.get_member(name) for name in self.names]
+        except KeyError:
+            return
+
+        for name, source in zip(self.names[:-1], sources[:-1]):
 
             def parse_action(s, l, t, name=name):
                 self.args[name] = t[0][1]
@@ -294,7 +312,8 @@ class VariableRepeatedItemGrammar(RepeatedItemGrammar):
             def grammar_hook(grammar, parse_action=parse_action):
                 grammar.add_parse_action(parse_action)
 
-            container[name].add_grammar_hook(grammar_hook)
+            source.add_grammar_hook(grammar_hook)
+            self.hooks.append((source, grammar_hook))
 
         def parse_action(s, l, t):
             self.args[self.names[-1]] = t[0][1]
@@ -304,9 +323,13 @@ class VariableRepeatedItemGrammar(RepeatedItemGrammar):
         def grammar_hook(grammar):
             grammar.add_parse_action(parse_action)
 
-        container[self.names[-1]].add_grammar_hook(grammar_hook)
+        sources[-1].add_grammar_hook(grammar_hook)
+        self.hooks.append((sources[-1], grammar_hook))
 
     def grammar(self, grammar, delimiter):
+        if not self.hooks:
+            missing = ", ".join(self.names)
+            raise KeyError(f"No repeated_count dependencies found: {missing}")
 
         if not self.forward:
             self.forward = Forward()

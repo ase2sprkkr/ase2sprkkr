@@ -20,6 +20,29 @@ class IP(cd.InputParametersDefinition):
 
 
 class TestRepeatedCountParsing(TestCase):
+    def test_container_callbacks_are_deferred_until_first_use(self):
+        class CountingValue(V):
+            def __init__(self, *args, **kwargs):
+                self.added_count = 0
+                super().__init__(*args, **kwargs)
+
+            def added_to_container(self, container):
+                self.added_count += 1
+                super().added_to_container(container)
+
+        value = CountingValue("VALUE", int)
+        section = S("SECTION", members=[value])
+
+        assert value.container is None
+        assert value.added_count == 0
+
+        root = IP([section])
+        assert value.container is section
+        assert value.added_count == 1
+
+        root.create_object()
+        assert value.added_count == 1
+
     def test_repeated_count_fixed_int(self):
         item = S("ITEM", members=[V("VAL", int, name_in_grammar=False)])
         parent = S("PARENT", members=[V("N", int), item])
@@ -154,3 +177,57 @@ class TestRepeatedCountParsing(TestCase):
             [instance["VAL"]() for instance in parsed.PARENT.ITEM.values()],
             [10, 20, 30],
         )
+
+    def test_repeated_count_dependency_from_parent_section(self):
+        item = S(
+            "ITEM",
+            members=[V("VAL", int, name_in_grammar=False)],
+            is_repeated=Repeated.REPEATED,
+            repeated_count="..N",
+            repeated_with_name=True,
+        )
+        child = S("CHILD", members=[V("N", int), item])
+        parent = S("PARENT", members=[V("N", int), child])
+        root = IP([parent])
+
+        parsed = root.read_from_string(
+            "PARENT\n\tN=2\n\tCHILD\n"
+            "\t\tN=4\n"
+            "\t\tITEM\n\t\t\t10\n"
+            "\t\tITEM\n\t\t\t20\n"
+        )
+
+        assert child.get_member("N") is child["N"]
+        assert child.get_member("..N") is parent["N"]
+        assert len(parent["N"].grammar_hooks) == 1
+        assert child["N"].grammar_hooks == []
+        assert parsed.PARENT.CHILD.get_member("N") is parsed.PARENT.CHILD["N"]
+        assert parsed.PARENT.CHILD.get_member("..N") is parsed.PARENT["N"]
+        assert (
+            parsed.PARENT.CHILD.ITEM.get_member("..N")
+            is parsed.PARENT.CHILD["N"]
+        )
+        assert (
+            parsed.PARENT.CHILD.ITEM.get_member("....N")
+            is parsed.PARENT["N"]
+        )
+        assert parsed.PARENT.CHILD.ITEM.get_member(0) is parsed.PARENT.CHILD.ITEM[0]
+        assert (
+            parsed.PARENT.CHILD.ITEM.get_member("0.VAL")
+            is parsed.PARENT.CHILD.ITEM[0]["VAL"]
+        )
+
+        self.assertEqual(
+            [instance["VAL"]() for instance in parsed.PARENT.CHILD.ITEM.values()],
+            [10, 20],
+        )
+
+        rows = S(
+            "ROWS",
+            members=[V("VAL", int)],
+            is_repeated=Repeated.DICT_SECTION,
+        )
+        dictionary = IP([rows]).create_object()
+        dictionary.ROWS.set({1: {"VAL": 10}})
+        assert dictionary.ROWS.get_member(1) is dictionary.ROWS[1]
+        assert dictionary.ROWS.get_member("1.VAL") is dictionary.ROWS[1]["VAL"]
