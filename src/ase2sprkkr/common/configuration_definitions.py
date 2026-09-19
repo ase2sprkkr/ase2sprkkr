@@ -11,6 +11,7 @@ e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 """
 
 import pyparsing as pp
+from enum import Enum
 import inspect
 from typing import Callable, Dict, Iterable, Optional, Union, Any
 import itertools
@@ -27,6 +28,12 @@ from .warnings import DataValidityWarning, ValidationResult
 
 Validator = Callable[[Any, Any, str], Any]
 _NO_GENERATED_KEY = object()
+
+
+class _TreeState(Enum):
+    UNFINALIZED = 0
+    FINALIZING = 1
+    FINALIZED = 2
 
 
 def _definition_write_condition_always_true(_):
@@ -103,6 +110,7 @@ class BaseDefinition:
         self.grammar_hooks = []
         self.condition = condition
         self.container = None
+        self._tree_state = _TreeState.UNFINALIZED
 
     is_repeated = Repeated.NO
     """ By default, the configuration items are not repeated """
@@ -147,6 +155,7 @@ class BaseDefinition:
          Allow dangerous values - i.e. values that do not fulfill the requirements
          for the given-option value (i.e. a type requirement or other constraints).
         """
+        self._finalize()
         with generate_grammar():
             return self._grammar and self._grammar(allow_dangerous)
 
@@ -156,6 +165,20 @@ class BaseDefinition:
         while root.container is not None:
             root = root.container
         return root
+
+    def _finalize(self):
+        """Finalize the complete definition tree before its first use."""
+        root = self._get_root_definition()
+        if root._tree_state is not _TreeState.UNFINALIZED:
+            return
+        root._tree_state = _TreeState.FINALIZING
+        try:
+            root.added_to_container(None)
+        except Exception:
+            root._tree_state = _TreeState.UNFINALIZED
+            raise
+        else:
+            root._tree_state = _TreeState.FINALIZED
 
     @property
     def _grammar(self):
@@ -250,6 +273,7 @@ class BaseDefinition:
 
     def create_object(self, container=None):
         """Creates Section/Option/.... object (whose properties I define)"""
+        self._finalize()
         return self.result_class(self, container)
 
     is_independent_on_the_predecessor = True
@@ -964,7 +988,9 @@ class Switch(ControlDefinition):
 
     def remove_from_container(self):
         if self.container:
-            self.container[self.item].remove_grammar_hook(self.item_hook)
+            source = self.container[self.item]
+            if self.item_hook in source.grammar_hooks:
+                source.remove_grammar_hook(self.item_hook)
             for i in self.values.values():
                 for j in i.values():
                     j.condition = None

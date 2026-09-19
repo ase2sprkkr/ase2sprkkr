@@ -115,8 +115,6 @@ class ContainerDefinition(RealItemDefinition):
             for i in members.values():
                 i.value_name_format = self.value_name_format
         self._members = members
-        for i in self._members.values():
-            i.added_to_container(self)
 
         self.has_hidden_members = has_hidden_members
         if force_order is not None:
@@ -128,6 +126,12 @@ class ContainerDefinition(RealItemDefinition):
 
     configuration_type_name = "SECTION"
     """ Name of the container type in the runtime documentation """
+
+    def added_to_container(self, container):
+        """Attach this container and propagate the callback to its children."""
+        super().added_to_container(container)
+        for member in self._members.values():
+            member.added_to_container(self)
 
     def allow_duplication(self):
         return self.is_repeated
@@ -545,6 +549,7 @@ class ContainerDefinition(RealItemDefinition):
             Otherwise, the container just for one instance of a section is
             returned.
         """
+        self._finalize()
         if repeated and self.is_repeated:
             return self.repeated_class(self, container)
         return super().create_object(container)
@@ -676,6 +681,7 @@ class ConfigurationRootDefinition(ContainerDefinition):
             members = name
             name = self.__class__.__name__
         super().__init__(name, members, **kwargs)
+        self._finalize()
 
     @property
     def sections(self):
