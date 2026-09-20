@@ -11,6 +11,8 @@ from ..readers.scf import ScfOutputParser, ScfResult, atomic_types_definition
 from ..readers.bsf import BsfResult
 from ..readers.dos import DosResult
 from ..readers.jxc import JxcOutputReader
+from ...output_files.output_files import OutputFile
+from ...output_files.definitions.sfn import SFNOutputFile
 
 if __package__:
     from .init_tests import TestCase, patch_package
@@ -111,6 +113,65 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
             self.assertEqual(values["Data"].actions(), ("data",))
             assert values["Data"].data() is out
             assert values["potential"] is out.files["potential"]
+
+    def test_scf_sfn(self, tmp_path, monkeypatch):
+        fullpot = ScfResult(None, None, tmp_path)
+        expected_filename = os.path.join(tmp_path, "shape.sfn")
+        fullpot.files.add_file("SFN", "shape.sfn")
+        parsed = object()
+
+        def parse_sfn(filename, **kwargs):
+            assert filename == expected_filename
+            assert kwargs == {"try_only": "sfn"}
+            return parsed
+
+        monkeypatch.setattr(OutputFile, "from_file", parse_sfn)
+
+        assert fullpot.sfn_filename == expected_filename
+        assert fullpot.sfn is parsed
+        assert fullpot.output_values["SFN"] is fullpot.files["SFN"]
+        assert fullpot.files["SFN"].file_type == "sfn"
+        assert fullpot.files["SFN"].display_name == "Shape functions (SFN)"
+
+        asa = ScfResult(None, None, tmp_path)
+        assert asa.sfn_filename is None
+        assert asa.sfn is None
+        assert "SFN" not in asa.output_values
+
+    def test_scf_parser_registers_reported_sfn(self):
+        directory = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "examples"))
+        output = os.path.join(directory, "Fe2Al_SCF.out")
+
+        result = TaskResult.from_file(output)
+
+        assert result.input_parameters is None
+        assert result.program_info["version"] == "9.7"
+        assert result.program_info["executable"] == "KKRSCF"
+        assert result.sfn_filename == os.path.join(directory, "Fe2Al_SCF.sfn")
+        assert result.files["SFN"].file_type == "sfn"
+        assert isinstance(result.sfn, SFNOutputFile)
+        assert result.sfn.nm == 2
+
+    def test_scf_parser_registers_sfn_reported_before_files(self, tmp_path):
+        directory = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "examples"))
+        with open(os.path.join(directory, "Fe2Al_SCF.out"), "rb") as source:
+            content = source.read()
+
+        report = (
+            b"          the shape functions have been read successfully\n"
+            b"          from file: Fe2Al_SCF.sfn\n"
+        )
+        file_marker = b" fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\n"
+        assert content.count(report) == 1
+        assert file_marker in content
+        content = content.replace(report, b"", 1)
+        content = content.replace(file_marker, report + file_marker, 1)
+
+        output = tmp_path / "fullpot-restart.out"
+        output.write_bytes(content)
+        result = TaskResult.from_file(output)
+
+        assert result.sfn_filename == os.path.join(tmp_path, "Fe2Al_SCF.sfn")
 
     def test_result_file_types_are_inferred_without_duplicate_aliases(self):
         dos = DosResult(None, None, None)

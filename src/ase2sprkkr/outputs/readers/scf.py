@@ -73,6 +73,21 @@ class ScfResult(TaskResult):
         else:
             SPRKKR(potential=self.potential_filename)
 
+    @cached_property
+    def sfn_filename(self):
+        """Shape-function file reported by SPR-KKR, if any."""
+        return self.path_to("SFN") if "SFN" in self.files else None
+
+    @cached_property
+    def sfn(self):
+        """Shape functions used by a full-potential calculation."""
+        sfn_file = self._sfn_file
+        return sfn_file.parsed_file() if sfn_file is not None else None
+
+    @cached_property
+    def _sfn_file(self):
+        return self.files.set_file_type("SFN", "sfn") if "SFN" in self.files else None
+
     @property
     def potential_filename(self):
         fname = super().potential_filename + "_new"
@@ -172,6 +187,7 @@ class ScfResult(TaskResult):
 
     @property
     def output_values(self):
+        self._sfn_file
         output_values = super().output_values
         output_values.update(self._scf_output_values.items())
         return output_values
@@ -283,6 +299,8 @@ class ScfOutputParser(SprKkrOutputParser):
     This class reads and parses the output of the SCF task of the SPR-KKR.
     """
 
+    _sfn_or_run_line = re.compile(rb"^\s*from file:|SPRKKR-run for:")
+
     def set_print_output(self, print_output):
         self.print_info = print_output == "info"
         self.print_output = print_output and not self.print_info
@@ -310,9 +328,12 @@ class ScfOutputParser(SprKkrOutputParser):
                 if b"ECTOP" in line:
                     out["energy"]["ECTOP"] = float(line.split(b"=")[1])
 
-                line = await readline_until(stdout, lambda line: b"SPRKKR-run for: " in line)
-                if not line:
-                    raise EOFError()
+                while True:
+                    line = await readline_until(stdout, self._sfn_or_run_line.search, can_end=False)
+                    if match := self._sfn_file.match(line):
+                        result.files.add_file("SFN", match.group(1), "sfn")
+                    else:
+                        break
                 line = line.strip()
                 if first and self.print_info:
                     print(line)
