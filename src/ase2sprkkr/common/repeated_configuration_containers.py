@@ -8,6 +8,7 @@ from .warnings import (
     ReportInvalidPolicy,
     RetainInvalidPolicy,
     ValidationReason,
+    ValidationResult,
 )
 from .configuration_definitions import BaseDefinition
 from .configuration_transaction import ConfigurationTransaction
@@ -387,7 +388,9 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             DataValidityError.warn(f"Non-optional section {self._definition.name} has no value to save")
 
         values = self.values()
-        self._definition.repeated_count.validate(self, len(values), why)
+        ValidationResult.emit(
+            self._definition.repeated_count.validate(self, len(values), why)
+        )
         for item in values:
             item._validate(why)
 
