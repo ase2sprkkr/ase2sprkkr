@@ -125,6 +125,23 @@ class TestRepeatedCountParsing(TestCase):
         with self.assertRaises(Exception):
             parent.parse(data_many)
 
+    def test_repeated_count_one_can_be_parsed_repeatedly(self):
+        item = S(
+            "ITEM",
+            members=[V("VAL", int, name_in_grammar=False)],
+            is_repeated=Repeated.REPEATED,
+            repeated_count="N",
+            repeated_with_name=True,
+        )
+        root = IP([S("PARENT", members=[V("N", int), item])])
+        data = "PARENT\n\tN=1\n\tITEM\n\t\t10\n"
+
+        first = root.read_from_string(data)
+        second = root.read_from_string(data)
+
+        assert first.PARENT.ITEM[0].VAL() == 10
+        assert second.PARENT.ITEM[0].VAL() == 10
+
     def test_repeated_count_callable(self):
         # End-to-end parse: callable doubles the given N -> 2 -> 4 items
         def double_n(N):
