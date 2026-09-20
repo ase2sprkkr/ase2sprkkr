@@ -45,6 +45,7 @@ class OutputFileOption(OutputOption):
         "input": "Input file",
         "potential": "Potential file",
         "converged": "Converged potential file",
+        "sfn": "Shape functions (SFN)",
         "dos": "Density of states (DOS)",
         "bloch-sf": "Bloch spectral function (BSF)",
         "spc": "Photoemission spectrum",
@@ -59,6 +60,7 @@ class OutputFileOption(OutputOption):
         "spc": "Photoemission spectrum",
         "jxc": "Exchange-interaction data",
         "rat": "X-ray spectroscopy data",
+        "sfn": "Shape functions (SFN)",
     }
 
     _FILE_INFO = {
@@ -66,6 +68,7 @@ class OutputFileOption(OutputOption):
         "input": "Input parameters used for this calculation.",
         "potential": "Potential used as input for this calculation.",
         "converged": "Potential produced by the converged SCF calculation.",
+        "sfn": "Shape-function data used by a full-potential calculation.",
     }
 
     _TYPE_INFO = {
@@ -74,6 +77,7 @@ class OutputFileOption(OutputOption):
         "spc": "Photoemission spectrum data produced by the calculation.",
         "jxc": "Exchange-interaction data produced by the calculation.",
         "rat": "X-ray spectroscopy data produced by the calculation.",
+        "sfn": "Shape-function data used by a full-potential calculation.",
     }
 
     @property
