@@ -87,8 +87,18 @@ class BaseConfigurationContainer(Configuration, ABC):
             yield self
             return
         if isinstance(name, str) and name.startswith(".."):
-            if self._container is not None:
-                yield from self._container.get_members(
+            parent = self._container
+            # A concrete item of a repeated section is held in a technical
+            # collection carrying the same definition.  It must not add a
+            # level to explicit paths, because no such level exists in the
+            # definition tree.
+            if (
+                parent is not None
+                and parent._definition is self._definition
+            ):
+                parent = parent._container
+            if parent is not None:
+                yield from parent.get_members(
                     name[2:],
                     unknown,
                     is_option,
