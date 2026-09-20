@@ -195,6 +195,21 @@ class TestDefinitions(TestCase):
                 ip2 = df.read_from_string(ip.to_string())
                 self.assertEqual(ip.to_dict(), ip2.to_dict())
 
+    def test_sfn_filename_default(self):
+        ip = InputParameters.create("SCF")
+        ip.CONTROL.DATASET = "calculation"
+        ip.CONTROL.POTFIL = "potential.pot"
+
+        assert ip.CONTROL.SFNFIL() == "calculation.sfn"
+        assert "SFNFIL" not in ip.CONTROL.to_string()
+
+        ip.CONTROL.DATASET = "renamed"
+        assert ip.CONTROL.SFNFIL() == "renamed.sfn"
+        assert "SFNFIL" not in ip.CONTROL.to_string()
+
+        ip.CONTROL.SFNFIL = "custom.sfn"
+        assert "SFNFIL=custom.sfn" in ip.CONTROL.to_string()
+
     @pytest.mark.slow
     def test_definitions(self):
         path = os.path.join(os.path.dirname(__file__), "../examples")

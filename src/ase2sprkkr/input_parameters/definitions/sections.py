@@ -12,6 +12,10 @@ def _sections_tau_bzint_default_value(option):
     return None if option._container.CLUSTER() or option._container.MOL() else "POINTS"
 
 
+def _sections_sfnfil_default_value(control):
+    return control.DATASET() + ".sfn"
+
+
 def _sections_tau_bzint_weyl_write_condition(option):
     return option._container.BZINT() == "WEYL"
 
@@ -91,6 +95,13 @@ def CONTROL(ADSI):
                 is_required=True,
                 result_is_visible=True,
                 info="The custom field for the description of the problem - the output files will been called 'DATASET.<ext>'.",
+            ),
+            V(
+                "SFNFIL",
+                str,
+                default_value_from_container=_sections_sfnfil_default_value,
+                is_always_added=False,
+                info="Shape-function file used for full-potential calculations.",
             ),
             V("ADSI", DefKeyword(ADSI), is_required=True, info="Type of the computation."),
             V(
