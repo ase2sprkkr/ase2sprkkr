@@ -228,6 +228,10 @@ class TestRepeatedCountParsing(TestCase):
             parsed.PARENT.CHILD.ITEM.get_member("....N")
             is parsed.PARENT["N"]
         )
+        assert (
+            parsed.PARENT.CHILD.ITEM[0].get_member("..N")
+            is parsed.PARENT.CHILD["N"]
+        )
         assert parsed.PARENT.CHILD.ITEM.get_member(0) is parsed.PARENT.CHILD.ITEM[0]
         assert (
             parsed.PARENT.CHILD.ITEM.get_member("0.VAL")
