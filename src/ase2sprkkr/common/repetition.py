@@ -2,7 +2,7 @@
 
 from enum import Enum, nonmember
 from typing import Callable, TYPE_CHECKING, Union
-from pyparsing import DelimitedList
+from pyparsing import DelimitedList, Empty
 import inspect
 import numpy as np
 
@@ -184,6 +184,10 @@ class RepeatedItemGrammar:
 
     @staticmethod
     def _delimited_list(grammar, delimiter, min=None, max=None):
+        if min == max == 0:
+            return Empty().set_parse_action(lambda _: [])
+        if min == max == 1:
+            return grammar.copy().add_parse_action(lambda x: x.as_list())
         return DelimitedList(grammar, delimiter, min=min, max=max).set_parse_action(lambda x: x.as_list())
 
 class NotRepeatedItemGrammar(RepeatedItemGrammar):
@@ -318,7 +322,7 @@ class VariableRepeatedItemGrammar(RepeatedItemGrammar):
         def parse_action(s, l, t):
             self.args[self.names[-1]] = t[0][1]
             count = self.call(*self.args.values())
-            self.forward << self._delimited_list(self.grammar, self.delimiter, count[0], count[1])
+            self.forward << self._delimited_list(self._item_grammar, self.delimiter, count[0], count[1])
 
         def grammar_hook(grammar):
             grammar.add_parse_action(parse_action)
@@ -333,7 +337,7 @@ class VariableRepeatedItemGrammar(RepeatedItemGrammar):
 
         if not self.forward:
             self.forward = Forward()
-        self.grammar = grammar
+        self._item_grammar = grammar
         self.delimiter = delimiter or ''
         return self.forward
 
