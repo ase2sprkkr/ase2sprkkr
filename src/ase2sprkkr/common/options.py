@@ -16,6 +16,7 @@ from .warnings import (
     InvalidValuePolicy,
     ReportInvalidPolicy,
     RetainInvalidPolicy,
+    ValidationResult,
 )
 
 
@@ -675,14 +676,17 @@ class Option(BaseOption):
             )
         )
 
+        value = self(unpack=False, all_values=True)
+        if d.is_repeated and value is not None:
+            ValidationResult.emit(
+                d.repeated_count.validate(self, len(value), why)
+            )
+
         if not validate_value:
             d.run_validators(self, container, why)
             return
 
-        value = self(unpack=False, all_values=True)
         if d.is_repeated:
-            if value is not None:
-                d.repeated_count.validate(self, len(value), why)
             if value is None:
                 validation_items = (value,)
             elif isinstance(value, DangerousValue):

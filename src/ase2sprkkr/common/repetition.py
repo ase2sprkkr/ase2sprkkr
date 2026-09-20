@@ -1,13 +1,15 @@
 """Definitions of the supported configuration-item repetition modes."""
 
 from enum import Enum, nonmember
+from numbers import Integral
 from typing import Callable, TYPE_CHECKING, Union
 from pyparsing import DelimitedList, Empty
-import inspect
 import numpy as np
 
+from .dependencies import DependentValue
 from .parsing_results import ArrayKey, DefArrayKey, DefDictKey, DictKey, IgnoredKey, Key, RepeatedKey
 from .grammar import Forward
+from .warnings import DataValidityError
 
 if TYPE_CHECKING:
     from .options import Option
@@ -149,10 +151,6 @@ class RepeatedNumberedIf:
         )
 
 
-def _exact_number(x):
-        return x,x
-
-
 class RepeatedItemGrammar:
     """ Base class for repetition handling grammar constructors """
     @staticmethod
@@ -261,78 +259,36 @@ class ConstRepeatedItemGrammar(ValidatedRepeatedItemGrammar):
         return self._delimited_list(grammar, delimiter or '', self.count[0], self.count[1])
 
 
-class VariableRepeatedItemGrammar(RepeatedItemGrammar):
+class VariableRepeatedItemGrammar(ValidatedRepeatedItemGrammar):
     """ Grammar constructor for an item with variable number of items """
 
     def __init__(self, count):
-        self.count = count
-        if isinstance(count, str):
-            self.names = [ count ]
-            self.fn = _exact_number
-        elif callable(count):
-            sig = inspect.signature(count)
-            self.names = list(sig.parameters)
-            self.fn = count
-        else:
-            raise TypeError("repeated_count must be an int, str, or callable.")
-        self.args = { i:None for i in self.names }
+        self.dependency = DependentValue.create(count)
+        self.count = self.dependency
         self.forward = None
-        self.hooks = []
 
-    def call(self, *args):
-        out = self.fn(*args)
-        if isinstance(out, int):
-            return out, out
-        return out
+    @staticmethod
+    def _limits(value):
+        if isinstance(value, Integral):
+            value = int(value)
+            return value, value
+        return value
 
     def limits(self, item):
-        return self.call(
-            *(
-                item._container.get_member(name, unknown="fail")()
-                for name in self.names
-            )
-        )
-
-    def _remove_hooks(self):
-        for source, hook in self.hooks:
-            source.remove_grammar_hook(hook)
-        self.hooks = []
+        return self._limits(self.dependency.runtime_value(item))
 
     def apply_hooks(self, container):
-        self._remove_hooks()
-        if container is None:
-            return
+        self.dependency.bind(container, self._set_count)
 
-        try:
-            sources = [container.get_member(name) for name in self.names]
-        except KeyError:
-            return
-
-        for name, source in zip(self.names[:-1], sources[:-1]):
-
-            def parse_action(s, l, t, name=name):
-                self.args[name] = t[0][1]
-
-            def grammar_hook(grammar, parse_action=parse_action):
-                grammar.add_parse_action(parse_action)
-
-            source.add_grammar_hook(grammar_hook)
-            self.hooks.append((source, grammar_hook))
-
-        def parse_action(s, l, t):
-            self.args[self.names[-1]] = t[0][1]
-            count = self.call(*self.args.values())
-            self.forward << self._delimited_list(self._item_grammar, self.delimiter, count[0], count[1])
-
-        def grammar_hook(grammar):
-            grammar.add_parse_action(parse_action)
-
-        sources[-1].add_grammar_hook(grammar_hook)
-        self.hooks.append((sources[-1], grammar_hook))
+    def _set_count(self, value):
+        lower, upper = self._limits(value)
+        self.forward << self._delimited_list(
+            self._item_grammar, self.delimiter, lower, upper
+        )
 
     def grammar(self, grammar, delimiter):
-        if not self.hooks:
-            missing = ", ".join(self.names)
+        if not self.dependency.hooks:
+            missing = ", ".join(self.dependency.paths)
             raise KeyError(f"No repeated_count dependencies found: {missing}")
 
         if not self.forward:
@@ -342,4 +298,4 @@ class VariableRepeatedItemGrammar(RepeatedItemGrammar):
         return self.forward
 
     def copy(self):
-        return VariableRepeatedItemGrammar(self.count)
+        return VariableRepeatedItemGrammar(self.dependency)
