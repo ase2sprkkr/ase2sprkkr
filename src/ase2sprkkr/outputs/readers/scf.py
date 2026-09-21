@@ -97,9 +97,11 @@ class ScfResult(TaskResult):
     def start_potential_filename(self):
         return super().potential_filename
 
-    @property
+    @cached_property
     def start_potential(self):
-        return Potential.from_file(self.potential_filename)
+        """Potential used as input for the SCF calculation."""
+
+        return Potential.from_file(self.start_potential_filename)
 
     @property
     def energy(self):
