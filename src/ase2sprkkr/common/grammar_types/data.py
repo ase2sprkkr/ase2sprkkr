@@ -1,11 +1,7 @@
 """This module contains special GrammarTypes used for large data in output files"""
 
-from .grammar_type import GrammarType, compare_numpy_values
-from ..dependencies import DependentValue
-from ..decorators import add_to_signature, cached_property
 import pyparsing as pp
 import re
-from ..grammar import SkipToRegex
 import io
 import math
 from numbers import Integral
@@ -14,6 +10,11 @@ import copy
 import os
 from typing import Union
 from functools import partial
+
+from .grammar_type import GrammarType, compare_numpy_values
+from ..dependencies import DependentValue
+from ..decorators import add_to_signature, cached_property
+from ..grammar import SkipToRegex, Forward
 
 def _shape_lines(shape, *, items_per_line):
     size = math.prod(shape)
@@ -213,7 +214,7 @@ class RawData(GrammarType):
 
     def added_to_container(self, container):
         if self._line_dependency is not None:
-            self.forward = pp.Forward()
+            self.forward = Forward()
             self._line_dependency.bind(container, self._set_number_of_lines)
         super().added_to_container(container)
 
@@ -407,14 +408,31 @@ class NumpyArray(RawData):
             if self.dtypes == "line":
                 v = np.array([i.rstrip() for i in v.split("\n")], dtype=object)
             else:
+                if self.items_per_line is not None:
+                    if isinstance(self.delimiter, int):
+                        shape = (
+                            self._parsed_shape
+                            if self._shape_dependency is not None
+                            else self.shape
+                        )
+                        if shape and all(i >= 0 for i in shape):
+                            remaining = math.prod(shape)
+                            lines = []
+                            for line in v.splitlines():
+                                count = min(self.items_per_line, remaining)
+                                # Pyparsing may skip padding before the first
+                                # fixed-width field of a value. Restore it
+                                # from the known record width before parsing.
+                                lines.append(line.rjust(count * self.delimiter))
+                                remaining -= count
+                            v = "".join(lines)
+                        else:
+                            v = v.replace("\n", "")
+                    else:
+                        v = v.replace("\n", " ")
                 last_error = None
                 for dt in self.dtypes:
                     try:
-                        if self.items_per_line is not None:
-                            if isinstance(self.delimiter, int):
-                                v = v.replace("\n", "")
-                            else:
-                                v = v.replace("\n", " ")
                         v = np.genfromtxt(
                               io.StringIO(v),
                               delimiter=self.delimiter,
