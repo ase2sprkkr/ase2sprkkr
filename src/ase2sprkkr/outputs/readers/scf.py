@@ -104,6 +104,17 @@ class ScfResult(TaskResult):
         return Potential.from_file(self.start_potential_filename)
 
     @property
+    def any_potential(self):
+        """Return the parsed result potential, falling back to the input one."""
+
+        for attribute in ("potential", "start_potential"):
+            try:
+                return getattr(self, attribute)
+            except (AttributeError, KeyError, OSError, ValueError):
+                pass
+        return None
+
+    @property
     def energy(self):
         """Total energy of the last iteration"""
         try:
