@@ -84,6 +84,14 @@ class TaskResult:
         """The new (output) potential - that contains the converged charge density etc."""
         return Potential.from_file(self.potential_filename)
 
+    @property
+    def any_potential(self):
+        """Return the parsed potential (SCF then try output and then input) """
+        try:
+            return self.potential
+        except (AttributeError, KeyError, OSError, ValueError):
+            return None
+
     def new_task(self, task):
         out = self._calculator.copy_with_potential(self.potential_filename)
         out.input_parameters = task
