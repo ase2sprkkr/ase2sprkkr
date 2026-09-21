@@ -69,7 +69,8 @@ class TaskResult:
     @cached_property
     def potential_filename(self):
         """New (output) potential file name"""
-        potfil = self.input_parameters.CONTROL.POTFIL()
+        parameters = self.input_parameters
+        potfil = parameters.CONTROL.POTFIL() if parameters is not None else None
         if not potfil:
             potfil = self.files["potential"]() if "potential" in self.files else None
         if not potfil:
