@@ -537,7 +537,9 @@ class ValueDefinition(RealItemDefinition):
                 raise ValueError(
                     f"The value of {opt._get_path()} is required to be {self.default_value}, cannot set it to {value}"
                 )
-            self.validate_type(item).validate(value, self.get_path, why=why)
+            self.validate_type(item).validate(
+                value, why=why, option=opt
+            )
         except ValueError as e:
             DataValidityError.warn(str(e))
 
