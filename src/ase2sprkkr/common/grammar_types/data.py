@@ -1,15 +1,25 @@
 """This module contains special GrammarTypes used for large data in output files"""
 
 from .grammar_type import GrammarType, compare_numpy_values
+from ..dependencies import DependentValue
 from ..decorators import add_to_signature, cached_property
 import pyparsing as pp
 import re
 from ..grammar import SkipToRegex
 import io
+import math
+from numbers import Integral
 import numpy as np
 import copy
 import os
 from typing import Union
+from functools import partial
+
+def _shape_lines(shape, *, items_per_line):
+    size = math.prod(shape)
+    if any(x < 0 for x in shape):
+        raise ValueError("Invalid shape")
+    return (size + items_per_line - 1) // items_per_line
 
 
 class RestOfTheFile(GrammarType):
@@ -66,8 +76,10 @@ class RawData(GrammarType):
         ----------
 
         lines
-          Number of lines to read. Can be given as string - then
-          the value of the given option determines the number of lines.
+          Number of lines to read. A string denotes the exact path of an
+          option containing the count. A callable derives the count from the
+          options named by its parameters; :class:`DependentValue` supports
+          explicit paths such as ``..N``.
 
         indented
           If there are <n> spaces before data, pass n to this arg.
@@ -112,20 +124,35 @@ class RawData(GrammarType):
         self.lines = lines
         self.line_length = line_length
         self.include_ends_with = include_ends_with
-        self.remove_forward = None
+        self._line_dependency = (
+            DependentValue.create(lines)
+            if lines is not None and not isinstance(lines, Integral)
+            else None
+        )
+        self.forward = None
         super().__init__(*args, **kwargs)
 
     def _n_lines_grammar(self, lines):
         """return a grammar for n lines of text"""
+        lines = int(lines)
+        if lines < 0:
+            raise ValueError("The number of lines cannot be negative")
+        if lines == 0:
+            return pp.Empty().set_parse_action(lambda: [""])
         out = pp.Regex(f"([^\n]*\n){{{lines - 1}}}[^\n]*(?=\n|$)", re.S)
         out.leave_whitespace()
         return out
 
     def _grammar(self, param_name=False):
-        if self.lines:
-            if isinstance(self.lines, int):
+        if self.lines is not None:
+            if isinstance(self.lines, Integral):
                 out = self._n_lines_grammar(self.lines)
             else:
+                if self.forward is None or not self._line_dependency.hooks:
+                    missing = ", ".join(self._line_dependency.paths)
+                    raise KeyError(
+                        f"No line-count dependencies found: {missing}"
+                    )
                 out = self.forward
         elif self.ends_with:
             if isinstance(self.ends_with, re.Pattern):
@@ -185,31 +212,24 @@ class RawData(GrammarType):
         return out
 
     def added_to_container(self, container):
-        if not self.lines or isinstance(self.lines, int):
-            return
-        if self.remove_forward:
-            self.remove_forward
-        if container:
+        if self._line_dependency is not None:
             self.forward = pp.Forward()
-            obj = container[self.lines]
-
-            def paction(parsed):
-                self.forward << self._n_lines_grammar(parsed[0][1])
-                return parsed
-
-            def hook(grammar):
-                grammar.add_parse_action(paction)
-
-            obj.add_grammar_hook(hook)
-            self.remove_forward = lambda: obj.remove_grammar_hook(hook)
-        else:
-            self.remove_forward = None
+            self._line_dependency.bind(container, self._set_number_of_lines)
         super().added_to_container(container)
 
+    def _set_number_of_lines(self, lines):
+        self.forward << self._n_lines_grammar(lines)
+
     def __del__(self):
-        if self.remove_forward:
-            self.remove_forward
-        self.remove_forward = None
+        if self._line_dependency is not None:
+            sef._line_dependency.unbind()
+
+    def copy(self):
+        out = super().copy()
+        if self._line_dependency is not None:
+            out._line_dependency = self._line_dependency.copy()
+            out.forward = None
+        return out
 
     def convert(self, val):
         return str(val)
@@ -225,8 +245,10 @@ class NumpyArray(RawData):
         self,
         *args,
         delimiter=None,
+        written_delimiter=None,
         shape=None,
         written_shape=None,
+        items_per_line=None,
         item_format="% .18e",
         dtype=None,
         dtypes=None,
@@ -241,11 +263,21 @@ class NumpyArray(RawData):
           None - default behavior.
           int  - the number will take given fixed number of chars
 
+        written_delimiter
+          Delimiter used only for writing. By default, use ``delimiter`` or
+          one space when the parsing delimiter is not specified.
+
         shape
-          Resize to given shape after read
+          Resize to given shape after read. A string, callable or
+          :class:`DependentValue` derives the shape from other options.
 
         written_shape
           Resize to given shape before writing
+
+        items_per_line
+          Flatten the array and wrap its output after this many scalar items.
+          If ``shape`` is dynamic, its value also determines the number of
+          input lines.
 
         item_format
           Output format of the array (just for writing).
@@ -260,10 +292,21 @@ class NumpyArray(RawData):
           Any other arguments are passed to the :meth:`GrammarType constructor<GrammarType.__init__>`
         """
         self.delimiter = delimiter
-        self.written_delimiter = delimiter or " "
+        self.written_delimiter = (
+            ("" if isinstance(delimiter, int) else delimiter or " ")
+            if written_delimiter is None
+            else written_delimiter
+        )
         self.written_shape = written_shape
+        self.items_per_line = items_per_line
         self.item_format = item_format
         self.shape = shape
+        self._shape_dependency = (
+            DependentValue.create(shape)
+            if isinstance(shape, (str, DependentValue)) or callable(shape)
+            else None
+        )
+        self._parsed_shape = None
         self.no_newline_at_end = no_newline_at_end
         if dtypes is None:
             if dtype == "line":
@@ -274,7 +317,18 @@ class NumpyArray(RawData):
             if dtype is not None:
                 raise ValueError("Use either dtype or dtypes, but not both")
         self.dtypes = dtypes
-        super().__init__(*args, **kwargs)
+        lines = kwargs.pop("lines", None)
+        if items_per_line is not None:
+            if not isinstance(items_per_line, int) or items_per_line <= 0:
+                raise ValueError("items_per_line has to be a positive integer")
+            if lines is None:
+                if self._shape_dependency is not None:
+                    lines = self._shape_dependency.mapped(
+                        partial(_shape_lines, items_per_line=items_per_line)
+                    )
+                elif shape is not None and -1 not in shape:
+                    lines = _shape_lines(shape, items_per_line=items_per_line)
+        super().__init__(*args, lines=lines, **kwargs)
 
     def _validate(self, value, why="set"):
         return isinstance(value, np.ndarray)
@@ -283,14 +337,27 @@ class NumpyArray(RawData):
         return np.asarray(value)
 
     def _string(self, value):
-        out = io.StringIO()
-        delimiter = self.delimiter
-        if isinstance(delimiter, int):
-            delimiter = ""
+        value = np.asarray(value)
         if self.written_shape:
             value = value.reshape(self.written_shape)
+        if self.items_per_line is not None:
+            values = value.reshape(-1)
+            lines = []
+            for start in range(0, len(values), self.items_per_line):
+                chunk = values[start : start + self.items_per_line]
+                lines.append(
+                    self.written_delimiter.join(
+                        self.item_format % item for item in chunk
+                    )
+                )
+            output = "\n".join(lines)
+            if lines and not self.no_newline_at_end:
+                output += "\n"
+            return super()._string(output)
+
+        out = io.StringIO()
         np.savetxt(out, value, delimiter=self.written_delimiter, fmt=self.item_format)
-        if self.no_newline_at_end:
+        if self.no_newline_at_end and out.tell():
             out.seek(out.tell() - 1, os.SEEK_SET)
             out.truncate()
         out = out.getvalue()
@@ -309,16 +376,30 @@ class NumpyArray(RawData):
                 last_error = None
                 for dt in self.dtypes:
                     try:
-                        v = np.genfromtxt(io.StringIO(v), delimiter=self.delimiter, dtype=dt)
+                        if self.items_per_line is not None:
+                            if isinstance(self.delimiter, int):
+                                v = v.replace("\n", "")
+                            else:
+                                v = v.replace("\n", " ")
+                        v = np.genfromtxt(
+                              io.StringIO(v),
+                              delimiter=self.delimiter,
+                              dtype=dt,
+                        )
                         break
-                    except Exception:
-                        pass
+                    except Exception as exc:
+                        last_error = exc
                 else:
                     if not last_error:
                         raise ValueError("No dtype specified")
                     raise last_error
-            if self.shape:
-                v.shape = self.shape
+            shape = (
+                self._parsed_shape
+                if self._shape_dependency is not None
+                else self.shape
+            )
+            if shape:
+                v.shape = tuple(shape)
             return v
 
         grammar.add_parse_action(parse)
@@ -326,3 +407,33 @@ class NumpyArray(RawData):
 
     def copy_value(self, value):
         return copy.deepcopy(value)
+
+    def added_to_container(self, container):
+        if self._shape_dependency is not None:
+            self._shape_dependency.bind(container, self._set_parsed_shape)
+        super().added_to_container(container)
+
+    def __del__(self):
+        dependency = getattr(self, "_shape_dependency", None)
+        if dependency is not None:
+            dependency.unbind()
+        super().__del__()
+
+    def _set_parsed_shape(self, shape):
+        self._parsed_shape = tuple(int(item) for item in shape)
+
+    def expected_shape(self, item):
+        """Return the shape expected for a runtime option."""
+
+        if self._shape_dependency is not None:
+            shape = self._shape_dependency.runtime_value(item)
+        else:
+            shape = self.shape
+        return None if shape is None else tuple(int(value) for value in shape)
+
+    def copy(self):
+        out = super().copy()
+        if self._shape_dependency is not None:
+            out._shape_dependency = self._shape_dependency.copy()
+            out._parsed_shape = None
+        return out
