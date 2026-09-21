@@ -294,7 +294,12 @@ scf_section = Section(
             [
                 PV(("EF", "fermi"), float, info="Fermi energy"),
                 PV(("ETOT", "total"), float, info="Total energy"),
-                PV(("EMIN", "band_states_min"), float, info="Bottom of energy contour for band states"),
+                PV(
+                    ("EMIN", "band_states_min"),
+                    float,
+                    info="Bottom of energy contour for band states",
+                    is_required=False,
+                ),
                 PV(("ESCBOT", "semi_core_min"), float, info="Lower limit for semi-core states", is_required=False),
                 PV(("ECTOP", "core_max"), float, info="Upper limit for core states", is_required=False),
             ],
@@ -312,7 +317,9 @@ class ScfOutputParser(SprKkrOutputParser):
     This class reads and parses the output of the SCF task of the SPR-KKR.
     """
 
-    _sfn_or_run_line = re.compile(rb"^\s*from file:|SPRKKR-run for:")
+    _iteration_event_line = re.compile(
+        rb"EMIN   = |^\s*from file:|SPRKKR-run for:"
+    )
 
     def set_print_output(self, print_output):
         self.print_info = print_output == "info"
@@ -328,25 +335,30 @@ class ScfOutputParser(SprKkrOutputParser):
             _err_or_time = re.compile(rb"execution time for last iteration| ERR.*EF")
 
             while True:
-                out = {}
-                line = await readline_until(stdout, lambda line: b"EMIN   = " in line)
+                out = {"energy": {}}
+                line = await readline_until(
+                    stdout, self._iteration_event_line.search
+                )
                 if not line:
                     break
 
-                out["energy"] = {"EMIN": float(line.split("=")[1])}
-                line = await stdout.readline()
-                if b"ESCBOT" in line:
-                    out["energy"]["ESCBOT"] = float(line.split(b"=")[1])
-                    line = await stdout.readline()
-                if b"ECTOP" in line:
-                    out["energy"]["ECTOP"] = float(line.split(b"=")[1])
-
-                while True:
-                    line = await readline_until(stdout, self._sfn_or_run_line.search, can_end=False)
-                    if match := self._sfn_file.match(line):
+                while "SPRKKR-run for:" not in line:
+                    if "EMIN   = " in line:
+                        out["energy"]["EMIN"] = float(line.split("=")[1])
+                        line = await stdout.readline()
+                        if b"ESCBOT" in line:
+                            out["energy"]["ESCBOT"] = float(line.split(b"=")[1])
+                            line = await stdout.readline()
+                        if b"ECTOP" in line:
+                            out["energy"]["ECTOP"] = float(line.split(b"=")[1])
+                    elif match := self._sfn_file.match(line):
                         result.files.add_file("SFN", match.group(1), "sfn")
-                    else:
-                        break
+
+                    line = await readline_until(
+                        stdout,
+                        self._iteration_event_line.search,
+                        can_end=False,
+                    )
                 line = line.strip()
                 if first and self.print_info:
                     print(line)

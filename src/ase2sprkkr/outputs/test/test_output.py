@@ -117,6 +117,16 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
             assert values["Data"].data() is out
             assert values["potential"] is out.files["potential"]
 
+    def test_scf_restart_without_emin_block(self, tmp_path):
+        """A restarted SCF with MODE=SREL reports iterations without running SCFCHKNVAL."""
+
+        source = Path(__file__).parent.parent / "examples" / "Al_SCF.out"
+        result = TaskResult.from_file(source)
+
+        assert result.iterations
+        assert len(result.iterations) == 1
+        assert result.iterations[0].energy.EMIN() is None
+
     def test_scf_sfn(self, tmp_path, monkeypatch):
         fullpot = ScfResult(None, None, tmp_path)
         expected_filename = os.path.join(tmp_path, "shape.sfn")
