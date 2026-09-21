@@ -35,6 +35,7 @@ class TestOutput(TestCase):
                 assert filename_from_file(Path(filename)) == filename
                 input_filename = os.path.join(directory, "result.inp")
                 result = TaskResult(None, None, directory, output_file=output, input_file=input_filename)
+                assert result.sfn_generated is None
                 assert isinstance(result.output_file, FilePath)
                 assert isinstance(result.input_file, FilePath)
                 assert str(result.output_file) == "result.out"
@@ -230,6 +231,7 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
         assert result.program_info["executable"] == "KKRSCF"
         assert result.sfn_filename == os.path.join(directory, "Fe2Al_SCF.sfn")
         assert result.files["SFN"].file_type == "sfn"
+        assert result.sfn_generated is True
         assert isinstance(result.sfn, SFNOutputFile)
         assert result.sfn.nm == 2
 
@@ -243,9 +245,12 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
             b"          from file: Fe2Al_SCF.sfn\n"
         )
         file_marker = b" fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\n"
+        unavailable = b"              shape function file not available:  Fe2Al_SCF.sfn\n"
         assert content.count(report) == 1
+        assert content.count(unavailable) == 1
         assert file_marker in content
         content = content.replace(report, b"", 1)
+        content = content.replace(unavailable, b"", 1)
         content = content.replace(file_marker, report + file_marker, 1)
 
         output = tmp_path / "fullpot-restart.out"
@@ -253,6 +258,7 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
         result = TaskResult.from_file(output)
 
         assert result.sfn_filename == os.path.join(tmp_path, "Fe2Al_SCF.sfn")
+        assert result.sfn_generated is False
 
     def test_result_file_types_are_inferred_without_duplicate_aliases(self):
         dos = DosResult(None, None, None)

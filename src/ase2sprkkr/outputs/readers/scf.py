@@ -318,7 +318,8 @@ class ScfOutputParser(SprKkrOutputParser):
     """
 
     _iteration_event_line = re.compile(
-        rb"EMIN   = |^\s*from file:|SPRKKR-run for:"
+        rb"EMIN   = |^\s*from file:|shape function file not available:|"
+        rb"SPRKKR-run for:"
     )
 
     def set_print_output(self, print_output):
@@ -351,8 +352,10 @@ class ScfOutputParser(SprKkrOutputParser):
                             line = await stdout.readline()
                         if b"ECTOP" in line:
                             out["energy"]["ECTOP"] = float(line.split(b"=")[1])
+                    elif match := self._missing_sfn_file.match(line):
+                        self._register_sfn(result, match.group(1), True)
                     elif match := self._sfn_file.match(line):
-                        result.files.add_file("SFN", match.group(1), "sfn")
+                        self._register_sfn(result, match.group(1), False)
 
                     line = await readline_until(
                         stdout,

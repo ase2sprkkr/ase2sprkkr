@@ -15,6 +15,9 @@ from .result_options import create_files_section
 class TaskResult:
     """A base class for a result of a runned task (kkrscf executable)"""
 
+    sfn_generated = None
+    """Whether this calculation generated rather than reused its SFN file."""
+
     def __init__(self, input_parameters, calculator, directory, output_file=None, input_file=None):
         self._input_parameters = input_parameters
         self._calculator = calculator
