@@ -903,6 +903,8 @@ class RootConfigurationContainer(ConfigurationContainer):
 
     name_in_grammar = False
 
+    _filename = None
+
     def read_from_file(self, file, clear_first: bool = True, allow_dangerous: bool = False):
         """Read data from a file
 
@@ -928,6 +930,10 @@ class RootConfigurationContainer(ConfigurationContainer):
                 unknown="add",
             )
         self._filename = filename_from_file(file, None)
+
+    @property
+    def original_filename(self):
+        return self._filename
 
     def find(self, name, unknown="find", is_option=True, lower_case=True, first=True):
         """Find a configuration value of a given name in the owned sections"""
