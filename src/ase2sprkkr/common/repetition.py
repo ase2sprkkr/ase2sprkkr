@@ -8,7 +8,7 @@ import numpy as np
 
 from .dependencies import DependentValue
 from .parsing_results import ArrayKey, DefArrayKey, DefDictKey, DictKey, IgnoredKey, Key, RepeatedKey
-from .grammar import Forward
+from .grammar import Forward, generate_grammar, TokenConverter
 from .warnings import DataValidityError
 
 if TYPE_CHECKING:
@@ -185,7 +185,8 @@ class RepeatedItemGrammar:
         if min == max == 0:
             return Empty().set_parse_action(lambda _: [])
         if min == max == 1:
-            return grammar.copy().add_parse_action(lambda x: x.as_list())
+            #pyparsing has a bug for DelimitedList(min=1, max=1)
+            return TokenConverter(grammar).add_parse_action(lambda x: x.as_list())
         return DelimitedList(grammar, delimiter, min=min, max=max).set_parse_action(lambda x: x.as_list())
 
 class NotRepeatedItemGrammar(RepeatedItemGrammar):
@@ -282,9 +283,10 @@ class VariableRepeatedItemGrammar(ValidatedRepeatedItemGrammar):
 
     def _set_count(self, value):
         lower, upper = self._limits(value)
-        self.forward << self._delimited_list(
-            self._item_grammar, self.delimiter, lower, upper
-        )
+        with generate_grammar():
+            self.forward << self._delimited_list(
+                self._item_grammar, self.delimiter, lower, upper
+            )
 
     def grammar(self, grammar, delimiter):
         if not self.dependency.hooks:
