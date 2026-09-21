@@ -297,7 +297,7 @@ class Multiplot:
 
     def __init__(
         self,
-        layout,
+        layout=None,
         figsize=(6, 4),
         latex=None,
         updown_layout=False,
@@ -318,6 +318,8 @@ class Multiplot:
         self.layout_kind = layout_kind  #'constrained', 'tight', 'adjust', {dict for adjust}
         self.projection = projection
 
+        if layout is None:
+            layout = 2
         if isinstance(layout, numbers.Integral):
             layout = min(layout, number_of_plots)
             layout = max(layout, 1)
@@ -329,7 +331,7 @@ class Multiplot:
             layout = (layout[0], (number_of_plots -1) // layout[0] + 1)
 
         if callable(figsize):
-            figsize = figsize(layout)
+            figsize = figsize((1, 1) if separate_plots else layout)
 
         if separate_plots:
             self.figsize = figsize
@@ -413,6 +415,7 @@ class Multiplot:
             if filename is None:
                 filename = self.filename
                 if filename:
+                    filename = os.fspath(filename)
                     if name is None:
                         fname = str(self.index + 1)
                     else:
