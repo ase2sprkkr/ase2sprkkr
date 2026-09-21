@@ -4,6 +4,7 @@ import os
 import platform
 import shutil
 import subprocess
+import functools
 from typing import Any, Tuple
 
 from ..common.container_definitions import SectionDefinition
@@ -115,12 +116,31 @@ class OutputFileOption(OutputOption):
 
     def actions(self):
         out = ["open", "open_directory", "save"]
-        if self.file_type and self.definition().result_class.can_be_plotted():
-            out.append("plot")
+        if self.file_type:
+            result_class = self.definition().result_class
+            if result_class.can_be_plotted():
+                out.append("plot")
+            out.extend(result_class.additional_actions)
         return tuple(out)
 
-    def parsed_file(self):
-        return OutputFile.from_file(self.path(), try_only=self.file_type)
+    def __getattr__(self, name):
+        if not name.startswith("_") and self.file_type:
+            result_class = self.definition().result_class
+            if name in result_class.additional_actions:
+                return functools.partial(self._run_file_action, name)
+        raise AttributeError(f"{type(self).__name__!s} has no attribute {name!r}")
+
+    def _run_file_action(self, action, parent=None, **kwargs):
+        return getattr(self.parsed_file(), action)(**kwargs)
+
+    def parsed_file(self, potential=None):
+        if potential is None:
+            owner = getattr(self._container, "result", None)
+            potential = getattr(owner, "available_potential_filename", None)
+        kwargs = {"try_only": self.file_type}
+        if potential is not None:
+            kwargs["potential"] = potential
+        return OutputFile.from_file(self.path(), **kwargs)
 
     def plot(self, parent=None):
         self.parsed_file().plot()
