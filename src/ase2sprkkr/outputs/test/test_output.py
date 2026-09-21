@@ -2,11 +2,14 @@ import os
 import pytest
 from io import BytesIO
 from pathlib import Path
+from shutil import copyfile
 from tempfile import TemporaryDirectory
+from ase.build import bulk
 from ..task_result import TaskResult
 from ...common.file_utils import FilePath, filename_from_file
 from ...common.options import Option
 from ...input_parameters.input_parameters import InputParameters
+from ...potentials.potentials import Potential
 from ..readers.scf import ScfOutputParser, ScfResult, atomic_types_definition
 from ..readers.bsf import BsfResult
 from ..readers.dos import DosResult
@@ -118,11 +121,31 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
         fullpot = ScfResult(None, None, tmp_path)
         expected_filename = os.path.join(tmp_path, "shape.sfn")
         fullpot.files.add_file("SFN", "shape.sfn")
-        parsed = object()
+        class ParsedSFN:
+            def __init__(self):
+                self.actions = []
+
+            def plot_shape(self):
+                self.actions.append("shape")
+
+            def plot_cell(self):
+                self.actions.append("cell")
+
+            def plot_periodic(self):
+                self.actions.append("periodic")
+
+            def plot_slice(self):
+                self.actions.append("slice")
+
+            def plot_radial(self):
+                self.actions.append("radial")
+
+        parsed = ParsedSFN()
 
         def parse_sfn(filename, **kwargs):
             assert filename == expected_filename
-            assert kwargs == {"try_only": "sfn"}
+            assert len(kwargs) == 2
+            assert set(kwargs.keys()) == {"try_only", "potential"}
             return parsed
 
         monkeypatch.setattr(OutputFile, "from_file", parse_sfn)
@@ -132,11 +155,59 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
         assert fullpot.output_values["SFN"] is fullpot.files["SFN"]
         assert fullpot.files["SFN"].file_type == "sfn"
         assert fullpot.files["SFN"].display_name == "Shape functions (SFN)"
+        assert fullpot.files["SFN"].actions() == (
+            "open",
+            "open_directory",
+            "save",
+            "plot",
+            "plot_cell",
+            "plot_periodic",
+            "plot_shape",
+            "plot_slice",
+            "plot_radial",
+        )
+        fullpot.files["SFN"].plot_cell()
+        fullpot.files["SFN"].plot_periodic()
+        fullpot.files["SFN"].plot_shape()
+        fullpot.files["SFN"].plot_slice()
+        fullpot.files["SFN"].plot_radial()
+        assert parsed.actions == ["cell", "periodic", "shape", "slice", "radial"]
 
         asa = ScfResult(None, None, tmp_path)
         assert asa.sfn_filename is None
         assert asa.sfn is None
         assert "SFN" not in asa.output_values
+
+    def test_output_files_prefer_existing_result_potential(
+        self, tmp_path, monkeypatch
+    ):
+        result = ScfResult(None, None, tmp_path)
+        old_potential = tmp_path / "Fe.pot"
+        new_potential = tmp_path / "Fe.pot_new"
+        old_potential.write_text("old")
+        result.files.add_file("potential", old_potential.name)
+        atoms = bulk('Cu')
+        Potential.from_atoms(atoms).save_to_file(old_potential)
+        start_potential = result.any_potential
+        assert start_potential.original_filename == str(old_potential)
+        copyfile(old_potential, new_potential)
+        potential = result.any_potential
+        assert potential.original_filename == str(new_potential)
+        assert result.any_potential is potential
+
+        output = result.files.add_file("JXC", "Fe_JXC.dat", "jxc")
+        parsed = object()
+
+        def parse_output(filename, **kwargs):
+            assert filename == str(tmp_path / "Fe_JXC.dat")
+            assert kwargs == {
+                "try_only": "jxc",
+                "potential": potential,
+            }
+            return parsed
+
+        monkeypatch.setattr(OutputFile, "from_file", parse_output)
+        assert output.parsed_file() is parsed
 
     def test_scf_parser_registers_reported_sfn(self):
         directory = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "examples"))
