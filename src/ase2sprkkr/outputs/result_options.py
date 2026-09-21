@@ -134,13 +134,16 @@ class OutputFileOption(OutputOption):
         return getattr(self.parsed_file(), action)(**kwargs)
 
     def parsed_file(self, potential=None):
-        if potential is None:
-            owner = getattr(self._container, "result", None)
-            potential = getattr(owner, "available_potential_filename", None)
-        kwargs = {"try_only": self.file_type}
-        if potential is not None:
-            kwargs["potential"] = potential
-        return OutputFile.from_file(self.path(), **kwargs)
+        """Parse the file, using its task result as context when available."""
+
+        owner = self._container.result
+        if owner is not None:
+            return owner.parse_output_file(self, potential=potential)
+        return OutputFile.from_file(
+            self.path(),
+            try_only=self.file_type,
+            potential=potential,
+        )
 
     def plot(self, parent=None):
         self.parsed_file().plot()

@@ -124,8 +124,8 @@ class DOS(Arithmetic):
 
 
 class DOSOutputFile(CommonOutputFile):
-    def __init__(self, definition, container=None):
-        super().__init__(definition, container)
+    def __init__(self, definition, container=None, potential=None):
+        super().__init__(definition, container, potential=potential)
         self.ENERGY.add_hook(self._clear_computed)
         self.EFERMI.add_hook(self._clear_computed)
 

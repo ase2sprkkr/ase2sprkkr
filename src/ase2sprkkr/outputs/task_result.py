@@ -92,6 +92,19 @@ class TaskResult:
         except (AttributeError, KeyError, OSError, ValueError):
             return None
 
+    def parse_output_file(self, file, potential=None):
+        """Parse a registered output file in the context of this result."""
+
+        from ..output_files.output_files import OutputFile
+
+        if potential is None:
+            potential = self.any_potential
+        return OutputFile.from_file(
+            file.path(),
+            try_only=file.file_type,
+            potential=potential,
+        )
+
     def new_task(self, task):
         out = self._calculator.copy_with_potential(self.potential_filename)
         out.input_parameters = task
