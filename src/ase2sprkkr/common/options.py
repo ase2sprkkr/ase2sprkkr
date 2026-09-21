@@ -666,41 +666,49 @@ class Option(BaseOption):
             d.validate_parsed(self)
         if not d.allowed(container):
             return
-        validate_value = (
-            why == "save"
+
+        has_stored_value = (
+            not d.is_generated
             and d.type.has_value
-            and (
-                d.is_validated
-                if d.is_validated is not None
-                else not d.is_generated
-            )
         )
 
-        value = self(unpack=False, all_values=True)
+        validate_value = (
+            has_stored_value and
+            why == 'save' and (
+                d.is_validated
+                if d.is_validated is not None
+                else True )
+        )
+
+        if has_stored_value and (validate_value or d.is_repeated):
+            value = self(unpack=False, all_values=True)
+        else:
+            value = None
+
+        if validate_value:
+            if d.is_repeated:
+                if value is None:
+                    validation_items = (value,)
+                elif isinstance(value, DangerousValue):
+                    validation_items = ()
+                elif d.is_repeated.is_dict:
+                    validation_items = tuple(value.values())
+                else:
+                    validation_items = value
+            else:
+                validation_items = (value,)
+
+            for item in validation_items:
+                if not isinstance(item, DangerousValue):
+                    d.validate(self, item, why)
+
+        else:
+             value = None
+
         if d.is_repeated and value is not None:
             ValidationResult.emit(
                 d.repeated_count.validate(self, len(value), why)
             )
-
-        if not validate_value:
-            d.run_validators(self, container, why)
-            return
-
-        if d.is_repeated:
-            if value is None:
-                validation_items = (value,)
-            elif isinstance(value, DangerousValue):
-                validation_items = ()
-            elif d.is_repeated.is_dict:
-                validation_items = tuple(value.values())
-            else:
-                validation_items = value
-        else:
-            validation_items = (value,)
-
-        for item in validation_items:
-            if not isinstance(item, DangerousValue):
-                d.validate(self, item, why)
 
         d.run_validators(self, container, why)
 
