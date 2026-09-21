@@ -8,8 +8,8 @@ Version 4.0.0-beta
   * Conditional length item in grammar
   * Some checks are done on tree level to allow cross-section conditions
 
-Version 3.6
------------
+Version 3.6.0
+-------------
 * Added support for ANDERSON mixing (experimental), BSF task improved
 * A better debugging in `ase2sprkkr shell`
 * `promote_ase_atoms` can be directly imported from the `ase2sprkkr` root package
