@@ -27,6 +27,16 @@ def description():
 
 help = "Plot SPR-KKR output files."
 
+SFN_PLOT_MODES = ("mesh", "cell", "periodic", "shape", "slice", "radial")
+SFN_PLOT_MODE_HELP = {
+    "mesh": "Show the distinct Voronoi meshes (the SFN default).",
+    "cell": "Place each distinct mesh in the crystallographic cell.",
+    "periodic": "Show the periodic tessellation clipped to one cell.",
+    "shape": "Reconstruct the S=0.5 shape-function isosurface.",
+    "slice": "Show a planar section of the reconstructed shape function.",
+    "radial": "Show the radial spherical-harmonic coefficients.",
+}
+
 
 def parser(parser):
     def parse_layer(value):
@@ -140,43 +150,70 @@ def parser(parser):
         required=False,
     )
 
+    group = parser.add_argument_group("SFN specific options")
+    modes = group.add_mutually_exclusive_group()
+    for mode in SFN_PLOT_MODES:
+        modes.add_argument(
+            f"--{mode}",
+            dest="what",
+            action="store_const",
+            const=mode,
+            help=SFN_PLOT_MODE_HELP[mode],
+        )
+    parser.set_defaults(what=None)
+
 
 def run(args, global_args):
     from ...output_files.output_files import OutputFile
+    from ...output_files.definitions.sfn import SFNOutputFile
     from pathlib import Path
     from ...gui.plot import Multiplot
 
-    kwargs = vars(args)
+    kwargs = vars(args).copy()
 
-    outputs = args.output
-    del kwargs["output"]
-    value = args.value
-    del kwargs["value"]
-    filename = kwargs["filename"]
-    del kwargs["filename"]
-    kwargs.update(dict(kwargs["args"]))
-    del kwargs["args"]
-    show_values = kwargs['show_values']
-    del kwargs['show_values']
+    outputs = kwargs.pop("output")
+    value = kwargs.pop("value")
+    filename = kwargs.pop("filename")
+    generic_options = dict(kwargs.pop("args"))
+    if "what" in generic_options:
+        raise ValueError(
+            "SFN plot mode cannot be set using '-S what=...'; use one of: "
+            + ", ".join(f"--{mode}" for mode in SFN_PLOT_MODES)
+        )
+    kwargs.update(generic_options)
+    show_values = kwargs.pop("show_values")
     kwargs = {k: v for k, v in kwargs.items() if v is not None}
-
-    error = None
 
     for output in outputs:
 
         def plot(fn, of, value=None):
-            nonlocal error
             try:
                 fn()
             except Exception as e:
-                if global_args["debug"]:
-                    raise
-                if value:
-                    value=f" value '{value}'"
-                print(f"File '{fn}'{value} can not be plotted due to: \n {e} ")
-                error = 1
+                value_label = f" value '{value}'" if value else ""
+                raise ValueError(
+                    f"File '{of}'{value_label} can not be plotted: {e}"
+                ) from e
 
         of = OutputFile.from_file(output, unknown=False)
+
+        if "what" in kwargs:
+            what = kwargs["what"]
+            if what not in SFN_PLOT_MODES:
+                raise ValueError(
+                    f"Unknown SFN plot mode '{what}'; choose one of: "
+                    f"{', '.join(SFN_PLOT_MODES)}"
+                )
+            if not isinstance(of, SFNOutputFile):
+                raise ValueError(
+                    "SFN plot mode options are only valid for SFN files; "
+                    f"'{output}' was read as {type(of).__name__}."
+                )
+            if value:
+                raise ValueError(
+                    "An SFN plot mode selects a whole-file plot and "
+                    "cannot be combined with '--value'."
+                )
 
         if show_values:
             print(f"In file {output}, there are values to plot:")
@@ -204,19 +241,15 @@ def run(args, global_args):
                 for name in value:
                     try:
                         val = of[name.upper()]
-                    except KeyError:
-                        if global_args["debug"]:
-                            raise
-                        error = 1
-                        print(f"There is no value named '{name.upper()}' in the output file '{output}'.")
-                        continue
+                    except KeyError as exc:
+                        raise ValueError(
+                            f"There is no value named '{name.upper()}' "
+                            f"in the output file '{output}'."
+                        ) from exc
                     if not hasattr(val, "plot"):
-                        msg = f"Value '{name.upper()}' does not know, how it should be plotted."
-                        if global_args["debug"]:
-                            raise ValueError(msg)
-                        else:
-                            print(msg)
-                            continue
+                        raise ValueError(
+                            f"Value '{name.upper()}' does not know how it should be plotted."
+                        )
                     yield val
 
             vals = [ i for i in vals() ]
@@ -228,9 +261,6 @@ def run(args, global_args):
             if not hasattr(of, "plot"):
                 raise ValueError(f"File '{of}' does not know, how it should be plotted.")
             plot(lambda: of.plot(filename=fn, **kwargs), output)
-
-    return error
-
 
 if __name__ == "__main__":
     main(globals())
