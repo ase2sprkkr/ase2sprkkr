@@ -307,6 +307,7 @@ class Multiplot:
         separate_plots=False,
         layout_kind="constrained",
         number_of_plots=None,
+        projection=None,
         **kwargs,
     ):
         self.separate_plots = separate_plots
@@ -315,6 +316,7 @@ class Multiplot:
         self.dpi = dpi
         self.latex = latex
         self.layout_kind = layout_kind  #'constrained', 'tight', 'adjust', {dict for adjust}
+        self.projection = projection
 
         if isinstance(layout, numbers.Integral):
             layout = min(layout, number_of_plots)
@@ -335,7 +337,11 @@ class Multiplot:
             self.figure = None
         else:
             self.figure, self.axes = plt.subplots(
-                figsize=figsize, nrows=layout[0], ncols=layout[1], constrained_layout=layout_kind == "constrained"
+                figsize=figsize,
+                nrows=layout[0],
+                ncols=layout[1],
+                constrained_layout=layout_kind == "constrained",
+                subplot_kw={"projection": projection} if projection else None,
             )
             if layout_kind == "adjust" or isinstance(layout_kind, dict):
                 adj = {"left": 0.12, "right": 0.95, "bottom": 0.17, "top": 0.90, "hspace": 0.75, "wspace": 0.4}
@@ -425,6 +431,7 @@ class Multiplot:
                 self.dpi,
                 self.latex,
                 self.figsize,
+                projection=self.projection,
             ) as (axis, _):
                 yield axis, kwargs
         else:
