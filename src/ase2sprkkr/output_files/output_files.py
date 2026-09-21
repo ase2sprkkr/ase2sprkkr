@@ -29,10 +29,29 @@ class OutputFile(ConfigurationFile):
     plot_parameters = {}
     additional_actions = ()
 
-    def __init__(self, definition=None, container=None):
+    def __init__(self, definition=None, container=None, potential=None):
         super().__init__(definition, container)
         self._potential = None
         self._potential_filename = None
+        if potential is not None:
+            self.potential = potential
+
+    def read_from_file(
+        self,
+        file,
+        clear_first=True,
+        allow_dangerous=False,
+        potential=None,
+    ):
+        """Read the output data and optionally associate its potential."""
+
+        if potential is not None:
+            self.potential = potential
+        return super().read_from_file(
+            file,
+            clear_first=clear_first,
+            allow_dangerous=allow_dangerous,
+        )
 
     @classmethod
     def can_be_plotted(cls):
@@ -117,7 +136,14 @@ class OutputFile(ConfigurationFile):
         return cls.definitions[self]
 
     @classmethod
-    def from_file(cls, filename, first_try=None, try_only=None, unknown=None):
+    def from_file(
+        cls,
+        filename,
+        first_try=None,
+        try_only=None,
+        unknown=None,
+        potential=None,
+    ):
         """
         Read SPRKKR output file (DOS, BSF....). The type of content of the
         output file is guessed from the content, however you can get hint what
@@ -143,6 +169,10 @@ class OutputFile(ConfigurationFile):
           If False, raise an exception if no known (and allowed) file type is
           recognized.
           None means True if try_only is None, False otherwise.
+
+        potential
+          A :class:`Potential` or its filename.  If omitted, it is looked up
+          lazily from the output filename when it is needed.
         """
         fname = filename
         if hasattr(filename, "name"):
@@ -168,7 +198,12 @@ class OutputFile(ConfigurationFile):
         if first_try:
             out = None
             try:
-                out = cls.from_file(filename, first_try=False, try_only=first_try)
+                out = cls.from_file(
+                    filename,
+                    first_try=False,
+                    try_only=first_try,
+                    potential=potential,
+                )
             except Exception as e:
                 first = e
             if out:
@@ -182,8 +217,9 @@ class OutputFile(ConfigurationFile):
             for i in try_only:
                 if i in cls.definitions:
                     try:
-                        out = cls.definitions[i].read_from_file(filename)
-                        return out
+                        return cls.definitions[i].read_from_file(
+                            filename, potential=potential
+                        )
                     except Exception as e:
                         last = e
         else:
@@ -191,15 +227,16 @@ class OutputFile(ConfigurationFile):
                 if first_try and ext in first_try:
                     continue
                 try:
-                    out = i.read_from_file(filename)
-                    return out
+                    return i.read_from_file(filename, potential=potential)
                 except Exception as e:
                     last = e
         if unknown is None:
             unknown = try_only is None
         if unknown:
             try:
-                return cls.unknown_output_file_definition.read_from_file(filename)
+                return cls.unknown_output_file_definition.read_from_file(
+                    filename, potential=potential
+                )
             except pp.ParseBaseException as e:
                 raise Exception(f"Can not parse file: {filename}") from e
         raise (first or last or ValueError(f"File {filename} is not recognized as any known file type"))
