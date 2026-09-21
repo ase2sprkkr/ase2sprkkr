@@ -22,6 +22,7 @@ aliases = ["examples"]
 def parser(parser):
     parser.add_argument("example", type=int, nargs="?", help="The number of the example to print. If ommited")
     parser.add_argument("-c", "--copy", help="Copy the example to a given dir", type=str)
+    parser.add_argument("-C", "--cd", help="Print  `cd <path_to_the_example(s dir)> and exit", action='store_true', default=False)
     parser.add_argument("-p", "--path", help="Print a path to the example(s)", action="store_true")
     parser.add_argument("-s", "--script", help="Print a path to the example main script", action="store_true")
     parser.add_argument("-g", "--regex", help="Find an example according to the given regex", type=str)
@@ -30,9 +31,20 @@ def parser(parser):
 def run(args, global_args):
     from ase2sprkkr.gui import examples
 
+    def cd(dir):
+        import os
+        dir = str(dir)
+        if os.name == "nt":
+            import subprocess
+            return print(f"cd /d {subprocess.list2cmdline([dir])}")
+        import shlex
+        return print(f"cd {shlex.quote(dir)}")
+
     if not args.example:
         if args.script:
             raise ValueError("The --script argument requires to specify the example number.")
+        if args.cd:
+            return cd(examples.examples_dir())
         if not args.path:
             print("Examples dir: ", end="")
         print(examples.examples_dir())
@@ -49,6 +61,8 @@ def run(args, global_args):
     example = examples.Example.by_number(args.example)
 
     show = True
+    if args.cd:
+        return cd(example.dir)
     if args.copy:
         example.copy(args.copy)
         show = False
