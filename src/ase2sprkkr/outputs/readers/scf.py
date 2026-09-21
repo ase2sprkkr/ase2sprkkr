@@ -185,7 +185,7 @@ scf_section = Section('iteration', [
   Section('energy' , [
     V('EF', float, info='Fermi energy', alternative_names='fermi'),
     V('ETOT', float, info='Total energy', alternative_names='total'),
-    V('EMIN', float, info='Bottom of energy contour for band states', alternative_names='band_states_min'),
+    V('EMIN', float, info='Bottom of energy contour for band states', alternative_names='band_states_min', is_required=False),
     V('ESCBOT', float, info='Lower limit for semi-core states', alternative_names='semi_core_min', is_required=False),
     V('ECTOP', float, info='Upper limit for core states', alternative_names='core_max', is_required=False)
   ]),
@@ -206,19 +206,26 @@ class ScfOutputReader(SprKkrOutputReader):
           first = True
           while True:
             out = {}
-            line = await readline_until(stdout,lambda line: b'EMIN   = ' in line)
+            # The "bottom of energy contour ... EMIN = " block is printed by
+            # SCFCHKNVAL, which SPR-KKR runs only when starting from a START
+            # potential.  A restarted SCF (from, e.g., a partially converged 
+            # potential) has no such line. Therefore, wait for either it or 
+            # the start of the iteration output. Without this, a run started
+            # from a partially converged potential shows no iterations.
+            line = await readline_until(stdout,lambda line: b'EMIN   = ' in line or b'SPRKKR-run for: ' in line)
             if not line:
                 break
 
-            out['energy'] = {'EMIN' : float(line.split('=')[1]) }
-            line = await stdout.readline()
-            if b'ESCBOT' in line:
-                out['energy']['ESCBOT'] = float(line.split(b'=')[1])
+            out['energy'] = {}
+            if 'EMIN' in line:
+                out['energy']['EMIN'] = float(line.split('=')[1])
                 line = await stdout.readline()
-            if b'ECTOP' in line:
-                out['energy']['ECTOP'] = float(line.split(b'=')[1])
-
-            line = await readline_until(stdout,lambda line: b'SPRKKR-run for: ' in line)
+                if b'ESCBOT' in line:
+                    out['energy']['ESCBOT'] = float(line.split(b'=')[1])
+                    line = await stdout.readline()
+                if b'ECTOP' in line:
+                    out['energy']['ECTOP'] = float(line.split(b'=')[1])
+                line = await readline_until(stdout,lambda line: b'SPRKKR-run for: ' in line)
             line=line.strip()
             if first and self.print_output == 'info':
                print(line)
