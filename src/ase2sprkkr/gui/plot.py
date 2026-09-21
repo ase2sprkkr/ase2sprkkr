@@ -66,7 +66,15 @@ def create_rc_context(latex: Optional[bool] = None):
 
 @contextmanager
 def single_plot(
-    filename: Optional[str] = None, show: Optional[bool] = None, window_title=None, dpi=600, latex=None, figsize=(6, 4), **kwargs
+    filename: Optional[str] = None,
+    show: Optional[bool] = None,
+    window_title=None,
+    dpi=600,
+    latex=None,
+    figsize=(6, 4),
+    axis=None,
+    projection=None,
+    **kwargs,
 ):
     """
     Creates single plot according to the given function a either show it or save it.
@@ -83,13 +91,28 @@ def single_plot(
       If True, always show the plot.
       If False, never.
       If None, show it, if the filename is not set.
+
+    axis
+      An existing Matplotlib axis to draw into.  If supplied, no figure is
+      created, shown, or saved by this context manager.
+
+    projection
+      Projection used when creating a new axis, for example ``"3d"``.
     """
+    if axis is not None:
+        yield axis, kwargs
+        return
+
     with create_rc_context(latex):
-        fig, ax = plt.subplots(figsize=figsize)
+        if projection is None:
+            fig, axis = plt.subplots(figsize=figsize)
+        else:
+            fig = plt.figure(figsize=figsize)
+            axis = fig.add_subplot(111, projection=projection)
         if window_title:
             fig.canvas.manager.set_window_title(window_title)
         plt.subplots_adjust(left=0.15, right=0.95, bottom=0.17, top=0.93)
-        yield ax, kwargs
+        yield axis, kwargs
         finish_plot(fig, filename, show, dpi)
 
 
@@ -166,15 +189,17 @@ def plotting_function(func):
     def plot_function(
         *args, filename=None, show=None, dpi=600, latex=None, figsize=(6, 4), callback=None, axis=None, **kwargs
     ):
-        if axis:
+        with single_plot(
+            filename=filename,
+            show=show,
+            dpi=dpi,
+            latex=latex,
+            figsize=figsize,
+            axis=axis,
+        ) as (axis, _):
             func(*args, axis=axis, **kwargs)
             if callback:
                 callback(axis)
-        else:
-            with single_plot(filename=filename, show=show, dpi=dpi, latex=latex, figsize=figsize) as (axis, _):
-                func(*args, axis=axis, **kwargs)
-                if callback:
-                    callback(axis)
 
     return plot_function
 
