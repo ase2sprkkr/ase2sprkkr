@@ -333,6 +333,40 @@ class NumpyArray(RawData):
     def _validate(self, value, why="set"):
         return isinstance(value, np.ndarray)
 
+    def validate(
+        self,
+        value,
+        param_name="<Unknown>",
+        why="set",
+        option=None,
+    ):
+        """Validate the array and, when possible, its configured shape."""
+        super().validate(
+            value,
+            param_name=param_name,
+            why=why,
+            option=option,
+        )
+        if option is None:
+            return True
+
+        expected = self.expected_shape(option)
+        if expected is None:
+            return True
+
+        actual = value.shape
+        matches = len(actual) == len(expected) and all(
+            wanted == -1 or current == wanted
+            for current, wanted in zip(actual, expected)
+        )
+        if not matches:
+            self._valueError(
+                value,
+                f"array has shape {actual}, expected {expected}",
+                option._get_path,
+            )
+        return True
+
     def convert(self, value):
         return np.asarray(value)
 

@@ -240,11 +240,17 @@ class GrammarType:
         """
         return False, None, None
 
-    def validate(self, value, param_name="<Unknown>", why: str = "set"):
+    def validate(
+        self,
+        value,
+        param_name="<Unknown>",
+        why: str = "set",
+        option=None,
+    ):
         """Validate either the pyparsing result or a user given value.
 
-        Do not override this method in subclasses for the validation implementation,
-        this method calls :meth:`_validate`, which should contain the actual validation
+        Subclasses should normally implement :meth:`_validate`. They may extend
+        this method when validation requires the runtime ``option``.
 
         Parameters
         ---------
@@ -254,6 +260,11 @@ class GrammarType:
         param_name : str or callable
           Parameter name to be used in possible throwed exception (Optional).
           If it is callable, it should be a function that returns the param_name.
+          When ``option`` is supplied, its runtime path is used instead.
+
+        option
+          Runtime option containing ``value``. It is unavailable during the
+          grammar's parse action, where ``param_name`` remains necessary.
 
         why
           Possible values are:
@@ -267,6 +278,9 @@ class GrammarType:
           ``save``
              validation before saving the values
         """
+        if option is not None:
+            param_name = option._get_path
+
         try:
             err = self._validate(value, why)
         except ValueError as err:
