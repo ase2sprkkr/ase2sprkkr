@@ -2248,7 +2248,11 @@ XSITES NR=3 FLAG
                     V("A", 1),
                     V("B", 2),
                     V("C", gt.NumpyArray(lines="A"), name_in_grammar=False),
-                    V("D", gt.NumpyArray(lines="B"), name_in_grammar=False),
+                    V(
+                        "D",
+                        gt.NumpyArray(lines=lambda B: int(B)),
+                        name_in_grammar=False,
+                    ),
                     V("E", 3),
                 ]
             }
@@ -2279,6 +2283,17 @@ XSITES NR=3 FLAG
                 self.assertEqual(np.asarray(val), na.parse(str))
 
         test(gt.NumpyArray(item_format="%2.0f"), [[1, 2, 3], [4, 5, 6]], " 1  2  3\n 4  5  6")
+        test(
+            gt.NumpyArray(
+                shape=(5,),
+                items_per_line=3,
+                item_format="%2d",
+                written_delimiter="",
+                dtype=int,
+            ),
+            [1, 2, 3, 4, 5],
+            " 1 2 3\n 4 5",
+        )
         test(gt.NumpyArray(indented=2, item_format="%2.0f"), [[1, 2, 3], [4, 5, 6]], "   1  2  3\n   4  5  6")
         test(
             gt.NumpyArray(indented=(8, 2), item_format="%2.0f"),
