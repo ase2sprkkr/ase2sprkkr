@@ -1,4 +1,5 @@
 from io import StringIO
+import os
 import sys
 from types import ModuleType
 
@@ -9,6 +10,7 @@ from ase.build import bulk
 from ..definitions.sfn import SFNOutputFile, definition
 from ..output_files import OutputFile
 from ...potentials.potentials import Potential
+from ...sprkkr.calculator import SPRKKR
 from ...common.warnings import DataValidityError
 
 
@@ -83,10 +85,11 @@ def test_sfn_grammar_and_generated_mesh_view():
     assert output.mesh_for_idx(3) is None
 
 
-def test_sfn_write_roundtrip():
+def test_sfn_write_roundtrip(tmp_path):
     output = definition.read_from_string(SFN)
-    written = output.to_string(validate=True)
-    reparsed = definition.read_from_file(StringIO(written))
+    filename = tmp_path / "roundtrip.sfn"
+    output.save_to_file(filename, validate=True)
+    reparsed = OutputFile.from_file(filename, unknown=False)
 
     assert reparsed.NM() == output.NM()
     for original, copy in zip(output.meshes, reparsed.meshes):
@@ -97,6 +100,49 @@ def test_sfn_write_roundtrip():
         np.testing.assert_allclose(
             copy.faces[0].VERTICES(), original.faces[0].VERTICES()
         )
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(
+    os.environ.get("DO_NOT_RUN_SPRKKR", "") != "",
+    reason="The test requires a working SPR-KKR executable",
+)
+def test_written_sfn_is_accepted_by_sprkkr(tmp_path):
+    """SPR-KKR can reuse an SFN file serialized by this implementation."""
+
+    options = {
+        "NL": 3,
+        "NE": 5,
+        "NKTAB": 5,
+        "NITER": 1,
+        "FULLPOT": True,
+        "MODE": "SREL",
+    }
+    first = SPRKKR(atoms=bulk("Al", "fcc", a=4.0)).calculate(
+        directory=tmp_path,
+        mpi=False,
+        options=options,
+        empty_spheres=False,
+        print_output=False,
+    )
+    assert first.sfn_generated is True
+
+    second_directory = tmp_path / "reuse"
+    second_directory.mkdir()
+    rewritten = second_directory / "rewritten.sfn"
+    first.sfn.save_to_file(rewritten, validate=True)
+
+    second = SPRKKR(potential=first.potential_filename).calculate(
+        directory=second_directory,
+        mpi=False,
+        options={**options, "SFNFIL": rewritten.name},
+        empty_spheres=False,
+        print_output=False,
+    )
+
+    assert second.sfn_generated is False
+    assert second.sfn_filename == str(rewritten)
+    assert len(second.iterations) == 1
 
 
 def test_sfn_dependent_array_lengths_are_validated():
