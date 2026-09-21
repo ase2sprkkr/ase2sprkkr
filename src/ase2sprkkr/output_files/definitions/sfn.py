@@ -22,7 +22,6 @@ from ...common.repetition import (
     RepeatedItemGrammar,
     VariableRepeatedItemGrammar,
 )
-from ...sprkkr.configuration import ConfigurationValue
 
 
 class _SFNValueDefinition(OutputFileValueDefinition):
@@ -78,16 +77,6 @@ class _SFNSectionDefinition(OutputFileSectionDefinition):
             values = self.repeated_count.grammar(values, self.repeated_delimiter)
             values.set_name(f"<{self.name}[]>")
         return values
-
-
-class _SFNGeneratedValueDefinition(GeneratedValueDefinition):
-    """Generated value retaining the output-file configuration trait."""
-
-    result_class = ConfigurationValue
-    type = Integer()
-
-    def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=""):
-        return False
 
 
 class _FortranArray(GrammarType):
@@ -399,7 +388,7 @@ class SFNDefinition(OutputFileDefinition):
 def create_definition():
     V = _SFNValueDefinition
     S = _SFNSectionDefinition
-    GV = _SFNGeneratedValueDefinition
+    GV = GeneratedValueDefinition
 
     header = V(
         "HEADER",
