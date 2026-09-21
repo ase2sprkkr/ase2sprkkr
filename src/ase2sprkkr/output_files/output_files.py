@@ -27,6 +27,7 @@ class OutputFile(ConfigurationFile):
     """Objects of this class holds datas of an output file"""
 
     plot_parameters = {}
+    additional_actions = ()
 
     def __init__(self, definition=None, container=None):
         super().__init__(definition, container)
