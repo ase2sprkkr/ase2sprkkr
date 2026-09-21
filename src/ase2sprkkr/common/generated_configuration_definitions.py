@@ -76,6 +76,17 @@ class BaseGeneratedValueDefinition(RealItemDefinition):
 
     item_type = "generated value"
 
+    def _save_to_file(
+        self,
+        file,
+        value,
+        always=False,
+        name_in_grammar=None,
+        delimiter="",
+    ):
+        """Generated values are runtime views and are never written."""
+        return False
+
     def __repr__(self):
         return f"<{self.name} (generated)>"
 
