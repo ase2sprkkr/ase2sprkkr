@@ -22,7 +22,7 @@ from ...common.repetition import (
     RepeatedItemGrammar,
     VariableRepeatedItemGrammar,
 )
-from ...sprkkr.configuration import ConfigurationValue, RepeatedConfigurationSection
+from ...sprkkr.configuration import ConfigurationValue
 
 
 class _SFNValueDefinition(OutputFileValueDefinition):
@@ -31,24 +31,10 @@ class _SFNValueDefinition(OutputFileValueDefinition):
     prefix = ""
 
 
-class _SFNRepeatedConfigurationSection(RepeatedConfigurationSection):
-    def has_any_value(self):
-        return any(item.has_any_value() for item in self.values())
-
-    def _set_from_atoms(self, atoms, io_data):
-        for item in self.values():
-            item._set_from_atoms(atoms, io_data)
-        setter = getattr(self._definition, "set_from_atoms", None)
-        if setter:
-            setter(self, atoms, io_data)
-
-
 class _SFNSectionDefinition(OutputFileSectionDefinition):
     """A section whose surrounding grammar owns its trailing newline."""
 
     write_last_delimiter = False
-    repeated_class = _SFNRepeatedConfigurationSection
-
     def _create_grammar(self, allow_dangerous=False):
         values = self._grammar_of_values(allow_dangerous, self.delimiter)
         grammar = TokenConverter(values)
