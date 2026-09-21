@@ -6,8 +6,22 @@ import re
 
 
 class SprKkrOutputParser(ProcessOutputParser):
-    _common_output_line = re.compile(rb"VERSION|programm execution|^\s*from file:|^\s*FILES:\s*$")
+    _common_output_line = re.compile(
+        rb"VERSION|programm execution|^\s*from file:|"
+        rb"shape function file not available:|^\s*FILES:\s*$"
+    )
     _sfn_file = re.compile(r"^\s*from file:\s*(.*?)\s*$")
+    _missing_sfn_file = re.compile(
+        r"^\s*shape function file not available:\s*(.*?)\s*$"
+    )
+
+    @staticmethod
+    def _register_sfn(result, filename, generated):
+        """Register an SFN file and whether this run had to generate it."""
+
+        result.files.add_file("SFN", filename, "sfn")
+        if generated or result.sfn_generated is None:
+            result.sfn_generated = generated
 
     async def read_commons(self, stdout, result):
         out = await self.parse_files(stdout, result)
@@ -26,8 +40,10 @@ class SprKkrOutputParser(ProcessOutputParser):
                 elif "programm execution" in line:
                     started = re.sub("[a-z]", "", line).strip()
                     result.program_info["start_time"] = datetime.datetime.strptime(started, "%d/%m/%Y %H:%M:%S")
+                elif match := self._missing_sfn_file.match(line):
+                    self._register_sfn(result, match.group(1), True)
                 elif match := self._sfn_file.match(line):
-                    result.files.add_file("SFN", match.group(1), "sfn")
+                    self._register_sfn(result, match.group(1), False)
                 elif line.strip() == "FILES:":
                     break
 
