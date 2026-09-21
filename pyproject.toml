@@ -54,6 +54,11 @@ mendeleev = [
 es_finder = [
     "pymatgen",
 ]
+plotting = [
+    "matplotlib",
+    "scipy",
+    "scikit-image",
+]
 
 [project.urls]
 Homepage = "https://ase2sprkkr.github.io/ase2sprkkr/"
