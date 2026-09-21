@@ -54,6 +54,10 @@ class BaseConfigurationContainer(Configuration, ABC):
         )
         return out
 
+    @abstractmethod
+    def values(self):
+        """Return the configuration objects contained by this container."""
+
     def has_any_value(self) -> bool:
         """
         Return True if any member of the section has value.
@@ -63,7 +67,7 @@ class BaseConfigurationContainer(Configuration, ABC):
           has_any_value: bool
               True, if no value in the container is set, False otherwise
         """
-        for i in self._values():
+        for i in self.values():
             if i.has_any_value():
                 return True
         return False
@@ -711,9 +715,13 @@ class ConfigurationContainer(BaseConfigurationContainer):
         """Iterate over all members of the container"""
         yield from self._members.values()
 
+    def values(self):
+        """Return the contained configuration values."""
+        return self._members.values()
+
     def _values(self):
         """Iterate over all members of the container"""
-        yield from self._members.values()
+        yield from self.values()
 
     def _as_dict(self, get):
         """
@@ -833,21 +841,6 @@ class ConfigurationContainer(BaseConfigurationContainer):
                 continue
             item._validate(why)
         self._definition.run_validators(self, self, why)
-
-    def has_any_value(self) -> bool:
-        """
-        Return True if any member of the section has value.
-
-        Return
-        ------
-          has_any_value: bool
-              True, if no value in the container is set, False otherwise
-        """
-        for i in self._values():
-            if i.has_any_value():
-                return True
-        return False
-
 
 class BaseSection(ConfigurationContainer):
     """A section of SPRKKR configuration - i.e. part of the configuration file."""

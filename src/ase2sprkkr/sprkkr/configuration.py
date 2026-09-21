@@ -43,7 +43,7 @@ class ConfigurationSectionTrait:
         """Set the sections' values of the potential according to the given ASE atoms object.
         Unlike the non_underscored routine, this one requires the io_data to be set.
         """
-        for i in self:
+        for i in self.values():
             i._set_from_atoms(atoms, io_data)
 
         if hasattr(self._definition, "set_from_atoms"):
@@ -122,6 +122,9 @@ class ConfigurationSectionDefinition(SectionDefinition):
 
     result_class = ConfigurationSection
     """ The sections should have this class (if not stated otherwise) """
+
+    repeated_class = RepeatedConfigurationSection
+    """Repeated sections retain the SPR-KKR configuration behavior."""
 
 
 class ConfigurationFileDefinition(ConfigurationRootDefinition):
