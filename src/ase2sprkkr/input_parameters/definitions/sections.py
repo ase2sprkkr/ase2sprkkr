@@ -275,27 +275,29 @@ regular mesh.
 
 def ENERGY(emin=(-0.2, "The real part of the lowest E-value", None), emax=None, add=[], defaults={}):
     """The definition of the ENERGY section of the task input file"""
+    egrid = Keyword({
+       0:'only real energies -- Gauss integration mesh',
+       1:'only real energies -- equidistant path',
+       2:'rectangular complex path',
+       3:'straight complex path parallel to real axis',
+       4:'rectangular complex grid, return to real axis on log scale',
+       5:'arc in the complex plain',
+       6:'standard X-ray mesh from E_Fermi to 3.5 Ry',
+       7:'X-ray mesh',
+       8:'arc in the complex plane (logarithim)',
+       9:"arc in the complex plane (Akai's scheme)",
+      10:'ellipse in the complex plain',
+      11:'semi circle (5) plus straight line (3)',
+      }, aliases={'REAL': 1, 'RECTANG': 2, 'STRAIGHT': 3, 'RECT-LOG': 4, 'ARC': 5, 'XAS': 6, 'XMOD': 7})
     vals = [
         V(
             "GRID",
-            SetOf(int),
+            SetOf(egrid, min_length=1, max_length=2),
             defaults.get("GRID", [5]),
             is_required=True,
             info="Type of the grid for the energy-mesh",
-            description=""" 0    only real energies -- Gauss integration mesh
-   1    only real energies -- equidistant path
-   2    rectangular complex path
-   3    straight complex path parallel to real axis
-   4    rectangular complex grid, return to real axis on log scale
-   5    arc in the complex plain
-   6    standard X-ray mesh from E_Fermi to 3.5 Ry
-   7    X-ray mesh
-   8    arc in the complex plane (logarithim)
-   9    arc in the complex plane (Akai's scheme)
-  10    ellipse in the complex plain
-  11    semi circle (5) plus straight line (3)""",
         ),
-        V("NE", SetOf(int), defaults.get("NE", [32]), is_required=True, info="Number of points in energy-mesh"),
+        V("NE", SetOf(int, min_length=1, max_length=2), defaults.get("NE", [32]), is_required=True, info="Number of points in energy-mesh"),
         V("ImE", energy, defaults.get("ImE", 0.0)),
     ]
 
