@@ -149,12 +149,12 @@ class Array(GrammarType):
                 length = ""
         else:
             if self.min_length is not None:
-                length = "{self.min_length}<=n"
+                length = f"{self.min_length}<=n"
             else:
                 length = "n"
             if self.max_length is not None:
                 length += f"<={self.max_length}"
-            length = " with length "
+            length = f" with length {length}"
         return f"Array(of {self.type}{length})"
 
     def grammar_name(self):
