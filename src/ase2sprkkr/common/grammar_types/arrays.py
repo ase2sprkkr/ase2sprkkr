@@ -255,6 +255,9 @@ class Array(GrammarType):
             return dtype, (self.min_length,) + shape
         return object
 
+    def additional_description(self, prefix):
+        if self.type:
+            return self.type.additional_description(prefix)
 
 class SetOf(Array):
     """Set of values of the same type. E.g. {1,2,3}"""
