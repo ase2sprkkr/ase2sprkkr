@@ -4,9 +4,10 @@ from functools import cache
 from typing import Any, List, Optional
 
 from ...common.generated_configuration_definitions import Length
-from ...common.grammar_types import Integer, SetOf
+from ...common.grammar_types import Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters import InputSection
+from ...physics.lattice_data import bravais_number
 from ..input_parameters_definitions import (
     InputParametersDefinition as InputParameters,
     InputValueDefinition as V,
@@ -133,53 +134,158 @@ def _validate_bsf(
     return issues or None
 
 
-def _validate_kpath(option, _container, _why):
-    value = option()
-    if value is not None and value not in (*range(1, 8), 10):
-        return DataValidityError("TASK.KPATH has to be one of 1-7 or 10")
+kpaths = {
+    0: "Default short path: Γ-X / Γ-H (Bravais 13, 14)",
+    1: "Full standard high-symmetry path (4, 11, 12, 13, 14)",
+    2: "Reduced standard high-symmetry path (4, 11, 12, 13, 14)",
+    3: "Short standard high-symmetry path (4, 11, 12, 13, 14)",
+    4: "Short path: Γ-Y-T-Z / Γ-M / Γ-X-M / Γ-X / Γ-H-N-Γ (4, 11, 12, 13, 14)",
+    5: "Selected path: Γ-X / K-Γ / Γ-X,Y,Z / Γ-L / Γ-H (4, 11, 12, 13, 14)",
+    6: "Selected directions: Γ-Y / Γ-X,Y,Z (4, 13, 14)",
+    7: "Selected paths: X-Γ + Γ-Y (4)",
+    10: "Alternative FCC path with L-K branch (13)",
+}
+
+kpaths_full = {
+    4: {
+        "name": "orthorhombic primitive",
+        "paths": {
+            1: ("full standard path",
+                "Γ-Σ-X-G-U-A-Z-Λ-Γ-∆-Y-H-T-B-Z + X-D-S-C-Y + U-P-R-E-T + S-Q-T"),
+            2: ("reduced standard path",
+                "Γ-Σ-X-G-U-A-Z-Λ-Γ-∆-Y-H-T-B-Z"),
+            3: ("short standard path",
+                "Γ-Σ-X-G-U-A-Z-Λ-Γ"),
+            4: ("secondary standard path",
+                "Γ-∆-Y-H-T-B-Z"),
+            5: ("Γ-X direction",
+                "Γ-Σ-X"),
+            6: ("Γ-Y direction",
+                "Γ-∆-Y"),
+            7: ("X-Γ and Γ-Y directions",
+                "X-Σ-Γ + Γ-∆-Y"),
+        },
+    },
+
+    11: {
+        "name": "hexagonal primitive",
+        "paths": {
+            1: ("full standard path",
+                "Γ-Σ-M-T'-K-T-Γ-∆-A-R-L-S'-H-S-A + M-U-L + K-P-H"),
+            2: ("reduced standard path",
+                "Γ-Σ-M-T'-K-T-Γ-∆-A-R-L-S'-H-S-A"),
+            3: ("short standard path",
+                "Γ-Σ-M-T'-K-T-Γ-∆-A"),
+            4: ("Γ-M direction",
+                "Γ-Σ-M"),
+            5: ("K-Γ direction",
+                "K-T-Γ"),
+        },
+    },
+
+    12: {
+        "name": "cubic primitive",
+        "paths": {
+            1: ("full standard path",
+                "Γ-∆-X-Y-M-V-R-Λ-Γ-Σ-M"),
+            2: ("reduced standard path",
+                "Γ-∆-X-Y-M-V-R-Λ-Γ"),
+            3: ("short standard path",
+                "Γ-∆-X-Y-M-V-R"),
+            4: ("Γ-X-M path",
+                "Γ-∆-X-Y-M"),
+            5: ("three principal Γ-axis directions",
+                "Γ-∆-X + Γ-∆-Y + Γ-∆-Z"),
+        },
+    },
+
+    13: {
+        "name": "cubic face-centered",
+        "paths": {
+            0: ("default path",
+                "Γ-∆-X"),
+            1: ("full standard path",
+                "X-∆-Γ-Λ-L-Q-W-N-K-Σ-Γ + L-M-U-S-X-Z-W-B-U"),
+            2: ("reduced standard path",
+                "X-∆-Γ-Λ-L-Q-W-N-K-Σ-Γ"),
+            3: ("short standard path",
+                "X-∆-Γ-Λ-L"),
+            4: ("Γ-X direction",
+                "Γ-∆-X"),
+            5: ("Γ-L direction",
+                "Γ-Λ-L"),
+            6: ("three principal Γ-axis directions",
+                "Γ-∆-X + Γ-∆-Y + Γ-∆-Z"),
+            10: ("alternative full path with L-K branch",
+                 "X-∆-Γ-Λ-L + L-?-K + W-N-K-Σ-Γ + L-M-U-S-X-Z-W-B-U"),
+        },
+    },
+
+    14: {
+        "name": "cubic body-centered",
+        "paths": {
+            0: ("default path",
+                "Γ-D-H"),
+            1: ("full standard path",
+                "Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P"),
+            2: ("reduced standard path",
+                "Γ-D-H-G-N-Σ-Γ-Λ-P-F-H"),
+            3: ("short standard path",
+                "Γ-D-H-G-N-Σ-Γ-Λ-P"),
+            4: ("Γ-H-N-Γ path",
+                "Γ-D-H-G-N-Σ-Γ"),
+            5: ("Γ-H direction",
+                "Γ-D-H"),
+            6: ("three principal Γ-axis directions",
+                "Γ-∆-X + Γ-∆-Y + Γ-∆-Z"),
+        },
+    },
+}
+
+def kpaths_for_atoms(atoms_or_bravais):
+    bravais = bravais_number(atoms_or_bravais)
+    paths = kpaths_fullpath.get(bravais, {}).get('paths', {})
+    return {
+        number: label for number, label in paths.items()
+    }
+
 
 
 def _task_definition():
+
+    def kpaths_cli_help(kpaths_full=kpaths_full, width=88):
+        lines = [ ' Valid values for the given Bravais lattice',
+                  ' ------------------------------------------',
+                  '  ']
+
+        for bravais, data in kpaths_full.items():
+            lines.append(f"{bravais:2}:  {data['name']}")
+
+            for kpath, (description, path) in data["paths"].items():
+                prefix = f"    {kpath:2}  {description}"
+                path_indent = " " * 8
+
+                if len(prefix) + 2 + len(path) <= width:
+                    lines.append(f"{prefix:<40}  {path}")
+                else:
+                    lines.append(prefix)
+                    lines.append(f"{path_indent}{path}")
+
+            lines.append("")
+
+        lines.append(" other Bravais lattices require manual k-path settings")
+        return "\n".join(lines).rstrip()
+
     return TASK(
         "BSF",
         add=[
             V("NK", 300, condition=_ek_item, info="total number of k-points"),
             V(
                 "KPATH",
-                Integer(min=1, max=10),
+                Keyword(kpaths),
                 condition=_ek_item,
-                validators=_validate_kpath,
                 info="Predefined path in k-space",
-                description="""
-Bravais-lattice KPATH path
-==========================
-orb 1  Γ-Σ-X-G-U-A-Z-Λ-Γ-∆-Y-H-T-B-Z
-       + X-D-S-C-Y + U-P-R-E-T + S-Q-T
-    2  Γ-Σ-X-G-U-A-Z-Λ-Γ-∆-Y-H-T-B-Z
-    3  Γ-Σ-X-G-U-A-Z-Λ-Γ
-    4  Γ-∆-Y-H-T-B-Z
-hex 1  Γ-Σ-M-T’-K-T-Γ-∆-A-R-L-S’-H-S-A
-       + M-U-L + K-P-H
-    2  Γ-Σ-M-T’-K-T-Γ-∆-A-R-L-S’-H-S-A
-    3  Γ-Σ-M-T’-K-T-Γ-∆-A
-    4  Γ-Σ-M
-    5  K-T-Γ
-sc  1  Γ-∆-X-Y-M-V-R-Λ-Γ-Σ-M
-    2  Γ-∆-X-Y-M-V-R-Λ-Γ
-    3  Γ-∆-X-Y-M-V-R
-    4  Γ-∆-X-Y-M
-fcc 1  X-∆-Γ-Λ-L-Q-W-N-K-Σ-Γ
-       + L-M-U-S-X-Z-W-D-U
-    2  X-∆-Γ-Λ-L-Q-W-N-K-Σ-Γ
-    3  X-∆-Γ-Λ-L
-    4  Γ-∆-X
-    5  Γ-Λ-L
-bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
-    2  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H
-    3  Γ-D-H-G-N-Σ-Γ-Λ-P
-    4  Γ-D-H-G-N-Σ-Γ
-    5  Γ-D-H
-""",
+                description=kpaths_cli_help(),
                 is_optional=True,
             ),
             V(

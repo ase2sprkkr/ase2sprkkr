@@ -11,6 +11,7 @@ from ase2sprkkr.bindings.spglib import spglib_dataset
 from ase.units import Bohr
 from scipy.optimize import linear_sum_assignment
 from typing import Union
+from numbers import Integral
 
 
 def reorder_matrix(target, source):
@@ -890,6 +891,17 @@ def ap_number_from_spacegroup(spacegroup_number: int, hall_number: Union[int, No
     if hall_number is not None and hall_number in hall_numbers_to_AP:
         return hall_numbers_to_AP[hall_number]
     return international_numbers_to_AP[spacegroup_number]
+
+
+def bravais_number(atoms_or_bravais):
+    """Return the Bravais-lattice number."""
+    if isinstance(atoms_or_bravais, Integral):
+        return int(atoms_or_bravais)
+
+    lattice = atoms_or_bravais.cell.get_bravais_lattice()
+    pearson = Pearson.from_symbol(lattice.pearson_symbol)
+
+    return pearson.bravais_number
 
 
 class LatticeData:
