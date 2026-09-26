@@ -46,7 +46,12 @@ def load_user_preferences():
     except Exception as e:
         import warnings
         import traceback
-        warnings.warn(f"Can not import {file} file with the user preferences: \n{e}\n\n {'\n'.join(traceback.format_exception(e))}")
+        tb = "\n".join(traceback.format_exception(e))
+
+        warnings.warn(
+            f"Can not import {file} file with the user preferences:\n"
+            f"{e}\n\n{tb}"
+        )
 
 
 @cache
