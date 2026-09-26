@@ -12,6 +12,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 if True:
     from ..input_parameters import InputParameters
     from ...common.warnings import DataValidityError, DataValidityWarning
+    from ...common.grammar_types import Keyword
 
 
 class TestDefinitions(TestCase):
@@ -133,10 +134,23 @@ class TestDefinitions(TestCase):
 
     def test_bsf_path_limits(self):
         ip = InputParameters.create("BSFEK")
-        for path in (6, 7, 10):
-            ip.TASK.KPATH = path
-        with pytest.raises(DataValidityError, match="one of 1-7 or 10"):
-            ip.TASK.KPATH = 8
+        ip.CONTROL.POTFIL = "x"
+        path_type = ip.TASK.KPATH._definition.type
+        assert isinstance(path_type, Keyword)
+        paths = (0, 1, 2, 3, 4, 5, 6, 7, 10)
+        assert {value for value, _ in path_type.items()} == {path for path in paths}
+        for path in paths:
+            for value in (path, str(path)):
+                ip.TASK.KPATH = value
+                assert ip.TASK.KPATH() == str(path)
+                text = ip.to_string(validate=True)
+                assert f"\n\tKPATH={path}\n" in text
+                parsed = InputParameters.definition("BSF").read_from_string(text)
+                assert parsed.TASK.KPATH() == str(path)
+        for path in (8, 9, 11, "custom"):
+            with pytest.raises(DataValidityError):
+                ip.TASK.KPATH = path
+            assert ip.TASK.KPATH() == "10"
 
         ip.TASK.KPATH = None
         with pytest.raises(DataValidityError, match="NKDIR cannot be greater than 9"):
