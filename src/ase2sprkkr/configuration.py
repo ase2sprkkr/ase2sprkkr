@@ -45,8 +45,8 @@ def load_user_preferences():
             loader.exec_module(mod)
     except Exception as e:
         import warnings
-
-        warnings.warn(f"Can not import {file} file with the user preferences: \n{e}")
+        import traceback
+        warnings.warn(f"Can not import {file} file with the user preferences: \n{e}\n\n {'\n'.join(traceback.format_exception(e))}")
 
 
 @cache
