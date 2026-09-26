@@ -276,7 +276,7 @@ def _task_definition():
         lines.append(" other Bravais lattices require manual k-path settings")
         return "\n".join(lines).rstrip()
 
-    return TASK(
+    out = TASK(
         "BSF",
         add=[
             V("NK", 300, condition=_ek_item, info="total number of k-points"),
@@ -354,6 +354,9 @@ def _task_definition():
             ),
         ],
     )
+    out['KPATH'].choices_from_atoms = kpaths_for_atoms
+
+    return out
 
 
 def _energy_definition():
