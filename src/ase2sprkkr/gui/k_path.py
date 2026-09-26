@@ -93,7 +93,10 @@ def k_path_gui(atoms: Atoms, verbose=False):
 
     cell = atoms.cell
     ALAT = cell.get_bravais_lattice().a
-    cell = cell.copy() / ALAT
+    # Dividing a Cell returns an ndarray; scale its contents to retain the
+    # reciprocal() method without changing the original atoms' cell.
+    cell = cell.copy()
+    cell[:] /= ALAT
     rec_basis, BZ = brillouin_zone(cell)
     if verbose:
         print("Normalized direct lattice:\n", np.asarray(cell))
