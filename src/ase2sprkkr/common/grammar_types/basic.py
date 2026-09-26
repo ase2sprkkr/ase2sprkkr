@@ -491,7 +491,7 @@ class Keyword(GrammarType):
             return f"{str(name):<16} {v}"
 
         ali = ' (aliases in parentheses)' if self.aliases else ''
-        out = f"\n{prefix}Possible values {ali}:\n"
+        out = f"\n{prefix}Possible values{ali}:\n"
         out += "\n".join((f"{prefix}  {value(k,v)}" for k, v in self.choices.items()))
         if ad:
             out += f"\n\n{prefix}" + ad
