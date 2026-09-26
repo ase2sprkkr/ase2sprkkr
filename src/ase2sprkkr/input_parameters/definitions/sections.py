@@ -140,18 +140,28 @@ def CONTROL(ADSI):
             V(
                 "NONMAG",
                 False,
-                info="Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation. ",
-            ),
-            V(
-                "NOHFF",
-                False,
-                info="Set this flag, if you want to include hyper fine field calculation. This leads to a slower calculation. ",
+                info="The system considered is non-magnetic. This leads to a higher symmetry and a faster calculation. ",
             ),
             V(
                 "NOSYM",
                 False,
                 info="Set this flag, if you want to supress all symetry consideration. This leads to a slower calculation. ",
             ),
+            V(
+                "NOHFF",
+                False,
+                info="Disable hyper-fine-field calculation. It's disabled by default for SCF task. TASK.HFF takes precedence.",
+            ),
+            V(
+                "FSOHFF",
+                False,
+                info="Calculate the relativistic decomposition of the hyperfine field into Fermi-contact, spin-dipolar, and orbital contributions. Sets SPLITSS automatically."
+            ),
+            V(
+                "SPLITSS",
+                False,
+                info="Evaluate single-site contributions on a separate energy contour. GRID and NE must each contain two values.", description="Forced to true, if TASK=COMPTON or FSOHFF"
+            )
         ],
     )
 
@@ -285,29 +295,32 @@ regular mesh.
 
 
 def ENERGY(emin=(-0.2, "The real part of the lowest E-value", None), emax=None, add=[], defaults={}):
-    """The definition of the ENERGY section of the task input file"""
+    """The definition of the ENERGY section of the task input file (possibly for each spin)"""
+    egrid = Keyword({
+       0:'only real energies -- Gauss integration mesh',
+       1:'only real energies -- equidistant path',
+       2:'rectangular complex path',
+       3:'straight complex path parallel to real axis',
+       4:'rectangular complex grid, return to real axis on log scale',
+       5:'arc in the complex plain',
+       6:'standard X-ray mesh from E_Fermi to 3.5 Ry',
+       7:'X-ray mesh',
+       8:'arc in the complex plane (logarithim)',
+       9:"arc in the complex plane (Akai's scheme)",
+      10:'ellipse in the complex plain',
+      11:'semi circle (5) plus straight line (3)',
+      }, aliases={'REAL': 1, 'RECTANG': 2, 'STRAIGHT': 3, 'RECT-LOG': 4, 'ARC': 5, 'XAS': 6, 'XMOD': 7})
     vals = [
         V(
             "GRID",
-            SetOf(int),
+            SetOf(egrid, min_length=1, max_length=2),
             defaults.get("GRID", [5]),
             is_required=True,
             info="Type of the grid for the energy-mesh",
-            description=""" 0    only real energies -- Gauss integration mesh
-   1    only real energies -- equidistant path
-   2    rectangular complex path
-   3    straight complex path parallel to real axis
-   4    rectangular complex grid, return to real axis on log scale
-   5    arc in the complex plain
-   6    standard X-ray mesh from E_Fermi to 3.5 Ry
-   7    X-ray mesh
-   8    arc in the complex plane (logarithim)
-   9    arc in the complex plane (Akai's scheme)
-  10    ellipse in the complex plain
-  11    semi circle (5) plus straight line (3)""",
         ),
-        V("NE", SetOf(int), defaults.get("NE", [32]), is_required=True, info="Number of points in energy-mesh"),
+        V("NE", SetOf(int, min_length=1, max_length=2), defaults.get("NE", [32]), is_required=True, info="Number of points in energy-mesh"),
         V("ImE", energy, defaults.get("ImE", 0.0)),
+        V("SPLITSS", False, info="Evaluate single-site contributions on a separate energy contour. GRID and NE must each contain two values.", description="Forced to true, if TASK=COMPTON or CONTROL.FSOHFF")
     ]
 
     if emin:
@@ -636,7 +649,20 @@ def TASK(task, add=[]):
     if isinstance(task, str):
         task = DefKeyword(task)
 
-    return Section("TASK", [V("TASK", task, name_in_grammar=False)] + add)
+    return Section("TASK", [
+      V(
+        "TASK", task, name_in_grammar=False
+      ),
+      V(
+        "HFF",
+        False,
+        info=(
+            "Enable the hyperfine-field calculation. "
+            "It is disabled by default for SCF calculations. "
+            "This option takes precedence over CONTROL.NOHFF."
+        ),
+      ),
+    ] + add)
 
 
 __all__ = ["CONTROL", "TAU", "ENERGY", "SCF", "SITES", "TASK", "STRCONST", "CPA", "MODE"]

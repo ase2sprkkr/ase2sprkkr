@@ -9,6 +9,7 @@ import re
 import unyt
 import itertools
 from unyt.array import unyt_quantity
+from collections import defaultdict
 
 from ..decorators import add_to_signature, cached_property
 from ..grammar import generate_grammar, separator_grammar, replace_whitechars, optional_quote
@@ -472,8 +473,26 @@ class Keyword(GrammarType):
         ad = super().additional_description(prefix)
         if not self.choices:
             return ad
-        out = f"\n{prefix}Possible values:\n"
-        out += "\n".join([f"{prefix}  {str(k):<10}{v}" for k, v in self.choices.items()])
+        if self.aliases:
+            aliases = defaultdict(lambda: [])
+            for k, v in self.aliases.items():
+                aliases[v].append(k)
+        else:
+            alias = []
+            aliases = defaultdict(lambda: alias)
+
+        def value(k,v):
+            alias = aliases[k]
+            if alias:
+                name = f'{k} ({",".join(alias)}) ' if len(alias) else ''
+
+            else:
+                name = k
+            return f"{str(name):<16} {v}"
+
+        ali = ' (aliases in parentheses)' if self.aliases else ''
+        out = f"\n{prefix}Possible values {ali}:\n"
+        out += "\n".join((f"{prefix}  {value(k,v)}" for k, v in self.choices.items()))
         if ad:
             out += f"\n\n{prefix}" + ad
         return out
