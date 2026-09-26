@@ -114,7 +114,7 @@ def run(args, global_args):
                     print(prefix + i.info())
 
             if path is not None:
-                ii = list(i.create_object().get_members(path, is_option=False))
+                ii = list(i.create_object().get_members(path, is_option=None))
                 if not ii:
                     continue
                 found = True
