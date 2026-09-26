@@ -281,6 +281,8 @@ class InputParameters(ConfigurationFile):
     def definition(cls, name):
         name = name.upper()
         if name not in cls._definitions:
+            if name == 'BSFEK' or name == 'BSFKK':
+                return cls.definition('bsf')
             module = cls.definition_modules[name]
             ip = module.input_parameters
             if isinstance(ip, ipdefs.InputParametersDefinition):
