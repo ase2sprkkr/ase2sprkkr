@@ -12,7 +12,7 @@ from ..input_parameters_definitions import (
     InputParametersDefinition as InputParameters,
     InputValueDefinition as V,
 )
-from .sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+from .sections import CONTROL, CPA, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
 EK = "EK"
@@ -393,6 +393,7 @@ def bsf_definition():
             _energy_definition(),
             MODE,
             STRCONST,
+            CPA,
             SITES,
         ],
         executable="kkrgen",
