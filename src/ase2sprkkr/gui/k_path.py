@@ -4,6 +4,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from matplotlib import rc
 from matplotlib.backend_bases import MouseEvent
 from matplotlib.patches import FancyArrowPatch
+from matplotlib.widgets import Button
 from mpl_toolkits.mplot3d import proj3d
 from ase import Atoms
 from ase.dft.bz import bz_vertices
@@ -53,7 +54,14 @@ def brillouin_zone(cell):
     return reciprocal_basis, faces
 
 
-def k_path_gui(atoms: Atoms, verbose=False):
+def k_path_gui(atoms: Atoms, verbose=False, *, parent=None):
+    """Select a path and confirm with OK; Cancel/window close return None.
+
+    With a Qt backend, an optional parent widget makes the editor window
+    modal to its parent. Waiting uses Matplotlib's local event loop, so this
+    function also works inside an already running GUI application.
+    Fewer than two selected points yield None.
+    """
 
     def on_pick(event):
         if isinstance(event, MouseEvent):
@@ -79,6 +87,8 @@ def k_path_gui(atoms: Atoms, verbose=False):
 
         # Update the path line
         update_path_line()
+        ok_button.set_active(len(selected_path) >= 2)
+        ok_button.label.set_alpha(1.0 if ok_button.active else 0.4)
 
         fig_kkr.canvas.draw_idle()
 
@@ -334,8 +344,51 @@ def k_path_gui(atoms: Atoms, verbose=False):
 
     fig_kkr.canvas.mpl_connect("pick_event", on_pick)
 
-    plt.tight_layout()
-    plt.show()
+    fig_kkr.tight_layout(rect=(0, 0.1, 1, 1))
+    # Keep the existing Matplotlib window and backend-independent controls.
+    # The local reference keeps Button alive throughout the event loop.
+    ok_axes = fig_kkr.add_axes((0.8, 0.025, 0.15, 0.055))
+    ok_button = Button(ok_axes, "OK")
+    ok_button.set_active(False)
+    ok_button.label.set_alpha(0.4)
+    accepted = False
+
+    def accept(_event):
+        nonlocal accepted
+        accepted = True
+        plt.close(fig_kkr)
+
+    ok_button.on_clicked(accept)
+    cancel_axes = fig_kkr.add_axes((0.62, 0.025, 0.15, 0.055))
+    cancel_button = Button(cancel_axes, "Cancel")
+    cancel_button.on_clicked(lambda _event: plt.close(fig_kkr))
+    canvas = fig_kkr.canvas
+    if parent is not None and canvas.required_interactive_framework == "qt":
+        from matplotlib.backends.qt_compat import QtCore
+
+        window = canvas.manager.window
+        window.setParent(parent, window.windowFlags())
+        window.setWindowModality(QtCore.Qt.WindowModality.WindowModal)
+
+    closed = False
+
+    def on_close(_event):
+        nonlocal closed
+        closed = True
+        canvas.stop_event_loop()
+
+    connection = canvas.mpl_connect("close_event", on_close)
+    try:
+        plt.show(block=False)
+        # Non-interactive backends cannot accept a selection. A GUI backend
+        # waits for this window only, without restarting QApplication.exec().
+        if not closed and canvas.required_interactive_framework is not None:
+            canvas.start_event_loop(timeout=0)
+    finally:
+        canvas.mpl_disconnect(connection)
+
+    if not accepted:
+        return None
 
     ################
     #              #
@@ -357,7 +410,7 @@ def k_path_gui(atoms: Atoms, verbose=False):
 
     K_resolution = 0.01  # I set this as default resolution of k-sampling, in 1/angstrom. It is just a guiding value and only affects the NK printed out.
 
-    if len(selected_path):
+    if len(selected_path) >= 2:
         NK = int(np.ceil(kpath_length / K_resolution))
         if verbose:
             print("")
