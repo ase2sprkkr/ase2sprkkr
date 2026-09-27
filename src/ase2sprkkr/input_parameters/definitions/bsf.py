@@ -244,7 +244,7 @@ kpaths_full = {
 
 def kpaths_for_atoms(atoms_or_bravais):
     bravais = bravais_number(atoms_or_bravais)
-    paths = kpaths_fullpath.get(bravais, {}).get('paths', {})
+    paths = kpaths_full.get(bravais, {}).get('paths', {})
     return {
         number: label for number, label in paths.items()
     }
@@ -354,7 +354,7 @@ def _task_definition():
             ),
         ],
     )
-    out['KPATH'].choices_from_atoms = kpaths_for_atoms
+    out['KPATH'].choices_for_atoms = kpaths_for_atoms
 
     return out
 
@@ -372,10 +372,10 @@ def _energy_definition():
 
 
 class BSFTaskSection(InputSection):
-    def k_path_gui(self, atoms):
+    def k_path_gui(self, atoms, *, parent=None):
         from ase2sprkkr.gui.k_path import k_path_gui
 
-        out = k_path_gui(atoms)
+        out = k_path_gui(atoms, parent=parent)
         if out:
             self.KPATH.clear()
             self.set(out)
