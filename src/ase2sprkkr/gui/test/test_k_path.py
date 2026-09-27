@@ -44,11 +44,13 @@ def test_k_path_gui_normalizes_cell_without_modifying_atoms(cell, monkeypatch):
     figures = set(plt.get_fignums())
     drawn = []
 
-    def show():
+    def show(*, block):
         # Exercise the actual plot construction and rendering without waiting
         # for interactive input. Closing without a selection returns None.
         plt.gcf().canvas.draw()
         drawn.append(True)
+        assert block is False
+        plt.close(plt.gcf())
 
     monkeypatch.setattr(plt, "show", show)
     try:
