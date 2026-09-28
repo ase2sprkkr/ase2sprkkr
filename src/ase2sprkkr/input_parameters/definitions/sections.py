@@ -6,6 +6,36 @@ from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Ke
 from ..input_parameters_definitions import InputSectionDefinition as Section, InputValueDefinition as V
 from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
 from functools import partial
+from ...common.warnings import DataValidityError
+
+
+def relative_energy_supported(section):
+    """Whether this energy definition can represent both relative bounds."""
+    return all(name in section for name in ('EMIN', 'EMAX', 'EMINEV', 'EMAXEV'))
+
+
+def energy_reference_error(section):
+    """Explain an energy-reference state INIT_MOD_ENERGY would silently ignore.
+
+    Legacy spectroscopy and SPLEED have a separate reader. Intermediate editing
+    states remain legal; callers use this check when accepting or saving input.
+    """
+    task = section._container.TASK
+    if 'INPVER' in task and (task.INPVER() == 0 or task.TASK() == 'SPLEED'):
+        return None
+    relative = [name in section and section[name]() is not None
+                for name in ('EMINEV', 'EMAXEV')]
+    if any(relative) and not all(relative):
+        return ('ENERGY.EMINEV and ENERGY.EMAXEV must be supplied together. '
+                'Use absolute energy for tasks without an upper relative bound.')
+    return None
+
+
+def _validate_energy_reference(section, _container, why):
+    if why != 'set':
+        error = energy_reference_error(section)
+        if error:
+            return [DataValidityError(error)]
 
 
 def _sections_tau_bzint_default_value(option):
@@ -20,12 +50,44 @@ def _sections_tau_bzint_weyl_write_condition(option):
     return option._container.BZINT() == "WEYL"
 
 
-def _sections_energy_emin_default_value(option):
-    return None if option._container.EMINEV() is not None else option._definition._energy_default_value
+def _energy_default(option):
+    """Evaluate a task-supplied default, which may depend on the current mode."""
+    value = option._definition._energy_default_value
+    return value(option) if callable(value) else value
 
 
-def _sections_energy_emin_is_optional(option):
-    return option._container.EMINEV() is not None
+def _energy_absolute_default(option):
+    """Suppress an absolute fallback when the relative representation is active."""
+    return None if option._container[option.name + 'EV']() is not None else _energy_default(option)
+
+
+def _energy_relative_default(option):
+    """Suppress a relative fallback when an absolute value was explicitly set.
+
+    Check storage with is_set(), not the absolute getter: that getter already
+    depends on this relative value, and calling it would recurse.
+    """
+    return None if option._container[option.name[:-2]].is_set() else _energy_default(option)
+
+
+def _energy_absolute_optional(option):
+    return option._container[option.name + 'EV']() is not None
+
+
+def _energy_bound(name, values):
+    """Define a paired absolute/relative bound with task-specific defaults.
+
+    values contains (absolute Ry default, description, relative eV default).
+    Either default may be a top-level callable accepting its Option. Shared
+    precedence and validation are independent of the task's numerical values.
+    """
+    absolute = V(name, float, _energy_absolute_default, info=values[1],
+                 is_optional=_energy_absolute_optional)
+    relative = V(name + 'EV', float, _energy_relative_default,
+                 info=f'{name}, given in eV with respect to the Fermi level', is_optional=True)
+    absolute._energy_default_value = values[0]
+    relative._energy_default_value = values[2]
+    return [absolute, relative]
 
 
 def _sections_energy_emax_from_emin_default_value(option):
@@ -34,14 +96,6 @@ def _sections_energy_emax_from_emin_default_value(option):
 
 def _sections_energy_emaxev_from_eminev_default_value(option):
     return option._container.EMINEV()
-
-
-def _sections_energy_emax_default_value(option):
-    return None if option._container.EMAXEV() is not None else option._definition._energy_default_value
-
-
-def _sections_energy_emax_is_optional(option):
-    return option._container.EMAXEV() is not None
 
 
 _SECTIONS_XC_INFO = {
@@ -295,7 +349,13 @@ regular mesh.
 
 
 def ENERGY(emin=(-0.2, "The real part of the lowest E-value", None), emax=None, add=[], defaults={}):
-    """The definition of the ENERGY section of the task input file (possibly for each spin)"""
+    """Define energy meshes and paired bounds.
+
+    emin/emax tuples supply (absolute Ry default, description, relative eV
+    default). An explicit absolute bound suppresses its relative default;
+    an active relative bound suppresses the absolute default. Explicit relative
+    values take precedence if both representations are set, as in SPRKKR.
+    """
     egrid = Keyword({
        0:'only real energies -- Gauss integration mesh',
        1:'only real energies -- equidistant path',
@@ -324,18 +384,7 @@ def ENERGY(emin=(-0.2, "The real part of the lowest E-value", None), emax=None, 
     ]
 
     if emin:
-        emin_value = V(
-            "EMIN",
-            float,
-            _sections_energy_emin_default_value,
-            info=emin[1],
-            is_optional=_sections_energy_emin_is_optional,
-        )
-        emin_value._energy_default_value = emin[0]
-        vals += [
-            emin_value,
-            V("EMINEV", float, emin[2], info="EMIN, given in eV with respect to the Fermi level", is_optional=True),
-        ]
+        vals += _energy_bound("EMIN", emin)
     if emax == "emin":
         vals += [
             V(
@@ -344,7 +393,7 @@ def ENERGY(emin=(-0.2, "The real part of the lowest E-value", None), emax=None, 
                 _sections_energy_emax_from_emin_default_value,
                 info="The same value as EMIN",
                 is_hidden=True,
-                is_optional=_sections_energy_emax_is_optional,
+                is_optional=_energy_absolute_optional,
             ),
             V(
                 "EMAXEV",
@@ -356,20 +405,9 @@ def ENERGY(emin=(-0.2, "The real part of the lowest E-value", None), emax=None, 
             ),
         ]
     elif emax:
-        emax_value = V(
-            "EMAX",
-            float,
-            _sections_energy_emax_default_value,
-            info=emax[1],
-            is_optional=_sections_energy_emax_is_optional,
-        )
-        emax_value._energy_default_value = emax[0]
-        vals += [
-            emax_value,
-            V("EMAXEV", float, emax[2], info="EMAX in eV with respect to the Fermi level", is_optional=True),
-        ]
+        vals += _energy_bound("EMAX", emax)
     vals += add
-    return Section("ENERGY", vals)
+    return Section("ENERGY", vals, validators=_validate_energy_reference)
 
 
 def xc(*args, **kwargs):
