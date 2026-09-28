@@ -38,6 +38,13 @@ class InputValueDefinition(ConfigurationValueDefinition):
     type_from_type_map = {bool: flag}
     type_of_dangerous = mixed
 
+    def copy(self, **kwargs):
+        """Copy input-specific definition metadata not represented by constructor args."""
+        copied = super().copy(**kwargs)
+        if hasattr(self, '_energy_default_value'):
+            copied._energy_default_value = self._energy_default_value
+        return copied
+
 
 class InputSectionDefinition(ConfigurationSectionDefinition):
     """This class describes the format of one

@@ -68,8 +68,6 @@ def _ne_default(option):
 
 
 def _emin_default(option):
-    if option._container["EMINEV"]() is not None:
-        return None
     return -0.2 if bsf_mode(_root(option)) == EK else 0.7
 
 
@@ -80,8 +78,6 @@ def _emaxev_default(option):
 
 
 def _emax_default(option):
-    if option._container["EMAXEV"]() is not None:
-        return None
     if bsf_mode(_root(option)) == KK:
         return option._container["EMIN"]()
     return -1.0
@@ -365,9 +361,9 @@ def _energy_definition():
         emax=(-1.0, "The energy at which the BSF mesh ends", None),
         defaults={"GRID": 3, "NE": _ne_default, "ImE": 0.001},
     )
-    energy["EMIN"].default_value = _emin_default
-    energy["EMAX"].default_value = _emax_default
-    energy["EMAXEV"].default_value = _emaxev_default
+    energy["EMIN"]._energy_default_value = _emin_default
+    energy["EMAX"]._energy_default_value = _emax_default
+    energy["EMAXEV"]._energy_default_value = _emaxev_default
     return energy
 
 

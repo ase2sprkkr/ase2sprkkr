@@ -8,6 +8,42 @@ from ..input_parameters_definitions import (
     InputSectionDefinition as Section,
 )
 from ...sprkkr.sprkkr_grammar_types import Site
+from ...common.warnings import DataValidityError
+
+
+def _electron_angle_default(option):
+    """SPEC_INPUT defaults differ for photoemission and SPLEED."""
+    angle = (45.0 if option.name == 'THETA' else 270.0) if option._container._container.TASK.TASK() == 'SPLEED' else 0.0
+    return [angle, angle]
+
+
+def _electron_spol_default(option):
+    return 1 if option._container._container.TASK.TASK() == 'SPLEED' else 2
+
+
+def angular_scan_errors(parameters):
+    """Return inconsistencies rejected by SPEC_INPUT, using its unset defaults."""
+    task, electron = parameters.TASK, parameters.SPEC_EL
+    if task.INPVER() == 0 or task.TASK() != 'ARPES' or electron.K1() is not None:
+        return []
+    errors = []
+    for angle, count in (('THETA', 'NT'), ('PHI', 'NP')):
+        bounds = electron[angle]()
+        span = 0. if bounds is None else abs(bounds[-1] - bounds[0])
+        points = electron[count]()
+        points = 1 if points is None else points
+        if (span > 1e-5) != (points > 1):
+            # BETA1 is the reader's explicit exception for a sample-tilt scan.
+            if angle == 'PHI' and span <= 1e-5 and 'BETA1' in electron and electron.BETA1() is not None:
+                continue
+            errors.append(f'SPEC_EL.{angle} and SPEC_EL.{count} must specify a consistent angular scan: '
+                          'a nonzero range requires more than one point, and vice versa.')
+    return errors
+
+
+def _validate_angular_scan(parameters, _container, why):
+    if why != 'set':
+        return [DataValidityError(message) for message in angular_scan_errors(parameters)]
 
 
 def input_parameters():
@@ -17,8 +53,8 @@ def input_parameters():
             CONTROL("ARPES"),
             TAU,
             ENERGY(
-                emin=(None, "Minimum of the energy window in eV with respect to the Fermi level", -8.0),
-                emax=(None, "Maximum of the energy window in eV with respect to the Fermi level", 5.0),
+                emin=(None, "Minimum of the energy window in Ry (absolute energy)", -8.0),
+                emax=(None, "Maximum of the energy window in Ry (absolute energy)", 5.0),
                 add=[
                     V("EWORK_EV", 4.2, info="Inner potential of the bulk crystal in eV"),
                     V(
@@ -131,17 +167,19 @@ def input_parameters():
             Section(
                 "SPEC_EL",
                 [
-                    V("THETA", Range(float), info="Scattering angle", is_required=False),
-                    V("PHI", Range(float), info="Scattering angle", is_required=False),
+                    V("THETA", Range(float), _electron_angle_default, info="Scattering angle", is_required=False),
+                    V("PHI", Range(float), _electron_angle_default, info="Scattering angle", is_required=False),
                     V(
                         "NT",
                         int,
+                        1,
                         info="Number of angular values for a rotation in polar coordinate.",
                         is_required=False,
                     ),
                     V(
                         "NP",
                         int,
+                        1,
                         info="Number of angular values for a rotation in azimuth coordinate.",
                         is_required=False,
                     ),
@@ -175,7 +213,7 @@ def input_parameters():
                     ),
                     V("NK4", int, info="Number of momentum steps 4 for the integration", is_required=False),
                     V("POL_E", DefKeyword("PZ")),
-                    V("SPOL", int, is_required=False),
+                    V("SPOL", int, _electron_spol_default, is_required=False),
                     V("PSPIN", SetOf(float, length=3), is_required=False),
                     V("BETA1", float, is_required=False, info="Begin of the rotation"),
                     V("BETA2", float, is_required=False, info="End of the rotation"),
@@ -237,6 +275,7 @@ def input_parameters():
             ),
         ],
         executable="kkrspec",
+        validators=_validate_angular_scan,
         info="ARPES - Angle resolved photoemission spectroscopy",
     )
 
