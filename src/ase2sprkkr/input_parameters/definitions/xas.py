@@ -34,6 +34,7 @@ def input_parameters():
                     V(
                         "FRAMETET",
                         float,
+                        0.0,
                         is_expert=True,
                         is_optional=True,
                         info="Polar angle θ (FRAMETET) defining the orientation of the electric field vector of the incident light with respect to the material surface normal. Default is FRAMETET = 0, meaning the field lies along the surface normal.",
@@ -41,6 +42,7 @@ def input_parameters():
                     V(
                         "FRAMEPHI",
                         float,
+                        0.0,
                         is_expert=True,
                         is_optional=True,
                         info="Azimuthal angle φ (FRAMEPHI) defining the in-plane rotation of the electric field vector of the incident light relative to the surface reference axis. Default is FRAMEPHI = 0, corresponding to alignment with the x-axis of the surface frame.",
