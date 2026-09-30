@@ -76,6 +76,27 @@ class InputParameters(ConfigurationFile):
         (see InputParametersDefinition class)"""
         return self._definition.name
 
+    def uses_separate_single_site_contour(self):
+        """Whether SPR-KKR evaluates single-site terms on a separate contour.
+
+        The effective mode can be requested explicitly in ENERGY or CONTROL,
+        is implied by the relativistic hyperfine-field decomposition, and is
+        intrinsic to COMPTON calculations.  Missing task-specific options are
+        treated as disabled.
+        """
+        switches = (
+            ("ENERGY", "SPLITSS"),
+            ("CONTROL", "SPLITSS"),
+            ("CONTROL", "FSOHFF"),
+        )
+        for section, name in switches:
+            try:
+                if self[section][name]():
+                    return True
+            except (KeyError, AttributeError):
+                pass
+        return self.task_name.upper() == "COMPTON"
+
     def is_mpi(self, mpi=True):
         """Will be this task (the task described by this input parameters)
         runned using mpi?
