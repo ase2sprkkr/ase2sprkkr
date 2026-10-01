@@ -8,7 +8,7 @@ import copy
 from typing import List, Optional, Union
 from ..alternative_types import numpy_types
 
-from ..grammar import generate_grammar, delimitedList, line_end, White
+from ..grammar import generate_grammar, delimitedList, line_end, White, Forward
 from .grammar_type import GrammarType, compare_numpy_values, type_from_type, type_from_default_value, TypedGrammarType
 from ..decorators import add_to_signature, cached_property
 from .basic import Integer, Real, Unsigned, real
@@ -92,36 +92,38 @@ class Array(GrammarType):
         self._build_grammar()
 
     def _build_grammar(self):
+        with generate_grammar():
+            self._grammar = self._do_build_grammar()
+
+    def _do_build_grammar(self):
         delimiter = self.delimiter
 
-        with generate_grammar():
-            if self._delimiter_spec is not None:
-                self.delimiter_str = self._delimiter_spec
-                delimiter = pp.Suppress(self._delimiter_spec)
+        if self._delimiter_spec is not None:
+            self.delimiter_str = self._delimiter_spec
+            delimiter = pp.Suppress(self._delimiter_spec)
 
-            grammar = self.type.grammar()
-            if self.write_length:
-                grammar = pp.Word(pp.nums).set_parse_action(lambda t: int(t[0])) + pp.ZeroOrMore(delimiter + grammar)
+        grammar = self.type.grammar()
+        if self.write_length:
+            grammar = pp.Word(pp.nums).set_parse_action(lambda t: int(t[0])) + pp.ZeroOrMore(delimiter + grammar)
 
-                def check(x):
-                    if len(x) != x[0] + 1:
-                        raise ValueError("Wrong number of list items")
-                    return x[1:]
+            def check(x):
+                if len(x) != x[0] + 1:
+                    raise ValueError("Wrong number of list items")
+                return x[1:]
 
-                grammar.set_parse_action(check)
-            elif self.min_length and self.min_length == self.max_length:
-                if delimiter:
-                    g2 = delimiter + grammar
-                    grammar = grammar + g2 * (self.max_length - 1)
-                else:
-                    grammar = grammar * self.max_length
+            grammar.set_parse_action(check)
+        elif self.min_length and self.min_length == self.max_length:
+            if delimiter:
+                g2 = delimiter + grammar
+                grammar = grammar + g2 * (self.max_length - 1)
             else:
-                grammar = delimitedList(grammar, delimiter)
+                grammar = grammar * self.max_length
+        else:
+            grammar = delimitedList(grammar, delimiter)
 
-            self._set_convert_action(grammar)
-            grammar.set_name(self.grammar_name())
-
-        self._grammar = grammar
+        self._set_convert_action(grammar)
+        grammar.set_name(self.grammar_name())
+        return grammar
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -253,6 +255,7 @@ class Array(GrammarType):
         if self.type:
             return self.type.additional_description(prefix)
 
+
 class SetOf(Array):
     """Set of values of the same type. E.g. {1,2,3}"""
 
@@ -261,12 +264,39 @@ class SetOf(Array):
 
     @add_to_signature(Array.__init__)
     def __init__(self, type, *args, **kwargs):
-        kwargs.setdefault("prefix", "{")
-        kwargs.setdefault("postfix", "}")
+        if 'prefix' in kwargs or 'postfix' in kwargs:
+            breakpoint()
+            raise ValueError("For a custom prefix/postfix use Array, not SetOf")
         super().__init__(type, *args, **kwargs)
 
-    def transform_grammar(self, grammar, param_name=False):
-        return grammar | self.type.grammar(param_name).copy().add_parse_action(lambda x: np.atleast_1d(x.asList()))
+    def _suppress(x):
+        return []
+
+    with generate_grammar():
+        _prefixes =  {
+              '{': pp.Literal('{').set_parse_action(_suppress),
+              '[': pp.Literal('[').set_parse_action(_suppress),
+              '(': pp.Literal('(').set_parse_action(_suppress),
+        }
+
+        _postfixes =  {
+              '{': pp.Literal('}').set_parse_action(_suppress),
+              '[': pp.Literal(']').set_parse_action(_suppress),
+              '(': pp.Literal(')').set_parse_action(_suppress),
+        }
+
+    def _do_build_grammar(self):
+        g = super()._do_build_grammar()
+        out = []
+        for i in ( '{', '[', '(' ):
+            out.append(self._prefixes[i] + g + self._postfixes[i])
+        out.append(g)
+        out = pp.MatchFirst(out).set_name( f"[{{([]]?{g}[}}])]?" )
+        return out
+        #out | self.type.grammar(param_name).copy().add_parse_action(lambda x: np.atleast_1d(x.asList()))
+
+    def _string(self, val):
+        return '{' + super()._string(val) + '}'
 
     def copy_value(self, value):
         return copy.deepcopy(value)
@@ -304,11 +334,6 @@ class Complex(TypedGrammarType):
 
     def _grammar_name(self):
         return "{complex (as 2 reals)}"
-
-    def transform_grammar(self, grammar, param_name=False):
-        if self.just_one:
-            return super().transform_grammar(grammar, param_name)
-        return grammar
 
     def _string(self, val):
         return real._string(val.real) + " " + real._string(val.imag)

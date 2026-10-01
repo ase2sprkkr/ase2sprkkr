@@ -12,7 +12,7 @@ import inspect
 from .. import grammar_types
 from ..decorators import cached_class_property, cache, add_called_class_as_argument, cached_property
 from ..alternative_types import normalize_type, allowed_types
-from ..grammar import generate_grammar
+from ..grammar import generate_grammar, Forward
 from ..formats import full_format_for_string
 
 
@@ -174,8 +174,7 @@ class GrammarType:
         grammar = self._grammar
 
         if isinstance(self._grammar, pp.ParserElement):
-            grammar = pp.Forward()
-            grammar << self._grammar
+            grammar = Forward(self._grammar)
         else:
             grammar = grammar(param_name)
 
@@ -185,7 +184,6 @@ class GrammarType:
                     grammar = pp.Literal(self.prefix.strip()).suppress().set_name(self.prefix) + grammar
                 if self.postfix:
                     grammar += pp.Literal(self.postfix.strip()).suppress().set_name(self.postfix)
-                grammar = self.transform_grammar(grammar, param_name)
 
         if self.has_value:
 

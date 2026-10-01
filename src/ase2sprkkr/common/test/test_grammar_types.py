@@ -188,6 +188,11 @@ class TestGrammar(TestCase):
         type = gt.SetOf(int)
         for val, res in [("a{}", Error), ("{a}", Error), ("{1,2}", np.array([1, 2])), ("{1,a}", Error)]:
             test(val, res)
+        for val, res in [("{1,2)", Error), ("{1,2", Error), ("(1,2)", np.array([1, 2])), ("[1,2]", np.array([1, 2]))]:
+            test(val, res)
+        for val, res in [("1,2)", Error), ("{1,2]", Error), ("[1,2]]", Error), ("1,2", np.array([1, 2]))]:
+            test(val, res)
+
         for v in [[1.5, 2, 3], "asasd"]:
             test_invalid(v)
         for v, r in [([1.0, 2, 3], np.asarray([1, 2, 3]))]:
