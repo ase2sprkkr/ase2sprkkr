@@ -234,9 +234,9 @@ def input_parameters():
                         expert=1,
                         info="Crystal coordinats in splout, xpsrun, or upsrun",
                     ),
-                    V("ISTR", Array(int, length=2), expert=[0, 0], info="beam number (h,k)"),
-                    V("POL0", Array(int, length=3), expert=[0, 0, 0], info="initial pol."),
-                    V("POL0L", Array(int, length=3), expert=[0, 0, 0], info="initial pol. in the laboratory system"),
+                    V("ISTR", SetOf(int, length=2), expert=[0, 0], info="beam number (h,k)"),
+                    V("POL0", SetOf(int, length=3), expert=[0, 0, 0], info="initial pol."),
+                    V("POL0L", SetOf(int, length=3), expert=[0, 0, 0], info="initial pol. in the laboratory system"),
                     V(
                         "Q1",
                         complex,
