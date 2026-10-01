@@ -1,7 +1,7 @@
 """Definitions of sections to be used in definitions of input parameters
 (input files for SPR-KKR tasks)"""
 
-from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Keyword, Section
+from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Keyword
 
 from ..input_parameters_definitions import InputSectionDefinition as Section, InputValueDefinition as V
 from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
@@ -491,7 +491,7 @@ SITES = Section(
     [
         V(
             "NL",
-            Section(Integer.I),
+            SetOf(Integer.I),
             is_optional=True,
             info="Angula momentum cutoff (the first discarded l-space)",
             description="The KKR-method is a minimum basis set method. This means that the angular-momentum "
