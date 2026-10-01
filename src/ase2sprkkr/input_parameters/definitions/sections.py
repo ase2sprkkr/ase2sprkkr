@@ -1,7 +1,7 @@
 """Definitions of sections to be used in definitions of input parameters
 (input files for SPR-KKR tasks)"""
 
-from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Keyword
+from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Keyword, Array
 
 from ..input_parameters_definitions import InputSectionDefinition as Section, InputValueDefinition as V
 from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
@@ -491,7 +491,8 @@ SITES = Section(
     [
         V(
             "NL",
-            [3],
+            Array(Integer.I),
+            is_optional=True,
             info="Angula momentum cutoff (the first discarded l-space)",
             description="The KKR-method is a minimum basis set method. This means that the angular-momentum "
             "expansion can be chosen according to the atomic properties of the atomic types. For transition "
@@ -501,9 +502,10 @@ SITES = Section(
             "choose NL = 4 for the U-site and NL = 2 for the S-site. At the moment this possibility, that "
             "would save storage and computer time, is not supported by all subroutines. For this reason "
             "a common l-expansion cutoff is used, that is fixed by the highest that occurs. For US "
-            "this implies that NL = 4 is used for all sites.",
+            "this implies that NL = 4 is used for all sites. Default is 3 for common and 4 for heavy elements.",
         )
     ],
+    is_optional=True
 )
 """The definition of the SITES section of the task input file """
 
