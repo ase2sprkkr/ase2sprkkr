@@ -173,8 +173,6 @@ class Suppress(Transparent):
     def __init__(self, expr):
         super().__init__(expr)
         self.add_parse_action(lambda x:[])
-
-
         self.set_name('Suppress')
 
 class TokenConverter(Transparent):
