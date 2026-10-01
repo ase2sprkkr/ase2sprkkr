@@ -265,7 +265,6 @@ class SetOf(Array):
     @add_to_signature(Array.__init__)
     def __init__(self, type, *args, **kwargs):
         if 'prefix' in kwargs or 'postfix' in kwargs:
-            breakpoint()
             raise ValueError("For a custom prefix/postfix use Array, not SetOf")
         super().__init__(type, *args, **kwargs)
 
