@@ -7,6 +7,7 @@ import asyncio
 import functools
 import subprocess
 import os
+import sys
 import numpy as np
 from threading import Thread
 from .decorators import maybeclassmethod
@@ -159,10 +160,11 @@ class ProcessOutputParser:
 
     async def read_error(self, stderr, *args):
         while True:
-            line = await stderr.readline()
+            line=await stderr.readline()
             if not line:
-                return
-            print(line.decode("utf8"))
+               return
+            if self.print_output is True:
+               print(line.decode('utf8'), end='', file=sys.stderr)
 
     async def read_output(self, stdout, *args):
         raise NotImplementedError("Please, redefine ProcessOuputParser.read_output coroutine")
