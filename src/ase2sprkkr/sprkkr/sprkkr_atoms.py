@@ -243,6 +243,34 @@ class SPRKKRAtoms(Atoms):
     def has_potential(self):
         return self._potential is not None
 
+    def sprkkr_is_scf_converged(self):
+        """Return whether the SPR-KKR SCF state represented by these atoms is converged.
+
+        An explicit ``CONVERGED`` status is authoritative. ``START`` (or atoms
+        without an attached potential) is considered converged only when all
+        atomic types already contain potential, charge and moments data.
+        Intermediate ``ITR*`` states are never promoted to converged; this keeps
+        the restart stage of interrupted 2D calculations intact.
+
+        The check does not create a potential as a side effect.
+        """
+        potential = self._potential
+        if potential is not None:
+            status = potential.SCF_INFO.SCFSTATUS()
+            if status == "CONVERGED":
+                return True
+            if status != "START":
+                return False
+
+        if not self.are_sites_inited():
+            return False
+
+        return all(
+            atomic_type.has_converged_data()
+            for site in self.sites
+            for atomic_type in site.occupation.atomic_types()
+        )
+
     def reset_sprkkr_potential(self):
         for i in self.sites:
             i.reset()
