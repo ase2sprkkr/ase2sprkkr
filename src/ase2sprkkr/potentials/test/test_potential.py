@@ -52,6 +52,35 @@ class TestPotential(TestCase):
         self.assertEqual(a2.positions, a1.positions)
         self.assertEqual(str(a2.symbols), str(a1.symbols))
 
+    def test_scf_convergence_status(self):
+        path = os.path.join(os.path.dirname(__file__), "..", "examples", "FePt.new.pot")
+        pot = Potential.from_file(path)
+        atoms = pot.atoms
+
+        self.assertTrue(atoms.sprkkr_is_scf_converged())
+
+        pot.SCF_INFO.SCFSTATUS = "START"
+        self.assertTrue(atoms.sprkkr_is_scf_converged())
+
+        copied = atoms.copy()
+        self.assertFalse(copied.has_potential())
+        self.assertTrue(copied.sprkkr_is_scf_converged())
+        self.assertFalse(copied.has_potential())
+
+        for status in ("ITR", "ITR-BULK", "ITR-L-BULK", "ITR-R-BULK", "ITR-I-ZONE"):
+            pot.SCF_INFO.SCFSTATUS = status
+            self.assertFalse(atoms.sprkkr_is_scf_converged())
+
+            saved = io.StringIO()
+            pot.save_to_file(saved)
+            self.assertEqual(status, pot.SCF_INFO.SCFSTATUS())
+            saved.seek(0)
+            self.assertEqual(status, Potential.from_file(saved).SCF_INFO.SCFSTATUS())
+
+        pot.SCF_INFO.SCFSTATUS = "START"
+        pot.save_to_file(io.StringIO())
+        self.assertEqual("CONVERGED", pot.SCF_INFO.SCFSTATUS())
+
     @pytest.mark.slow
     def test_2D(self, temporary_dir):
         path = os.path.join(os.path.dirname(__file__), "..", "examples", "GeTe.pot")
