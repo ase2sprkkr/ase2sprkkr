@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import numpy as np
 from typing import Any, Optional, Union
+from collections.abc import Mapping
 
 from ..common.grammar_types import mixed
 from .configuration import Configuration, UnknownMemberPolicy
@@ -287,7 +288,7 @@ class Option(BaseOption):
             if value is None:
                 converted = None
             elif definition.is_repeated.is_dict:
-                if isinstance(value, dict):
+                if isinstance(value, Mapping):
                     converted = {}
                     rejected = False
                     for item_key, item in value.items():
@@ -308,6 +309,8 @@ class Option(BaseOption):
                             for index, item in enumerate(value, 1)
                         )
             elif definition.is_repeated:
+                if isinstance(value, Mapping):
+                      raise ValueError('Mapping not allowed in Array-like repeated options')
                 if isinstance(value, (str, bytes)):
                     value = (value,)
                 else:
