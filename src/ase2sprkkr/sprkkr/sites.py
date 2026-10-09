@@ -187,8 +187,7 @@ class SiteType:
     def reset(self):
         """
         Set the properties of the site to the default.
-
-        Currently, it resets the mesh.
+        Reset the mesh and clear calculated data from all atomic types.
         """
         self.mesh = Mesh.default()
         self.occupation._clear_data()

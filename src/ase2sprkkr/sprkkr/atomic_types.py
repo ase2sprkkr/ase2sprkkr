@@ -334,5 +334,11 @@ n_semicore: {self._n_semicore}""")
         out = map[self] = self.for_mesh(mesh)
         return out
 
+    def reset(self):
+        """Remove data produced by an SPR-KKR calculation."""
+        self._potential = None
+        self._charge = None
+        self._moments = None
+
     def has_converged_data(self):
         return self.potential and self.charge and self.moments

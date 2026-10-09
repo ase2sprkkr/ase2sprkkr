@@ -271,7 +271,8 @@ class SPRKKRAtoms(Atoms):
             for atomic_type in site.occupation.atomic_types()
         )
 
-    def reset_sprkkr_potential(self):
+    def sprkkr_reset_potential(self):
+        """Reset all SPR-KKR potential data stored in the atoms."""
         for i in self.sites:
             i.reset()
         if self._potential:

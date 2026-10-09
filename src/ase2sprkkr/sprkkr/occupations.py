@@ -378,6 +378,5 @@ class Occupation:
         return map
 
     def _clear_data(self):
-        self._potential = None
-        self._charge = None
-        self._moments = None
+        for atomic_type in self.atomic_types():
+            atomic_type.reset()
