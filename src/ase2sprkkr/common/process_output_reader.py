@@ -9,7 +9,7 @@ import subprocess
 import os
 import sys
 import numpy as np
-from threading import Thread
+from threading import Event, Thread
 from .decorators import maybeclassmethod
 from .file_utils import filename_from_file
 
@@ -26,43 +26,88 @@ class ProcessOutputParser:
     def __init__(self, print_output=False, read_callback=None):
         self.set_print_output(print_output)
         self.read_callback = read_callback
-        self._stopped = False
+        self._stop_requested = Event()
+        self._loop = None
+        self._stop_task = None
+        self.proc = None
 
     def stop_the_process(self):
-        self._stopped = True
-        self._kill()
+        """Request process termination from any thread.
 
-    def _kill(self):
-        if self.proc and self.proc.returncode is None:
-            self.proc.kill()  # SIGKILL on Unix, TerminateProcess on Windows
-        self.proc.terminate()  # SIGTERM on Unix, CTRL-BREAK-ish on Windows
-
-        try:
-            # 2) Give it time to clean up
-            run_coro_sync(asyncio.wait_for(self.proc.wait(), 0.1))
+        The subprocess belongs to the asyncio event loop running
+        :meth:`run_subprocess`.  Cross-thread callers only set the persistent
+        stop flag and schedule the actual process operation on that loop.
+        """
+        self._stop_requested.set()
+        loop = self._loop
+        if loop is None:
             return
-        except asyncio.TimeoutError:
+        try:
+            loop.call_soon_threadsafe(self._schedule_stop)
+        except RuntimeError:
+            # The owning loop has already stopped.  There is no live process
+            # operation left to schedule; the persistent flag still prevents
+            # a later run from starting.
             pass
-        self.proc.kill()  # SIGKILL / TerminateProcess
+
+    def _schedule_stop(self):
+        """Schedule one stop task.  Must run on the owning event loop."""
+        self._ensure_stop_task()
+
+    def _ensure_stop_task(self):
+        if self.proc is None or self.proc.returncode is not None:
+            return None
+        if self._stop_task is None or self._stop_task.done():
+            self._stop_task = asyncio.create_task(self._stop_process())
+        return self._stop_task
+
+    async def _stop_process(self):
+        """Terminate the subprocess on the event loop that owns it."""
+        proc = self.proc
+        if proc is None or proc.returncode is not None:
+            return
+        try:
+            proc.terminate()
+        except ProcessLookupError:
+            return
+        try:
+            await asyncio.wait_for(proc.wait(), 0.1)
+        except asyncio.TimeoutError:
+            if proc.returncode is not None:
+                return
+            try:
+                proc.kill()
+            except ProcessLookupError:
+                return
+            await proc.wait()
 
     async def run_subprocess(self, read_args=[]):
 
+        self._loop = asyncio.get_running_loop()
+        self._stop_task = None
         if self.directory:
             dr = os.getcwd()
             os.chdir(self.directory)
         else:
             dr = None
-        if self._stopped:
-            raise asyncio.CancelledError()
+        try:
+            if self._stop_requested.is_set():
+                raise asyncio.CancelledError()
 
-        self.proc = await asyncio.create_subprocess_exec(
-            *self.cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **self.kwargs
-        )
-        if self._stopped:
-            self._kill()
+            self.proc = await asyncio.create_subprocess_exec(
+                *self.cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **self.kwargs
+            )
+        finally:
+            if dr:
+                os.chdir(dr)
 
-        if dr:
-            os.chdir(dr)
+        # stop_the_process() can race with process creation.  Its Event keeps
+        # the request visible even if the loop callback ran before self.proc
+        # was assigned.
+        if self._stop_requested.is_set():
+            stop_task = self._ensure_stop_task()
+            if stop_task is not None:
+                await stop_task
 
         exception = None
 
@@ -107,6 +152,8 @@ class ProcessOutputParser:
                 self.proc.wait(),
             )
         finally:
+            if self._stop_task is not None:
+                await self._stop_task
             if self.outfile:
                 self.outfile.close()
 
