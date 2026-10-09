@@ -1,7 +1,9 @@
 """ARPES task input parameters definition"""
 
-from ...common.grammar_types import SetOf, DefKeyword, Keyword, Range, Array, flag
-from .sections import CONTROL, TAU, ENERGY, SITES
+import warnings
+import numpy as np
+from ...common.grammar_types import Integer, SetOf, DefKeyword, Keyword, Range, Array, flag
+from ._sections import CONTROL, TAU, ENERGY, SITES
 from ..input_parameters_definitions import (
     InputParametersDefinition as InputParameters,
     InputValueDefinition as V,
@@ -43,7 +45,33 @@ def angular_scan_errors(parameters):
 
 def _validate_angular_scan(parameters, _container, why):
     if why != 'set':
-        return [DataValidityError(message) for message in angular_scan_errors(parameters)]
+        task = parameters.TASK.TASK()
+        if parameters._definition.name.lower() == "arpes" and task in ("AIPES", "BAND", "SPLEED"):
+            warnings.warn(
+                f'Using TASK={task} through the ARPES definition is deprecated; '
+                f'use InputParameters.create("{task}") for task-specific defaults and validation.',
+                DeprecationWarning, stacklevel=3,
+            )
+        errors = [DataValidityError(message) for message in angular_scan_errors(parameters)]
+        if parameters.TASK.INPVER() == 0:
+            return errors
+        for section, names in ((parameters.ENERGY, ("EWORK_EV", "IMV_INI_EV", "IMV_FIN_EV")), (parameters.SPEC_PH, ("EPHOT",))):
+            for name in names:
+                value = section[name]()
+                if not np.isfinite(value) or value < 0 or (name == "EPHOT" and value == 0):
+                    errors.append(DataValidityError(f"{section.name}.{name} must be finite and nonnegative (EPHOT strictly positive)."))
+        electron = parameters.SPEC_EL
+        if parameters.TASK.TASK() == "ARPES" and any(electron[name]() is not None for name in ("K3", "K4", "NK3", "NK4")):
+            errors.append(DataValidityError("SPR-KKR 9.7 SPEC_INPUT does not read K3/K4/NK3/NK4; use K1/K2."))
+        if electron.K1() is not None:
+            for vector, count in (("K1", "NK1"), ("K2", "NK2")):
+                if electron[vector]() is not None and electron[count]() is None:
+                    errors.append(DataValidityError(f"SPEC_EL.{vector} requires {count}."))
+        for name in ("THETA", "PHI", "KA", "K1", "K2"):
+            value = electron[name]()
+            if value is not None and not np.all(np.isfinite(value)):
+                errors.append(DataValidityError(f"SPEC_EL.{name} must be finite."))
+        return errors
 
 
 def input_parameters():
@@ -56,7 +84,7 @@ def input_parameters():
                 emin=(None, "Minimum of the energy window in Ry (absolute energy)", -8.0),
                 emax=(None, "Maximum of the energy window in Ry (absolute energy)", 5.0),
                 add=[
-                    V("EWORK_EV", 4.2, info="Inner potential of the bulk crystal in eV"),
+                    V("EWORK_EV", 4.2, info="Work function in eV."),
                     V(
                         "IMV_INI_EV", 0.05, info="Imaginary part of the potential in eV (initial state)"
                     ),  # alternatively you can use VIL (in eV) or IMV_INI (in Ry)'),
@@ -88,6 +116,7 @@ def input_parameters():
                     V("CRYS_VEC", True, info="Miller indices with respect to crystalographic primitive vectors"),
                     V(
                         "STRVER",
+                        Integer(min=0, max=1),
                         1,
                         is_expert=True,
                         is_always_added=True,
@@ -95,6 +124,7 @@ def input_parameters():
                     ),
                     V(
                         "INPVER",
+                        Integer(min=0, max=1),
                         1,
                         is_expert=True,
                         is_always_added=True,
@@ -171,14 +201,14 @@ def input_parameters():
                     V("PHI", Range(float), _electron_angle_default, info="Scattering angle", is_required=False),
                     V(
                         "NT",
-                        int,
+                        Integer(min=1),
                         1,
                         info="Number of angular values for a rotation in polar coordinate.",
                         is_required=False,
                     ),
                     V(
                         "NP",
-                        int,
+                        Integer(min=1),
                         1,
                         info="Number of angular values for a rotation in azimuth coordinate.",
                         is_required=False,
@@ -190,28 +220,28 @@ def input_parameters():
                         info="Translating vector of the scatering in momentum space ",
                         is_required=False,
                     ),
-                    V("NK1", int, info="Number of momentum steps for the integration", is_required=False),
+                    V("NK1", Integer(min=1), info="Number of momentum steps for the integration", is_required=False),
                     V(
                         "K2",
                         Range(float),
                         info="Translating vector 2 of the scatering in momentum space ",
                         is_required=False,
                     ),
-                    V("NK2", int, info="Number of momentum steps 2 for the integration", is_required=False),
+                    V("NK2", Integer(min=1), info="Number of momentum steps 2 for the integration", is_required=False),
                     V(
                         "K3",
                         Range(float),
                         info="Translating vector 3 of the scatering in momentum space ",
                         is_required=False,
                     ),
-                    V("NK3", int, info="Number of momentum steps 3 for the integration", is_required=False),
+                    V("NK3", Integer(min=1), info="Number of momentum steps 3 for the integration", is_required=False),
                     V(
                         "K4",
                         Range(float),
                         info="Translating vector 4 of the scatering in momentum space ",
                         is_required=False,
                     ),
-                    V("NK4", int, info="Number of momentum steps 4 for the integration", is_required=False),
+                    V("NK4", Integer(min=1), info="Number of momentum steps 4 for the integration", is_required=False),
                     V("POL_E", DefKeyword("PZ")),
                     V("SPOL", int, _electron_spol_default, is_required=False),
                     V("PSPIN", SetOf(float, length=3), is_required=False),
@@ -266,9 +296,9 @@ def input_parameters():
             Section(
                 "SPEC_STR",
                 [
-                    V("N_LAYDBL", SetOf(int), [10, 10]),
-                    V("NLAT_G_VEC", 57),
-                    V("N_LAYER", 50),
+                    V("N_LAYDBL", SetOf(Integer(min=0), length=2), [10, 10]),
+                    V("NLAT_G_VEC", Integer(min=1), 57),
+                    V("N_LAYER", Integer(min=1), 50),
                     V("SURF_BAR", SetOf(float), [0.25, 0.25]),
                     V("TRANSP_BAR", flag, False),
                 ],

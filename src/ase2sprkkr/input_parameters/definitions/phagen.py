@@ -1,20 +1,31 @@
-"""PHAGEN task input parameters definition"""
-
-# from ...common.grammar_types import
-from .sections import CONTROL, TASK, TAU, ENERGY, SCF
+"""Export a spherical potential for PHAGEN/MsSpec (SPR-KKR 9.7)."""
+from ...common.grammar_types import Integer, SetOf
+from ...common.warnings import DataValidityError
+from ._sections import CONTROL, TASK, TAU, ENERGY, SCF, MODE
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters
-# ,InputValueDefinition as V
+
+
+def _validate_phagen(parameters, _values, why):
+    if why == "set":
+        return None
+    if parameters.SCF.FULLPOT():
+        return DataValidityError("PHAGEN supports ASA only.")
+    if parameters.SCF.VXC() != "VWN":
+        return DataValidityError("PHAGEN requires a VWN starting potential.")
+    if parameters.MODE.OP() in ("DMFT", "LDA+U"):
+        return DataValidityError("PHAGEN does not support DMFT or LDA+U.")
+    if parameters.ENERGY.SPLITSS() or len(parameters.ENERGY.GRID()) != 1 or len(parameters.ENERGY.NE()) != 1:
+        return DataValidityError("PHAGEN Hartree SCF step requires a single energy path.")
+    return None
 
 
 def input_parameters():
-    return InputParameters(
-        "phagen",
-        [CONTROL("PHAGEN"), TASK("PHAGEN"), TAU, ENERGY(), SCF],
-        info="PHAGEN",
-        description="<TODO: change to something meaningfull>",
-        executable="kkrscf",
-        mpi=False,
-    )
-
-
-""" PHAGEN - PHAGEN task input parameters definition"""
+    energy = ENERGY()
+    energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
+    return InputParameters("phagen", [CONTROL("PHAGEN"), TASK("PHAGEN"), TAU, energy, SCF, MODE],
+        info="Export radial potential, charge density and Coulomb potential for PHAGEN/MsSpec.",
+        description="Requires an existing non-spin-polarized ASA VWN potential with NT=1, no CPA/NLCPA "
+                    "and no thermal fluctuations. Native export runs one Hartree SCF step with NITER=1 "
+                    "and MIX=1 regardless of the input values, writing POTFIL_ex_sprkkr and Coulomb files. "
+                    "PHAGEN_CALCTYPE is hardcoded EXP; no phase-shift solver is invoked.",
+        executable="kkrscf", mpi=False, validators=_validate_phagen)

@@ -686,13 +686,16 @@ def TASK(task, add=[]):
     ------
     TASK: InputSectionDefinition
     """
-    if isinstance(task, str):
-        task = DefKeyword(task)
+    if isinstance(task, list):
+        members = task
+    else:
+        if isinstance(task, str):
+            task = DefKeyword(task)
+        members  = [ V(
+            "TASK", task, name_in_grammar=False
+            ) ]
 
-    return Section("TASK", [
-      V(
-        "TASK", task, name_in_grammar=False
-      ),
+    members += [
       V(
         "HFF",
         False,
@@ -701,8 +704,10 @@ def TASK(task, add=[]):
             "It is disabled by default for SCF calculations. "
             "This option takes precedence over CONTROL.NOHFF."
         ),
-      ),
-    ] + add)
+      ), *add
+    ]
+
+    return Section("TASK", members)
 
 
 __all__ = ["CONTROL", "TAU", "ENERGY", "SCF", "SITES", "TASK", "STRCONST", "CPA", "MODE"]

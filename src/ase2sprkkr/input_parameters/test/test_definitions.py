@@ -183,21 +183,24 @@ class TestDefinitions(TestCase):
             try:
                 out = ip.to_string(validate=True)
             except DataValidityError:
-                if i == "BSFEK":
+                if i == "CHIXAS":
+                    ip.TASK.NEF = [[1.,1.],[1.,2.]]
+                    ip.TASK.CHISPN = [1.,1.]
+                    ip.TASK.CHIVV = [1.,1.]
+                elif i == "BSFEK":
                     ip.TASK.KPATH = 1
                     out = ip.to_string(validate=True)
                     with pytest.raises(Exception):
                         ip.TASK.NKDIR = 2
                     ip.TASK.KPATH = None
                     ip.TASK.NKDIR = 2
-                    out = ip.to_string(validate=True)
                 elif i in ("BSF", "BSFKK"):
                     self.set_bsfkk_grid(ip)
-                    out = ip.to_string(validate=True)
                 else:
                     raise
+                out = ip.to_string(validate=True)
             else:
-                if i == "BSFEK":
+                if i in { "BSFEK", "CHIXAS" }:
                     raise Exception("This tasks should not be runnable using the defaults argument")
 
             ip2 = df.read_from_string(out)

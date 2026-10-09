@@ -300,18 +300,29 @@ class InputParameters(ConfigurationFile):
     def definition_modules():
         names = (i for i in pkgutil.iter_modules(definitions.__path__))
         im = importlib.import_module
-        modules = (im(".definitions." + i.name, __package__) for i in names)
+        modules = (im(".definitions." + i.name, __package__) for i in names if not i.name.startswith('_'))
         return {m.__name__.rsplit(".", 1)[-1].upper(): m for m in modules if hasattr(m, "input_parameters")}
 
     _definitions = {}
+
+    @cached_class_property
+    def definition_aliases(cls):
+        aliases = {}
+        for name, module in cls.definition_modules.items():
+            for i in getattr(module, "aliases", []):
+                aliases[i.upper()] = name
+        return aliases
 
     @classmethod
     def definition(cls, name):
         name = name.upper()
         if name not in cls._definitions:
-            if name == 'BSFEK' or name == 'BSFKK':
-                return cls.definition('bsf')
-            module = cls.definition_modules[name]
+            module = cls.definition_modules.get(name)
+            if not module:
+                if name in cls.definition_aliases:
+                    return cls.definition(cls.definition_aliases[name])
+                raise KeyError(f"Unknown task {name}")
+
             ip = module.input_parameters
             if isinstance(ip, ipdefs.InputParametersDefinition):
                 warnings.warn(

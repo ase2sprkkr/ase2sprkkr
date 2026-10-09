@@ -10,7 +10,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 if True:
     from ..definitions.jxc import input_parameters as jxc_input_parameters
     from ..definitions.scf import input_parameters as scf_input_parameters
-    from ..definitions.sections import ENERGY, TAU
+    from ..definitions._sections import ENERGY, TAU
     from ..definitions.torque import input_parameters as torque_input_parameters
     from ..input_parameters import InputParameters
     from ..input_parameters_definitions import (
