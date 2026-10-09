@@ -624,8 +624,13 @@ class SPRKKR(BaseCalculator):
             if empty_spheres is None:
                 empty_spheres = self.empty_spheres
             if empty_spheres == "auto":
-                empty_spheres = atoms is not None and (
-                    not atoms.has_potential() or atoms.potential.SCF_INFO.SCFSTATUS() == "START"
+                empty_spheres = (
+                    input_parameters.TASK.TASK == 'SCF'
+                    and atoms is not None
+                    and (
+                        not atoms.has_potential()
+                        or atoms.potential.SCF_INFO.SCFSTATUS() == "START"
+                    )
                 )
                 if empty_spheres:
                     for site in atoms.sites:
