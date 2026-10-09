@@ -132,6 +132,15 @@ class TestInputParameters(TestCase):
     def assertNotValid(self, text, grammar=None):
         self.assertRaises(pp.ParseBaseException, lambda: self.parse(text, grammar))
 
+    @pytest.mark.parametrize("copy_values", [False, True])
+    def test_copy_preserves_requested_task_name(self, copy_values):
+        parameters = input_parameters.InputParameters.create("bsfek")
+
+        copied = parameters.copy(copy_values=copy_values)
+
+        assert copied._requested_task_name == "BSFEK"
+        np.testing.assert_array_equal(copied.ENERGY.NE(), [200])
+
     def test_section_delimiter_value(self):
         with generate_grammar():
             grammar = cd.InputParametersDefinition.delimiter()

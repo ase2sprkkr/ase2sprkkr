@@ -70,6 +70,13 @@ class InputParameters(ConfigurationFile):
         self._inputfile = inputfile
         self._outputfile = inputfile if outputfile is False else outputfile
 
+    def copy(self, copy_values: bool = False):
+        """Copy the parameters, preserving the originally requested task name."""
+        out = super().copy(copy_values=copy_values)
+        if hasattr(self, "_requested_task_name"):
+            out._requested_task_name = self._requested_task_name
+        return out
+
     @property
     def task_name(self):
         """Return the task name, as defined in the definition of the parameters
