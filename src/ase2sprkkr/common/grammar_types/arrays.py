@@ -1,6 +1,6 @@
 """Grammar types for array, sequences and tables"""
 
-from collections import namedtuple
+from collections import namedtuple, abc
 import numpy as np
 import pyparsing as pp
 import itertools
@@ -209,6 +209,12 @@ class Array(GrammarType):
             return _array_dtype_condition_not_object_and_scalar
 
     def convert(self, value):
+        if isinstance(value, abc.Mapping):
+            raise ValueError(
+                f"An array-like value is required, mapping "
+                f"{type(value).__name__} is not allowed"
+            )
+
         if self.as_list:
             if callable(self.as_list):
                 value = value if isinstance(value, self.as_list) else self.as_list(value)
