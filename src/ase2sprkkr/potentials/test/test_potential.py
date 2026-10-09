@@ -155,10 +155,24 @@ class TestPotential(TestCase):
         self.assertTrue(isinstance(pot.LATTICE, PotentialSection))
         self.assertEqual(pot.SCF_INFO.SCFSTATUS(), "START")
         # a more hard version - it resets all the informations
-        pot.atoms.reset_sprkkr_potential()
+        pot.atoms.sprkkr_reset_potential()
         self.assertEqual(pot.MESH_INFORMATION.DATA()[0][0], pot.atoms.sites[0].mesh.r1)
         self.assertNotEqual(1.0, pot.atoms.sites[0].mesh.r1)
         self.assertNotEqual(2.0, pot.MESH_INFORMATION.DATA()[0][0])
+        self.assertEqual(pot.SCF_INFO.SCFSTATUS(), "START")
+        self.assertEqual(len(pot.POTENTIAL), 0)
+        self.assertEqual(len(pot.CHARGE), 0)
+        self.assertEqual(len(pot.MOMENTS), 0)
+        self.assertFalse(pot.atoms.sprkkr_is_scf_converged())
+        self.assertTrue(
+            all(
+                atomic_type.potential is None
+                and atomic_type.charge is None
+                and atomic_type.moments is None
+                for site in pot.atoms.sites
+                for atomic_type in site.occupation.atomic_types()
+            )
+        )
 
     def test_single_type(self):
         pot = Potential.from_file(os.path.join(os.path.dirname(__file__), "../examples/Au_single_type.pot"))
