@@ -131,7 +131,12 @@ class TestPotential(TestCase):
         self.assertTrue(i >= 2)
 
     def test_sequence(self):
+        import pickle
+
         p = Potential()
+        option = p.HEADER.FORMAT
+        option_class = type(option)
+
         self.assertEqual(9, p.HEADER.FORMAT.VERSION)
         p.HEADER.FORMAT.VERSION = 5
         self.assertEqual(5, p.HEADER.FORMAT.VERSION)
@@ -139,6 +144,11 @@ class TestPotential(TestCase):
         self.assertEqual(8, p.HEADER.FORMAT.VERSION)
         self.assertEqual(datetime, p.HEADER.FORMAT.DATE.__class__)
         self.assertEqual(datetime, p.HEADER.FORMAT[1].__class__)
+
+        restored = pickle.loads(pickle.dumps(option))
+        self.assertIs(type(restored), option_class)
+        self.assertEqual(8, restored.VERSION)
+        self.assertEqual(datetime, restored.DATE.__class__)
 
     def test_reset(self):
         pot = Potential.from_file(os.path.join(os.path.dirname(__file__), "../examples/fp_new.pot"))
