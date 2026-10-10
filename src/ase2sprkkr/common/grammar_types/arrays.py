@@ -370,6 +370,8 @@ class Complex(TypedGrammarType):
 class Sequence(GrammarType):
     """A sequence of values of given types"""
 
+    array_access = True
+
     def __init__(
         self,
         *types,
@@ -458,29 +460,23 @@ class Sequence(GrammarType):
             out.append(i.string(v))
         return "".join(out)
 
-    def enrich(self, option):
+    def _option_index(self, key):
+        if self.names and isinstance(key, str):
+            return self.names[key]
+        return key
 
-        class cls(option.__class__):
-            def _get_index(sulf, name):
-                if self.names and isinstance(name, str):
-                    return self.names[name]
-                return name
+    def get_option_index(self, option, key):
+        return option()[self._option_index(key)]
 
-            def __getitem__(self, key):
-                key = self._get_index(key)
-                return self()[key]
+    def set_option_index(self, option, key, value):
+        values = list(option())
+        values[self._option_index(key)] = value
+        option.set(values)
 
-            def __setitem__(self, key, value):
-                key = self._get_index(key)
-                v = list(self())
-                v[key] = value
-                self.set(v)
-
+    def option_attribute_index(self, name):
         if self.names:
-            for n, i in self.names.items():
-                (lambda i: setattr(cls, n, property(lambda self: self[i], lambda self, v: self.__setitem__(i, v))))(i)
-
-        option.__class__ = cls
+            return self.names.get(name)
+        return None
 
     is_the_same_value = staticmethod(compare_numpy_values)
 

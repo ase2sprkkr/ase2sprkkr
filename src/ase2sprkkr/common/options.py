@@ -138,6 +138,32 @@ class Option(BaseOption):
 
     _NO_KEY = object()
 
+    def __getattr__(self, name):
+        try:
+            definition = object.__getattribute__(self, "_definition")
+        except AttributeError:
+            raise AttributeError(name) from None
+
+        index = definition.type.option_attribute_index(name)
+        if index is None:
+            raise AttributeError(
+                f"{type(self).__name__!s} has no attribute {name!r}"
+            )
+        return definition.type.get_option_index(self, index)
+
+    def __setattr__(self, name, value):
+        if not name.startswith("_"):
+            try:
+                definition = object.__getattribute__(self, "_definition")
+            except AttributeError:
+                pass
+            else:
+                index = definition.type.option_attribute_index(name)
+                if index is not None:
+                    definition.type.set_option_index(self, index, value)
+                    return
+        object.__setattr__(self, name, value)
+
     def __init__(self, definition, container=None, value=None):
         """ "
         Parameters
@@ -387,6 +413,10 @@ class Option(BaseOption):
         """Check, whether the option is array type (or repeated) and thus it can be accessed as array using []"""
         return self._definition.check_array_acces(self)
 
+    def _set_indexed_value(self, key, value):
+        with self._mutation("set") as (transaction, _policy):
+            self.stage(transaction, value, key=key)
+
     def __setitem__(self, name, value):
         """Set an item of a numbered array. If the Option is not a numbered array, throw an Exception."""
         d = self._definition
@@ -397,9 +427,7 @@ class Option(BaseOption):
 
         d.check_array_access()
         if not d.is_repeated.is_dict:
-            with self._mutation("set") as (transaction, _policy):
-                self.stage(transaction, value, key=name)
-            return
+            return d.type.set_option_index(self, name, value)
 
         current = self(unpack=False, all_values=True)
         proposed = {} if current is None else d.copy_value(current, all_values=True)
@@ -446,7 +474,7 @@ class Option(BaseOption):
             return d.get_generated(self, name)
         d.check_array_access()
         if not d.is_repeated.is_dict:
-            return self()[name]
+            return d.type.get_option_index(self, name)
 
         if isinstance(name, (list, tuple)):
             return [self._getitem(n) for n in name]

@@ -379,10 +379,20 @@ class GrammarType:
     def copy(self):
         return copy.copy(self)
 
+    def get_option_index(self, option, key):
+        """Return one indexed value from an option of this type."""
+        return option()[key]
+
+    def set_option_index(self, option, key, value):
+        """Set one indexed value on an option of this type."""
+        option._set_indexed_value(key, value)
+
+    def option_attribute_index(self, name):
+        """Return the index exposed as ``option.<name>``, or ``None``."""
+        return None
+
     def enrich(self, option):
-        """Some types can add properties to the options that have
-        the type, e.g. see Sequence.enrich, which adds the ability to
-        access the items of the sequence using []"""
+        """Allow a grammar type to customize an option instance."""
         pass
 
     def __repr__(self):
