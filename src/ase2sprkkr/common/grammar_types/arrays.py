@@ -14,6 +14,27 @@ from ..decorators import add_to_signature, cached_property
 from .basic import Integer, Real, Unsigned, real
 
 
+_named_sequence_types = {}
+
+
+def _restore_named_sequence(names, values):
+    return _named_sequence_type(names)(*values)
+
+
+def _named_sequence_type(names):
+    names = tuple(names)
+    value_type = _named_sequence_types.get(names)
+    if value_type is None:
+        value_type = namedtuple("_".join(names), names)
+
+        def _reduce(value):
+            return _restore_named_sequence, (names, tuple(value))
+
+        value_type.__reduce__ = _reduce
+        _named_sequence_types[names] = value_type
+    return value_type
+
+
 def _array_dtype_condition_always_true(_type, _shape):
     return True
 
@@ -361,19 +382,12 @@ class Sequence(GrammarType):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        if names:
-            self.names = names if isinstance(names, dict) else {name: i for i, name in enumerate(names)}
-            self.value_type = namedtuple("_".join(names), names)
-            self.value_constructor = self.value_type
-            self.value_constructor = self.value_type
-        else:
-            self.names = None
-            if as_list:
-                self.value_type = list
-                self.value_constructor = lambda *x: [[*x]]
-            else:
-                self.value_type = tuple
-                self.value_constructor = lambda *x: [tuple(x)]
+        self.names = (
+            names if isinstance(names, dict)
+            else {name: i for i, name in enumerate(names)} if names
+            else None
+        )
+        self.as_list = as_list
         if isinstance(format, dict):
             format = {type_from_type(k): v for k, v in format.items()}
         if isinstance(format, (str, dict)):
@@ -383,6 +397,19 @@ class Sequence(GrammarType):
             allowed_values = set(allowed_values)
         self.allowed_values = allowed_values
         self.default_values = default_values
+
+    @property
+    def value_type(self):
+        if self.names:
+            return _named_sequence_type(self.names)
+        return list if self.as_list else tuple
+
+    def value_constructor(self, *values):
+        if self.names:
+            return self.value_type(*values)
+        if self.as_list:
+            return [[*values]]
+        return [tuple(values)]
 
     def __len__(self):
         return len(self.types)
