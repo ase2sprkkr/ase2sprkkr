@@ -65,12 +65,13 @@ class OccupationSection(PotentialSection):
         atoms.info["occupancy"] = occ_dict
 
 
+def _validate_row(result):
+    return result[2] == len(result[3]) or "Number of occupations differs from NOQ"
+
+
 class OccupationSectionDefinition(PotSectionDefinition):
     def __init__(self, name="OCCUPATION", **kwargs):
         V = PotValueDefinition
-
-        def validate_row(result):
-            return result[2] == len(result[3]) or "Number of occupations differs from NOQ"
 
         members = [
             V(
@@ -83,7 +84,7 @@ class OccupationSectionDefinition(PotSectionDefinition):
                         "ITOQ CONC": Array(Sequence(int, float), as_list=tuple),
                     },
                     numbering="IQ",
-                    row_condition=validate_row,
+                    row_condition=_validate_row,
                 ),
             )
         ]
