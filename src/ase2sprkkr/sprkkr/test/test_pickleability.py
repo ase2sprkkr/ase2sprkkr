@@ -24,3 +24,18 @@ class TestSPRKKRPickle(TestCase):
 
         self.assertEqual(restored.symbols[0], 'H')
         assert isinstance(restored.calc, SPRKKR)
+
+    def test_atoms_with_potential_roundtrip(self):
+        atoms = SPRKKRAtoms(
+            'Fe',
+            positions=[[0.0, 0.0, 0.0]],
+            cell=[2.87, 2.87, 2.87],
+            pbc=True,
+        )
+        original_potential = atoms.potential
+
+        restored = pickle.loads(pickle.dumps(atoms))
+
+        self.assertEqual(restored.symbols[0], 'Fe')
+        assert restored.has_potential()
+        assert restored.potential is not original_potential

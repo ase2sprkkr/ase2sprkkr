@@ -16,6 +16,11 @@ from ..grammar import generate_grammar, Forward
 from ..formats import full_format_for_string
 
 
+def _apply_after_convert(grammar_type, convert, after_convert, value):
+    """Apply an instance's post-conversion hook without a local closure."""
+    return after_convert(grammar_type, convert(grammar_type, value))
+
+
 class GrammarType:
     """Base class for definition of configuration option types
 
@@ -118,7 +123,12 @@ class GrammarType:
         The format is passed as format argument to ``str.format`` routine.  """
         self.condition = condition
         if after_convert is not None:
-            self.convert = lambda v: after_convert(self, self.__class__.convert(self, v))
+            self.convert = functools.partial(
+                _apply_after_convert,
+                self,
+                self.__class__.convert,
+                after_convert,
+            )
 
         """ Some subclasses has default_value defined via read-only property. """
         if default_value is not None:
