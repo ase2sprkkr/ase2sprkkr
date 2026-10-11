@@ -146,7 +146,7 @@ class TestPotential(TestCase):
         self.assertEqual(datetime, p.HEADER.FORMAT[1].__class__)
 
         restored = pickle.loads(pickle.dumps(option))
-        self.assertIs(type(restored), option_class)
+        assert type(restored) is option_class
         self.assertEqual(8, restored.VERSION)
         self.assertEqual(datetime, restored.DATE.__class__)
 

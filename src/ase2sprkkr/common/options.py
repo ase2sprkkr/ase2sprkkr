@@ -144,12 +144,12 @@ class Option(BaseOption):
         except AttributeError:
             raise AttributeError(name) from None
 
-        index = definition.type.option_attribute_index(name)
+        index = definition.option_attribute_index(name)
         if index is None:
             raise AttributeError(
                 f"{type(self).__name__!s} has no attribute {name!r}"
             )
-        return definition.type.get_option_index(self, index)
+        return self[index]
 
     def __setattr__(self, name, value):
         if not name.startswith("_"):
@@ -158,9 +158,9 @@ class Option(BaseOption):
             except AttributeError:
                 pass
             else:
-                index = definition.type.option_attribute_index(name)
+                index = definition.option_attribute_index(name)
                 if index is not None:
-                    definition.type.set_option_index(self, index, value)
+                    self[index] = value
                     return
         object.__setattr__(self, name, value)
 
