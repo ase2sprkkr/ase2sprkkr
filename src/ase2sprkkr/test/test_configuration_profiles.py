@@ -82,7 +82,7 @@ def test_suffix_environment_default_does_not_create_legacy(monkeypatch):
     assert config.profiles["legacy"].executable_suffix() == "_custom"
 
 
-def test_legacy_profile_is_read_only_and_not_serialized():
+def test_legacy_profile_is_read_only_but_persistent():
     config = fresh_config()
     config.running.mpi.set(8)
     legacy = config.profiles["legacy"]
@@ -92,8 +92,30 @@ def test_legacy_profile_is_read_only_and_not_serialized():
     with pytest.raises(TypeError, match="read-only"):
         legacy.set({"mpi": 4})
 
-    profiles = config.as_dict().get("profiles") or {}
-    assert "legacy" not in profiles
+    assert config.as_dict(only_changed="explicit")["profiles"]["legacy"]["mpi"] == 8
+
+
+def test_persisted_legacy_profile_backs_deprecated_options():
+    config = fresh_config()
+
+    config.set(
+        {
+            "profiles": {
+                "legacy": {
+                    "mpi": 6,
+                    "executable_dir": "/opt/legacy",
+                    "executable_suffix": "_v",
+                }
+            }
+        },
+        unknown="fail",
+    )
+
+    assert config.running.mpi() == 6
+    assert config.executables.dir() == "/opt/legacy"
+    assert config.executables.suffix() == "_v"
+    with pytest.raises(TypeError, match="read-only"):
+        config.profiles["legacy"].mpi.set(2)
 
 
 def test_reserved_virtual_profile_names_cannot_be_added():
