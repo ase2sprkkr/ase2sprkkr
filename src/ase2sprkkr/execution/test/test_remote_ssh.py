@@ -105,10 +105,13 @@ def test_remote_executor_over_ssh():
             )
             output_seen = Event()
             output = []
+            first_output_at = []
 
             def read_output(text, kind):
                 output.append((kind, text))
                 if kind == "out" and text:
+                    if not first_output_at:
+                        first_output_at.append(time.monotonic())
                     output_seen.set()
 
             workdir = tmp / "calculation"
@@ -131,12 +134,14 @@ def test_remote_executor_over_ssh():
             assert runner.reference.computer == "tester@127.0.0.1"
             assert runner.reference.directory == "/home/tester/ase2sprkkr-runs/calculation"
             _wait_for_live_output(runner, output_seen, output)
-            assert runner.state.value == "running"
 
             result = runner.wait()
+            finished_at = time.monotonic()
             assert result.return_code == 0
             assert len(result.iterations) > 0
             assert any(kind == "out" and text for kind, text in output)
+            assert first_output_at
+            assert finished_at - first_output_at[0] >= 0.5
 
             potfil = result.input_parameters.CONTROL.POTFIL()
             remote_potential = (
