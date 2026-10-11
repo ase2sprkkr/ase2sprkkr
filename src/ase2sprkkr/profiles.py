@@ -1,9 +1,9 @@
 """Execution-profile views used by the ase2sprkkr configuration.
 
-Persistent named profiles live in the ase2sprkkr configuration. ``ase`` and
-``legacy`` are virtual read-only profiles. The legacy profile is backed by an
-internal normal profile which is written only through the deprecated options;
-the ASE profile is backed by ASE's own configuration.
+Persistent named profiles live in the ase2sprkkr configuration. ``ase`` is a
+virtual read-only profile backed by ASE's own configuration. ``legacy`` is a
+persisted compatibility profile, but is exposed through a read-only view and
+can only be modified through the deprecated configuration options.
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from .common.repeated_configuration_containers import RepeatedConfigurationConta
 
 
 class ReadOnlyProfileValue:
-    """Small option-like read-only value used by virtual profiles."""
+    """Small option-like read-only value used by virtual/read-only profiles."""
 
     def __init__(self, getter, name: str):
         self._getter = getter
@@ -115,23 +115,21 @@ class ASEProfile:
 
 
 class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
-    """Dict-like repeated section with virtual external profiles.
+    """Dict-like repeated section with reserved execution profiles.
 
-    Normal entries are stored by :class:`RepeatedConfigurationContainer` and
-    therefore participate in parsing/serialization. ``legacy`` uses a separate
-    internal section so deprecated options can use the same profile schema
-    without making that section mutable or persistent through the profiles API.
+    Normal entries and the internal ``legacy`` backing profile are persistent.
+    The public ``legacy`` item is read-only, while ``ase`` is a non-persistent
+    virtual view of ASE configuration.
     """
 
     reserved_names = frozenset(("legacy", "ase"))
     legacy_fields = ("mpi", "executable_dir", "executable_suffix")
 
     def _legacy_profile(self, create=False):
-        """Return the internal mutable legacy profile used by old options."""
-        profile = getattr(self, "_legacy", None)
+        """Return the mutable backing profile used by deprecated options."""
+        profile = self._values.get("legacy")
         if profile is None and create:
-            profile = self._definition.create_object(self, repeated=False)
-            self._legacy = profile
+            profile = self._add("legacy")
         return profile
 
     def _legacy_available(self) -> bool:
@@ -184,41 +182,36 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         # section should not silently become the preferred runnable profile.
         return bool(section.get("command"))
 
-    def _virtual(self, name):
-        if name == "ase" and self._ase_available():
-            return ASEProfile(self._ase_config())
-        if name == "legacy" and self._legacy_available():
-            return LegacyProfile(self)
-        raise KeyError(name)
-
     def add(self, id=None):
         if id in self.reserved_names:
             raise ValueError(f"{id!r} is a reserved profile name")
         return super().add(id)
 
     def __getitem__(self, name):
-        try:
-            return super().__getitem__(name)
-        except (IndexError, KeyError, TypeError):
-            return self._virtual(name)
+        if name == "legacy":
+            if self._legacy_available():
+                return LegacyProfile(self)
+            raise KeyError(name)
+        if name == "ase":
+            if self._ase_available():
+                return ASEProfile(self._ase_config())
+            raise KeyError(name)
+        return super().__getitem__(name)
 
     def __contains__(self, name):
-        return super().__contains__(name) or (
-            name == "ase" and self._ase_available()
-        ) or (
-            name == "legacy" and self._legacy_available()
-        )
+        if name == "legacy":
+            return self._legacy_available()
+        if name == "ase":
+            return self._ase_available()
+        return super().__contains__(name)
 
     def _virtual_names(self) -> Iterator[str]:
         if self._ase_available():
             yield "ase"
-        if self._legacy_available():
-            yield "legacy"
 
     def __iter__(self):
-        # ``items`` and ``values`` intentionally remain inherited and contain
-        # persistent entries only. The repeated-container implementation uses
-        # them while staging, validating and serializing its contents.
+        # Stored profiles, including the read-only legacy backing profile, keep
+        # their normal mapping position. ASE is appended as a virtual entry.
         yield from super().__iter__()
         yield from self._virtual_names()
 
@@ -226,7 +219,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         return super().__len__() + sum(1 for _ in self._virtual_names())
 
     def available_items(self):
-        """Iterate over both persistent and virtual profiles."""
+        """Iterate over persistent and virtual profiles through public views."""
         for name in self:
             yield name, self[name]
 
