@@ -23,19 +23,24 @@ except AttributeError:
     SpglibError = Exception
 
 
-def spglib_dataset_wrapper(dataset):
+class _SpglibCompatibilityWrapper:
     """Backward compatibility"""
-    if dataset is None or hasattr(dataset, "equivalent_atoms"):
-        return dataset
 
-    class Convertor:
-        def __getattr__(self, name):
-            try:
-                return dataset[name]
-            except KeyError as ke:
-                raise AttributeError(ke)
+    def __init__(self, dataset):
+        self.dataset = dataset
 
-    return Convertor()
+    def __getattr__(self, name):
+        try:
+            return self.dataset[name]
+        except KeyError as ke:
+            raise AttributeError(ke)
+
+    @classmethod
+    def create_if_needed(cls, dataset):
+        if dataset is None or hasattr(dataset, "equivalent_atoms"):
+            return dataset
+
+        return cls(dataset)
 
 
 def tag_sites(atoms: Atoms, consider_old: bool, return_mapping: False):
@@ -122,7 +127,7 @@ def spglib_dataset(
                 warnings.warn(str(exc), RuntimeWarning, stacklevel=2)
             sg_dataset = None
         if sg_dataset:
-            dataset = spglib_dataset_wrapper(sg_dataset)
+            dataset = _SpglibCompatibilityWrapper.create_if_needed(sg_dataset)
         else:
             dataset = False
         return dataset
