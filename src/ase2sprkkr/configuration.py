@@ -1,8 +1,6 @@
 """ASE2SPRKKR user configuration."""
 
 import os
-import re
-from typing import Union
 from .common.decorators import cache
 from .common.grammar_types import CustomMixed, AlwaysQString, Array, Bool, Keyword, Integer
 from .common.container_definitions import SectionDefinition, ConfigurationRootDefinition
@@ -182,78 +180,28 @@ class Configuration(RootConfigurationContainer):
     def _generic_info(self):
         return "ASE2SPRKKR Configuration"
 
-    def store_value_permanent(self, name: str, value, doc=None, doc_regex: bool or str = False):
-        """
-        Set/remove permanently the value with given name in the legacy Python config file.
-        """
-        file = legacy_user_preferences_file()
-        if not os.path.isfile(file):
-            raise ValueError("Please, generate the user preference file using 'ase2sprkkr config -d' first.")
+    def save_user_preferences(self):
+        """Persist explicit configuration values to the YAML user config."""
+        from .configuration_yaml import load_yaml_document, save_configuration_yaml
 
-        with open(file, "r+") as f:
-            content = f.read()
-            pattern = f"(#?\\s*)*config.{name}\\s+="
-            if value is None:
-                line = ""
-                cnt = 0
-                last = ""
-                if doc:
-                    if not doc_regex:
-                        pre = re.escape(doc)
-                    else:
-                        pre = doc
-                    pre = f"(?:(?:^|\n)# {pre} *)?"
-                else:
-                    pre = ""
-            else:
-                line = f"config.{name} = {value}\n"
-                cnt = 1
-                pre = ""
-                last = f"(?!(.*\n)*{pattern})"
-            content, replaced = re.subn(f"{pre}(^|\n){pattern}[^\n]*(\n|$){last}", r"\1" + line, content, cnt)
-            if replaced:
-                f.seek(0)
-                f.write(content)
-            elif value is None:
-                return
-            else:
-                i = len(content) - 1
-                while i >= 0:
-                    if content[i] not in ("\r", "\n", " ", "\t"):
-                        break
-                    i -= 1
-                f.seek(i + 1)
-                if i > 0:
-                    f.write("\n\n")
-                if doc:
-                    f.write(f"# {doc}\n")
-                f.write(line)
-            f.truncate()
+        file = user_preferences_file()
+        document = load_yaml_document(file) if os.path.isfile(file) else None
+        save_configuration_yaml(self, file, document)
 
 
 class ConfigurationOption(Option):
-    def set_permanent(self, value, doc=None, doc_regex: Union[bool, str] = False):
-        """Set the value and store it in the config file."""
-
+    def set_permanent(self, value, doc=None, doc_regex=False):
+        """Set the value and persist the complete user configuration."""
         self.set(value)
         self.store_permanent()
 
-    def store_permanent(self, doc=None, doc_regex: Union[bool, str] = False):
-        """Store the actual value in the config file."""
-        val = self()
-        if val is not None:
-            val = self._definition.type.string(val)
-        config.store_value_permanent(self.get_path(), val)
+    def store_permanent(self, doc=None, doc_regex=False):
+        """Persist the current configuration to the YAML user config."""
+        self._get_root_container().save_user_preferences()
 
 
 class GeneratedConfigurationOption(ConfigurationOption):
     """Configuration option whose value is backed by another config object."""
-
-    def store_permanent(self, doc=None, doc_regex: Union[bool, str] = False):
-        val = self()
-        if val is not None:
-            val = repr(val)
-        config.store_value_permanent(self.get_path(), val)
 
 
 class ConfigValueDefinition(ValueDefinition):
@@ -307,7 +255,7 @@ definition = ConfigFileDefinition(
             ],
             is_repeated="DICT_SECTION",
             is_optional=True,
-            info="Named SPR-KKR execution profiles. The reserved 'ase' and 'legacy' profiles are virtual and read-only.",
+            info="Named SPR-KKR execution profiles. The reserved 'ase' profile is virtual; 'legacy' is persisted but read-only through the profiles API.",
         ),
         Section(
             "running",
