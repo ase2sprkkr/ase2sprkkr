@@ -59,9 +59,6 @@ def explicit_configuration(config):
 def _validate_yaml_shape(data):
     if not isinstance(data, Mapping):
         raise ValueError("ASE2SPRKKR configuration YAML must contain a mapping")
-    profiles = data.get("profiles")
-    if isinstance(profiles, Mapping) and "ase" in profiles:
-        raise ValueError("profiles.ase is virtual and cannot be stored in ASE2SPRKKR YAML")
 
 
 def apply_yaml_document(config, data):
@@ -77,9 +74,6 @@ def _recover_profiles(config, value, accepted, issues):
 
     accepted_profiles = CommentedMap()
     for name, profile_data in value.items():
-        if name == "ase":
-            issues.append(("profile 'ase'", ValueError("the ASE profile is virtual and cannot be stored here")))
-            continue
         try:
             config.profiles.set({name: profile_data}, unknown="fail", merge=True)
         except _EXPECTED_USER_ERRORS as error:
@@ -126,8 +120,6 @@ def _recover_configuration(config, data):
     if "profiles" in data:
         _recover_profiles(config, data["profiles"], accepted, issues)
 
-    # Load ordinary sections before default_profile so profile references see
-    # all profiles which were successfully recovered.
     keys = [key for key in data if key not in ("profiles", "default_profile")]
     if "default_profile" in data:
         keys.append("default_profile")
@@ -225,13 +217,18 @@ def _update_mapping(target, values, accepted):
         known_current = accepted.get(key, _MISSING)
 
         if isinstance(value, Mapping):
-            # A mapping which existed but was not accepted is one invalid logical
-            # unit (notably a profile). Explicitly creating that same unit should
-            # replace it rather than retain its broken contents.
-            if current is _MISSING or not isinstance(current, Mapping) or known_current is _MISSING:
+            if (
+                current is _MISSING
+                or not isinstance(current, Mapping)
+                or known_current is _MISSING
+            ):
                 current = CommentedMap()
                 target[key] = current
-            known_children = known_current if isinstance(known_current, Mapping) else CommentedMap()
+            known_children = (
+                known_current
+                if isinstance(known_current, Mapping)
+                else CommentedMap()
+            )
             _update_mapping(current, value, known_children)
         else:
             target[key] = value
