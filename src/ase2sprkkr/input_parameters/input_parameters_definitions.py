@@ -75,6 +75,12 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     """ Input parameters can have a save_hook defined, which is executed before saving the
   parameters. The arguments of the hook are ``filename, atoms, self``. """
 
+    task_input_files = ()
+    """Task-specific input files, optionally containing a ``{dataset}`` placeholder."""
+
+    task_output_files = ()
+    """Task-specific output files, optionally containing a ``{dataset}`` placeholder."""
+
     child_class = InputSectionDefinition
     """ Sections of the :class:`InputParameters` are defined by :class:`InputSectionDefinition` """
 
@@ -116,7 +122,17 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         return f"Input parameters for task {self.name}"
 
     @add_to_signature(ConfigurationFileDefinition.__init__, prepend=True)
-    def __init__(self, name, members=None, executable="kkrscf", mpi=True, result_reader=None, **kwargs):
+    def __init__(
+        self,
+        name,
+        members=None,
+        executable="kkrscf",
+        mpi=True,
+        result_reader=None,
+        task_input_files=(),
+        task_output_files=(),
+        **kwargs,
+    ):
         """
         Parameters
         ---------
@@ -133,10 +149,20 @@ class InputParametersDefinition(ConfigurationFileDefinition):
           Class, that runs the process and read the results. Default NONE
           means, that the class is determined from the TASK name
           (see InputParameters.result_reader)
+
+        task_input_files: sequence of str
+          Additional task-specific input files. ``{dataset}`` is replaced by
+          ``CONTROL.DATASET`` when the execution manifest is built.
+
+        task_output_files: sequence of str
+          Additional task-specific output files. ``{dataset}`` is replaced by
+          ``CONTROL.DATASET`` when the execution manifest is built.
         """
         self.executable = executable
         self.mpi = mpi
         self.result_reader = result_reader
+        self.task_input_files = tuple(task_input_files)
+        self.task_output_files = tuple(task_output_files)
 
         super().__init__(name, members, **kwargs)
         # if not 'TASK' in self:

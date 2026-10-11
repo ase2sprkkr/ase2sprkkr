@@ -67,6 +67,8 @@ class _Reader:
 def test_profile_builds_serial_command():
     input_file = SimpleNamespace(name="/tmp/Fe.inp")
     output_file = object()
+    potential_file = "/tmp/Fe.pot"
+    task_output = "/tmp/Fe_DOS.dos"
     profile = SPRKKRProfile(
         executable_dir=False,
         executable_suffix="",
@@ -78,6 +80,8 @@ def test_profile_builds_serial_command():
         input_file,
         output_file,
         "/tmp",
+        input_files=(input_file, potential_file),
+        output_files=(output_file, task_output),
         mpi_supported=True,
     )
 
@@ -85,6 +89,8 @@ def test_profile_builds_serial_command():
     assert spec.stdin is input_file
     assert spec.input_file is input_file
     assert spec.output_file is output_file
+    assert spec.input_files == (input_file, potential_file)
+    assert spec.output_files == (output_file, task_output)
 
 
 def test_profile_builds_mpi_command():

@@ -42,6 +42,8 @@ class ExecutionSpec:
     directory: str
     stdin: Any = None
     error_file: Any = None
+    input_files: Sequence[Any] = ()
+    output_files: Sequence[Any] = ()
 
 
 class Runner(Protocol):

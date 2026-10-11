@@ -45,7 +45,7 @@ class InputParameters(ConfigurationFile):
         return out
 
     def resolve_executable_suffix(self, suffix: Union[str, bool]):
-        """ " Return the suffix, that is appended after the name of SPR-KKR executable.
+        """ " Return the suffix, that is appended after the name of SPRKKR executable.
 
         Parameters
         ----------
@@ -120,6 +120,13 @@ class InputParameters(ConfigurationFile):
         """
         return mpi and self._definition.mpi
 
+    def _task_files(self, templates, directory):
+        dataset = self.CONTROL.DATASET()
+        return tuple(
+            path if os.path.isabs(path) else os.path.join(directory, path)
+            for path in (os.fspath(template).format(dataset=dataset) for template in templates)
+        )
+
     def run_process(
         self,
         calculator,
@@ -161,11 +168,35 @@ class InputParameters(ConfigurationFile):
                 if callback:
                     callback(out)
 
+            potential_file = self.CONTROL.POTFIL.result()
+            if potential_file and not os.path.isabs(potential_file):
+                potential_file = os.path.join(directory, potential_file)
+
+            input_files = tuple(
+                file
+                for file in (
+                    input_file,
+                    potential_file,
+                    *self._task_files(self._definition.task_input_files, directory),
+                )
+                if file is not None
+            )
+            output_files = tuple(
+                file
+                for file in (
+                    output_file,
+                    *self._task_files(self._definition.task_output_files, directory),
+                )
+                if file is not None
+            )
+
             spec = profile.create_execution(
                 self._definition.executable,
                 input_file,
                 output_file,
                 directory,
+                input_files=input_files,
+                output_files=output_files,
                 mpi_supported=self._definition.mpi,
                 executable_suffix=executable_suffix,
                 executable_dir=executable_dir,
