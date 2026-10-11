@@ -52,6 +52,36 @@ def test_legacy_profile_exists_only_for_explicit_legacy_configuration():
     assert "legacy" in list(config.profiles)
 
 
+def test_legacy_options_are_backed_by_internal_profile():
+    config = fresh_config()
+
+    config.running.mpi.set(8)
+    config.executables.dir.set("/opt/sprkkr")
+
+    assert config.profiles.legacy_option("mpi")() == 8
+    assert config.profiles.legacy_option("executable_dir")() == "/opt/sprkkr"
+    assert config.profiles["legacy"].as_dict() == {
+        "mpi": 8,
+        "executable_dir": "/opt/sprkkr",
+        "executable_suffix": None,
+    }
+
+    config.running.mpi.set(None)
+    config.executables.dir.set(None)
+    assert "legacy" not in config.profiles
+
+
+def test_suffix_environment_default_does_not_create_legacy(monkeypatch):
+    monkeypatch.setenv("SPRKKR_EXECUTABLE_SUFFIX", "_mpi")
+    config = fresh_config()
+
+    assert config.executables.suffix() == "_mpi"
+    assert "legacy" not in config.profiles
+
+    config.executables.suffix.set("_custom")
+    assert config.profiles["legacy"].executable_suffix() == "_custom"
+
+
 def test_legacy_profile_is_read_only_and_not_serialized():
     config = fresh_config()
     config.running.mpi.set(8)
