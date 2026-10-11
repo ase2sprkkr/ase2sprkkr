@@ -35,7 +35,7 @@ def input_parameters():
                            V("POSVC", Keyword({"BM": "Native BM correlation potential", "DR": "Native DR correlation potential", "IPM": "Independent-particle model"}), "BM",
                              info="ASA electron-positron correlation potential: BM, DR, or independent-particle IPM."),
                        ]), SITES],
-        executable="kkrgen", mpi=False, output_files=("{dataset}_pos_data.pan",), validators=_validate_posaniprep,
+        executable="kkrgen", mpi=False, output_file_templates=("{dataset}_pos_data.pan",), validators=_validate_posaniprep,
         info="Prepare positron wavefunction and scattering data for POSANI",
         description="Periodic 3D ASA FREL preparation at a user-chosen energy near the positron band bottom. "
                     "Uses an electronic potential and writes DATASET_pos_data.pan. Native code keeps s_1/2 only. "

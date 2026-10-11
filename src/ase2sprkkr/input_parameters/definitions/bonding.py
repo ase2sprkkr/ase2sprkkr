@@ -26,7 +26,7 @@ def input_parameters():
     energy = ENERGY(emax=(1.0, "Explicit upper scan bound in Ry", None), defaults={"GRID": 3, "NE": 300, "ImE": 0.01})
     energy.copy_member("NE", type=SetOf(Integer(min=2), min_length=1, max_length=2))
     return InputParameters("bonding", [CONTROL("BONDING"), tau, MODE, STRCONST, energy, TASK("BONDING"), SITES],
-        executable="kkrgen", mpi=False, output_files=("fort.22",), validators=_validate,
+        executable="kkrgen", mpi=False, output_file_templates=("fort.22",), validators=_validate,
         info="Experimental bonding analysis of molecular site 1.",
         description="Native 9.7 TAU_DRIVE supplies KTAUIJ=0, while CLUBONDING reads scratch units "
                     "that require KTAUIJ>=2. The native workflow needs repair before numerical use. "

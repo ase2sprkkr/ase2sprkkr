@@ -26,7 +26,7 @@ def input_parameters():
     return InputParameters(
         "jorb", [CONTROL("JORB"), TAU, MODE, STRCONST, energy, TASK("JORB"), SITES],
         executable="kkrgen", mpi=False,
-        output_files=("{dataset}0_JORB.dat", "{dataset}0_JORB_UP.dat", "{dataset}0_JORB_DN.dat"),
+        output_file_templates=("{dataset}0_JORB.dat", "{dataset}0_JORB_UP.dat", "{dataset}0_JORB_DN.dat"),
         validators=_validate_jorb,
         info="Valence paramagnetic current density in the full-potential formalism.",
         description="No task-specific options are read. JORB becomes E-INTEGRAL internally. "

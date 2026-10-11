@@ -1,9 +1,33 @@
 """SCF task definition audited against SPR-KKR 9.7."""
+import os
 import numpy as np
 from ...common.grammar_types import Integer, SetOf, Keyword
 from ...common.warnings import DataValidityError
 from ._sections import CONTROL, TAU, ENERGY, SCF, SITES, STRCONST, CPA, MODE, TASK
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters
+from ..input_parameters_definitions import InputParametersDefinition
+
+
+class SCFInputParametersDefinition(InputParametersDefinition):
+    """SCF definition with output files depending on the concrete parameters."""
+
+    @staticmethod
+    def _resolve_file(directory, filename):
+        filename = os.fspath(filename)
+        return filename if os.path.isabs(filename) else os.path.join(directory, filename)
+
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+
+        potfil = parameters.CONTROL.POTFIL()
+        if potfil:
+            files.append(self._resolve_file(directory, f"{potfil}_new"))
+
+        if parameters.SCF.FULLPOT():
+            sfnfil = parameters.CONTROL.SFNFIL()
+            if sfnfil:
+                files.append(self._resolve_file(directory, sfnfil))
+
+        return tuple(files)
 
 
 def _validate_scf(p, _values, why):
@@ -32,7 +56,7 @@ def input_parameters():
     scf.copy_member("EFGUESS", info="Initial Fermi-energy guess in Ry; skips the initial search when building a starting potential, not all later EF updates.")
     energy = ENERGY()
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
-    return InputParameters(
+    return SCFInputParametersDefinition(
         "scf", [CONTROL("SCF"), TASK("SCF"), TAU, energy, scf, SITES, STRCONST, CPA, MODE],
         info="SCF - Calculate a self-consistent potential", executable="kkrscf", mpi=True,
         validators=_validate_scf

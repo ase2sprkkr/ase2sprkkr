@@ -83,8 +83,8 @@ def input_parameters():
     return InputParameters("posani", [control, tau, MODE, STRCONST, CPA,
                            energy, TASK("POSANI").copy(members), SITES],
                            executable="kkrgen", mpi=True,
-                           input_files=("{dataset}_pos_data.pan",),
-                           output_files=("{dataset}_BND.mpa", "{dataset}_COR.mpa", "{dataset}_TOT.mpa"),
+                           input_file_templates=("{dataset}_pos_data.pan",),
+                           output_file_templates=("{dataset}_BND.mpa", "{dataset}_COR.mpa", "{dataset}_TOT.mpa"),
                            validators=_validate_posani,
                            info="Positron annihilation momentum density and profiles",
                            description="Periodic FREL workflow using electron potential, electron TAU data and DATASET_pos_data.pan from POSANIPREP. Native TAUQQ reader/writer assumes NQ=NT; other systems are unsafe. "

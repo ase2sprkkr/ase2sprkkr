@@ -43,7 +43,7 @@ def input_parameters():
         ],
         executable="kkrgen",
         mpi=False,
-        output_files=("{dataset}.dos",),
+        output_file_templates=("{dataset}.dos",),
         validators=_validate_tdobs,
         info="TDOBS: native generic energy-loop DOS and observable calculation with attempted reuse of stored tau. "
              "SPR-KKR 9.7 has no separate TDOBS postprocessing branch. A missing tau file triggers its normal "

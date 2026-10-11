@@ -38,7 +38,7 @@ def input_parameters():
     ])
     return InputParameters("nucsscpl", [control, tau, MODE, STRCONST, energy, task, SITES],
         executable="kkrgen", mpi=False,
-        output_files=("{dataset}_A_ij.dat", "RK.dat", "tab_aij.dat"), validators=_validate,
+        output_file_templates=("{dataset}_A_ij.dat", "RK.dat", "tab_aij.dat"), validators=_validate,
         info="Experimental nuclear spin-spin coupling tensor (ASA).",
         description="Native 9.7 deallocates unallocated arrays on intermediate energies and clears "
                     "previous types' matrix elements. Fortran repair is needed before numerical use. "

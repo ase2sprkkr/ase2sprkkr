@@ -78,7 +78,7 @@ def input_parameters():
     return InputParameters("compton", [CONTROL("COMPTON"), tau, MODE, STRCONST, CPA,
                            energy, TASK("COMPTON").copy(members), SITES],
                            executable="kkrgen", mpi=True,
-                           output_files=("{dataset}_BND.mcp", "{dataset}_COR.mcp", "{dataset}_TOT.mcp"),
+                           output_file_templates=("{dataset}_BND.mcp", "{dataset}_COR.mcp", "{dataset}_TOT.mcp"),
                            validators=_validate_compton,
                            info="Compton momentum density and profiles",
                            description="Periodic FREL split-contour workflow using an existing compatible TAU directory. "
