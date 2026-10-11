@@ -8,7 +8,7 @@ a calculation is prepared.
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any
 
 from ..configuration import config
@@ -19,9 +19,9 @@ from ..execution import ExecutionSpec
 class SPRKKRProfile:
     """Describe how SPR-KKR executables are invoked on one computer."""
 
-    executable_dir: Any = None
+    executable_dir: Any = False
     executable_suffix: Any = ""
-    mpi: Any = None
+    mpi: Any = False
 
     def _executable_suffix(self, override):
         if override is False:
@@ -118,7 +118,7 @@ def profile_from_ase_command(command):
 
     count = command.count("{}")
     if count == 0:
-        return SPRKKRProfile(executable_dir=command, executable_suffix="")
+        return SPRKKRProfile(executable_dir=command)
     if count != 1:
         raise ValueError("ASE SPR-KKR command may contain at most one '{}' placeholder")
 
@@ -134,26 +134,20 @@ def profile_from_ase_command(command):
     )
 
 
-def resolve_sprkkr_profile(profile=None, *, configuration=None):
-    """Resolve a user/configuration profile into an immutable runtime profile.
-
-    Resolution order for ``profile=None`` is the one defined by the profile
-    configuration container: configured ``default_profile``, ASE's virtual
-    profile, the deprecated legacy profile, then built-in defaults. A string
-    explicitly selects a named profile.
-    """
-    if isinstance(profile, SPRKKRProfile):
-        return profile
-
-    configuration = configuration or config
+def _configured_profile(profile, configuration):
     if profile is None or isinstance(profile, str):
         profile = configuration.profiles.resolve(profile)
 
     if profile is None:
         return SPRKKRProfile(
-            executable_dir=False,
             executable_suffix=os.environ.get("SPRKKR_EXECUTABLE_SUFFIX", ""),
-            mpi=None,
+        )
+
+    if isinstance(profile, SPRKKRProfile):
+        return SPRKKRProfile(
+            executable_dir=False if profile.executable_dir is None else profile.executable_dir,
+            executable_suffix="" if profile.executable_suffix is None else profile.executable_suffix,
+            mpi=False if profile.mpi is None else profile.mpi,
         )
 
     if getattr(profile, "source", None) == "ase":
@@ -165,9 +159,41 @@ def resolve_sprkkr_profile(profile=None, *, configuration=None):
     executable_dir = _profile_value(profile, "executable_dir")
     if executable_dir is None:
         executable_dir = False
+    mpi = _profile_value(profile, "mpi")
+    if mpi is None:
+        mpi = False
 
     return SPRKKRProfile(
         executable_dir=executable_dir,
         executable_suffix=suffix,
-        mpi=_profile_value(profile, "mpi"),
+        mpi=mpi,
     )
+
+
+def resolve_sprkkr_profile(
+    profile=None,
+    *,
+    configuration=None,
+    mpi=None,
+    executable_dir=None,
+    executable_suffix=None,
+):
+    """Resolve a user/configuration profile into an immutable runtime profile.
+
+    Resolution order for ``profile=None`` is the one defined by the profile
+    configuration container: configured ``default_profile``, ASE's virtual
+    profile, the deprecated legacy profile, then built-in defaults. A string
+    explicitly selects a named profile. Explicit execution-location arguments
+    override the resolved profile when they are not ``None``.
+    """
+    configuration = configuration or config
+    resolved = _configured_profile(profile, configuration)
+
+    changes = {}
+    if mpi is not None:
+        changes["mpi"] = mpi
+    if executable_dir is not None:
+        changes["executable_dir"] = executable_dir
+    if executable_suffix is not None:
+        changes["executable_suffix"] = executable_suffix
+    return replace(resolved, **changes) if changes else resolved
