@@ -69,7 +69,8 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
     def __bool__(self):
         return True
 
-    def add(self, id=None):
+    def _add(self, id=None):
+        """Create one repeated item without applying public API restrictions."""
         out = self._definition.create_object(self, repeated=False)
         if (id is None) != (self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION):
             raise ValueError("Non-none Id for repeated list is allowedonly for dict-like repeated containers")
@@ -78,6 +79,9 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         else:
             self._values[id] = out
         return out
+
+    def add(self, id=None):
+        return self._add(id)
 
     def __contains__(self, name):
         """The check for existence of a member with the given name."""
@@ -166,7 +170,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         ----------
         name: None or str
           If None, return contained values as a dictionary.
-          Otherwise, return the value of the member with the given name.
+          Otherwise, return the value of the member with a given name.
 
         unknown: str or None
           If unknown == 'find' and there is no member with a given name,
@@ -270,7 +274,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             ):
                 child = proposed._values[key]
             else:
-                child = proposed.add(
+                child = proposed._add(
                     None
                     if proposed._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION
                     else key
