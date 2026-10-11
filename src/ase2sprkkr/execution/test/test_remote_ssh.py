@@ -33,6 +33,27 @@ def _remote_error(exc):
     pytest.fail(f"{exc}\n\nRemote stderr:\n{stderr or '<empty>'}")
 
 
+def _wait_for_live_output(runner, output_seen, output, timeout=30):
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if output_seen.wait(0.1):
+            return
+        state = runner.state
+        if state.value in {"finished", "failed", "cancelled"}:
+            try:
+                result = runner.wait()
+            except Exception as exc:
+                pytest.fail(
+                    f"remote run ended before live output: state={state.value}, "
+                    f"exception={exc!r}, output={output!r}"
+                )
+            pytest.fail(
+                f"remote run ended before live output: state={state.value}, "
+                f"return_code={result.return_code}, output={output!r}"
+            )
+    pytest.fail(f"no live SPR-KKR output arrived over SSH; state={runner.state.value}, output={output!r}")
+
+
 def test_remote_executor_over_ssh():
     from ase.build import bulk
     from ase2sprkkr.configuration import config
@@ -119,7 +140,7 @@ def test_remote_executor_over_ssh():
             assert runner.reference is not None
             assert runner.reference.computer == "tester@127.0.0.1"
             assert runner.reference.directory == "/home/tester/ase2sprkkr-runs/calculation"
-            assert output_seen.wait(30), "no live SPR-KKR output arrived over SSH"
+            _wait_for_live_output(runner, output_seen, output)
             result = runner.wait()
             assert result.return_code == 0
             assert len(result.iterations) == 2
