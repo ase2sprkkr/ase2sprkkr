@@ -54,7 +54,8 @@ class Transport:
         raise NotImplementedError
 
 
-def _sha256_file(path):
+def local_file_digest(path):
+    """Return the SHA-256 digest of a local file, or ``None`` if absent."""
     digest = hashlib.sha256()
     try:
         with open(path, "rb") as file:
@@ -63,6 +64,10 @@ def _sha256_file(path):
     except FileNotFoundError:
         return None
     return digest.hexdigest()
+
+
+# Kept temporarily for code using the helper inside the execution package.
+_sha256_file = local_file_digest
 
 
 async def _completed_process(process, argv, input=None, check=True):
@@ -116,7 +121,7 @@ class LocalTransport(Transport):
 
     async def file_digest(self, path):
         loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(None, _sha256_file, path)
+        return await loop.run_in_executor(None, local_file_digest, path)
 
 
 class SshTransport(Transport):
