@@ -73,12 +73,7 @@ class LegacyProfile:
 
 
 class ASEProfile:
-    """Read-only view of ASE's ``[sprkkr]`` calculator configuration.
-
-    ASE calculator profiles are intentionally not copied into the ase2sprkkr
-    configuration. Keeping this object as a live view also means changes made
-    to ASE's in-memory configuration are immediately visible here.
-    """
+    """Read-only view of ASE's ``[sprkkr]`` calculator configuration."""
 
     name = "ase"
     source = "ase"
@@ -115,12 +110,7 @@ class ASEProfile:
 
 
 class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
-    """Dict-like repeated section with reserved execution profiles.
-
-    Normal entries and the internal ``legacy`` backing profile are persistent.
-    The public ``legacy`` item is read-only, while ``ase`` is a non-persistent
-    virtual view of ASE configuration.
-    """
+    """Dict-like repeated section with persistent and virtual profile views."""
 
     reserved_names = frozenset(("legacy", "ase"))
     legacy_fields = ("mpi", "executable_dir", "executable_suffix")
@@ -164,7 +154,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             option.stage(transaction, value)
 
     def legacy_option(self, name, create=False):
-        """Return the mutable backing option for compatibility plumbing."""
+        """Return mutable backing option for compatibility plumbing only."""
         profile = self._legacy_profile(create=create)
         return None if profile is None else getattr(profile, name)
 
@@ -222,10 +212,19 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
     def __len__(self):
         return sum(1 for _ in self)
 
-    def available_items(self):
-        """Iterate over persistent and virtual profiles through public views."""
+    def items(self):
+        """Iterate over public profile views only."""
         for name in self:
             yield name, self[name]
+
+    def values(self):
+        """Iterate over public profile views only."""
+        for _name, profile in self.items():
+            yield profile
+
+    def available_items(self):
+        """Backward-compatible alias for public profile items."""
+        yield from self.items()
 
     def _get_members(
         self,
@@ -236,6 +235,8 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         *,
         accept,
     ):
+        # The backing legacy section is an implementation detail. Generic
+        # lookup must not expose mutable options below its read-only public view.
         head = name.split(".", 1)[0] if isinstance(name, str) else name
         if head == "legacy":
             return
