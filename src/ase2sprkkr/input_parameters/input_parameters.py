@@ -147,6 +147,13 @@ class InputParameters(ConfigurationFile):
         profile = profile or getattr(calculator, "profile", None) or SPRKKRProfile()
         executor = executor or getattr(calculator, "executor", None) or LocalExecutor()
 
+        if self._definition.mpi:
+            if mpi is None:
+                mpi = getattr(profile, "mpi", None)
+            mpi = executor.resolve_mpi(mpi)
+        else:
+            mpi = None
+
         try:
 
             def cleanup(out):
@@ -301,7 +308,7 @@ class InputParameters(ConfigurationFile):
         Return
         ------
         input_parameters: InputParameters
-          Input parameters with the default values for the given task.
+          Input parameters with the default values for the task.
         """
         out = cls(cls.definition(name))
         out._requested_task_name = name.upper()
