@@ -35,9 +35,9 @@ def _read_state(directory):
         return json.load(f)
 
 
-def _write_state(directory, **changes):
-    directory = Path(directory)
-    path = _state_path(directory)
+def _write_state(run_directory, **changes):
+    run_directory = Path(run_directory)
+    path = _state_path(run_directory)
     try:
         with path.open() as f:
             state = json.load(f)
