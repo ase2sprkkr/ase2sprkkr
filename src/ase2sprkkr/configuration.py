@@ -10,6 +10,7 @@ from .common.container_definitions import SectionDefinition, ConfigurationRootDe
 from .common.configuration_containers import RootConfigurationContainer
 from .common.value_definitions import ValueDefinition
 from .common.options import Option
+from .profiles import ProfilesConfigurationContainer
 import warnings
 import shutil
 import platformdirs
@@ -18,6 +19,12 @@ import platformdirs
 class Section(SectionDefinition):
     info_in_data_description = True
     dir_common_attributes = False
+
+
+class ProfilesSection(Section):
+    """Definition of the dict-like named execution-profile section."""
+
+    repeated_class = ProfilesConfigurationContainer
 
 
 def _get_suffix(*_):
@@ -228,11 +235,44 @@ class ConfigFileDefinition(ConfigurationRootDefinition):
 
 
 V = ConfigValueDefinition
+MPI = CustomMixed(Bool, Array(AlwaysQString.I), Integer.I)
 
 """ The definition of ASE2SPRKKR configuration """
 definition = ConfigFileDefinition(
     "config",
     [
+        V(
+            "default_profile",
+            AlwaysQString.I,
+            is_optional=True,
+            info="Explicit default execution profile. If unset, ASE and legacy profiles may be used as fallbacks.",
+        ),
+        ProfilesSection(
+            "profiles",
+            [
+                V(
+                    "mpi",
+                    MPI,
+                    is_optional=True,
+                    info='MPI runner for this profile. It accepts the same values as the legacy running.mpi option.',
+                ),
+                V(
+                    "executable_dir",
+                    AlwaysQString.I,
+                    is_optional=True,
+                    info="Directory containing SPR-KKR executables for this profile.",
+                ),
+                V(
+                    "executable_suffix",
+                    AlwaysQString.I,
+                    is_optional=True,
+                    info="Suffix appended to SPR-KKR executable names for this profile.",
+                ),
+            ],
+            is_repeated="DICT_SECTION",
+            is_optional=True,
+            info="Named SPR-KKR execution profiles. The reserved 'ase' and 'legacy' profiles are virtual and read-only.",
+        ),
         Section(
             "running",
             [
@@ -266,7 +306,7 @@ definition = ConfigFileDefinition(
                 ),
                 V(
                     "mpi",
-                    CustomMixed(Bool, Array(AlwaysQString.I), Integer.I),
+                    MPI,
                     is_optional=True,
                     default_value=None,
                     info='Use mpi for calculation? List of strings means yes, use the given strings as mpi runner and its params (e.g. [ "mpirun", "-n", "4" ]). Default None means try to autodetect. Integer number means use the standard runner with a given number of processes.',
