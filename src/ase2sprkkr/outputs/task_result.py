@@ -215,12 +215,11 @@ class KkrOutputReader:
         result = self.create_result(output, input_file)
         output_source = output if hasattr(output, "read") else result.path_to("output")
 
-        parsed_output, parsed_error, parsed_return_code = self.parser.read_from_file(
+        _parsed_output, parsed_error, parsed_return_code = self.parser.read_from_file(
             output_source, error, [result], return_code
         )
-        return self.complete_result(
-            result, parsed_output, parsed_error, parsed_return_code
-        )
+        result.complete(parsed_error, parsed_return_code)
+        return result
 
     @staticmethod
     def class_for_task(task):
