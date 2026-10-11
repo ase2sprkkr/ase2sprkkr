@@ -436,6 +436,10 @@ class ValueDefinition(RealItemDefinition):
         """The Option can be enriched by the definition, e.g. the docsting can be extended."""
         self.type.enrich(option)
 
+    def option_attribute_index(self, name):
+        """Return the named value index exposed as ``option.<name>``."""
+        return self.type.option_attribute_index(name)
+
     def data_description(self, verbose: Union[bool, str] = False, show_hidden=False, prefix: str = ""):
         """
         Return the description of the contained data type and their type.

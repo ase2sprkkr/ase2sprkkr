@@ -511,6 +511,10 @@ class RealItemDefinition(BaseDefinition):
             option.plot.__doc__ = " Plot the data."
             option.number_of_plots.__doc__ = " Return the number of plots to draw."
 
+    def option_attribute_index(self, name):
+        """Return an index exposed as ``option.<name>``, or ``None``."""
+        return None
+
     @property
     def formated_name(self):
         name = self.written_name
