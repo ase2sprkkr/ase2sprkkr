@@ -43,6 +43,12 @@ def parser(parser):
         const="overwrite",
     )
     parser.add_argument("-o", "--show-default", help="Show the default YAML configuration.", action="store_true")
+    parser.add_argument(
+        "-m",
+        "--migrate",
+        action="store_true",
+        help="Migrate the deprecated Python user configuration to config.yaml.",
+    )
 
 
 def default_content(file):
@@ -80,13 +86,27 @@ def default_content(file):
 def run(args, global_args):
     import os
     import pyparsing
-    from ...configuration import user_preferences_file, config
+    from ...configuration import (
+        config,
+        legacy_user_preferences_file,
+        user_preferences_file,
+    )
     import subprocess
 
     file = user_preferences_file()
 
     run = True
 
+    if args.migrate:
+        legacy_file = legacy_user_preferences_file()
+        if os.path.isfile(file):
+            print(f"YAML configuration already exists: '{file}'. Nothing was migrated.")
+        elif not os.path.isfile(legacy_file):
+            print(f"No legacy configuration found at '{legacy_file}'.")
+        else:
+            config.save_user_preferences()
+            print(f"Migrated '{legacy_file}' to '{file}'. The legacy file was left unchanged.")
+        run = False
     if args.default:
         if args.default == "overwrite" or not os.path.isfile(file):
             Path(file).parent.mkdir(parents=True, exist_ok=True)
