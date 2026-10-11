@@ -434,7 +434,7 @@ class SPRKKR(BaseCalculator):
             The input parameters is written into the input file,
                whose name is given by input_file argument.
 
-        potential: sprkkr.potential.potentials.Potential or str or None or False
+        potential: sprkkr.potential.Potentials.Potential or str or None or False
             If it is None, the self.potential value is used instead (see the later options)
             If False, the potential filename is specified in the input_parameters.
             If True,  create the potential according to the atoms and write to the resulting <potential_file> file.
@@ -793,7 +793,7 @@ class SPRKKR(BaseCalculator):
 
         print_output: bool or str or None
             Print output to stdout, too.
-            If print_output=='info' only a few lines per iteration will be printed.
+            If print_output=='info' only a few info lines per iteration will be printed.
             None means to use a default value (specified in constructor)
 
         read_callback: callable(str,str)
@@ -804,11 +804,11 @@ class SPRKKR(BaseCalculator):
             If True, KkrProcess that can be runned async is returned
 
         executable_suffix: str or bool or None
-            If not None, it overrides the executable_postifx, that have been specified when the
+            If not None, it overrides the executable_postifx, that have been specified in the
             calculator have been created.
 
         executable_dir: str or bool or None
-            If not None, it overrides the executable_dir, that have been specified when the
+            If not None, it overrides the executable_dir, that have been specified in the
             calculator have been created.
 
         mpi: bool or None
@@ -830,6 +830,8 @@ class SPRKKR(BaseCalculator):
                 atoms=atoms,
                 input_parameters=input_parameters,
                 potential=potential,
+                input_file=input_file,
+                potential_file=potential_file,
                 output_file=output_file,
                 empty_spheres=empty_spheres,
                 mpi=mpi,
@@ -911,7 +913,7 @@ class SPRKKR(BaseCalculator):
         Parameters
         ----------
         properties: list or str
-            List of what needs to be calculated. Can be any combination of ‘energy’, ‘forces’, ‘stress’, ‘dipole’, ‘charges’, ‘magmom’ and ‘magmoms’.
+            List of what needs to be calculated. Can be any combination of ‘energy’, ‘forces’, ‘stress’, 'dipole', 'charges', 'magmom' and 'magmoms'.
 
         system_changes: list of str
             List of what has changed since last calculation.  Can be
