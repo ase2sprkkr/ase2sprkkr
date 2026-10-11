@@ -25,7 +25,9 @@ def input_parameters():
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
     return InputParameters(
         "jorb", [CONTROL("JORB"), TAU, MODE, STRCONST, energy, TASK("JORB"), SITES],
-        executable="kkrgen", mpi=False, validators=_validate_jorb,
+        executable="kkrgen", mpi=False,
+        output_files=("{dataset}0_JORB.dat", "{dataset}0_JORB_UP.dat", "{dataset}0_JORB_DN.dat"),
+        validators=_validate_jorb,
         info="Valence paramagnetic current density in the full-potential formalism.",
         description="No task-specific options are read. JORB becomes E-INTEGRAL internally. "
                     "The final ORBCURDNS call is skipped by the native MPI postprocessing guard. "

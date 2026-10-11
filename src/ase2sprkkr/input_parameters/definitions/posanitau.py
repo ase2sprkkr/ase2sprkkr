@@ -39,7 +39,7 @@ def input_parameters():
                            V("POSVC", Keyword({"BM": "Native BM correlation potential", "DR": "Native DR correlation potential", "IPM": "Independent-particle model"}), "BM",
                              info="ASA electron-positron correlation potential: BM, DR, or independent-particle IPM."),
                        ]), SITES],
-        executable="kkrgen", mpi=False, validators=_validate_posanitau,
+        executable="kkrgen", mpi=False, output_files=("{dataset}_positron.rho",), validators=_validate_posanitau,
         info="Positron annihilation rate and lifetime",
         description="Periodic 3D ASA FREL lifetime from integrated positron density. "
                     "Uses an electronic potential and may reuse DATASET_positron.rho. "

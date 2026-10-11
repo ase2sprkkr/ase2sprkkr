@@ -32,7 +32,8 @@ def input_parameters():
             V("CL", Keyword(*(f"{n}{s}" for n in range(1, 6) for s in "SPDF")), "2P", is_always_added=False),
             V("CALCLS", False, info="Calculate (l,s)-resolved spectra."),
             V("OUTGNU", False, info="Write additional gnuplot data."),
-        ]), SITES], executable="kkrgen", mpi=False, validators=_validate_nraes,
+        ]), SITES], executable="kkrgen", mpi=False,
+        input_files=("{dataset}.dos",), validators=_validate_nraes,
         info="Nonrelativistic Auger electron spectroscopy from existing DATASET.dos (ASA).",
         description="Requires old-format spin-polarized DOS on a uniform increasing mesh covering occupied states up to EF. "
                     "ENERGY.NE supplies allocation capacity; actual energies come from DOS. "

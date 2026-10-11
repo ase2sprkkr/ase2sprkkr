@@ -40,7 +40,8 @@ def input_parameters():
             V("CALCLS", False, info="Calculate (l,s)-resolved spectra."),
             V("OUTGNU", False, info="Write additional gnuplot data."),
             V("GAMMA", float, is_optional=True, info="Native parameter printed in eV; positive values enable DOS broadening."),
-        ]), SITES], executable="kkrgen", mpi=False, validators=_validate_aps,
+        ]), SITES], executable="kkrgen", mpi=False,
+        input_files=("{dataset}.dos",), validators=_validate_aps,
         info="Appearance-potential spectroscopy from existing DATASET.dos (ASA).",
         description="Requires old-format spin-polarized DOS on a uniform increasing mesh starting at EF. "
                     "ENERGY.NE supplies allocation capacity; actual energies come from DOS. "

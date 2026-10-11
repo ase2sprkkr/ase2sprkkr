@@ -82,8 +82,11 @@ def input_parameters():
     control = CONTROL("POSANI").copy(add=[V("RDTAU", True, is_always_added=True, info="Use existing electron TAU data.")])
     return InputParameters("posani", [control, tau, MODE, STRCONST, CPA,
                            energy, TASK("POSANI").copy(members), SITES],
-                           executable="kkrgen", mpi=True, validators=_validate_posani,
+                           executable="kkrgen", mpi=True,
+                           input_files=("{dataset}_pos_data.pan",),
+                           output_files=("{dataset}_BND.mpa", "{dataset}_COR.mpa", "{dataset}_TOT.mpa"),
+                           validators=_validate_posani,
                            info="Positron annihilation momentum density and profiles",
-                           description="Periodic FREL workflow using electron potential, electron TAU data and DATASET_pos_dat.pan from POSANIPREP. Native TAUQQ reader/writer assumes NQ=NT; other systems are unsafe. "
+                           description="Periodic FREL workflow using electron potential, electron TAU data and DATASET_pos_data.pan from POSANIPREP. Native TAUQQ reader/writer assumes NQ=NT; other systems are unsafe. "
                            "ONLY_CORE and USE_ZJOVZZ workflows are not audited. NONMAG is allowed. "
                            "Native code forces the ZJ wavefunction convention even for FULLPOT.")

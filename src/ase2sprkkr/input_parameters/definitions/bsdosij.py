@@ -34,7 +34,7 @@ def input_parameters():
         V("QREPONLY", False, info="Treat only representative central sites."),
     ])
     return InputParameters("bsdosij", [CONTROL("BSDOSIJ"), tau, MODE, STRCONST, energy, task, SITES],
-        executable="kkrgen", mpi=True, validators=_validate,
+        executable="kkrgen", mpi=True, output_files=("{dataset}_XCPLTEN_Jij.dat",), validators=_validate,
         info="Experimental site-resolved back-scattering DOS.",
         description="Native 9.7 component and output indexing appear faulty; numerical results are unverified. "
                     "Potential-dependent native checks also require KMROT=0, NKM=NKMMAX and representative type sites.")

@@ -28,7 +28,9 @@ def input_parameters():
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
     return InputParameters(
         "jalf", [CONTROL("JALF"), TAU, MODE, STRCONST, energy, TASK("JALF"), SITES],
-        executable="kkrgen", mpi=False, validators=_validate_jalf,
+        executable="kkrgen", mpi=False,
+        output_files=("{dataset}0_JALF.dat", "curdns1", "curdns2", "curdns3"),
+        validators=_validate_jalf,
         info="Valence current density from Dirac alpha matrices, with magnetic moment.",
         description="No task-specific options are read. JALF becomes E-INTEGRAL internally. "
                     "The final CURDNS call is skipped by the native MPI postprocessing guard. "

@@ -77,7 +77,9 @@ def input_parameters():
     members += [V(name, False) for name in ("MD2D", "EMD2D", "SHFT", "SHFT_PP", "SHFT_PN", "INSIDE_SPHERE", "SQQ_RESOLVED")]
     return InputParameters("compton", [CONTROL("COMPTON"), tau, MODE, STRCONST, CPA,
                            energy, TASK("COMPTON").copy(members), SITES],
-                           executable="kkrgen", mpi=True, validators=_validate_compton,
+                           executable="kkrgen", mpi=True,
+                           output_files=("{dataset}_BND.mcp", "{dataset}_COR.mcp", "{dataset}_TOT.mcp"),
+                           validators=_validate_compton,
                            info="Compton momentum density and profiles",
                            description="Periodic FREL split-contour workflow using an existing compatible TAU directory. "
                            "ONLY_CORE and USE_ZJOVZZ workflows are not audited. NONMAG is allowed. "

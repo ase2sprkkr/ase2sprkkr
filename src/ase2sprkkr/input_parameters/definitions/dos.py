@@ -42,6 +42,7 @@ def input_parameters():
         ],
         executable="kkrgen",
         mpi=True,
+        output_files=("{dataset}.dos",),
         validators=_validate_dos,
         info="DOS - The density of states computation",
     )
