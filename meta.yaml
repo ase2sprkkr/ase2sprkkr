@@ -30,6 +30,7 @@ requirements:
     - elementy
     - platformdirs
     - packaging
+    - ruamel.yaml >=0.18.16
 
 test:
   source_files:
@@ -46,7 +47,7 @@ test:
 about:
   home: https://ase2sprkkr.github.io/ase2sprkkr/
   license: MIT
-  summary: 'SPR-KKR wrapper for ASE - Atomic Simulation Environtment'
+  summary: 'SPR-KKR wrapper for ASE - Atomic Simulation Environment'
   description: |
     SPR-KKR is the band structure program package for electronic structure
     calculations. This packages provide wrapper that allows to use SPR-KKR
