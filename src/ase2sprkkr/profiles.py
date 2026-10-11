@@ -205,6 +205,18 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             return self._ase_available()
         return super().__contains__(name)
 
+    def _get_members(self, name, unknown, is_option, lower_case, *, accept):
+        """Keep the mutable legacy backing profile private from generic lookup."""
+        if isinstance(name, str) and name.split(".", 1)[0] == "legacy":
+            return
+        yield from super()._get_members(
+            name,
+            unknown,
+            is_option,
+            lower_case,
+            accept=accept,
+        )
+
     def _virtual_names(self) -> Iterator[str]:
         if self._ase_available():
             yield "ase"
