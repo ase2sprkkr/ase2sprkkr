@@ -31,9 +31,14 @@ class _SpglibCompatibilityWrapper:
 
     def __getattr__(self, name):
         try:
-            return self.dataset[name]
-        except KeyError as ke:
-            raise AttributeError(ke)
+            dataset = self.__dict__["dataset"]
+        except KeyError:
+            raise AttributeError(name) from None
+
+        try:
+            return dataset[name]
+        except KeyError:
+            raise AttributeError(name) from None
 
     @classmethod
     def create_if_needed(cls, dataset):
