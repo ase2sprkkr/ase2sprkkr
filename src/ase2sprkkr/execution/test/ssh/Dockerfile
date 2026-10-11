@@ -2,7 +2,8 @@ FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
-    VIRTUAL_ENV=/opt/venv
+    VIRTUAL_ENV=/opt/venv \
+    ASE2SPRKKR_TEST_SCF_OUTPUT=/workspace/ase2sprkkr/src/ase2sprkkr/outputs/examples/Al_SCF.out
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN apt-get update \
@@ -44,8 +45,9 @@ RUN useradd -m -s /bin/bash tester \
         'PubkeyAuthentication yes' \
         > /etc/ssh/sshd_config.d/ase2sprkkr-test.conf
 
+COPY kkrscf /usr/local/bin/kkrscf
 COPY entrypoint.sh /usr/local/bin/ssh-test-entrypoint
-RUN chmod 0755 /usr/local/bin/ssh-test-entrypoint
+RUN chmod 0755 /usr/local/bin/kkrscf /usr/local/bin/ssh-test-entrypoint
 
 WORKDIR /workspace
 EXPOSE 22

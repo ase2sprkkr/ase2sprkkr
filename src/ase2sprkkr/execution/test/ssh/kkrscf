@@ -1,0 +1,42 @@
+#!/opt/venv/bin/python
+"""Small SPR-KKR SCF stand-in used by the Docker/SSH integration test."""
+
+import os
+import re
+import shutil
+import sys
+import time
+from pathlib import Path
+
+
+POTFIL_RE = re.compile(
+    r"\bPOTFIL\s*=\s*(?:\"([^\"]+)\"|'([^']+)'|([^\s]+))",
+    re.IGNORECASE,
+)
+
+
+def main():
+    parameters = sys.stdin.read()
+    match = POTFIL_RE.search(parameters)
+    if match is None:
+        raise RuntimeError("SCF test input does not contain CONTROL.POTFIL")
+
+    potfil = next(value for value in match.groups() if value is not None)
+    potential = Path(potfil)
+    if not potential.is_file():
+        raise FileNotFoundError(f"Input potential was not staged: {potential}")
+
+    fixture = Path(os.environ["ASE2SPRKKR_TEST_SCF_OUTPUT"])
+    time.sleep(0.25)
+    with fixture.open() as output:
+        for line in output:
+            sys.stdout.write(line)
+            sys.stdout.flush()
+            time.sleep(0.002)
+
+    # KKRSCF writes the updated potential only after the SCF run completes.
+    shutil.copyfile(potential, Path(str(potential) + "_new"))
+
+
+if __name__ == "__main__":
+    main()
