@@ -200,3 +200,28 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         """Iterate over both persistent and virtual profiles."""
         for name in self:
             yield name, self[name]
+
+    def resolve_name(self, name=None):
+        """Resolve the profile name according to configuration precedence.
+
+        An explicit ``name`` wins.  Otherwise an explicitly configured
+        ``default_profile`` wins, followed by ASE and then by the deprecated
+        legacy configuration.  ``None`` means that no configured profile is
+        available and the caller may use its automatic fallback.
+        """
+        if name is None:
+            name = self._container.default_profile()
+        if name is not None:
+            if name not in self:
+                raise KeyError(f"Unknown execution profile {name!r}")
+            return name
+        if "ase" in self:
+            return "ase"
+        if "legacy" in self:
+            return "legacy"
+        return None
+
+    def resolve(self, name=None):
+        """Return the resolved profile object, or ``None`` for auto fallback."""
+        name = self.resolve_name(name)
+        return None if name is None else self[name]
