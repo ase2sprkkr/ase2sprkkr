@@ -34,6 +34,8 @@ import re
 import warnings
 from ..common.misc import config_property, first_non_none
 from ..configuration import config
+from ..execution import LocalExecutor
+from .profile import SPRKKRProfile
 
 
 class SPRKKR(BaseCalculator):
@@ -67,6 +69,8 @@ class SPRKKR(BaseCalculator):
         empty_spheres: Optional[Union[str, bool, Dict]] = None,
         executable_suffix=None,
         executable_dir: Optional[Union[str, bool]] = None,
+        profile=None,
+        executor=None,
         **kwargs,
     ):
         """
@@ -191,9 +195,15 @@ class SPRKKR(BaseCalculator):
             self.input_parameters.set(options, unknown="find")
         self.print_output = print_output
         self.empty_spheres = empty_spheres
-        self.executable_suffix = executable_suffix
-        self.executable_dir = executable_dir
-        self.mpi = mpi
+        self.profile = profile or SPRKKRProfile(
+            executable_dir=executable_dir,
+            executable_suffix=executable_suffix,
+            mpi=mpi,
+        )
+        self.executor = executor or LocalExecutor()
+        self.executable_suffix = self.profile.executable_suffix
+        self.executable_dir = self.profile.executable_dir
+        self.mpi = self.profile.mpi
         self.label = label
         self._counter = 0
         # For %c template in file names
@@ -784,6 +794,8 @@ class SPRKKR(BaseCalculator):
         executable_dir=None,
         callback=None,
         gdb=False,
+        profile=None,
+        executor=None,
     ):
         """
         Do the calculation, return various results.
@@ -801,7 +813,13 @@ class SPRKKR(BaseCalculator):
             The second argument is either 'out' or 'err'
 
         run_async: bool
-            If True, KkrProcess that can be runned async is returned
+            If True, a run object is returned without executing it synchronously.
+
+        profile: ase2sprkkr.sprkkr.profile.SPRKKRProfile or None
+            Override the calculator execution profile for this run.
+
+        executor: ase2sprkkr.execution.Executor or None
+            Override the calculator execution backend for this run.
 
         executable_suffix: str or bool or None
             If not None, it overrides the executable_postifx, that have been specified when the
@@ -859,6 +877,8 @@ class SPRKKR(BaseCalculator):
                     mpi=mpi,
                     callback=callback,
                     gdb=gdb,
+                    profile=profile or self.profile,
+                    executor=executor or self.executor,
                 )
             if input_parameters.TASK.TASK() == "SCF" and not potential and not atoms:
                 try:
@@ -898,6 +918,8 @@ class SPRKKR(BaseCalculator):
         callback=None,
         executable_dir=None,
         gdb=False,
+        profile=None,
+        executor=None,
     ):
         """
         ASE-interface method for the calculation.  This method runs the appropriate task(s)
@@ -968,6 +990,8 @@ class SPRKKR(BaseCalculator):
             executable_dir,
             cleanup,
             gdb,
+            profile,
+            executor,
         )
         return out
 
