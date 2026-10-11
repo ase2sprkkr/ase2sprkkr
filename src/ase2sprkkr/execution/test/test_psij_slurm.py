@@ -43,6 +43,8 @@ def test_psij_slurm_docker():
             docker,
             "run",
             "--rm",
+            "--privileged",
+            "--cgroupns=private",
             "--hostname",
             "node1",
             "--mount",

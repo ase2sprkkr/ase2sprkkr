@@ -5,6 +5,12 @@ mkdir -p /run/munge /var/lib/munge /var/log/munge \
          /var/spool/slurmctld /var/spool/slurmd /var/log/slurm \
          /root/.config/ase2sprkkr
 
+# Slurm 23.11 initializes the cgroup/v2 layer even with task/cgroup disabled.
+# This test runs without systemd, so cgroup.conf uses IgnoreSystemd=yes and the
+# privileged, private cgroup namespace supplied by the outer pytest lets Slurm
+# create its own scope here without touching the host hierarchy.
+mkdir -p /sys/fs/cgroup/system.slice
+
 if [[ ! -s /etc/munge/munge.key ]]; then
     dd if=/dev/urandom of=/etc/munge/munge.key bs=1024 count=1 status=none
 fi

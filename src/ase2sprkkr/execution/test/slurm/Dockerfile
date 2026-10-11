@@ -39,6 +39,7 @@ RUN python3 -m venv "$VIRTUAL_ENV" \
         "numpy>=2.1"
 
 COPY slurm.conf /etc/slurm/slurm.conf
+COPY cgroup.conf /etc/slurm/cgroup.conf
 COPY entrypoint.sh /usr/local/bin/slurm-entrypoint
 
 RUN chmod 0755 /usr/local/bin/slurm-entrypoint \
