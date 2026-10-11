@@ -1,15 +1,27 @@
 """YAML persistence helpers for the ASE2SPRKKR configuration.
 
-This module deliberately only translates between YAML data and the existing
-configuration model. Selecting the user configuration file and migrating the
-legacy Python file are handled separately.
+The YAML document is kept separate from the typed configuration. Loading first
+tries the whole document atomically; if a user-data error is found, valid
+fragments are recovered while invalid/unknown raw nodes remain available for
+round-trip persistence.
 """
 
 from collections.abc import Mapping
 from pathlib import Path
+import warnings
 
 from ruamel.yaml import YAML
 from ruamel.yaml.comments import CommentedMap
+
+from .common.warnings import DataValidityError
+
+
+class YamlConfigurationWarning(UserWarning):
+    """Problems found while recovering a syntactically valid YAML config."""
+
+
+_EXPECTED_USER_ERRORS = (KeyError, TypeError, ValueError, DataValidityError)
+_MISSING = object()
 
 
 def _yaml():
@@ -40,55 +52,186 @@ def dump_yaml_document(file, data):
 
 
 def explicit_configuration(config):
-    """Return only values explicitly stored in ASE2SPRKKR configuration.
-
-    Generated compatibility values such as the virtual ``legacy`` profile are
-    intentionally omitted. Virtual profiles are likewise not part of the
-    persistent repeated section.
-    """
+    """Return only explicitly stored, non-generated configuration values."""
     return config.as_dict(only_changed="explicit", generated=False) or {}
 
 
-def apply_yaml_document(config, data):
-    """Apply a YAML mapping to a configuration object."""
+def _validate_yaml_shape(data):
     if not isinstance(data, Mapping):
         raise ValueError("ASE2SPRKKR configuration YAML must contain a mapping")
+    profiles = data.get("profiles")
+    if isinstance(profiles, Mapping) and "ase" in profiles:
+        raise ValueError("profiles.ase is virtual and cannot be stored in ASE2SPRKKR YAML")
+
+
+def apply_yaml_document(config, data):
+    """Apply a complete YAML mapping atomically to a configuration object."""
+    _validate_yaml_shape(data)
     config.set(data, unknown="fail")
 
 
+def _recover_profiles(config, value, accepted, issues):
+    if not isinstance(value, Mapping):
+        issues.append(("profiles", ValueError("profiles must be a mapping")))
+        return
+
+    accepted_profiles = CommentedMap()
+    for name, profile_data in value.items():
+        if name == "ase":
+            issues.append(("profile 'ase'", ValueError("the ASE profile is virtual and cannot be stored here")))
+            continue
+        try:
+            config.profiles.set({name: profile_data}, unknown="fail", merge=True)
+        except _EXPECTED_USER_ERRORS as error:
+            issues.append((f"profile {name!r}", error))
+        else:
+            accepted_profiles[name] = profile_data
+    if accepted_profiles:
+        accepted["profiles"] = accepted_profiles
+
+
+def _recover_section(member, path, value, accepted, issues):
+    """Recover a normal section, then fall back to individual options."""
+    try:
+        member.set(value, unknown="fail")
+    except _EXPECTED_USER_ERRORS:
+        if not isinstance(value, Mapping):
+            issues.append((path, ValueError(f"{path} must be a mapping")))
+            return
+    else:
+        accepted[path] = value
+        return
+
+    accepted_section = CommentedMap()
+    for name, child_value in value.items():
+        child_path = f"{path}.{name}"
+        try:
+            child = member.get_member(
+                name, unknown="fail", is_option=None, lower_case=False
+            )
+            child.set(child_value, unknown="fail")
+        except _EXPECTED_USER_ERRORS as error:
+            issues.append((child_path, error))
+        else:
+            accepted_section[name] = child_value
+    if accepted_section:
+        accepted[path] = accepted_section
+
+
+def _recover_configuration(config, data):
+    """Recover valid logical units after an atomic load has failed."""
+    accepted = CommentedMap()
+    issues = []
+
+    if "profiles" in data:
+        _recover_profiles(config, data["profiles"], accepted, issues)
+
+    # Load ordinary sections before default_profile so profile references see
+    # all profiles which were successfully recovered.
+    keys = [key for key in data if key not in ("profiles", "default_profile")]
+    if "default_profile" in data:
+        keys.append("default_profile")
+
+    for name in keys:
+        value = data[name]
+        try:
+            member = config.get_member(
+                name, unknown="fail", is_option=None, lower_case=False
+            )
+        except KeyError as error:
+            issues.append((str(name), error))
+            continue
+
+        if member._definition.is_option:
+            try:
+                member.set(value, unknown="fail")
+            except _EXPECTED_USER_ERRORS as error:
+                issues.append((str(name), error))
+            else:
+                accepted[name] = value
+        else:
+            _recover_section(member, str(name), value, accepted, issues)
+
+    return accepted, issues
+
+
+def _format_issues(file, issues):
+    lines = [
+        f"Problems found in ASE2SPRKKR configuration '{file}':",
+        "",
+    ]
+    for path, error in issues:
+        lines.append(f"- {path}: {error}")
+    lines.extend(("", "Other valid configuration values were loaded."))
+    return "\n".join(lines)
+
+
+def _apply_with_recovery(config, data, *, file=None, warn=True):
+    _validate_yaml_shape(data)
+    try:
+        config.set(data, unknown="fail")
+    except _EXPECTED_USER_ERRORS:
+        accepted, issues = _recover_configuration(config, data)
+        if warn and issues:
+            warnings.warn(
+                _format_issues(file or "<YAML>", issues),
+                YamlConfigurationWarning,
+                stacklevel=3,
+            )
+        return accepted, issues
+    return data, []
+
+
 def load_configuration_yaml(config, file):
-    """Load ``file`` and apply it to ``config``; return the round-trip document."""
+    """Load YAML strictly first, then recover independent valid fragments."""
     data = load_yaml_document(file)
-    apply_yaml_document(config, data)
+    _apply_with_recovery(config, data, file=file)
     return data
 
 
-def save_configuration_yaml(config, file, document=None):
-    """Persist explicit config values to YAML and preserve existing comments.
+def _classify_document(config, document):
+    """Return the subset of ``document`` which the current schema accepts."""
+    fresh = config._definition.create_object()
+    accepted, _issues = _apply_with_recovery(fresh, document, warn=False)
+    return accepted
 
-    When a round-trip ``document`` is supplied, mappings are updated in place so
-    comments attached to still-existing keys survive the save.
+
+def save_configuration_yaml(config, file, document=None):
+    """Persist explicit values without destroying unknown or invalid YAML.
+
+    Existing YAML is classified through the same loader. Valid nodes are
+    synchronized with ``config``; unknown or invalid nodes are preserved as raw
+    round-trip YAML unless the caller explicitly replaces the same logical unit.
     """
     values = explicit_configuration(config)
     if document is None:
         document = CommentedMap()
-    _update_mapping(document, values)
+        accepted = CommentedMap()
+    else:
+        accepted = _classify_document(config, document)
+    _update_mapping(document, values, accepted)
     dump_yaml_document(file, document)
     return document
 
 
-def _update_mapping(target, values):
-    """Synchronize a CommentedMap recursively without replacing its nodes."""
-    for key in tuple(target):
-        if key not in values:
+def _update_mapping(target, values, accepted):
+    """Synchronize known values while leaving unaccepted raw nodes untouched."""
+    for key in tuple(accepted):
+        if key not in values and key in target:
             del target[key]
 
     for key, value in values.items():
-        current = target.get(key)
+        current = target.get(key, _MISSING)
+        known_current = accepted.get(key, _MISSING)
+
         if isinstance(value, Mapping):
-            if not isinstance(current, Mapping):
+            # A mapping which existed but was not accepted is one invalid logical
+            # unit (notably a profile). Explicitly creating that same unit should
+            # replace it rather than retain its broken contents.
+            if current is _MISSING or not isinstance(current, Mapping) or known_current is _MISSING:
                 current = CommentedMap()
                 target[key] = current
-            _update_mapping(current, value)
+            known_children = known_current if isinstance(known_current, Mapping) else CommentedMap()
+            _update_mapping(current, value, known_children)
         else:
             target[key] = value
