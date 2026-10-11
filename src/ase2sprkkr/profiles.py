@@ -1,9 +1,9 @@
-"""Execution profiles for configuring how SPR-KKR calculations are run.
+"""Execution-profile views used by the ase2sprkkr configuration.
 
-The collection deliberately distinguishes persistent ase2sprkkr profiles from
-virtual profiles backed by other configuration sources.  Virtual profiles are
-visible through the mapping API, but are never serialized as ase2sprkkr
-configuration.
+Persistent named profiles live in the ase2sprkkr configuration.  ``ase`` and
+``legacy`` are virtual read-only profiles backed by ASE and by the deprecated
+ase2sprkkr execution options respectively; they are never serialized as named
+ase2sprkkr profiles.
 """
 
 from __future__ import annotations
@@ -11,11 +11,10 @@ from __future__ import annotations
 from collections.abc import Iterator
 
 from .common.repeated_configuration_containers import RepeatedConfigurationContainer
-from .common.warnings import DataValidityError
 
 
 class ReadOnlyProfileValue:
-    """Read-only option-like view used by externally backed profiles."""
+    """Small option-like read-only value used by virtual profiles."""
 
     def __init__(self, getter, name: str):
         self._getter = getter
@@ -68,16 +67,64 @@ class LegacyProfile:
         )
 
 
+class ASEProfile:
+    """Read-only view of ASE's ``[sprkkr]`` calculator configuration.
+
+    ASE calculator profiles are intentionally not copied into the ase2sprkkr
+    configuration.  Keeping this object as a live view also means changes made
+    to ASE's in-memory configuration are immediately visible here.
+    """
+
+    name = "ase"
+    source = "ase"
+    read_only = True
+
+    def __init__(self, ase_config):
+        self._ase_config = ase_config
+
+    @property
+    def _section(self):
+        return self._ase_config.parser["sprkkr"]
+
+    def __getattr__(self, name):
+        if name.startswith("_"):
+            raise AttributeError(name)
+        if name not in self._section:
+            raise AttributeError(name)
+        return ReadOnlyProfileValue(lambda: self._section.get(name), name)
+
+    @property
+    def command(self):
+        return ReadOnlyProfileValue(lambda: self._section.get("command"), "command")
+
+    def as_dict(self, *args, **kwargs):
+        return dict(self._section.items())
+
+    get = as_dict
+
+    def set(self, *args, **kwargs):
+        raise TypeError(
+            "The 'ase' profile is read-only in this configuration API; "
+            "edit the ASE [sprkkr] configuration instead"
+        )
+
+
 class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
-    """Repeated profile section with non-persistent virtual profiles."""
+    """Dict-like repeated section with virtual external profiles.
+
+    Normal entries are stored by :class:`RepeatedConfigurationContainer` and
+    therefore participate in parsing/serialization.  Virtual entries are added
+    only by lookup/iteration, so the base implementation remains the sole
+    persistence path and cannot accidentally write them to ase2sprkkr config.
+    """
 
     reserved_names = frozenset(("legacy", "ase"))
 
     def _legacy_available(self) -> bool:
         config = self._container
-        # Presence, rather than difference from the default, matters here: an
-        # explicitly configured value equal to its default still is legacy
-        # configuration.  ``None`` is represented by clearing an option.
+        # Explicit presence matters, not whether the value differs from its
+        # default.  This also deliberately ignores the suffix environment
+        # default: an environment default alone is not a legacy config profile.
         return any(
             getattr(option, "_value", None) is not None
             for option in (
@@ -87,77 +134,69 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             )
         )
 
+    @staticmethod
+    def _ase_config():
+        try:
+            from ase.config import cfg
+        except (ImportError, AttributeError):
+            return None
+        return cfg
+
+    def _ase_available(self) -> bool:
+        cfg = self._ase_config()
+        if cfg is None:
+            return False
+        try:
+            section = cfg.parser["sprkkr"]
+        except KeyError:
+            return False
+        # ``command`` is the common ASE profile requirement.  An incomplete
+        # section should not silently become the preferred runnable profile.
+        return bool(section.get("command"))
+
     def _virtual(self, name):
+        if name == "ase" and self._ase_available():
+            return ASEProfile(self._ase_config())
         if name == "legacy" and self._legacy_available():
             return LegacyProfile(self._container)
         raise KeyError(name)
 
-    def add(self, id):
+    def add(self, id=None):
         if id in self.reserved_names:
             raise ValueError(f"{id!r} is a reserved profile name")
         return super().add(id)
 
     def __getitem__(self, name):
         try:
-            return self._values[name]
-        except KeyError:
+            return super().__getitem__(name)
+        except (IndexError, KeyError, TypeError):
             return self._virtual(name)
 
     def __contains__(self, name):
-        return name in self._values or (
+        return super().__contains__(name) or (
+            name == "ase" and self._ase_available()
+        ) or (
             name == "legacy" and self._legacy_available()
         )
 
     def _virtual_names(self) -> Iterator[str]:
+        if self._ase_available():
+            yield "ase"
         if self._legacy_available():
             yield "legacy"
 
     def __iter__(self):
-        yield from self._values
+        # Iteration is the public list of available profile names.  ``items``
+        # and ``values`` intentionally remain inherited and persistent-only,
+        # because the base repeated-container implementation uses them while
+        # staging, validating and serializing its contents.
+        yield from super().__iter__()
         yield from self._virtual_names()
 
     def __len__(self):
-        return len(self._values) + sum(1 for _ in self._virtual_names())
+        return super().__len__() + sum(1 for _ in self._virtual_names())
 
-    def items(self):
-        yield from self._values.items()
-        for name in self._virtual_names():
-            yield name, self._virtual(name)
-
-    def values(self):
-        yield from self._values.values()
-        for name in self._virtual_names():
-            yield self._virtual(name)
-
-    # The methods below intentionally use only _values.  Virtual profiles are
-    # views of external/legacy state and must never leak into persistence.
-    def _as_dict(self, only_changed="basic", generated=False, copy=False):
-        out = {}
-        for key, value in self._values.items():
-            item = value.as_dict(only_changed, generated, copy)
-            if item is not None:
-                out[key] = item
-        return out or None
-
-    def is_changed(self):
-        return any(value.is_changed() for value in self._values.values())
-
-    def _save_to_file(self, file, always=False, name_in_grammar=None, delimiter=""):
-        out = False
-        for value in self._values.values():
-            definition = self._definition
-            if definition._save_to_file(
-                file, value, always, name_in_grammar, delimiter=delimiter
-            ):
-                name_in_grammar = False
-                delimiter = definition.repeated_delimiter
-                out = True
-        return out
-
-    def _validate(self, why="save"):
-        if why == "save" and not self._definition.is_optional and not self.has_any_value():
-            DataValidityError.warn(
-                f"Non-optional section {self._definition.name} has no value to save"
-            )
-        for value in self._values.values():
-            value._validate(why)
+    def available_items(self):
+        """Iterate over both persistent and virtual profiles."""
+        for name in self:
+            yield name, self[name]
