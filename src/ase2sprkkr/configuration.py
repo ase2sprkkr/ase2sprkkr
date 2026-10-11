@@ -245,7 +245,7 @@ class ConfigurationOption(Option):
         """
 
         self.set(value)
-        self.store_permanent()
+        self.store_permanent(doc, doc_regex)
 
     def store_permanent(self, doc=None, doc_regex: Union[bool, str] = False):
         """Store the actual value in the config file
@@ -255,7 +255,17 @@ class ConfigurationOption(Option):
         val = self()
         if val is not None:
             val = self._definition.type.string(val)
-        config.store_value_permanent(self.get_path(), val)
+        config.store_value_permanent(self.get_path(), val, doc, doc_regex)
+
+
+class GeneratedConfigurationOption(ConfigurationOption):
+    """Configuration option whose value is backed by another config object."""
+
+    def store_permanent(self, doc=None, doc_regex: Union[bool, str] = False):
+        val = self()
+        if val is not None:
+            val = repr(val)
+        config.store_value_permanent(self.get_path(), val, doc, doc_regex)
 
 
 class ConfigValueDefinition(ValueDefinition):
@@ -263,7 +273,7 @@ class ConfigValueDefinition(ValueDefinition):
 
 
 class GeneratedConfigValueDefinition(GeneratedValueDefinition):
-    result_class = ConfigurationOption
+    result_class = GeneratedConfigurationOption
 
 
 class ConfigFileDefinition(ConfigurationRootDefinition):
