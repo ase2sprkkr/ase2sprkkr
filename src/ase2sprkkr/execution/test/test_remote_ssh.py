@@ -136,9 +136,11 @@ def test_remote_executor_over_ssh():
                 if kind == "out" and text:
                     output_seen.set()
 
+            calculation_directory = temporary / "calculation"
+            calculation_directory.mkdir()
             calculator = SPRKKR(
                 atoms=bulk("Al"),
-                directory=temporary / "calculation",
+                directory=calculation_directory,
                 executor=executor,
                 executable_dir="/opt/sprkkr",
                 executable_suffix=suffix,
