@@ -2,8 +2,7 @@ FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
-    VIRTUAL_ENV=/opt/venv \
-    ASE2SPRKKR_TEST_SCF_OUTPUT=/workspace/ase2sprkkr/src/ase2sprkkr/outputs/examples/Al_SCF.out
+    VIRTUAL_ENV=/opt/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN apt-get update \

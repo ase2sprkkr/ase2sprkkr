@@ -1,7 +1,6 @@
 #!/opt/venv/bin/python
 """Small SPR-KKR SCF stand-in used by the Docker/SSH integration test."""
 
-import os
 import re
 import shutil
 import sys
@@ -12,6 +11,9 @@ from pathlib import Path
 POTFIL_RE = re.compile(
     r"\bPOTFIL\s*=\s*(?:\"([^\"]+)\"|'([^']+)'|([^\s]+))",
     re.IGNORECASE,
+)
+SCF_OUTPUT = Path(
+    "/workspace/ase2sprkkr/src/ase2sprkkr/outputs/examples/Al_SCF.out"
 )
 
 
@@ -26,9 +28,8 @@ def main():
     if not potential.is_file():
         raise FileNotFoundError(f"Input potential was not staged: {potential}")
 
-    fixture = Path(os.environ["ASE2SPRKKR_TEST_SCF_OUTPUT"])
     time.sleep(0.25)
-    with fixture.open() as output:
+    with SCF_OUTPUT.open() as output:
         for line in output:
             sys.stdout.write(line)
             sys.stdout.flush()
