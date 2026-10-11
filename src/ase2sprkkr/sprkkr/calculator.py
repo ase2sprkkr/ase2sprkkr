@@ -773,7 +773,7 @@ class SPRKKR(BaseCalculator):
             else:
                 return input_parameters, input_file, potential_file
 
-    def run(
+    def create_run(
         self,
         atoms=None,
         input_parameters=None,
@@ -789,7 +789,6 @@ class SPRKKR(BaseCalculator):
         mpi: bool = None,
         print_output=None,
         read_callback: Optional[callable] = None,
-        run_async: bool = False,
         executable_suffix=None,
         executable_dir=None,
         callback=None,
@@ -797,8 +796,11 @@ class SPRKKR(BaseCalculator):
         profile=None,
         executor=None,
     ):
-        """
-        Do the calculation, return various results.
+        """Prepare a calculation and return an unstarted Runner.
+
+        The returned Runner owns execution.  Creating it prepares the SPR-KKR
+        input/output files but does not execute the task and does not update
+        the calculator state.
 
         Parameters
         ----------
@@ -811,9 +813,6 @@ class SPRKKR(BaseCalculator):
         read_callback: callable(str,str)
             Receives output of the called executable.
             The second argument is either 'out' or 'err'
-
-        run_async: bool
-            If True, a run object is returned without executing it synchronously.
 
         profile: ase2sprkkr.sprkkr.profile.SPRKKRProfile or None
             Override the calculator execution profile for this run.
@@ -848,30 +847,32 @@ class SPRKKR(BaseCalculator):
                 atoms=atoms,
                 input_parameters=input_parameters,
                 potential=potential,
+                input_file=input_file,
+                potential_file=potential_file,
                 output_file=output_file,
+                directory=directory,
+                create_subdirs=create_subdirs,
                 empty_spheres=empty_spheres,
                 mpi=mpi,
                 options=options,
                 task=task,
                 return_files=True,
-                directory=directory,
             )
 
             executable_suffix = first_non_none(executable_suffix, self.executable_suffix)
             executable_dir = first_non_none(executable_dir, self.executable_dir)
             print_output = first_non_none(print_output, self.print_output)
             mpi = first_non_none(mpi, self.mpi)
-            empty_spheres = first_non_none(empty_spheres, self.empty_spheres)
 
             with directory.chdir():
-                out = input_parameters.run_process(
+                return input_parameters.run_process(
                     self,
                     input_file,
                     output_file,
                     directory=os.path.abspath("."),
                     print_output=print_output,
                     read_callback=read_callback,
-                    run_async=run_async,
+                    run_async=True,
                     executable_suffix=executable_suffix,
                     executable_dir=executable_dir,
                     mpi=mpi,
@@ -880,20 +881,25 @@ class SPRKKR(BaseCalculator):
                     profile=profile or self.profile,
                     executor=executor or self.executor,
                 )
-            if input_parameters.TASK.TASK() == "SCF" and not potential and not atoms:
-                try:
-                    pot = out.potential
-                except (ValueError, FileNotFoundError):
-                    pot = None
-                if pot:
-                    self.potential = pot
-            return out
 
     def value_or_default(self, name, value):
         """Return the default value of the parameter, if the given value is None"""
         if value is None:
             value = getattr(self, name)
         return value
+
+    def _update_from_result(self, result, *, adopt_potential=False):
+        """Update calculator state from a completed synchronous result."""
+        if hasattr(result, "energy"):
+            self.results["energy"] = result.energy
+
+        if adopt_potential:
+            try:
+                potential = result.potential
+            except (ValueError, FileNotFoundError):
+                return
+            if potential:
+                self.potential = potential
 
     def calculate(
         self,
@@ -913,7 +919,6 @@ class SPRKKR(BaseCalculator):
         task=None,
         print_output=None,
         read_callback: Optional[callable] = None,
-        run_async: bool = False,
         executable_suffix=None,
         callback=None,
         executable_dir=None,
@@ -943,7 +948,7 @@ class SPRKKR(BaseCalculator):
             This calculator ignore properties and system_changes.
 
         ---------
-        For the other parameters, see the run() and save_input() methods
+        For the other parameters, see the create_run() and save_input() methods
 
         ---------
 
@@ -964,36 +969,35 @@ class SPRKKR(BaseCalculator):
 
         # There is no need to call this
         # super().calculate(atoms, properties, system_changes)
-        def cleanup(out):
-            if callback:
-                callback(out)
-            if hasattr(out, "energy"):
-                self.results.update({"energy": out.energy})
-
-        out = self.run(
-            atoms,
-            input_parameters,
-            potential,
-            input_file,
-            potential_file,
-            output_file,
-            directory,
-            create_subdirs,
-            options,
-            task,
-            empty_spheres,
-            mpi,
-            print_output,
-            read_callback,
-            run_async,
-            executable_suffix,
-            executable_dir,
-            cleanup,
-            gdb,
-            profile,
-            executor,
+        runner = self.create_run(
+            atoms=atoms,
+            input_parameters=input_parameters,
+            potential=potential,
+            input_file=input_file,
+            potential_file=potential_file,
+            output_file=output_file,
+            directory=directory,
+            create_subdirs=create_subdirs,
+            options=options,
+            task=task,
+            empty_spheres=empty_spheres,
+            mpi=mpi,
+            print_output=print_output,
+            read_callback=read_callback,
+            executable_suffix=executable_suffix,
+            executable_dir=executable_dir,
+            gdb=gdb,
+            profile=profile,
+            executor=executor,
         )
-        return out
+        result = runner.run()
+        self._update_from_result(
+            result,
+            adopt_potential=(result.task_name.upper() == "SCF" and not potential and not atoms),
+        )
+        if callback:
+            callback(result)
+        return result
 
     def scf(self, *args, **kwargs):
         """A shortcut for calculating a SCF task"""
