@@ -4,7 +4,7 @@ from .base import ExecutionSpec, Executor, Runner, RunReference, RunState
 from .local import LocalExecutor, LocalRunner
 from .psij import PsijExecutor, PsijRunner
 from .remote import RemoteExecutor, RemoteRunner
-from .transport import LocalTransport, SshTransport, Transport
+from .transport import LocalTransport, RunningCommand, SshTransport, Transport
 
 __all__ = [
     "ExecutionSpec",
@@ -19,6 +19,7 @@ __all__ = [
     "RemoteExecutor",
     "RemoteRunner",
     "Transport",
+    "RunningCommand",
     "LocalTransport",
     "SshTransport",
 ]
