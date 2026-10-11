@@ -9,7 +9,7 @@ import shlex
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Protocol
+from typing import Optional, Protocol
 
 
 class RunningCommand(Protocol):
@@ -17,7 +17,7 @@ class RunningCommand(Protocol):
 
     stdout: asyncio.StreamReader
     stderr: asyncio.StreamReader
-    returncode: int
+    returncode: Optional[int]
 
     async def wait(self) -> int: ...
 
