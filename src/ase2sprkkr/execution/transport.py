@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import os
 import posixpath
 import shlex
@@ -47,6 +48,21 @@ class Transport:
 
     async def read_file(self, path):
         raise NotImplementedError
+
+    async def file_digest(self, path):
+        """Return the SHA-256 digest of *path*, or ``None`` if it does not exist."""
+        raise NotImplementedError
+
+
+def _sha256_file(path):
+    digest = hashlib.sha256()
+    try:
+        with open(path, "rb") as file:
+            for chunk in iter(lambda: file.read(1024 * 1024), b""):
+                digest.update(chunk)
+    except FileNotFoundError:
+        return None
+    return digest.hexdigest()
 
 
 async def _completed_process(process, argv, input=None, check=True):
@@ -97,6 +113,10 @@ class LocalTransport(Transport):
     async def read_file(self, path):
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(None, Path(path).read_bytes)
+
+    async def file_digest(self, path):
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, _sha256_file, path)
 
 
 class SshTransport(Transport):
@@ -167,3 +187,26 @@ class SshTransport(Transport):
 
     async def read_file(self, path):
         return (await self.run(("cat", "--", os.fspath(path)))).stdout
+
+    async def file_digest(self, path):
+        path = os.fspath(path)
+        result = await self.run(
+            (
+                "sh",
+                "-c",
+                '[ -f "$1" ] || exit 3; sha256sum -- "$1"',
+                "sh",
+                path,
+            ),
+            check=False,
+        )
+        if result.returncode == 3:
+            return None
+        if result.returncode:
+            raise subprocess.CalledProcessError(
+                result.returncode,
+                result.args,
+                output=result.stdout,
+                stderr=result.stderr,
+            )
+        return result.stdout.decode("ascii").split(None, 1)[0]
