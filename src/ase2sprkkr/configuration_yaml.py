@@ -183,7 +183,7 @@ def _apply_with_recovery(config, data, *, file=None, warn=True):
     except _EXPECTED_USER_ERRORS:
         accepted, issues = _recover_configuration(config, data)
     else:
-        accepted = data
+        accepted = CommentedMap(data)
         issues = []
         _discard_invalid_default_profile(config, accepted, issues)
 
