@@ -49,6 +49,22 @@ def parser(parser):
         action="store_true",
         help="Migrate the deprecated Python user configuration to config.yaml.",
     )
+    cleanup = parser.add_mutually_exclusive_group()
+    cleanup.add_argument(
+        "--keep-init",
+        action="store_true",
+        help="After migration, keep the deprecated Python init script unchanged.",
+    )
+    cleanup.add_argument(
+        "--clean-init",
+        action="store_true",
+        help="After migration, remove migrated ASE2SPRKKR assignments from the init script.",
+    )
+    cleanup.add_argument(
+        "--delete-init",
+        action="store_true",
+        help="After migration, delete the deprecated Python init script.",
+    )
     parser.add_argument(
         "--init-script",
         action="store_true",
@@ -112,6 +128,67 @@ def _edit(file, *, create=None):
     subprocess.run([editor, file])
 
 
+def _requested_cleanup(args):
+    if args.keep_init:
+        return "keep"
+    if args.clean_init:
+        return "clean"
+    if args.delete_init:
+        return "delete"
+    return None
+
+
+def _prompt_cleanup():
+    if not sys.stdin.isatty():
+        raise SystemExit(
+            "Migration needs a legacy-file action when stdin is not interactive: "
+            "use --keep-init, --clean-init, or --delete-init."
+        )
+
+    print()
+    print("What should be done with the old Python init script?")
+    print("  1) Keep it unchanged")
+    print("  2) Clean migrated ASE2SPRKKR settings from it")
+    print("  3) Delete it")
+    while True:
+        choice = input("Choose 1, 2, or 3: ").strip().lower()
+        if choice in ("1", "keep", "k"):
+            return "keep"
+        if choice in ("2", "clean", "c"):
+            return "clean"
+        if choice in ("3", "delete", "d"):
+            return "delete"
+        print("Please choose 1, 2, or 3.")
+
+
+def _migrate(args, legacy_file, file):
+    from ...configuration import definition
+    from ...configuration_migration import (
+        clean_legacy_configuration,
+        migrate_legacy_configuration,
+    )
+
+    if Path(file).is_file():
+        print(f"YAML configuration already exists: '{file}'. Nothing was migrated.")
+        return
+    if not Path(legacy_file).is_file():
+        print(f"No legacy configuration found at '{legacy_file}'.")
+        return
+
+    migrate_legacy_configuration(legacy_file, file, definition)
+    print(f"Migrated '{legacy_file}' to '{file}'.")
+
+    action = _requested_cleanup(args) or _prompt_cleanup()
+    if action == "keep":
+        print(f"Kept legacy init script unchanged: '{legacy_file}'.")
+    elif action == "clean":
+        count = clean_legacy_configuration(legacy_file)
+        print(f"Removed {count} migrated configuration assignment(s) from '{legacy_file}'.")
+    else:
+        Path(legacy_file).unlink()
+        print(f"Deleted legacy init script: '{legacy_file}'.")
+
+
 def run(args, global_args):
     import os
     import pyparsing
@@ -125,14 +202,12 @@ def run(args, global_args):
     legacy_file = legacy_user_preferences_file()
     run = True
 
+    cleanup = _requested_cleanup(args)
+    if cleanup and not args.migrate:
+        raise SystemExit("--keep-init, --clean-init and --delete-init can only be used with --migrate")
+
     if args.migrate:
-        if os.path.isfile(file):
-            print(f"YAML configuration already exists: '{file}'. Nothing was migrated.")
-        elif not os.path.isfile(legacy_file):
-            print(f"No legacy configuration found at '{legacy_file}'.")
-        else:
-            config.save_user_preferences()
-            print(f"Migrated '{legacy_file}' to '{file}'. The legacy file was left unchanged.")
+        _migrate(args, legacy_file, file)
         run = False
     if args.default:
         if args.default == "overwrite" or not os.path.isfile(file):
