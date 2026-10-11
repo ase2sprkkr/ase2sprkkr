@@ -31,6 +31,10 @@ class ProcessOutputParser:
         self._stop_task = None
         self.proc = None
 
+    @property
+    def stop_requested(self):
+        return self._stop_requested.is_set()
+
     def stop_the_process(self):
         """Request process termination from any thread.
 
