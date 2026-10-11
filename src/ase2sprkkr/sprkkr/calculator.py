@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import os
 import sys
+from dataclasses import replace
 from ase.calculators.calculator import BaseCalculator, all_changes
 
 from .sprkkr_atoms import SPRKKRAtoms
@@ -35,7 +36,7 @@ import warnings
 from ..common.misc import config_property, first_non_none
 from ..configuration import config
 from ..execution import LocalExecutor
-from .profile import SPRKKRProfile
+from .profile import SPRKKRProfile, resolve_sprkkr_profile
 
 
 class SPRKKR(BaseCalculator):
@@ -109,8 +110,7 @@ class SPRKKR(BaseCalculator):
         mpi: Union[list,string,int,bool]
           Runner for mpi to run a mpi calculation. True and int means autodetect: use True
           for a cluster where mpi is able to autodetect the number of the processes, otherwise
-          use integer to specify the number of processes. None means use the value from
-          config.running.mpi.
+          use integer to specify the number of processes. None means use the selected profile.
           E.g. mpi = [ 'mpirun', '-np', '4' ], mpi = 4
 
         input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None
@@ -137,14 +137,13 @@ class SPRKKR(BaseCalculator):
         executable_suffix: str or bool or None
           String to be added to the runned executable. In some environments, the version
           and the hostname is added to the name of sprkkr executables.
-          True: use config.config.executable.suffix, by default initialized
-                by SPRKKR_EXECUTABLE_SUFFIX environment variable
-          False: do not append anything (the same as '')
+          None means use the selected execution profile.
+          False means do not append anything (the same as '').
 
         executable_dir
-          If the SPRKKR exacutables are not in path, or you want to control which
+          If the SPR-KKR executables are not in path, or you want to control which
           executables will be runned, please supply this parameter.
-          None means use the default from config.config.executable.dir (if exists).
+          None means use the selected execution profile.
           False means use only the executable in PATH.
 
         empty_spheres
@@ -195,24 +194,43 @@ class SPRKKR(BaseCalculator):
             self.input_parameters.set(options, unknown="find")
         self.print_output = print_output
         self.empty_spheres = empty_spheres
-        self.profile = profile or SPRKKRProfile(
+        self.profile = resolve_sprkkr_profile(
+            profile,
+            mpi=mpi,
             executable_dir=executable_dir,
             executable_suffix=executable_suffix,
-            mpi=mpi,
         )
         self.executor = executor or LocalExecutor()
-        self.executable_suffix = self.profile.executable_suffix
-        self.executable_dir = self.profile.executable_dir
-        self.mpi = self.profile.mpi
         self.label = label
         self._counter = 0
         # For %c template in file names
 
     print_output = config_property("print_output", config.running.print_output)
-    mpi = config_property("mpi", config.running.mpi)
     empty_spheres = config_property("empty_spheres", config.running.empty_spheres)
-    executable_dir = config_property("executable_dir", config.executables.dir)
-    executable_suffix = config_property("exectable_suffix", config.executables.suffix)
+
+    @property
+    def mpi(self):
+        return self.profile.mpi
+
+    @mpi.setter
+    def mpi(self, value):
+        self.profile = replace(self.profile, mpi=False if value is None else value)
+
+    @property
+    def executable_dir(self):
+        return self.profile.executable_dir
+
+    @executable_dir.setter
+    def executable_dir(self, value):
+        self.profile = replace(self.profile, executable_dir=False if value is None else value)
+
+    @property
+    def executable_suffix(self):
+        return self.profile.executable_suffix
+
+    @executable_suffix.setter
+    def executable_suffix(self, value):
+        self.profile = replace(self.profile, executable_suffix="" if value is None else value)
 
     @property
     def input_parameters(self):
@@ -798,7 +816,7 @@ class SPRKKR(BaseCalculator):
     ):
         """Prepare a calculation and return an unstarted Runner.
 
-        The returned Runner owns execution.  Creating it prepares the SPR-KKR
+        The returned Runner owns execution. Creating it prepares the SPR-KKR
         input/output files but does not execute the task and does not update
         the calculator state.
 
@@ -814,25 +832,24 @@ class SPRKKR(BaseCalculator):
             Receives output of the called executable.
             The second argument is either 'out' or 'err'
 
-        profile: ase2sprkkr.sprkkr.profile.SPRKKRProfile or None
-            Override the calculator execution profile for this run.
+        profile: ase2sprkkr.sprkkr.profile.SPRKKRProfile, str or None
+            Override the calculator execution profile for this run. A string
+            selects a named configured profile.
 
         executor: ase2sprkkr.execution.Executor or None
             Override the calculator execution backend for this run.
 
         executable_suffix: str or bool or None
-            If not None, it overrides the executable_postifx, that have been specified when the
-            calculator have been created.
+            If not None, override the suffix from the selected execution profile.
 
         executable_dir: str or bool or None
-            If not None, it overrides the executable_dir, that have been specified when the
-            calculator have been created.
+            If not None, override the executable directory from the selected profile.
 
         mpi: bool or None
             Runner for mpi to run a mpi calculation. True and int means autodetect: use True
             for a cluster where mpi is able to autodetect the number of the processes, otherwise
             use integer to specify the number of processes.
-            None means use the default value (specified in the calculator's contructor).
+            None means use the value from the selected profile.
             E.g. mpi = [ 'mpirun', '-np', '4' ], mpi = 4
 
         ---------
@@ -841,6 +858,14 @@ class SPRKKR(BaseCalculator):
 
         if output_file is False:
             output_file = None
+
+        run_profile = resolve_sprkkr_profile(
+            self.profile if profile is None else profile,
+            mpi=mpi,
+            executable_dir=executable_dir,
+            executable_suffix=executable_suffix,
+        )
+        print_output = first_non_none(print_output, self.print_output)
 
         with Directory.new(directory, default=self._directory) as directory:
             input_parameters, input_file, _, output_file = self.save_input(
@@ -853,16 +878,11 @@ class SPRKKR(BaseCalculator):
                 directory=directory,
                 create_subdirs=create_subdirs,
                 empty_spheres=empty_spheres,
-                mpi=mpi,
+                mpi=run_profile.mpi,
                 options=options,
                 task=task,
                 return_files=True,
             )
-
-            executable_suffix = first_non_none(executable_suffix, self.executable_suffix)
-            executable_dir = first_non_none(executable_dir, self.executable_dir)
-            print_output = first_non_none(print_output, self.print_output)
-            mpi = first_non_none(mpi, self.mpi)
 
             with directory.chdir():
                 return input_parameters.run_process(
@@ -873,12 +893,10 @@ class SPRKKR(BaseCalculator):
                     print_output=print_output,
                     read_callback=read_callback,
                     run_async=True,
-                    executable_suffix=executable_suffix,
-                    executable_dir=executable_dir,
-                    mpi=mpi,
+                    mpi=run_profile.mpi,
                     callback=callback,
                     gdb=gdb,
-                    profile=profile or self.profile,
+                    profile=run_profile,
                     executor=executor or self.executor,
                 )
 
