@@ -57,7 +57,7 @@ def test_psij_slurm_docker():
             f"SPRKKR_EXECUTABLE_SUFFIX={suffix}",
             image,
             "python",
-            "/workspace/ase2sprkkr/src/ase2sprkkr/execution/test/slurm/run_test.py",
+            "/workspace/ase2sprkkr/src/ase2sprkkr/execution/test/slurm/psij_slurm_test_in_docker.py",
         ],
         check=True,
     )
