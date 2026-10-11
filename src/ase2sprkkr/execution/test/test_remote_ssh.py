@@ -89,7 +89,8 @@ def test_remote_executor_over_ssh():
 
             executor = RemoteExecutor(
                 SshTransport("tester@127.0.0.1", options=options),
-                root_directory="/home/tester/ase2sprkkr-runs",
+                local_root=tmp,
+                remote_root="/home/tester/ase2sprkkr-runs",
             )
             output_seen = Event()
             output = []
@@ -117,6 +118,7 @@ def test_remote_executor_over_ssh():
 
             assert runner.reference is not None
             assert runner.reference.computer == "tester@127.0.0.1"
+            assert runner.reference.directory == "/home/tester/ase2sprkkr-runs/calculation"
             assert output_seen.wait(30), "no live SPR-KKR output arrived over SSH"
             result = runner.wait()
             assert result.return_code == 0
