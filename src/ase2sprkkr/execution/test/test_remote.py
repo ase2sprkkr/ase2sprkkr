@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pytest
 
 from ..base import ExecutionSpec, RunState
-from ..remote import RemoteExecutor
+from ..remote import FileSyncPolicy, RemoteExecutor
 from ..transport import LocalTransport
 
 
@@ -40,16 +40,25 @@ class _SpyTransport(LocalTransport):
         await super().get_file(source, destination)
 
 
-def _executor(local_root, remote_root, transport=None):
+def _executor(local_root, remote_root, transport=None, **kwargs):
     return RemoteExecutor(
         transport or LocalTransport(),
         local_root=local_root,
         remote_root=remote_root,
         command=(sys.executable, "-m", "ase2sprkkr.tools.ase2sprkkr", "remote"),
+        **kwargs,
     )
 
 
-def _text_run(tmp_path, transport=None, *, input_files=(), output_files=(), code=None):
+def _text_run(
+    tmp_path,
+    transport=None,
+    *,
+    input_files=(),
+    output_files=(),
+    code=None,
+    **executor_kwargs,
+):
     local_root = tmp_path / "local"
     workdir = local_root / "calculation"
     workdir.mkdir(parents=True, exist_ok=True)
@@ -58,7 +67,9 @@ def _text_run(tmp_path, transport=None, *, input_files=(), output_files=(), code
     input_file.seek(0)
     output_file = (workdir / "output.txt").open("wb")
     remote_root = tmp_path / "remote"
-    executor = _executor(local_root, remote_root, transport=transport)
+    executor = _executor(
+        local_root, remote_root, transport=transport, **executor_kwargs
+    )
     spec = ExecutionSpec(
         argv=(sys.executable, "-c", code or "print('ok')"),
         input_file=input_file,
@@ -221,6 +232,51 @@ def test_remote_executor_uses_remote_only_input(tmp_path):
     assert all(destination != remote_file for _, destination in transport.put_files)
 
 
+@pytest.mark.parametrize(
+    "policy, expected, uploaded",
+    [
+        ("changed", "local", True),
+        ("always", "local", True),
+        ("missing", "remote", False),
+        ("never", "remote", False),
+    ],
+)
+def test_remote_input_file_policies(tmp_path, policy, expected, uploaded):
+    transport = _SpyTransport()
+    workdir = tmp_path / "local" / "calculation"
+    workdir.mkdir(parents=True)
+    artifact = workdir / "artifact.dat"
+    artifact.write_text("local")
+    remote_artifact = tmp_path / "remote" / "calculation" / "artifact.dat"
+    remote_artifact.parent.mkdir(parents=True)
+    remote_artifact.write_text("remote")
+
+    executor, spec, _, _ = _text_run(
+        tmp_path,
+        transport,
+        input_files=(artifact,),
+        input_files=policy,
+        code="import pathlib; print(pathlib.Path('artifact.dat').read_text())",
+    )
+    result = executor.create_run(_Reader(), spec).run()
+
+    assert result.output == (expected + "\n").encode()
+    assert any(dst == remote_artifact for _, dst in transport.put_files) is uploaded
+
+
+def test_remote_input_policy_always_requires_local_file(tmp_path):
+    missing = tmp_path / "local" / "calculation" / "missing.dat"
+    remote = tmp_path / "remote" / "calculation" / "missing.dat"
+    remote.parent.mkdir(parents=True)
+    remote.write_text("remote")
+    executor, spec, _, _ = _text_run(
+        tmp_path, input_files=(missing,), input_files="always"
+    )
+
+    with pytest.raises(FileNotFoundError, match="Local input file"):
+        executor.create_run(_Reader(), spec).run()
+
+
 def test_remote_executor_downloads_changed_output(tmp_path):
     transport = _SpyTransport()
     local_root = tmp_path / "local"
@@ -264,6 +320,36 @@ def test_remote_executor_skips_unchanged_output(tmp_path):
     assert transport.get_files == []
 
 
+@pytest.mark.parametrize(
+    "policy, expected, downloaded",
+    [
+        (FileSyncPolicy.CHANGED, "remote", True),
+        (FileSyncPolicy.ALWAYS, "remote", True),
+        (FileSyncPolicy.MISSING, "local", False),
+        (FileSyncPolicy.NEVER, "local", False),
+    ],
+)
+def test_remote_output_file_policies(tmp_path, policy, expected, downloaded):
+    transport = _SpyTransport()
+    workdir = tmp_path / "local" / "calculation"
+    workdir.mkdir(parents=True)
+    artifact = workdir / "artifact.dat"
+    artifact.write_text("local")
+
+    executor, spec, _, remote_root = _text_run(
+        tmp_path,
+        transport,
+        output_files=(artifact,),
+        output_files=policy,
+        code="import pathlib; pathlib.Path('artifact.dat').write_text('remote'); print('done')",
+    )
+    executor.create_run(_Reader(), spec).run()
+
+    remote_artifact = remote_root / "calculation" / "artifact.dat"
+    assert artifact.read_text() == expected
+    assert any(src == remote_artifact for src, _ in transport.get_files) is downloaded
+
+
 def test_remote_executor_does_not_reuse_stale_output(tmp_path):
     transport = _SpyTransport()
     local_root = tmp_path / "local"
@@ -289,6 +375,11 @@ def test_remote_executor_does_not_reuse_stale_output(tmp_path):
 
     assert not remote_artifact.exists()
     assert not artifact.exists()
+
+
+def test_remote_sync_policy_rejects_unknown_value(tmp_path):
+    with pytest.raises(ValueError):
+        _executor(tmp_path, tmp_path / "remote", input_files="sometimes")
 
 
 def test_remote_directory_mapping_defaults_to_home():
