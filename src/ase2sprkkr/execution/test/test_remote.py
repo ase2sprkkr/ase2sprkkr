@@ -52,7 +52,7 @@ def _executor(local_root, remote_root, transport=None):
 def _text_run(tmp_path, transport=None, *, input_files=(), output_files=(), code=None):
     local_root = tmp_path / "local"
     workdir = local_root / "calculation"
-    workdir.mkdir(parents=True)
+    workdir.mkdir(parents=True, exist_ok=True)
     input_file = (workdir / "input.txt").open("w+b")
     input_file.write(b"hello")
     input_file.seek(0)
