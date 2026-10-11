@@ -6,6 +6,7 @@ structure, so they share common functionalities from
 sprkkr.common.configuration_definitions
 """
 
+import os
 import pyparsing as pp
 from ..common.container_definitions import dict_from_parsed
 from ..sprkkr.configuration import (
@@ -75,11 +76,11 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     """ Input parameters can have a save_hook defined, which is executed before saving the
   parameters. The arguments of the hook are ``filename, atoms, self``. """
 
-    task_input_files = ()
-    """Task-specific input files, optionally containing a ``{dataset}`` placeholder."""
+    input_file_templates = ()
+    """Task-specific input file templates. ``{dataset}`` expands to ``CONTROL.DATASET``."""
 
-    task_output_files = ()
-    """Task-specific output files, optionally containing a ``{dataset}`` placeholder."""
+    output_file_templates = ()
+    """Task-specific output file templates. ``{dataset}`` expands to ``CONTROL.DATASET``."""
 
     child_class = InputSectionDefinition
     """ Sections of the :class:`InputParameters` are defined by :class:`InputSectionDefinition` """
@@ -121,6 +122,29 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     def _generic_info(self):
         return f"Input parameters for task {self.name}"
 
+    @staticmethod
+    def _resolve_file_templates(parameters, directory, templates):
+        dataset = parameters.CONTROL.DATASET()
+        return tuple(
+            path if os.path.isabs(path) else os.path.join(directory, path)
+            for path in (
+                os.fspath(template).format(dataset=dataset)
+                for template in templates
+            )
+        )
+
+    def input_files(self, parameters, directory):
+        """Return task-specific input files for one concrete calculation."""
+        return self._resolve_file_templates(
+            parameters, directory, self.input_file_templates
+        )
+
+    def output_files(self, parameters, directory):
+        """Return task-specific output files for one concrete calculation."""
+        return self._resolve_file_templates(
+            parameters, directory, self.output_file_templates
+        )
+
     @add_to_signature(ConfigurationFileDefinition.__init__, prepend=True)
     def __init__(
         self,
@@ -129,8 +153,8 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         executable="kkrscf",
         mpi=True,
         result_reader=None,
-        task_input_files=(),
-        task_output_files=(),
+        input_file_templates=(),
+        output_file_templates=(),
         **kwargs,
     ):
         """
@@ -150,19 +174,26 @@ class InputParametersDefinition(ConfigurationFileDefinition):
           means, that the class is determined from the TASK name
           (see InputParameters.result_reader)
 
-        task_input_files: sequence of str
+        input_file_templates: sequence of str
           Additional task-specific input files. ``{dataset}`` is replaced by
-          ``CONTROL.DATASET`` when the execution manifest is built.
+          ``CONTROL.DATASET`` by the default :meth:`input_files` implementation.
 
-        task_output_files: sequence of str
+        output_file_templates: sequence of str
           Additional task-specific output files. ``{dataset}`` is replaced by
-          ``CONTROL.DATASET`` when the execution manifest is built.
+          ``CONTROL.DATASET`` by the default :meth:`output_files` implementation.
+
+        Notes
+        -----
+        Tasks whose file manifests depend on input values can override
+        :meth:`input_files` or :meth:`output_files`.  The default methods remain
+        useful through ``super()`` for combining static templates with dynamic
+        files.
         """
         self.executable = executable
         self.mpi = mpi
         self.result_reader = result_reader
-        self.task_input_files = tuple(task_input_files)
-        self.task_output_files = tuple(task_output_files)
+        self.input_file_templates = tuple(input_file_templates)
+        self.output_file_templates = tuple(output_file_templates)
 
         super().__init__(name, members, **kwargs)
         # if not 'TASK' in self:

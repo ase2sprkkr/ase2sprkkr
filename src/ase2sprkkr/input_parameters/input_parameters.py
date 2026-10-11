@@ -120,12 +120,13 @@ class InputParameters(ConfigurationFile):
         """
         return mpi and self._definition.mpi
 
-    def _task_files(self, templates, directory):
-        dataset = self.CONTROL.DATASET()
-        return tuple(
-            path if os.path.isabs(path) else os.path.join(directory, path)
-            for path in (os.fspath(template).format(dataset=dataset) for template in templates)
-        )
+    def input_files(self, directory):
+        """Return task-specific input files for this concrete calculation."""
+        return self._definition.input_files(self, directory)
+
+    def output_files(self, directory):
+        """Return task-specific output files for this concrete calculation."""
+        return self._definition.output_files(self, directory)
 
     def run_process(
         self,
@@ -177,7 +178,7 @@ class InputParameters(ConfigurationFile):
                 for file in (
                     input_file,
                     potential_file,
-                    *self._task_files(self._definition.task_input_files, directory),
+                    *self.input_files(directory),
                 )
                 if file is not None
             )
@@ -185,7 +186,7 @@ class InputParameters(ConfigurationFile):
                 file
                 for file in (
                     output_file,
-                    *self._task_files(self._definition.task_output_files, directory),
+                    *self.output_files(directory),
                 )
                 if file is not None
             )
