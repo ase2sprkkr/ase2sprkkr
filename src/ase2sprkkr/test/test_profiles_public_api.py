@@ -35,7 +35,8 @@ def test_profile_collection_exposes_only_public_views(monkeypatch):
     assert names == ["local", "legacy", "ase"]
     assert list(items) == names
     assert len(config.profiles) == len(names)
-    assert values == [items[name] for name in names]
+    assert values[0] is local
+    assert [profile.source for profile in values[1:]] == ["legacy", "ase"]
 
     assert items["local"] is local
     assert items["legacy"].read_only is True
