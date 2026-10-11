@@ -54,8 +54,8 @@ def _text_run(
     tmp_path,
     transport=None,
     *,
-    input_files=(),
-    output_files=(),
+    declared_input_files=(),
+    declared_output_files=(),
     code=None,
     **executor_kwargs,
 ):
@@ -76,8 +76,8 @@ def _text_run(
         output_file=output_file,
         directory=str(workdir),
         stdin=input_file,
-        input_files=(input_file, *input_files),
-        output_files=(output_file, *output_files),
+        input_files=(input_file, *declared_input_files),
+        output_files=(output_file, *declared_output_files),
     )
     return executor, spec, workdir, remote_root
 
@@ -155,81 +155,69 @@ def test_remote_executor_stages_declared_input_files(tmp_path):
 
 def test_remote_executor_skips_unchanged_input(tmp_path):
     transport = _SpyTransport()
-    local_root = tmp_path / "local"
-    workdir = local_root / "calculation"
+    workdir = tmp_path / "local" / "calculation"
     workdir.mkdir(parents=True)
     potential = workdir / "start.pot"
     potential.write_text("same")
-
-    remote_root = tmp_path / "remote"
-    remote_workdir = remote_root / "calculation"
-    remote_workdir.mkdir(parents=True)
-    remote_potential = remote_workdir / "start.pot"
+    remote_potential = tmp_path / "remote" / "calculation" / "start.pot"
+    remote_potential.parent.mkdir(parents=True)
     remote_potential.write_text("same")
 
     executor, spec, _, _ = _text_run(
         tmp_path,
         transport,
-        input_files=(potential,),
+        declared_input_files=(potential,),
         code="import pathlib; print(pathlib.Path('start.pot').read_text())",
     )
     result = executor.create_run(_Reader(), spec).run()
 
     assert result.output == b"same\n"
-    assert all(destination != remote_potential for _, destination in transport.put_files)
+    assert all(dst != remote_potential for _, dst in transport.put_files)
 
 
 def test_remote_executor_uploads_changed_input(tmp_path):
     transport = _SpyTransport()
-    local_root = tmp_path / "local"
-    workdir = local_root / "calculation"
+    workdir = tmp_path / "local" / "calculation"
     workdir.mkdir(parents=True)
     potential = workdir / "start.pot"
     potential.write_text("new")
-
-    remote_root = tmp_path / "remote"
-    remote_workdir = remote_root / "calculation"
-    remote_workdir.mkdir(parents=True)
-    remote_potential = remote_workdir / "start.pot"
+    remote_potential = tmp_path / "remote" / "calculation" / "start.pot"
+    remote_potential.parent.mkdir(parents=True)
     remote_potential.write_text("old")
 
     executor, spec, _, _ = _text_run(
         tmp_path,
         transport,
-        input_files=(potential,),
+        declared_input_files=(potential,),
         code="import pathlib; print(pathlib.Path('start.pot').read_text())",
     )
     result = executor.create_run(_Reader(), spec).run()
 
     assert result.output == b"new\n"
     assert remote_potential.read_text() == "new"
-    assert sum(destination == remote_potential for _, destination in transport.put_files) == 1
+    assert sum(dst == remote_potential for _, dst in transport.put_files) == 1
 
 
 def test_remote_executor_uses_remote_only_input(tmp_path):
     transport = _SpyTransport()
-    local_root = tmp_path / "local"
-    workdir = local_root / "calculation"
+    workdir = tmp_path / "local" / "calculation"
     workdir.mkdir(parents=True)
     remote_only = workdir / "remote-only.dat"
-
-    remote_root = tmp_path / "remote"
-    remote_workdir = remote_root / "calculation"
-    remote_workdir.mkdir(parents=True)
-    remote_file = remote_workdir / "remote-only.dat"
+    remote_file = tmp_path / "remote" / "calculation" / "remote-only.dat"
+    remote_file.parent.mkdir(parents=True)
     remote_file.write_text("remote")
 
     executor, spec, _, _ = _text_run(
         tmp_path,
         transport,
-        input_files=(remote_only,),
+        declared_input_files=(remote_only,),
         code="import pathlib; print(pathlib.Path('remote-only.dat').read_text())",
     )
     result = executor.create_run(_Reader(), spec).run()
 
     assert result.output == b"remote\n"
     assert not remote_only.exists()
-    assert all(destination != remote_file for _, destination in transport.put_files)
+    assert all(dst != remote_file for _, dst in transport.put_files)
 
 
 @pytest.mark.parametrize(
@@ -254,7 +242,7 @@ def test_remote_input_file_policies(tmp_path, policy, expected, uploaded):
     executor, spec, _, _ = _text_run(
         tmp_path,
         transport,
-        input_files=(artifact,),
+        declared_input_files=(artifact,),
         input_files=policy,
         code="import pathlib; print(pathlib.Path('artifact.dat').read_text())",
     )
@@ -270,7 +258,7 @@ def test_remote_input_policy_always_requires_local_file(tmp_path):
     remote.parent.mkdir(parents=True)
     remote.write_text("remote")
     executor, spec, _, _ = _text_run(
-        tmp_path, input_files=(missing,), input_files="always"
+        tmp_path, declared_input_files=(missing,), input_files="always"
     )
 
     with pytest.raises(FileNotFoundError, match="Local input file"):
@@ -279,8 +267,7 @@ def test_remote_input_policy_always_requires_local_file(tmp_path):
 
 def test_remote_executor_downloads_changed_output(tmp_path):
     transport = _SpyTransport()
-    local_root = tmp_path / "local"
-    workdir = local_root / "calculation"
+    workdir = tmp_path / "local" / "calculation"
     workdir.mkdir(parents=True)
     artifact = workdir / "artifact.dat"
     artifact.write_text("old")
@@ -288,7 +275,7 @@ def test_remote_executor_downloads_changed_output(tmp_path):
     executor, spec, _, remote_root = _text_run(
         tmp_path,
         transport,
-        output_files=(artifact,),
+        declared_output_files=(artifact,),
         code="import pathlib; pathlib.Path('artifact.dat').write_text('new'); print('done')",
     )
     result = executor.create_run(_Reader(), spec).run()
@@ -301,8 +288,7 @@ def test_remote_executor_downloads_changed_output(tmp_path):
 
 def test_remote_executor_skips_unchanged_output(tmp_path):
     transport = _SpyTransport()
-    local_root = tmp_path / "local"
-    workdir = local_root / "calculation"
+    workdir = tmp_path / "local" / "calculation"
     workdir.mkdir(parents=True)
     artifact = workdir / "artifact.dat"
     artifact.write_text("same")
@@ -310,7 +296,7 @@ def test_remote_executor_skips_unchanged_output(tmp_path):
     executor, spec, _, _ = _text_run(
         tmp_path,
         transport,
-        output_files=(artifact,),
+        declared_output_files=(artifact,),
         code="import pathlib; pathlib.Path('artifact.dat').write_text('same'); print('done')",
     )
     result = executor.create_run(_Reader(), spec).run()
@@ -339,7 +325,7 @@ def test_remote_output_file_policies(tmp_path, policy, expected, downloaded):
     executor, spec, _, remote_root = _text_run(
         tmp_path,
         transport,
-        output_files=(artifact,),
+        declared_output_files=(artifact,),
         output_files=policy,
         code="import pathlib; pathlib.Path('artifact.dat').write_text('remote'); print('done')",
     )
@@ -352,21 +338,17 @@ def test_remote_output_file_policies(tmp_path, policy, expected, downloaded):
 
 def test_remote_executor_does_not_reuse_stale_output(tmp_path):
     transport = _SpyTransport()
-    local_root = tmp_path / "local"
-    workdir = local_root / "calculation"
+    workdir = tmp_path / "local" / "calculation"
     workdir.mkdir(parents=True)
     artifact = workdir / "artifact.dat"
-
-    remote_root = tmp_path / "remote"
-    remote_workdir = remote_root / "calculation"
-    remote_workdir.mkdir(parents=True)
-    remote_artifact = remote_workdir / "artifact.dat"
+    remote_artifact = tmp_path / "remote" / "calculation" / "artifact.dat"
+    remote_artifact.parent.mkdir(parents=True)
     remote_artifact.write_text("stale")
 
     executor, spec, _, _ = _text_run(
         tmp_path,
         transport,
-        output_files=(artifact,),
+        declared_output_files=(artifact,),
         code="print('done')",
     )
 
