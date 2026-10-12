@@ -2,6 +2,10 @@ import pytest
 
 import ase2sprkkr.configuration as configuration
 from ase2sprkkr.configuration import definition
+from ase2sprkkr.configuration_migration import (
+    clean_legacy_configuration,
+    migrate_legacy_configuration,
+)
 from ase2sprkkr.configuration_yaml import (
     load_configuration_yaml,
     load_yaml_document,
@@ -217,3 +221,63 @@ def test_legacy_python_generated_options_load_into_legacy_profile(tmp_path, monk
         "executable_dir": "/opt/sprkkr",
         "executable_suffix": "_legacy",
     }
+
+
+def test_legacy_migration_is_self_contained(tmp_path):
+    legacy_path = tmp_path / "__init__.py"
+    yaml_path = tmp_path / "config.yaml"
+    legacy_path.write_text(
+        "from ase2sprkkr.configuration import config\n"
+        "config.executables.dir = '/opt/legacy'\n"
+        "config.running.mpi = 3\n",
+        encoding="utf8",
+    )
+
+    migrated = migrate_legacy_configuration(legacy_path, yaml_path, definition)
+
+    assert migrated.executables.dir() == "/opt/legacy"
+    assert migrated.running.mpi() == 3
+    data = load_yaml_document(yaml_path)
+    assert data["profiles"]["legacy"]["executable_dir"] == "/opt/legacy"
+    assert data["profiles"]["legacy"]["mpi"] == 3
+
+
+def test_clean_legacy_configuration_removes_top_level_assignments(tmp_path):
+    path = tmp_path / "__init__.py"
+    path.write_text(
+        "from ase2sprkkr.configuration import config\n"
+        "\n"
+        "# MPI configuration\n"
+        "config.running.mpi = [\n"
+        "    'mpirun',\n"
+        "    '-n',\n"
+        "    '4',\n"
+        "]\n"
+        "\n"
+        "value = 42\n",
+        encoding="utf8",
+    )
+
+    assert clean_legacy_configuration(path) == 1
+    text = path.read_text(encoding="utf8")
+    assert "config.running.mpi" not in text
+    assert "# MPI configuration" not in text
+    assert "from ase2sprkkr.configuration import config" not in text
+    assert "value = 42" in text
+
+
+def test_clean_legacy_configuration_keeps_dynamic_config_use(tmp_path):
+    path = tmp_path / "__init__.py"
+    path.write_text(
+        "from ase2sprkkr.configuration import config\n"
+        "config.executables.dir = '/opt/sprkkr'\n"
+        "if enabled:\n"
+        "    config.running.mpi = 8\n",
+        encoding="utf8",
+    )
+
+    assert clean_legacy_configuration(path) == 1
+    text = path.read_text(encoding="utf8")
+    assert "config.executables.dir" not in text
+    assert "from ase2sprkkr.configuration import config" in text
+    assert "config.running.mpi = 8" in text
