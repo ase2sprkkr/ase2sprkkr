@@ -45,7 +45,7 @@ class InputParameters(ConfigurationFile):
         return out
 
     def resolve_executable_suffix(self, suffix: Union[str, bool]):
-        """ " Return the suffix, that is appended after the name of SPRKKR executable.
+        """ " Return the suffix, that is appended after the name of SPR-KKR executable.
 
         Parameters
         ----------
@@ -128,6 +128,10 @@ class InputParameters(ConfigurationFile):
         """Return task-specific output files for this concrete calculation."""
         return self._definition.output_files(self, directory)
 
+    def cache_files(self, directory):
+        """Return task-specific reusable cache files for this calculation."""
+        return self._definition.cache_files(self, directory)
+
     def run_process(
         self,
         calculator,
@@ -188,6 +192,9 @@ class InputParameters(ConfigurationFile):
                 )
                 if file is not None
             )
+            cache_files = tuple(
+                file for file in self.cache_files(directory) if file is not None
+            )
 
             spec = execution_profile.create_execution(
                 self._definition.executable,
@@ -196,6 +203,7 @@ class InputParameters(ConfigurationFile):
                 directory,
                 input_files=input_files,
                 output_files=output_files,
+                cache_files=cache_files,
                 mpi_supported=self._definition.mpi,
                 gdb=gdb,
             )
