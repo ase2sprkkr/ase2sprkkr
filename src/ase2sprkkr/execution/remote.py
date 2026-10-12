@@ -10,17 +10,27 @@ import signal
 import subprocess
 import sys
 import time
+from enum import Enum
 from pathlib import Path
 from threading import Event, Lock, Thread
 from uuid import uuid4
 
 from .base import Executor, RunReference, RunState
-from .transport import _sha256_file
+from .transport import local_file_digest
 
 
 _FINAL_STATES = {"finished", "failed", "cancelled"}
 _STATE_FILE = ".ase2sprkkr-run.json"
 _REQUEST_FILE = ".ase2sprkkr-request.json"
+
+
+class FileSyncPolicy(str, Enum):
+    """Policy controlling transfers between local and remote workspaces."""
+
+    CHANGED = "changed"
+    ALWAYS = "always"
+    MISSING = "missing"
+    NEVER = "never"
 
 
 def _state_path(directory):
@@ -360,9 +370,25 @@ class RemoteRunner:
         if previous is not None:
             return target
 
-        local_digest = _sha256_file(source)
+        policy = self.executor.input_files
+        local_digest = local_file_digest(source)
         remote_digest = await self.executor.transport.file_digest(target)
-        if local_digest is None:
+
+        if policy == FileSyncPolicy.ALWAYS:
+            if local_digest is None:
+                raise FileNotFoundError(f"Local input file does not exist: {source}")
+            await self.executor.transport.put_file(source, target)
+        elif policy == FileSyncPolicy.MISSING:
+            if remote_digest is None:
+                if local_digest is None:
+                    raise FileNotFoundError(
+                        f"Input file exists neither locally nor remotely: {source}"
+                    )
+                await self.executor.transport.put_file(source, target)
+        elif policy == FileSyncPolicy.NEVER:
+            if remote_digest is None:
+                raise FileNotFoundError(f"Remote input file does not exist: {target}")
+        elif local_digest is None:
             if remote_digest is None:
                 raise FileNotFoundError(
                     f"Input file exists neither locally nor remotely: {source}"
@@ -392,6 +418,7 @@ class RemoteRunner:
         self._output_targets = targets
 
     async def _sync_output_files(self, required):
+        policy = self.executor.output_files
         for local, remote in self._output_targets.items():
             remote_digest = await self.executor.transport.file_digest(remote)
             if remote_digest is None:
@@ -400,7 +427,17 @@ class RemoteRunner:
                         f"Declared remote output file was not created: {remote}"
                     )
                 continue
-            if _sha256_file(local) != remote_digest:
+
+            if policy == FileSyncPolicy.NEVER:
+                continue
+            if policy == FileSyncPolicy.ALWAYS:
+                await self.executor.transport.get_file(remote, local)
+                continue
+            local_digest = local_file_digest(local)
+            if policy == FileSyncPolicy.MISSING:
+                if local_digest is None:
+                    await self.executor.transport.get_file(remote, local)
+            elif local_digest != remote_digest:
                 await self.executor.transport.get_file(remote, local)
 
     def _remote_argv(self, staged):
@@ -610,6 +647,10 @@ class RemoteExecutor(Executor):
     path below the local home directory is mapped to the same relative path
     below the remote home directory.  ``local_root`` and ``remote_root`` can
     override either side of that mapping.
+
+    ``input_files`` and ``output_files`` select how declared artifacts are
+    synchronized.  Accepted policies are ``changed``, ``always``, ``missing``
+    and ``never``.
     """
 
     name = "remote"
@@ -623,6 +664,8 @@ class RemoteExecutor(Executor):
         remote_root=None,
         root_directory=None,
         command=("ase2sprkkr", "remote"),
+        input_files=FileSyncPolicy.CHANGED,
+        output_files=FileSyncPolicy.CHANGED,
     ):
         if root_directory is not None:
             if remote_root is not None:
@@ -633,6 +676,8 @@ class RemoteExecutor(Executor):
         self.local_root = Path(local_root or Path.home()).expanduser().resolve()
         self.remote_root = None if remote_root is None else os.fspath(remote_root)
         self.command = tuple(command)
+        self.input_files = FileSyncPolicy(input_files)
+        self.output_files = FileSyncPolicy(output_files)
         self.computer = getattr(transport, "host", None)
         self._remote_home_cache = None
 
