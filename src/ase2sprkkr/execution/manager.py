@@ -17,6 +17,8 @@ from uuid import uuid4
 from platformdirs import user_state_dir
 
 from .base import Executor, RunReference, RunState, RunStatus
+from .endpoint import ExecutorEndpoint, endpoint_for_executor
+from .pool import default_executor_pool
 
 
 _RUN_RECORD_SCHEMA_VERSION = 1
@@ -26,39 +28,6 @@ _UNCHANGED = object()
 
 def _now():
     return datetime.now(timezone.utc).isoformat()
-
-
-def _jsonable(value):
-    if isinstance(value, dict):
-        return {str(key): _jsonable(item) for key, item in value.items()}
-    if isinstance(value, (tuple, list)):
-        return [_jsonable(item) for item in value]
-    if isinstance(value, os.PathLike):
-        return os.fspath(value)
-    if value is None or isinstance(value, (str, int, float, bool)):
-        return value
-    return repr(value)
-
-
-def _endpoint_identity(executor):
-    """Return a stable, serializable identity of the backend connection."""
-    descriptor = {
-        "executor": executor.name
-        or f"{type(executor).__module__}.{type(executor).__qualname__}"
-    }
-    for name in ("backend", "url", "computer", "command", "backend_options"):
-        if hasattr(executor, name):
-            descriptor[name] = getattr(executor, name)
-    transport = getattr(executor, "transport", None)
-    if transport is not None:
-        transport_descriptor = {
-            "type": f"{type(transport).__module__}.{type(transport).__qualname__}"
-        }
-        for name in ("host", "ssh", "options"):
-            if hasattr(transport, name):
-                transport_descriptor[name] = getattr(transport, name)
-        descriptor["transport"] = transport_descriptor
-    return json.dumps(_jsonable(descriptor), sort_keys=True, separators=(",", ":"))
 
 
 class CorruptRunRecord(RuntimeError):
@@ -73,12 +42,14 @@ class CorruptRunRecord(RuntimeError):
 class SubmissionKey:
     """Persistent namespace used only for duplicate-submit protection."""
 
-    endpoint: str
+    endpoint: ExecutorEndpoint
     directory: str
     task: str
     dataset: Optional[str] = None
 
     def __post_init__(self):
+        if isinstance(self.endpoint, dict):
+            object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
         object.__setattr__(self, "directory", os.fspath(self.directory))
         object.__setattr__(self, "task", str(self.task).upper())
         if self.dataset is not None:
@@ -116,6 +87,7 @@ class RunRecord:
     task: str
     directory: str
     dataset: Optional[str] = None
+    endpoint: Optional[ExecutorEndpoint] = None
     submission: Optional[SubmissionKey] = None
     reference: Optional[RunReference] = None
     return_code: Optional[int] = None
@@ -123,6 +95,8 @@ class RunRecord:
     schema_version: int = _RUN_RECORD_SCHEMA_VERSION
 
     def __post_init__(self):
+        if isinstance(self.endpoint, dict):
+            object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
         if isinstance(self.submission, dict):
             object.__setattr__(self, "submission", SubmissionKey(**self.submission))
         if isinstance(self.reference, dict):
@@ -276,49 +250,59 @@ class ExecutionManager:
     """Orchestrate optional persistent run bookkeeping.
 
     The manager owns persistent records, not live runners. Returned
-    :class:`PersistentRunner` objects remain owned by their callers.
+    :class:`PersistentRunner` objects remain owned by their callers. Executors
+    are process-wide pooled by persisted endpoint identity, independently of
+    this manager and its store.
     """
 
-    def __init__(self, store=None):
+    def __init__(self, store=None, *, executor_pool=None):
         self.store = store if store is not None else RunStore()
-        self._executors = {}
+        self.executor_pool = (
+            executor_pool if executor_pool is not None else default_executor_pool()
+        )
+        self._legacy_executors = {}
         self._lock = RLock()
 
     @staticmethod
-    def _executor_key(reference):
+    def _reference_key(reference):
         return reference.executor, reference.computer
 
-    def register_executor(self, executor: Executor, reference=None):
-        """Remember a live backend only for status refresh in this process."""
+    def register_executor(self, executor: Executor, endpoint=None, reference=None):
+        """Register a live executor in the independent endpoint pool."""
+        endpoint = endpoint or endpoint_for_executor(executor)
+        pooled = self.executor_pool.get(endpoint, lambda: executor)
         if reference is not None:
-            key = self._executor_key(reference)
-        else:
-            name = executor.name
-            computer = getattr(executor, "computer", None)
-            if name == "psij" and hasattr(executor, "backend"):
-                name = f"psij:{executor.backend}"
-                computer = getattr(executor, "url", None)
-            elif name == "remote" and hasattr(executor, "backend"):
-                name = f"remote:{executor.backend}"
-            key = name, computer
-        with self._lock:
-            self._executors[key] = executor
-        return executor
+            with self._lock:
+                self._legacy_executors[self._reference_key(reference)] = pooled
+        return pooled
 
-    def executor_for(self, reference):
+    def executor_for(self, record):
+        """Return or reconstruct the executor needed for a persisted run."""
+        if record.endpoint is not None:
+            return self.executor_pool.for_endpoint(record.endpoint)
+        reference = record.reference
+        if reference is None:
+            raise KeyError(f"Run {record.id} has neither endpoint nor backend reference")
         with self._lock:
-            executor = self._executors.get(self._executor_key(reference))
+            executor = self._legacy_executors.get(self._reference_key(reference))
             if executor is None and reference.computer is not None:
-                executor = self._executors.get((reference.executor, None))
+                executor = self._legacy_executors.get((reference.executor, None))
         if executor is None:
             raise KeyError(
-                f"No live executor registered for {reference.executor} on "
-                f"{reference.computer or 'local machine'}"
+                f"Run {record.id} predates persisted endpoint identity and no live "
+                "executor is registered for it"
             )
         return executor
 
     def new_record(
-        self, *, task, directory, dataset=None, submission=None, run_id=None
+        self,
+        *,
+        task,
+        directory,
+        dataset=None,
+        endpoint=None,
+        submission=None,
+        run_id=None,
     ):
         """Create the in-memory identity of an unsubmitted persistent run."""
         now = _now()
@@ -330,6 +314,7 @@ class ExecutionManager:
             task=str(task).upper(),
             dataset=None if dataset is None else str(dataset),
             directory=os.path.abspath(os.fspath(directory)),
+            endpoint=endpoint,
             submission=submission,
         )
 
@@ -426,8 +411,9 @@ class ExecutionManager:
         run_id=None,
     ):
         """Create a caller-owned runner whose lifecycle is persisted."""
+        endpoint = endpoint_for_executor(executor)
         submission = SubmissionKey(
-            endpoint=_endpoint_identity(executor),
+            endpoint=endpoint,
             directory=executor.submission_directory(spec),
             task=task,
             dataset=dataset,
@@ -436,10 +422,11 @@ class ExecutionManager:
             task=task,
             dataset=dataset,
             directory=spec.directory,
+            endpoint=endpoint,
             submission=submission,
             run_id=run_id,
         )
-        self.register_executor(executor)
+        self.register_executor(executor, endpoint)
         return self._wrap_runner(
             executor,
             record,
@@ -453,14 +440,14 @@ class ExecutionManager:
         )
 
     def refresh(self, records=None):
-        """Refresh referenced runs, batching each live executor into one query."""
+        """Refresh referenced runs, reconstructing endpoints when necessary."""
         records = tuple(self.store.runs(active=True) if records is None else records)
         current = {record.id: record for record in records}
         groups = {}
         for record in records:
             if record.reference is None:
                 continue
-            executor = self.executor_for(record.reference)
+            executor = self.executor_for(record)
             groups.setdefault(executor, []).append(record)
 
         for executor, group in groups.items():
@@ -476,7 +463,8 @@ class ExecutionManager:
         record = self.store.get(run) if isinstance(run, str) else run
         if record.reference is None:
             raise RuntimeError(f"Run {record.id} has no backend reference")
-        self.register_executor(executor, record.reference)
+        endpoint = record.endpoint or endpoint_for_executor(executor)
+        self.register_executor(executor, endpoint, record.reference)
         return self._wrap_runner(
             executor,
             record,
@@ -550,7 +538,11 @@ class PersistentRunner:
         reference = self.reference
         if reference is None:
             raise RuntimeError("Executor submit returned without a run reference")
-        self.manager.register_executor(self.executor, reference)
+        self.manager.register_executor(
+            self.executor,
+            self._record.endpoint,
+            reference,
+        )
         state = self._runner.state
         if state == RunState.NEW:
             state = RunState.QUEUED

@@ -15,31 +15,11 @@ from typing import Any
 from ..configuration import config
 from ..execution import (
     ExecutionSpec,
+    ExecutorEndpoint,
     LaunchSpec,
-    LocalExecutor,
-    PsijExecutor,
-    SshTransport,
 )
-from ..execution.remote_endpoint import RemoteEndpointExecutor
+from ..execution.endpoint import create_executor_from_endpoint
 from ..profiles import ase_command_profile_values
-
-
-@dataclass(frozen=True)
-class ExecutorEndpoint:
-    """Identity of a reusable execution backend.
-
-    The endpoint contains only properties needed to establish communication
-    with an executor. It deliberately excludes launch/staging policy so that
-    profiles differing only in how a calculation is launched can share the
-    same long-lived executor instance.
-    """
-
-    executor: str = "local"
-    host: Any = None
-    ssh_options: Any = ()
-    remote_command: Any = ()
-    psij_backend: Any = None
-    psij_url: Any = None
 
 
 @dataclass(frozen=True)
@@ -281,30 +261,7 @@ def _configured_profile(profile, configuration):
 
 def create_executor_from_profile(profile: SPRKKRProfile):
     """Construct a new execution backend from endpoint identity only."""
-    if profile.executor == "local":
-        return LocalExecutor()
-
-    if profile.executor == "ssh":
-        if not profile.host:
-            raise ValueError("SSH execution profile requires 'host'")
-        kwargs = {}
-        if profile.remote_command:
-            kwargs["command"] = profile.remote_command
-        if profile.psij_backend is not None or profile.psij_url is not None:
-            kwargs["backend"] = "psij"
-            kwargs["backend_options"] = {
-                "backend": profile.psij_backend or "slurm",
-                "url": profile.psij_url,
-            }
-        return RemoteEndpointExecutor(
-            SshTransport(profile.host, options=profile.ssh_options),
-            **kwargs,
-        )
-
-    if profile.executor == "psij":
-        return PsijExecutor(profile.psij_backend or "slurm", url=profile.psij_url)
-
-    raise ValueError(f"Unknown execution backend {profile.executor!r}")
+    return create_executor_from_endpoint(profile.endpoint)
 
 
 def executor_from_profile(profile: SPRKKRProfile):

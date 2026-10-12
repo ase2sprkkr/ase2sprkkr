@@ -10,6 +10,7 @@ from .base import (
     RunState,
     RunStatus,
 )
+from .endpoint import ExecutorEndpoint
 from .local import LocalExecutor, LocalRunner
 from .manager import (
     CorruptRunRecord,
@@ -33,6 +34,7 @@ RemoteExecutor = RemoteEndpointExecutor
 __all__ = [
     "ExecutionSpec",
     "Executor",
+    "ExecutorEndpoint",
     "LaunchSpec",
     "MpiNotFoundWarning",
     "Runner",

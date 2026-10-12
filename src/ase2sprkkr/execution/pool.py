@@ -25,12 +25,17 @@ class ExecutorPool:
                 self._executors[key] = executor
             return executor
 
+    def for_endpoint(self, endpoint):
+        """Return the shared backend reconstructed from *endpoint*."""
+        from .endpoint import ExecutorEndpoint, create_executor_from_endpoint
+
+        if isinstance(endpoint, dict):
+            endpoint = ExecutorEndpoint(**endpoint)
+        return self.get(endpoint, lambda: create_executor_from_endpoint(endpoint))
+
     def for_profile(self, profile):
         """Return the shared backend suitable for *profile*."""
-        from ..sprkkr.profile import create_executor_from_profile
-
-        key = self.key_for_profile(profile)
-        return self.get(key, lambda: create_executor_from_profile(profile))
+        return self.for_endpoint(self.key_for_profile(profile))
 
     def discard(self, key):
         """Forget one pooled backend and close it when supported."""
