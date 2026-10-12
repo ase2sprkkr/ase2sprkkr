@@ -57,7 +57,27 @@ def submit_remote(request):
 
     directory = Path(request["directory"]).expanduser().resolve()
     directory.mkdir(parents=True, exist_ok=True)
+    try:
+        previous = _read_state(directory)
+    except FileNotFoundError:
+        previous = None
+    if previous and previous.get("state") not in _FINAL_STATES:
+        raise RuntimeError(
+            f"Remote workspace already contains an active run: {directory}"
+        )
+
     request = dict(request, directory=os.fspath(directory))
+    output_file = _absolute_file(directory, request.get("output_file"))
+    error_file = _absolute_file(directory, request.get("error_file"))
+    cleared = set()
+    for path in (output_file, error_file):
+        if path is None or path in cleared:
+            continue
+        cleared.add(path)
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"")
+
     _request_path(directory).write_text(json.dumps(request))
     state = _write_state(
         directory,
@@ -65,9 +85,11 @@ def submit_remote(request):
         state="queued",
         directory=os.fspath(directory),
         input_file=_absolute_file(directory, request.get("input_file")),
-        output_file=_absolute_file(directory, request.get("output_file")),
-        error_file=_absolute_file(directory, request.get("error_file")),
+        output_file=output_file,
+        error_file=error_file,
         return_code=None,
+        error=None,
+        pid=None,
     )
 
     subprocess.Popen(
@@ -468,9 +490,7 @@ class RemoteRunner:
 
     async def _submit_async(self):
         run_id = uuid4().hex
-        remote_directory = posixpath.join(
-            self.executor.root_directory, run_id
-        )
+        remote_directory = await self.executor.map_directory(self.spec.directory)
         await self.executor.transport.run(
             ("mkdir", "-p", "--", remote_directory)
         )
@@ -524,7 +544,13 @@ class RemoteRunner:
 
 
 class RemoteExecutor(Executor):
-    """Run commands through a remote ASE2SPRKKR helper and a transport."""
+    """Run commands through a remote ASE2SPRKKR helper and a transport.
+
+    Calculation directories are persistent workspaces.  By default a local
+    path below the local home directory is mapped to the same relative path
+    below the remote home directory.  ``local_root`` and ``remote_root`` can
+    override either side of that mapping.
+    """
 
     name = "remote"
 
@@ -533,14 +559,61 @@ class RemoteExecutor(Executor):
         transport,
         *,
         backend="local",
-        root_directory=".ase2sprkkr/runs",
+        local_root=None,
+        remote_root=None,
+        root_directory=None,
         command=("ase2sprkkr", "remote"),
     ):
+        if root_directory is not None:
+            if remote_root is not None:
+                raise ValueError("Use either remote_root or root_directory, not both")
+            remote_root = root_directory
         self.transport = transport
         self.backend = backend
-        self.root_directory = os.fspath(root_directory)
+        self.local_root = Path(local_root or Path.home()).expanduser().resolve()
+        self.remote_root = None if remote_root is None else os.fspath(remote_root)
         self.command = tuple(command)
         self.computer = getattr(transport, "host", None)
+        self._remote_home_cache = None
+
+    async def _remote_home(self):
+        if self._remote_home_cache is None:
+            result = await self.transport.run(
+                ("sh", "-c", 'printf "%s" "$HOME"')
+            )
+            home = result.stdout.decode("utf8").strip()
+            if not home:
+                raise RuntimeError("Could not determine remote home directory")
+            self._remote_home_cache = posixpath.normpath(home)
+        return self._remote_home_cache
+
+    async def _resolved_remote_root(self):
+        home = await self._remote_home()
+        if self.remote_root is None:
+            return home
+        root = self.remote_root
+        if root == "~":
+            return home
+        if root.startswith("~/"):
+            return posixpath.join(home, root[2:])
+        if not posixpath.isabs(root):
+            return posixpath.join(home, root)
+        return posixpath.normpath(root)
+
+    async def map_directory(self, directory):
+        """Map a local calculation directory to its persistent remote workspace."""
+        directory = Path(directory).expanduser().resolve()
+        try:
+            relative = directory.relative_to(self.local_root)
+        except ValueError as exc:
+            raise ValueError(
+                f"Local directory {directory} is outside mapped root "
+                f"{self.local_root}; specify local_root/remote_root explicitly"
+            ) from exc
+        remote_root = await self._resolved_remote_root()
+        if not relative.parts:
+            return remote_root
+        return posixpath.join(remote_root, *relative.parts)
 
     async def _json_request(self, action, *args, payload=None):
         data = None if payload is None else json.dumps(payload).encode("utf8")
