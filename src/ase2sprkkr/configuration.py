@@ -39,11 +39,19 @@ def _set_legacy_value(section, value, name):
 
 
 def _legacy_mpi(section):
-    return _legacy_value(section, "mpi")
+    return _legacy_value(section, "mpi", "auto")
 
 
 def _set_legacy_mpi(section, value):
     _set_legacy_value(section, value, "mpi")
+
+
+def _legacy_mpi_warning(section):
+    return _legacy_value(section, "mpi_warning", True)
+
+
+def _set_legacy_mpi_warning(section, value):
+    _set_legacy_value(section, value, "mpi_warning")
 
 
 def _legacy_executable_dir(section):
@@ -161,7 +169,7 @@ def get_default_mpi_runner():
     out = find_default_mpi_runner()
     if out:
         return out
-    if config.mpi_warning():
+    if config.running.mpi_warning():
         warnings.warn("No MPI runner found. Disabling MPI!!!")
 
 
@@ -289,8 +297,14 @@ definition = ConfigFileDefinition(
                 V(
                     "mpi",
                     MPI,
+                    default_value="auto",
                     is_optional=True,
-                    info='MPI runner for this profile. It accepts the same values as the legacy running.mpi option.',
+                    info='MPI runner for this profile. Defaults to "auto" and accepts the same values as the legacy running.mpi option.',
+                ),
+                V(
+                    "mpi_warning",
+                    True,
+                    info="Whether missing MPI support should be reported for this profile.",
                 ),
                 V(
                     "executable_dir",
@@ -407,7 +421,13 @@ definition = ConfigFileDefinition(
                     is_optional=True,
                     info='Deprecated compatibility option backed by profiles["legacy"].',
                 ),
-                V("mpi_warning", True, info="Warn, if no MPI is found."),
+                G(
+                    "mpi_warning",
+                    _legacy_mpi_warning,
+                    _set_legacy_mpi_warning,
+                    is_optional=True,
+                    info='Deprecated compatibility option backed by profiles["legacy"].',
+                ),
             ],
             info="Default values for SPRKKR calculator parameters.",
         ),

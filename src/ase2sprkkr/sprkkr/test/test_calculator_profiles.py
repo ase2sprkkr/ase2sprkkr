@@ -19,12 +19,22 @@ def fresh_profile_config(monkeypatch):
     return configuration
 
 
+def test_runtime_profile_mpi_defaults():
+    profile = SPRKKRProfile()
+
+    assert profile.mpi == "auto"
+    assert profile.mpi_warning is True
+    assert profile.launch_parameters.mpi == "auto"
+    assert profile.launch_parameters.mpi_warning is True
+
+
 def test_calculator_uses_configured_default_profile(monkeypatch):
     configuration = fresh_profile_config(monkeypatch)
     configuration.profiles.set(
         {
             "cluster": {
                 "mpi": 8,
+                "mpi_warning": False,
                 "executable_dir": "/cluster/sprkkr",
                 "executable_suffix": ".x",
             }
@@ -38,6 +48,7 @@ def test_calculator_uses_configured_default_profile(monkeypatch):
         executable_dir="/cluster/sprkkr",
         executable_suffix=".x",
         mpi=8,
+        mpi_warning=False,
     )
 
 
@@ -55,6 +66,17 @@ def test_calculator_accepts_named_profile(monkeypatch):
 
     assert calculator.profile.executable_dir == "/cluster"
     assert calculator.profile.mpi == 4
+    assert calculator.profile.mpi_warning is True
+
+
+def test_named_profile_without_mpi_uses_auto(monkeypatch):
+    configuration = fresh_profile_config(monkeypatch)
+    configuration.profiles.set({"local": {"executable_dir": "/local"}})
+
+    calculator = SPRKKR(profile="local")
+
+    assert calculator.profile.mpi == "auto"
+    assert calculator.profile.mpi_warning is True
 
 
 def test_calculator_init_overrides_copy_explicit_profile(monkeypatch):

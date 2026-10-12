@@ -48,11 +48,12 @@ class LaunchParameters:
 
     executable_dir: Any = False
     executable_suffix: Any = ""
-    mpi: Any = False
+    mpi: Any = "auto"
     local_root: Any = None
     remote_root: Any = None
     input_sync: str = "changed"
     output_sync: str = "changed"
+    mpi_warning: bool = True
 
 
 @dataclass(frozen=True)
@@ -66,7 +67,7 @@ class SPRKKRProfile:
 
     executable_dir: Any = False
     executable_suffix: Any = ""
-    mpi: Any = False
+    mpi: Any = "auto"
     executor: str = "local"
     host: Any = None
     local_root: Any = None
@@ -77,6 +78,7 @@ class SPRKKRProfile:
     output_sync: str = "changed"
     psij_backend: Any = None
     psij_url: Any = None
+    mpi_warning: bool = True
 
     @property
     def endpoint(self):
@@ -99,6 +101,7 @@ class SPRKKRProfile:
             remote_root=self.remote_root,
             input_sync=self.input_sync,
             output_sync=self.output_sync,
+            mpi_warning=self.mpi_warning,
         )
 
     def with_overrides(self, **overrides):
@@ -220,9 +223,11 @@ def _configured_profile(profile, configuration):
             changes["executable_dir"] = False
         if profile.executable_suffix is None:
             changes["executable_suffix"] = ""
-        mpi = False if profile.mpi is None else _normalize_mpi(profile.mpi)
+        mpi = "auto" if profile.mpi is None else _normalize_mpi(profile.mpi)
         if type(mpi) is not type(profile.mpi) or mpi != profile.mpi:
             changes["mpi"] = mpi
+        if profile.mpi_warning is None:
+            changes["mpi_warning"] = True
         if not profile.executor:
             changes["executor"] = "local"
         ssh_options = _shell_argv(profile.ssh_options)
@@ -248,9 +253,12 @@ def _configured_profile(profile, configuration):
         executable_dir = False
     mpi = _profile_value(profile, "mpi")
     if mpi is None:
-        mpi = False
+        mpi = "auto"
     else:
         mpi = _normalize_mpi(mpi)
+    mpi_warning = _profile_value(profile, "mpi_warning")
+    if mpi_warning is None:
+        mpi_warning = True
 
     return SPRKKRProfile(
         executable_dir=executable_dir,
@@ -266,6 +274,7 @@ def _configured_profile(profile, configuration):
         output_sync=_profile_value(profile, "output_sync") or "changed",
         psij_backend=_profile_value(profile, "psij_backend"),
         psij_url=_profile_value(profile, "psij_url"),
+        mpi_warning=mpi_warning,
     )
 
 
