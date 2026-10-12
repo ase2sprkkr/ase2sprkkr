@@ -69,6 +69,7 @@ def test_legacy_options_are_backed_by_internal_profile():
     config.running.mpi.set(None)
     config.executables.dir.set(None)
     assert "legacy" not in config.profiles
+    assert "legacy" not in list(config.profiles)
 
 
 def test_suffix_environment_default_does_not_create_legacy(monkeypatch):
@@ -91,6 +92,8 @@ def test_legacy_profile_is_read_only_but_persistent():
         legacy.mpi.set(4)
     with pytest.raises(TypeError, match="read-only"):
         legacy.set({"mpi": 4})
+    with pytest.raises(KeyError):
+        config.find("profiles.legacy.mpi")
 
     assert config.as_dict(only_changed="explicit")["profiles"]["legacy"]["mpi"] == 8
 
