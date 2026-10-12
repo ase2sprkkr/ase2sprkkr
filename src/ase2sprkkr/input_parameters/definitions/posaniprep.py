@@ -37,10 +37,9 @@ def input_parameters():
                        ]), SITES],
         executable="kkrgen", mpi=False,
         output_file_templates=("{dataset}_pos_dat.pan",),
-        cache_file_templates=("{dataset}_positron.rho",),
         validators=_validate_posaniprep,
         info="Prepare positron wavefunction and scattering data for POSANI",
         description="Periodic 3D ASA FREL preparation at a user-chosen energy near the positron band bottom. "
                     "Uses an electronic potential and writes DATASET_pos_dat.pan. Native code keeps s_1/2 only. "
-                    "Requires KMROT=0 and NQ=NT for the current export; existing DATASET_positron.rho can suppress the energy loop.",
+                    "Requires KMROT=0 and NQ=NT for the current export; an existing DATASET_positron.rho can suppress the energy loop and must not be reused as this task's cache.",
     )
