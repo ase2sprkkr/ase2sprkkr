@@ -12,8 +12,10 @@ class RunState(str, Enum):
     """Backend-independent state of a calculation run."""
 
     NEW = "new"
+    SUBMITTING = "submitting"
     QUEUED = "queued"
     RUNNING = "running"
+    FINISHING = "finishing"
     FINISHED = "finished"
     FAILED = "failed"
     CANCELLED = "cancelled"
