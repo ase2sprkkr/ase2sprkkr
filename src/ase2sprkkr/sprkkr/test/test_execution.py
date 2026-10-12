@@ -1,16 +1,67 @@
+import asyncio
+import sys
+import tempfile
+import threading
+import time
 from types import SimpleNamespace
 
-from ...execution import ExecutionSpec, LocalExecutor
+import pytest
+
+from ...execution import ExecutionSpec, LocalExecutor, LocalRunner, RunState
 from ..profile import SPRKKRProfile
 
 
-class _Reader:
-    def __init__(self):
-        self.call = None
+class _Result:
+    def complete(self, error, return_code):
+        self.error = error
+        self.return_code = return_code
 
-    def create_process(self, command, output_file, **kwargs):
-        self.call = command, output_file, kwargs
-        return "run"
+
+class _Parser:
+    print_output = False
+
+    async def read_output(self, stdout, result):
+        out = b""
+        while data := await stdout.readline():
+            out += data
+        result.output = out
+        return out
+
+    async def read_error(self, stderr, result):
+        out = b""
+        while data := await stderr.readline():
+            out += data
+        result.error_output = out
+        return out
+
+    def result(self, output, error, return_code):
+        if return_code:
+            exc = ValueError(f"Process returned {return_code}")
+            exc.output = output
+            exc.error = error
+            raise exc
+        return output, error, return_code
+
+
+class _Reader:
+    print_output = False
+
+    def __init__(self):
+        self.parser = _Parser()
+
+    def create_result(self, output_file, input_file):
+        return _Result()
+
+    async def parse_streams(self, stdout, stderr, result):
+        return await asyncio.gather(
+            self.parser.read_output(stdout, result),
+            self.parser.read_error(stderr, result),
+        )
+
+    def complete_result(self, result, output, error, return_code):
+        _, error, return_code = self.parser.result(output, error, return_code)
+        result.complete(error, return_code)
+        return result
 
 
 def test_profile_builds_serial_command():
@@ -82,23 +133,75 @@ def test_non_mpi_task_does_not_use_profile_mpi():
     assert spec.stdin is input_file
 
 
-def test_local_executor_does_not_modify_command():
-    reader = _Reader()
-    input_file = SimpleNamespace(name="/tmp/Fe.inp")
-    output_file = object()
+def _local_run(code):
+    directory = tempfile.TemporaryDirectory()
+    output = open(f"{directory.name}/run.out", "wb")
     spec = ExecutionSpec(
-        argv=("custom-launcher", "--flag", "program"),
-        input_file=input_file,
-        output_file=output_file,
-        directory="/tmp",
-        stdin=None,
+        argv=(sys.executable, "-S", "-c", code),
+        input_file=SimpleNamespace(name=f"{directory.name}/run.inp"),
+        output_file=output,
+        directory=directory.name,
     )
+    runner = LocalExecutor().create_run(_Reader(), spec)
+    runner._test_directory = directory
+    return runner
 
-    run = LocalExecutor().create_run(reader, spec)
 
-    assert run == "run"
-    command, created_output, kwargs = reader.call
-    assert command == ["custom-launcher", "--flag", "program"]
-    assert created_output is output_file
-    assert kwargs["stdin"] is None
-    assert kwargs["input_file"] == input_file.name
+def test_local_executor_returns_unstarted_runner():
+    runner = _local_run("pass")
+    assert isinstance(runner, LocalRunner)
+    assert runner.state == RunState.NEW
+    assert runner.reference is None
+
+
+def test_local_runner_streams_output_to_parser_and_listeners():
+    runner = _local_run(
+        "import sys; print('hello', flush=True); "
+        "print('problem', file=sys.stderr, flush=True)"
+    )
+    seen = []
+    runner.add_output_listener(lambda text, kind: seen.append((kind, text)))
+
+    result = runner.run()
+
+    assert runner.state == RunState.FINISHED
+    assert result.output == b"hello\n"
+    assert result.error_output == b"problem\n"
+    assert result.return_code == 0
+    assert ("out", "hello\n") in seen
+    assert ("err", "problem\n") in seen
+
+
+def test_local_runner_submit_then_wait():
+    runner = _local_run("print('ok')")
+    runner.submit()
+    result = runner.wait()
+    assert result.output == b"ok\n"
+    assert runner.state == RunState.FINISHED
+
+
+def test_local_runner_cancel_is_thread_safe():
+    runner = _local_run("import time; time.sleep(30)")
+    caller_thread = threading.get_ident()
+    stopped_from = []
+    original_stop = runner._stop_process
+
+    async def stop():
+        stopped_from.append(threading.get_ident())
+        await original_stop()
+
+    runner._stop_process = stop
+    runner.submit()
+
+    deadline = time.monotonic() + 5
+    while runner.state != RunState.RUNNING and time.monotonic() < deadline:
+        time.sleep(0.01)
+    assert runner.state == RunState.RUNNING
+
+    runner.cancel()
+    with pytest.raises(ValueError):
+        runner.wait()
+
+    assert runner.state == RunState.CANCELLED
+    assert stopped_from
+    assert stopped_from[0] != caller_thread

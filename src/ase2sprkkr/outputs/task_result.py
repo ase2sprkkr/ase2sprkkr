@@ -1,15 +1,14 @@
 """This module contains classes, used by parsers of the output files"""
 
+import asyncio
 import os
 import re
 import importlib
 from . import readers
 from ..common.decorators import cached_property, cached_class_property, maybeclassmethod
-from ..common.process_output_reader import run_coro_sync
 from ..common.file_utils import FilePath, filename_from_file
 from ..potentials.potentials import Potential
 from ..input_parameters import input_parameters as input_parameters
-from ..execution import RunState
 from .result_options import create_files_section
 
 
@@ -144,10 +143,10 @@ class TaskResult:
     @classmethod
     def from_file(cls, file):
         def read_output_for(task):
-            process = KkrOutputReader.class_for_task(task or "")
-            process = process(None, None, os.path.dirname(file))
+            reader = KkrOutputReader.class_for_task(task or "")
+            reader = reader(None, None, os.path.dirname(file))
             f.seek(0)
-            return process.read_from_file(f)
+            return reader.read_from_file(f)
 
         with open(file, "rb") as f:
             raw_out = f.read()
@@ -165,118 +164,62 @@ class TaskResult:
             return out
 
 
-class KkrProcess:
-    """Local run handle implementing the common execution lifecycle."""
-
-    def __init__(self, reader, output_parser, coroutine, result, callback=None):
-        self.reader = reader
-        self.output_parser = output_parser
-        self.coroutine = coroutine
-        self.result = result
-        self.callback = callback
-        self._state = RunState.NEW
-
-    @property
-    def state(self):
-        return self._state
-
-    @property
-    def reference(self):
-        # A local subprocess cannot in general be reattached after this Python
-        # process exits. Persistent backends return a RunReference instead.
-        return None
-
-    def _failed(self):
-        self._state = (
-            RunState.CANCELLED
-            if self.output_parser.stop_requested
-            else RunState.FAILED
-        )
-
-    def run(self):
-        self._state = RunState.RUNNING
-        try:
-            _result, error, return_code = run_coro_sync(self.coroutine)
-            self.result.complete(error, return_code)
-            self._state = RunState.FINISHED
-        except BaseException:
-            self._failed()
-            raise
-        finally:
-            if self.callback:
-                self.callback(self.result)
-        return self.result
-
-    def cancel(self):
-        self.output_parser.stop_the_process()
-
-    def stop_the_process(self):
-        """Backward-compatible alias for :meth:`cancel`."""
-        self.cancel()
-
-    async def run_async(self):
-        self._state = RunState.RUNNING
-        try:
-            _result, error, return_code = await self.coroutine
-            self.result.complete(error, return_code)
-            self._state = RunState.FINISHED
-            return self.result
-        except BaseException:
-            self._failed()
-            raise
-
-
 class KkrOutputReader:
-    """Class, that runs a process and reads its output using the underlying
-    output parser (see :class:`ase2sprkkr.common.process_output_reader.ProcessOutputParser`)
-    and return the appropriate TaskResult.
+    """Parse SPR-KKR output streams into a TaskResult.
 
-    Descendants should define parser_class and result_class property.
+    Execution is handled by :mod:`ase2sprkkr.execution`; this class owns only
+    task-specific parsing and result construction.
     """
 
-    def __init__(self, input_parameters, calculator, directory, print_output=False, read_callback=None):
+    def __init__(self, input_parameters, calculator, directory, print_output=False):
         self.input_parameters = input_parameters
-        """ Input parameters, that command to read the output (thus probably the ones, that
-      run the process that produced the output. It is used e.g. for determining the potential file,
-      which belongs to the output.
-      """
         self.calculator = calculator
         self.directory = directory
-        """ Calculator, that can be used for further processing of the results. """
-        self.parser = self.parser_class(print_output, read_callback)
+        self.parser = self.parser_class(print_output)
 
-    def _create_result(self, output_file, input_file=None):
-        """Create an object that stores results of the KKR output parsing."""
+    @property
+    def print_output(self):
+        """Whether raw process output should be mirrored to the terminal."""
+        return bool(self.parser.print_output)
+
+    def create_result(self, output_file, input_file=None):
+        """Create the TaskResult before parsing starts."""
         return self.result_class(
-            self.input_parameters, self.calculator, self.directory, output_file=output_file, input_file=input_file
+            self.input_parameters,
+            self.calculator,
+            self.directory,
+            output_file=output_file,
+            input_file=input_file,
         )
 
-    def _create_process(self, coroutine, result, callback=None):
-        """Create an object that can run the desired process (either reading from file or running a process)
+    async def parse_streams(self, stdout, stderr, result):
+        """Parse simultaneously growing stdout and stderr streams."""
+        return await asyncio.gather(
+            self.parser.read_output(stdout, result),
+            self.parser.read_error(stderr, result),
+        )
 
-        Returns
-        -------
-        KkrProcess
-            An object that can run the process and return the result.
-        """
-        return KkrProcess(self, self.parser, coroutine, result, callback=callback)
-
-    def create_process(self, cmd, outfile, input_file=None, callback=None, **kwargs):
-        """Create an object that takes care of running the command and parsing the results"""
-        result = self._create_result(filename_from_file(outfile, None), input_file)
-        coroutine = self.parser.run_async(cmd, outfile, self.directory, [result], **kwargs)
-        return self._create_process(coroutine, result, callback=callback)
+    def complete_result(self, result, output, error, return_code):
+        """Finalize a result after the execution backend completes."""
+        _output, error, return_code = self.parser.result(
+            output, error, return_code
+        )
+        result.complete(error, return_code)
+        return result
 
     @maybeclassmethod
     def read_from_file(self, cls, output, error=None, return_code=0, input_file=None, directory=None):
-        """Creates an object that takes care of reading and parsing of the output of a sprkkr process"""
+        """Parse output of an already finished SPR-KKR calculation."""
         if self is None:
             self = cls(None, None, directory)
-        result = self._create_result(output, input_file)
+        result = self.create_result(output, input_file)
         output_source = output if hasattr(output, "read") else result.path_to("output")
 
-        coroutine = self.parser.read_output_file(output_source, error, [result], return_code)
-        return self._create_process(coroutine, result).run()
+        _parsed_output, parsed_error, parsed_return_code = self.parser.read_from_file(
+            output_source, error, [result], return_code
+        )
+        result.complete(parsed_error, parsed_return_code)
+        return result
 
     @staticmethod
     def class_for_task(task):
