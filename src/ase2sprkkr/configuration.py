@@ -72,7 +72,7 @@ def user_preferences_file():
 
 
 def legacy_user_preferences_file():
-    """Return the deprecated executable-Python configuration filename."""
+    """Return the optional Python user-configuration hook filename."""
     return os.path.join(user_preferences_directory(), "__init__.py")
 
 
@@ -86,22 +86,22 @@ def _load_legacy_user_preferences(file):
 
 
 def load_user_preferences():
-    """Load user preferences, preferring ``config.yaml`` over legacy Python.
+    """Load the Python hook and then overlay ``config.yaml`` if present.
 
     Expected invalid YAML values are handled by ``load_configuration_yaml`` at
     the narrow boundary where they can be recovered safely. Unexpected loader
-    and legacy-Python exceptions deliberately propagate instead of silently
+    and Python-hook exceptions deliberately propagate instead of silently
     falling back to a partially/default configured process.
     """
     yaml_file = user_preferences_file()
     legacy_file = legacy_user_preferences_file()
 
+    if os.path.isfile(legacy_file):
+        _load_legacy_user_preferences(legacy_file)
     if os.path.isfile(yaml_file):
         from .configuration_yaml import load_configuration_yaml
 
         load_configuration_yaml(config, yaml_file)
-    elif os.path.isfile(legacy_file):
-        _load_legacy_user_preferences(legacy_file)
 
 
 @cache
