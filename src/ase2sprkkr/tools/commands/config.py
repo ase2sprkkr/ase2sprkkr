@@ -53,7 +53,10 @@ def parser(parser):
         "-m",
         "--migrate",
         action="store_true",
-        help="Migrate the deprecated Python user configuration to config.yaml.",
+        help=(
+            "Migrate the deprecated Python user configuration to config.yaml "
+            "and convert legacy execution settings to a named profile."
+        ),
     )
     cleanup = parser.add_mutually_exclusive_group()
     cleanup.add_argument(
@@ -107,8 +110,8 @@ def default_content(file):
 #     mpi: auto
 #
 # The reserved profile "ase" is read from ASE configuration and is not stored
-# here. The reserved "legacy" profile is managed through deprecated options and
-# may appear here after migrating an old configuration.
+# here. The reserved "legacy" profile exists only for deprecated options;
+# --migrate converts those execution settings to a normal named profile.
 
 # running:
 #   empty_spheres: auto

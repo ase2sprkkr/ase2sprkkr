@@ -232,7 +232,14 @@ def test_legacy_python_generated_options_load_into_legacy_profile(tmp_path, monk
     }
 
 
-def test_legacy_migration_is_self_contained(tmp_path):
+def test_legacy_migration_is_self_contained(tmp_path, monkeypatch):
+    from ase2sprkkr.profiles import ProfilesConfigurationContainer
+
+    monkeypatch.setattr(
+        ProfilesConfigurationContainer,
+        "_ase_config",
+        staticmethod(lambda: None),
+    )
     legacy_path = tmp_path / "__init__.py"
     yaml_path = tmp_path / "config.yaml"
     legacy_path.write_text(
@@ -244,11 +251,15 @@ def test_legacy_migration_is_self_contained(tmp_path):
 
     migrated = migrate_legacy_configuration(legacy_path, yaml_path, definition)
 
-    assert migrated.executables.dir() == "/opt/legacy"
-    assert migrated.running.mpi() == 3
+    assert migrated.default_profile() == "local"
+    assert "legacy" not in migrated.profiles
+    assert migrated.profiles["local"].executable_dir() == "/opt/legacy"
+    assert migrated.profiles["local"].mpi() == 3
     data = load_yaml_document(yaml_path)
-    assert data["profiles"]["legacy"]["executable_dir"] == "/opt/legacy"
-    assert data["profiles"]["legacy"]["mpi"] == 3
+    assert data["default_profile"] == "local"
+    assert "legacy" not in data["profiles"]
+    assert data["profiles"]["local"]["executable_dir"] == "/opt/legacy"
+    assert data["profiles"]["local"]["mpi"] == 3
 
 
 def test_clean_legacy_configuration_removes_top_level_assignments(tmp_path):
