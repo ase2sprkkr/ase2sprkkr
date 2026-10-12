@@ -562,7 +562,7 @@ class Option(BaseOption):
             raise _DiscardInvalidValue
         return converted
 
-    def __hasitem__(self, name):
+    def __contains__(self, name):
         d = self._definition
         d.check_array_access()
         if not d.is_repeated.is_dict:
