@@ -46,7 +46,10 @@ class LegacyProfile:
     def __init__(self, profiles):
         self._profiles = profiles
         self.mpi = ReadOnlyProfileValue(
-            lambda: profiles.legacy_value("mpi"), "mpi"
+            lambda: profiles.legacy_value("mpi", "auto"), "mpi"
+        )
+        self.mpi_warning = ReadOnlyProfileValue(
+            lambda: profiles.legacy_value("mpi_warning", True), "mpi_warning"
         )
         self.executable_dir = ReadOnlyProfileValue(
             lambda: profiles.legacy_value("executable_dir"), "executable_dir"
@@ -59,6 +62,7 @@ class LegacyProfile:
     def as_dict(self, *args, **kwargs):
         return {
             "mpi": self.mpi(),
+            "mpi_warning": self.mpi_warning(),
             "executable_dir": self.executable_dir(),
             "executable_suffix": self.executable_suffix(),
         }
@@ -68,7 +72,8 @@ class LegacyProfile:
     def set(self, *args, **kwargs):
         raise TypeError(
             "The 'legacy' profile is read-only; change the deprecated "
-            "running.mpi/executables options or create a named profile instead"
+            "running.mpi/running.mpi_warning/executables options or create a "
+            "named profile instead"
         )
 
 
@@ -113,7 +118,12 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
     """Dict-like repeated section with persistent and virtual profile views."""
 
     reserved_names = frozenset(("legacy", "ase"))
-    legacy_fields = ("mpi", "executable_dir", "executable_suffix")
+    legacy_fields = (
+        "mpi",
+        "mpi_warning",
+        "executable_dir",
+        "executable_suffix",
+    )
 
     def _add(self, id=None):
         """Create a stored profile while keeping ``ase`` strictly virtual."""
