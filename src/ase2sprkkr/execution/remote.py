@@ -339,21 +339,20 @@ class RemoteRunner:
         except TypeError as exc:
             raise ValueError("Remote execution requires named input files") from exc
 
-    async def _stage_file(self, value, remote_directory, used):
+    async def _stage_file(self, value, used):
         name = self._file_name(value)
         if name is None:
             return None
         if isinstance(name, int):
             raise ValueError("Remote execution requires named input files")
         source = os.path.abspath(name)
-        target = os.path.basename(source)
+        target = await self.executor.map_path(source)
         previous = used.get(target)
         if previous is not None and previous != source:
-            raise ValueError("Remote input files must have distinct base names")
-        used[target] = source
-        await self.executor.transport.put_file(
-            source, posixpath.join(remote_directory, target)
-        )
+            raise ValueError(f"Remote input target collision: {target}")
+        if previous is None:
+            used[target] = source
+            await self.executor.transport.put_file(source, target)
         return target
 
     def _remote_argv(self, staged):
@@ -371,27 +370,36 @@ class RemoteRunner:
 
     async def _prepare_request(self, run_id, remote_directory):
         used = {}
-        input_target = await self._stage_file(
-            self.spec.input_file, remote_directory, used
-        )
-        stdin_target = None
+        for value in self.spec.input_files:
+            await self._stage_file(value, used)
         staged = {source: target for target, source in used.items()}
+
+        input_name = self._file_name(self.spec.input_file)
+        input_path = os.path.abspath(input_name) if input_name is not None else None
+        input_target = staged.get(input_path)
+        if input_target is None:
+            input_target = await self._stage_file(self.spec.input_file, used)
+            staged = {source: target for target, source in used.items()}
+
+        stdin_target = None
         if self.spec.stdin is not None:
             stdin_name = self._file_name(self.spec.stdin)
             if stdin_name is not None:
                 stdin_path = os.path.abspath(stdin_name)
                 stdin_target = staged.get(stdin_path)
                 if stdin_target is None:
-                    stdin_target = await self._stage_file(
-                        self.spec.stdin, remote_directory, used
-                    )
+                    stdin_target = await self._stage_file(self.spec.stdin, used)
                     staged = {source: target for target, source in used.items()}
 
         output_name = self._file_name(self.spec.output_file)
         error_name = self._file_name(self.spec.error_file)
-        output_target = os.path.basename(output_name) if output_name else "stdout"
+        output_target = (
+            await self.executor.map_path(output_name) if output_name else posixpath.join(remote_directory, "stdout")
+        )
         error_target = (
-            os.path.basename(error_name) if error_name else output_target + ".err"
+            await self.executor.map_path(error_name)
+            if error_name
+            else output_target + ".err"
         )
 
         return {
@@ -600,20 +608,24 @@ class RemoteExecutor(Executor):
             return posixpath.join(home, root)
         return posixpath.normpath(root)
 
-    async def map_directory(self, directory):
-        """Map a local calculation directory to its persistent remote workspace."""
-        directory = Path(directory).expanduser().resolve()
+    async def map_path(self, path):
+        """Map one local path to the corresponding path on the target filesystem."""
+        path = Path(path).expanduser().resolve()
         try:
-            relative = directory.relative_to(self.local_root)
+            relative = path.relative_to(self.local_root)
         except ValueError as exc:
             raise ValueError(
-                f"Local directory {directory} is outside mapped root "
-                f"{self.local_root}; specify local_root/remote_root explicitly"
+                f"Local path {path} is outside mapped root {self.local_root}; "
+                "specify local_root/remote_root explicitly"
             ) from exc
         remote_root = await self._resolved_remote_root()
         if not relative.parts:
             return remote_root
         return posixpath.join(remote_root, *relative.parts)
+
+    async def map_directory(self, directory):
+        """Map a local calculation directory to its persistent remote workspace."""
+        return await self.map_path(directory)
 
     async def _json_request(self, action, *args, payload=None):
         data = None if payload is None else json.dumps(payload).encode("utf8")

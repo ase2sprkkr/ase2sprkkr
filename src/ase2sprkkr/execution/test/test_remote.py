@@ -70,6 +70,42 @@ def test_remote_executor_local_transport_streams_output(tmp_path):
     assert Path(runner.reference.directory) == remote_root
 
 
+def test_remote_executor_stages_declared_input_files(tmp_path):
+    workdir = tmp_path / "calculation"
+    workdir.mkdir()
+    input_file = (workdir / "input.txt").open("w+b")
+    input_file.write(b"hello")
+    input_file.seek(0)
+    potential_file = workdir / "start.pot"
+    potential_file.write_text("potential")
+    output_file = (workdir / "output.txt").open("wb")
+
+    remote_root = tmp_path / "remote"
+    executor = _executor(tmp_path, remote_root)
+    spec = ExecutionSpec(
+        argv=(
+            sys.executable,
+            "-c",
+            (
+                "import pathlib, sys; "
+                "print(sys.stdin.buffer.read().decode() + ':' + "
+                "pathlib.Path('start.pot').read_text())"
+            ),
+        ),
+        input_file=input_file,
+        output_file=output_file,
+        directory=str(workdir),
+        stdin=input_file,
+        input_files=(input_file, potential_file),
+    )
+
+    result = executor.create_run(_Reader(), spec).run()
+
+    assert result.return_code == 0
+    assert result.output == b"hello:potential\n"
+    assert (remote_root / "calculation" / "start.pot").read_text() == "potential"
+
+
 def test_remote_directory_mapping_defaults_to_home():
     executor = RemoteExecutor(LocalTransport())
     local = Path.home() / "calculations" / "Fe"
