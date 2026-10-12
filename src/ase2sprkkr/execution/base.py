@@ -23,29 +23,7 @@ class RunState(str, Enum):
     FINISHED = "finished"
     FAILED = "failed"
     CANCELLED = "cancelled"
-    LOST = "lost"
     UNKNOWN = "unknown"
-
-
-@dataclass(frozen=True)
-class RunTarget:
-    """Filesystem resources owned by a run on one execution target.
-
-    ``files`` contains paths that the run may modify. Two targets conflict only
-    when they refer to the same filesystem namespace and own at least one of
-    the same files.
-    """
-
-    location: str
-    files: Tuple[str, ...] = ()
-
-    def __post_init__(self):
-        object.__setattr__(self, "files", tuple(sorted(set(self.files))))
-
-    def conflicts_with(self, other: "RunTarget") -> bool:
-        return self.location == other.location and bool(
-            set(self.files) & set(other.files)
-        )
 
 
 @dataclass(frozen=True)
@@ -59,11 +37,6 @@ class RunReference:
     input_file: Optional[str] = None
     output_file: Optional[str] = None
     error_file: Optional[str] = None
-    target: Optional[RunTarget] = None
-
-    def __post_init__(self):
-        if isinstance(self.target, dict):
-            object.__setattr__(self, "target", RunTarget(**self.target))
 
 
 @dataclass(frozen=True)
@@ -199,43 +172,10 @@ class Runner(Protocol):
     def add_output_listener(self, callback) -> None: ...
 
 
-def _resource_path(value, directory):
-    """Return an absolute filesystem path for a run resource, when possible."""
-    if value is None:
-        return None
-    value = getattr(value, "name", value)
-    if isinstance(value, int):
-        # Anonymous temporary files and subprocess special values do not have a
-        # filesystem name that can collide with another calculation.
-        return None
-    try:
-        path = os.fspath(value)
-    except TypeError:
-        return None
-    if not os.path.isabs(path):
-        path = os.path.join(directory, path)
-    return os.path.abspath(path)
-
-
 class Executor:
     """Factory/backend for calculation runners."""
 
     name = None
-
-    def execution_target(self, spec: ExecutionSpec) -> RunTarget:
-        """Return the concrete resources that can collide with another run."""
-        directory = os.path.abspath(spec.directory)
-        files = set()
-        for value in (
-            spec.output_file,
-            spec.error_file,
-            *spec.output_files,
-            *spec.cache_files,
-        ):
-            path = _resource_path(value, directory)
-            if path is not None:
-                files.add(path)
-        return RunTarget("local", tuple(files))
 
     def resolve_mpi(self, mpi=None):
         """Convert profile MPI syntax to portable launch intent.
