@@ -59,8 +59,8 @@ def _read_state(directory, run_id):
         return json.load(f)
 
 
-def _write_state(directory, run_id, **changes):
-    path = _state_path(directory, run_id)
+def _write_state(workspace, run_id, **changes):
+    path = _state_path(workspace, run_id)
     try:
         with path.open() as f:
             state = json.load(f)
