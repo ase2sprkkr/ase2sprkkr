@@ -3,7 +3,8 @@ import numpy as np
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ._sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE, CPA
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ._file_manifests import RequiredTauInputParametersDefinition
+from ..input_parameters_definitions import InputValueDefinition as V
 
 
 def _validate_compton(p, _values, why):
@@ -75,7 +76,7 @@ def input_parameters():
     members += [V(name, SetOf(float, min_length=3, max_length=3), is_optional=True)
                 for name in ("PNVEC", "PPVEC1", "PPVEC2")]
     members += [V(name, False) for name in ("MD2D", "EMD2D", "SHFT", "SHFT_PP", "SHFT_PN", "INSIDE_SPHERE", "SQQ_RESOLVED")]
-    return InputParameters("compton", [CONTROL("COMPTON"), tau, MODE, STRCONST, CPA,
+    return RequiredTauInputParametersDefinition("compton", [CONTROL("COMPTON"), tau, MODE, STRCONST, CPA,
                            energy, TASK("COMPTON").copy(members), SITES],
                            executable="kkrgen", mpi=True,
                            output_file_templates=("{dataset}_BND.mcp", "{dataset}_COR.mcp", "{dataset}_TOT.mcp"),

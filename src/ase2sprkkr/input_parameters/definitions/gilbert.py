@@ -3,8 +3,17 @@
 import numpy as np
 from ...common.grammar_types import real, Keyword, Integer
 from ...common.warnings import DataValidityError
+from ._file_manifests import resolve_file
 from ._sections import CONTROL, TAU, ENERGY, SITES, TASK, MODE, CPA, STRCONST
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
+
+
+class GilbertInputParametersDefinition(InputParametersDefinition):
+    def input_files(self, parameters, directory):
+        files = list(super().input_files(parameters, directory))
+        if parameters.TASK.SETFLUCT() == "M_T" and parameters.TASK.FLUCTFIL():
+            files.append(resolve_file(directory, parameters.TASK.FLUCTFIL()))
+        return tuple(files)
 
 
 def _validate_gilbert(p, _values, why):
@@ -50,7 +59,7 @@ def _validate_gilbert(p, _values, why):
 
 
 def input_parameters():
-    return InputParameters(
+    return GilbertInputParametersDefinition(
         "gilbert",
         [
             CONTROL("GILBERT"),

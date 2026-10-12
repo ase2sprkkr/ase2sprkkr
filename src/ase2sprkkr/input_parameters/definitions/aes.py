@@ -1,7 +1,8 @@
 """Fully relativistic AES, audited against SPR-KKR 9.7."""
 from ...common.grammar_types import Integer, Keyword
 from ...common.warnings import DataValidityError
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ..input_parameters_definitions import InputValueDefinition as V
+from ._file_manifests import RequiredTauInputParametersDefinition
 from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
@@ -27,7 +28,7 @@ def input_parameters():
     energy = ENERGY(emax=(None, "Omitted bound delegates to EF", None),
                     defaults={"GRID": 3, "NE": 300, "ImE": .01})
     energy.copy_member("EMAX", is_optional=True)
-    return InputParameters(
+    return RequiredTauInputParametersDefinition(
         "aes", [CONTROL("AES"), TAU, MODE, STRCONST, energy,
         TASK("AES", [
             V("IT", Integer(min=1), 1, is_always_added=False),

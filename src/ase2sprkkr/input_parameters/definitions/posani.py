@@ -3,7 +3,8 @@ import numpy as np
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ._sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE, CPA
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ._file_manifests import RequiredTauInputParametersDefinition
+from ..input_parameters_definitions import InputValueDefinition as V
 
 
 def _validate_posani(p, _values, why):
@@ -80,13 +81,13 @@ def input_parameters():
                 for name in ("PNVEC", "PPVEC1", "PPVEC2")]
     members += [V(name, False) for name in ("MD2D", "EMD2D", "SHFT", "SHFT_PP", "SHFT_PN", "INSIDE_SPHERE", "SQQ_RESOLVED")]
     control = CONTROL("POSANI").copy(add=[V("RDTAU", True, is_always_added=True, info="Use existing electron TAU data.")])
-    return InputParameters("posani", [control, tau, MODE, STRCONST, CPA,
+    return RequiredTauInputParametersDefinition("posani", [control, tau, MODE, STRCONST, CPA,
                            energy, TASK("POSANI").copy(members), SITES],
                            executable="kkrgen", mpi=True,
-                           input_file_templates=("{dataset}_pos_data.pan",),
+                           input_file_templates=("{dataset}_pos_dat.pan",),
                            output_file_templates=("{dataset}_BND.mpa", "{dataset}_COR.mpa", "{dataset}_TOT.mpa"),
                            validators=_validate_posani,
                            info="Positron annihilation momentum density and profiles",
-                           description="Periodic FREL workflow using electron potential, electron TAU data and DATASET_pos_data.pan from POSANIPREP. Native TAUQQ reader/writer assumes NQ=NT; other systems are unsafe. "
+                           description="Periodic FREL workflow using electron potential, electron TAU data and DATASET_pos_dat.pan from POSANIPREP. Native TAUQQ reader/writer assumes NQ=NT; other systems are unsafe. "
                            "ONLY_CORE and USE_ZJOVZZ workflows are not audited. NONMAG is allowed. "
                            "Native code forces the ZJ wavefunction convention even for FULLPOT.")

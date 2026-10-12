@@ -4,8 +4,20 @@ from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError
 from ...common.generated_configuration_definitions import GeneratedValueDefinition
 
+from ._file_manifests import resolve_file
 from ._sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
+
+
+class JxcInputParametersDefinition(InputParametersDefinition):
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        dataset = parameters.CONTROL.DATASET()
+        if parameters.TASK.JXC() and parameters.MODE.MODE() != "SP-SREL":
+            files.append(resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat"))
+        if parameters.TASK.DMI():
+            files.append(resolve_file(directory, f"{dataset}_DMIVEC_Dij.dat"))
+        return tuple(files)
 
 
 def _task_name(_section):
@@ -98,7 +110,7 @@ def input_parameters():
     ]
     task = TASK(task)
 
-    input_parameters = InputParameters(
+    input_parameters = JxcInputParametersDefinition(
         "jxc",
         [
             CONTROL("JXC"),

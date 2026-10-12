@@ -3,30 +3,29 @@ import os
 import numpy as np
 from ...common.grammar_types import Integer, SetOf, Keyword
 from ...common.warnings import DataValidityError
+from ._file_manifests import resolve_file
 from ._sections import CONTROL, TAU, ENERGY, SCF, SITES, STRCONST, CPA, MODE, TASK
 from ..input_parameters_definitions import InputParametersDefinition
 
 
 class SCFInputParametersDefinition(InputParametersDefinition):
-    """SCF definition with output files depending on the concrete parameters."""
+    """SCF definition with files depending on the concrete parameters."""
 
-    @staticmethod
-    def _resolve_file(directory, filename):
-        filename = os.fspath(filename)
-        return filename if os.path.isabs(filename) else os.path.join(directory, filename)
-
-    def output_files(self, parameters, directory):
-        files = list(super().output_files(parameters, directory))
-
-        potfil = parameters.CONTROL.POTFIL()
-        if potfil:
-            files.append(self._resolve_file(directory, f"{potfil}_new"))
-
+    def input_files(self, parameters, directory):
+        files = list(super().input_files(parameters, directory))
         if parameters.SCF.FULLPOT():
             sfnfil = parameters.CONTROL.SFNFIL()
             if sfnfil:
-                files.append(self._resolve_file(directory, sfnfil))
+                path = resolve_file(directory, sfnfil)
+                if os.path.exists(path):
+                    files.append(path)
+        return tuple(files)
 
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        potfil = parameters.CONTROL.POTFIL()
+        if potfil:
+            files.append(resolve_file(directory, f"{potfil}_new"))
         return tuple(files)
 
 

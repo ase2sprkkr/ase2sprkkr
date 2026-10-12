@@ -2,7 +2,8 @@
 import numpy as np
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ..input_parameters_definitions import InputValueDefinition as V
+from ._file_manifests import RequiredTauInputParametersDefinition
 from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
@@ -39,7 +40,7 @@ def input_parameters():
                     defaults={"GRID": 3, "NE": 300, "ImE": 0.01},
                     add=[V("ERANGE", float, is_optional=True, info="Occupied energy window below EF, in eV; overrides EMIN.")])
     energy.copy_member("EMAX", is_optional=True)
-    return InputParameters(
+    return RequiredTauInputParametersDefinition(
         "vbpes", [CONTROL("VBPES"), TAU, MODE, STRCONST, energy,
         TASK("VBPES", [
             V("EPHOT", float, 1253.6, is_always_added=False, info="Photon energy in eV; values rounding to 1/2 select 1253.6/1486.6 eV."),
@@ -56,7 +57,9 @@ def input_parameters():
             V("ImEFIN", float, is_optional=True, info="Final-state broadening in Ry; omitted means Im(ETAB(NE,1))."),
             V("USETAUNN", False, info="Use or calculate the final-state TAU directory."),
             V("USETFIN", False, info="Single-site final state; disables USETAUNN."),
-        ]), SITES], executable="kkrgen", mpi=False, validators=_validate_vbpes,
+        ]), SITES], executable="kkrgen", mpi=False,
+        output_file_templates=("arpes.dat", "arpes_spol.dat", "spin.matrix.xps"),
+        validators=_validate_vbpes,
         info="Angle-integrated valence-band photoemission (KKRGEN).",
         description="Requires the initial-state TAU directory. Full relativity is required. "
                     "This is a separate implementation from KKRSPEC ARPES. GRV stops as unimplemented. "

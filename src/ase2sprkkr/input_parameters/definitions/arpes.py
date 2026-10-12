@@ -3,14 +3,31 @@
 import warnings
 import numpy as np
 from ...common.grammar_types import Integer, SetOf, DefKeyword, Keyword, Range, Array, flag
+from ._file_manifests import resolve_file
 from ._sections import CONTROL, TAU, ENERGY, SITES
 from ..input_parameters_definitions import (
-    InputParametersDefinition as InputParameters,
+    InputParametersDefinition,
     InputValueDefinition as V,
     InputSectionDefinition as Section,
 )
 from ...sprkkr.sprkkr_grammar_types import Site
 from ...common.warnings import DataValidityError
+
+
+class KKRSpecInputParametersDefinition(InputParametersDefinition):
+    def input_files(self, parameters, directory):
+        files = list(super().input_files(parameters, directory))
+        if parameters.TASK.INPVER() == 0:
+            files.append(resolve_file(directory, "input.inp"))
+        if parameters.TASK.STRVER() == 0:
+            files.append(resolve_file(directory, "struc.inp"))
+        return tuple(files)
+
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        if parameters.TASK.TASK() == "ARPES":
+            files.append(resolve_file(directory, f"{parameters.CONTROL.DATASET()}_ARPES_data.spc"))
+        return tuple(files)
 
 
 def _electron_angle_default(option):
@@ -75,7 +92,7 @@ def _validate_angular_scan(parameters, _container, why):
 
 
 def input_parameters():
-    return InputParameters(
+    return KKRSpecInputParametersDefinition(
         "arpes",
         [
             CONTROL("ARPES"),
