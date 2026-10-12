@@ -1,74 +1,106 @@
-"""Low-level command and file transports used by remote execution."""
+"""Low-level asynchronous command and file transports."""
 
 from __future__ import annotations
 
+import asyncio
 import os
 import posixpath
 import shlex
 import shutil
 import subprocess
 from pathlib import Path
+from typing import Optional, Protocol
+
+
+class RunningCommand(Protocol):
+    """A running command with independently readable output streams."""
+
+    stdout: asyncio.StreamReader
+    stderr: asyncio.StreamReader
+    returncode: Optional[int]
+
+    async def wait(self) -> int: ...
+
+    def terminate(self) -> None: ...
 
 
 class Transport:
-    """Run commands and move files on one target machine."""
+    """Run commands and move files on one target machine.
 
-    def exec(self, argv, *, cwd=None, input=None, check=True):
+    Transport operations are asynchronous because remote execution is mostly
+    I/O. ``run()`` waits for a command and captures its output, while
+    ``start()`` returns a process-like object with native asyncio stdout and
+    stderr streams.
+    """
+
+    async def run(self, argv, *, cwd=None, input=None, check=True):
         raise NotImplementedError
 
-    def exec_stream(self, argv, *, cwd=None, stdin=None):
+    async def start(self, argv, *, cwd=None, stdin=None) -> RunningCommand:
         raise NotImplementedError
 
-    def put_file(self, source, destination):
+    async def put_file(self, source, destination):
         raise NotImplementedError
 
-    def get_file(self, source, destination):
+    async def get_file(self, source, destination):
         raise NotImplementedError
 
-    def read_file(self, path):
+    async def read_file(self, path):
         raise NotImplementedError
+
+
+async def _completed_process(process, argv, input=None, check=True):
+    stdout, stderr = await process.communicate(input)
+    result = subprocess.CompletedProcess(tuple(argv), process.returncode, stdout, stderr)
+    if check and result.returncode:
+        raise subprocess.CalledProcessError(
+            result.returncode,
+            result.args,
+            output=result.stdout,
+            stderr=result.stderr,
+        )
+    return result
 
 
 class LocalTransport(Transport):
-    """Transport backed by the local subprocess and filesystem APIs."""
+    """Transport backed by asyncio subprocesses and the local filesystem."""
 
-    def exec(self, argv, *, cwd=None, input=None, check=True):
-        return subprocess.run(
-            tuple(os.fspath(arg) for arg in argv),
-            cwd=cwd,
-            input=input,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=check,
-        )
-
-    def exec_stream(self, argv, *, cwd=None, stdin=None):
-        return subprocess.Popen(
-            tuple(os.fspath(arg) for arg in argv),
+    async def start(self, argv, *, cwd=None, stdin=None):
+        return await asyncio.create_subprocess_exec(
+            *(os.fspath(arg) for arg in argv),
             cwd=cwd,
             stdin=stdin,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
         )
 
-    def put_file(self, source, destination):
+    async def run(self, argv, *, cwd=None, input=None, check=True):
+        argv = tuple(os.fspath(arg) for arg in argv)
+        process = await asyncio.create_subprocess_exec(
+            *argv,
+            cwd=cwd,
+            stdin=asyncio.subprocess.PIPE if input is not None else None,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        return await _completed_process(process, argv, input=input, check=check)
+
+    async def put_file(self, source, destination):
         destination = Path(destination)
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(source, destination)
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(None, shutil.copyfile, source, destination)
 
-    def get_file(self, source, destination):
-        self.put_file(source, destination)
+    async def get_file(self, source, destination):
+        await self.put_file(source, destination)
 
-    def read_file(self, path):
-        return Path(path).read_bytes()
+    async def read_file(self, path):
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, Path(path).read_bytes)
 
 
 class SshTransport(Transport):
-    """Transport using the system ``ssh`` client.
-
-    The remote side only needs a POSIX shell and common file utilities.  No
-    Python SSH library is required on the controlling machine.
-    """
+    """Transport using the system ``ssh`` client."""
 
     def __init__(self, host, *, ssh="ssh", options=()):
         self.host = host
@@ -83,51 +115,55 @@ class SshTransport(Transport):
             )
         return [self.ssh, *self.options, self.host, command]
 
-    def exec(self, argv, *, cwd=None, input=None, check=True):
-        return subprocess.run(
-            self._command(argv, cwd),
-            input=input,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=check,
-        )
-
-    def exec_stream(self, argv, *, cwd=None, stdin=None):
-        return subprocess.Popen(
-            self._command(argv, cwd),
+    async def start(self, argv, *, cwd=None, stdin=None):
+        return await asyncio.create_subprocess_exec(
+            *self._command(argv, cwd),
             stdin=stdin,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
         )
 
-    def put_file(self, source, destination):
+    async def run(self, argv, *, cwd=None, input=None, check=True):
+        command = self._command(argv, cwd)
+        process = await asyncio.create_subprocess_exec(
+            *command,
+            stdin=asyncio.subprocess.PIPE if input is not None else None,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        return await _completed_process(process, command, input=input, check=check)
+
+    async def put_file(self, source, destination):
         destination = os.fspath(destination)
         parent = posixpath.dirname(destination)
         if parent:
-            self.exec(("mkdir", "-p", "--", parent))
+            await self.run(("mkdir", "-p", "--", parent))
 
-        # Stream through ssh instead of relying on scp path parsing/quoting.
         command = self._command(("sh", "-c", 'cat > "$1"', "sh", destination))
         with open(source, "rb") as source_file:
-            subprocess.run(
-                command,
+            process = await asyncio.create_subprocess_exec(
+                *command,
                 stdin=source_file,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                check=True,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
             )
+            await _completed_process(process, command)
 
-    def get_file(self, source, destination):
+    async def get_file(self, source, destination):
         destination = Path(destination)
         destination.parent.mkdir(parents=True, exist_ok=True)
         command = self._command(("cat", "--", os.fspath(source)))
         with destination.open("wb") as destination_file:
-            subprocess.run(
-                command,
+            process = await asyncio.create_subprocess_exec(
+                *command,
                 stdout=destination_file,
-                stderr=subprocess.PIPE,
-                check=True,
+                stderr=asyncio.subprocess.PIPE,
             )
+            _, stderr = await process.communicate()
+            if process.returncode:
+                raise subprocess.CalledProcessError(
+                    process.returncode, command, stderr=stderr
+                )
 
-    def read_file(self, path):
-        return self.exec(("cat", "--", os.fspath(path))).stdout
+    async def read_file(self, path):
+        return (await self.run(("cat", "--", os.fspath(path)))).stdout

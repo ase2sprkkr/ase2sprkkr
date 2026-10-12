@@ -35,9 +35,9 @@ def _read_state(directory):
         return json.load(f)
 
 
-def _write_state(directory, **changes):
-    directory = Path(directory)
-    path = _state_path(directory)
+def _write_state(run_directory, **changes):
+    run_directory = Path(run_directory)
+    path = _state_path(run_directory)
     try:
         with path.open() as f:
             state = json.load(f)
@@ -131,7 +131,15 @@ def cancel_remote(directory, timeout=1.0):
     return _read_state(directory)
 
 
-def follow_remote(directory, stdout, stderr, *, stdout_offset=0, stderr_offset=0, poll_interval=0.1):
+def follow_remote(
+    directory,
+    stdout,
+    stderr,
+    *,
+    stdout_offset=0,
+    stderr_offset=0,
+    poll_interval=0.1,
+):
     """Forward newly written stdout/stderr until the remote run is final."""
     directory = Path(directory).expanduser().resolve()
     offsets = {"out": stdout_offset, "err": stderr_offset}
@@ -212,6 +220,30 @@ def run_remote_worker(directory):
         raise
 
 
+def _run_sync(coro):
+    """Run one transport coroutine from the synchronous executor facade."""
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+
+    result = []
+    error = []
+
+    def worker():
+        try:
+            result.append(asyncio.run(coro))
+        except BaseException as exc:
+            error.append(exc)
+
+    thread = Thread(target=worker)
+    thread.start()
+    thread.join()
+    if error:
+        raise error[0]
+    return result[0]
+
+
 class RemoteRunner:
     """A local proxy for one run controlled by a remote ASE2SPRKKR helper."""
 
@@ -244,7 +276,7 @@ class RemoteRunner:
             RunState.CANCELLED,
         ):
             return self._state
-        status = self.executor._status(self._reference.directory)
+        status = _run_sync(self.executor._status(self._reference.directory))
         self._state = RunState(status.get("state", "unknown"))
         return self._state
 
@@ -264,7 +296,11 @@ class RemoteRunner:
             callback(text, kind)
 
     def _write_output(self, data, kind):
-        target = self.spec.error_file if kind == "err" and self.spec.error_file is not None else self.spec.output_file
+        target = (
+            self.spec.error_file
+            if kind == "err" and self.spec.error_file is not None
+            else self.spec.output_file
+        )
         if target is not None:
             target.write(data)
             target.flush()
@@ -281,7 +317,7 @@ class RemoteRunner:
         except TypeError as exc:
             raise ValueError("Remote execution requires named input files") from exc
 
-    def _stage_file(self, value, remote_directory, used):
+    async def _stage_file(self, value, remote_directory, used):
         name = self._file_name(value)
         if name is None:
             return None
@@ -293,7 +329,9 @@ class RemoteRunner:
         if previous is not None and previous != source:
             raise ValueError("Remote input files must have distinct base names")
         used[target] = source
-        self.executor.transport.put_file(source, posixpath.join(remote_directory, target))
+        await self.executor.transport.put_file(
+            source, posixpath.join(remote_directory, target)
+        )
         return target
 
     def _remote_argv(self, staged):
@@ -309,9 +347,11 @@ class RemoteRunner:
             out.append(replacement or value)
         return out
 
-    def _prepare_request(self, run_id, remote_directory):
+    async def _prepare_request(self, run_id, remote_directory):
         used = {}
-        input_target = self._stage_file(self.spec.input_file, remote_directory, used)
+        input_target = await self._stage_file(
+            self.spec.input_file, remote_directory, used
+        )
         stdin_target = None
         staged = {source: target for target, source in used.items()}
         if self.spec.stdin is not None:
@@ -320,13 +360,17 @@ class RemoteRunner:
                 stdin_path = os.path.abspath(stdin_name)
                 stdin_target = staged.get(stdin_path)
                 if stdin_target is None:
-                    stdin_target = self._stage_file(self.spec.stdin, remote_directory, used)
+                    stdin_target = await self._stage_file(
+                        self.spec.stdin, remote_directory, used
+                    )
                     staged = {source: target for target, source in used.items()}
 
         output_name = self._file_name(self.spec.output_file)
         error_name = self._file_name(self.spec.error_file)
         output_target = os.path.basename(output_name) if output_name else "stdout"
-        error_target = os.path.basename(error_name) if error_name else output_target + ".err"
+        error_target = (
+            os.path.basename(error_name) if error_name else output_target + ".err"
+        )
 
         return {
             "id": run_id,
@@ -340,10 +384,9 @@ class RemoteRunner:
         }
 
     async def _pump(self, source, target, kind):
-        loop = asyncio.get_running_loop()
         try:
             while True:
-                data = await loop.run_in_executor(None, source.read, 65536)
+                data = await source.read(65536)
                 if not data:
                     break
                 self._write_output(data, kind)
@@ -355,37 +398,47 @@ class RemoteRunner:
     async def _monitor(self):
         stdout = asyncio.StreamReader()
         stderr = asyncio.StreamReader()
-        parse_task = asyncio.create_task(self.reader.parse_streams(stdout, stderr, self.result))
-        self._follow_process = self.executor._follow(self._reference.directory)
-        loop = asyncio.get_running_loop()
-        tasks = [
-            asyncio.create_task(self._pump(self._follow_process.stdout, stdout, "out")),
-            asyncio.create_task(self._pump(self._follow_process.stderr, stderr, "err")),
-            loop.run_in_executor(None, self._follow_process.wait),
-        ]
+        parse_task = asyncio.create_task(
+            self.reader.parse_streams(stdout, stderr, self.result)
+        )
+        self._follow_process = await self.executor._follow(
+            self._reference.directory
+        )
+        stdout_task = asyncio.create_task(
+            self._pump(self._follow_process.stdout, stdout, "out")
+        )
+        stderr_task = asyncio.create_task(
+            self._pump(self._follow_process.stderr, stderr, "err")
+        )
         try:
-            _, _, follow_return_code = await asyncio.gather(*tasks)
+            follow_return_code, _, _ = await asyncio.gather(
+                self._follow_process.wait(), stdout_task, stderr_task
+            )
             output, error = await parse_task
         finally:
-            for task in tasks:
-                if hasattr(task, "done") and not task.done():
+            for task in (stdout_task, stderr_task, parse_task):
+                if not task.done():
                     task.cancel()
-            if not parse_task.done():
-                parse_task.cancel()
-            await asyncio.gather(parse_task, return_exceptions=True)
+            await asyncio.gather(
+                stdout_task, stderr_task, parse_task, return_exceptions=True
+            )
 
-        status = self.executor._status(self._reference.directory)
+        status = await self.executor._status(self._reference.directory)
         self._state = RunState(status.get("state", "unknown"))
         if follow_return_code != 0 and self._state not in (
             RunState.FINISHED,
             RunState.FAILED,
             RunState.CANCELLED,
         ):
-            raise RuntimeError("Remote output stream ended before the remote run finished")
+            raise RuntimeError(
+                "Remote output stream ended before the remote run finished"
+            )
         return_code = status.get("return_code")
         if return_code is None:
             return_code = 0 if self._state == RunState.FINISHED else 1
-        return self.reader.complete_result(self.result, output, error, return_code)
+        return self.reader.complete_result(
+            self.result, output, error, return_code
+        )
 
     def _close_output_files(self):
         closed = set()
@@ -413,16 +466,24 @@ class RemoteRunner:
                     self._exception = exc
             self._done.set()
 
+    async def _submit_async(self):
+        run_id = uuid4().hex
+        remote_directory = posixpath.join(
+            self.executor.root_directory, run_id
+        )
+        await self.executor.transport.run(
+            ("mkdir", "-p", "--", remote_directory)
+        )
+        request = await self._prepare_request(run_id, remote_directory)
+        status = await self.executor._submit(request)
+        return run_id, status
+
     def submit(self):
         with self._lock:
             if self._state != RunState.NEW:
                 raise RuntimeError(f"Run is already {self._state.value}")
 
-            run_id = uuid4().hex
-            remote_directory = posixpath.join(self.executor.root_directory, run_id)
-            self.executor.transport.exec(("mkdir", "-p", "--", remote_directory))
-            request = self._prepare_request(run_id, remote_directory)
-            status = self.executor._submit(request)
+            run_id, status = _run_sync(self._submit_async())
             self._state = RunState(status["state"])
             directory = status["directory"]
             self._reference = RunReference(
@@ -451,16 +512,14 @@ class RemoteRunner:
         return self.wait()
 
     async def run_async(self):
-        if self._state == RunState.NEW:
-            self.submit()
         loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(None, self.wait)
+        return await loop.run_in_executor(None, self.run)
 
     def cancel(self):
         if self._reference is None:
             self._state = RunState.CANCELLED
             return
-        status = self.executor._cancel(self._reference.directory)
+        status = _run_sync(self.executor._cancel(self._reference.directory))
         self._state = RunState(status.get("state", "cancelled"))
 
 
@@ -483,25 +542,33 @@ class RemoteExecutor(Executor):
         self.command = tuple(command)
         self.computer = getattr(transport, "host", None)
 
-    def _json_request(self, action, *args, payload=None):
+    async def _json_request(self, action, *args, payload=None):
         data = None if payload is None else json.dumps(payload).encode("utf8")
-        result = self.transport.exec((*self.command, action, *args), input=data)
+        result = await self.transport.run(
+            (*self.command, action, *args), input=data
+        )
         return json.loads(result.stdout.decode("utf8"))
 
     def resolve_mpi(self, mpi=None):
-        return self._json_request("resolve-mpi", payload={"mpi": mpi})["mpi"]
+        return _run_sync(
+            self._json_request("resolve-mpi", payload={"mpi": mpi})
+        )["mpi"]
 
-    def _submit(self, request):
-        return self._json_request("submit", request["directory"], payload=request)
+    async def _submit(self, request):
+        return await self._json_request(
+            "submit", request["directory"], payload=request
+        )
 
-    def _status(self, directory):
-        return self._json_request("status", directory)
+    async def _status(self, directory):
+        return await self._json_request("status", directory)
 
-    def _cancel(self, directory):
-        return self._json_request("cancel", directory)
+    async def _cancel(self, directory):
+        return await self._json_request("cancel", directory)
 
-    def _follow(self, directory):
-        return self.transport.exec_stream((*self.command, "follow", directory))
+    async def _follow(self, directory):
+        return await self.transport.start(
+            (*self.command, "follow", directory)
+        )
 
     def create_run(self, reader, spec, callback=None):
         return RemoteRunner(self, reader, spec, callback=callback)
