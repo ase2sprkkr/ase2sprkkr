@@ -114,7 +114,9 @@ def default_content(file):
 #     executable_dir: /opt/sprkkr/bin
 #     executable_suffix: ""
 #     # MPI can be false, true, an integer process count, "auto", or argv.
+#     # If omitted, mpi defaults to "auto".
 #     mpi: auto
+#     mpi_warning: true
 #
 # The reserved profile "ase" is read from ASE configuration and is not stored
 # here. The reserved "legacy" profile exists only for deprecated options;
@@ -123,7 +125,6 @@ def default_content(file):
 # running:
 #   empty_spheres: auto
 #   print_output: info
-#   mpi_warning: true
 
 # nomad:
 #   token: your-token
