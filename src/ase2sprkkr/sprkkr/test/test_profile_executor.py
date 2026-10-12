@@ -3,7 +3,8 @@ from types import SimpleNamespace
 import pytest
 
 from ase2sprkkr.configuration import definition
-from ase2sprkkr.execution import LocalExecutor, RemoteExecutor, SshTransport
+from ase2sprkkr.execution import LocalExecutor, SshTransport
+from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
 from ase2sprkkr.input_parameters import input_parameters as input_parameters_module
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
@@ -64,7 +65,7 @@ def test_local_profile_creates_local_executor():
     assert isinstance(executor, LocalExecutor)
 
 
-def test_ssh_profile_creates_remote_executor():
+def test_ssh_profile_creates_endpoint_only_executor():
     profile = SPRKKRProfile(
         executor="ssh",
         host="user@cluster",
@@ -78,15 +79,24 @@ def test_ssh_profile_creates_remote_executor():
 
     executor = executor_from_profile(profile)
 
-    assert isinstance(executor, RemoteExecutor)
+    assert isinstance(executor, RemoteEndpointExecutor)
     assert isinstance(executor.transport, SshTransport)
     assert executor.transport.host == "user@cluster"
     assert executor.transport.options == ("-p", "2222")
-    assert executor.local_root.as_posix() == "/home/user/work"
-    assert executor.remote_root == "/scratch/user/work"
     assert executor.command == ("custom-ase2sprkkr", "remote")
-    assert executor.input_files.value == "missing"
-    assert executor.output_files.value == "always"
+    # Staging belongs to the concrete execution, not the pooled endpoint.
+    input_file = SimpleNamespace(name="/home/user/work/test.inp")
+    spec = profile.create_execution(
+        "kkrscf",
+        input_file,
+        object(),
+        "/home/user/work",
+        mpi_supported=True,
+    )
+    assert spec.launch.local_root == "/home/user/work"
+    assert spec.launch.remote_root == "/scratch/user/work"
+    assert spec.launch.input_sync == "missing"
+    assert spec.launch.output_sync == "always"
 
 
 def test_ssh_profile_requires_host():

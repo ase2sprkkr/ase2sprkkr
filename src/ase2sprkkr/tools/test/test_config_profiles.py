@@ -40,9 +40,11 @@ def _fresh_cli(monkeypatch, tmp_path):
         lambda: str(tmp_path / "__init__.py"),
     )
     monkeypatch.setattr(
-        config,
+        type(config),
         "save_user_preferences",
-        lambda: saves.append(config.as_dict(only_changed="explicit", generated=False)),
+        lambda self: saves.append(
+            self.as_dict(only_changed="explicit", generated=False)
+        ),
     )
     return config, saves
 
@@ -54,6 +56,17 @@ def test_config_set_creates_profile_from_dotted_option(monkeypatch, tmp_path):
 
     assert config.profiles["cluster"].mpi() == 8
     assert len(saves) == 1
+
+
+def test_config_set_creates_profile_with_mpi_warning(monkeypatch, tmp_path):
+    config, saves = _fresh_cli(monkeypatch, tmp_path)
+
+    config_command.run(_args("profiles.cluster.mpi_warning", "false"), None)
+
+    profile = config.profiles["cluster"]
+    assert profile.mpi() == "auto"
+    assert profile.mpi_warning() is False
+    assert saves == [{"profiles": {"cluster": {"mpi_warning": False}}}]
 
 
 def test_config_set_creates_profile_from_yaml_mapping(monkeypatch, tmp_path):

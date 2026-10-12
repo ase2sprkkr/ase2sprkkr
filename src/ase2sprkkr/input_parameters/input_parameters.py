@@ -18,6 +18,7 @@ from ..configuration import config
 from ..potentials.potentials import Potential
 from ..common.doc import process_input_parameters_definition
 from ..sprkkr.profile import SPRKKRProfile, executor_from_profile
+from ..execution.persistence import resolve_execution_manager
 import warnings
 
 
@@ -144,19 +145,28 @@ class InputParameters(ConfigurationFile):
         gdb=False,
         profile=None,
         executor=None,
+        persistent=None,
     ):
         """Run the SPR-KKR task described by these input parameters.
 
         ``run_async=False`` executes synchronously and returns a TaskResult.
         ``run_async=True`` returns an unstarted Runner.
+
+        ``persistent`` may be ``False``/``None`` (disabled), ``True`` (use the
+        process-wide default execution manager), or an explicit
+        :class:`~ase2sprkkr.execution.ExecutionManager`.
         """
         print_output = calculator.value_or_default("print_output", print_output)
         reader = self.output_reader(calculator, print_output, directory)
+        explicit_profile = profile is not None
         profile = profile or getattr(calculator, "profile", None) or SPRKKRProfile()
-        if executor is None:
+        if executor is None and not explicit_profile:
             executor = getattr(calculator, "executor", None)
         if executor is None:
             executor = executor_from_profile(profile)
+        if persistent is None:
+            persistent = getattr(calculator, "persistent", False)
+        manager = resolve_execution_manager(persistent)
 
         execution_profile = profile
         if self._definition.mpi:
@@ -207,7 +217,17 @@ class InputParameters(ConfigurationFile):
                 mpi_supported=self._definition.mpi,
                 gdb=gdb,
             )
-            runner = executor.create_run(reader, spec, callback=cleanup)
+            if manager is None:
+                runner = executor.create_run(reader, spec, callback=cleanup)
+            else:
+                runner = manager.create_run(
+                    executor,
+                    reader,
+                    spec,
+                    task=self.task_name,
+                    dataset=self.CONTROL.DATASET.result,
+                    callback=cleanup,
+                )
             if read_callback:
                 runner.add_output_listener(read_callback)
             if run_async:

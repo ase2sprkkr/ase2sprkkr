@@ -1,217 +1,208 @@
-import argparse
-import asyncio
 import json
-import sys
+import warnings
 from types import SimpleNamespace
 
+import pytest
+
 from ase2sprkkr.execution import (
-    ExecutionSpec,
+    ExecutionManager,
     Executor,
-    ExecutorPool,
-    LocalExecutor,
-    ManagedExecutor,
-    RunManager,
     RunReference,
     RunState,
     RunStatus,
     RunStore,
-    RunTarget,
 )
-from ase2sprkkr.execution import psij as psij_backend
-from ase2sprkkr.execution.remote import _run_directory, _write_state
-from ase2sprkkr.tools.commands import remote as remote_command
 
 
-class _StatusExecutor(Executor):
+class _FakeRunner:
+    def __init__(self, callback=None):
+        self.callback = callback
+        self.state = RunState.NEW
+        self.reference = None
+        self.result = SimpleNamespace(return_code=None)
+        self.on_submit = None
+
+    def submit(self):
+        if self.on_submit:
+            self.on_submit()
+        self.reference = RunReference(executor="test", native_id="native-1")
+        self.state = RunState.QUEUED
+
+    def wait(self):
+        return self.result
+
+    def run(self):
+        self.submit()
+        return self.wait()
+
+    def cancel(self):
+        self.state = RunState.CANCELLED
+
+    def add_output_listener(self, callback):
+        pass
+
+    def finish(self, return_code=0):
+        self.result.return_code = return_code
+        self.state = RunState.FINISHED if return_code == 0 else RunState.FAILED
+        if self.callback:
+            self.callback(self.result)
+
+
+class _FakeExecutor(Executor):
     name = "test"
 
     def __init__(self):
-        self.calls = []
+        self.runners = []
+        self.status_calls = []
+
+    def create_run(self, reader, spec, callback=None):
+        runner = _FakeRunner(callback=callback)
+        self.runners.append(runner)
+        return runner
 
     def status(self, *references):
-        self.calls.append(references)
+        self.status_calls.append(references)
         return tuple(
             RunStatus(reference, RunState.RUNNING) for reference in references
         )
 
 
-def test_run_store_roundtrip_and_manager_batches_refresh(tmp_path):
+def _spec(tmp_path):
+    return SimpleNamespace(directory=str(tmp_path))
+
+
+def test_persistent_run_is_first_saved_as_submitting(tmp_path):
     store = RunStore(tmp_path / "runs")
-    manager = RunManager(store=store)
-    executor = _StatusExecutor()
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    run = manager.create_run(
+        executor,
+        reader=object(),
+        spec=_spec(tmp_path),
+        task="SCF",
+        dataset="case",
+    )
+    backend = executor.runners[0]
+    seen = []
+    backend.on_submit = lambda: seen.append(store.get(run.id).state)
+
+    run.submit()
+
+    assert seen == [RunState.SUBMITTING]
+    stored = store.get(run.id)
+    assert stored.state == RunState.QUEUED
+    assert stored.reference == backend.reference
+    assert stored.task == "SCF"
+    assert stored.dataset == "case"
+
+
+def test_run_id_exists_before_submit_and_double_submit_is_rejected(tmp_path):
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    executor = _FakeExecutor()
+    run = manager.create_run(
+        executor,
+        reader=object(),
+        spec=_spec(tmp_path),
+        task="SCF",
+    )
+
+    assert run.id
+    assert run.record.state == RunState.NEW
+
+    run.submit()
+    with pytest.raises(RuntimeError, match="already queued"):
+        run.submit()
+
+
+def test_completion_callback_persists_final_result(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    run = manager.create_run(
+        executor,
+        reader=object(),
+        spec=_spec(tmp_path),
+        task="DOS",
+    )
+
+    run.submit()
+    executor.runners[0].finish(return_code=0)
+
+    stored = store.get(run.id)
+    assert stored.state == RunState.FINISHED
+    assert stored.return_code == 0
+
+
+def test_refresh_batches_referenced_runs(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
     manager.register_executor(executor)
 
-    first = manager.remember(
-        RunReference(
-            executor="test",
-            native_id="one",
-            target=RunTarget("local", ("one.out",)),
+    records = []
+    for native_id in ("one", "two"):
+        record = manager.new_record(task="DOS", directory=tmp_path)
+        record = manager.transition(
+            record,
+            state=RunState.QUEUED,
+            reference=RunReference(executor="test", native_id=native_id),
         )
-    )
-    second = manager.remember(
-        RunReference(executor="test", native_id="two")
-    )
+        records.append(record)
 
-    restored = RunStore(tmp_path / "runs")
-    assert restored.get(first.id).reference.target == RunTarget(
-        "local", ("one.out",)
-    )
+    refreshed = manager.refresh(records)
 
-    updated = manager.refresh()
-
-    assert len(executor.calls) == 1
-    assert executor.calls[0] == (first.reference, second.reference)
-    assert [record.state for record in updated] == [
+    assert len(executor.status_calls) == 1
+    assert executor.status_calls[0] == tuple(record.reference for record in records)
+    assert [record.state for record in refreshed] == [
         RunState.RUNNING,
         RunState.RUNNING,
     ]
 
 
-def test_executor_pool_reuses_profile_executor():
-    pool = ExecutorPool()
-    created = []
-
-    def factory():
-        value = object()
-        created.append(value)
-        return value
-
-    first = pool.get(("psij", "slurm"), factory)
-    second = pool.get(("psij", "slurm"), factory)
-
-    assert first is second
-    assert created == [first]
-
-
-class _LocalResult:
-    pass
-
-
-class _LocalReader:
-    print_output = False
-
-    def create_result(self, output_file, input_file):
-        return _LocalResult()
-
-    async def parse_streams(self, stdout, stderr, result):
-        return await asyncio.gather(stdout.read(), stderr.read())
-
-    def complete_result(self, result, output, error, return_code):
-        result.return_code = return_code
-        return result
-
-
-def test_managed_local_run_persists_pid_before_submit_returns(tmp_path):
+def test_run_store_shards_records_and_marks_schema(tmp_path):
     store = RunStore(tmp_path / "runs")
-    manager = RunManager(store=store)
-    executor = ManagedExecutor(LocalExecutor(), manager)
-    output = open(tmp_path / "run.out", "w+b")
-    spec = ExecutionSpec(
-        argv=(sys.executable, "-c", "import time; time.sleep(1)"),
-        input_file=None,
-        output_file=output,
-        directory=str(tmp_path),
-    )
-    runner = executor.create_run(_LocalReader(), spec)
+    manager = ExecutionManager(store)
+    record = manager.new_record(task="SCF", directory=tmp_path)
+    record = manager.transition(record, state=RunState.SUBMITTING, reference=None)
 
-    runner.submit()
-    reference = runner.reference
+    path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
+    data = json.loads(path.read_text())
 
-    assert reference is not None
-    assert reference.executor == "local"
-    assert reference.native_id
-    records = store.runs(active=True)
-    assert len(records) == 1
-    assert records[0].reference == reference
-    assert LocalExecutor().status(reference)[0].state == RunState.RUNNING
-
-    runner.cancel()
-    try:
-        runner.wait()
-    except RuntimeError:
-        pass
+    assert path.is_file()
+    assert data["schema_version"] == 1
 
 
-class _PsijStatus:
-    def __init__(self, name="NEW", exit_code=None, message=None):
-        self.state = SimpleNamespace(name=name)
-        self.exit_code = exit_code
-        self.message = message
+def test_run_store_listing_warns_once_and_skips_corrupt_record(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    valid = manager.new_record(task="SCF", directory=tmp_path)
+    valid = manager.transition(valid, state=RunState.SUBMITTING, reference=None)
+    broken = tmp_path / "runs" / valid.created_at[:10] / "broken.json"
+    broken.write_text("{")
+
+    with pytest.warns(RuntimeWarning, match="Corrupt run record"):
+        assert store.runs() == (valid,)
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        assert store.runs() == (valid,)
+    assert not caught
 
 
-class _PsijJob:
-    def __init__(self, spec=None):
-        self.spec = spec
-        self.native_id = None
-        self.status = _PsijStatus()
-
-
-class _PsijBackend:
-    def __init__(self):
-        self.attached = []
-
-    def attach(self, job, native_id):
-        self.attached.append(native_id)
-        job.native_id = native_id
-        job.status = _PsijStatus("ACTIVE")
-
-
-class _PsijJobExecutor:
-    @staticmethod
-    def get_instance(*args, **kwargs):
-        raise AssertionError("A supplied backend should be used")
-
-
-class _PsijJobSpec:
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
-
-
-class _PsijResourceSpec:
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
-
-
-def test_psij_status_reuses_attached_jobs(monkeypatch):
-    fake_psij = SimpleNamespace(
-        Job=_PsijJob,
-        JobSpec=_PsijJobSpec,
-        JobExecutor=_PsijJobExecutor,
-        ResourceSpecV1=_PsijResourceSpec,
-    )
-    monkeypatch.setattr(psij_backend, "_load_psij", lambda: fake_psij)
-    backend = _PsijBackend()
-    executor = psij_backend.PsijExecutor("slurm", job_executor=backend)
-    references = (
-        RunReference(executor="psij:slurm", native_id="101"),
-        RunReference(executor="psij:slurm", native_id="102"),
+def test_weaker_observation_does_not_degrade_final_record(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    reference = RunReference(executor="test", native_id="one")
+    record = manager.new_record(task="DOS", directory=tmp_path)
+    record = manager.transition(
+        record,
+        state=RunState.FINISHED,
+        reference=reference,
+        return_code=0,
+        message="completed",
     )
 
-    first = executor.status(*references)
-    second = executor.status(*references)
+    updated = manager.update(record, RunStatus(reference, RunState.RUNNING))
 
-    assert [status.state for status in first] == [RunState.RUNNING, RunState.RUNNING]
-    assert [status.state for status in second] == [RunState.RUNNING, RunState.RUNNING]
-    assert backend.attached == ["101", "102"]
-
-
-def test_remote_status_command_accepts_multiple_run_ids(tmp_path, capsys):
-    workspace = tmp_path / "workspace"
-    for run_id, state in (("one", "running"), ("two", "finished")):
-        _run_directory(workspace, run_id).mkdir(parents=True)
-        _write_state(
-            workspace,
-            run_id,
-            id=run_id,
-            state=state,
-            directory=str(workspace),
-        )
-
-    parser = argparse.ArgumentParser()
-    remote_command.parser(parser)
-    args = parser.parse_args(["status", str(workspace), "one", "two"])
-    remote_command.run(args, None)
-
-    states = json.loads(capsys.readouterr().out)
-    assert [state["id"] for state in states] == ["one", "two"]
-    assert [state["state"] for state in states] == ["running", "finished"]
+    assert updated.state == RunState.FINISHED
+    assert updated.return_code == 0
+    assert updated.message == "completed"

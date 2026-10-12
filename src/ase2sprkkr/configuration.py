@@ -1,6 +1,7 @@
 """ASE2SPRKKR user configuration."""
 
 import os
+from collections.abc import Mapping
 from .common.decorators import cache
 from .common.grammar_types import CustomMixed, AlwaysQString, Array, Bool, Keyword, Integer
 from .common.container_definitions import SectionDefinition, ConfigurationRootDefinition
@@ -38,11 +39,19 @@ def _set_legacy_value(section, value, name):
 
 
 def _legacy_mpi(section):
-    return _legacy_value(section, "mpi")
+    return _legacy_value(section, "mpi", "auto")
 
 
 def _set_legacy_mpi(section, value):
     _set_legacy_value(section, value, "mpi")
+
+
+def _legacy_mpi_warning(section):
+    return _legacy_value(section, "mpi_warning", True)
+
+
+def _set_legacy_mpi_warning(section, value):
+    _set_legacy_value(section, value, "mpi_warning")
 
 
 def _legacy_executable_dir(section):
@@ -72,7 +81,7 @@ def user_preferences_file():
 
 
 def legacy_user_preferences_file():
-    """Return the deprecated executable-Python configuration filename."""
+    """Return the optional Python user-configuration hook filename."""
     return os.path.join(user_preferences_directory(), "__init__.py")
 
 
@@ -82,30 +91,66 @@ def _load_legacy_user_preferences(file):
 
     loader = importlib.machinery.SourceFileLoader("ase2sprkkr.personal", file)
     mod = types.ModuleType(loader.name)
+    mod.config = config
     loader.exec_module(mod)
 
 
+def _profile_overlay_values(yaml_file):
+    """Return profile values from the Python hook not overridden by YAML."""
+    from .configuration_yaml import load_yaml_document
+
+    python_profiles = {
+        name: profile.as_dict(only_changed="explicit", generated=False) or {}
+        for name, profile in config.profiles._raw_items()
+    }
+    if not python_profiles:
+        return {}
+
+    document = load_yaml_document(yaml_file)
+    yaml_profiles = document.get("profiles", {})
+    if not isinstance(yaml_profiles, Mapping):
+        return {}
+
+    overlay = {}
+    for name, values in python_profiles.items():
+        if name not in yaml_profiles:
+            overlay[name] = values
+            continue
+        yaml_values = yaml_profiles[name]
+        if not isinstance(yaml_values, Mapping):
+            continue
+        missing = {key: value for key, value in values.items() if key not in yaml_values}
+        if missing:
+            overlay[name] = missing
+    return overlay
+
+
 def load_user_preferences():
-    """Load user preferences, preferring ``config.yaml`` over legacy Python."""
+    """Load the Python hook and then overlay ``config.yaml`` if present.
+
+    Expected invalid YAML values are handled by ``load_configuration_yaml`` at
+    the narrow boundary where they can be recovered safely. Unexpected loader
+    and Python-hook exceptions deliberately propagate instead of silently
+    falling back to a partially/default configured process.
+    """
     yaml_file = user_preferences_file()
     legacy_file = legacy_user_preferences_file()
 
-    try:
-        if os.path.isfile(yaml_file):
-            from .configuration_yaml import load_configuration_yaml
+    if os.path.isfile(legacy_file):
+        _load_legacy_user_preferences(legacy_file)
+    if os.path.isfile(yaml_file):
+        from .configuration_yaml import load_configuration_yaml
 
-            load_configuration_yaml(config, yaml_file)
-        elif os.path.isfile(legacy_file):
-            _load_legacy_user_preferences(legacy_file)
-    except Exception as e:
-        import traceback
-
-        tb = "\n".join(traceback.format_exception(e))
-        file = yaml_file if os.path.isfile(yaml_file) else legacy_file
-        warnings.warn(
-            f"Can not load {file} file with the user preferences:\n"
-            f"{e}\n\n{tb}"
-        )
+        overlay = _profile_overlay_values(yaml_file)
+        load_configuration_yaml(config, yaml_file)
+        if overlay:
+            with config.profiles._mutation("set") as (transaction, _policy):
+                config.profiles._stage_persisted(
+                    transaction,
+                    overlay,
+                    unknown="fail",
+                    merge=True,
+                )
 
 
 @cache
@@ -124,7 +169,7 @@ def get_default_mpi_runner():
     out = find_default_mpi_runner()
     if out:
         return out
-    if config.mpi_warning():
+    if config.running.mpi_warning():
         warnings.warn("No MPI runner found. Disabling MPI!!!")
 
 
@@ -252,8 +297,14 @@ definition = ConfigFileDefinition(
                 V(
                     "mpi",
                     MPI,
+                    default_value="auto",
                     is_optional=True,
-                    info='MPI runner for this profile. It accepts the same values as the legacy running.mpi option.',
+                    info='MPI runner for this profile. Defaults to "auto" and accepts the same values as the legacy running.mpi option.',
+                ),
+                V(
+                    "mpi_warning",
+                    True,
+                    info="Whether missing MPI support should be reported for this profile.",
                 ),
                 V(
                     "executable_dir",
@@ -370,7 +421,13 @@ definition = ConfigFileDefinition(
                     is_optional=True,
                     info='Deprecated compatibility option backed by profiles["legacy"].',
                 ),
-                V("mpi_warning", True, info="Warn, if no MPI is found."),
+                G(
+                    "mpi_warning",
+                    _legacy_mpi_warning,
+                    _set_legacy_mpi_warning,
+                    is_optional=True,
+                    info='Deprecated compatibility option backed by profiles["legacy"].',
+                ),
             ],
             info="Default values for SPRKKR calculator parameters.",
         ),

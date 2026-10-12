@@ -6,10 +6,11 @@ import asyncio
 import errno
 import os
 import sys
+import warnings
 from dataclasses import replace
 from threading import Event, Lock, Thread
 
-from .base import ExecutionSpec, Executor, RunReference, RunState
+from .base import ExecutionSpec, Executor, MpiNotFoundWarning, RunReference, RunState
 
 
 def _mpi_command(launch):
@@ -19,6 +20,13 @@ def _mpi_command(launch):
     command = mpi_runner(launch.mpi)
     if not command:
         if launch.mpi == "auto":
+            if launch.mpi_warning:
+                warnings.warn(
+                    "MPI autodetection did not find an MPI launcher; "
+                    "the calculation will run without MPI.",
+                    MpiNotFoundWarning,
+                    stacklevel=3,
+                )
             return None
         raise FileNotFoundError(
             errno.ENOENT,

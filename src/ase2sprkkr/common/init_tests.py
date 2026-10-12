@@ -93,10 +93,8 @@ class TestCase:
             kwargs["options"].update(cls._calc_args["options"])
         out.update(kwargs)
         if TYPE == "save_input":
-            try:
-                del out["print_output"]
-            except KeyError:
-                pass
+            out.pop("print_output", None)
+            out.pop("mpi", None)
         return out
 
     @staticmethod

@@ -5,6 +5,8 @@ import pytest
 from ase2sprkkr.configuration import definition
 from ase2sprkkr.configuration_yaml import load_configuration_yaml
 from ase2sprkkr.sprkkr.profile import (
+    ExecutorEndpoint,
+    LaunchParameters,
     SPRKKRProfile,
     profile_from_ase_command,
     resolve_sprkkr_profile,
@@ -54,6 +56,63 @@ def test_ase_command_locates_sprkkr_executable_family():
 
     assert profile.executable_dir == "/opt/sprkkr"
     assert profile.executable_suffix == "_v8"
+
+
+def test_runtime_profile_splits_endpoint_from_launch_parameters():
+    profile = SPRKKRProfile(
+        executor="ssh",
+        host="cluster.example",
+        ssh_options=("-p", "2222"),
+        remote_command=("python", "-m", "ase2sprkkr.tools.ase2sprkkr", "remote"),
+        psij_backend="slurm",
+        psij_url="ssh://scheduler",
+        executable_dir="/opt/sprkkr",
+        executable_suffix="_v8",
+        mpi=32,
+        local_root="/home/me/project",
+        remote_root="/scratch/me/project",
+        input_sync="missing",
+        output_sync="always",
+    )
+
+    assert profile.endpoint == ExecutorEndpoint(
+        executor="ssh",
+        host="cluster.example",
+        ssh_options=("-p", "2222"),
+        remote_command=("python", "-m", "ase2sprkkr.tools.ase2sprkkr", "remote"),
+        psij_backend="slurm",
+        psij_url="ssh://scheduler",
+    )
+    assert profile.launch_parameters == LaunchParameters(
+        executable_dir="/opt/sprkkr",
+        executable_suffix="_v8",
+        mpi=32,
+        local_root="/home/me/project",
+        remote_root="/scratch/me/project",
+        input_sync="missing",
+        output_sync="always",
+    )
+
+
+def test_profiles_with_same_backend_share_endpoint_identity():
+    first = SPRKKRProfile(
+        executor="ssh",
+        host="cluster.example",
+        psij_backend="slurm",
+        mpi=8,
+        remote_root="/scratch/one",
+    )
+    second = SPRKKRProfile(
+        executor="ssh",
+        host="cluster.example",
+        psij_backend="slurm",
+        mpi=64,
+        remote_root="/scratch/two",
+        input_sync="never",
+    )
+
+    assert first.endpoint == second.endpoint
+    assert first.launch_parameters != second.launch_parameters
 
 
 @pytest.mark.parametrize(

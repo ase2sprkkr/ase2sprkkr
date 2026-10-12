@@ -10,7 +10,7 @@ from .base import Executor, RunReference, RunState, RunStatus
 from .local import LocalExecutor
 from .psij import PsijExecutor, _STATE_MAP
 from .remote import RemoteExecutor, _run_sync
-from .tracking import TrackingExecutor
+from .remote_endpoint import RemoteEndpointExecutor
 
 
 def _validate_executor(references, expected):
@@ -59,7 +59,9 @@ def _(executor, *references):
         except (TypeError, ValueError):
             state = RunState.UNKNOWN
         else:
-            state = RunState.RUNNING if _pid_running(pid) else RunState.LOST
+            # Local execution has no reconnectable controller. Once the recorded
+            # process is gone, its final outcome cannot be inferred from the PID.
+            state = RunState.RUNNING if _pid_running(pid) else RunState.UNKNOWN
         out.append(RunStatus(reference, state))
     return tuple(out)
 
@@ -84,9 +86,6 @@ def _(executor, *references):
         status_value = getattr(job, "status", None)
         state_value = getattr(status_value, "state", None)
         state_name = getattr(state_value, "name", None)
-        # PSI/J attach() registers the native job with its polling thread but
-        # can leave the new Job in NEW until the first scheduler poll. A
-        # persistent scheduler job is never meaningfully NEW at this point.
         state = (
             RunState.UNKNOWN
             if attached and state_name == "NEW"
@@ -103,6 +102,7 @@ def _(executor, *references):
     return tuple(out)
 
 
+@status.register(RemoteEndpointExecutor)
 @status.register(RemoteExecutor)
 def _(executor, *references):
     expected = "remote:{}".format(executor.backend)
@@ -133,8 +133,3 @@ def _(executor, *references):
         return tuple(result)
 
     return _run_sync(query())
-
-
-@status.register(TrackingExecutor)
-def _(executor, *references):
-    return executor.executor.status(*references)

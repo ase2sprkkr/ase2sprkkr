@@ -174,6 +174,50 @@ def test_save_preserves_invalid_and_unknown_raw_yaml(tmp_path):
     assert "# keep broken profile" in text
 
 
+def test_save_preserves_only_invalid_profile_when_adding_valid_profile(tmp_path):
+    path = tmp_path / "config.yaml"
+    path.write_text(
+        "profiles:\n"
+        "  broken:\n"
+        "    mpi:\n"
+        "      nonsense: true\n",
+        encoding="utf8",
+    )
+
+    document = load_yaml_document(path)
+    config = fresh_config()
+    with pytest.warns(YamlConfigurationWarning):
+        load_configuration_yaml(config, path)
+
+    config.profiles.add("local").mpi.set(4)
+    save_configuration_yaml(config, path, document)
+
+    data = load_yaml_document(path)
+    assert data["profiles"]["broken"]["mpi"] == {"nonsense": True}
+    assert data["profiles"]["local"]["mpi"] == 4
+
+
+def test_save_preserves_only_invalid_children_of_known_section(tmp_path):
+    path = tmp_path / "config.yaml"
+    path.write_text(
+        "running:\n"
+        "  print_output: definitely-not-valid\n",
+        encoding="utf8",
+    )
+
+    document = load_yaml_document(path)
+    config = fresh_config()
+    with pytest.warns(YamlConfigurationWarning):
+        load_configuration_yaml(config, path)
+
+    config.running.mpi_warning.set(False)
+    save_configuration_yaml(config, path, document)
+
+    data = load_yaml_document(path)
+    assert data["running"]["print_output"] == "definitely-not-valid"
+    assert data["running"]["mpi_warning"] is False
+
+
 def test_invalid_default_profile_survives_unrelated_save(tmp_path):
     path = tmp_path / "config.yaml"
     path.write_text(

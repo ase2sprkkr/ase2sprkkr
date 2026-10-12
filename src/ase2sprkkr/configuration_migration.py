@@ -5,6 +5,7 @@ from __future__ import annotations
 import ast
 import importlib.machinery
 import os
+import shutil
 import types
 from pathlib import Path
 
@@ -14,6 +15,9 @@ def load_legacy_configuration(file, definition):
     from . import configuration
 
     migrated = definition.create_object()
+    # The user is already explicitly migrating the deprecated configuration;
+    # do not warn about the legacy writes performed while reading it.
+    migrated.profiles._legacy_write_warning_emitted = True
     original = configuration.config
     configuration.config = migrated
     try:
@@ -27,11 +31,52 @@ def load_legacy_configuration(file, definition):
     return migrated
 
 
+def _migrated_profile_name(profiles):
+    """Return a free conventional name for migrated execution settings."""
+    name = "local"
+    index = 2
+    while name in profiles:
+        name = f"local-{index}"
+        index += 1
+    return name
+
+
+def _convert_legacy_execution_profile(config):
+    """Move deprecated execution settings to a normal named profile."""
+    profiles = config.profiles
+    legacy = profiles._legacy_profile()
+    if legacy is None or not profiles._legacy_available():
+        return None
+
+    active_profile = profiles.resolve_name()
+    values = {
+        name: value
+        for name in profiles.legacy_fields
+        if (value := getattr(legacy, name)()) is not None
+    }
+    name = _migrated_profile_name(profiles)
+
+    profiles._values.pop("legacy", None)
+    profile = profiles.add(name)
+    profile.set(values, unknown="fail")
+
+    # Preserve profile precedence.  Without ASE the legacy profile was the
+    # fallback and must become explicit.  If ASE is available it already won
+    # over legacy, so leave default_profile unset and keep ASE active.
+    if active_profile == "legacy":
+        config.default_profile.set(name)
+    return name
+
+
 def migrate_legacy_configuration(source, destination, definition):
-    """Convert a legacy Python config file to YAML without modifying source."""
+    """Convert a legacy Python config file to YAML and back up the source."""
     from .configuration_yaml import save_configuration_yaml
 
+    source = Path(source)
+    backup = source.with_name(source.name + ".bak")
+    shutil.copy2(source, backup)
     migrated = load_legacy_configuration(source, definition)
+    _convert_legacy_execution_profile(migrated)
     save_configuration_yaml(migrated, destination)
     return migrated
 
@@ -43,7 +88,8 @@ def clean_legacy_configuration(file):
     dynamic uses of ``config`` are deliberately retained. A directly preceding
     contiguous comment block is removed together with an assignment. The
     ``from ase2sprkkr.configuration import config`` import is removed only when
-    no remaining code refers to ``config``.
+    no remaining code refers to ``config``. Runs of blank lines left by removed
+    blocks are collapsed to a single blank line.
     """
     path = Path(file)
     source = path.read_text(encoding="utf8")
@@ -78,11 +124,23 @@ def clean_legacy_configuration(file):
     ):
         remove.update(_config_import_lines(tree))
 
-    cleaned = "".join(
+    cleaned = _collapse_blank_lines(
         line for index, line in enumerate(lines) if index not in remove
     )
     path.write_text(cleaned, encoding="utf8")
     return len(assignments)
+
+
+def _collapse_blank_lines(lines):
+    result = []
+    previous_blank = False
+    for line in lines:
+        blank = not line.strip()
+        if blank and previous_blank:
+            continue
+        result.append(line)
+        previous_blank = blank
+    return "".join(result)
 
 
 def _is_config_assignment(node):

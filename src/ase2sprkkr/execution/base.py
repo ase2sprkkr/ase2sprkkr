@@ -8,38 +8,22 @@ from enum import Enum
 from typing import Any, Optional, Protocol, Sequence, Tuple
 
 
+class MpiNotFoundWarning(UserWarning):
+    """MPI autodetection was requested, but no MPI launcher was found."""
+
+
 class RunState(str, Enum):
     """Backend-independent state of a calculation run."""
 
     NEW = "new"
+    SUBMITTING = "submitting"
     QUEUED = "queued"
     RUNNING = "running"
+    FINISHING = "finishing"
     FINISHED = "finished"
     FAILED = "failed"
     CANCELLED = "cancelled"
-    LOST = "lost"
     UNKNOWN = "unknown"
-
-
-@dataclass(frozen=True)
-class RunTarget:
-    """Filesystem resources owned by a run on one execution target.
-
-    ``files`` contains paths that the run may modify. Two targets conflict only
-    when they refer to the same filesystem namespace and own at least one of
-    the same files.
-    """
-
-    location: str
-    files: Tuple[str, ...] = ()
-
-    def __post_init__(self):
-        object.__setattr__(self, "files", tuple(sorted(set(self.files))))
-
-    def conflicts_with(self, other: "RunTarget") -> bool:
-        return self.location == other.location and bool(
-            set(self.files) & set(other.files)
-        )
 
 
 @dataclass(frozen=True)
@@ -53,11 +37,6 @@ class RunReference:
     input_file: Optional[str] = None
     output_file: Optional[str] = None
     error_file: Optional[str] = None
-    target: Optional[RunTarget] = None
-
-    def __post_init__(self):
-        if isinstance(self.target, dict):
-            object.__setattr__(self, "target", RunTarget(**self.target))
 
 
 @dataclass(frozen=True)
@@ -72,25 +51,43 @@ class RunStatus:
 
 @dataclass(frozen=True)
 class LaunchSpec:
-    """Portable intent for launching one executable.
+    """Portable launch and staging parameters for one concrete run.
 
     ``mpi`` is ``False`` for serial execution, ``True`` when MPI is required,
     ``"auto"`` when a local executor may fall back to serial execution, or an
     explicit launcher argv tuple. ``process_count`` is an optional requested
-    number of MPI ranks. Executors translate this intent on the machine where
-    the calculation actually runs.
+    number of MPI ranks. ``mpi_warning`` controls whether failed MPI
+    autodetection emits :class:`MpiNotFoundWarning`.
+
+    The remaining fields describe remote filesystem mapping and synchronization
+    for this run. They intentionally belong to the run rather than to an
+    executor so executors can be shared by profiles that use the same endpoint
+    but different launch/staging parameters.
     """
 
     mpi: Any = False
     process_count: Optional[int] = None
+    mpi_warning: bool = True
+    local_root: Optional[str] = None
+    remote_root: Optional[str] = None
+    input_sync: str = "changed"
+    output_sync: str = "changed"
 
     def __post_init__(self):
         if isinstance(self.mpi, list):
             object.__setattr__(self, "mpi", tuple(self.mpi))
         if self.process_count is not None and self.process_count < 1:
             raise ValueError("process_count must be positive")
+        for name in ("local_root", "remote_root"):
+            value = getattr(self, name)
+            if value is not None:
+                object.__setattr__(self, name, os.fspath(value))
+        for name in ("input_sync", "output_sync"):
+            value = getattr(self, name)
+            object.__setattr__(self, name, getattr(value, "value", value))
 
     def __bool__(self):
+        """Whether this run requests MPI."""
         return self.mpi is not False and self.mpi is not None
 
     @classmethod
@@ -106,11 +103,16 @@ class LaunchSpec:
             if mpi < 1:
                 raise ValueError("MPI process count must be positive")
             return cls(mpi=True, process_count=mpi)
-        if mpi == "auto":
-            return cls(mpi="auto")
         if isinstance(mpi, str):
-            return cls(mpi=(mpi,))
+            return cls(mpi="auto" if mpi == "auto" else (mpi,))
         return cls(mpi=tuple(mpi))
+
+
+def _pathlike(value):
+    """Normalize path-like values without touching open file objects."""
+    if isinstance(value, os.PathLike):
+        return os.fspath(value)
+    return value
 
 
 @dataclass(frozen=True)
@@ -128,6 +130,24 @@ class ExecutionSpec:
     cache_files: Sequence[Any] = ()
     mpi_argv: Optional[Sequence[str]] = None
     launch: LaunchSpec = LaunchSpec()
+
+    def __post_init__(self):
+        object.__setattr__(self, "directory", os.fspath(self.directory))
+        for name in ("input_file", "output_file", "stdin", "error_file"):
+            object.__setattr__(self, name, _pathlike(getattr(self, name)))
+        for name in ("input_files", "output_files", "cache_files"):
+            object.__setattr__(
+                self,
+                name,
+                tuple(_pathlike(value) for value in getattr(self, name)),
+            )
+        object.__setattr__(self, "argv", tuple(os.fspath(value) for value in self.argv))
+        if self.mpi_argv is not None:
+            object.__setattr__(
+                self,
+                "mpi_argv",
+                tuple(os.fspath(value) for value in self.mpi_argv),
+            )
 
 
 class Runner(Protocol):
@@ -152,42 +172,10 @@ class Runner(Protocol):
     def add_output_listener(self, callback) -> None: ...
 
 
-def _resource_path(value, directory):
-    if value is None:
-        return None
-    value = getattr(value, "name", value)
-    if isinstance(value, int):
-        # Anonymous temporary files and subprocess special values do not have a
-        # filesystem name that can collide with another calculation.
-        return None
-    try:
-        path = os.fspath(value)
-    except TypeError:
-        return None
-    if not os.path.isabs(path):
-        path = os.path.join(directory, path)
-    return os.path.abspath(path)
-
-
 class Executor:
     """Factory/backend for calculation runners."""
 
     name = None
-
-    def execution_target(self, spec: ExecutionSpec) -> RunTarget:
-        """Return the concrete resources that can collide with another run."""
-        directory = os.path.abspath(spec.directory)
-        files = set()
-        for value in (
-            spec.output_file,
-            spec.error_file,
-            *spec.output_files,
-            *spec.cache_files,
-        ):
-            path = _resource_path(value, directory)
-            if path is not None:
-                files.add(path)
-        return RunTarget("local", tuple(files))
 
     def resolve_mpi(self, mpi=None):
         """Convert profile MPI syntax to portable launch intent.

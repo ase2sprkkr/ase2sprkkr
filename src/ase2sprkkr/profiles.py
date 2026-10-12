@@ -113,7 +113,10 @@ class LegacyProfile:
     def __init__(self, profiles):
         self._profiles = profiles
         self.mpi = ReadOnlyProfileValue(
-            lambda: profiles.legacy_value("mpi"), "mpi"
+            lambda: profiles.legacy_value("mpi", "auto"), "mpi"
+        )
+        self.mpi_warning = ReadOnlyProfileValue(
+            lambda: profiles.legacy_value("mpi_warning", True), "mpi_warning"
         )
         self.executable_dir = ReadOnlyProfileValue(
             lambda: profiles.legacy_value("executable_dir"), "executable_dir"
@@ -126,6 +129,7 @@ class LegacyProfile:
     def as_dict(self, *args, **kwargs):
         return {
             "mpi": self.mpi(),
+            "mpi_warning": self.mpi_warning(),
             "executable_dir": self.executable_dir(),
             "executable_suffix": self.executable_suffix(),
         }
@@ -193,7 +197,12 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
     """Dict-like repeated section with persistent and virtual profile views."""
 
     reserved_names = frozenset(("legacy", "ase"))
-    legacy_fields = ("mpi", "executable_dir", "executable_suffix")
+    legacy_fields = (
+        "mpi",
+        "mpi_warning",
+        "executable_dir",
+        "executable_suffix",
+    )
 
     def _add(self, id=None):
         """Create one stored profile while keeping ``ase`` strictly virtual."""
@@ -228,15 +237,22 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             return
         warnings.warn(
             "config.executables.dir is deprecated together with "
-            "config.executables.suffix and config.running.mpi; use an execution "
-            "profile instead.\n"
-            "To migrate an existing legacy configuration, run:\n"
+            "config.executables.suffix, config.running.mpi and "
+            "config.running.mpi_warning.\n"
+            "\n"
+            "To migrate the existing configuration to config.yaml and convert "
+            "these settings to an execution profile, run:\n"
             "  ase2sprkkr config --migrate\n"
-            "Use the ASE [sprkkr] profile, for example:\n"
+            "\n"
+            "For new configuration, use an execution profile directly. For example,\n"
+            "configure SPR-KKR through ASE:\n"
+            "\n"
             "  [sprkkr]\n"
             "  command = /opt/sprkkr/kkrscf_v8\n"
             "  mpi = 8\n"
-            "or use a named ase2sprkkr profile:\n"
+            "\n"
+            "or create a named ASE2SPRKKR profile:\n"
+            "\n"
             "  ase2sprkkr config --set profiles.local "
             "'{mpi: 8, executable_dir: /opt/sprkkr, executable_suffix: _v8}'\n"
             "  ase2sprkkr config --set default_profile local",

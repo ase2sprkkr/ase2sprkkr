@@ -147,8 +147,7 @@ def _recover_profiles(config, value, accepted, issues):
             issues.append((f"profile {name!r}", error))
         else:
             accepted_profiles[name] = profile_data
-    if accepted_profiles:
-        accepted["profiles"] = accepted_profiles
+    accepted["profiles"] = accepted_profiles
 
 
 def _recover_section(member, path, value, accepted, issues):
@@ -175,8 +174,7 @@ def _recover_section(member, path, value, accepted, issues):
             issues.append((child_path, error))
         else:
             accepted_section[name] = child_value
-    if accepted_section:
-        accepted[path] = accepted_section
+    accepted[path] = accepted_section
 
 
 def _valid_default_profile(config):

@@ -3,7 +3,6 @@
 import base64
 import json
 import os
-import shutil
 import struct
 import subprocess
 import tempfile
@@ -184,36 +183,17 @@ def _remote_run_diagnostics(ssh, reference):
     return "\n\n".join(sections)
 
 
-def test_remote_executor_runs_psij_slurm_over_ssh():
+def test_remote_executor_runs_psij_slurm_over_ssh(docker_execution_image):
     from ase.build import bulk
 
-    from ase2sprkkr.configuration import config
     from ase2sprkkr.execution import RemoteRunner
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
-    docker = shutil.which("docker")
-    if docker is None:
-        pytest.fail("Docker is required for the explicit SSH/PSI-J/Slurm test")
-
-    executable_dir = config.executables.dir()
-    if not executable_dir:
-        pytest.fail("config.executables.dir must point to the SPR-KKR executable directory")
-    executable_dir = Path(executable_dir).expanduser().resolve()
-    suffix = config.executables.suffix() or ""
-    executable = executable_dir / f"kkrscf{suffix}"
-    if not executable.is_file():
-        pytest.fail(f"SPR-KKR executable not found: {executable}")
-
-    repository = Path(__file__).resolve().parents[4]
-    docker_context = Path(__file__).with_name("slurm")
-    image = "ase2sprkkr-psij-slurm-test"
+    docker = docker_execution_image.docker
+    repository = docker_execution_image.repository
+    image = docker_execution_image.image
     container = f"ase2sprkkr-psij-ssh-test-{uuid4().hex[:12]}"
-
-    subprocess.run(
-        [docker, "build", "-t", image, str(docker_context)],
-        check=True,
-    )
 
     with tempfile.TemporaryDirectory(prefix="ase2sprkkr-psij-ssh-") as tmp:
         tmp = Path(tmp)
@@ -237,11 +217,9 @@ def test_remote_executor_runs_psij_slurm_over_ssh():
                     "--mount",
                     f"type=bind,src={repository},dst=/workspace/ase2sprkkr,readonly",
                     "--mount",
-                    f"type=bind,src={executable_dir},dst=/opt/sprkkr,readonly",
-                    "--mount",
                     f"type=bind,src={key}.pub,dst=/authorized_keys,readonly",
                     "-e",
-                    f"SPRKKR_EXECUTABLE_SUFFIX={suffix}",
+                    "ASE2SPRKKR_TEST_SERVICES=ssh,slurm",
                     image,
                     "sleep",
                     "infinity",
@@ -266,42 +244,11 @@ def test_remote_executor_runs_psij_slurm_over_ssh():
             ssh = ["ssh", *ssh_options, "tester@127.0.0.1"]
             _wait_for_ssh(ssh)
 
-            # The bind mount keeps host ownership and mode bits. The direct
-            # PSI/J test runs as root, but this test deliberately submits Slurm
-            # jobs as ``tester``. Copy the executables inside the container so
-            # the result does not depend on the host user's UID or directory
-            # permissions.
-            remote_executable_dir = "/home/tester/sprkkr"
-            subprocess.run(
-                [
-                    docker,
-                    "exec",
-                    container,
-                    "sh",
-                    "-c",
-                    "rm -rf /home/tester/sprkkr && "
-                    "cp -a /opt/sprkkr /home/tester/sprkkr && "
-                    "chown -R tester:tester /home/tester/sprkkr",
-                ],
-                check=True,
-            )
-            subprocess.run(
-                [
-                    docker,
-                    "exec",
-                    container,
-                    "test",
-                    "-x",
-                    f"{remote_executable_dir}/kkrscf{suffix}",
-                ],
-                check=True,
-            )
-
             workdir = tmp / "calculation"
             workdir.mkdir()
             profile = SPRKKRProfile(
-                executable_dir=remote_executable_dir,
-                executable_suffix=suffix,
+                executable_dir="/opt/sprkkr",
+                executable_suffix="",
                 mpi=False,
                 executor="ssh",
                 host="tester@127.0.0.1",
