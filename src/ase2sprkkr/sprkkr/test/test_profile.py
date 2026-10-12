@@ -12,9 +12,11 @@ from ase2sprkkr.sprkkr.profile import (
 )
 
 
-def ase_config(command):
+def ase_config(command, **values):
     parser = configparser.ConfigParser()
-    parser["sprkkr"] = {"command": command}
+    section = {"command": command}
+    section.update({name: str(value) for name, value in values.items()})
+    parser["sprkkr"] = section
     return SimpleNamespace(parser=parser)
 
 
@@ -46,21 +48,30 @@ def test_invalid_ase_command_placeholder_is_rejected(command):
         profile_from_ase_command(command)
 
 
-def test_runtime_resolver_uses_ase_profile(monkeypatch):
+def test_runtime_resolver_uses_full_ase_profile(monkeypatch):
     monkeypatch.setattr(
         ProfilesConfigurationContainer,
         "_ase_config",
-        staticmethod(lambda: ase_config("/opt/sprkkr/{}.x")),
+        staticmethod(
+            lambda: ase_config(
+                "/opt/sprkkr/{}.x",
+                mpi=8,
+                executor="ssh",
+                host="user@cluster",
+                input_sync="always",
+            )
+        ),
     )
     configuration = definition.create_object()
 
     profile = resolve_sprkkr_profile(configuration=configuration)
 
-    assert profile == SPRKKRProfile(
-        executable_dir="/opt/sprkkr",
-        executable_suffix=".x",
-        mpi=False,
-    )
+    assert profile.executable_dir == "/opt/sprkkr"
+    assert profile.executable_suffix == ".x"
+    assert profile.mpi == 8
+    assert profile.executor == "ssh"
+    assert profile.host == "user@cluster"
+    assert profile.input_sync == "always"
 
 
 def test_runtime_resolver_prefers_named_default_over_ase(monkeypatch):

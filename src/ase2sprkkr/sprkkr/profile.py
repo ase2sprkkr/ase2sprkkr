@@ -19,6 +19,7 @@ from ..execution import (
     RemoteExecutor,
     SshTransport,
 )
+from ..profiles import ase_command_profile_values
 
 
 @dataclass(frozen=True)
@@ -33,7 +34,7 @@ class SPRKKRProfile:
     local_root: Any = None
     remote_root: Any = None
     ssh_options: Any = ()
-    remote_command: Any = None
+    remote_command: Any = ()
     input_sync: str = "changed"
     output_sync: str = "changed"
     psij_backend: str = "slurm"
@@ -120,33 +121,8 @@ def _profile_value(profile, name):
 
 
 def profile_from_ase_command(command):
-    """Translate ASE's ``[sprkkr] command`` into an SPR-KKR profile.
-
-    A command without ``{}`` denotes the directory containing the SPR-KKR
-    executables. A command of the form ``directory/{}suffix`` additionally
-    specifies the executable suffix. The placeholder is intentionally much
-    more restricted than a general format string: it must occur exactly once
-    and at the beginning of the final path component.
-    """
-    if not isinstance(command, str) or not command:
-        raise ValueError("ASE SPR-KKR command must be a non-empty path")
-
-    count = command.count("{}")
-    if count == 0:
-        return SPRKKRProfile(executable_dir=command)
-    if count != 1:
-        raise ValueError("ASE SPR-KKR command may contain at most one '{}' placeholder")
-
-    executable_dir, filename = os.path.split(command)
-    if "{}" in executable_dir or not filename.startswith("{}"):
-        raise ValueError(
-            "ASE SPR-KKR command placeholder must start the final path component, "
-            "for example '/opt/sprkkr/{}.mpi'"
-        )
-    return SPRKKRProfile(
-        executable_dir=executable_dir or False,
-        executable_suffix=filename[2:],
-    )
+    """Translate ASE's ``[sprkkr] command`` into an SPR-KKR profile."""
+    return SPRKKRProfile(**ase_command_profile_values(command))
 
 
 def _configured_profile(profile, configuration):
@@ -170,6 +146,12 @@ def _configured_profile(profile, configuration):
             changes["executor"] = "local"
         if profile.ssh_options is None:
             changes["ssh_options"] = ()
+        elif not isinstance(profile.ssh_options, tuple):
+            changes["ssh_options"] = tuple(profile.ssh_options)
+        if profile.remote_command is None:
+            changes["remote_command"] = ()
+        elif not isinstance(profile.remote_command, tuple):
+            changes["remote_command"] = tuple(profile.remote_command)
         if not profile.input_sync:
             changes["input_sync"] = "changed"
         if not profile.output_sync:
@@ -179,7 +161,7 @@ def _configured_profile(profile, configuration):
         return replace(profile, **changes) if changes else profile
 
     if getattr(profile, "source", None) == "ase":
-        return profile_from_ase_command(profile.command())
+        profile = profile.configuration_profile()
 
     suffix = _profile_value(profile, "executable_suffix")
     if suffix is None:
@@ -200,7 +182,7 @@ def _configured_profile(profile, configuration):
         local_root=_profile_value(profile, "local_root"),
         remote_root=_profile_value(profile, "remote_root"),
         ssh_options=tuple(_profile_value(profile, "ssh_options") or ()),
-        remote_command=_profile_value(profile, "remote_command"),
+        remote_command=tuple(_profile_value(profile, "remote_command") or ()),
         input_sync=_profile_value(profile, "input_sync") or "changed",
         output_sync=_profile_value(profile, "output_sync") or "changed",
         psij_backend=_profile_value(profile, "psij_backend") or "slurm",
@@ -223,9 +205,9 @@ def executor_from_profile(profile: SPRKKRProfile):
             "output_files": profile.output_sync,
         }
         if profile.remote_command:
-            kwargs["command"] = tuple(profile.remote_command)
+            kwargs["command"] = profile.remote_command
         return RemoteExecutor(
-            SshTransport(profile.host, options=tuple(profile.ssh_options or ())),
+            SshTransport(profile.host, options=profile.ssh_options),
             **kwargs,
         )
 
