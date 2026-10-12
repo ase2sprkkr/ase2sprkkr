@@ -54,29 +54,7 @@ def test_migration_converts_legacy_execution_settings_to_default_profile(
     }
 
 
-def test_migration_does_not_freeze_implicit_mpi_defaults(tmp_path, monkeypatch):
-    monkeypatch.setattr(
-        ProfilesConfigurationContainer,
-        "_ase_config",
-        staticmethod(lambda: None),
-    )
-    source = tmp_path / "__init__.py"
-    destination = tmp_path / "config.yaml"
-    _write_legacy(source, "config.executables.dir = '/opt/sprkkr'\n")
-
-    migrated = migrate_legacy_configuration(source, destination, definition)
-
-    profile = migrated.profiles["local"]
-    assert profile.mpi() == "auto"
-    assert profile.mpi_warning() is True
-
-    data = load_yaml_document(destination)
-    assert data["profiles"]["local"] == {
-        "executable_dir": "/opt/sprkkr",
-    }
-
-
-def test_migration_keeps_explicit_default_mpi_policy(tmp_path, monkeypatch):
+def test_migration_does_not_freeze_mpi_defaults(tmp_path, monkeypatch):
     monkeypatch.setattr(
         ProfilesConfigurationContainer,
         "_ase_config",
@@ -91,12 +69,37 @@ def test_migration_keeps_explicit_default_mpi_policy(tmp_path, monkeypatch):
         "config.running.mpi_warning = True\n",
     )
 
+    migrated = migrate_legacy_configuration(source, destination, definition)
+
+    profile = migrated.profiles["local"]
+    assert profile.mpi() == "auto"
+    assert profile.mpi_warning() is True
+
+    data = load_yaml_document(destination)
+    assert data["profiles"]["local"] == {
+        "executable_dir": "/opt/sprkkr",
+    }
+
+
+def test_migration_keeps_nondefault_mpi_warning(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        ProfilesConfigurationContainer,
+        "_ase_config",
+        staticmethod(lambda: None),
+    )
+    source = tmp_path / "__init__.py"
+    destination = tmp_path / "config.yaml"
+    _write_legacy(
+        source,
+        "config.executables.dir = '/opt/sprkkr'\n"
+        "config.running.mpi_warning = False\n",
+    )
+
     migrate_legacy_configuration(source, destination, definition)
 
     data = load_yaml_document(destination)
     assert data["profiles"]["local"] == {
-        "mpi": "auto",
-        "mpi_warning": True,
+        "mpi_warning": False,
         "executable_dir": "/opt/sprkkr",
     }
 
