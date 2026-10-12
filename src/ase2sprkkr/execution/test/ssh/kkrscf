@@ -1,0 +1,51 @@
+#!/opt/venv/bin/python
+"""Small SPR-KKR SCF stand-in used by the Docker/SSH integration test."""
+
+import re
+import shutil
+import sys
+import time
+from pathlib import Path
+
+
+POTFIL_RE = re.compile(
+    r"\bPOTFIL\s*=\s*(?:\"([^\"]+)\"|'([^']+)'|([^\s]+))",
+    re.IGNORECASE,
+)
+SCF_OUTPUT = Path(
+    "/workspace/ase2sprkkr/src/ase2sprkkr/outputs/examples/Al_SCF.out"
+)
+
+
+def main():
+    parameters = sys.stdin.read()
+    match = POTFIL_RE.search(parameters)
+    if match is None:
+        raise RuntimeError("SCF test input does not contain CONTROL.POTFIL")
+
+    potfil = next(value for value in match.groups() if value is not None)
+    potential = Path(potfil)
+    if not potential.is_file():
+        raise FileNotFoundError(f"Input potential was not staged: {potential}")
+
+    # Delay the first output as a real remote calculation would, then keep a
+    # deliberate gap after the first line.  The latter makes it deterministic
+    # that the client can observe live output while the process is still alive.
+    time.sleep(0.25)
+    with SCF_OUTPUT.open() as output:
+        first_line = next(output)
+        sys.stdout.write(first_line)
+        sys.stdout.flush()
+        time.sleep(1.0)
+
+        for line in output:
+            sys.stdout.write(line)
+            sys.stdout.flush()
+            time.sleep(0.001)
+
+    # KKRSCF writes the updated potential only after the SCF run completes.
+    shutil.copyfile(potential, Path(str(potential) + "_new"))
+
+
+if __name__ == "__main__":
+    main()
