@@ -9,6 +9,7 @@ from .common.grammar_types import CustomMixed, AlwaysQString, Array, Bool, Keywo
 from .common.container_definitions import SectionDefinition, ConfigurationRootDefinition
 from .common.configuration_containers import RootConfigurationContainer
 from .common.value_definitions import ValueDefinition
+from .common.generated_configuration_definitions import GeneratedValueDefinition
 from .common.options import Option
 from .profiles import ProfilesConfigurationContainer
 import warnings
@@ -29,6 +30,38 @@ class ProfilesSection(Section):
 
 def _get_suffix(*_):
     return os.environ.get("SPRKKR_EXECUTABLE_SUFFIX", "")
+
+
+def _legacy_value(section, name, default=None):
+    return section._container.profiles.legacy_value(name, default)
+
+
+def _set_legacy_value(section, value, name):
+    section._container.profiles.set_legacy_value(name, value)
+
+
+def _legacy_mpi(section):
+    return _legacy_value(section, "mpi")
+
+
+def _set_legacy_mpi(section, value):
+    _set_legacy_value(section, value, "mpi")
+
+
+def _legacy_executable_dir(section):
+    return _legacy_value(section, "executable_dir")
+
+
+def _set_legacy_executable_dir(section, value):
+    _set_legacy_value(section, value, "executable_dir")
+
+
+def _legacy_executable_suffix(section):
+    return _legacy_value(section, "executable_suffix", _get_suffix)
+
+
+def _set_legacy_executable_suffix(section, value):
+    _set_legacy_value(section, value, "executable_suffix")
 
 
 def user_preferences_file():
@@ -212,7 +245,7 @@ class ConfigurationOption(Option):
         """
 
         self.set(value)
-        self.store_permanent()
+        self.store_permanent(doc, doc_regex)
 
     def store_permanent(self, doc=None, doc_regex: Union[bool, str] = False):
         """Store the actual value in the config file
@@ -222,11 +255,25 @@ class ConfigurationOption(Option):
         val = self()
         if val is not None:
             val = self._definition.type.string(val)
-        config.store_value_permanent(self.get_path(), val)
+        config.store_value_permanent(self.get_path(), val, doc, doc_regex)
+
+
+class GeneratedConfigurationOption(ConfigurationOption):
+    """Configuration option whose value is backed by another config object."""
+
+    def store_permanent(self, doc=None, doc_regex: Union[bool, str] = False):
+        val = self()
+        if val is not None:
+            val = repr(val)
+        config.store_value_permanent(self.get_path(), val, doc, doc_regex)
 
 
 class ConfigValueDefinition(ValueDefinition):
     result_class = ConfigurationOption
+
+
+class GeneratedConfigValueDefinition(GeneratedValueDefinition):
+    result_class = GeneratedConfigurationOption
 
 
 class ConfigFileDefinition(ConfigurationRootDefinition):
@@ -235,6 +282,7 @@ class ConfigFileDefinition(ConfigurationRootDefinition):
 
 
 V = ConfigValueDefinition
+G = GeneratedConfigValueDefinition
 MPI = CustomMixed(Bool, Array(AlwaysQString.I), Integer.I)
 
 """ The definition of ASE2SPRKKR configuration """
@@ -304,12 +352,12 @@ definition = ConfigFileDefinition(
                     default_value="info",
                     info="Print output of SPRKKR calculation. Default value ``info`` prints only short info each iteration.",
                 ),
-                V(
+                G(
                     "mpi",
-                    MPI,
+                    _legacy_mpi,
+                    _set_legacy_mpi,
                     is_optional=True,
-                    default_value=None,
-                    info='Use mpi for calculation? List of strings means yes, use the given strings as mpi runner and its params (e.g. [ "mpirun", "-n", "4" ]). Default None means try to autodetect. Integer number means use the standard runner with a given number of processes.',
+                    info='Deprecated compatibility option backed by profiles["legacy"].',
                 ),
                 V("mpi_warning", True, info="Warn, if no MPI is found."),
             ],
@@ -318,20 +366,22 @@ definition = ConfigFileDefinition(
         Section(
             "executables",
             [
-                V(
+                G(
                     "suffix",
-                    AlwaysQString.I,
-                    default_value=_get_suffix,
-                    info="This suffix is appended (if not stated otherwise) to the SPRKKR executable names.",
-                ),
-                V(
-                    "dir",
-                    AlwaysQString.I,
+                    _legacy_executable_suffix,
+                    _set_legacy_executable_suffix,
                     is_optional=True,
-                    info="Directory, from which the executables will be runned. None mean use the default PATH-environment-variable mechanism.",
+                    info='Deprecated compatibility option backed by profiles["legacy"].',
+                ),
+                G(
+                    "dir",
+                    _legacy_executable_dir,
+                    _set_legacy_executable_dir,
+                    is_optional=True,
+                    info='Deprecated compatibility option backed by profiles["legacy"].',
                 ),
             ],
-            info="Configuration, that affects how the execubables are runned",
+            info="Deprecated compatibility view of the legacy execution profile.",
         ),
         Section("nomad", [V("token", AlwaysQString.I, info="Token for NOMAD upload", is_optional=True)]),
     ],
