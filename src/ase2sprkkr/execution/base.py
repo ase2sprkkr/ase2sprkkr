@@ -76,10 +76,14 @@ class Executor:
     def resolve_mpi(self, mpi=None):
         """Resolve an MPI setting for the machine where this executor runs.
 
-        Local executors use the normal ASE2SPRKKR MPI autodetection.  Executors
-        targeting another machine can override this method and perform the
-        resolution on that target instead.
+        ``None`` means that the selected execution profile did not request MPI;
+        it must not fall back to another global configuration authority.
+        Executors targeting another machine can override this method and resolve
+        non-trivial MPI settings on that target instead.
         """
+        if mpi is None:
+            return None
+
         from ..configuration import mpi_runner
 
         return mpi_runner(mpi)

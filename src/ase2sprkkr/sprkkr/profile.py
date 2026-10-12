@@ -1,42 +1,39 @@
-"""Machine-specific SPR-KKR execution profile.
+"""Machine-specific SPR-KKR execution profiles.
 
-The split follows the same idea as ASE's calculator profiles: the profile knows
-how an installed program is invoked, while the executor only knows how to run
-an already prepared command.
+A runtime profile is deliberately separate from the mutable user configuration:
+configuration profiles are resolved once into this small immutable value before
+a calculation is prepared.
 """
 
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any
 
 from ..configuration import config
 from ..execution import ExecutionSpec
-from ..common.misc import first_non_none
 
 
 @dataclass(frozen=True)
 class SPRKKRProfile:
-    """Describe how SPR-KKR executables are invoked on a computer."""
+    """Describe how SPR-KKR executables are invoked on one computer."""
 
-    executable_dir: Any = None
-    executable_suffix: Any = None
-    mpi: Any = None
+    executable_dir: Any = False
+    executable_suffix: Any = ""
+    mpi: Any = False
 
     def _executable_suffix(self, override):
-        suffix = first_non_none(override, self.executable_suffix)
-        if suffix is False:
+        if override is False:
             return ""
-        if suffix is True or suffix is None:
-            return config.executables.suffix() or ""
-        return suffix
+        if override is True or override is None:
+            return self.executable_suffix or ""
+        return override
 
     def _executable_dir(self, override):
-        directory = first_non_none(override, self.executable_dir)
-        if directory is None:
-            directory = config.executables.dir()
-        return directory
+        if override is None:
+            return self.executable_dir
+        return override
 
     def create_execution(
         self,
@@ -55,7 +52,7 @@ class SPRKKRProfile:
     ):
         """Create a concrete execution specification for one SPR-KKR task.
 
-        ``mpi`` is an already resolved MPI command.  Resolving ``True``,
+        ``mpi`` is an already resolved MPI command. Resolving ``True``,
         ``"auto"`` or a process count belongs to the executor, because only
         the executor knows the machine on which the command will run.
         """
@@ -96,3 +93,107 @@ class SPRKKRProfile:
             input_files=tuple(input_files),
             output_files=tuple(output_files),
         )
+
+
+def _profile_value(profile, name):
+    """Read one option-like value from a configuration profile."""
+    try:
+        value = getattr(profile, name)
+    except AttributeError:
+        return None
+    return value() if callable(value) else value
+
+
+def profile_from_ase_command(command):
+    """Translate ASE's ``[sprkkr] command`` into an SPR-KKR profile.
+
+    A command without ``{}`` denotes the directory containing the SPR-KKR
+    executables. A command of the form ``directory/{}suffix`` additionally
+    specifies the executable suffix. The placeholder is intentionally much
+    more restricted than a general format string: it must occur exactly once
+    and at the beginning of the final path component.
+    """
+    if not isinstance(command, str) or not command:
+        raise ValueError("ASE SPR-KKR command must be a non-empty path")
+
+    count = command.count("{}")
+    if count == 0:
+        return SPRKKRProfile(executable_dir=command)
+    if count != 1:
+        raise ValueError("ASE SPR-KKR command may contain at most one '{}' placeholder")
+
+    executable_dir, filename = os.path.split(command)
+    if "{}" in executable_dir or not filename.startswith("{}"):
+        raise ValueError(
+            "ASE SPR-KKR command placeholder must start the final path component, "
+            "for example '/opt/sprkkr/{}.mpi'"
+        )
+    return SPRKKRProfile(
+        executable_dir=executable_dir or False,
+        executable_suffix=filename[2:],
+    )
+
+
+def _configured_profile(profile, configuration):
+    if profile is None or isinstance(profile, str):
+        profile = configuration.profiles.resolve(profile)
+
+    if profile is None:
+        return SPRKKRProfile(
+            executable_suffix=os.environ.get("SPRKKR_EXECUTABLE_SUFFIX", ""),
+        )
+
+    if isinstance(profile, SPRKKRProfile):
+        return SPRKKRProfile(
+            executable_dir=False if profile.executable_dir is None else profile.executable_dir,
+            executable_suffix="" if profile.executable_suffix is None else profile.executable_suffix,
+            mpi=False if profile.mpi is None else profile.mpi,
+        )
+
+    if getattr(profile, "source", None) == "ase":
+        return profile_from_ase_command(profile.command())
+
+    suffix = _profile_value(profile, "executable_suffix")
+    if suffix is None:
+        suffix = os.environ.get("SPRKKR_EXECUTABLE_SUFFIX", "")
+    executable_dir = _profile_value(profile, "executable_dir")
+    if executable_dir is None:
+        executable_dir = False
+    mpi = _profile_value(profile, "mpi")
+    if mpi is None:
+        mpi = False
+
+    return SPRKKRProfile(
+        executable_dir=executable_dir,
+        executable_suffix=suffix,
+        mpi=mpi,
+    )
+
+
+def resolve_sprkkr_profile(
+    profile=None,
+    *,
+    configuration=None,
+    mpi=None,
+    executable_dir=None,
+    executable_suffix=None,
+):
+    """Resolve a user/configuration profile into an immutable runtime profile.
+
+    Resolution order for ``profile=None`` is the one defined by the profile
+    configuration container: configured ``default_profile``, ASE's virtual
+    profile, the deprecated legacy profile, then built-in defaults. A string
+    explicitly selects a named profile. Explicit execution-location arguments
+    override the resolved profile when they are not ``None``.
+    """
+    configuration = configuration or config
+    resolved = _configured_profile(profile, configuration)
+
+    changes = {}
+    if mpi is not None:
+        changes["mpi"] = mpi
+    if executable_dir is not None:
+        changes["executable_dir"] = executable_dir
+    if executable_suffix is not None:
+        changes["executable_suffix"] = executable_suffix
+    return replace(resolved, **changes) if changes else resolved
