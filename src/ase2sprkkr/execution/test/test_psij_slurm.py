@@ -1,9 +1,7 @@
 """Explicit Docker/Slurm integration test for the PSI/J executor."""
 
 import os
-import shutil
 import subprocess
-from pathlib import Path
 
 import pytest
 
@@ -14,19 +12,11 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-def test_psij_slurm_docker():
-    docker = shutil.which("docker")
-    if docker is None:
-        pytest.fail("Docker is required for the explicit PSI/J Slurm integration test")
+def test_psij_slurm_docker(docker_execution_image):
+    docker = docker_execution_image.docker
+    repository = docker_execution_image.repository
+    image = docker_execution_image.image
 
-    repository = Path(__file__).resolve().parents[4]
-    docker_context = Path(__file__).with_name("docker")
-    image = "ase2sprkkr-execution-test"
-
-    subprocess.run(
-        [docker, "build", "-t", image, str(docker_context)],
-        check=True,
-    )
     subprocess.run(
         [
             docker,

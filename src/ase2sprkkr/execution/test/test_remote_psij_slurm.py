@@ -3,7 +3,6 @@
 import base64
 import json
 import os
-import shutil
 import struct
 import subprocess
 import tempfile
@@ -184,26 +183,17 @@ def _remote_run_diagnostics(ssh, reference):
     return "\n\n".join(sections)
 
 
-def test_remote_executor_runs_psij_slurm_over_ssh():
+def test_remote_executor_runs_psij_slurm_over_ssh(docker_execution_image):
     from ase.build import bulk
 
     from ase2sprkkr.execution import RemoteRunner
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
-    docker = shutil.which("docker")
-    if docker is None:
-        pytest.fail("Docker is required for the explicit SSH/PSI-J/Slurm test")
-
-    repository = Path(__file__).resolve().parents[4]
-    docker_context = Path(__file__).with_name("docker")
-    image = "ase2sprkkr-execution-test"
+    docker = docker_execution_image.docker
+    repository = docker_execution_image.repository
+    image = docker_execution_image.image
     container = f"ase2sprkkr-psij-ssh-test-{uuid4().hex[:12]}"
-
-    subprocess.run(
-        [docker, "build", "-t", image, str(docker_context)],
-        check=True,
-    )
 
     with tempfile.TemporaryDirectory(prefix="ase2sprkkr-psij-ssh-") as tmp:
         tmp = Path(tmp)

@@ -61,23 +61,19 @@ def _wait_for_live_output(runner, output_seen, output, timeout=30):
     )
 
 
-def test_remote_executor_over_ssh():
+def test_remote_executor_over_ssh(docker_execution_image):
     from ase.build import bulk
     from ase2sprkkr.execution import RemoteExecutor, SshTransport
     from ase2sprkkr.sprkkr.calculator import SPRKKR
 
-    docker = shutil.which("docker")
+    docker = docker_execution_image.docker
+    repository = docker_execution_image.repository
+    image = docker_execution_image.image
     ssh_keygen = shutil.which("ssh-keygen")
-    if not docker:
-        pytest.fail("Docker is required")
     if not ssh_keygen:
         pytest.fail("ssh-keygen is required")
 
-    repository = Path(__file__).resolve().parents[4]
-    context = Path(__file__).with_name("docker")
-    image = "ase2sprkkr-execution-test"
     container = f"ase2sprkkr-ssh-test-{uuid4().hex[:12]}"
-    subprocess.run([docker, "build", "-t", image, str(context)], check=True)
 
     with tempfile.TemporaryDirectory(prefix="ase2sprkkr-ssh-") as tmp:
         tmp = Path(tmp)
