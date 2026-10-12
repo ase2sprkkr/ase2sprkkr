@@ -1,5 +1,4 @@
 from ase2sprkkr.execution import Executor, LaunchSpec
-from ase2sprkkr.execution.remote import RemoteExecutor as LegacyRemoteExecutor
 from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
 
 
@@ -21,7 +20,6 @@ def test_run_context_is_staging_policy_not_executor(tmp_path):
     )
 
     assert not isinstance(context, Executor)
-    assert not isinstance(context, LegacyRemoteExecutor)
     assert context.endpoint is endpoint
     assert context.transport is endpoint.transport
     assert context.local_root == tmp_path.resolve()

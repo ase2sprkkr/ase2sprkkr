@@ -1,13 +1,12 @@
 import asyncio
 import sys
 import time
-from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
-from ..base import ExecutionSpec, RunReference, RunState
-from ..remote import RemoteExecutor
+from ..base import ExecutionSpec, LaunchSpec, RunReference, RunState
+from ..remote_endpoint import RemoteEndpointExecutor
 from ..transport import LocalTransport
 
 
@@ -27,14 +26,16 @@ class _Reader:
         return result
 
 
-def _executor(local_root, remote_root, *, backend="local"):
-    return RemoteExecutor(
+def _executor(*, backend="local"):
+    return RemoteEndpointExecutor(
         LocalTransport(),
         backend=backend,
-        local_root=local_root,
-        remote_root=remote_root,
         command=(sys.executable, "-m", "ase2sprkkr.tools.ase2sprkkr", "remote"),
     )
+
+
+def _launch(local_root, remote_root):
+    return LaunchSpec(local_root=local_root, remote_root=remote_root)
 
 
 def _wait_for_state(runner, expected, timeout=5):
@@ -47,21 +48,20 @@ def _wait_for_state(runner, expected, timeout=5):
 
 
 def test_remote_executor_attach_reconnects_running_run_and_restores_stage_out(tmp_path):
-    first_root = tmp_path / "first"
-    second_root = tmp_path / "second"
+    local_root = tmp_path / "local"
     remote_root = tmp_path / "remote"
-    first_workdir = first_root / "calculation"
-    first_workdir.mkdir(parents=True)
+    workdir = local_root / "calculation"
+    workdir.mkdir(parents=True)
 
-    input_file = (first_workdir / "run.inp").open("w+b")
+    input_file = (workdir / "run.inp").open("w+b")
     input_file.write(b"input")
     input_file.seek(0)
-    output_file = (first_workdir / "run.out").open("wb")
-    generated = first_workdir / "generated.dat"
-    cache = first_workdir / "cache.dat"
+    output_file = (workdir / "run.out").open("wb")
+    generated = workdir / "generated.dat"
+    cache = workdir / "cache.dat"
     cache.write_text("before")
 
-    first_executor = _executor(first_root, remote_root)
+    first_executor = _executor()
     spec = ExecutionSpec(
         argv=(
             sys.executable,
@@ -76,11 +76,12 @@ def test_remote_executor_attach_reconnects_running_run_and_restores_stage_out(tm
         ),
         input_file=input_file,
         output_file=output_file,
-        directory=str(first_workdir),
+        directory=str(workdir),
         stdin=input_file,
         input_files=(input_file,),
         output_files=(output_file, generated),
         cache_files=(cache,),
+        launch=_launch(local_root, remote_root),
     )
     original = first_executor.create_run(_Reader(), spec)
     original.submit()
@@ -89,8 +90,9 @@ def test_remote_executor_attach_reconnects_running_run_and_restores_stage_out(tm
     reference = original.reference
     assert reference is not None
 
-    second_executor = _executor(second_root, remote_root)
-    attached = second_executor.attach(reference, _Reader())
+    # A fresh endpoint object must be able to reconstruct all per-run staging
+    # policy from the persisted request; no live runner state is required.
+    attached = _executor().attach(reference, _Reader())
 
     assert attached.reference == reference
     result = attached.wait()
@@ -98,53 +100,51 @@ def test_remote_executor_attach_reconnects_running_run_and_restores_stage_out(tm
     assert attached.state == RunState.FINISHED
     assert result.return_code == 0
     assert result.output == b"done\n"
-    assert (second_root / "calculation" / "run.out").read_bytes() == b"done\n"
-    assert (second_root / "calculation" / "generated.dat").read_text() == "generated"
-    assert (second_root / "calculation" / "cache.dat").read_text() == "after"
+    assert (workdir / "run.out").read_bytes() == b"done\n"
+    assert (workdir / "generated.dat").read_text() == "generated"
+    assert (workdir / "cache.dat").read_text() == "after"
 
-    # The original client may still be alive in this process, but reconnecting
-    # must not depend on any of its in-memory state.
     assert original.wait().return_code == 0
 
 
 def test_remote_executor_attach_replays_finished_run(tmp_path):
-    first_root = tmp_path / "first"
-    second_root = tmp_path / "second"
+    local_root = tmp_path / "local"
     remote_root = tmp_path / "remote"
-    first_workdir = first_root / "calculation"
-    first_workdir.mkdir(parents=True)
+    workdir = local_root / "calculation"
+    workdir.mkdir(parents=True)
 
-    input_file = (first_workdir / "run.inp").open("w+b")
+    input_file = (workdir / "run.inp").open("w+b")
     input_file.write(b"input")
     input_file.seek(0)
-    output_file = (first_workdir / "run.out").open("wb")
+    output_file = (workdir / "run.out").open("wb")
 
-    first_executor = _executor(first_root, remote_root)
+    first_executor = _executor()
     spec = ExecutionSpec(
         argv=(sys.executable, "-c", "print('finished')"),
         input_file=input_file,
         output_file=output_file,
-        directory=str(first_workdir),
+        directory=str(workdir),
         stdin=input_file,
         input_files=(input_file,),
         output_files=(output_file,),
+        launch=_launch(local_root, remote_root),
     )
     original = first_executor.create_run(_Reader(), spec)
     assert original.run().return_code == 0
     reference = original.reference
     assert reference is not None
 
-    attached = _executor(second_root, remote_root).attach(reference, _Reader())
+    attached = _executor().attach(reference, _Reader())
     result = attached.wait()
 
     assert attached.state == RunState.FINISHED
     assert result.return_code == 0
     assert result.output == b"finished\n"
-    assert (second_root / "calculation" / "run.out").read_bytes() == b"finished\n"
+    assert (workdir / "run.out").read_bytes() == b"finished\n"
 
 
 def test_remote_executor_attach_rejects_reference_for_other_backend(tmp_path):
-    executor = _executor(tmp_path / "local", tmp_path / "remote")
+    executor = _executor()
     reference = RunReference(
         executor="remote:psij",
         native_id="job",

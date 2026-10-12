@@ -5,8 +5,9 @@ from types import SimpleNamespace
 
 import pytest
 
-from ..base import ExecutionSpec, RunState
-from ..remote import FileSyncPolicy, RemoteExecutor
+from ..base import ExecutionSpec, LaunchSpec, RunState
+from ..remote import FileSyncPolicy
+from ..remote_endpoint import RemoteEndpointExecutor
 from ..transport import LocalTransport
 
 
@@ -40,13 +41,26 @@ class _SpyTransport(LocalTransport):
         await super().get_file(source, destination)
 
 
-def _executor(local_root, remote_root, transport=None, **kwargs):
-    return RemoteExecutor(
+def _executor(transport=None, **kwargs):
+    return RemoteEndpointExecutor(
         transport or LocalTransport(),
-        local_root=local_root,
-        remote_root=remote_root,
         command=(sys.executable, "-m", "ase2sprkkr.tools.ase2sprkkr", "remote"),
         **kwargs,
+    )
+
+
+def _launch(
+    local_root,
+    remote_root,
+    *,
+    input_files=FileSyncPolicy.CHANGED,
+    output_files=FileSyncPolicy.CHANGED,
+):
+    return LaunchSpec(
+        local_root=local_root,
+        remote_root=remote_root,
+        input_sync=input_files,
+        output_sync=output_files,
     )
 
 
@@ -58,6 +72,8 @@ def _text_run(
     declared_output_files=(),
     declared_cache_files=(),
     code=None,
+    input_files=FileSyncPolicy.CHANGED,
+    output_files=FileSyncPolicy.CHANGED,
     **executor_kwargs,
 ):
     local_root = tmp_path / "local"
@@ -68,9 +84,7 @@ def _text_run(
     input_file.seek(0)
     output_file = (workdir / "output.txt").open("wb")
     remote_root = tmp_path / "remote"
-    executor = _executor(
-        local_root, remote_root, transport=transport, **executor_kwargs
-    )
+    executor = _executor(transport=transport, **executor_kwargs)
     spec = ExecutionSpec(
         argv=(sys.executable, "-c", code or "print('ok')"),
         input_file=input_file,
@@ -80,6 +94,12 @@ def _text_run(
         input_files=(input_file, *declared_input_files),
         output_files=(output_file, *declared_output_files),
         cache_files=declared_cache_files,
+        launch=_launch(
+            local_root,
+            remote_root,
+            input_files=input_files,
+            output_files=output_files,
+        ),
     )
     return executor, spec, workdir, remote_root
 
@@ -91,7 +111,7 @@ def test_remote_executor_local_transport_streams_output(tmp_path):
     output_file = (tmp_path / "output.txt").open("wb")
 
     remote_root = tmp_path / "remote"
-    executor = _executor(tmp_path, remote_root)
+    executor = _executor()
     spec = ExecutionSpec(
         argv=(
             sys.executable,
@@ -102,6 +122,7 @@ def test_remote_executor_local_transport_streams_output(tmp_path):
         output_file=output_file,
         directory=str(tmp_path),
         stdin=input_file,
+        launch=_launch(tmp_path, remote_root),
     )
 
     seen = []
@@ -130,7 +151,7 @@ def test_remote_executor_stages_declared_input_files(tmp_path):
     output_file = (workdir / "output.txt").open("wb")
 
     remote_root = tmp_path / "remote"
-    executor = _executor(tmp_path, remote_root)
+    executor = _executor()
     spec = ExecutionSpec(
         argv=(
             sys.executable,
@@ -146,6 +167,7 @@ def test_remote_executor_stages_declared_input_files(tmp_path):
         directory=str(workdir),
         stdin=input_file,
         input_files=(input_file, potential_file),
+        launch=_launch(tmp_path, remote_root),
     )
 
     result = executor.create_run(_Reader(), spec).run()
@@ -518,26 +540,33 @@ def test_remote_cache_output_never_skips_download(tmp_path):
 
 
 def test_remote_sync_policy_rejects_unknown_value(tmp_path):
+    endpoint = _executor()
     with pytest.raises(ValueError):
-        _executor(tmp_path, tmp_path / "remote", input_files="sometimes")
+        endpoint._context(
+            endpoint,
+            _launch(tmp_path, tmp_path / "remote", input_files="sometimes"),
+        )
 
 
 def test_remote_directory_mapping_defaults_to_home():
-    executor = RemoteExecutor(LocalTransport())
+    endpoint = _executor()
+    context = endpoint._context(endpoint, LaunchSpec())
     local = Path.home() / "calculations" / "Fe"
 
-    mapped = asyncio.run(executor.map_directory(local))
+    mapped = asyncio.run(context.map_directory(local))
 
     assert mapped == (Path.home() / "calculations" / "Fe").as_posix()
 
 
 def test_remote_directory_mapping_can_replace_remote_root(tmp_path):
-    executor = RemoteExecutor(
-        LocalTransport(), remote_root="/scratch/tester"
+    endpoint = _executor()
+    context = endpoint._context(
+        endpoint,
+        LaunchSpec(remote_root="/scratch/tester"),
     )
     local = Path.home() / "calculations" / "Fe"
 
-    mapped = asyncio.run(executor.map_directory(local))
+    mapped = asyncio.run(context.map_directory(local))
 
     assert mapped == "/scratch/tester/calculations/Fe"
 
@@ -545,24 +574,27 @@ def test_remote_directory_mapping_can_replace_remote_root(tmp_path):
 def test_remote_directory_mapping_can_replace_both_roots(tmp_path):
     local_root = tmp_path / "local"
     local = local_root / "project" / "Fe"
-    executor = RemoteExecutor(
-        LocalTransport(),
-        local_root=local_root,
-        remote_root="/scratch/tester/projects",
+    endpoint = _executor()
+    context = endpoint._context(
+        endpoint,
+        LaunchSpec(
+            local_root=local_root,
+            remote_root="/scratch/tester/projects",
+        ),
     )
 
-    mapped = asyncio.run(executor.map_directory(local))
+    mapped = asyncio.run(context.map_directory(local))
 
     assert mapped == "/scratch/tester/projects/project/Fe"
 
 
 def test_remote_directory_mapping_rejects_path_outside_local_root(tmp_path):
     local_root = tmp_path / "local"
-    executor = RemoteExecutor(
-        LocalTransport(),
-        local_root=local_root,
-        remote_root="/scratch/tester",
+    endpoint = _executor()
+    context = endpoint._context(
+        endpoint,
+        LaunchSpec(local_root=local_root, remote_root="/scratch/tester"),
     )
 
     with pytest.raises(ValueError, match="outside mapped root"):
-        asyncio.run(executor.map_directory(tmp_path / "elsewhere"))
+        asyncio.run(context.map_directory(tmp_path / "elsewhere"))
