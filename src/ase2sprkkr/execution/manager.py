@@ -443,7 +443,12 @@ class ExecutionManager:
         return self._wrap_runner(
             executor,
             record,
-            lambda completed: executor.create_run(reader, spec, callback=completed),
+            lambda completed: executor.create_persistent_run(
+                reader,
+                spec,
+                run_id=record.id,
+                callback=completed,
+            ),
             callback,
         )
 

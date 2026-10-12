@@ -200,6 +200,16 @@ class Executor:
 
         return status(self, *references)
 
+    def create_persistent_run(
+        self, reader, spec: ExecutionSpec, *, run_id: str, callback=None
+    ) -> Runner:
+        """Create a run with an ASE2SPRKKR identity known before submission.
+
+        Backends that can expose the identity to an external scheduler or helper
+        override this method. Other backends use the normal runner unchanged.
+        """
+        return self.create_run(reader, spec, callback=callback)
+
     def create_run(self, reader, spec: ExecutionSpec, callback=None) -> Runner:
         raise NotImplementedError
 

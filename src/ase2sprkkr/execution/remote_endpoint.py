@@ -7,16 +7,36 @@ import os
 import posixpath
 import warnings
 from pathlib import Path, PurePosixPath
+from uuid import uuid4
 
 from .base import Executor, LaunchSpec, MpiNotFoundWarning, RunReference
 from .remote import (
     RemoteExecutor as _RemoteStagingExecutor,
+    RemoteRunner,
     _METADATA_DIR,
     _REQUEST_FILE,
     _REMOTE_EXECUTORS,
     _RUNS_DIR,
     _run_sync,
 )
+
+
+class _RemoteRun(RemoteRunner):
+    """Remote runner that can reuse an identity chosen before submission."""
+
+    def __init__(self, *args, run_id=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._run_id = run_id
+
+    async def _submit_async(self):
+        run_id = self._run_id or uuid4().hex
+        remote_directory = await self.executor.map_directory(self.spec.directory)
+        await self.executor.transport.run(
+            ("mkdir", "-p", "--", remote_directory)
+        )
+        request = await self._prepare_request(run_id, remote_directory)
+        status = await self.executor._submit(request)
+        return run_id, status
 
 
 class _RemoteRunContext(_RemoteStagingExecutor):
@@ -40,6 +60,15 @@ class _RemoteRunContext(_RemoteStagingExecutor):
 
     async def _submit(self, request):
         return await self.endpoint._submit(request)
+
+    def create_run(self, reader, spec, callback=None, *, run_id=None):
+        return _RemoteRun(
+            self,
+            reader,
+            spec,
+            callback=callback,
+            run_id=run_id,
+        )
 
 
 class RemoteEndpointExecutor(Executor):
@@ -158,9 +187,15 @@ class RemoteEndpointExecutor(Executor):
         return posixpath.join(remote_root, *PurePosixPath(*relative.parts).parts)
 
     def create_run(self, reader, spec, callback=None):
-        """Create one run using staging parameters embedded in *spec*."""
+        """Create a nonpersistent run with a backend-generated identity."""
         return self._context(self, spec.launch).create_run(
             reader, spec, callback=callback
+        )
+
+    def create_persistent_run(self, reader, spec, *, run_id, callback=None):
+        """Create a remote run using the manager's persistent run identity."""
+        return self._context(self, spec.launch).create_run(
+            reader, spec, callback=callback, run_id=run_id
         )
 
     async def _attach_with_saved_launch(self, reference, reader, callback=None):
