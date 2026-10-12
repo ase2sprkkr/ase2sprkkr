@@ -190,15 +190,16 @@ class Executor:
         return LaunchSpec.from_mpi(mpi)
 
     def status(self, *references: RunReference) -> Tuple[RunStatus, ...]:
-        """Return status snapshots for all supplied persistent references.
+        """Return ordered status snapshots for persistent run references.
 
-        There is deliberately one API for one or many jobs. Backends may batch
-        the underlying query, for example into one scheduler status command.
-        The returned tuple always follows the input order.
+        Backends override this method directly. There is deliberately one API
+        for one or many jobs so scheduler-backed executors can batch queries.
         """
-        from .status import status
-
-        return status(self, *references)
+        if not references:
+            return ()
+        raise NotImplementedError(
+            f"{type(self).__name__} cannot query persistent run status"
+        )
 
     def recover_submission(self, run_id, submission) -> Optional[RunStatus]:
         """Recover a submit whose backend reference was not persisted.

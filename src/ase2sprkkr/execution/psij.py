@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 from threading import Event, Lock, Thread
 
-from .base import ExecutionSpec, Executor, RunReference, RunState
+from .base import ExecutionSpec, Executor, RunReference, RunState, RunStatus
 
 
 _STATE_MAP = {
@@ -341,6 +341,7 @@ class PsijExecutor(Executor):
             if job_executor is not None
             else self._psij.JobExecutor.get_instance(backend, url=url, config=config)
         )
+        self._status_jobs = {}
 
     def create_run(self, reader, spec: ExecutionSpec, callback=None):
         return PsijRunner(self, reader, spec, callback=callback)
@@ -355,6 +356,41 @@ class PsijExecutor(Executor):
             callback=callback,
             run_id=run_id,
         )
+
+    def status(self, *references: RunReference):
+        expected = f"psij:{self.backend}"
+        for reference in references:
+            if reference.executor != expected:
+                raise ValueError(
+                    f"Run reference belongs to {reference.executor!r}, not {expected!r}"
+                )
+
+        statuses = []
+        for reference in references:
+            attached = False
+            job = self._status_jobs.get(reference.native_id)
+            if job is None:
+                job = self._psij.Job()
+                self._job_executor.attach(job, reference.native_id)
+                self._status_jobs[reference.native_id] = job
+                attached = True
+            status = getattr(job, "status", None)
+            state = getattr(status, "state", None)
+            state_name = getattr(state, "name", None)
+            run_state = (
+                RunState.UNKNOWN
+                if attached and state_name == "NEW"
+                else _STATE_MAP.get(state_name, RunState.UNKNOWN)
+            )
+            statuses.append(
+                RunStatus(
+                    reference,
+                    run_state,
+                    return_code=getattr(status, "exit_code", None),
+                    message=getattr(status, "message", None),
+                )
+            )
+        return tuple(statuses)
 
     def attach(self, reference: RunReference, reader, callback=None):
         expected = f"psij:{self.backend}"

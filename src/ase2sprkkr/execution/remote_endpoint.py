@@ -49,7 +49,7 @@ class _RemoteRun(RemoteRunner):
 class _RemoteRunContext:
     """Per-run filesystem/staging policy for one reusable remote endpoint.
 
-    This is intentionally not an :class:`Executor`.  Endpoint identity and
+    This is intentionally not an :class:`Executor`. Endpoint identity and
     backend communication are owned by :class:`RemoteEndpointExecutor`; this
     object only maps paths and carries synchronization policy for one run.
     """
@@ -368,6 +368,40 @@ class RemoteEndpointExecutor(Executor):
         if not relative.parts:
             return remote_root
         return posixpath.join(remote_root, *PurePosixPath(*relative.parts).parts)
+
+    def status(self, *references: RunReference):
+        expected = f"remote:{self.backend}"
+        for reference in references:
+            if reference.executor != expected:
+                raise ValueError(
+                    f"Run reference belongs to {reference.executor!r}, not {expected!r}"
+                )
+        if not references:
+            return ()
+
+        by_directory = {}
+        for index, reference in enumerate(references):
+            if not reference.directory:
+                raise ValueError("Remote run reference lacks directory")
+            by_directory.setdefault(reference.directory, []).append((index, reference))
+
+        async def query():
+            result = [None] * len(references)
+            for directory, items in by_directory.items():
+                ids = tuple(reference.native_id for _, reference in items)
+                states = await self._json_request("status", directory, *ids)
+                if len(ids) == 1:
+                    states = (states,)
+                for (index, reference), state in zip(items, states):
+                    result[index] = RunStatus(
+                        reference,
+                        RunState(state.get("state", "unknown")),
+                        return_code=state.get("return_code"),
+                        message=state.get("error"),
+                    )
+            return tuple(result)
+
+        return _run_sync(query())
 
     async def _recover_submission(self, run_id, submission):
         directory = await self._resolve_submission_directory(submission.directory)

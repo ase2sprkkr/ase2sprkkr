@@ -10,7 +10,7 @@ def test_disappeared_local_process_is_unknown(monkeypatch):
     def missing_process(pid, signal):
         raise ProcessLookupError
 
-    monkeypatch.setattr("ase2sprkkr.execution.status.os.kill", missing_process)
+    monkeypatch.setattr("ase2sprkkr.execution.local.os.kill", missing_process)
 
     (status,) = executor.status(reference)
 
