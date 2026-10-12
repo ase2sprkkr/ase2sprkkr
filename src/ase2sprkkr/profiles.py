@@ -125,6 +125,12 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
     reserved_names = frozenset(("legacy", "ase"))
     legacy_fields = ("mpi", "executable_dir", "executable_suffix")
 
+    def _add(self, id=None):
+        """Create a stored profile while keeping ``ase`` strictly virtual."""
+        if id == "ase":
+            raise ValueError("'ase' is a virtual profile and cannot be stored")
+        return super()._add(id)
+
     def _legacy_profile(self, create=False):
         """Return the mutable backing profile used by deprecated options."""
         profile = self._values.get("legacy")
@@ -178,14 +184,12 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             section = cfg.parser["sprkkr"]
         except KeyError:
             return False
-        # ``command`` is the common ASE profile requirement. An incomplete
-        # section should not silently become the preferred runnable profile.
         return bool(section.get("command"))
 
     def add(self, id=None):
         if id in self.reserved_names:
             raise ValueError(f"{id!r} is a reserved profile name")
-        return super().add(id)
+        return self._add(id)
 
     def __getitem__(self, name):
         if name == "legacy":
@@ -232,9 +236,6 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         *,
         accept,
     ):
-        # The backing legacy section is an implementation detail. In
-        # particular, generic lookup must not expose mutable options below the
-        # public read-only legacy profile.
         head = name.split(".", 1)[0] if isinstance(name, str) else name
         if head == "legacy":
             return
