@@ -9,12 +9,39 @@ can only be modified through the deprecated configuration options.
 from __future__ import annotations
 
 from collections.abc import Iterator, Mapping
+import inspect
 import os
 import shlex
 import warnings
 
 from .common.configuration_transaction import ConfigurationTransaction
 from .common.repeated_configuration_containers import RepeatedConfigurationContainer
+
+
+_PACKAGE_DIR = os.path.normcase(os.path.realpath(os.path.dirname(__file__)))
+
+
+def _external_warning_stacklevel():
+    """Return a warning stacklevel for the first caller outside this package."""
+    frame = inspect.currentframe()
+    if frame is None:
+        return 1
+    frame = frame.f_back
+    stacklevel = 1
+    try:
+        while frame is not None:
+            filename = os.path.normcase(os.path.realpath(frame.f_code.co_filename))
+            try:
+                internal = os.path.commonpath((filename, _PACKAGE_DIR)) == _PACKAGE_DIR
+            except ValueError:
+                internal = False
+            if not internal:
+                return stacklevel
+            frame = frame.f_back
+            stacklevel += 1
+    finally:
+        del frame
+    return 1
 
 
 def ase_command_profile_values(command):
@@ -214,7 +241,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             "'{mpi: 8, executable_dir: /opt/sprkkr, executable_suffix: _v8}'\n"
             "  ase2sprkkr config --set default_profile local",
             FutureWarning,
-            stacklevel=3,
+            stacklevel=_external_warning_stacklevel(),
         )
         self._legacy_write_warning_emitted = True
 

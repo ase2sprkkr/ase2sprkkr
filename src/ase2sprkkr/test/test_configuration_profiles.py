@@ -134,6 +134,21 @@ def test_legacy_write_warning_is_emitted_once():
     assert len(caught) == 1
 
 
+def test_legacy_write_warning_points_to_external_caller(tmp_path):
+    config = fresh_config()
+    source = "config.executables.dir.set('/opt/sprkkr')\n"
+    config_file = tmp_path / "legacy_config.py"
+    config_file.write_text(source)
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always", FutureWarning)
+        exec(compile(source, str(config_file), "exec"), {"config": config})
+
+    assert len(caught) == 1
+    assert caught[0].filename == str(config_file)
+    assert caught[0].lineno == 1
+
+
 def test_persisted_legacy_profile_backs_deprecated_options():
     config = fresh_config()
 
