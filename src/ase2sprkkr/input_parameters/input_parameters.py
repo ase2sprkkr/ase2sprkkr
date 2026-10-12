@@ -36,7 +36,7 @@ class InputParameters(ConfigurationFile):
     @property
     def potential(self):
         pot = getattr(self, "_potential", None)
-        potfil = self.CONTROL.POTFIL.result()
+        potfil = self.CONTROL.POTFIL.result
         if pot:
             if potfil == pot[0]:
                 return pot[1]
@@ -168,7 +168,7 @@ class InputParameters(ConfigurationFile):
                 if callback:
                     callback(out)
 
-            potential_file = self.CONTROL.POTFIL.result()
+            potential_file = self.CONTROL.POTFIL.result
             if potential_file and not os.path.isabs(potential_file):
                 potential_file = os.path.join(directory, potential_file)
 
