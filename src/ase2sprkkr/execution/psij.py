@@ -90,16 +90,42 @@ class PsijRunner:
         if attached:
             self._start_monitor()
 
+    def _mpi_launcher(self):
+        # Slurm's native launcher knows the scheduler allocation. Other PSI/J
+        # backends commonly use mpirun; users needing a custom command can use
+        # an explicit MPI launcher in the profile instead.
+        return "srun" if self.executor.backend.lower() == "slurm" else "mpirun"
+
+    def _job_command(self):
+        launch = self.spec.launch
+        if not launch or self.spec.mpi_argv is None:
+            return tuple(self.spec.argv), None, None
+
+        if isinstance(launch.mpi, tuple):
+            # An explicit launcher is already a concrete command. Preserve it
+            # instead of asking PSI/J to reinterpret it.
+            return (*launch.mpi, *self.spec.mpi_argv), None, None
+
+        resources = None
+        if launch.process_count is not None:
+            resources = self._psij.ResourceSpecV1(
+                process_count=launch.process_count
+            )
+        return tuple(self.spec.mpi_argv), resources, self._mpi_launcher()
+
     def _create_job(self):
-        if not self.spec.argv:
+        argv, resources, launcher = self._job_command()
+        if not argv:
             raise ValueError("Cannot submit a PSI/J run without a command")
         job_spec = self._psij.JobSpec(
-            executable=os.fspath(self.spec.argv[0]),
-            arguments=[os.fspath(arg) for arg in self.spec.argv[1:]],
+            executable=os.fspath(argv[0]),
+            arguments=[os.fspath(arg) for arg in argv[1:]],
             directory=self.spec.directory,
-            stdin_path=self._stdin_path,
+            stdin_path=None if self.spec.launch and self.spec.mpi_argv is not None else self._stdin_path,
             stdout_path=self._stdout_path,
             stderr_path=self._stderr_path,
+            resources=resources,
+            launcher=launcher,
         )
         return self._psij.Job(job_spec)
 

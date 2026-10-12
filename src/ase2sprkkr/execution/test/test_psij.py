@@ -2,7 +2,7 @@ import asyncio
 import threading
 from types import SimpleNamespace
 
-from ase2sprkkr.execution.base import ExecutionSpec, RunReference, RunState
+from ase2sprkkr.execution.base import ExecutionSpec, LaunchSpec, RunReference, RunState
 from ase2sprkkr.execution import psij as psij_backend
 
 
@@ -61,6 +61,11 @@ class _JobSpec:
         self.__dict__.update(kwargs)
 
 
+class _ResourceSpecV1:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+
 class _Job:
     def __init__(self, spec=None):
         self.spec = spec
@@ -111,7 +116,12 @@ class _JobExecutor:
         raise AssertionError("A supplied backend should be used")
 
 
-_FAKE_PSIJ = SimpleNamespace(Job=_Job, JobSpec=_JobSpec, JobExecutor=_JobExecutor)
+_FAKE_PSIJ = SimpleNamespace(
+    Job=_Job,
+    JobSpec=_JobSpec,
+    JobExecutor=_JobExecutor,
+    ResourceSpecV1=_ResourceSpecV1,
+)
 
 
 def _executor(monkeypatch, backend):
@@ -146,6 +156,8 @@ def test_psij_runner_submits_and_streams_output(monkeypatch, tmp_path):
     assert backend.submitted.spec.arguments == ["arg"]
     assert backend.submitted.spec.stdin_path == str(tmp_path / "run.inp")
     assert backend.submitted.spec.stdout_path == str(tmp_path / "run.out")
+    assert backend.submitted.spec.resources is None
+    assert backend.submitted.spec.launcher is None
     assert reference.executor == "psij:slurm"
     assert reference.native_id == "123"
     assert runner.state == RunState.FINISHED
@@ -155,6 +167,58 @@ def test_psij_runner_submits_and_streams_output(monkeypatch, tmp_path):
     assert ("out", "hello\n") in seen
     assert ("err", "warning\n") in seen
     input_file.close()
+
+
+def test_psij_mpi_process_count_becomes_resource_spec(monkeypatch, tmp_path):
+    backend = _Backend()
+    executor = _executor(monkeypatch, backend)
+    input_file = open(tmp_path / "run.inp", "wb+")
+    output_file = open(tmp_path / "run.out", "wb")
+    spec = ExecutionSpec(
+        argv=("program",),
+        mpi_argv=("programMPI", str(tmp_path / "run.inp")),
+        launch=LaunchSpec(mpi=True, process_count=16),
+        input_file=input_file,
+        output_file=output_file,
+        directory=str(tmp_path),
+        stdin=input_file,
+    )
+
+    runner = executor.create_run(_Reader(), spec)
+    job_spec = runner._job.spec
+
+    assert job_spec.executable == "programMPI"
+    assert job_spec.arguments == [str(tmp_path / "run.inp")]
+    assert job_spec.resources.process_count == 16
+    assert job_spec.launcher == "srun"
+    assert job_spec.stdin_path is None
+    input_file.close()
+    output_file.close()
+
+
+def test_psij_auto_uses_mpi_without_fixed_process_count(monkeypatch, tmp_path):
+    backend = _Backend()
+    executor = _executor(monkeypatch, backend)
+    input_file = open(tmp_path / "run.inp", "wb+")
+    output_file = open(tmp_path / "run.out", "wb")
+    spec = ExecutionSpec(
+        argv=("program",),
+        mpi_argv=("programMPI", str(tmp_path / "run.inp")),
+        launch=LaunchSpec(mpi="auto"),
+        input_file=input_file,
+        output_file=output_file,
+        directory=str(tmp_path),
+        stdin=input_file,
+    )
+
+    runner = executor.create_run(_Reader(), spec)
+    job_spec = runner._job.spec
+
+    assert job_spec.executable == "programMPI"
+    assert job_spec.resources is None
+    assert job_spec.launcher == "srun"
+    input_file.close()
+    output_file.close()
 
 
 def test_psij_executor_attaches_to_native_job(monkeypatch, tmp_path):

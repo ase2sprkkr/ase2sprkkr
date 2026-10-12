@@ -12,13 +12,14 @@ import subprocess
 import sys
 import time
 from contextlib import contextmanager
+from dataclasses import asdict
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path, PurePosixPath
 from threading import Event, Lock, Thread
 from uuid import uuid4
 
-from .base import ExecutionSpec, Executor, RunReference, RunState
+from .base import ExecutionSpec, Executor, LaunchSpec, RunReference, RunState
 from .transport import local_file_digest
 
 
@@ -307,13 +308,28 @@ def clean_remote_runs(directory, older_than=None):
 
 
 def resolve_remote_mpi(mpi):
-    from ..configuration import mpi_runner
+    """Compatibility helper for the target-side CLI."""
+    return LaunchSpec.from_mpi(mpi)
 
-    return mpi_runner(mpi)
+
+def _request_spec(directory, request):
+    mpi_argv = request.get("mpi_argv")
+    return ExecutionSpec(
+        argv=tuple(request["argv"]),
+        input_file=request.get("input_file"),
+        output_file=request.get("output_file"),
+        error_file=request.get("error_file"),
+        directory=os.fspath(directory),
+        stdin=request.get("stdin"),
+        mpi_argv=None if mpi_argv is None else tuple(mpi_argv),
+        launch=LaunchSpec(**(request.get("launch") or {})),
+    )
 
 
 def run_remote_worker(directory, run_id):
     """Execute one run using the executor selected by the remote request."""
+    from .local import materialize_local_spec
+
     directory = Path(directory).expanduser().resolve()
     try:
         request = json.loads(_request_path(directory, run_id).read_text())
@@ -326,11 +342,9 @@ def run_remote_worker(directory, run_id):
         if executor != "local":
             raise ValueError(f"Unsupported remote executor: {executor!r}")
 
-        stdin_path = request.get("stdin")
-        output_path = request.get("output_file") or "stdout"
-        error_path = request.get("error_file") or "stderr"
-        output_path = Path(output_path)
-        error_path = Path(error_path)
+        spec = materialize_local_spec(_request_spec(directory, request))
+        output_path = Path(spec.output_file or "stdout")
+        error_path = Path(spec.error_file or "stderr")
         if not output_path.is_absolute():
             output_path = directory / output_path
         if not error_path.is_absolute():
@@ -338,8 +352,8 @@ def run_remote_worker(directory, run_id):
         output_path.parent.mkdir(parents=True, exist_ok=True)
         error_path.parent.mkdir(parents=True, exist_ok=True)
 
-        if stdin_path:
-            stdin_path = Path(stdin_path)
+        if spec.stdin:
+            stdin_path = Path(spec.stdin)
             if not stdin_path.is_absolute():
                 stdin_path = directory / stdin_path
             stdin = stdin_path.open("rb")
@@ -357,7 +371,7 @@ def run_remote_worker(directory, run_id):
                             f"{state.get('state')!r}"
                         )
                     process = subprocess.Popen(
-                        request["argv"],
+                        spec.argv,
                         cwd=directory,
                         stdin=stdin,
                         stdout=output,
@@ -658,10 +672,10 @@ class RemoteRunner:
                 continue
             await self.executor.transport.get_file(remote, local)
 
-    def _remote_argv(self, staged):
+    def _remote_argv(self, argv, staged):
         directory = os.path.abspath(self.spec.directory)
         out = []
-        for arg in self.spec.argv:
+        for arg in argv:
             value = os.fspath(arg)
             try:
                 path = value if os.path.isabs(value) else os.path.join(directory, value)
@@ -725,7 +739,11 @@ class RemoteRunner:
             "executor": self.executor.backend,
             "executor_options": self.executor.backend_options,
             "directory": remote_directory,
-            "argv": self._remote_argv(staged),
+            "argv": self._remote_argv(self.spec.argv, staged),
+            "mpi_argv": None
+            if self.spec.mpi_argv is None
+            else self._remote_argv(self.spec.mpi_argv, staged),
+            "launch": asdict(self.spec.launch),
             "input_file": input_target,
             "stdin": stdin_target,
             "output_file": output_target,
@@ -999,9 +1017,7 @@ class RemoteExecutor(Executor):
         return json.loads(result.stdout.decode("utf8"))
 
     def resolve_mpi(self, mpi=None):
-        return _run_sync(
-            self._json_request("resolve-mpi", payload={"mpi": mpi})
-        )["mpi"]
+        return Executor.resolve_mpi(self, mpi)
 
     async def _submit(self, request):
         return await self._json_request(

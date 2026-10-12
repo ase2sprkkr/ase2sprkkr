@@ -60,8 +60,51 @@ class RunReference:
 
 
 @dataclass(frozen=True)
+class LaunchSpec:
+    """Portable intent for launching one executable.
+
+    ``mpi`` is ``False`` for serial execution, ``True`` when MPI is required,
+    ``"auto"`` when a local executor may fall back to serial execution, or an
+    explicit launcher argv tuple. ``process_count`` is an optional requested
+    number of MPI ranks. Executors translate this intent on the machine where
+    the calculation actually runs.
+    """
+
+    mpi: Any = False
+    process_count: Optional[int] = None
+
+    def __post_init__(self):
+        if isinstance(self.mpi, list):
+            object.__setattr__(self, "mpi", tuple(self.mpi))
+        if self.process_count is not None and self.process_count < 1:
+            raise ValueError("process_count must be positive")
+
+    def __bool__(self):
+        return self.mpi is not False and self.mpi is not None
+
+    @classmethod
+    def from_mpi(cls, mpi):
+        """Translate the existing ``mpi`` profile syntax without probing a host."""
+        if isinstance(mpi, cls):
+            return mpi
+        if mpi is None or mpi is False:
+            return cls()
+        if isinstance(mpi, bool):
+            return cls(mpi=mpi)
+        if isinstance(mpi, int):
+            if mpi < 1:
+                raise ValueError("MPI process count must be positive")
+            return cls(mpi=True, process_count=mpi)
+        if mpi == "auto":
+            return cls(mpi="auto")
+        if isinstance(mpi, str):
+            return cls(mpi=(mpi,))
+        return cls(mpi=tuple(mpi))
+
+
+@dataclass(frozen=True)
 class ExecutionSpec:
-    """A concrete command ready to be handed to an execution backend."""
+    """A command and launch intent ready to be handed to an execution backend."""
 
     argv: Sequence[str]
     input_file: Any
@@ -72,6 +115,8 @@ class ExecutionSpec:
     input_files: Sequence[Any] = ()
     output_files: Sequence[Any] = ()
     cache_files: Sequence[Any] = ()
+    mpi_argv: Optional[Sequence[str]] = None
+    launch: LaunchSpec = LaunchSpec()
 
 
 class Runner(Protocol):
@@ -134,19 +179,12 @@ class Executor:
         return RunTarget("local", tuple(files))
 
     def resolve_mpi(self, mpi=None):
-        """Resolve an MPI setting for the machine where this executor runs.
+        """Convert profile MPI syntax to portable launch intent.
 
-        ``None`` means that the selected execution profile did not request MPI;
-        it must not fall back to another global configuration authority.
-        Executors targeting another machine can override this method and resolve
-        non-trivial MPI settings on that target instead.
+        No host probing is done here. The executor that actually starts the
+        calculation decides how to materialize the returned launch request.
         """
-        if mpi is None:
-            return None
-
-        from ..configuration import mpi_runner
-
-        return mpi_runner(mpi)
+        return LaunchSpec.from_mpi(mpi)
 
     def create_run(self, reader, spec: ExecutionSpec, callback=None) -> Runner:
         raise NotImplementedError

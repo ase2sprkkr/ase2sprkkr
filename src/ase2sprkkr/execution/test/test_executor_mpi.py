@@ -1,11 +1,12 @@
 from types import SimpleNamespace
 
-from ...execution import LocalExecutor
+from ...execution import ExecutionSpec, LaunchSpec, LocalExecutor
+from ...execution.local import materialize_local_spec
 from ...input_parameters.input_parameters import InputParameters
 from ...sprkkr.profile import SPRKKRProfile
 
 
-def test_input_parameters_resolve_mpi_on_executor(tmp_path, monkeypatch):
+def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
     reader = object()
     parameters = InputParameters.create("SCF")
     monkeypatch.setattr(
@@ -20,7 +21,7 @@ def test_input_parameters_resolve_mpi_on_executor(tmp_path, monkeypatch):
     class Executor:
         def resolve_mpi(self, mpi):
             seen["executor_mpi"] = mpi
-            return ("remote-mpirun",)
+            return LaunchSpec.from_mpi(mpi)
 
         def create_run(self, output_reader, spec, callback=None):
             assert output_reader is reader
@@ -28,10 +29,7 @@ def test_input_parameters_resolve_mpi_on_executor(tmp_path, monkeypatch):
             return runner
 
     profile = SPRKKRProfile(mpi="auto")
-    executor = Executor()
-    calculator = SimpleNamespace(
-        value_or_default=lambda name, value: value,
-    )
+    calculator = SimpleNamespace(value_or_default=lambda name, value: value)
 
     with (tmp_path / "run.inp").open("w+") as input_file, (
         tmp_path / "run.out"
@@ -43,17 +41,64 @@ def test_input_parameters_resolve_mpi_on_executor(tmp_path, monkeypatch):
             directory=str(tmp_path),
             run_async=True,
             profile=profile,
-            executor=executor,
+            executor=Executor(),
         )
 
         assert created is runner
         assert seen["executor_mpi"] == "auto"
-        assert seen["spec"].argv == (
-            "remote-mpirun",
-            "kkrscfMPI",
-            input_file.name,
-        )
-        assert seen["spec"].stdin is None
+        assert seen["spec"].argv == ("kkrscf",)
+        assert seen["spec"].mpi_argv == ("kkrscfMPI", input_file.name)
+        assert seen["spec"].launch == LaunchSpec(mpi="auto")
+        assert seen["spec"].stdin is input_file
+
+
+def test_mpi_process_count_is_portable_launch_intent():
+    assert LocalExecutor().resolve_mpi(16) == LaunchSpec(
+        mpi=True, process_count=16
+    )
+
+
+def test_local_executor_materializes_mpi_on_execution_host(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        "ase2sprkkr.configuration.mpi_runner",
+        lambda mpi: ["srun"] if mpi is True else None,
+    )
+    input_file = (tmp_path / "run.inp").open("w+")
+    spec = ExecutionSpec(
+        argv=("kkrscf",),
+        mpi_argv=("kkrscfMPI", input_file.name),
+        launch=LaunchSpec(mpi=True, process_count=16),
+        input_file=input_file,
+        output_file=None,
+        directory=str(tmp_path),
+        stdin=input_file,
+    )
+
+    resolved = materialize_local_spec(spec)
+
+    assert resolved.argv == ("srun", "-n", "16", "kkrscfMPI", input_file.name)
+    assert resolved.stdin is None
+    input_file.close()
+
+
+def test_local_auto_falls_back_to_serial(monkeypatch, tmp_path):
+    monkeypatch.setattr("ase2sprkkr.configuration.mpi_runner", lambda mpi: None)
+    input_file = (tmp_path / "run.inp").open("w+")
+    spec = ExecutionSpec(
+        argv=("kkrscf",),
+        mpi_argv=("kkrscfMPI", input_file.name),
+        launch=LaunchSpec(mpi="auto"),
+        input_file=input_file,
+        output_file=None,
+        directory=str(tmp_path),
+        stdin=input_file,
+    )
+
+    resolved = materialize_local_spec(spec)
+
+    assert resolved.argv == ("kkrscf",)
+    assert resolved.stdin is input_file
+    input_file.close()
 
 
 def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch):
@@ -71,7 +116,7 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
     class ExplicitLocalExecutor(LocalExecutor):
         def resolve_mpi(self, mpi):
             seen["mpi"] = mpi
-            return ()
+            return LaunchSpec()
 
         def create_run(self, output_reader, spec, callback=None):
             assert output_reader is reader
@@ -109,3 +154,5 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
         assert created is runner
         assert seen["mpi"] == "auto"
         assert seen["spec"].argv == ("kkrscf",)
+        assert seen["spec"].mpi_argv is None
+        assert seen["spec"].launch == LaunchSpec()

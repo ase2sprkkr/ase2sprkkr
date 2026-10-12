@@ -3,10 +3,51 @@
 from __future__ import annotations
 
 import asyncio
+import errno
+import os
 import sys
+from dataclasses import replace
 from threading import Event, Lock, Thread
 
 from .base import ExecutionSpec, Executor, RunState
+
+
+def _mpi_command(launch):
+    """Materialize portable MPI intent for this machine."""
+    from ..configuration import mpi_runner
+
+    command = mpi_runner(launch.mpi)
+    if not command:
+        if launch.mpi == "auto":
+            return None
+        raise FileNotFoundError(
+            errno.ENOENT,
+            "MPI was requested but no MPI launcher was found",
+        )
+
+    command = list(command)
+    if launch.process_count is not None:
+        launcher = os.path.basename(os.fspath(command[0]))
+        count_option = "-n" if launcher == "srun" else "-np"
+        command.extend((count_option, str(launch.process_count)))
+    return tuple(command)
+
+
+def materialize_local_spec(spec: ExecutionSpec) -> ExecutionSpec:
+    """Choose serial/MPI argv immediately before local process creation."""
+    if not spec.launch or spec.mpi_argv is None:
+        return spec
+
+    launcher = _mpi_command(spec.launch)
+    if launcher is None:
+        # ``auto`` may fall back to the serial command on this machine.
+        return spec
+
+    return replace(
+        spec,
+        argv=(*launcher, *spec.mpi_argv),
+        stdin=None,
+    )
 
 
 class LocalRunner:
@@ -262,4 +303,4 @@ class LocalExecutor(Executor):
     name = "local"
 
     def create_run(self, reader, spec: ExecutionSpec, callback=None):
-        return LocalRunner(reader, spec, callback=callback)
+        return LocalRunner(reader, materialize_local_spec(spec), callback=callback)

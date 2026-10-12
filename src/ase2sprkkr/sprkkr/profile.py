@@ -15,6 +15,7 @@ from typing import Any
 from ..configuration import config
 from ..execution import (
     ExecutionSpec,
+    LaunchSpec,
     LocalExecutor,
     PsijExecutor,
     RemoteExecutor,
@@ -71,38 +72,33 @@ class SPRKKRProfile:
         mpi_supported=False,
         gdb=False,
     ):
-        """Create a concrete execution specification for one SPR-KKR task.
+        """Create an execution specification for one SPR-KKR task.
 
-        ``mpi`` stored in this profile must already be resolved to a concrete
-        command by the executor. Resolving ``True``, ``"auto"`` or a process
-        count belongs to the executor, because only the executor knows the
-        machine on which the command will run.
+        The profile describes MPI intent only. The concrete launcher is chosen
+        by the executor on the machine where the calculation actually runs.
         """
         executable += self.executable_suffix or ""
         if self.executable_dir:
             executable = os.path.join(self.executable_dir, executable)
 
-        mpi_command = self.mpi if mpi_supported else None
+        launch = LaunchSpec.from_mpi(self.mpi) if mpi_supported else LaunchSpec()
+        argv = [executable]
+        mpi_argv = None
+        stdin = input_file
 
-        if mpi_command:
+        if launch:
             input_name = input_file.name
             # SPR-KKR limits the input-file command-line argument to 80 chars.
             if len(input_name) > 80:
                 input_name = os.path.relpath(input_name, directory)
-            argv = [*mpi_command, executable + "MPI", input_name]
-            stdin = None
-        else:
-            argv = [executable]
-            stdin = input_file
+            mpi_argv = [executable + "MPI", input_name]
 
         if gdb:
+            if launch:
+                raise ValueError("gdb with deferred MPI execution is not supported")
             stdin = None
-            if mpi_command:
-                print(f"run {input_file.name}")
-                argv = argv[:-1]
-            else:
-                print(f"run <{input_file.name}")
-            argv = ["gdb", *argv]
+            print(f"run <{input_file.name}")
+            argv = ["gdb", executable]
 
         return ExecutionSpec(
             argv=tuple(argv),
@@ -113,6 +109,8 @@ class SPRKKRProfile:
             input_files=tuple(input_files),
             output_files=tuple(output_files),
             cache_files=tuple(cache_files),
+            mpi_argv=None if mpi_argv is None else tuple(mpi_argv),
+            launch=launch,
         )
 
 

@@ -8,7 +8,7 @@ import signal
 import time
 from dataclasses import asdict
 
-from .base import ExecutionSpec, RunReference, RunState
+from .base import ExecutionSpec, LaunchSpec, RunReference, RunState
 from .psij import PsijExecutor
 
 
@@ -48,6 +48,20 @@ def _executor(request):
     )
 
 
+def _execution_spec(directory, request, output_file, error_file):
+    mpi_argv = request.get("mpi_argv")
+    return ExecutionSpec(
+        argv=tuple(request["argv"]),
+        input_file=request.get("input_file"),
+        output_file=output_file,
+        error_file=error_file,
+        directory=os.fspath(directory),
+        stdin=request.get("stdin"),
+        mpi_argv=None if mpi_argv is None else tuple(mpi_argv),
+        launch=LaunchSpec(**(request.get("launch") or {})),
+    )
+
+
 def run_remote_psij_worker(directory, run_id, request):
     """Run one remote request through PSI/J on the target machine."""
     from .remote import (
@@ -60,14 +74,7 @@ def run_remote_psij_worker(directory, run_id, request):
 
     output_file = request.get("output_file") or os.path.join(directory, "stdout")
     error_file = request.get("error_file") or output_file + ".err"
-    spec = ExecutionSpec(
-        argv=tuple(request["argv"]),
-        input_file=request.get("input_file"),
-        output_file=output_file,
-        error_file=error_file,
-        directory=os.fspath(directory),
-        stdin=request.get("stdin"),
-    )
+    spec = _execution_spec(directory, request, output_file, error_file)
     runner = _executor(request).create_run(_RemoteReader(), spec)
 
     with _state_lock(directory, run_id):

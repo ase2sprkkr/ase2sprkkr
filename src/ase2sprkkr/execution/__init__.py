@@ -1,6 +1,6 @@
 """Calculation execution subsystem."""
 
-from .base import ExecutionSpec, Executor, Runner, RunReference, RunState, RunTarget
+from .base import ExecutionSpec, Executor, LaunchSpec, Runner, RunReference, RunState, RunTarget
 from .local import LocalExecutor, LocalRunner
 from .psij import PsijExecutor, PsijRunner
 from .remote import FileSyncPolicy, RemoteExecutor, RemoteRunner
@@ -16,6 +16,7 @@ from .transport import LocalTransport, RunningCommand, SshTransport, Transport
 __all__ = [
     "ExecutionSpec",
     "Executor",
+    "LaunchSpec",
     "Runner",
     "RunReference",
     "RunState",

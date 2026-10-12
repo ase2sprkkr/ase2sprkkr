@@ -58,6 +58,8 @@ def parser(parser):
         help="Only remove completed runs older than AGE, e.g. 30d or 12h",
     )
 
+    # Kept as a diagnostic/compatibility command. Normal remote execution no
+    # longer calls it: launch intent is resolved by the target-side executor.
     actions.add_parser("resolve-mpi")
 
 
@@ -71,7 +73,6 @@ def run(args, global_args):
         clean_remote_runs,
         follow_remote,
         list_remote_runs,
-        resolve_remote_mpi,
         status_remote,
         submit_remote,
     )
@@ -98,7 +99,9 @@ def run(args, global_args):
     elif args.remote_action == "clean":
         _print_json(clean_remote_runs(args.directory, older_than=args.older_than))
     elif args.remote_action == "resolve-mpi":
+        from ...configuration import mpi_runner
+
         request = json.load(sys.stdin)
-        _print_json({"mpi": resolve_remote_mpi(request.get("mpi"))})
+        _print_json({"mpi": mpi_runner(request.get("mpi"))})
     else:
         raise ValueError("Unknown remote action: {}".format(args.remote_action))
