@@ -40,15 +40,44 @@ def test_named_profile_is_persistent_configuration():
     assert config.as_dict()["profiles"]["local"]["mpi"] == 4
 
 
+def test_profile_mpi_policy_has_effective_defaults_without_explicit_values():
+    config = fresh_config()
+    profile = config.profiles.add("local")
+
+    assert profile.mpi() == "auto"
+    assert profile.mpi_warning() is True
+
+    explicit = config.as_dict(only_changed="explicit", generated=False) or {}
+    stored = (explicit.get("profiles") or {}).get("local", {})
+    assert "mpi" not in stored
+    assert "mpi_warning" not in stored
+
+
+def test_named_profile_can_override_mpi_warning():
+    config = fresh_config()
+    profile = config.profiles.add("cluster")
+
+    profile.mpi_warning.set(False)
+
+    assert profile.mpi() == "auto"
+    assert profile.mpi_warning() is False
+    assert config.as_dict(only_changed="explicit", generated=False)["profiles"][
+        "cluster"
+    ] == {"mpi_warning": False}
+
+
 def test_legacy_profile_exists_only_for_explicit_legacy_configuration():
     config = fresh_config()
 
+    assert config.running.mpi() == "auto"
+    assert config.running.mpi_warning() is True
     assert "legacy" not in config.profiles
 
     config.running.mpi.set(8)
 
     assert "legacy" in config.profiles
     assert config.profiles["legacy"].mpi() == 8
+    assert config.profiles["legacy"].mpi_warning() is True
     assert "legacy" in list(config.profiles)
 
 
@@ -56,17 +85,21 @@ def test_legacy_options_are_backed_by_internal_profile():
     config = fresh_config()
 
     config.running.mpi.set(8)
+    config.running.mpi_warning.set(False)
     config.executables.dir.set("/opt/sprkkr")
 
     assert config.profiles.legacy_option("mpi")() == 8
+    assert config.profiles.legacy_option("mpi_warning")() is False
     assert config.profiles.legacy_option("executable_dir")() == "/opt/sprkkr"
     assert config.profiles["legacy"].as_dict() == {
         "mpi": 8,
+        "mpi_warning": False,
         "executable_dir": "/opt/sprkkr",
         "executable_suffix": None,
     }
 
     config.running.mpi.set(None)
+    config.running.mpi_warning.set(None)
     config.executables.dir.set(None)
     assert "legacy" not in config.profiles
     assert "legacy" not in list(config.profiles)
@@ -106,6 +139,7 @@ def test_persisted_legacy_profile_backs_deprecated_options():
             "profiles": {
                 "legacy": {
                     "mpi": 6,
+                    "mpi_warning": False,
                     "executable_dir": "/opt/legacy",
                     "executable_suffix": "_v",
                 }
@@ -115,6 +149,7 @@ def test_persisted_legacy_profile_backs_deprecated_options():
     )
 
     assert config.running.mpi() == 6
+    assert config.running.mpi_warning() is False
     assert config.executables.dir() == "/opt/legacy"
     assert config.executables.suffix() == "_v"
     with pytest.raises(TypeError, match="read-only"):
