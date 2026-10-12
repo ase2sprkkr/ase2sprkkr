@@ -56,6 +56,17 @@ def test_config_set_creates_profile_from_dotted_option(monkeypatch, tmp_path):
     assert len(saves) == 1
 
 
+def test_config_set_creates_profile_with_mpi_warning(monkeypatch, tmp_path):
+    config, saves = _fresh_cli(monkeypatch, tmp_path)
+
+    config_command.run(_args("profiles.cluster.mpi_warning", "false"), None)
+
+    profile = config.profiles["cluster"]
+    assert profile.mpi() == "auto"
+    assert profile.mpi_warning() is False
+    assert saves == [{"profiles": {"cluster": {"mpi_warning": False}}}]
+
+
 def test_config_set_creates_profile_from_yaml_mapping(monkeypatch, tmp_path):
     config, saves = _fresh_cli(monkeypatch, tmp_path)
 
