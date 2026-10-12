@@ -1,0 +1,138 @@
+import json
+from datetime import datetime, timedelta, timezone
+
+import pytest
+
+from ..remote import (
+    _run_directory,
+    _write_state,
+    clean_remote_runs,
+    list_remote_runs,
+    status_remote,
+    submit_remote,
+)
+
+
+def _request(workspace, run_id, output_name):
+    return {
+        "id": run_id,
+        "executor": "local",
+        "directory": str(workspace),
+        "argv": ["true"],
+        "input_file": None,
+        "stdin": None,
+        "output_file": output_name,
+        "error_file": output_name + ".err",
+    }
+
+
+def test_remote_run_metadata_is_isolated_per_run(tmp_path, monkeypatch):
+    workspace = tmp_path / "workspace"
+    monkeypatch.setattr("ase2sprkkr.execution.remote.subprocess.Popen", lambda *a, **k: None)
+
+    first = submit_remote(_request(workspace, "run-one", "one.out"))
+    second = submit_remote(_request(workspace, "run-two", "two.out"))
+
+    assert first["id"] == "run-one"
+    assert second["id"] == "run-two"
+    assert status_remote(workspace, "run-one")["output_file"].endswith("one.out")
+    assert status_remote(workspace, "run-two")["output_file"].endswith("two.out")
+
+    for run_id in ("run-one", "run-two"):
+        run_dir = workspace / ".ase2sprkkr" / "runs" / run_id
+        assert (run_dir / "request.json").is_file()
+        assert (run_dir / "state.json").is_file()
+
+    assert not (workspace / ".ase2sprkkr-run.json").exists()
+    assert not (workspace / ".ase2sprkkr-request.json").exists()
+
+
+def test_remote_run_listing_keeps_history(tmp_path):
+    workspace = tmp_path / "workspace"
+    for run_id, state in (("old", "finished"), ("new", "failed")):
+        run_dir = _run_directory(workspace, run_id)
+        run_dir.mkdir(parents=True)
+        (run_dir / "request.json").write_text("{}")
+        _write_state(
+            workspace,
+            run_id,
+            id=run_id,
+            state=state,
+            created_at=(
+                datetime(2026, 1, 1, tzinfo=timezone.utc)
+                if run_id == "old"
+                else datetime(2026, 1, 2, tzinfo=timezone.utc)
+            ).isoformat(),
+            finished_at=datetime(2026, 1, 3, tzinfo=timezone.utc).isoformat(),
+        )
+
+    assert [run["id"] for run in list_remote_runs(workspace)] == ["old", "new"]
+
+
+def test_remote_clean_removes_only_completed_metadata(tmp_path):
+    workspace = tmp_path / "workspace"
+    artifact = workspace / "result.dat"
+    artifact.parent.mkdir(parents=True)
+    artifact.write_text("keep me")
+
+    now = datetime.now(timezone.utc)
+    states = {
+        "finished": ("finished", now - timedelta(days=40)),
+        "recent": ("failed", now - timedelta(days=1)),
+        "active": ("running", None),
+    }
+    for run_id, (state, finished_at) in states.items():
+        run_dir = _run_directory(workspace, run_id)
+        run_dir.mkdir(parents=True)
+        (run_dir / "request.json").write_text(json.dumps({"id": run_id}))
+        _write_state(
+            workspace,
+            run_id,
+            id=run_id,
+            state=state,
+            created_at=(now - timedelta(days=50)).isoformat(),
+            finished_at=None if finished_at is None else finished_at.isoformat(),
+        )
+
+    cleaned = clean_remote_runs(workspace, older_than=30 * 86400)
+
+    assert cleaned == {"removed": ["finished"], "active": ["active"]}
+    assert not _run_directory(workspace, "finished").exists()
+    assert _run_directory(workspace, "recent").exists()
+    assert _run_directory(workspace, "active").exists()
+    assert artifact.read_text() == "keep me"
+
+
+def test_remote_clean_without_age_removes_all_completed_runs(tmp_path):
+    workspace = tmp_path / "workspace"
+    for run_id, state in (("done", "cancelled"), ("active", "queued")):
+        run_dir = _run_directory(workspace, run_id)
+        run_dir.mkdir(parents=True)
+        _write_state(
+            workspace,
+            run_id,
+            id=run_id,
+            state=state,
+            created_at=datetime.now(timezone.utc).isoformat(),
+            finished_at=(
+                datetime.now(timezone.utc).isoformat()
+                if state == "cancelled"
+                else None
+            ),
+        )
+
+    cleaned = clean_remote_runs(workspace)
+
+    assert cleaned == {"removed": ["done"], "active": ["active"]}
+    assert not _run_directory(workspace, "done").exists()
+    assert _run_directory(workspace, "active").exists()
+
+
+def test_remote_submit_rejects_duplicate_run_id(tmp_path, monkeypatch):
+    workspace = tmp_path / "workspace"
+    monkeypatch.setattr("ase2sprkkr.execution.remote.subprocess.Popen", lambda *a, **k: None)
+    request = _request(workspace, "same", "out")
+
+    submit_remote(request)
+    with pytest.raises(RuntimeError, match="already exists"):
+        submit_remote(request)
