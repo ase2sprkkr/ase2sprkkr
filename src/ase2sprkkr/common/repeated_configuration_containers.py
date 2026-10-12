@@ -35,7 +35,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             self.section = section
             self.old_values = section._values
             self.old_parents = tuple(
-                (child, child._container) for child in proposed.values()
+                (child, child._container) for child in proposed._raw_values()
             )
 
         def commit(self) -> None:
@@ -46,7 +46,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             section._values = self.old_values
             for child, parent in self.old_parents:
                 child._container = parent
-            for child in section.values():
+            for child in section._raw_values():
                 child._container = section
 
     def __init__(self, definition, container=None):
@@ -82,6 +82,18 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
 
     def add(self, id=None):
         return self._add(id)
+
+    def _raw_items(self):
+        """Return physically stored items, independent of public collection views."""
+        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
+            return enumerate(self._values)
+        return self._values.items()
+
+    def _raw_values(self):
+        """Return physically stored values, independent of public collection views."""
+        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
+            return self._values
+        return self._values.values()
 
     def __contains__(self, name):
         """The check for existence of a member with the given name."""
@@ -288,7 +300,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
 
         change = self.ContentsChange(self, proposed)
         self._values = proposed._values
-        for child in self.values():
+        for child in self._raw_values():
             child._container = self
         transaction.push(change)
         return True
@@ -301,34 +313,18 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             yield from self._values.keys()
 
     def items(self):
-        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
-            return enumerate(self._values)
-        return self._values.items()
+        return self._raw_items()
 
     def values(self):
-        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
-            return self._values
-        return self._values.values()
+        return self._raw_values()
 
     def _as_dict(self, only_changed: Union[bool, str] = "basic", generated: bool = False, copy=False):
         """
         Return the content of the container as a dictionary.
         Nested containers will be transformed to dictionaries as well.
-
-        Parameters
-        ----------
-        only_changed
-          Return only changed values, or all of them?
-          If True, return only the values, that differ from the defaults.
-          If False, return all the values.
-          The default value 'basic' means, return all non-expert values
-          and all changed expert values.
-
-        generated: bool
-          Add generated values
         """
         if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
-            out = [v.as_dict(only_changed, generated, copy) for v in self]
+            out = [v.as_dict(only_changed, generated, copy) for v in self._raw_values()]
             if out and out[-1] is not None:
                 for i in range(len(out) - 1, 0, -1):
                     if out[i] is not None:
@@ -337,14 +333,14 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
                         out = None
         else:
             out = {}
-            for k, v in self.items():
+            for k, v in self._raw_items():
                 value = v.as_dict(only_changed, generated, copy)
                 if value is not None:
                     out[k] = value
         return out or None
 
     def is_changed(self):
-        for i in self.values():
+        for i in self._raw_values():
             if i.is_changed():
                 return True
         return False
@@ -353,23 +349,9 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         return super().__repr__() + "[]"
 
     def _save_to_file(self, file, always=False, name_in_grammar=None, delimiter="") -> bool:
-        """Save the content of the container to the file (according to the definition)
-
-        Parameters
-        ----------
-        file: file
-          File object (open for writing), where the data should be written
-
-        always:
-          Do not consider conditions
-
-        Returns
-        -------
-        something_have_been_written
-          If any value have been written return True, otherwise return False.
-        """
+        """Save the content of the container to the file (according to the definition)."""
         out = False
-        for i in self.values():
+        for i in self._raw_values():
             d = self._definition
             if d._save_to_file(file, i, always, name_in_grammar, delimiter=delimiter):
                 name_in_grammar = False
@@ -378,31 +360,33 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         return out
 
     def _validate(self, why: str):
-        """Validate the configuration data. Raise an exception, if the validation fail.
-
-        Parameters
-        ----------
-        why
-          Type of the validation. Possible values
-          ``save`` - Full validation, during save.
-          ``set`` - Validation on user input. Allow required values not to be set.
-          ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.
-        """
+        """Validate the configuration data."""
         if why == "save" and not self._definition.is_optional and not self.has_any_value():
             DataValidityError.warn(f"Non-optional section {self._definition.name} has no value to save")
 
-        values = self.values()
+        values = self._raw_values()
         ValidationResult.emit(
-            self._definition.repeated_count.validate(self, len(values), why)
+            self._definition.repeated_count.validate(self, len(self._values), why)
         )
         for item in values:
             item._validate(why)
 
+    def has_any_value(self) -> bool:
+        return any(item.has_any_value() for item in self._raw_values())
 
     def values_of(self, name):
-        ln = len(self)
+        ln = len(self._values)
         if not ln:
             return np.empty((0,))
+        if self._definition.is_repeated == BaseDefinition.Repeated.LIST_SECTION:
+            return np.fromiter(
+                (self._values[i][name]() for i in range(ln)),
+                count=ln,
+                dtype=self._values[0][name]._definition.type.numpy_dtype()[0],
+            )
+        first = next(iter(self._values.values()))
         return np.fromiter(
-            (self[i][name]() for i in self), count=ln, dtype=self[0][name]._definition.type.numpy_dtype()[0]
+            (item[name]() for item in self._values.values()),
+            count=ln,
+            dtype=first[name]._definition.type.numpy_dtype()[0],
         )
