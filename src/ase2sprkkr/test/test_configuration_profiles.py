@@ -5,6 +5,7 @@ import warnings
 import pytest
 
 from ase2sprkkr.configuration import definition
+from ase2sprkkr.configuration_yaml import apply_yaml_document
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
 
 
@@ -61,21 +62,18 @@ def test_legacy_options_are_backed_by_internal_profile():
 
     with pytest.warns(FutureWarning):
         config.running.mpi.set(8)
-    with pytest.warns(FutureWarning):
-        config.executables.dir.set("/opt/sprkkr")
+    config.executables.dir.set("/opt/sprkkr")
 
-    assert config.profiles.legacy_option("mpi")() == 8
-    assert config.profiles.legacy_option("executable_dir")() == "/opt/sprkkr"
+    assert config.profiles.legacy_value("mpi") == 8
+    assert config.profiles.legacy_value("executable_dir") == "/opt/sprkkr"
     assert config.profiles["legacy"].as_dict() == {
         "mpi": 8,
         "executable_dir": "/opt/sprkkr",
         "executable_suffix": None,
     }
 
-    with pytest.warns(FutureWarning):
-        config.running.mpi.set(None)
-    with pytest.warns(FutureWarning):
-        config.executables.dir.set(None)
+    config.running.mpi.set(None)
+    config.executables.dir.set(None)
     assert "legacy" not in config.profiles
     assert "legacy" not in list(config.profiles)
 
@@ -116,6 +114,7 @@ def test_legacy_write_warning_shows_both_profile_migrations():
 
     message = str(caught[0].message)
     assert "config.executables.dir is deprecated" in message
+    assert "ase2sprkkr config --migrate" in message
     assert "[sprkkr]" in message
     assert "command = /opt/sprkkr/kkrscf_v8" in message
     assert "mpi = 8" in message
@@ -127,7 +126,7 @@ def test_legacy_write_warning_is_emitted_once():
     config = fresh_config()
 
     with warnings.catch_warnings(record=True) as caught:
-        warnings.simplefilter("default", FutureWarning)
+        warnings.simplefilter("always", FutureWarning)
         config.running.mpi.set(8)
         config.executables.dir.set("/opt/sprkkr")
         config.executables.suffix.set("_v8")
@@ -135,10 +134,26 @@ def test_legacy_write_warning_is_emitted_once():
     assert len(caught) == 1
 
 
+def test_legacy_write_warning_points_to_external_caller(tmp_path):
+    config = fresh_config()
+    source = "config.executables.dir.set('/opt/sprkkr')\n"
+    config_file = tmp_path / "legacy_config.py"
+    config_file.write_text(source)
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always", FutureWarning)
+        exec(compile(source, str(config_file), "exec"), {"config": config})
+
+    assert len(caught) == 1
+    assert caught[0].filename == str(config_file)
+    assert caught[0].lineno == 1
+
+
 def test_persisted_legacy_profile_backs_deprecated_options():
     config = fresh_config()
 
-    config.set(
+    apply_yaml_document(
+        config,
         {
             "profiles": {
                 "legacy": {
@@ -148,7 +163,6 @@ def test_persisted_legacy_profile_backs_deprecated_options():
                 }
             }
         },
-        unknown="fail",
     )
 
     assert config.running.mpi() == 6

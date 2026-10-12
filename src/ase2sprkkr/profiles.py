@@ -8,13 +8,40 @@ can only be modified through the deprecated configuration options.
 
 from __future__ import annotations
 
-from collections.abc import Iterator
+from collections.abc import Iterator, Mapping
+import inspect
 import os
 import shlex
 import warnings
 
 from .common.configuration_transaction import ConfigurationTransaction
 from .common.repeated_configuration_containers import RepeatedConfigurationContainer
+
+
+_PACKAGE_DIR = os.path.normcase(os.path.realpath(os.path.dirname(__file__)))
+
+
+def _external_warning_stacklevel():
+    """Return a warning stacklevel for the first caller outside this package."""
+    frame = inspect.currentframe()
+    if frame is None:
+        return 1
+    frame = frame.f_back
+    stacklevel = 1
+    try:
+        while frame is not None:
+            filename = os.path.normcase(os.path.realpath(frame.f_code.co_filename))
+            try:
+                internal = os.path.commonpath((filename, _PACKAGE_DIR)) == _PACKAGE_DIR
+            except ValueError:
+                internal = False
+            if not internal:
+                return stacklevel
+            frame = frame.f_back
+            stacklevel += 1
+    finally:
+        del frame
+    return 1
 
 
 def ase_command_profile_values(command):
@@ -48,7 +75,7 @@ def ase_command_profile_values(command):
             "ASE SPR-KKR command must directly name the canonical kkrscf executable"
         )
 
-    values = {"executable_suffix": filename[len("kkrscf"):]}
+    values = {"executable_suffix": filename[len("kkrscf"): ]}
     if executable_dir:
         values["executable_dir"] = executable_dir
     return values
@@ -197,10 +224,14 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         return value
 
     def _warn_legacy_write(self):
+        if getattr(self, "_legacy_write_warning_emitted", False):
+            return
         warnings.warn(
             "config.executables.dir is deprecated together with "
             "config.executables.suffix and config.running.mpi; use an execution "
             "profile instead.\n"
+            "To migrate an existing legacy configuration, run:\n"
+            "  ase2sprkkr config --migrate\n"
             "Use the ASE [sprkkr] profile, for example:\n"
             "  [sprkkr]\n"
             "  command = /opt/sprkkr/kkrscf_v8\n"
@@ -210,10 +241,11 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             "'{mpi: 8, executable_dir: /opt/sprkkr, executable_suffix: _v8}'\n"
             "  ase2sprkkr config --set default_profile local",
             FutureWarning,
-            stacklevel=3,
+            stacklevel=_external_warning_stacklevel(),
         )
+        self._legacy_write_warning_emitted = True
 
-    def set_legacy_value(self, name, value):
+    def _set_legacy_value(self, name, value):
         """Stage a deprecated option into the internal legacy profile."""
         self._warn_legacy_write()
         profile = self._legacy_profile(create=True)
@@ -223,11 +255,6 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             option.set(value)
         else:
             option.stage(transaction, value)
-
-    def legacy_option(self, name, create=False):
-        """Return mutable backing option for compatibility plumbing only."""
-        profile = self._legacy_profile(create=create)
-        return None if profile is None else getattr(profile, name)
 
     @staticmethod
     def _ase_config():
@@ -275,6 +302,66 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         except KeyError:
             return False
         return bool(section.get("command"))
+
+    @classmethod
+    def _reserved_in(cls, values):
+        if isinstance(values, str):
+            names = (values,)
+        elif isinstance(values, Mapping):
+            names = values.keys()
+        else:
+            return ()
+        return tuple(sorted(cls.reserved_names.intersection(names)))
+
+    def stage(
+        self,
+        transaction,
+        values=None,
+        value=None,
+        *,
+        unknown="find",
+        merge=False,
+        **kwargs,
+    ):
+        """Stage public profile changes without exposing reserved profiles."""
+        reserved = self._reserved_in(values)
+        if reserved:
+            names = ", ".join(repr(name) for name in reserved)
+            raise ValueError(f"Reserved profiles are read-only: {names}")
+
+        legacy = self._values.get("legacy")
+        changed = super().stage(
+            transaction,
+            values,
+            value,
+            unknown=unknown,
+            merge=merge,
+            **kwargs,
+        )
+        if legacy is not None and not merge:
+            self._values["legacy"] = legacy
+            legacy._container = self
+        return changed
+
+    def _stage_persisted(
+        self,
+        transaction,
+        values=None,
+        value=None,
+        *,
+        unknown="find",
+        merge=False,
+        **kwargs,
+    ):
+        """Stage profiles read from persisted ASE2SPRKKR configuration."""
+        return super().stage(
+            transaction,
+            values,
+            value,
+            unknown=unknown,
+            merge=merge,
+            **kwargs,
+        )
 
     def add(self, id=None):
         if id in self.reserved_names:

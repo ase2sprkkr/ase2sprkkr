@@ -3,10 +3,66 @@
 from __future__ import annotations
 
 import asyncio
+import errno
+import os
 import sys
+from dataclasses import replace
 from threading import Event, Lock, Thread
 
-from .base import ExecutionSpec, Executor, RunState
+from .base import ExecutionSpec, Executor, RunReference, RunState
+
+
+def _mpi_command(launch):
+    """Materialize portable MPI intent for this machine."""
+    from ..configuration import mpi_runner
+
+    command = mpi_runner(launch.mpi)
+    if not command:
+        if launch.mpi == "auto":
+            return None
+        raise FileNotFoundError(
+            errno.ENOENT,
+            "MPI was requested but no MPI launcher was found",
+        )
+
+    command = list(command)
+    if launch.process_count is not None:
+        launcher = os.path.basename(os.fspath(command[0]))
+        count_option = "-n" if launcher == "srun" else "-np"
+        command.extend((count_option, str(launch.process_count)))
+    return tuple(command)
+
+
+def materialize_local_spec(spec: ExecutionSpec) -> ExecutionSpec:
+    """Choose serial/MPI argv immediately before local process creation."""
+    if not spec.launch or spec.mpi_argv is None:
+        return spec
+
+    launcher = _mpi_command(spec.launch)
+    if launcher is None:
+        # ``auto`` may fall back to the serial command on this machine.
+        return spec
+
+    return replace(
+        spec,
+        argv=(*launcher, *spec.mpi_argv),
+        stdin=None,
+    )
+
+
+def _path(value, directory):
+    if value is None:
+        return None
+    value = getattr(value, "name", value)
+    if isinstance(value, int):
+        return None
+    try:
+        path = os.fspath(value)
+    except TypeError:
+        return None
+    if not os.path.isabs(path):
+        path = os.path.join(directory, path)
+    return os.path.abspath(path)
 
 
 class LocalRunner:
@@ -27,11 +83,13 @@ class LocalRunner:
         self._listeners = []
         self._lock = Lock()
         self._cancel_requested = Event()
+        self._started = Event()
         self._done = Event()
 
         self._thread = None
         self._loop = None
         self._process = None
+        self._pid = None
         self._stop_task = None
         self._exception = None
 
@@ -41,9 +99,16 @@ class LocalRunner:
 
     @property
     def reference(self):
-        # A local subprocess cannot in general be reattached after the Python
-        # process exits.
-        return None
+        if self._pid is None:
+            return None
+        return RunReference(
+            executor="local",
+            native_id=str(self._pid),
+            directory=os.path.abspath(self.spec.directory),
+            input_file=_path(self.spec.input_file, self.spec.directory),
+            output_file=_path(self.spec.output_file, self.spec.directory),
+            error_file=_path(self.spec.error_file, self.spec.directory),
+        )
 
     def add_output_listener(self, callback):
         """Receive raw output as ``callback(text, kind)``.
@@ -147,6 +212,7 @@ class LocalRunner:
 
         if self._cancel_requested.is_set():
             self._state = RunState.CANCELLED
+            self._started.set()
             raise RuntimeError("Run was cancelled before process start")
 
         try:
@@ -157,7 +223,9 @@ class LocalRunner:
                 stderr=asyncio.subprocess.PIPE,
                 cwd=self.spec.directory,
             )
+            self._pid = self._process.pid
             self._state = RunState.RUNNING
+            self._started.set()
 
             if self._cancel_requested.is_set():
                 stop_task = self._ensure_stop_task()
@@ -190,6 +258,7 @@ class LocalRunner:
             self._state = RunState.FINISHED
             return result
         except BaseException:
+            self._started.set()
             self._state = (
                 RunState.CANCELLED
                 if self._cancel_requested.is_set()
@@ -220,7 +289,7 @@ class LocalRunner:
             self._done.set()
 
     def submit(self):
-        """Start the run and return immediately."""
+        """Start the run and return once its persistent process id is known."""
         with self._lock:
             if self._state == RunState.CANCELLED and self._thread is None:
                 raise RuntimeError("Run was cancelled before submission")
@@ -230,6 +299,8 @@ class LocalRunner:
             self._state = RunState.QUEUED
             self._thread = Thread(target=self._thread_main, daemon=True)
             self._thread.start()
+
+        self._started.wait()
 
     def wait(self):
         """Wait for a submitted run and return its TaskResult."""
@@ -253,7 +324,8 @@ class LocalRunner:
         """Async wrapper around submit/wait."""
         if self._state == RunState.NEW:
             self.submit()
-        return await asyncio.to_thread(self.wait)
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, self.wait)
 
 
 class LocalExecutor(Executor):
@@ -262,4 +334,4 @@ class LocalExecutor(Executor):
     name = "local"
 
     def create_run(self, reader, spec: ExecutionSpec, callback=None):
-        return LocalRunner(reader, spec, callback=callback)
+        return LocalRunner(reader, materialize_local_spec(spec), callback=callback)

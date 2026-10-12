@@ -193,14 +193,32 @@ class KkrOutputReader:
         )
 
     async def parse_streams(self, stdout, stderr, result):
-        """Parse simultaneously growing stdout and stderr streams."""
+        """Parse simultaneously growing stdout and stderr streams.
+
+        Parser failures are returned to the execution backend rather than
+        raised immediately.  The backend must first observe the process exit
+        status: a truncated output stream is often only a symptom of the
+        executable having failed, and that failure is the more useful error.
+        """
         return await asyncio.gather(
             self.parser.read_output(stdout, result),
             self.parser.read_error(stderr, result),
+            return_exceptions=True,
         )
 
     def complete_result(self, result, output, error, return_code):
         """Finalize a result after the execution backend completes."""
+        if return_code != 0:
+            self.parser.result(
+                None if isinstance(output, BaseException) else output,
+                None if isinstance(error, BaseException) else error,
+                return_code,
+            )
+        if isinstance(output, BaseException):
+            raise output
+        if isinstance(error, BaseException):
+            raise error
+
         _output, error, return_code = self.parser.result(
             output, error, return_code
         )

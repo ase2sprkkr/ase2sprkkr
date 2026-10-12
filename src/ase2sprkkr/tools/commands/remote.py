@@ -32,7 +32,7 @@ def parser(parser):
 
     status = actions.add_parser("status")
     status.add_argument("directory")
-    status.add_argument("run_id")
+    status.add_argument("run_id", nargs="+")
 
     cancel = actions.add_parser("cancel")
     cancel.add_argument("directory")
@@ -58,6 +58,8 @@ def parser(parser):
         help="Only remove completed runs older than AGE, e.g. 30d or 12h",
     )
 
+    # Kept as a diagnostic/compatibility command. Normal remote execution no
+    # longer calls it: launch intent is resolved by the target-side executor.
     actions.add_parser("resolve-mpi")
 
 
@@ -71,7 +73,6 @@ def run(args, global_args):
         clean_remote_runs,
         follow_remote,
         list_remote_runs,
-        resolve_remote_mpi,
         status_remote,
         submit_remote,
     )
@@ -81,7 +82,14 @@ def run(args, global_args):
         request["directory"] = args.directory
         _print_json(submit_remote(request))
     elif args.remote_action == "status":
-        _print_json(status_remote(args.directory, args.run_id))
+        # A status query is also the recovery point for a target-side PSI/J
+        # agent killed by logout/reboot. The persisted native scheduler ids are
+        # sufficient for the replacement agent to attach instead of resubmit.
+        from ...execution.remote_psij import ensure_remote_psij_agent
+
+        ensure_remote_psij_agent(args.directory, args.run_id)
+        states = [status_remote(args.directory, run_id) for run_id in args.run_id]
+        _print_json(states[0] if len(states) == 1 else states)
     elif args.remote_action == "cancel":
         _print_json(cancel_remote(args.directory, args.run_id))
     elif args.remote_action == "follow":
@@ -98,7 +106,9 @@ def run(args, global_args):
     elif args.remote_action == "clean":
         _print_json(clean_remote_runs(args.directory, older_than=args.older_than))
     elif args.remote_action == "resolve-mpi":
+        from ...configuration import mpi_runner
+
         request = json.load(sys.stdin)
-        _print_json({"mpi": resolve_remote_mpi(request.get("mpi"))})
+        _print_json({"mpi": mpi_runner(request.get("mpi"))})
     else:
         raise ValueError("Unknown remote action: {}".format(args.remote_action))

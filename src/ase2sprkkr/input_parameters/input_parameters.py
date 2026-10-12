@@ -15,7 +15,6 @@ from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
 from typing import Union
 from ..configuration import config
-from ..execution import LocalExecutor
 from ..potentials.potentials import Potential
 from ..common.doc import process_input_parameters_definition
 from ..sprkkr.profile import SPRKKRProfile, executor_from_profile
@@ -154,8 +153,9 @@ class InputParameters(ConfigurationFile):
         print_output = calculator.value_or_default("print_output", print_output)
         reader = self.output_reader(calculator, print_output, directory)
         profile = profile or getattr(calculator, "profile", None) or SPRKKRProfile()
-        executor = executor or getattr(calculator, "executor", None) or LocalExecutor()
-        if profile.executor != "local" and isinstance(executor, LocalExecutor):
+        if executor is None:
+            executor = getattr(calculator, "executor", None)
+        if executor is None:
             executor = executor_from_profile(profile)
 
         execution_profile = profile

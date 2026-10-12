@@ -55,6 +55,31 @@ def test_reserved_profiles_cannot_be_created_publicly():
         config.profiles.add("ase")
 
 
+def test_reserved_profiles_cannot_be_set_publicly():
+    config = fresh_config()
+
+    for name in ("legacy", "ase"):
+        with pytest.raises(ValueError, match="read-only"):
+            config.profiles.set({name: {"mpi": 8}}, unknown="fail", merge=True)
+        with pytest.raises(ValueError, match="read-only"):
+            config.set(
+                {"profiles": {name: {"mpi": 8}}},
+                unknown="fail",
+            )
+
+
+def test_public_profile_replace_preserves_legacy_backing():
+    config = fresh_config()
+    config.running.mpi.set(4)
+    config.profiles.add("old").mpi.set(2)
+
+    config.profiles.set({"new": {"mpi": 3}}, unknown="fail")
+
+    assert list(config.profiles) == ["new", "legacy"]
+    assert config.profiles["new"].mpi() == 3
+    assert config.profiles["legacy"].mpi() == 4
+
+
 def test_generic_lookup_does_not_expose_legacy_backing():
     config = fresh_config()
     config.running.mpi.set(4)

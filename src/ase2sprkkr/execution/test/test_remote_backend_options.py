@@ -1,7 +1,12 @@
 import asyncio
 from types import SimpleNamespace
 
-from ase2sprkkr.execution import ExecutionSpec, LocalTransport, RemoteExecutor
+from ase2sprkkr.execution import (
+    ExecutionSpec,
+    LaunchSpec,
+    LocalTransport,
+    RemoteExecutor,
+)
 
 
 class _Reader:
@@ -29,6 +34,8 @@ def test_remote_request_carries_target_executor_options(tmp_path):
     )
     spec = ExecutionSpec(
         argv=("program",),
+        mpi_argv=("programMPI", input_file.name),
+        launch=LaunchSpec(mpi=True, process_count=16),
         input_file=input_file,
         output_file=output_file,
         directory=str(directory),
@@ -41,6 +48,10 @@ def test_remote_request_carries_target_executor_options(tmp_path):
 
     assert request["executor"] == "psij"
     assert request["executor_options"] == {"backend": "slurm", "url": None}
+    assert request["argv"] == ["program"]
+    assert request["mpi_argv"][0] == "programMPI"
+    assert request["mpi_argv"][1].endswith("/calculation/run.inp")
+    assert request["launch"] == {"mpi": True, "process_count": 16}
 
     input_file.close()
     output_file.close()
