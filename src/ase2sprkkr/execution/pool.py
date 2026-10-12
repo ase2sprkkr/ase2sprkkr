@@ -14,15 +14,7 @@ class ExecutorPool:
 
     @staticmethod
     def key_for_profile(profile):
-        """Return the backend identity used for executor reuse.
-
-        Local and PSI/J executors depend only on the endpoint. Remote execution
-        still keeps staging policy on ``RemoteExecutor`` today, so SSH profiles
-        temporarily include launch parameters in the key until that policy is
-        moved into the per-run execution specification.
-        """
-        if profile.executor == "ssh":
-            return profile.endpoint, profile.launch_parameters
+        """Return the endpoint identity used for executor reuse."""
         return profile.endpoint
 
     def get(self, key, factory):

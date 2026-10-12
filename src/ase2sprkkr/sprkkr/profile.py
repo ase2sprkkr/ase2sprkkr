@@ -18,9 +18,9 @@ from ..execution import (
     LaunchSpec,
     LocalExecutor,
     PsijExecutor,
-    RemoteExecutor,
     SshTransport,
 )
+from ..execution.remote_endpoint import RemoteEndpointExecutor
 from ..profiles import ase_command_profile_values
 
 
@@ -29,7 +29,7 @@ class ExecutorEndpoint:
     """Identity of a reusable execution backend.
 
     The endpoint contains only properties needed to establish communication
-    with an executor.  It deliberately excludes launch/staging policy so that
+    with an executor. It deliberately excludes launch/staging policy so that
     profiles differing only in how a calculation is launched can share the
     same long-lived executor instance.
     """
@@ -44,12 +44,7 @@ class ExecutorEndpoint:
 
 @dataclass(frozen=True)
 class LaunchParameters:
-    """Profile-level parameters controlling how calculations are launched.
-
-    These values are intentionally kept separate from :class:`ExecutorEndpoint`:
-    they describe executable selection, MPI intent and remote staging policy,
-    not the identity of the backend connection itself.
-    """
+    """Profile-level parameters controlling how calculations are launched."""
 
     executable_dir: Any = False
     executable_suffix: Any = ""
@@ -64,10 +59,9 @@ class LaunchParameters:
 class SPRKKRProfile:
     """Describe how and where SPR-KKR executables are invoked.
 
-    The public/runtime profile stays flat for configuration ergonomics.  Code
-    that creates execution objects can split it into :attr:`endpoint` and
-    :attr:`launch_parameters` without exposing that internal decomposition in
-    YAML or the user-facing profile syntax.
+    The public/runtime profile stays flat for configuration ergonomics. Code
+    that creates execution objects splits it into :attr:`endpoint` and
+    :attr:`launch_parameters` internally.
     """
 
     executable_dir: Any = False
@@ -86,7 +80,6 @@ class SPRKKRProfile:
 
     @property
     def endpoint(self):
-        """Return the reusable backend identity represented by this profile."""
         return ExecutorEndpoint(
             executor=self.executor,
             host=self.host,
@@ -98,7 +91,6 @@ class SPRKKRProfile:
 
     @property
     def launch_parameters(self):
-        """Return launch/staging parameters independent of backend identity."""
         return LaunchParameters(
             executable_dir=self.executable_dir,
             executable_suffix=self.executable_suffix,
@@ -110,7 +102,6 @@ class SPRKKRProfile:
         )
 
     def with_overrides(self, **overrides):
-        """Return this profile with non-``None`` compatibility overrides applied."""
         allowed = {"mpi", "executable_dir", "executable_suffix"}
         unknown = set(overrides) - allowed
         if unknown:
@@ -139,23 +130,25 @@ class SPRKKRProfile:
         mpi_supported=False,
         gdb=False,
     ):
-        """Create an execution specification for one SPR-KKR task.
-
-        The profile describes MPI intent only. The concrete launcher is chosen
-        by the executor on the machine where the calculation actually runs.
-        """
+        """Create the concrete execution specification for one run."""
         executable += self.executable_suffix or ""
         if self.executable_dir:
             executable = os.path.join(self.executable_dir, executable)
 
-        launch = LaunchSpec.from_mpi(self.mpi) if mpi_supported else LaunchSpec()
+        mpi_launch = LaunchSpec.from_mpi(self.mpi) if mpi_supported else LaunchSpec()
+        launch = replace(
+            mpi_launch,
+            local_root=self.local_root,
+            remote_root=self.remote_root,
+            input_sync=self.input_sync,
+            output_sync=self.output_sync,
+        )
         argv = [executable]
         mpi_argv = None
         stdin = input_file
 
         if launch:
             input_name = input_file.name
-            # SPR-KKR limits the input-file command-line argument to 80 chars.
             if len(input_name) > 80:
                 input_name = os.path.relpath(input_name, directory)
             mpi_argv = [executable + "MPI", input_name]
@@ -182,7 +175,6 @@ class SPRKKRProfile:
 
 
 def _profile_value(profile, name):
-    """Read one option-like value from a configuration profile."""
     try:
         value = getattr(profile, name)
     except AttributeError:
@@ -191,7 +183,6 @@ def _profile_value(profile, name):
 
 
 def _shell_argv(value):
-    """Normalize a shell-style command string or argv sequence to a tuple."""
     if value is None:
         return ()
     if isinstance(value, str):
@@ -200,7 +191,6 @@ def _shell_argv(value):
 
 
 def _normalize_mpi(value):
-    """Normalize an explicit MPI command while retaining symbolic modes."""
     if isinstance(value, str):
         return value if value == "auto" else _shell_argv(value)
     if value is None or isinstance(value, (bool, int)):
@@ -212,7 +202,6 @@ def _normalize_mpi(value):
 
 
 def profile_from_ase_command(command):
-    """Translate ASE's ``[sprkkr] command`` into an SPR-KKR profile."""
     return SPRKKRProfile(**ase_command_profile_values(command))
 
 
@@ -281,19 +270,14 @@ def _configured_profile(profile, configuration):
 
 
 def create_executor_from_profile(profile: SPRKKRProfile):
-    """Construct a new execution backend from a resolved runtime profile."""
+    """Construct a new execution backend from endpoint identity only."""
     if profile.executor == "local":
         return LocalExecutor()
 
     if profile.executor == "ssh":
         if not profile.host:
             raise ValueError("SSH execution profile requires 'host'")
-        kwargs = {
-            "local_root": profile.local_root,
-            "remote_root": profile.remote_root,
-            "input_files": profile.input_sync,
-            "output_files": profile.output_sync,
-        }
+        kwargs = {}
         if profile.remote_command:
             kwargs["command"] = profile.remote_command
         if profile.psij_backend is not None or profile.psij_url is not None:
@@ -302,7 +286,7 @@ def create_executor_from_profile(profile: SPRKKRProfile):
                 "backend": profile.psij_backend or "slurm",
                 "url": profile.psij_url,
             }
-        return RemoteExecutor(
+        return RemoteEndpointExecutor(
             SshTransport(profile.host, options=profile.ssh_options),
             **kwargs,
         )
@@ -314,20 +298,11 @@ def create_executor_from_profile(profile: SPRKKRProfile):
 
 
 def executor_from_profile(profile: SPRKKRProfile):
-    """Return the process-shared execution backend for a resolved profile."""
     from ..execution.pool import default_executor_pool
 
     return default_executor_pool().for_profile(profile)
 
 
 def resolve_sprkkr_profile(profile=None, *, configuration=None):
-    """Resolve a user/configuration profile into an immutable runtime profile.
-
-    Resolution order for ``profile=None`` is the one defined by the profile
-    configuration container: configured ``default_profile``, ASE's virtual
-    profile, the deprecated legacy profile, then built-in defaults. A string
-    explicitly selects a named profile. Per-calculation compatibility
-    overrides are applied by ``SPRKKR`` after this resolution.
-    """
     configuration = configuration or config
     return _configured_profile(profile, configuration)

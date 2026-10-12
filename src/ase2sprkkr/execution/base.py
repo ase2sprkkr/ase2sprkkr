@@ -74,25 +74,41 @@ class RunStatus:
 
 @dataclass(frozen=True)
 class LaunchSpec:
-    """Portable intent for launching one executable.
+    """Portable launch and staging parameters for one concrete run.
 
     ``mpi`` is ``False`` for serial execution, ``True`` when MPI is required,
     ``"auto"`` when a local executor may fall back to serial execution, or an
     explicit launcher argv tuple. ``process_count`` is an optional requested
-    number of MPI ranks. Executors translate this intent on the machine where
-    the calculation actually runs.
+    number of MPI ranks.
+
+    The remaining fields describe remote filesystem mapping and synchronization
+    for this run. They intentionally belong to the run rather than to an
+    executor so executors can be shared by profiles that use the same endpoint
+    but different launch/staging parameters.
     """
 
     mpi: Any = False
     process_count: Optional[int] = None
+    local_root: Optional[str] = None
+    remote_root: Optional[str] = None
+    input_sync: str = "changed"
+    output_sync: str = "changed"
 
     def __post_init__(self):
         if isinstance(self.mpi, list):
             object.__setattr__(self, "mpi", tuple(self.mpi))
         if self.process_count is not None and self.process_count < 1:
             raise ValueError("process_count must be positive")
+        for name in ("local_root", "remote_root"):
+            value = getattr(self, name)
+            if value is not None:
+                object.__setattr__(self, name, os.fspath(value))
+        for name in ("input_sync", "output_sync"):
+            value = getattr(self, name)
+            object.__setattr__(self, name, getattr(value, "value", value))
 
     def __bool__(self):
+        """Whether this run requests MPI."""
         return self.mpi is not False and self.mpi is not None
 
     @classmethod
@@ -113,6 +129,13 @@ class LaunchSpec:
         return cls(mpi=tuple(mpi))
 
 
+def _pathlike(value):
+    """Normalize path-like values without touching open file objects."""
+    if isinstance(value, os.PathLike):
+        return os.fspath(value)
+    return value
+
+
 @dataclass(frozen=True)
 class ExecutionSpec:
     """A command and launch intent ready to be handed to an execution backend."""
@@ -128,6 +151,24 @@ class ExecutionSpec:
     cache_files: Sequence[Any] = ()
     mpi_argv: Optional[Sequence[str]] = None
     launch: LaunchSpec = LaunchSpec()
+
+    def __post_init__(self):
+        object.__setattr__(self, "directory", os.fspath(self.directory))
+        for name in ("input_file", "output_file", "stdin", "error_file"):
+            object.__setattr__(self, name, _pathlike(getattr(self, name)))
+        for name in ("input_files", "output_files", "cache_files"):
+            object.__setattr__(
+                self,
+                name,
+                tuple(_pathlike(value) for value in getattr(self, name)),
+            )
+        object.__setattr__(self, "argv", tuple(os.fspath(value) for value in self.argv))
+        if self.mpi_argv is not None:
+            object.__setattr__(
+                self,
+                "mpi_argv",
+                tuple(os.fspath(value) for value in self.mpi_argv),
+            )
 
 
 class Runner(Protocol):
