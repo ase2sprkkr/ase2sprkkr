@@ -12,13 +12,13 @@ from .base import (
 )
 from .local import LocalExecutor, LocalRunner
 from .manager import (
-    ExecutorPool,
     ManagedExecutor,
     ManagedRunner,
     RunManager,
     RunRecord,
     RunStore,
 )
+from .pool import ExecutorPool, default_executor_pool
 from .psij import PsijExecutor, PsijRunner
 from .remote import FileSyncPolicy, RemoteExecutor, RemoteRunner
 from .tracking import (
@@ -43,6 +43,7 @@ __all__ = [
     "RunStore",
     "RunManager",
     "ExecutorPool",
+    "default_executor_pool",
     "ManagedRunner",
     "ManagedExecutor",
     "RunConflictError",

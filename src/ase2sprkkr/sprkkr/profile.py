@@ -275,8 +275,8 @@ def _configured_profile(profile, configuration):
     )
 
 
-def executor_from_profile(profile: SPRKKRProfile):
-    """Create an execution backend from a resolved runtime profile."""
+def create_executor_from_profile(profile: SPRKKRProfile):
+    """Construct a new execution backend from a resolved runtime profile."""
     if profile.executor == "local":
         return LocalExecutor()
 
@@ -306,6 +306,13 @@ def executor_from_profile(profile: SPRKKRProfile):
         return PsijExecutor(profile.psij_backend or "slurm", url=profile.psij_url)
 
     raise ValueError(f"Unknown execution backend {profile.executor!r}")
+
+
+def executor_from_profile(profile: SPRKKRProfile):
+    """Return the process-shared execution backend for a resolved profile."""
+    from ..execution.pool import default_executor_pool
+
+    return default_executor_pool().for_profile(profile)
 
 
 def resolve_sprkkr_profile(profile=None, *, configuration=None):
