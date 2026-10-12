@@ -222,8 +222,9 @@ class RawData(GrammarType):
         self.forward << self._n_lines_grammar(lines)
 
     def __del__(self):
-        if self._line_dependency is not None:
-            sef._line_dependency.unbind()
+        dependency = getattr(self, "_line_dependency", None)
+        if dependency is not None:
+            dependency.unbind()
 
     def copy(self):
         out = super().copy()
