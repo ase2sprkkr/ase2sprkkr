@@ -45,6 +45,8 @@ class SPRKKRProfile:
         output_file,
         directory,
         *,
+        input_files=(),
+        output_files=(),
         mpi_supported=False,
         executable_suffix=None,
         executable_dir=None,
@@ -91,4 +93,6 @@ class SPRKKRProfile:
             output_file=output_file,
             directory=directory,
             stdin=stdin,
+            input_files=tuple(input_files),
+            output_files=tuple(output_files),
         )

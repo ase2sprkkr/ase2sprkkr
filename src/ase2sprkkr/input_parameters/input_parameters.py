@@ -36,7 +36,7 @@ class InputParameters(ConfigurationFile):
     @property
     def potential(self):
         pot = getattr(self, "_potential", None)
-        potfil = self.CONTROL.POTFIL.result()
+        potfil = self.CONTROL.POTFIL.result
         if pot:
             if potfil == pot[0]:
                 return pot[1]
@@ -45,7 +45,7 @@ class InputParameters(ConfigurationFile):
         return out
 
     def resolve_executable_suffix(self, suffix: Union[str, bool]):
-        """ " Return the suffix, that is appended after the name of SPR-KKR executable.
+        """ " Return the suffix, that is appended after the name of SPRKKR executable.
 
         Parameters
         ----------
@@ -120,6 +120,14 @@ class InputParameters(ConfigurationFile):
         """
         return mpi and self._definition.mpi
 
+    def input_files(self, directory):
+        """Return task-specific input files for this concrete calculation."""
+        return self._definition.input_files(self, directory)
+
+    def output_files(self, directory):
+        """Return task-specific output files for this concrete calculation."""
+        return self._definition.output_files(self, directory)
+
     def run_process(
         self,
         calculator,
@@ -161,11 +169,35 @@ class InputParameters(ConfigurationFile):
                 if callback:
                     callback(out)
 
+            potential_file = self.CONTROL.POTFIL.result
+            if potential_file and not os.path.isabs(potential_file):
+                potential_file = os.path.join(directory, potential_file)
+
+            input_files = tuple(
+                file
+                for file in (
+                    input_file,
+                    potential_file,
+                    *self.input_files(directory),
+                )
+                if file is not None
+            )
+            output_files = tuple(
+                file
+                for file in (
+                    output_file,
+                    *self.output_files(directory),
+                )
+                if file is not None
+            )
+
             spec = profile.create_execution(
                 self._definition.executable,
                 input_file,
                 output_file,
                 directory,
+                input_files=input_files,
+                output_files=output_files,
                 mpi_supported=self._definition.mpi,
                 executable_suffix=executable_suffix,
                 executable_dir=executable_dir,
