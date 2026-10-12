@@ -25,8 +25,50 @@ from ..profiles import ase_command_profile_values
 
 
 @dataclass(frozen=True)
+class ExecutorEndpoint:
+    """Identity of a reusable execution backend.
+
+    The endpoint contains only properties needed to establish communication
+    with an executor.  It deliberately excludes launch/staging policy so that
+    profiles differing only in how a calculation is launched can share the
+    same long-lived executor instance.
+    """
+
+    executor: str = "local"
+    host: Any = None
+    ssh_options: Any = ()
+    remote_command: Any = ()
+    psij_backend: Any = None
+    psij_url: Any = None
+
+
+@dataclass(frozen=True)
+class LaunchParameters:
+    """Profile-level parameters controlling how calculations are launched.
+
+    These values are intentionally kept separate from :class:`ExecutorEndpoint`:
+    they describe executable selection, MPI intent and remote staging policy,
+    not the identity of the backend connection itself.
+    """
+
+    executable_dir: Any = False
+    executable_suffix: Any = ""
+    mpi: Any = False
+    local_root: Any = None
+    remote_root: Any = None
+    input_sync: str = "changed"
+    output_sync: str = "changed"
+
+
+@dataclass(frozen=True)
 class SPRKKRProfile:
-    """Describe how and where SPR-KKR executables are invoked."""
+    """Describe how and where SPR-KKR executables are invoked.
+
+    The public/runtime profile stays flat for configuration ergonomics.  Code
+    that creates execution objects can split it into :attr:`endpoint` and
+    :attr:`launch_parameters` without exposing that internal decomposition in
+    YAML or the user-facing profile syntax.
+    """
 
     executable_dir: Any = False
     executable_suffix: Any = ""
@@ -41,6 +83,31 @@ class SPRKKRProfile:
     output_sync: str = "changed"
     psij_backend: Any = None
     psij_url: Any = None
+
+    @property
+    def endpoint(self):
+        """Return the reusable backend identity represented by this profile."""
+        return ExecutorEndpoint(
+            executor=self.executor,
+            host=self.host,
+            ssh_options=self.ssh_options,
+            remote_command=self.remote_command,
+            psij_backend=self.psij_backend,
+            psij_url=self.psij_url,
+        )
+
+    @property
+    def launch_parameters(self):
+        """Return launch/staging parameters independent of backend identity."""
+        return LaunchParameters(
+            executable_dir=self.executable_dir,
+            executable_suffix=self.executable_suffix,
+            mpi=self.mpi,
+            local_root=self.local_root,
+            remote_root=self.remote_root,
+            input_sync=self.input_sync,
+            output_sync=self.output_sync,
+        )
 
     def with_overrides(self, **overrides):
         """Return this profile with non-``None`` compatibility overrides applied."""
