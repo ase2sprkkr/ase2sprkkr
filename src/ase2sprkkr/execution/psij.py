@@ -64,12 +64,14 @@ class PsijRunner:
         *,
         job=None,
         attached=False,
+        run_id=None,
     ):
         self.executor = executor
         self.reader = reader
         self.spec = spec
         self.callback = callback
         self.result = reader.create_result(spec.output_file, spec.input_file)
+        self._run_id = run_id
 
         self._stdout_path = _path(spec.output_file, spec.directory)
         if self._stdout_path is None:
@@ -113,18 +115,34 @@ class PsijRunner:
             )
         return tuple(self.spec.mpi_argv), resources, self._mpi_launcher()
 
+    def _persistent_metadata(self):
+        if self._run_id is None:
+            return None, None
+        environment = {"ASE2SPRKKR_RUN_ID": self._run_id}
+        attributes = None
+        if self.executor.backend.lower() == "slurm":
+            attributes = self._psij.JobAttributes(
+                custom_attributes={
+                    "slurm.comment": f"ase2sprkkr:{self._run_id}",
+                }
+            )
+        return environment, attributes
+
     def _create_job(self):
         argv, resources, launcher = self._job_command()
         if not argv:
             raise ValueError("Cannot submit a PSI/J run without a command")
+        environment, attributes = self._persistent_metadata()
         job_spec = self._psij.JobSpec(
             executable=os.fspath(argv[0]),
             arguments=[os.fspath(arg) for arg in argv[1:]],
             directory=self.spec.directory,
+            environment=environment,
             stdin_path=None if self.spec.launch and self.spec.mpi_argv is not None else self._stdin_path,
             stdout_path=self._stdout_path,
             stderr_path=self._stderr_path,
             resources=resources,
+            attributes=attributes,
             launcher=launcher,
         )
         return self._psij.Job(job_spec)
@@ -326,6 +344,17 @@ class PsijExecutor(Executor):
 
     def create_run(self, reader, spec: ExecutionSpec, callback=None):
         return PsijRunner(self, reader, spec, callback=callback)
+
+    def create_persistent_run(
+        self, reader, spec: ExecutionSpec, *, run_id, callback=None
+    ):
+        return PsijRunner(
+            self,
+            reader,
+            spec,
+            callback=callback,
+            run_id=run_id,
+        )
 
     def attach(self, reference: RunReference, reader, callback=None):
         expected = f"psij:{self.backend}"
