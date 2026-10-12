@@ -128,7 +128,7 @@ def _spawn_agent(directory, run_id):
 
 
 def ensure_remote_psij_agent(directory, run_ids):
-    """Ensure an agent exists when any requested PSI/J run is still active."""
+    """Ensure an agent exists when a requested PSI/J run needs attention."""
     from .remote import _read_state, _request_path
 
     directory = Path(directory).expanduser().resolve()
@@ -158,7 +158,7 @@ class _ActiveRun:
 
 
 class _RemotePsijAgent:
-    """Own shared PSI/J executors and all active PSI/J runs in one workspace."""
+    """Temporarily own shared PSI/J executors for one remote workspace."""
 
     def __init__(self, directory):
         self.directory = Path(directory).expanduser().resolve()
@@ -244,9 +244,6 @@ class _RemotePsijAgent:
                     f"{state.get('state')!r}"
                 )
 
-            # Keep the per-run state lock across scheduler submission. This is
-            # the handoff boundary with cancellation: a cancel request either
-            # wins before submit, or observes a fully published native id.
             runner.submit()
             reference = runner.reference
             if reference is None:
@@ -283,19 +280,19 @@ class _RemotePsijAgent:
         return True
 
     def _discover(self):
-        found = False
+        activity = False
         for run_id, state, request in self._runs():
-            found = True
             if run_id in self._active:
                 continue
             try:
                 if state.get("backend_reference") is not None:
-                    self._attach(run_id, state, request)
+                    activity = self._attach(run_id, state, request) or activity
                 elif state.get("state") == RunState.QUEUED.value:
-                    self._submit(run_id, request)
+                    activity = self._submit(run_id, request) or activity
             except BaseException as exc:
                 self._fail(run_id, exc)
-        return found
+                activity = True
+        return activity
 
     def _finish(self, run_id, active, requested_cancel):
         from .remote import (
@@ -340,6 +337,7 @@ class _RemotePsijAgent:
             _write_state_unlocked,
         )
 
+        activity = False
         for run_id, active in tuple(self._active.items()):
             try:
                 state = _read_state(self.directory, run_id)
@@ -347,11 +345,13 @@ class _RemotePsijAgent:
                 current = active.runner.state
                 if current in _FINAL_RUN_STATES:
                     self._finish(run_id, active, requested_cancel)
+                    activity = True
                     continue
 
                 if requested_cancel and not active.cancel_sent:
                     active.runner.cancel()
                     active.cancel_sent = True
+                    activity = True
                     current = active.runner.state
                     if current in _FINAL_RUN_STATES:
                         self._finish(run_id, active, requested_cancel)
@@ -364,16 +364,19 @@ class _RemotePsijAgent:
                             _write_state_unlocked(
                                 self.directory, run_id, state=current.value
                             )
+                    activity = True
                 active.last_state = current
             except BaseException as exc:
                 self._fail(run_id, exc)
+                activity = True
+        return activity
 
     def run(self):
         idle_since = None
         while True:
-            found = self._discover()
-            self._poll_active()
-            if found or self._active:
+            activity = self._discover()
+            activity = self._poll_active() or activity
+            if activity:
                 idle_since = None
             elif idle_since is None:
                 idle_since = time.monotonic()
@@ -383,11 +386,12 @@ class _RemotePsijAgent:
 
 
 def run_remote_psij_worker(directory, run_id, request):
-    """Join or become the workspace PSI/J agent.
+    """Join or become the short-lived workspace PSI/J agent.
 
-    The first detached worker owns the workspace agent lock and stays alive to
-    manage all PSI/J runs. Later per-submit workers see the lock, exit quickly,
-    and leave scheduler polling to the shared PSI/J executor instance.
+    The first detached worker owns the workspace agent lock and shares PSI/J
+    executors for submissions, refreshes and cancellation requests that arrive
+    close together. The agent exits after a short period without such activity,
+    even if scheduler jobs are still running; a later request starts it again.
     """
     directory = Path(directory).expanduser().resolve()
     lock = _try_agent_lock(directory)
@@ -405,7 +409,7 @@ def run_remote_psij_worker(directory, run_id, request):
 
 
 def cancel_remote_psij(directory, run_id, request, timeout=1.0):
-    """Request cancellation through the shared target-side PSI/J agent."""
+    """Request cancellation through the target-side PSI/J agent."""
     from .remote import (
         _read_state,
         _read_state_unlocked,
