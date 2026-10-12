@@ -6,10 +6,12 @@ import asyncio
 import json
 import os
 import posixpath
+import shutil
 import signal
 import subprocess
 import sys
 import time
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from threading import Event, Lock, Thread
@@ -20,8 +22,10 @@ from .transport import local_file_digest
 
 
 _FINAL_STATES = {"finished", "failed", "cancelled"}
-_STATE_FILE = ".ase2sprkkr-run.json"
-_REQUEST_FILE = ".ase2sprkkr-request.json"
+_METADATA_DIR = ".ase2sprkkr"
+_RUNS_DIR = "runs"
+_STATE_FILE = "state.json"
+_REQUEST_FILE = "request.json"
 
 
 class FileSyncPolicy(str, Enum):
@@ -33,22 +37,29 @@ class FileSyncPolicy(str, Enum):
     NEVER = "never"
 
 
-def _state_path(directory):
-    return Path(directory) / _STATE_FILE
+def _timestamp():
+    return datetime.now(timezone.utc).isoformat()
 
 
-def _request_path(directory):
-    return Path(directory) / _REQUEST_FILE
+def _run_directory(directory, run_id):
+    return Path(directory) / _METADATA_DIR / _RUNS_DIR / run_id
 
 
-def _read_state(directory):
-    with _state_path(directory).open() as f:
+def _state_path(directory, run_id):
+    return _run_directory(directory, run_id) / _STATE_FILE
+
+
+def _request_path(directory, run_id):
+    return _run_directory(directory, run_id) / _REQUEST_FILE
+
+
+def _read_state(directory, run_id):
+    with _state_path(directory, run_id).open() as f:
         return json.load(f)
 
 
-def _write_state(run_directory, **changes):
-    run_directory = Path(run_directory)
-    path = _state_path(run_directory)
+def _write_state(directory, run_id, **changes):
+    path = _state_path(directory, run_id)
     try:
         with path.open() as f:
             state = json.load(f)
@@ -68,14 +79,12 @@ def submit_remote(request):
 
     directory = Path(request["directory"]).expanduser().resolve()
     directory.mkdir(parents=True, exist_ok=True)
+    run_id = request["id"]
+    run_directory = _run_directory(directory, run_id)
     try:
-        previous = _read_state(directory)
-    except FileNotFoundError:
-        previous = None
-    if previous and previous.get("state") not in _FINAL_STATES:
-        raise RuntimeError(
-            f"Remote workspace already contains an active run: {directory}"
-        )
+        run_directory.mkdir(parents=True)
+    except FileExistsError as exc:
+        raise RuntimeError(f"Remote run already exists: {run_id}") from exc
 
     request = dict(request, directory=os.fspath(directory))
     output_file = _absolute_file(directory, request.get("output_file"))
@@ -89,10 +98,11 @@ def submit_remote(request):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(b"")
 
-    _request_path(directory).write_text(json.dumps(request))
+    _request_path(directory, run_id).write_text(json.dumps(request))
     state = _write_state(
         directory,
-        id=request["id"],
+        run_id,
+        id=run_id,
         state="queued",
         directory=os.fspath(directory),
         input_file=_absolute_file(directory, request.get("input_file")),
@@ -101,6 +111,9 @@ def submit_remote(request):
         return_code=None,
         error=None,
         pid=None,
+        created_at=_timestamp(),
+        started_at=None,
+        finished_at=None,
     )
 
     subprocess.Popen(
@@ -109,6 +122,7 @@ def submit_remote(request):
             "-m",
             "ase2sprkkr.execution.remote_worker",
             os.fspath(directory),
+            run_id,
         ],
         stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
@@ -128,18 +142,20 @@ def _absolute_file(directory, path):
     return os.fspath(path)
 
 
-def status_remote(directory):
-    return _read_state(Path(directory).expanduser().resolve())
+def status_remote(directory, run_id):
+    return _read_state(Path(directory).expanduser().resolve(), run_id)
 
 
-def cancel_remote(directory, timeout=1.0):
+def cancel_remote(directory, run_id, timeout=1.0):
     """Cancel a direct remote process group."""
     directory = Path(directory).expanduser().resolve()
-    state = _read_state(directory)
+    state = _read_state(directory, run_id)
     if state.get("state") in _FINAL_STATES:
         return state
 
-    state = _write_state(directory, state="cancelled")
+    state = _write_state(
+        directory, run_id, state="cancelled", finished_at=_timestamp()
+    )
     pid = state.get("pid")
     if not pid:
         return state
@@ -147,25 +163,26 @@ def cancel_remote(directory, timeout=1.0):
     try:
         os.killpg(pid, signal.SIGTERM)
     except ProcessLookupError:
-        return _read_state(directory)
+        return _read_state(directory, run_id)
 
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         try:
             os.kill(pid, 0)
         except ProcessLookupError:
-            return _read_state(directory)
+            return _read_state(directory, run_id)
         time.sleep(0.05)
 
     try:
         os.killpg(pid, signal.SIGKILL)
     except ProcessLookupError:
         pass
-    return _read_state(directory)
+    return _read_state(directory, run_id)
 
 
 def follow_remote(
     directory,
+    run_id,
     stdout,
     stderr,
     *,
@@ -179,7 +196,7 @@ def follow_remote(
     streams = {"out": stdout, "err": stderr}
 
     while True:
-        state = _read_state(directory)
+        state = _read_state(directory, run_id)
         had_data = False
         for kind, key in (("out", "output_file"), ("err", "error_file")):
             path = state.get(key)
@@ -203,18 +220,63 @@ def follow_remote(
             time.sleep(poll_interval)
 
 
+def list_remote_runs(directory):
+    """Return states of runs recorded in a workspace."""
+    directory = Path(directory).expanduser().resolve()
+    runs_directory = directory / _METADATA_DIR / _RUNS_DIR
+    if not runs_directory.is_dir():
+        return []
+
+    runs = []
+    for run_directory in runs_directory.iterdir():
+        if not run_directory.is_dir():
+            continue
+        try:
+            runs.append(_read_state(directory, run_directory.name))
+        except (FileNotFoundError, json.JSONDecodeError):
+            continue
+    return sorted(runs, key=lambda state: state.get("created_at") or "")
+
+
+def clean_remote_runs(directory, older_than=None):
+    """Remove metadata for completed runs without touching workspace artifacts."""
+    directory = Path(directory).expanduser().resolve()
+    now = datetime.now(timezone.utc)
+    removed = []
+    active = []
+
+    for state in list_remote_runs(directory):
+        run_id = state["id"]
+        if state.get("state") not in _FINAL_STATES:
+            active.append(run_id)
+            continue
+        if older_than is not None:
+            timestamp = state.get("finished_at") or state.get("created_at")
+            if timestamp is None:
+                continue
+            finished = datetime.fromisoformat(timestamp)
+            if finished.tzinfo is None:
+                finished = finished.replace(tzinfo=timezone.utc)
+            if (now - finished).total_seconds() < older_than:
+                continue
+        shutil.rmtree(_run_directory(directory, run_id))
+        removed.append(run_id)
+
+    return {"removed": removed, "active": active}
+
+
 def resolve_remote_mpi(mpi):
     from ..configuration import mpi_runner
 
     return mpi_runner(mpi)
 
 
-def run_remote_worker(directory):
+def run_remote_worker(directory, run_id):
     """Execute one direct run inside the detached remote worker process."""
     directory = Path(directory).expanduser().resolve()
     try:
-        request = json.loads(_request_path(directory).read_text())
-        state = _read_state(directory)
+        request = json.loads(_request_path(directory, run_id).read_text())
+        state = _read_state(directory, run_id)
         if state.get("state") == "cancelled":
             return
 
@@ -237,19 +299,38 @@ def run_remote_worker(directory):
                     stderr=error,
                     start_new_session=True,
                 )
-                _write_state(directory, state="running", pid=process.pid)
+                _write_state(
+                    directory,
+                    run_id,
+                    state="running",
+                    pid=process.pid,
+                    started_at=_timestamp(),
+                )
                 return_code = process.wait()
         finally:
             if stdin is not subprocess.DEVNULL:
                 stdin.close()
 
-        state = _read_state(directory)
+        state = _read_state(directory, run_id)
         final_state = state.get("state")
         if final_state != "cancelled":
             final_state = "finished" if return_code == 0 else "failed"
-        _write_state(directory, state=final_state, return_code=return_code)
+        _write_state(
+            directory,
+            run_id,
+            state=final_state,
+            return_code=return_code,
+            finished_at=state.get("finished_at") or _timestamp(),
+        )
     except BaseException as exc:
-        _write_state(directory, state="failed", error=repr(exc), return_code=None)
+        _write_state(
+            directory,
+            run_id,
+            state="failed",
+            error=repr(exc),
+            return_code=None,
+            finished_at=_timestamp(),
+        )
         raise
 
 
@@ -310,7 +391,11 @@ class RemoteRunner:
             RunState.CANCELLED,
         ):
             return self._state
-        status = _run_sync(self.executor._status(self._reference.directory))
+        status = _run_sync(
+            self.executor._status(
+                self._reference.directory, self._reference.native_id
+            )
+        )
         self._state = RunState(status.get("state", "unknown"))
         return self._state
 
@@ -519,7 +604,7 @@ class RemoteRunner:
             self.reader.parse_streams(stdout, stderr, self.result)
         )
         self._follow_process = await self.executor._follow(
-            self._reference.directory
+            self._reference.directory, self._reference.native_id
         )
         stdout_task = asyncio.create_task(
             self._pump(self._follow_process.stdout, stdout, "out")
@@ -540,7 +625,9 @@ class RemoteRunner:
                 stdout_task, stderr_task, parse_task, return_exceptions=True
             )
 
-        status = await self.executor._status(self._reference.directory)
+        status = await self.executor._status(
+            self._reference.directory, self._reference.native_id
+        )
         self._state = RunState(status.get("state", "unknown"))
         if follow_return_code != 0 and self._state not in (
             RunState.FINISHED,
@@ -636,7 +723,11 @@ class RemoteRunner:
         if self._reference is None:
             self._state = RunState.CANCELLED
             return
-        status = _run_sync(self.executor._cancel(self._reference.directory))
+        status = _run_sync(
+            self.executor._cancel(
+                self._reference.directory, self._reference.native_id
+            )
+        )
         self._state = RunState(status.get("state", "cancelled"))
 
 
@@ -741,15 +832,15 @@ class RemoteExecutor(Executor):
             "submit", request["directory"], payload=request
         )
 
-    async def _status(self, directory):
-        return await self._json_request("status", directory)
+    async def _status(self, directory, run_id):
+        return await self._json_request("status", directory, run_id)
 
-    async def _cancel(self, directory):
-        return await self._json_request("cancel", directory)
+    async def _cancel(self, directory, run_id):
+        return await self._json_request("cancel", directory, run_id)
 
-    async def _follow(self, directory):
+    async def _follow(self, directory, run_id):
         return await self.transport.start(
-            (*self.command, "follow", directory)
+            (*self.command, "follow", directory, run_id)
         )
 
     def create_run(self, reader, spec, callback=None):
