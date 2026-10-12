@@ -92,6 +92,13 @@ def _wait_for_ssh(ssh, attempts=80):
     pytest.fail("SSH server did not become ready")
 
 
+def _remote_error(exc):
+    stderr = exc.stderr
+    if isinstance(stderr, bytes):
+        stderr = stderr.decode("utf8", errors="replace")
+    pytest.fail(f"{exc}\n\nRemote stderr:\n{stderr or '<empty>'}")
+
+
 def test_remote_executor_runs_psij_slurm_over_ssh():
     from ase.build import bulk
 
@@ -205,7 +212,10 @@ def test_remote_executor_runs_psij_slurm_over_ssh():
                 "url": None,
             }
 
-            runner.submit()
+            try:
+                runner.submit()
+            except subprocess.CalledProcessError as exc:
+                _remote_error(exc)
             reference = runner.reference
             assert reference is not None
             assert reference.executor == "remote:psij"
