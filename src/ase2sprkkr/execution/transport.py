@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 import asyncio
+import fnmatch
+import glob
 import hashlib
 import os
 import posixpath
 import shlex
 import shutil
 import subprocess
-from pathlib import Path
+from functools import lru_cache
+from pathlib import Path, PurePosixPath
 from typing import Optional, Protocol
 
 
@@ -25,13 +28,127 @@ class RunningCommand(Protocol):
     def terminate(self) -> None: ...
 
 
+def _sources(sources):
+    if isinstance(sources, (str, bytes, os.PathLike)):
+        return (sources,)
+    return tuple(sources)
+
+
+def has_file_magic(path):
+    """Return whether *path* contains shell-style wildcard characters."""
+    return glob.has_magic(os.fspath(path))
+
+
+def _local_pattern(source, root):
+    root = Path(root).expanduser().resolve()
+    source = os.fspath(source)
+    path = Path(source).expanduser()
+    if not path.is_absolute():
+        path = root / path
+    pattern = os.path.abspath(os.fspath(path))
+    try:
+        os.path.relpath(pattern, root)
+    except ValueError as exc:
+        raise ValueError(f"File pattern {source!r} is outside source root {root}") from exc
+    relative = os.path.relpath(pattern, root)
+    if relative == os.pardir or relative.startswith(os.pardir + os.sep):
+        raise ValueError(f"File pattern {source!r} is outside source root {root}")
+    return root, pattern
+
+
+def expand_local_files(sources, root):
+    """Expand local source paths/patterns below *root* into concrete files."""
+    root = Path(root).expanduser().resolve()
+    files = []
+    seen = set()
+    for source in _sources(sources):
+        _, pattern = _local_pattern(source, root)
+        matches = glob.glob(pattern, recursive=True)
+        for match in sorted(matches):
+            path = Path(match)
+            if not path.is_file():
+                continue
+            path = path.resolve()
+            try:
+                path.relative_to(root)
+            except ValueError as exc:
+                raise ValueError(
+                    f"Expanded file {path} is outside source root {root}"
+                ) from exc
+            value = os.fspath(path)
+            if value not in seen:
+                seen.add(value)
+                files.append(value)
+    return tuple(files)
+
+
+def _posix_relative_pattern(source, root):
+    source = os.fspath(source)
+    root = posixpath.normpath(os.fspath(root))
+    if posixpath.isabs(source):
+        pattern = posixpath.normpath(source)
+        try:
+            common = posixpath.commonpath((root, pattern))
+        except ValueError as exc:
+            raise ValueError(
+                f"File pattern {source!r} is outside source root {root}"
+            ) from exc
+        if common != root:
+            raise ValueError(f"File pattern {source!r} is outside source root {root}")
+        relative = posixpath.relpath(pattern, root)
+    else:
+        relative = posixpath.normpath(source)
+    if relative == ".." or relative.startswith("../"):
+        raise ValueError(f"File pattern {source!r} is outside source root {root}")
+    return relative
+
+
+def _match_component(name, pattern):
+    if name.startswith(".") and not pattern.startswith("."):
+        return False
+    return fnmatch.fnmatchcase(name, pattern)
+
+
+def _match_relative_path(path, pattern):
+    parts = PurePosixPath(path).parts
+    patterns = PurePosixPath(pattern).parts
+
+    @lru_cache(maxsize=None)
+    def match(path_index, pattern_index):
+        if pattern_index == len(patterns):
+            return path_index == len(parts)
+        current = patterns[pattern_index]
+        if current == "**":
+            return match(path_index, pattern_index + 1) or (
+                path_index < len(parts) and match(path_index + 1, pattern_index)
+            )
+        return (
+            path_index < len(parts)
+            and _match_component(parts[path_index], current)
+            and match(path_index + 1, pattern_index + 1)
+        )
+
+    return match(0, 0)
+
+
+def _literal_prefix(pattern):
+    parts = PurePosixPath(pattern).parts
+    prefix = []
+    for part in parts:
+        if has_file_magic(part) or part == "**":
+            break
+        prefix.append(part)
+    return prefix
+
+
 class Transport:
     """Run commands and move files on one target machine.
 
     Transport operations are asynchronous because remote execution is mostly
-    I/O. ``run()`` waits for a command and captures its output, while
-    ``start()`` returns a process-like object with native asyncio stdout and
-    stderr streams.
+    I/O. ``put_file()`` and ``get_file()`` are exact one-file primitives.
+    ``put_files()`` and ``get_files()`` accept one path/pattern or an iterable
+    and preserve each matched file's path relative to the supplied source root.
+    Wildcards are always expanded on the source side of the transfer.
     """
 
     async def run(self, argv, *, cwd=None, input=None, check=True):
@@ -44,6 +161,16 @@ class Transport:
         raise NotImplementedError
 
     async def get_file(self, source, destination):
+        raise NotImplementedError
+
+    async def put_files(self, sources, source_root, destination_root):
+        raise NotImplementedError
+
+    async def get_files(self, sources, source_root, destination_root):
+        raise NotImplementedError
+
+    async def expand_files(self, sources, root):
+        """Expand paths/patterns on the target filesystem into concrete files."""
         raise NotImplementedError
 
     async def read_file(self, path):
@@ -132,6 +259,31 @@ class LocalTransport(Transport):
     async def get_file(self, source, destination):
         await self.put_file(source, destination)
 
+    async def expand_files(self, sources, root):
+        return expand_local_files(sources, root)
+
+    async def put_files(self, sources, source_root, destination_root):
+        source_root = Path(source_root).expanduser().resolve()
+        destination_root = Path(destination_root).expanduser().resolve()
+        transfers = []
+        for source in expand_local_files(sources, source_root):
+            relative = Path(source).relative_to(source_root)
+            destination = destination_root / relative
+            await self.put_file(source, destination)
+            transfers.append((source, os.fspath(destination)))
+        return tuple(transfers)
+
+    async def get_files(self, sources, source_root, destination_root):
+        source_root = Path(source_root).expanduser().resolve()
+        destination_root = Path(destination_root).expanduser().resolve()
+        transfers = []
+        for source in await self.expand_files(sources, source_root):
+            relative = Path(source).relative_to(source_root)
+            destination = destination_root / relative
+            await self.get_file(source, destination)
+            transfers.append((source, os.fspath(destination)))
+        return tuple(transfers)
+
     async def read_file(self, path):
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(None, Path(path).read_bytes)
@@ -210,6 +362,133 @@ class SshTransport(Transport):
                 raise subprocess.CalledProcessError(
                     process.returncode, command, stderr=stderr
                 )
+
+    async def expand_files(self, sources, root):
+        root = posixpath.normpath(os.fspath(root))
+        files = []
+        seen = set()
+        for source in _sources(sources):
+            pattern = _posix_relative_pattern(source, root)
+            if not has_file_magic(pattern):
+                path = posixpath.join(root, pattern)
+                if await self.file_signature(path) is not None and path not in seen:
+                    seen.add(path)
+                    files.append(path)
+                continue
+
+            prefix = _literal_prefix(pattern)
+            search_root = posixpath.join(root, *prefix) if prefix else root
+            exists = await self.run(("test", "-d", search_root), check=False)
+            if exists.returncode:
+                continue
+            result = await self.run(("find", search_root, "-type", "f", "-print0"))
+            for item in result.stdout.decode("utf8").split("\0"):
+                if not item:
+                    continue
+                relative = posixpath.relpath(item, root)
+                if _match_relative_path(relative, pattern) and item not in seen:
+                    seen.add(item)
+                    files.append(item)
+        return tuple(sorted(files))
+
+    @staticmethod
+    async def _pipe(source, destination):
+        try:
+            while True:
+                chunk = await source.read(1024 * 1024)
+                if not chunk:
+                    break
+                destination.write(chunk)
+                await destination.drain()
+        finally:
+            destination.close()
+
+    async def put_files(self, sources, source_root, destination_root):
+        source_root = Path(source_root).expanduser().resolve()
+        destination_root = posixpath.normpath(os.fspath(destination_root))
+        files = expand_local_files(sources, source_root)
+        if not files:
+            return ()
+
+        relatives = [os.fspath(Path(source).relative_to(source_root)) for source in files]
+        await self.run(("mkdir", "-p", "--", destination_root))
+        remote_command = self._command(("tar", "-C", destination_root, "-xf", "-"))
+        remote = await asyncio.create_subprocess_exec(
+            *remote_command,
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        local = await asyncio.create_subprocess_exec(
+            "tar", "-C", os.fspath(source_root), "-cf", "-", "--", *relatives,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        await self._pipe(local.stdout, remote.stdin)
+        local_stderr, remote_stderr = await asyncio.gather(
+            local.stderr.read(), remote.stderr.read()
+        )
+        local_returncode, remote_returncode = await asyncio.gather(
+            local.wait(), remote.wait()
+        )
+        if local_returncode:
+            raise subprocess.CalledProcessError(
+                local_returncode, ("tar", "-C", os.fspath(source_root), "-cf", "-"),
+                stderr=local_stderr,
+            )
+        if remote_returncode:
+            raise subprocess.CalledProcessError(
+                remote_returncode, remote_command, stderr=remote_stderr
+            )
+        return tuple(
+            (source, posixpath.join(destination_root, *Path(relative).parts))
+            for source, relative in zip(files, relatives)
+        )
+
+    async def get_files(self, sources, source_root, destination_root):
+        source_root = posixpath.normpath(os.fspath(source_root))
+        destination_root = Path(destination_root).expanduser().resolve()
+        files = await self.expand_files(sources, source_root)
+        if not files:
+            return ()
+
+        relatives = [posixpath.relpath(source, source_root) for source in files]
+        destination_root.mkdir(parents=True, exist_ok=True)
+        remote_command = self._command(
+            ("tar", "-C", source_root, "-cf", "-", "--", *relatives)
+        )
+        remote = await asyncio.create_subprocess_exec(
+            *remote_command,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        local = await asyncio.create_subprocess_exec(
+            "tar", "-C", os.fspath(destination_root), "-xf", "-",
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        await self._pipe(remote.stdout, local.stdin)
+        remote_stderr, local_stderr = await asyncio.gather(
+            remote.stderr.read(), local.stderr.read()
+        )
+        remote_returncode, local_returncode = await asyncio.gather(
+            remote.wait(), local.wait()
+        )
+        if remote_returncode:
+            raise subprocess.CalledProcessError(
+                remote_returncode, remote_command, stderr=remote_stderr
+            )
+        if local_returncode:
+            raise subprocess.CalledProcessError(
+                local_returncode,
+                ("tar", "-C", os.fspath(destination_root), "-xf", "-"),
+                stderr=local_stderr,
+            )
+        return tuple(
+            (source, os.fspath(destination_root.joinpath(*PurePosixPath(relative).parts)))
+            for source, relative in zip(files, relatives)
+        )
 
     async def read_file(self, path):
         return (await self.run(("cat", "--", os.fspath(path)))).stdout
