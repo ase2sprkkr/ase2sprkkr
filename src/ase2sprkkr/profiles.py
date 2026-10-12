@@ -210,13 +210,16 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             yield "ase"
 
     def __iter__(self):
-        # Stored profiles, including the read-only legacy backing profile, keep
-        # their normal mapping position. ASE is appended as a virtual entry.
-        yield from super().__iter__()
+        for name in super().__iter__():
+            if name != "legacy" or self._legacy_available():
+                yield name
         yield from self._virtual_names()
 
     def __len__(self):
-        return super().__len__() + sum(1 for _ in self._virtual_names())
+        stored = super().__len__()
+        if "legacy" in self._values and not self._legacy_available():
+            stored -= 1
+        return stored + sum(1 for _ in self._virtual_names())
 
     def available_items(self):
         """Iterate over persistent and virtual profiles through public views."""
