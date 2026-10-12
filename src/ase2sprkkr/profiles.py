@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 import os
+import warnings
 
 from .common.configuration_transaction import ConfigurationTransaction
 from .common.repeated_configuration_containers import RepeatedConfigurationContainer
@@ -101,8 +102,8 @@ class LegacyProfile:
 
     def set(self, *args, **kwargs):
         raise TypeError(
-            "The 'legacy' profile is read-only; change the deprecated "
-            "running.mpi/executables options or create a named profile instead"
+            "The 'legacy' profile is read-only; create a named profile or use "
+            "the ASE [sprkkr] profile instead"
         )
 
 
@@ -161,6 +162,11 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
 
     reserved_names = frozenset(("legacy", "ase"))
     legacy_fields = ("mpi", "executable_dir", "executable_suffix")
+    legacy_option_names = {
+        "mpi": "running.mpi",
+        "executable_dir": "executables.dir",
+        "executable_suffix": "executables.suffix",
+    }
 
     def _add(self, id=None):
         """Create one stored profile while keeping ``ase`` strictly virtual."""
@@ -190,8 +196,25 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             return default() if callable(default) else default
         return value
 
+    def _warn_legacy_write(self, name):
+        option = self.legacy_option_names[name]
+        warnings.warn(
+            f"config.{option} is deprecated; use an execution profile instead.\n"
+            "For example, configure the ASE SPR-KKR profile:\n"
+            "  [sprkkr]\n"
+            "  command = /opt/sprkkr/{}.mpi\n"
+            "  mpi = 8\n"
+            "or create a named ase2sprkkr profile:\n"
+            "  ase2sprkkr config --set profiles.local "
+            "'{mpi: 8, executable_dir: /opt/sprkkr, executable_suffix: .mpi}'\n"
+            "  ase2sprkkr config --set default_profile local",
+            FutureWarning,
+            stacklevel=4,
+        )
+
     def set_legacy_value(self, name, value):
         """Stage a deprecated option into the internal legacy profile."""
+        self._warn_legacy_write(name)
         profile = self._legacy_profile(create=True)
         option = getattr(profile, name)
         transaction = ConfigurationTransaction.current(profile)

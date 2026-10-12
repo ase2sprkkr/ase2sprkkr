@@ -47,7 +47,8 @@ def test_legacy_profile_exists_only_for_explicit_legacy_configuration():
 
     assert "legacy" not in config.profiles
 
-    config.running.mpi.set(8)
+    with pytest.warns(FutureWarning):
+        config.running.mpi.set(8)
 
     assert "legacy" in config.profiles
     assert config.profiles["legacy"].mpi() == 8
@@ -57,8 +58,10 @@ def test_legacy_profile_exists_only_for_explicit_legacy_configuration():
 def test_legacy_options_are_backed_by_internal_profile():
     config = fresh_config()
 
-    config.running.mpi.set(8)
-    config.executables.dir.set("/opt/sprkkr")
+    with pytest.warns(FutureWarning):
+        config.running.mpi.set(8)
+    with pytest.warns(FutureWarning):
+        config.executables.dir.set("/opt/sprkkr")
 
     assert config.profiles.legacy_option("mpi")() == 8
     assert config.profiles.legacy_option("executable_dir")() == "/opt/sprkkr"
@@ -68,8 +71,10 @@ def test_legacy_options_are_backed_by_internal_profile():
         "executable_suffix": None,
     }
 
-    config.running.mpi.set(None)
-    config.executables.dir.set(None)
+    with pytest.warns(FutureWarning):
+        config.running.mpi.set(None)
+    with pytest.warns(FutureWarning):
+        config.executables.dir.set(None)
     assert "legacy" not in config.profiles
     assert "legacy" not in list(config.profiles)
 
@@ -81,13 +86,15 @@ def test_suffix_environment_default_does_not_create_legacy(monkeypatch):
     assert config.executables.suffix() == "_mpi"
     assert "legacy" not in config.profiles
 
-    config.executables.suffix.set("_custom")
+    with pytest.warns(FutureWarning):
+        config.executables.suffix.set("_custom")
     assert config.profiles["legacy"].executable_suffix() == "_custom"
 
 
 def test_legacy_profile_is_read_only_but_persistent():
     config = fresh_config()
-    config.running.mpi.set(8)
+    with pytest.warns(FutureWarning):
+        config.running.mpi.set(8)
     legacy = config.profiles["legacy"]
 
     with pytest.raises(TypeError, match="read-only"):
@@ -98,6 +105,21 @@ def test_legacy_profile_is_read_only_but_persistent():
         config.find("profiles.legacy.mpi")
 
     assert config.as_dict(only_changed="explicit")["profiles"]["legacy"]["mpi"] == 8
+
+
+def test_legacy_write_warning_shows_both_profile_migrations():
+    config = fresh_config()
+
+    with pytest.warns(FutureWarning) as caught:
+        config.executables.dir.set("/opt/sprkkr")
+
+    message = str(caught[0].message)
+    assert "config.executables.dir is deprecated" in message
+    assert "[sprkkr]" in message
+    assert "command = /opt/sprkkr/{}.mpi" in message
+    assert "mpi = 8" in message
+    assert "ase2sprkkr config --set profiles.local" in message
+    assert "ase2sprkkr config --set default_profile local" in message
 
 
 def test_persisted_legacy_profile_backs_deprecated_options():
@@ -205,7 +227,8 @@ def test_profile_resolution_precedence(monkeypatch):
         staticmethod(lambda: external),
     )
     config = fresh_config()
-    config.running.mpi.set(8)
+    with pytest.warns(FutureWarning):
+        config.running.mpi.set(8)
     local = config.profiles.add("local")
     local.mpi.set(2)
 
