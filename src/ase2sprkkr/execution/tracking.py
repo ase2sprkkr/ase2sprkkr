@@ -41,7 +41,7 @@ def _run_sync(coro):
 
 @singledispatch
 def execution_target(executor: Executor, spec) -> RunTarget:
-    """Resolve the concrete filesystem resources touched by ``executor``."""
+    """Resolve the concrete filesystem resources owned by ``executor``."""
     return executor.execution_target(spec)
 
 
@@ -50,11 +50,9 @@ def _(executor: RemoteExecutor, spec) -> RunTarget:
     local = Executor.execution_target(executor, spec)
 
     async def mapped():
-        read = tuple([await executor.map_path(path) for path in local.read_files])
-        write = tuple([await executor.map_path(path) for path in local.write_files])
-        return read, write
+        return tuple([await executor.map_path(path) for path in local.files])
 
-    read_files, write_files = _run_sync(mapped())
+    files = _run_sync(mapped())
     transport = executor.transport
     if isinstance(transport, LocalTransport):
         location = "local"
@@ -67,11 +65,11 @@ def _(executor: RemoteExecutor, spec) -> RunTarget:
                 "Remote transport must identify its target machine for run tracking"
             )
         location = "remote:{}".format(computer)
-    return RunTarget(location, read_files, write_files)
+    return RunTarget(location, files)
 
 
 class RunConflictError(RuntimeError):
-    """Raised when a run would touch resources owned by an active run."""
+    """Raised when a run would own resources already used by an active run."""
 
     def __init__(self, target, conflicts):
         self.target = target

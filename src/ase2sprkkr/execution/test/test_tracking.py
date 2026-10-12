@@ -69,23 +69,26 @@ def _spec(tmp_path, *, input_name="input.inp", output_name="output.out", cache=(
     )
 
 
-def test_run_target_conflicts_only_on_shared_writes():
-    first = RunTarget("local", ("shared.in",), ("first.out",))
-    same_input = RunTarget("local", ("shared.in",), ("second.out",))
-    reads_first_output = RunTarget("local", ("first.out",), ("third.out",))
-    other_machine = RunTarget("ssh:other", (), ("first.out",))
+def test_run_target_conflicts_on_owned_files_only():
+    first = RunTarget("local", ("first.out", "cache.dat"))
+    disjoint = RunTarget("local", ("second.out",))
+    shared = RunTarget("local", ("cache.dat", "third.out"))
+    other_machine = RunTarget("ssh:other", ("cache.dat",))
 
-    assert not first.conflicts_with(same_input)
-    assert first.conflicts_with(reads_first_output)
+    assert not first.conflicts_with(disjoint)
+    assert first.conflicts_with(shared)
     assert not first.conflicts_with(other_machine)
 
 
-def test_execution_target_treats_cache_as_read_write(tmp_path):
+def test_execution_target_contains_only_modified_files(tmp_path):
     target = Executor().execution_target(_spec(tmp_path, cache=("cache.dat",)))
-    cache = str((tmp_path / "cache.dat").resolve())
+    input_file = str((tmp_path / "input.inp").resolve())
+    output_file = str((tmp_path / "output.out").resolve())
+    cache_file = str((tmp_path / "cache.dat").resolve())
 
-    assert cache in target.read_files
-    assert cache in target.write_files
+    assert input_file not in target.files
+    assert output_file in target.files
+    assert cache_file in target.files
 
 
 def test_registry_reserves_atomically_and_releases_on_wait(tmp_path):
@@ -130,7 +133,7 @@ def test_different_outputs_in_same_directory_can_run_together(tmp_path):
 
 
 def test_run_reference_carries_serializable_target():
-    target = RunTarget("ssh:cluster", ("/work/in",), ("/work/out",))
+    target = RunTarget("ssh:cluster", ("/work/out", "/work/cache"))
     reference = RunReference("remote:local", "42", target=target)
     data = asdict(reference)
 
@@ -151,11 +154,12 @@ def test_remote_target_uses_remote_paths_and_machine_identity(tmp_path):
         local_root=tmp_path,
         remote_root="/scratch/work",
     )
-    spec = _spec(tmp_path)
+    spec = _spec(tmp_path, cache=("cache.dat",))
 
     target = execution_target(executor, spec)
 
     assert target.location == "remote:cluster-a"
-    assert "/scratch/work/input.inp" in target.read_files
-    assert "/scratch/work/output.out" in target.write_files
-    assert str(tmp_path / "output.out") not in target.write_files
+    assert "/scratch/work/input.inp" not in target.files
+    assert "/scratch/work/output.out" in target.files
+    assert "/scratch/work/cache.dat" in target.files
+    assert str(tmp_path / "output.out") not in target.files

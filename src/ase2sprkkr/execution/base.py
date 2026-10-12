@@ -22,31 +22,22 @@ class RunState(str, Enum):
 
 @dataclass(frozen=True)
 class RunTarget:
-    """Filesystem resources touched by a run on one execution target.
+    """Filesystem resources owned by a run on one execution target.
 
-    Two targets conflict when they refer to the same filesystem namespace and
-    at least one run writes a file read or written by the other. Read-only
-    sharing is therefore allowed.
+    ``files`` contains paths that the run may modify. Two targets conflict only
+    when they refer to the same filesystem namespace and own at least one of
+    the same files.
     """
 
     location: str
-    read_files: Tuple[str, ...] = ()
-    write_files: Tuple[str, ...] = ()
+    files: Tuple[str, ...] = ()
 
     def __post_init__(self):
-        object.__setattr__(self, "read_files", tuple(sorted(set(self.read_files))))
-        object.__setattr__(self, "write_files", tuple(sorted(set(self.write_files))))
+        object.__setattr__(self, "files", tuple(sorted(set(self.files))))
 
     def conflicts_with(self, other: "RunTarget") -> bool:
-        if self.location != other.location:
-            return False
-        reads = set(self.read_files)
-        writes = set(self.write_files)
-        other_reads = set(other.read_files)
-        other_writes = set(other.write_files)
-        return bool(
-            writes & (other_reads | other_writes)
-            or other_writes & reads
+        return self.location == other.location and bool(
+            set(self.files) & set(other.files)
         )
 
 
@@ -130,25 +121,17 @@ class Executor:
     def execution_target(self, spec: ExecutionSpec) -> RunTarget:
         """Return the concrete resources that can collide with another run."""
         directory = os.path.abspath(spec.directory)
-
-        def paths(values):
-            out = set()
-            for value in values:
-                path = _resource_path(value, directory)
-                if path is not None:
-                    out.add(path)
-            return out
-
-        read_files = paths((spec.input_file, spec.stdin, *spec.input_files))
-        write_files = paths((spec.output_file, spec.error_file, *spec.output_files))
-        cache_files = paths(spec.cache_files)
-        read_files.update(cache_files)
-        write_files.update(cache_files)
-        return RunTarget(
-            "local",
-            tuple(read_files),
-            tuple(write_files),
-        )
+        files = set()
+        for value in (
+            spec.output_file,
+            spec.error_file,
+            *spec.output_files,
+            *spec.cache_files,
+        ):
+            path = _resource_path(value, directory)
+            if path is not None:
+                files.add(path)
+        return RunTarget("local", tuple(files))
 
     def resolve_mpi(self, mpi=None):
         """Resolve an MPI setting for the machine where this executor runs.
