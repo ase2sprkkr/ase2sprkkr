@@ -40,6 +40,13 @@ def _now():
     return datetime.now(timezone.utc).isoformat()
 
 
+def _timestamp(value):
+    parsed = datetime.fromisoformat(value)
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed
+
+
 @contextmanager
 def _filesystem_lock(path):
     """Hold an exclusive one-byte/file lock on *path* across processes."""
@@ -291,11 +298,14 @@ class ExecutionManager:
     this manager and its store.
     """
 
-    def __init__(self, store=None, *, executor_pool=None):
+    def __init__(self, store=None, *, executor_pool=None, submitting_grace=60.0):
+        if submitting_grace < 0:
+            raise ValueError("submitting_grace must be non-negative")
         self.store = store if store is not None else RunStore()
         self.executor_pool = (
             executor_pool if executor_pool is not None else default_executor_pool()
         )
+        self.submitting_grace = float(submitting_grace)
         self._legacy_executors = {}
         self._lock = RLock()
 
@@ -383,17 +393,12 @@ class ExecutionManager:
                 "state": self._merged_state(latest, state),
                 "updated_at": _now(),
             }
-            # Backend identity is monotonic: once known, a stale snapshot must
-            # neither erase nor replace it.
             if (
                 reference is not _UNCHANGED
                 and reference is not None
                 and latest.reference is None
             ):
                 changes["reference"] = reference
-
-            # Once a final outcome is known, later stale callbacks may only fill
-            # missing details. They cannot replace known precise information.
             if return_code is not _UNCHANGED and return_code is not None:
                 if not final_locked or latest.return_code is None:
                     changes["return_code"] = return_code
@@ -404,25 +409,82 @@ class ExecutionManager:
 
         return self.store.update(record, merge)
 
+    def _is_stale_submitting(self, record, *, now=None):
+        if record.state != RunState.SUBMITTING or record.reference is not None:
+            return False
+        now = now or datetime.now(timezone.utc)
+        return (now - _timestamp(record.updated_at)).total_seconds() >= self.submitting_grace
+
+    def recover_submitting(self, record):
+        """Recover one stale SUBMITTING record without guessing on uncertainty."""
+        record = self.store.get(record.id)
+        if not self._is_stale_submitting(record):
+            return record
+        executor = self.executor_for(record)
+        try:
+            status = executor.recover_submission(record.id, record.submission)
+        except NotImplementedError:
+            return record
+        if status is not None:
+            return self.update(record, status)
+
+        # Absence was positively established by the backend. Re-check under the
+        # per-run lock before releasing the reservation: another process may
+        # have persisted a reference while recovery was in flight.
+        def mark_absent(latest):
+            if latest.state != RunState.SUBMITTING or latest.reference is not None:
+                return latest
+            return replace(
+                latest,
+                state=RunState.FAILED,
+                updated_at=_now(),
+                message="Stale submission was not found by its execution backend",
+            )
+
+        return self.store.update(record, mark_absent)
+
     def reserve(self, record):
         """Atomically reserve *record*'s persistent submission namespace."""
         if record.submission is None:
             raise ValueError("Persistent run lacks a submission key")
-        with self.store.submission_lock():
-            conflicts = tuple(
-                active
-                for active in self.store.runs(active=True)
-                if active.id != record.id
-                and active.submission is not None
-                and record.submission.conflicts_with(active.submission)
-            )
-            if conflicts:
+
+        attempted_recovery = set()
+        while True:
+            with self.store.submission_lock():
+                conflicts = tuple(
+                    active
+                    for active in self.store.runs(active=True)
+                    if active.id != record.id
+                    and active.submission is not None
+                    and record.submission.conflicts_with(active.submission)
+                )
+                if not conflicts:
+                    return self.transition(
+                        record,
+                        state=RunState.SUBMITTING,
+                        reference=None,
+                    )
+                stale = tuple(
+                    conflict
+                    for conflict in conflicts
+                    if conflict.id not in attempted_recovery
+                    and self._is_stale_submitting(conflict)
+                )
+
+            # Backend I/O must happen outside the short submission lock.
+            if not stale:
                 raise DuplicateSubmissionError(record, conflicts)
-            return self.transition(
-                record,
-                state=RunState.SUBMITTING,
-                reference=None,
-            )
+            progressed = False
+            for conflict in stale:
+                attempted_recovery.add(conflict.id)
+                recovered = self.recover_submitting(conflict)
+                if (
+                    recovered.state != RunState.SUBMITTING
+                    or recovered.reference is not None
+                ):
+                    progressed = True
+            if not progressed:
+                raise DuplicateSubmissionError(record, conflicts)
 
     def update(self, record, status: RunStatus):
         return self.transition(

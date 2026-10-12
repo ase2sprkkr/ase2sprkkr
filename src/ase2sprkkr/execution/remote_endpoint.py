@@ -9,7 +9,14 @@ import warnings
 from pathlib import Path, PurePosixPath
 from uuid import uuid4
 
-from .base import Executor, LaunchSpec, MpiNotFoundWarning, RunReference
+from .base import (
+    Executor,
+    LaunchSpec,
+    MpiNotFoundWarning,
+    RunReference,
+    RunState,
+    RunStatus,
+)
 from .remote import (
     RemoteExecutor as _RemoteStagingExecutor,
     RemoteRunner,
@@ -17,6 +24,7 @@ from .remote import (
     _REQUEST_FILE,
     _REMOTE_EXECUTORS,
     _RUNS_DIR,
+    _STATE_FILE,
     _run_sync,
 )
 
@@ -160,6 +168,14 @@ class RemoteEndpointExecutor(Executor):
             launch = LaunchSpec(**dict(launch))
         return _RemoteRunContext(endpoint, launch)
 
+    async def _resolve_submission_directory(self, directory):
+        directory = posixpath.normpath(os.fspath(directory))
+        if directory == "~":
+            return await self._remote_home()
+        if directory.startswith("~/"):
+            return posixpath.join(await self._remote_home(), directory[2:])
+        return directory
+
     def submission_directory(self, spec):
         """Return a stable target-side namespace without contacting the host."""
         launch = spec.launch
@@ -185,6 +201,40 @@ class RemoteEndpointExecutor(Executor):
         if not relative.parts:
             return remote_root
         return posixpath.join(remote_root, *PurePosixPath(*relative.parts).parts)
+
+    async def _recover_submission(self, run_id, submission):
+        directory = await self._resolve_submission_directory(submission.directory)
+        state_path = posixpath.join(
+            directory,
+            _METADATA_DIR,
+            _RUNS_DIR,
+            run_id,
+            _STATE_FILE,
+        )
+        # file_signature() distinguishes a positively absent helper record from
+        # transport failure. Only the former is safe to interpret as no submit.
+        if await self.transport.file_signature(state_path) is None:
+            return None
+        state = await self._status(directory, run_id)
+        reference = RunReference(
+            executor=f"remote:{self.backend}",
+            native_id=run_id,
+            computer=self.computer,
+            directory=directory,
+            input_file=state.get("input_file"),
+            output_file=state.get("output_file"),
+            error_file=state.get("error_file"),
+        )
+        return RunStatus(
+            reference=reference,
+            state=RunState(state.get("state", "unknown")),
+            return_code=state.get("return_code"),
+            message=state.get("error"),
+        )
+
+    def recover_submission(self, run_id, submission):
+        """Recover a helper run from the persistent ASE2SPRKKR run id."""
+        return _run_sync(self._recover_submission(run_id, submission))
 
     def create_run(self, reader, spec, callback=None):
         """Create a nonpersistent run with a backend-generated identity."""

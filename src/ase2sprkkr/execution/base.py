@@ -200,6 +200,19 @@ class Executor:
 
         return status(self, *references)
 
+    def recover_submission(self, run_id, submission) -> Optional[RunStatus]:
+        """Recover a submit whose backend reference was not persisted.
+
+        Return a status with a reconstructed backend reference when the submit
+        is found, ``None`` only when the backend can positively establish that
+        it does not exist, and raise :class:`NotImplementedError` when this
+        backend cannot perform such recovery. Transport/backend failures should
+        propagate rather than being mistaken for absence.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} cannot recover an uncertain submission"
+        )
+
     def create_persistent_run(
         self, reader, spec: ExecutionSpec, *, run_id: str, callback=None
     ) -> Runner:
