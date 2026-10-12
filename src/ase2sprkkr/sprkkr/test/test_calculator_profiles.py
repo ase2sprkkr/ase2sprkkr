@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 
 from ase2sprkkr.configuration import definition
-from ase2sprkkr.execution import PsijExecutor, RemoteExecutor
+from ase2sprkkr.execution import RemoteExecutor
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
 from ase2sprkkr.sprkkr import profile as profile_module
 from ase2sprkkr.sprkkr.calculator import SPRKKR
@@ -158,8 +158,16 @@ def test_ssh_profile_can_use_psij_on_target():
     }
 
 
-def test_direct_psij_profile_still_defaults_to_slurm():
+def test_direct_psij_profile_still_defaults_to_slurm(monkeypatch):
+    captured = {}
+
+    def make_executor(backend, *, url=None):
+        captured.update(backend=backend, url=url)
+        return object()
+
+    monkeypatch.setattr(profile_module, "PsijExecutor", make_executor)
+
     executor = executor_from_profile(SPRKKRProfile(executor="psij"))
 
-    assert isinstance(executor, PsijExecutor)
-    assert executor.backend == "slurm"
+    assert executor is not None
+    assert captured == {"backend": "slurm", "url": None}
