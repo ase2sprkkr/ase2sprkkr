@@ -53,6 +53,14 @@ class Transport:
         """Return the SHA-256 digest of *path*, or ``None`` if it does not exist."""
         raise NotImplementedError
 
+    async def file_signature(self, path):
+        """Return a cheap modification signature for *path*, or ``None`` if absent.
+
+        The signature is intended for comparing one target-side file before and
+        after a calculation, not for comparing files across different machines.
+        """
+        raise NotImplementedError
+
 
 def local_file_digest(path):
     """Return the SHA-256 digest of a local file, or ``None`` if absent."""
@@ -64,6 +72,15 @@ def local_file_digest(path):
     except FileNotFoundError:
         return None
     return digest.hexdigest()
+
+
+def local_file_signature(path):
+    """Return ``(size, mtime_ns)`` for a local file, or ``None`` if absent."""
+    try:
+        stat = os.stat(path)
+    except FileNotFoundError:
+        return None
+    return stat.st_size, stat.st_mtime_ns
 
 
 # Kept temporarily for code using the helper inside the execution package.
@@ -122,6 +139,10 @@ class LocalTransport(Transport):
     async def file_digest(self, path):
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(None, local_file_digest, path)
+
+    async def file_signature(self, path):
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, local_file_signature, path)
 
 
 class SshTransport(Transport):
@@ -215,3 +236,27 @@ class SshTransport(Transport):
                 stderr=result.stderr,
             )
         return result.stdout.decode("ascii").split(None, 1)[0]
+
+    async def file_signature(self, path):
+        path = os.fspath(path)
+        result = await self.run(
+            (
+                "sh",
+                "-c",
+                '[ -f "$1" ] || exit 3; stat -c "%s|%y" -- "$1"',
+                "sh",
+                path,
+            ),
+            check=False,
+        )
+        if result.returncode == 3:
+            return None
+        if result.returncode:
+            raise subprocess.CalledProcessError(
+                result.returncode,
+                result.args,
+                output=result.stdout,
+                stderr=result.stderr,
+            )
+        size, mtime = result.stdout.decode("utf8").rstrip("\n").split("|", 1)
+        return int(size), mtime
