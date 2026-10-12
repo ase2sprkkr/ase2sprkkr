@@ -16,9 +16,11 @@ from . import definitions
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
 from typing import Union
-from ..configuration import config, mpi_runner
+from ..configuration import config
+from ..execution import LocalExecutor
 from ..potentials.potentials import Potential
 from ..common.doc import process_input_parameters_definition
+from ..sprkkr.profile import SPRKKRProfile
 import warnings
 
 
@@ -136,6 +138,8 @@ class InputParameters(ConfigurationFile):
         mpi=None,
         callback=None,
         gdb=False,
+        profile=None,
+        executor=None,
     ):
         """
         Run the process that calculate the task specified by this input paameters
@@ -160,7 +164,13 @@ class InputParameters(ConfigurationFile):
           The function will be called for each line
 
         run_async: bool
-          Whether directly execute the process, or return the coroutine to run it
+          Whether directly execute the process, or return the run object.
+
+        profile: ase2sprkkr.sprkkr.profile.SPRKKRProfile or None
+          Description of how SPR-KKR is installed and invoked on the computer.
+
+        executor: ase2sprkkr.execution.Executor or None
+          Backend used to execute the prepared command.
 
         executable_suffix: str or None
           Postfix, appended to the name of the called executable (sometimes, SPRKKR executables are
@@ -180,20 +190,9 @@ class InputParameters(ConfigurationFile):
 
         """
         print_output = calculator.value_or_default("print_output", print_output)
-        executable_suffix = self.resolve_executable_suffix(executable_suffix)
-        executable_suffix = calculator.value_or_default("executable_suffix", executable_suffix)
-        mpi = calculator.value_or_default("mpi", mpi)
-
-        d = self._definition
-        executable = d.executable
-        executable += executable_suffix
-        if executable_dir is not False:
-            if executable_dir is None:
-                executable_dir = config.executables.dir()
-            if executable_dir:
-                executable = os.path.join(executable_dir, executable)
-
         runner = self.process_runner(calculator, print_output, read_callback, directory)
+        profile = profile or getattr(calculator, "profile", None) or SPRKKRProfile()
+        executor = executor or getattr(calculator, "executor", None) or LocalExecutor()
 
         try:
 
@@ -202,28 +201,18 @@ class InputParameters(ConfigurationFile):
                 if callback:
                     callback(out)
 
-            mpi = mpi_runner(mpi) if self._definition.mpi else None
-            if mpi:
-                fname = input_file.name
-                # max length of the argument in SPRKKR
-                if len(fname) > 80:
-                    fname = os.path.relpath(fname, directory)
-                executable = mpi + [executable + "MPI", fname]
-                stdin = None
-            else:
-                executable = [executable]
-                stdin = input_file
-            if gdb:
-                stdin = None
-                if mpi:
-                    print(f"run {input_file.name}")
-                    executable = executable[:-1]
-                else:
-                    print(f"run <{input_file.name}")
-                executable = ["gdb"] + executable
-            out = runner.create_process(
-                executable, output_file, stdin=stdin, input_file=input_file.name, callback=cleanup
+            spec = profile.create_execution(
+                self._definition.executable,
+                input_file,
+                output_file,
+                directory,
+                mpi_supported=self._definition.mpi,
+                executable_suffix=executable_suffix,
+                executable_dir=executable_dir,
+                mpi=mpi,
+                gdb=gdb,
             )
+            out = executor.create_run(runner, spec, callback=cleanup)
             if not run_async:
                 out = out.run()
             return out
