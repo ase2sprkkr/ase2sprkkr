@@ -113,7 +113,10 @@ class LegacyProfile:
     def __init__(self, profiles):
         self._profiles = profiles
         self.mpi = ReadOnlyProfileValue(
-            lambda: profiles.legacy_value("mpi"), "mpi"
+            lambda: profiles.legacy_value("mpi", "auto"), "mpi"
+        )
+        self.mpi_warning = ReadOnlyProfileValue(
+            lambda: profiles.legacy_value("mpi_warning", True), "mpi_warning"
         )
         self.executable_dir = ReadOnlyProfileValue(
             lambda: profiles.legacy_value("executable_dir"), "executable_dir"
@@ -126,6 +129,7 @@ class LegacyProfile:
     def as_dict(self, *args, **kwargs):
         return {
             "mpi": self.mpi(),
+            "mpi_warning": self.mpi_warning(),
             "executable_dir": self.executable_dir(),
             "executable_suffix": self.executable_suffix(),
         }
@@ -193,7 +197,12 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
     """Dict-like repeated section with persistent and virtual profile views."""
 
     reserved_names = frozenset(("legacy", "ase"))
-    legacy_fields = ("mpi", "executable_dir", "executable_suffix")
+    legacy_fields = (
+        "mpi",
+        "mpi_warning",
+        "executable_dir",
+        "executable_suffix",
+    )
 
     def _add(self, id=None):
         """Create one stored profile while keeping ``ase`` strictly virtual."""
@@ -228,7 +237,8 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             return
         warnings.warn(
             "config.executables.dir is deprecated together with "
-            "config.executables.suffix and config.running.mpi.\n"
+            "config.executables.suffix, config.running.mpi and "
+            "config.running.mpi_warning.\n"
             "\n"
             "To migrate the existing configuration to config.yaml and convert "
             "these settings to an execution profile, run:\n"
