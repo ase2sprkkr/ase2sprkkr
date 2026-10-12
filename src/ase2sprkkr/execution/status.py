@@ -10,6 +10,7 @@ from .base import Executor, RunReference, RunState, RunStatus
 from .local import LocalExecutor
 from .psij import PsijExecutor, _STATE_MAP
 from .remote import RemoteExecutor, _run_sync
+from .remote_endpoint import RemoteEndpointExecutor
 from .tracking import TrackingExecutor
 
 
@@ -103,6 +104,7 @@ def _(executor, *references):
     return tuple(out)
 
 
+@status.register(RemoteEndpointExecutor)
 @status.register(RemoteExecutor)
 def _(executor, *references):
     expected = "remote:{}".format(executor.backend)
