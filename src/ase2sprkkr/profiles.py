@@ -197,10 +197,14 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         return value
 
     def _warn_legacy_write(self):
+        if getattr(self, "_legacy_write_warning_emitted", False):
+            return
         warnings.warn(
             "config.executables.dir is deprecated together with "
             "config.executables.suffix and config.running.mpi; use an execution "
             "profile instead.\n"
+            "To migrate an existing legacy configuration, run:\n"
+            "  ase2sprkkr config --migrate\n"
             "Use the ASE [sprkkr] profile, for example:\n"
             "  [sprkkr]\n"
             "  command = /opt/sprkkr/kkrscf_v8\n"
@@ -212,6 +216,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             FutureWarning,
             stacklevel=3,
         )
+        self._legacy_write_warning_emitted = True
 
     def _set_legacy_value(self, name, value):
         """Stage a deprecated option into the internal legacy profile."""
