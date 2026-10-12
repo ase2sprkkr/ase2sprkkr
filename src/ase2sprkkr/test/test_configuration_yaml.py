@@ -23,6 +23,7 @@ def test_yaml_round_trip_named_profiles(tmp_path):
     config = fresh_config()
     profile = config.profiles.add("local")
     profile.mpi.set(4)
+    profile.mpi_warning.set(False)
     profile.executable_dir.set("/opt/sprkkr")
     config.default_profile.set("local")
 
@@ -33,13 +34,30 @@ def test_yaml_round_trip_named_profiles(tmp_path):
 
     assert loaded.default_profile() == "local"
     assert loaded.profiles["local"].mpi() == 4
+    assert loaded.profiles["local"].mpi_warning() is False
     assert loaded.profiles["local"].executable_dir() == "/opt/sprkkr"
+
+
+def test_yaml_does_not_persist_implicit_profile_mpi_defaults(tmp_path):
+    path = tmp_path / "config.yaml"
+    config = fresh_config()
+    profile = config.profiles.add("local")
+
+    assert profile.mpi() == "auto"
+    assert profile.mpi_warning() is True
+    save_configuration_yaml(config, path)
+
+    data = load_yaml_document(path)
+    stored = (data.get("profiles") or {}).get("local", {})
+    assert "mpi" not in stored
+    assert "mpi_warning" not in stored
 
 
 def test_yaml_persists_legacy_backing_profile(tmp_path):
     path = tmp_path / "config.yaml"
     config = fresh_config()
     config.running.mpi.set(8)
+    config.running.mpi_warning.set(False)
     config.executables.dir.set("/opt/legacy")
 
     save_configuration_yaml(config, path)
@@ -47,14 +65,17 @@ def test_yaml_persists_legacy_backing_profile(tmp_path):
 
     assert data["profiles"]["legacy"] == {
         "mpi": 8,
+        "mpi_warning": False,
         "executable_dir": "/opt/legacy",
     }
     assert "running" not in data or "mpi" not in data["running"]
+    assert "running" not in data or "mpi_warning" not in data["running"]
     assert "executables" not in data or "dir" not in data["executables"]
 
     loaded = fresh_config()
     load_configuration_yaml(loaded, path)
     assert loaded.running.mpi() == 8
+    assert loaded.running.mpi_warning() is False
     assert loaded.executables.dir() == "/opt/legacy"
     with pytest.raises(TypeError, match="read-only"):
         loaded.profiles["legacy"].mpi.set(2)
@@ -225,8 +246,10 @@ def test_legacy_python_generated_options_load_into_legacy_profile(tmp_path, monk
     assert config.executables.suffix() == "_legacy"
     assert config.executables.dir() == "/opt/sprkkr"
     assert config.running.mpi() == 4
+    assert config.running.mpi_warning() is True
     assert config.profiles["legacy"].as_dict() == {
         "mpi": 4,
+        "mpi_warning": True,
         "executable_dir": "/opt/sprkkr",
         "executable_suffix": "_legacy",
     }
@@ -249,6 +272,7 @@ def test_legacy_migration_is_self_contained(tmp_path):
     data = load_yaml_document(yaml_path)
     assert data["profiles"]["legacy"]["executable_dir"] == "/opt/legacy"
     assert data["profiles"]["legacy"]["mpi"] == 3
+    assert "mpi_warning" not in data["profiles"]["legacy"]
 
 
 def test_clean_legacy_configuration_removes_top_level_assignments(tmp_path):
