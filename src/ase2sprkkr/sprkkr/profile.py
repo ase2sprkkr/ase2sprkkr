@@ -49,11 +49,11 @@ class LaunchParameters:
     executable_dir: Any = False
     executable_suffix: Any = ""
     mpi: Any = "auto"
-    mpi_warning: bool = True
     local_root: Any = None
     remote_root: Any = None
     input_sync: str = "changed"
     output_sync: str = "changed"
+    mpi_warning: bool = True
 
 
 @dataclass(frozen=True)
@@ -68,7 +68,6 @@ class SPRKKRProfile:
     executable_dir: Any = False
     executable_suffix: Any = ""
     mpi: Any = "auto"
-    mpi_warning: bool = True
     executor: str = "local"
     host: Any = None
     local_root: Any = None
@@ -79,6 +78,7 @@ class SPRKKRProfile:
     output_sync: str = "changed"
     psij_backend: Any = None
     psij_url: Any = None
+    mpi_warning: bool = True
 
     @property
     def endpoint(self):
@@ -97,11 +97,11 @@ class SPRKKRProfile:
             executable_dir=self.executable_dir,
             executable_suffix=self.executable_suffix,
             mpi=self.mpi,
-            mpi_warning=self.mpi_warning,
             local_root=self.local_root,
             remote_root=self.remote_root,
             input_sync=self.input_sync,
             output_sync=self.output_sync,
+            mpi_warning=self.mpi_warning,
         )
 
     def with_overrides(self, **overrides):
@@ -264,7 +264,6 @@ def _configured_profile(profile, configuration):
         executable_dir=executable_dir,
         executable_suffix=suffix,
         mpi=mpi,
-        mpi_warning=mpi_warning,
         executor=_profile_value(profile, "executor") or "local",
         host=_profile_value(profile, "host"),
         local_root=_profile_value(profile, "local_root"),
@@ -275,6 +274,7 @@ def _configured_profile(profile, configuration):
         output_sync=_profile_value(profile, "output_sync") or "changed",
         psij_backend=_profile_value(profile, "psij_backend"),
         psij_url=_profile_value(profile, "psij_url"),
+        mpi_warning=mpi_warning,
     )
 
 
