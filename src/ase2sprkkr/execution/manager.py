@@ -242,10 +242,7 @@ class ExecutionManager:
         if record.state in _FINAL_STATES and new_state not in _FINAL_STATES:
             new_state = record.state
 
-        changes = {
-            "state": new_state,
-            "updated_at": _now(),
-        }
+        changes = {"state": new_state, "updated_at": _now()}
         if reference is not _UNCHANGED:
             changes["reference"] = reference
         if return_code is not _UNCHANGED and return_code is not None:
@@ -262,6 +259,35 @@ class ExecutionManager:
             return_code=status.return_code,
             message=status.message,
         )
+
+    @staticmethod
+    def _complete(persistent, result, callback):
+        persistent._sync_completion(result)
+        if callback is not None:
+            callback(result)
+
+    def _wrap_runner(self, executor, record, factory, callback):
+        """Create a persistent wrapper without assuming callback timing."""
+        guard = RLock()
+        holder = {"runner": None, "pending": _UNCHANGED}
+
+        def completed(result):
+            with guard:
+                persistent = holder["runner"]
+                if persistent is None:
+                    holder["pending"] = result
+                    return
+            self._complete(persistent, result, callback)
+
+        runner = factory(completed)
+        persistent = PersistentRunner(self, executor, runner, record)
+        with guard:
+            holder["runner"] = persistent
+            pending = holder["pending"]
+            holder["pending"] = _UNCHANGED
+        if pending is not _UNCHANGED:
+            self._complete(persistent, pending, callback)
+        return persistent
 
     def create_run(
         self,
@@ -281,19 +307,13 @@ class ExecutionManager:
             directory=spec.directory,
             run_id=run_id,
         )
-        holder = {}
-
-        def completed(result):
-            persistent = holder["runner"]
-            persistent._sync_completion(result)
-            if callback is not None:
-                callback(result)
-
-        runner = executor.create_run(reader, spec, callback=completed)
-        persistent = PersistentRunner(self, executor, runner, record)
-        holder["runner"] = persistent
         self.register_executor(executor)
-        return persistent
+        return self._wrap_runner(
+            executor,
+            record,
+            lambda completed: executor.create_run(reader, spec, callback=completed),
+            callback,
+        )
 
     def refresh(self, records=None):
         """Refresh referenced runs, batching each live executor into one query."""
@@ -320,8 +340,14 @@ class ExecutionManager:
         if record.reference is None:
             raise RuntimeError(f"Run {record.id} has no backend reference")
         self.register_executor(executor, record.reference)
-        runner = executor.attach(record.reference, reader, callback=callback)
-        return PersistentRunner(self, executor, runner, record)
+        return self._wrap_runner(
+            executor,
+            record,
+            lambda completed: executor.attach(
+                record.reference, reader, callback=completed
+            ),
+            callback,
+        )
 
 
 class PersistentRunner:
@@ -352,6 +378,8 @@ class PersistentRunner:
     @property
     def state(self):
         state = self._runner.state
+        if state == RunState.NEW and self._record.state != RunState.NEW:
+            state = self._record.state
         if self._record.state != RunState.NEW and state != self._record.state:
             self._record = self.manager.transition(
                 self._record,
@@ -376,9 +404,12 @@ class PersistentRunner:
         except BaseException:
             reference = self.reference
             if reference is not None:
+                state = self._runner.state
+                if state == RunState.NEW:
+                    state = RunState.QUEUED
                 self._record = self.manager.transition(
                     self._record,
-                    state=self._runner.state,
+                    state=state,
                     reference=reference,
                 )
             raise
@@ -387,20 +418,22 @@ class PersistentRunner:
         if reference is None:
             raise RuntimeError("Executor submit returned without a run reference")
         self.manager.register_executor(self.executor, reference)
+        state = self._runner.state
+        if state == RunState.NEW:
+            state = RunState.QUEUED
         self._record = self.manager.transition(
             self._record,
-            state=self._runner.state,
+            state=state,
             reference=reference,
         )
         return result
 
     def _sync_completion(self, result):
-        return_code = getattr(result, "return_code", None)
         self._record = self.manager.transition(
             self._record,
             state=self._runner.state,
             reference=self.reference,
-            return_code=return_code,
+            return_code=getattr(result, "return_code", None),
         )
 
     def wait(self):
