@@ -14,11 +14,11 @@ import time
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from enum import Enum
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from threading import Event, Lock, Thread
 from uuid import uuid4
 
-from .base import Executor, RunReference, RunState
+from .base import ExecutionSpec, Executor, RunReference, RunState
 from .transport import local_file_digest
 
 
@@ -430,23 +430,38 @@ def _run_sync(coro):
 class RemoteRunner:
     """A local proxy for one run controlled by a remote ASE2SPRKKR helper."""
 
-    def __init__(self, executor, reader, spec, callback=None):
+    def __init__(
+        self,
+        executor,
+        reader,
+        spec,
+        callback=None,
+        *,
+        reference=None,
+        state=RunState.NEW,
+        output_targets=None,
+        cache_targets=None,
+    ):
         self.executor = executor
         self.reader = reader
         self.spec = spec
         self.callback = callback
         self.result = reader.create_result(spec.output_file, spec.input_file)
 
-        self._state = RunState.NEW
-        self._reference = None
+        self._state = RunState(state)
+        self._reference = reference
         self._listeners = []
         self._lock = Lock()
         self._done = Event()
         self._thread = None
         self._exception = None
         self._follow_process = None
-        self._output_targets = {}
-        self._cache_targets = {}
+        self._output_targets = dict(output_targets or {})
+        self._cache_targets = dict(cache_targets or {})
+
+        if reference is not None:
+            self._thread = Thread(target=self._thread_main, daemon=True)
+            self._thread.start()
 
     @property
     def reference(self):
@@ -695,6 +710,15 @@ class RemoteRunner:
             if error_name
             else output_target + ".err"
         )
+        client_sync = {
+            "output_file": output_target if self.spec.output_file is not None else None,
+            "error_file": error_target if self.spec.error_file is not None else None,
+            "output_files": list(self._output_targets.values()),
+            "cache_files": [
+                {"path": remote, "before": before}
+                for remote, before in self._cache_targets.values()
+            ],
+        }
 
         return {
             "id": run_id,
@@ -706,6 +730,7 @@ class RemoteRunner:
             "stdin": stdin_target,
             "output_file": output_target,
             "error_file": error_target,
+            "client_sync": client_sync,
         }
 
     async def _pump(self, source, target, kind):
@@ -941,6 +966,27 @@ class RemoteExecutor(Executor):
             return remote_root
         return posixpath.join(remote_root, *relative.parts)
 
+    async def unmap_path(self, path):
+        """Map one target-side path back into this executor's local root."""
+        remote_root = await self._resolved_remote_root()
+        path = posixpath.normpath(os.fspath(path))
+        if not posixpath.isabs(path):
+            raise ValueError(f"Remote path must be absolute: {path}")
+        try:
+            common = posixpath.commonpath((remote_root, path))
+        except ValueError as exc:
+            raise ValueError(
+                f"Remote path {path} is outside mapped root {remote_root}"
+            ) from exc
+        if common != remote_root:
+            raise ValueError(
+                f"Remote path {path} is outside mapped root {remote_root}"
+            )
+        relative = posixpath.relpath(path, remote_root)
+        if relative == ".":
+            return self.local_root
+        return self.local_root.joinpath(*PurePosixPath(relative).parts)
+
     async def map_directory(self, directory):
         """Map a local calculation directory to its persistent remote workspace."""
         return await self.map_path(directory)
@@ -973,5 +1019,117 @@ class RemoteExecutor(Executor):
             (*self.command, "follow", directory, run_id)
         )
 
+    async def _saved_request(self, directory, run_id):
+        path = posixpath.join(
+            directory,
+            _METADATA_DIR,
+            _RUNS_DIR,
+            run_id,
+            _REQUEST_FILE,
+        )
+        return json.loads((await self.transport.read_file(path)).decode("utf8"))
+
+    async def _attach(self, reference, reader, callback=None):
+        expected = f"remote:{self.backend}"
+        if reference.executor != expected:
+            raise ValueError(
+                f"Run reference belongs to {reference.executor!r}, not {expected!r}"
+            )
+        if not reference.native_id or not reference.directory:
+            raise ValueError("Remote run reference lacks run id or directory")
+
+        status, request = await asyncio.gather(
+            self._status(reference.directory, reference.native_id),
+            self._saved_request(reference.directory, reference.native_id),
+        )
+        remote_backend = request.get("executor", "local")
+        if remote_backend != self.backend:
+            raise ValueError(
+                f"Remote run uses backend {remote_backend!r}, not {self.backend!r}"
+            )
+
+        local_directory = await self.unmap_path(reference.directory)
+        local_directory.mkdir(parents=True, exist_ok=True)
+        input_remote = status.get("input_file") or reference.input_file
+        input_local = (
+            await self.unmap_path(input_remote) if input_remote is not None else None
+        )
+
+        sync = request.get("client_sync")
+        if sync is None:
+            sync = {
+                "output_file": status.get("output_file") or reference.output_file,
+                "error_file": None,
+                "output_files": (),
+                "cache_files": (),
+            }
+
+        output_remote = sync.get("output_file")
+        error_remote = sync.get("error_file")
+        output_local = (
+            await self.unmap_path(output_remote) if output_remote is not None else None
+        )
+        error_local = (
+            await self.unmap_path(error_remote) if error_remote is not None else None
+        )
+
+        output_targets = {}
+        for remote in sync.get("output_files", ()):
+            local = await self.unmap_path(remote)
+            output_targets[os.fspath(local)] = remote
+
+        cache_targets = {}
+        for item in sync.get("cache_files", ()):
+            remote = item["path"]
+            before = item.get("before")
+            if isinstance(before, list):
+                before = tuple(before)
+            local = await self.unmap_path(remote)
+            cache_targets[os.fspath(local)] = (remote, before)
+
+        opened = []
+        try:
+            output_file = None
+            if output_local is not None:
+                output_local.parent.mkdir(parents=True, exist_ok=True)
+                output_file = output_local.open("w+b")
+                opened.append(output_file)
+
+            error_file = None
+            if error_local is not None:
+                if output_local is not None and error_local == output_local:
+                    error_file = output_file
+                else:
+                    error_local.parent.mkdir(parents=True, exist_ok=True)
+                    error_file = error_local.open("w+b")
+                    opened.append(error_file)
+
+            spec = ExecutionSpec(
+                argv=(),
+                input_file=None if input_local is None else os.fspath(input_local),
+                output_file=output_file,
+                error_file=error_file,
+                directory=os.fspath(local_directory),
+            )
+            runner = RemoteRunner(
+                self,
+                reader,
+                spec,
+                callback=callback,
+                reference=reference,
+                state=RunState(status.get("state", "unknown")),
+                output_targets=output_targets,
+                cache_targets=cache_targets,
+            )
+        except BaseException:
+            for file in opened:
+                file.close()
+            raise
+        return runner
+
     def create_run(self, reader, spec, callback=None):
         return RemoteRunner(self, reader, spec, callback=callback)
+
+    def attach(self, reference: RunReference, reader, callback=None):
+        """Reconnect to a persistent run and resume monitoring and stage-out."""
+        return _run_sync(self._attach(reference, reader, callback=callback))
