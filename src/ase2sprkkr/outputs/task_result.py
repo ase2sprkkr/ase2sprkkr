@@ -9,6 +9,7 @@ from ..common.process_output_reader import run_coro_sync
 from ..common.file_utils import FilePath, filename_from_file
 from ..potentials.potentials import Potential
 from ..input_parameters import input_parameters as input_parameters
+from ..execution import RunState
 from .result_options import create_files_section
 
 
@@ -165,30 +166,64 @@ class TaskResult:
 
 
 class KkrProcess:
+    """Local run handle implementing the common execution lifecycle."""
+
     def __init__(self, reader, output_parser, coroutine, result, callback=None):
         self.reader = reader
         self.output_parser = output_parser
         self.coroutine = coroutine
         self.result = result
         self.callback = callback
+        self._state = RunState.NEW
+
+    @property
+    def state(self):
+        return self._state
+
+    @property
+    def reference(self):
+        # A local subprocess cannot in general be reattached after this Python
+        # process exits. Persistent backends return a RunReference instead.
+        return None
+
+    def _failed(self):
+        self._state = (
+            RunState.CANCELLED
+            if self.output_parser.stop_requested
+            else RunState.FAILED
+        )
 
     def run(self):
-        result = self.result
+        self._state = RunState.RUNNING
         try:
-            result, error, return_code = run_coro_sync(self.coroutine)
+            _result, error, return_code = run_coro_sync(self.coroutine)
             self.result.complete(error, return_code)
+            self._state = RunState.FINISHED
+        except BaseException:
+            self._failed()
+            raise
         finally:
             if self.callback:
                 self.callback(self.result)
         return self.result
 
-    def stop_the_process(self):
+    def cancel(self):
         self.output_parser.stop_the_process()
 
+    def stop_the_process(self):
+        """Backward-compatible alias for :meth:`cancel`."""
+        self.cancel()
+
     async def run_async(self):
-        result, error, return_code = await self.coroutine
-        self.result.complete(error, return_code)
-        return self.result
+        self._state = RunState.RUNNING
+        try:
+            _result, error, return_code = await self.coroutine
+            self.result.complete(error, return_code)
+            self._state = RunState.FINISHED
+            return self.result
+        except BaseException:
+            self._failed()
+            raise
 
 
 class KkrOutputReader:
