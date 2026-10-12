@@ -15,7 +15,6 @@ from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
 from typing import Union
 from ..configuration import config
-from ..execution import LocalExecutor
 from ..potentials.potentials import Potential
 from ..common.doc import process_input_parameters_definition
 from ..sprkkr.profile import SPRKKRProfile, executor_from_profile
@@ -154,8 +153,9 @@ class InputParameters(ConfigurationFile):
         print_output = calculator.value_or_default("print_output", print_output)
         reader = self.output_reader(calculator, print_output, directory)
         profile = profile or getattr(calculator, "profile", None) or SPRKKRProfile()
-        executor = executor or getattr(calculator, "executor", None) or LocalExecutor()
-        if profile.executor != "local" and isinstance(executor, LocalExecutor):
+        if executor is None:
+            executor = getattr(calculator, "executor", None)
+        if executor is None:
             executor = executor_from_profile(profile)
 
         execution_profile = profile
@@ -268,38 +268,6 @@ class InputParameters(ConfigurationFile):
         return {m.__name__.rsplit(".", 1)[-1].upper(): m for m in modules if hasattr(m, "input_parameters")}
 
     _definitions = {}
-
-    @classmethod
-    def definition(cls, name):
-        name = name.upper()
-        if name not in cls._definitions:
-            if name == 'BSFEK' or name == 'BSFKK':
-                return cls.definition('bsf')
-            module = cls.definition_modules[name]
-            ip = module.input_parameters
-            if isinstance(ip, ipdefs.InputParametersDefinition):
-                warnings.warn(
-                    f"In the module '{module.__name__}' in file '{module.__file__}' "
-                    "is an InputParametersDefinition object directly defined. "
-                    "Consider to enclose its definition in a lambda function to "
-                    "speed up ase2sprkkr loading."
-                )
-            else:
-                try:
-                    ip = ip()
-                except Exception as e:
-                    raise RuntimeError(
-                        f"Can not load file {module.__name__} in {module.__file__} due to the following error:\n {e}"
-                    ) from e
-            cls._definitions[name] = ip
-            process_input_parameters_definition(module, ip)
-        return cls._definitions[name]
-
-    @cached_class_property
-    def definitions():
-        # user = os.path.join(platformdirs.user_config_dir('ase2sprkkr', 'ase2sprkkr'), 'input_parameters')
-        ip = InputParameters
-        return {n: ip.definition(n) for n in ip.definition_modules}
 
     @classmethod
     def is_it_an_input_parameters_name(cls, name):

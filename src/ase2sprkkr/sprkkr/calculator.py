@@ -34,7 +34,6 @@ import re
 import warnings
 from ..common.misc import config_property, first_non_none
 from ..configuration import config
-from ..execution import LocalExecutor
 from .profile import SPRKKRProfile, resolve_sprkkr_profile
 
 
@@ -196,7 +195,7 @@ class SPRKKR(BaseCalculator):
             executable_dir=executable_dir,
             executable_suffix=executable_suffix,
         )
-        self.executor = executor or LocalExecutor()
+        self.executor = executor
         self.label = label
         self._counter = 0
         # For %c template in file names
@@ -846,7 +845,7 @@ class SPRKKR(BaseCalculator):
                     callback=callback,
                     gdb=gdb,
                     profile=run_profile,
-                    executor=executor or self.executor,
+                    executor=self.executor if executor is None else executor,
                 )
 
     def value_or_default(self, name, value):
