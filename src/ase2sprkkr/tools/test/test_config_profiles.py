@@ -40,9 +40,11 @@ def _fresh_cli(monkeypatch, tmp_path):
         lambda: str(tmp_path / "__init__.py"),
     )
     monkeypatch.setattr(
-        config,
+        type(config),
         "save_user_preferences",
-        lambda: saves.append(config.as_dict(only_changed="explicit", generated=False)),
+        lambda self: saves.append(
+            self.as_dict(only_changed="explicit", generated=False)
+        ),
     )
     return config, saves
 

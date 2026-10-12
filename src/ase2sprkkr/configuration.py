@@ -1,6 +1,7 @@
 """ASE2SPRKKR user configuration."""
 
 import os
+from collections.abc import Mapping
 from .common.decorators import cache
 from .common.grammar_types import CustomMixed, AlwaysQString, Array, Bool, Keyword, Integer
 from .common.container_definitions import SectionDefinition, ConfigurationRootDefinition
@@ -82,7 +83,38 @@ def _load_legacy_user_preferences(file):
 
     loader = importlib.machinery.SourceFileLoader("ase2sprkkr.personal", file)
     mod = types.ModuleType(loader.name)
+    mod.config = config
     loader.exec_module(mod)
+
+
+def _profile_overlay_values(yaml_file):
+    """Return profile values from the Python hook not overridden by YAML."""
+    from .configuration_yaml import load_yaml_document
+
+    python_profiles = {
+        name: profile.as_dict(only_changed="explicit", generated=False) or {}
+        for name, profile in config.profiles._raw_items()
+    }
+    if not python_profiles:
+        return {}
+
+    document = load_yaml_document(yaml_file)
+    yaml_profiles = document.get("profiles", {})
+    if not isinstance(yaml_profiles, Mapping):
+        return {}
+
+    overlay = {}
+    for name, values in python_profiles.items():
+        if name not in yaml_profiles:
+            overlay[name] = values
+            continue
+        yaml_values = yaml_profiles[name]
+        if not isinstance(yaml_values, Mapping):
+            continue
+        missing = {key: value for key, value in values.items() if key not in yaml_values}
+        if missing:
+            overlay[name] = missing
+    return overlay
 
 
 def load_user_preferences():
@@ -101,7 +133,16 @@ def load_user_preferences():
     if os.path.isfile(yaml_file):
         from .configuration_yaml import load_configuration_yaml
 
+        overlay = _profile_overlay_values(yaml_file)
         load_configuration_yaml(config, yaml_file)
+        if overlay:
+            with config.profiles._mutation("set") as (transaction, _policy):
+                config.profiles._stage_persisted(
+                    transaction,
+                    overlay,
+                    unknown="fail",
+                    merge=True,
+                )
 
 
 @cache

@@ -17,9 +17,11 @@ def _run_with_config(monkeypatch, config, *argv):
     saved = []
     monkeypatch.setattr(configuration, "config", config)
     monkeypatch.setattr(
-        config,
+        type(config),
         "save_user_preferences",
-        lambda: saved.append(config.as_dict(only_changed="explicit", generated=False)),
+        lambda self: saved.append(
+            self.as_dict(only_changed="explicit", generated=False)
+        ),
     )
     monkeypatch.setattr(configuration, "user_preferences_file", lambda: "/tmp/unused-config.yaml")
     monkeypatch.setattr(configuration, "legacy_user_preferences_file", lambda: "/tmp/unused-init.py")
