@@ -42,17 +42,18 @@ def _migrated_profile_name(profiles):
 
 
 def _convert_legacy_execution_profile(config):
-    """Move deprecated execution settings to a normal named profile."""
+    """Move explicitly configured deprecated execution settings to a profile."""
     profiles = config.profiles
     legacy = profiles._legacy_profile()
     if legacy is None or not profiles._legacy_available():
         return None
 
     active_profile = profiles.resolve_name()
+    explicit = legacy.as_dict(only_changed="explicit", generated=False) or {}
     values = {
-        name: value
+        name: explicit[name]
         for name in profiles.legacy_fields
-        if (value := getattr(legacy, name)()) is not None
+        if name in explicit
     }
     name = _migrated_profile_name(profiles)
 
