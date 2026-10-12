@@ -26,6 +26,7 @@ _METADATA_DIR = ".ase2sprkkr"
 _RUNS_DIR = "runs"
 _STATE_FILE = "state.json"
 _REQUEST_FILE = "request.json"
+_REMOTE_EXECUTORS = {"local", "psij"}
 
 
 class FileSyncPolicy(str, Enum):
@@ -73,9 +74,10 @@ def _write_state(directory, run_id, **changes):
 
 
 def submit_remote(request):
-    """Start a detached direct process and return its initial state."""
-    if request.get("executor", "local") != "local":
-        raise ValueError("Only the local remote executor is supported for now")
+    """Start a detached target-side executor and return its initial state."""
+    executor = request.get("executor", "local")
+    if executor not in _REMOTE_EXECUTORS:
+        raise ValueError(f"Unsupported remote executor: {executor!r}")
 
     directory = Path(request["directory"]).expanduser().resolve()
     directory.mkdir(parents=True, exist_ok=True)
@@ -111,6 +113,7 @@ def submit_remote(request):
         return_code=None,
         error=None,
         pid=None,
+        backend_reference=None,
         created_at=_timestamp(),
         started_at=None,
         finished_at=None,
@@ -147,11 +150,17 @@ def status_remote(directory, run_id):
 
 
 def cancel_remote(directory, run_id, timeout=1.0):
-    """Cancel a direct remote process group."""
+    """Cancel a remote run through its target-side executor."""
     directory = Path(directory).expanduser().resolve()
     state = _read_state(directory, run_id)
     if state.get("state") in _FINAL_STATES:
         return state
+
+    request = json.loads(_request_path(directory, run_id).read_text())
+    if request.get("executor", "local") == "psij":
+        from .remote_psij import cancel_remote_psij
+
+        return cancel_remote_psij(directory, run_id, request, timeout=timeout)
 
     state = _write_state(
         directory, run_id, state="cancelled", finished_at=_timestamp()
@@ -272,7 +281,7 @@ def resolve_remote_mpi(mpi):
 
 
 def run_remote_worker(directory, run_id):
-    """Execute one direct run inside the detached remote worker process."""
+    """Execute one run using the executor selected by the remote request."""
     directory = Path(directory).expanduser().resolve()
     try:
         request = json.loads(_request_path(directory, run_id).read_text())
@@ -280,15 +289,34 @@ def run_remote_worker(directory, run_id):
         if state.get("state") == "cancelled":
             return
 
+        executor = request.get("executor", "local")
+        if executor == "psij":
+            from .remote_psij import run_remote_psij_worker
+
+            run_remote_psij_worker(directory, run_id, request)
+            return
+        if executor != "local":
+            raise ValueError(f"Unsupported remote executor: {executor!r}")
+
         stdin_path = request.get("stdin")
         output_path = request.get("output_file") or "stdout"
         error_path = request.get("error_file") or "stderr"
-        output_path = directory / output_path
-        error_path = directory / error_path
+        output_path = Path(output_path)
+        error_path = Path(error_path)
+        if not output_path.is_absolute():
+            output_path = directory / output_path
+        if not error_path.is_absolute():
+            error_path = directory / error_path
         output_path.parent.mkdir(parents=True, exist_ok=True)
         error_path.parent.mkdir(parents=True, exist_ok=True)
 
-        stdin = open(directory / stdin_path, "rb") if stdin_path else subprocess.DEVNULL
+        if stdin_path:
+            stdin_path = Path(stdin_path)
+            if not stdin_path.is_absolute():
+                stdin_path = directory / stdin_path
+            stdin = stdin_path.open("rb")
+        else:
+            stdin = subprocess.DEVNULL
         try:
             with output_path.open("wb") as output, error_path.open("wb") as error:
                 process = subprocess.Popen(
@@ -577,6 +605,7 @@ class RemoteRunner:
         return {
             "id": run_id,
             "executor": self.executor.backend,
+            "executor_options": self.executor.backend_options,
             "directory": remote_directory,
             "argv": self._remote_argv(staged),
             "input_file": input_target,
@@ -739,6 +768,10 @@ class RemoteExecutor(Executor):
     below the remote home directory.  ``local_root`` and ``remote_root`` can
     override either side of that mapping.
 
+    ``backend`` selects the executor created by the helper on the target
+    machine. ``local`` runs the command directly there; ``psij`` delegates it
+    to PSI/J using ``backend_options``.
+
     ``input_files`` and ``output_files`` select how declared artifacts are
     synchronized.  Accepted policies are ``changed``, ``always``, ``missing``
     and ``never``.
@@ -751,6 +784,7 @@ class RemoteExecutor(Executor):
         transport,
         *,
         backend="local",
+        backend_options=None,
         local_root=None,
         remote_root=None,
         root_directory=None,
@@ -762,8 +796,11 @@ class RemoteExecutor(Executor):
             if remote_root is not None:
                 raise ValueError("Use either remote_root or root_directory, not both")
             remote_root = root_directory
+        if backend not in _REMOTE_EXECUTORS:
+            raise ValueError(f"Unsupported remote executor: {backend!r}")
         self.transport = transport
         self.backend = backend
+        self.backend_options = dict(backend_options or {})
         self.local_root = Path(local_root or Path.home()).expanduser().resolve()
         self.remote_root = None if remote_root is None else os.fspath(remote_root)
         self.command = tuple(command)
