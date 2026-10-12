@@ -177,6 +177,10 @@ class Executor:
 
     name = None
 
+    def submission_directory(self, spec: ExecutionSpec) -> str:
+        """Return this run's directory in the backend filesystem namespace."""
+        return os.path.abspath(os.fspath(spec.directory))
+
     def resolve_mpi(self, mpi=None):
         """Convert profile MPI syntax to portable launch intent.
 

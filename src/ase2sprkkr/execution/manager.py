@@ -6,6 +6,7 @@ import asyncio
 import json
 import os
 import warnings
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
@@ -27,12 +28,81 @@ def _now():
     return datetime.now(timezone.utc).isoformat()
 
 
+def _jsonable(value):
+    if isinstance(value, dict):
+        return {str(key): _jsonable(item) for key, item in value.items()}
+    if isinstance(value, (tuple, list)):
+        return [_jsonable(item) for item in value]
+    if isinstance(value, os.PathLike):
+        return os.fspath(value)
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    return repr(value)
+
+
+def _endpoint_identity(executor):
+    """Return a stable, serializable identity of the backend connection."""
+    descriptor = {
+        "executor": executor.name
+        or f"{type(executor).__module__}.{type(executor).__qualname__}"
+    }
+    for name in ("backend", "url", "computer", "command", "backend_options"):
+        if hasattr(executor, name):
+            descriptor[name] = getattr(executor, name)
+    transport = getattr(executor, "transport", None)
+    if transport is not None:
+        transport_descriptor = {
+            "type": f"{type(transport).__module__}.{type(transport).__qualname__}"
+        }
+        for name in ("host", "ssh", "options"):
+            if hasattr(transport, name):
+                transport_descriptor[name] = getattr(transport, name)
+        descriptor["transport"] = transport_descriptor
+    return json.dumps(_jsonable(descriptor), sort_keys=True, separators=(",", ":"))
+
+
 class CorruptRunRecord(RuntimeError):
     """A persisted run record cannot be decoded or validated."""
 
     def __init__(self, path, message):
         self.path = Path(path)
         super().__init__(f"Corrupt run record {self.path}: {message}")
+
+
+@dataclass(frozen=True)
+class SubmissionKey:
+    """Persistent namespace used only for duplicate-submit protection."""
+
+    endpoint: str
+    directory: str
+    task: str
+    dataset: Optional[str] = None
+
+    def __post_init__(self):
+        object.__setattr__(self, "directory", os.fspath(self.directory))
+        object.__setattr__(self, "task", str(self.task).upper())
+        if self.dataset is not None:
+            object.__setattr__(self, "dataset", str(self.dataset))
+
+    def conflicts_with(self, other):
+        if self.endpoint != other.endpoint or self.directory != other.directory:
+            return False
+        if self.task == "SCF" or other.task == "SCF":
+            return True
+        return self.task == other.task and self.dataset == other.dataset
+
+
+class DuplicateSubmissionError(RuntimeError):
+    """A persistent run would duplicate an active calculation namespace."""
+
+    def __init__(self, record, conflicts):
+        self.record = record
+        self.conflicts = tuple(conflicts)
+        super().__init__(
+            "Run conflicts with {} active persistent run{}".format(
+                len(self.conflicts), "" if len(self.conflicts) == 1 else "s"
+            )
+        )
 
 
 @dataclass(frozen=True)
@@ -46,12 +116,15 @@ class RunRecord:
     task: str
     directory: str
     dataset: Optional[str] = None
+    submission: Optional[SubmissionKey] = None
     reference: Optional[RunReference] = None
     return_code: Optional[int] = None
     message: Optional[str] = None
     schema_version: int = _RUN_RECORD_SCHEMA_VERSION
 
     def __post_init__(self):
+        if isinstance(self.submission, dict):
+            object.__setattr__(self, "submission", SubmissionKey(**self.submission))
         if isinstance(self.reference, dict):
             object.__setattr__(self, "reference", RunReference(**self.reference))
         if not isinstance(self.state, RunState):
@@ -110,6 +183,35 @@ class RunStore:
             return
         self._warned_corrupt.add(key)
         warnings.warn(str(exc), RuntimeWarning, stacklevel=3)
+
+    @contextmanager
+    def submission_lock(self):
+        """Serialize duplicate checking and the SUBMITTING record creation."""
+        self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+        path = self.directory / ".submit.lock"
+        with self._lock, path.open("a+b") as lock_file:
+            if os.name == "nt":
+                import msvcrt
+
+                lock_file.seek(0, os.SEEK_END)
+                if lock_file.tell() == 0:
+                    lock_file.write(b"\0")
+                    lock_file.flush()
+                lock_file.seek(0)
+                msvcrt.locking(lock_file.fileno(), msvcrt.LK_LOCK, 1)
+                try:
+                    yield
+                finally:
+                    lock_file.seek(0)
+                    msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                import fcntl
+
+                fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+                try:
+                    yield
+                finally:
+                    fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
 
     def save(self, record: RunRecord):
         with self._lock:
@@ -215,7 +317,9 @@ class ExecutionManager:
             )
         return executor
 
-    def new_record(self, *, task, directory, dataset=None, run_id=None):
+    def new_record(
+        self, *, task, directory, dataset=None, submission=None, run_id=None
+    ):
         """Create the in-memory identity of an unsubmitted persistent run."""
         now = _now()
         return RunRecord(
@@ -226,6 +330,7 @@ class ExecutionManager:
             task=str(task).upper(),
             dataset=None if dataset is None else str(dataset),
             directory=os.path.abspath(os.fspath(directory)),
+            submission=submission,
         )
 
     def transition(
@@ -250,6 +355,26 @@ class ExecutionManager:
         if message is not _UNCHANGED and message is not None:
             changes["message"] = message
         return self.store.save(replace(record, **changes))
+
+    def reserve(self, record):
+        """Atomically reserve *record*'s persistent submission namespace."""
+        if record.submission is None:
+            raise ValueError("Persistent run lacks a submission key")
+        with self.store.submission_lock():
+            conflicts = tuple(
+                active
+                for active in self.store.runs(active=True)
+                if active.id != record.id
+                and active.submission is not None
+                and record.submission.conflicts_with(active.submission)
+            )
+            if conflicts:
+                raise DuplicateSubmissionError(record, conflicts)
+            return self.transition(
+                record,
+                state=RunState.SUBMITTING,
+                reference=None,
+            )
 
     def update(self, record, status: RunStatus):
         return self.transition(
@@ -301,10 +426,17 @@ class ExecutionManager:
         run_id=None,
     ):
         """Create a caller-owned runner whose lifecycle is persisted."""
+        submission = SubmissionKey(
+            endpoint=_endpoint_identity(executor),
+            directory=executor.submission_directory(spec),
+            task=task,
+            dataset=dataset,
+        )
         record = self.new_record(
             task=task,
             dataset=dataset,
             directory=spec.directory,
+            submission=submission,
             run_id=run_id,
         )
         self.register_executor(executor)
@@ -394,11 +526,7 @@ class PersistentRunner:
     def submit(self):
         if self._record.state != RunState.NEW:
             raise RuntimeError(f"Run is already {self._record.state.value}")
-        self._record = self.manager.transition(
-            self._record,
-            state=RunState.SUBMITTING,
-            reference=None,
-        )
+        self._record = self.manager.reserve(self._record)
         try:
             result = self._runner.submit()
         except BaseException:

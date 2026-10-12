@@ -13,10 +13,12 @@ from .base import (
 from .local import LocalExecutor, LocalRunner
 from .manager import (
     CorruptRunRecord,
+    DuplicateSubmissionError,
     ExecutionManager,
     PersistentRunner,
     RunRecord,
     RunStore,
+    SubmissionKey,
 )
 from .pool import ExecutorPool, default_executor_pool
 from .psij import PsijExecutor, PsijRunner
@@ -37,6 +39,8 @@ __all__ = [
     "RunReference",
     "RunState",
     "RunStatus",
+    "SubmissionKey",
+    "DuplicateSubmissionError",
     "RunRecord",
     "RunStore",
     "CorruptRunRecord",

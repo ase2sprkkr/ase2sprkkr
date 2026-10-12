@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import json
+import os
 import posixpath
 import warnings
+from pathlib import Path, PurePosixPath
 
 from .base import Executor, LaunchSpec, MpiNotFoundWarning, RunReference
 from .remote import (
@@ -128,6 +130,32 @@ class RemoteEndpointExecutor(Executor):
         if not isinstance(launch, LaunchSpec):
             launch = LaunchSpec(**dict(launch))
         return _RemoteRunContext(endpoint, launch)
+
+    def submission_directory(self, spec):
+        """Return a stable target-side namespace without contacting the host."""
+        launch = spec.launch
+        local_root = Path(launch.local_root or Path.home()).expanduser().resolve()
+        directory = Path(spec.directory).expanduser().resolve()
+        try:
+            relative = directory.relative_to(local_root)
+        except ValueError as exc:
+            raise ValueError(
+                f"Local path {directory} is outside mapped root {local_root}; "
+                "specify local_root/remote_root explicitly"
+            ) from exc
+
+        root = launch.remote_root
+        if root is None or root == "~":
+            remote_root = "~"
+        elif root.startswith("~/"):
+            remote_root = posixpath.normpath(root)
+        elif posixpath.isabs(root):
+            remote_root = posixpath.normpath(root)
+        else:
+            remote_root = posixpath.normpath(posixpath.join("~", root))
+        if not relative.parts:
+            return remote_root
+        return posixpath.join(remote_root, *PurePosixPath(*relative.parts).parts)
 
     def create_run(self, reader, spec, callback=None):
         """Create one run using staging parameters embedded in *spec*."""
