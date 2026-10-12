@@ -1,144 +1,43 @@
-import configparser
-from types import SimpleNamespace
-
-import pytest
+import shlex
 
 from ase2sprkkr.configuration import definition
-from ase2sprkkr.profiles import ProfilesConfigurationContainer
-from ase2sprkkr.sprkkr.profile import (
-    SPRKKRProfile,
-    profile_from_ase_command,
-    resolve_sprkkr_profile,
-)
+from ase2sprkkr.configuration_yaml import load_configuration_yaml
+from ase2sprkkr.sprkkr.profile import SPRKKRProfile, resolve_sprkkr_profile
 
 
-def ase_config(command, **values):
-    parser = configparser.ConfigParser()
-    section = {"command": command}
-    section.update({name: str(value) for name, value in values.items()})
-    parser["sprkkr"] = section
-    return SimpleNamespace(parser=parser)
-
-
-def test_ase_command_directory_is_no_suffix():
-    profile = profile_from_ase_command("/opt/sprkkr/bin")
-
-    assert profile.executable_dir == "/opt/sprkkr/bin"
-    assert profile.executable_suffix == ""
-    assert profile.mpi is False
-
-
-def test_ase_command_placeholder_maps_to_suffix():
-    profile = profile_from_ase_command("/opt/sprkkr/bin/{}.mpi")
-
-    assert profile.executable_dir == "/opt/sprkkr/bin"
-    assert profile.executable_suffix == ".mpi"
-
-
-@pytest.mark.parametrize(
-    "command",
-    (
-        "/opt/{}/bin",
-        "/opt/sprkkr/foo_{}",
-        "/opt/sprkkr/{}/{}",
-    ),
-)
-def test_invalid_ase_command_placeholder_is_rejected(command):
-    with pytest.raises(ValueError, match="placeholder"):
-        profile_from_ase_command(command)
-
-
-def test_runtime_resolver_uses_full_ase_profile(monkeypatch):
-    monkeypatch.setattr(
-        ProfilesConfigurationContainer,
-        "_ase_config",
-        staticmethod(
-            lambda: ase_config(
-                "/opt/sprkkr/{}.x",
-                mpi=8,
-                executor="ssh",
-                host="user@cluster",
-                input_sync="always",
-            )
-        ),
+def test_profile_shell_strings_round_trip_to_runtime_argv(tmp_path):
+    path = tmp_path / "config.yaml"
+    path.write_text(
+        "profiles:\n"
+        "  cluster:\n"
+        "    mpi: srun -n 8\n"
+        "    ssh_options: -p 2222 -i '/tmp/key file'\n",
+        encoding="utf8",
     )
-    configuration = definition.create_object()
+    config = definition.create_object()
 
-    profile = resolve_sprkkr_profile(configuration=configuration)
+    load_configuration_yaml(config, path)
+    profile = resolve_sprkkr_profile("cluster", configuration=config)
 
-    assert profile.executable_dir == "/opt/sprkkr"
-    assert profile.executable_suffix == ".x"
-    assert profile.mpi == 8
-    assert profile.executor == "ssh"
-    assert profile.host == "user@cluster"
-    assert profile.input_sync == "always"
+    assert profile.mpi == ("srun", "-n", "8")
+    assert profile.ssh_options == ("-p", "2222", "-i", "/tmp/key file")
 
 
-def test_runtime_resolver_prefers_named_default_over_ase(monkeypatch):
-    monkeypatch.setattr(
-        ProfilesConfigurationContainer,
-        "_ase_config",
-        staticmethod(lambda: ase_config("/ase/bin")),
+def test_explicit_runtime_shell_strings_are_split():
+    profile = resolve_sprkkr_profile(
+        SPRKKRProfile(
+            mpi="mpirun -np 4 --bind-to 'core list'",
+            ssh_options="-o 'ProxyCommand=ssh jump nc %h %p' -p 2222",
+        )
     )
-    configuration = definition.create_object()
-    configuration.profiles.set(
-        {
-            "cluster": {
-                "mpi": 8,
-                "executable_dir": "/cluster/bin",
-                "executable_suffix": ".mpi",
-            }
-        }
-    )
-    configuration.default_profile.set("cluster")
 
-    profile = resolve_sprkkr_profile(configuration=configuration)
-
-    assert profile == SPRKKRProfile(
-        executable_dir="/cluster/bin",
-        executable_suffix=".mpi",
-        mpi=8,
+    assert profile.mpi == tuple(shlex.split("mpirun -np 4 --bind-to 'core list'"))
+    assert profile.ssh_options == tuple(
+        shlex.split("-o 'ProxyCommand=ssh jump nc %h %p' -p 2222")
     )
 
 
-def test_runtime_resolver_accepts_explicit_profile_name(monkeypatch):
-    monkeypatch.setattr(
-        ProfilesConfigurationContainer,
-        "_ase_config",
-        staticmethod(lambda: None),
-    )
-    configuration = definition.create_object()
-    configuration.profiles.set({"cluster": {"mpi": 4}})
+def test_mpi_auto_keeps_symbolic_semantics():
+    profile = resolve_sprkkr_profile(SPRKKRProfile(mpi="auto"))
 
-    profile = resolve_sprkkr_profile("cluster", configuration=configuration)
-
-    assert profile.mpi == 4
-    assert profile.executable_dir is False
-    assert profile.executable_suffix == ""
-
-
-def test_explicit_runtime_profile_is_normalized():
-    source = SPRKKRProfile(executable_dir="/bin", executable_suffix=None, mpi=None)
-
-    profile = resolve_sprkkr_profile(source)
-
-    assert profile == SPRKKRProfile("/bin", "", False)
-    assert source == SPRKKRProfile("/bin", None, None)
-
-
-def test_profile_with_overrides_returns_self_when_no_change_is_needed():
-    profile = SPRKKRProfile("/cluster", ".x", 4)
-
-    assert profile.with_overrides() is profile
-    assert profile.with_overrides(mpi=None, executable_dir=None, executable_suffix=None) is profile
-    assert profile.with_overrides(mpi=4, executable_dir="/cluster", executable_suffix=".x") is profile
-
-
-def test_profile_with_overrides_copies_only_changed_values():
-    profile = SPRKKRProfile("/cluster", ".x", 4)
-
-    changed = profile.with_overrides(mpi=2, executable_suffix=False)
-
-    assert changed == SPRKKRProfile("/cluster", False, 2)
-    assert changed is not profile
-    assert profile == SPRKKRProfile("/cluster", ".x", 4)
+    assert profile.mpi == "auto"
