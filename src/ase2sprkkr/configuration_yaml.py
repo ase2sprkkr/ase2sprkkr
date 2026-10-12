@@ -6,8 +6,10 @@ fragments are recovered while invalid/unknown raw nodes remain available for
 round-trip persistence.
 """
 
+import copy
 from collections.abc import Mapping
 from pathlib import Path
+import shlex
 import warnings
 
 from ruamel.yaml import YAML
@@ -51,9 +53,49 @@ def dump_yaml_document(file, data):
         _yaml().dump(data, stream)
 
 
+def _shell_string(value):
+    """Serialize an argv-like value as one shell-escaped command string."""
+    if isinstance(value, (list, tuple)):
+        return shlex.join([str(item) for item in value])
+    return value
+
+
+def _storage_configuration(values):
+    """Convert command argv values to the canonical YAML representation."""
+    profiles = values.get("profiles") if isinstance(values, Mapping) else None
+    if not isinstance(profiles, Mapping):
+        return values
+
+    for profile in profiles.values():
+        if not isinstance(profile, Mapping):
+            continue
+        if "mpi" in profile:
+            profile["mpi"] = _shell_string(profile["mpi"])
+        if "ssh_options" in profile:
+            profile["ssh_options"] = _shell_string(profile["ssh_options"])
+    return values
+
+
+def _typed_configuration(data):
+    """Convert shell-string YAML values to the typed configuration shape."""
+    out = copy.deepcopy(data)
+    profiles = out.get("profiles") if isinstance(out, Mapping) else None
+    if not isinstance(profiles, Mapping):
+        return out
+
+    for profile in profiles.values():
+        if not isinstance(profile, Mapping):
+            continue
+        ssh_options = profile.get("ssh_options")
+        if isinstance(ssh_options, str):
+            profile["ssh_options"] = shlex.split(ssh_options)
+    return out
+
+
 def explicit_configuration(config):
-    """Return only explicitly stored, non-generated configuration values."""
-    return config.as_dict(only_changed="explicit", generated=False) or {}
+    """Return explicitly stored values in their canonical YAML representation."""
+    values = config.as_dict(only_changed="explicit", generated=False) or {}
+    return _storage_configuration(values)
 
 
 def _validate_yaml_shape(data):
@@ -64,7 +106,7 @@ def _validate_yaml_shape(data):
 def apply_yaml_document(config, data):
     """Apply a complete YAML mapping atomically to a configuration object."""
     _validate_yaml_shape(data)
-    config.set(data, unknown="fail")
+    config.set(_typed_configuration(data), unknown="fail")
 
 
 def _recover_profiles(config, value, accepted, issues):
@@ -178,10 +220,11 @@ def _format_issues(file, issues):
 
 def _apply_with_recovery(config, data, *, file=None, warn=True):
     _validate_yaml_shape(data)
+    typed_data = _typed_configuration(data)
     try:
-        config.set(data, unknown="fail")
+        config.set(typed_data, unknown="fail")
     except _EXPECTED_USER_ERRORS:
-        accepted, issues = _recover_configuration(config, data)
+        accepted, issues = _recover_configuration(config, typed_data)
     else:
         accepted = CommentedMap(data)
         issues = []
