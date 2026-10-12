@@ -95,44 +95,93 @@ def _remote_error(exc):
     pytest.fail(f"{exc}\n\nRemote stderr:\n{stderr or '<empty>'}")
 
 
-def _remote_run_diagnostics(ssh, reference):
-    """Return target-side state and scheduler stderr for a failed remote run."""
-    try:
-        state = json.loads(
-            subprocess.check_output(
-                ssh
-                + [
-                    "ase2sprkkr",
-                    "remote",
-                    "status",
-                    reference.directory,
-                    reference.native_id,
-                ],
-                text=True,
-                stderr=subprocess.STDOUT,
-            )
-        )
-    except Exception as exc:
-        return f"Could not read remote state: {exc}"
+def _ssh_capture(ssh, *command):
+    return subprocess.run(
+        ssh + list(command),
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
 
-    stderr = "<empty>"
+
+def _diagnostic_command(ssh, title, *command):
+    result = _ssh_capture(ssh, *command)
+    parts = [f"{title} (exit {result.returncode}):"]
+    if result.stdout:
+        parts.append(result.stdout.rstrip())
+    if result.stderr:
+        parts.append("stderr:\n" + result.stderr.rstrip())
+    if len(parts) == 1:
+        parts.append("<empty>")
+    return "\n".join(parts)
+
+
+def _remote_run_diagnostics(ssh, reference):
+    """Return target-side state, request and scheduler diagnostics."""
+    status = _ssh_capture(
+        ssh,
+        "ase2sprkkr",
+        "remote",
+        "status",
+        reference.directory,
+        reference.native_id,
+    )
+    if status.returncode:
+        return (
+            f"Remote status command failed with exit {status.returncode}.\n"
+            f"stdout:\n{status.stdout or '<empty>'}\n"
+            f"stderr:\n{status.stderr or '<empty>'}"
+        )
+
+    try:
+        state = json.loads(status.stdout)
+    except json.JSONDecodeError as exc:
+        return (
+            f"Could not parse remote state: {exc}\n"
+            f"stdout:\n{status.stdout or '<empty>'}\n"
+            f"stderr:\n{status.stderr or '<empty>'}"
+        )
+
+    run_dir = f"{reference.directory}/.ase2sprkkr/runs/{reference.native_id}"
+    request_result = _ssh_capture(ssh, "cat", "--", f"{run_dir}/request.json")
+    request = None
+    if request_result.returncode == 0:
+        try:
+            request = json.loads(request_result.stdout)
+        except json.JSONDecodeError:
+            pass
+
+    sections = ["Remote state:\n" + json.dumps(state, indent=2, sort_keys=True)]
+    sections.append(
+        "Remote request:\n"
+        + (
+            json.dumps(request, indent=2, sort_keys=True)
+            if request is not None
+            else (request_result.stdout or request_result.stderr or "<unavailable>")
+        )
+    )
+
     error_file = state.get("error_file")
     if error_file:
-        try:
-            stderr = subprocess.check_output(
-                ssh + ["cat", "--", error_file],
-                text=True,
-                stderr=subprocess.STDOUT,
-            )
-        except subprocess.CalledProcessError as exc:
-            stderr = exc.output or f"Could not read {error_file}"
+        sections.append(_diagnostic_command(ssh, "Scheduler stderr", "cat", "--", error_file))
 
-    return (
-        "Remote state:\n"
-        + json.dumps(state, indent=2, sort_keys=True)
-        + "\n\nScheduler stderr:\n"
-        + (stderr or "<empty>")
-    )
+    backend_reference = state.get("backend_reference") or {}
+    native_id = backend_reference.get("native_id")
+    if native_id:
+        psij_out = f"/home/tester/.psij/work/slurm/{native_id}.out"
+        sections.append(_diagnostic_command(ssh, "PSI/J launcher output", "cat", "--", psij_out))
+        sections.append(_diagnostic_command(ssh, "Slurm job", "scontrol", "show", "job", str(native_id)))
+
+    if request is not None:
+        launch = request.get("launch") or {}
+        argv = request.get("mpi_argv") if launch.get("mpi") else request.get("argv")
+        if argv:
+            executable = argv[0]
+            sections.append(_diagnostic_command(ssh, "Executable", "ls", "-l", "--", executable))
+            sections.append(_diagnostic_command(ssh, "Executable target", "readlink", "-f", "--", executable))
+            sections.append(_diagnostic_command(ssh, "Executable dependencies", "ldd", executable))
+
+    return "\n\n".join(sections)
 
 
 def test_remote_executor_runs_psij_slurm_over_ssh():
