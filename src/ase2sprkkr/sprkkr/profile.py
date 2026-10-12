@@ -67,6 +67,7 @@ class SPRKKRProfile:
         *,
         input_files=(),
         output_files=(),
+        cache_files=(),
         mpi_supported=False,
         gdb=False,
     ):
@@ -111,6 +112,7 @@ class SPRKKRProfile:
             stdin=stdin,
             input_files=tuple(input_files),
             output_files=tuple(output_files),
+            cache_files=tuple(cache_files),
         )
 
 
