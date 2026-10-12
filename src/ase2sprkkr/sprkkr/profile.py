@@ -8,6 +8,7 @@ a calculation is prepared.
 from __future__ import annotations
 
 import os
+import shlex
 from dataclasses import dataclass, replace
 from typing import Any
 
@@ -48,6 +49,8 @@ class SPRKKRProfile:
             names = ", ".join(sorted(unknown))
             raise TypeError(f"Unknown SPR-KKR profile override(s): {names}")
 
+        if "mpi" in overrides and overrides["mpi"] is not None:
+            overrides["mpi"] = _normalize_mpi(overrides["mpi"])
         changes = {
             name: value
             for name, value in overrides.items()
@@ -120,6 +123,22 @@ def _profile_value(profile, name):
     return value() if callable(value) else value
 
 
+def _shell_argv(value):
+    """Normalize a shell-style command string or argv sequence to a tuple."""
+    if not value:
+        return ()
+    if isinstance(value, str):
+        return tuple(shlex.split(value))
+    return tuple(value)
+
+
+def _normalize_mpi(value):
+    """Normalize an explicit MPI command while retaining symbolic modes."""
+    if isinstance(value, str) and value != "auto":
+        return _shell_argv(value)
+    return value
+
+
 def profile_from_ase_command(command):
     """Translate ASE's ``[sprkkr] command`` into an SPR-KKR profile."""
     return SPRKKRProfile(**ase_command_profile_values(command))
@@ -140,18 +159,17 @@ def _configured_profile(profile, configuration):
             changes["executable_dir"] = False
         if profile.executable_suffix is None:
             changes["executable_suffix"] = ""
-        if profile.mpi is None:
-            changes["mpi"] = False
+        mpi = False if profile.mpi is None else _normalize_mpi(profile.mpi)
+        if mpi != profile.mpi:
+            changes["mpi"] = mpi
         if not profile.executor:
             changes["executor"] = "local"
-        if profile.ssh_options is None:
-            changes["ssh_options"] = ()
-        elif not isinstance(profile.ssh_options, tuple):
-            changes["ssh_options"] = tuple(profile.ssh_options)
-        if profile.remote_command is None:
-            changes["remote_command"] = ()
-        elif not isinstance(profile.remote_command, tuple):
-            changes["remote_command"] = tuple(profile.remote_command)
+        ssh_options = _shell_argv(profile.ssh_options)
+        if ssh_options != profile.ssh_options:
+            changes["ssh_options"] = ssh_options
+        remote_command = _shell_argv(profile.remote_command)
+        if remote_command != profile.remote_command:
+            changes["remote_command"] = remote_command
         if not profile.input_sync:
             changes["input_sync"] = "changed"
         if not profile.output_sync:
@@ -172,6 +190,8 @@ def _configured_profile(profile, configuration):
     mpi = _profile_value(profile, "mpi")
     if mpi is None:
         mpi = False
+    else:
+        mpi = _normalize_mpi(mpi)
 
     return SPRKKRProfile(
         executable_dir=executable_dir,
@@ -181,8 +201,8 @@ def _configured_profile(profile, configuration):
         host=_profile_value(profile, "host"),
         local_root=_profile_value(profile, "local_root"),
         remote_root=_profile_value(profile, "remote_root"),
-        ssh_options=tuple(_profile_value(profile, "ssh_options") or ()),
-        remote_command=tuple(_profile_value(profile, "remote_command") or ()),
+        ssh_options=_shell_argv(_profile_value(profile, "ssh_options")),
+        remote_command=_shell_argv(_profile_value(profile, "remote_command")),
         input_sync=_profile_value(profile, "input_sync") or "changed",
         output_sync=_profile_value(profile, "output_sync") or "changed",
         psij_backend=_profile_value(profile, "psij_backend") or "slurm",
