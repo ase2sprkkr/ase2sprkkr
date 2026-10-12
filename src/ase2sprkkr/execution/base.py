@@ -3,9 +3,13 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 from typing import Any, Optional, Protocol, Sequence, Tuple
+
+
+class MPIRunnerNotFoundWarning(UserWarning):
+    """Warning emitted when an explicitly requested MPI launcher is unavailable."""
 
 
 class RunState(str, Enum):
@@ -79,7 +83,8 @@ class LaunchSpec:
     ``mpi`` is ``False`` for serial execution, ``True`` when MPI is required,
     ``"auto"`` when a local executor may fall back to serial execution, or an
     explicit launcher argv tuple. ``process_count`` is an optional requested
-    number of MPI ranks.
+    number of MPI ranks. ``mpi_warning`` controls whether failure to detect an
+    explicitly requested default MPI launcher emits a warning.
 
     The remaining fields describe remote filesystem mapping and synchronization
     for this run. They intentionally belong to the run rather than to an
@@ -93,6 +98,7 @@ class LaunchSpec:
     remote_root: Optional[str] = None
     input_sync: str = "changed"
     output_sync: str = "changed"
+    mpi_warning: bool = True
 
     def __post_init__(self):
         if isinstance(self.mpi, list):
