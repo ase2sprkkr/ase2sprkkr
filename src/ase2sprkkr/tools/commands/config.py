@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-"""
-Tool to configuration of ASE2SPRKKR
-"""
+"""Tool for ASE2SPRKKR user configuration."""
 
 from pathlib import Path
 import sys
@@ -14,68 +12,68 @@ sys.path.append(root_path)
 
 from ...common.tools import main  # NOQA
 
-help = "Show the (current) user configuration."
-description = "On the most modern unix/linux systems, it is in the file ~/.config/ase2sprkkr/__init__.py"
+help = "Show or edit the current user configuration."
+description = "The user configuration is stored in ~/.config/ase2sprkkr/config.yaml on typical Unix/Linux systems."
 
 
 def parser(parser):
     parser.add_argument("-p", "--path", help="Just print the path to the configuration file.", action="store_true")
-    parser.add_argument("-P", "--print", help="Just print the path configuration file.", action="store_true")
-    parser.add_argument("-s", "--show", help="Print the configuration.", action="store_true")
+    parser.add_argument("-P", "--print", help="Print the configuration file.", action="store_true")
+    parser.add_argument("-s", "--show", help="Print the resolved configuration.", action="store_true")
     parser.add_argument("-i", "--info", help="Show the description of the configuration options.", action="store_true")
     parser.add_argument(
         "-S",
         "--set",
         nargs=2,
-        help='Set the given configuration to the given value. Example: "ase2sprkkr config -S executables.suffix 8.6".',
+        help='Set the given configuration to the given value. Example: "ase2sprkkr config -S default_profile local".',
         metavar=("NAME", "VALUE"),
     )
     parser.add_argument(
-        "-e", "--edit", help="Edit the file using the editor in the $EDITOR environment variable.", action="store_true"
+        "-e", "--edit", help="Edit the YAML file using the editor in the $EDITOR environment variable.", action="store_true"
     )
     parser.add_argument(
-        "-d", "--default", help="Put the default values into the file, if it not exists.", action="store_true"
+        "-d", "--default", help="Create a commented YAML configuration file if it does not exist.", action="store_true"
     )
     parser.add_argument(
         "-D",
         "--overwrite-by-default",
         dest="default",
-        help="Put the default values into the file. Owerwrite it if it exists.",
+        help="Write the commented default YAML configuration, overwriting an existing file.",
         action="store_const",
         const="overwrite",
     )
-    parser.add_argument("-o", "--show-default", help="Show the default values.", action="store_true")
+    parser.add_argument("-o", "--show-default", help="Show the default YAML configuration.", action="store_true")
 
 
 def default_content(file):
-    return f"""# ASE2SRPKKR configuration file
-# -------------------------------
+    return f"""# ASE2SPRKKR configuration file
+# -----------------------------
+# Location: {file}
+#
+# Only values you want to override need to be present. The examples below are
+# commented out and therefore do not change the defaults.
 
-# Please, DO NOT comment the following line.
-from ase2sprkkr.configuration import config
+# Explicitly select one of the named profiles below.
+# default_profile: local
 
-# This file is pure python and it is executed when ase2sprkkr is imported.
-# Place it into the following path:
-# {file}
+# profiles:
+#   local:
+#     executable_dir: /opt/sprkkr/bin
+#     executable_suffix: ""
+#     # MPI can be false, true, an integer process count, "auto", or argv.
+#     mpi: auto
+#
+# The reserved profile "ase" is read from ASE configuration and is not stored
+# here. The reserved "legacy" profile is managed through deprecated options and
+# may appear here after migrating an old configuration.
 
-# This string is appended to the runned executables
-# config.executables.suffix = ''
+# running:
+#   empty_spheres: auto
+#   print_output: info
+#   mpi_warning: true
 
-# Do you want to run the executables from a specific directory?
-# config.executables.dir = ''
-
-# Uncomment, if you don't want to run empty-spheres finding by default
-# config.running.empty_spheres = False
-
-# Set to False if MPI should not be used. Or set to the number of processor,
-# or just command line to run mpi programm, e.g.: [ '/usr/bin/mpiexec', '-n', '4' ]
-# config.running.mpi = []
-
-# You can change the verbosity of the output by setting the following to False or True
-# config.running.print_output = 'info'
-
-# Authentication token to Nomad. You can set it using ase2sprkkr nomad authenticate <username>
-# config.nomad.token = None
+# nomad:
+#   token: your-token
 """
 
 
@@ -91,17 +89,18 @@ def run(args, global_args):
 
     if args.default:
         if args.default == "overwrite" or not os.path.isfile(file):
-            with open(file, "w") as f:
+            Path(file).parent.mkdir(parents=True, exist_ok=True)
+            with open(file, "w", encoding="utf8") as f:
                 f.write(default_content(file))
             print(f"Configuration defaults have been written to file '{file}'.")
         else:
-            print("Configuration file have already existed, so it have not been overwritten.")
+            print("Configuration file already exists, so it has not been overwritten.")
         run = False
     if args.path:
         print(file)
         run = False
     if args.print:
-        with open(file, "r") as f:
+        with open(file, "r", encoding="utf8") as f:
             print(f.read())
         run = False
     if args.show_default:
@@ -119,15 +118,15 @@ def run(args, global_args):
                 val = Variant().parse(args.set[1])
                 config.find(args.set[0]).set_permanent(val)
             except DataValidityError:
-                # if parsing using mixed failed, just try store string
+                # If parsing using mixed failed, just try storing a string.
                 config.find(args.set[0]).set_permanent(args.set[1])
-            print(f"Configuration '{args.set[0]}' have been set to '{args.set[1]}'.")
+            print(f"Configuration '{args.set[0]}' has been set to '{args.set[1]}'.")
         except KeyError:
             print(f"Unknown configuration name '{args.set[0]}'.")
         except pyparsing.ParseBaseException:
             print(
-                f"Suspicious configuration value '{args.set[1]}'. If you are sure,"
-                "please edit the configuration file manually"
+                f"Suspicious configuration value '{args.set[1]}'. If you are sure, "
+                "please edit the configuration file manually."
             )
         run = False
     if args.show:
@@ -138,7 +137,10 @@ def run(args, global_args):
     if args.edit:
         if "EDITOR" not in os.environ:
             print("Please set the EDITOR environment variable.")
-            exit(-1)
+            raise SystemExit(-1)
+        if not os.path.isfile(file):
+            Path(file).parent.mkdir(parents=True, exist_ok=True)
+            Path(file).write_text(default_content(file), encoding="utf8")
         subprocess.run([os.environ["EDITOR"], file])
         run = False
 
@@ -147,7 +149,7 @@ def run(args, global_args):
             print("# Content of the ASE2SPRKKR user configuration file")
             print("#--------------------------------------------------")
             print("")
-            with open(file, "r") as f:
+            with open(file, "r", encoding="utf8") as f:
                 print(f.read())
         else:
             print("# No custom user configuration found")
