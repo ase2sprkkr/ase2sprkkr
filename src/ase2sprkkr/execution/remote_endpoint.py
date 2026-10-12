@@ -1,19 +1,23 @@
-"""Endpoint-only remote executor with per-run staging configuration."""
+"""Reusable remote endpoint with per-run staging configuration."""
 
 from __future__ import annotations
 
-from dataclasses import asdict
+import json
+import posixpath
 
-from .base import LaunchSpec, RunReference
-from .remote import RemoteExecutor, _run_sync
+from .base import Executor, LaunchSpec, RunReference
+from .remote import (
+    RemoteExecutor as _RemoteStagingExecutor,
+    _METADATA_DIR,
+    _REQUEST_FILE,
+    _REMOTE_EXECUTORS,
+    _RUNS_DIR,
+    _run_sync,
+)
 
 
-class _RemoteRunContext(RemoteExecutor):
-    """Lightweight configured facade for one remote run.
-
-    It shares transport/backend identity with the pooled endpoint executor but
-    keeps filesystem mapping and sync policy local to the concrete run.
-    """
+class _RemoteRunContext(_RemoteStagingExecutor):
+    """Per-run staging facade sharing one pooled endpoint transport."""
 
     def __init__(self, endpoint, launch):
         self.endpoint = endpoint
@@ -27,17 +31,15 @@ class _RemoteRunContext(RemoteExecutor):
             input_files=launch.input_sync,
             output_files=launch.output_sync,
         )
-        # Reuse the endpoint's cached remote HOME lookup when available.
-        self._remote_home_cache = endpoint._remote_home_cache
 
     async def _remote_home(self):
-        home = await self.endpoint._remote_home()
-        self._remote_home_cache = home
-        return home
+        return await self.endpoint._remote_home()
 
 
-class RemoteEndpointExecutor(RemoteExecutor):
-    """Reusable remote endpoint independent of launch/staging policy."""
+class RemoteEndpointExecutor(Executor):
+    """Reusable remote execution endpoint independent of staging policy."""
+
+    name = "remote"
 
     def __init__(
         self,
@@ -47,12 +49,58 @@ class RemoteEndpointExecutor(RemoteExecutor):
         backend_options=None,
         command=("ase2sprkkr", "remote"),
     ):
-        super().__init__(
-            transport,
-            backend=backend,
-            backend_options=backend_options,
-            command=command,
+        if backend not in _REMOTE_EXECUTORS:
+            raise ValueError(f"Unsupported remote executor: {backend!r}")
+        self.transport = transport
+        self.backend = backend
+        self.backend_options = dict(backend_options or {})
+        self.command = tuple(command)
+        self.computer = getattr(transport, "host", None)
+        self._remote_home_cache = None
+
+    async def _remote_home(self):
+        if self._remote_home_cache is None:
+            result = await self.transport.run(
+                ("sh", "-c", 'printf "%s" "$HOME"')
+            )
+            home = result.stdout.decode("utf8").strip()
+            if not home:
+                raise RuntimeError("Could not determine remote home directory")
+            self._remote_home_cache = posixpath.normpath(home)
+        return self._remote_home_cache
+
+    async def _json_request(self, action, *args, payload=None):
+        data = None if payload is None else json.dumps(payload).encode("utf8")
+        result = await self.transport.run(
+            (*self.command, action, *args), input=data
         )
+        return json.loads(result.stdout.decode("utf8"))
+
+    async def _submit(self, request):
+        return await self._json_request(
+            "submit", request["directory"], payload=request
+        )
+
+    async def _status(self, directory, run_id):
+        return await self._json_request("status", directory, run_id)
+
+    async def _cancel(self, directory, run_id):
+        return await self._json_request("cancel", directory, run_id)
+
+    async def _follow(self, directory, run_id):
+        return await self.transport.start(
+            (*self.command, "follow", directory, run_id)
+        )
+
+    async def _saved_request(self, directory, run_id):
+        path = posixpath.join(
+            directory,
+            _METADATA_DIR,
+            _RUNS_DIR,
+            run_id,
+            _REQUEST_FILE,
+        )
+        return json.loads((await self.transport.read_file(path)).decode("utf8"))
 
     @staticmethod
     def _context(endpoint, launch):
@@ -77,7 +125,3 @@ class RemoteEndpointExecutor(RemoteExecutor):
         return _run_sync(
             self._attach_with_saved_launch(reference, reader, callback=callback)
         )
-
-    def launch_snapshot(self, spec):
-        """Return the serializable launch configuration carried by *spec*."""
-        return asdict(spec.launch)
