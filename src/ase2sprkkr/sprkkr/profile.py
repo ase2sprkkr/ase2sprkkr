@@ -38,7 +38,7 @@ class SPRKKRProfile:
     remote_command: Any = ()
     input_sync: str = "changed"
     output_sync: str = "changed"
-    psij_backend: str = "slurm"
+    psij_backend: Any = None
     psij_url: Any = None
 
     def with_overrides(self, **overrides):
@@ -174,8 +174,6 @@ def _configured_profile(profile, configuration):
             changes["input_sync"] = "changed"
         if not profile.output_sync:
             changes["output_sync"] = "changed"
-        if not profile.psij_backend:
-            changes["psij_backend"] = "slurm"
         return replace(profile, **changes) if changes else profile
 
     if getattr(profile, "source", None) == "ase":
@@ -205,7 +203,7 @@ def _configured_profile(profile, configuration):
         remote_command=_shell_argv(_profile_value(profile, "remote_command")),
         input_sync=_profile_value(profile, "input_sync") or "changed",
         output_sync=_profile_value(profile, "output_sync") or "changed",
-        psij_backend=_profile_value(profile, "psij_backend") or "slurm",
+        psij_backend=_profile_value(profile, "psij_backend"),
         psij_url=_profile_value(profile, "psij_url"),
     )
 
@@ -226,13 +224,19 @@ def executor_from_profile(profile: SPRKKRProfile):
         }
         if profile.remote_command:
             kwargs["command"] = profile.remote_command
+        if profile.psij_backend is not None or profile.psij_url is not None:
+            kwargs["backend"] = "psij"
+            kwargs["backend_options"] = {
+                "backend": profile.psij_backend or "slurm",
+                "url": profile.psij_url,
+            }
         return RemoteExecutor(
             SshTransport(profile.host, options=profile.ssh_options),
             **kwargs,
         )
 
     if profile.executor == "psij":
-        return PsijExecutor(profile.psij_backend, url=profile.psij_url)
+        return PsijExecutor(profile.psij_backend or "slurm", url=profile.psij_url)
 
     raise ValueError(f"Unknown execution backend {profile.executor!r}")
 
