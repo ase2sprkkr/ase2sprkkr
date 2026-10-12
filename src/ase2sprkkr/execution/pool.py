@@ -35,10 +35,10 @@ class ExecutorPool:
 
     def for_profile(self, profile):
         """Return the shared backend suitable for *profile*."""
-        from ..sprkkr.profile import executor_from_profile
+        from ..sprkkr.profile import create_executor_from_profile
 
         key = self.key_for_profile(profile)
-        return self.get(key, lambda: executor_from_profile(profile))
+        return self.get(key, lambda: create_executor_from_profile(profile))
 
     def discard(self, key):
         """Forget one pooled backend and close it when supported."""
