@@ -44,6 +44,7 @@ class ExecutionSpec:
     error_file: Any = None
     input_files: Sequence[Any] = ()
     output_files: Sequence[Any] = ()
+    cache_files: Sequence[Any] = ()
 
 
 class Runner(Protocol):
