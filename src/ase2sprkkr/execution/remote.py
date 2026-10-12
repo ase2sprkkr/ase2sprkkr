@@ -405,6 +405,7 @@ class RemoteRunner:
         self._exception = None
         self._follow_process = None
         self._output_targets = {}
+        self._cache_targets = {}
 
     @property
     def reference(self):
@@ -499,8 +500,7 @@ class RemoteRunner:
                     )
                 await self.executor.transport.put_file(source, target)
         elif policy == FileSyncPolicy.NEVER:
-            if remote_digest is None:
-                raise FileNotFoundError(f"Remote input file does not exist: {target}")
+            pass
         elif local_digest is None:
             if remote_digest is None:
                 raise FileNotFoundError(
@@ -511,6 +511,38 @@ class RemoteRunner:
 
         used[target] = source
         return target
+
+    async def _prepare_cache_files(self, used):
+        targets = {}
+        policy = self.executor.input_files
+        for value in self.spec.cache_files:
+            local = self._local_path(value)
+            if local is None or local in targets:
+                continue
+            remote = await self.executor.map_path(local)
+            previous = used.get(remote)
+            if previous is not None and previous != local:
+                raise ValueError(f"Remote cache target collision: {remote}")
+
+            if previous is None:
+                local_digest = local_file_digest(local)
+                remote_digest = await self.executor.transport.file_digest(remote)
+                if policy == FileSyncPolicy.ALWAYS:
+                    if local_digest is not None:
+                        await self.executor.transport.put_file(local, remote)
+                elif policy == FileSyncPolicy.MISSING:
+                    if remote_digest is None and local_digest is not None:
+                        await self.executor.transport.put_file(local, remote)
+                elif policy == FileSyncPolicy.CHANGED:
+                    if local_digest is not None and local_digest != remote_digest:
+                        await self.executor.transport.put_file(local, remote)
+                used[remote] = local
+
+            targets[local] = (
+                remote,
+                await self.executor.transport.file_signature(remote),
+            )
+        self._cache_targets = targets
 
     async def _prepare_output_files(self, input_targets):
         primary = {
@@ -532,6 +564,8 @@ class RemoteRunner:
 
     async def _sync_output_files(self, required):
         policy = self.executor.output_files
+        if policy == FileSyncPolicy.NEVER:
+            return
         for local, remote in self._output_targets.items():
             remote_digest = await self.executor.transport.file_digest(remote)
             if remote_digest is None:
@@ -541,8 +575,6 @@ class RemoteRunner:
                     )
                 continue
 
-            if policy == FileSyncPolicy.NEVER:
-                continue
             if policy == FileSyncPolicy.ALWAYS:
                 await self.executor.transport.get_file(remote, local)
                 continue
@@ -552,6 +584,18 @@ class RemoteRunner:
                     await self.executor.transport.get_file(remote, local)
             elif local_digest != remote_digest:
                 await self.executor.transport.get_file(remote, local)
+
+    async def _sync_cache_files(self):
+        policy = self.executor.output_files
+        if policy == FileSyncPolicy.NEVER:
+            return
+        for local, (remote, before) in self._cache_targets.items():
+            after = await self.executor.transport.file_signature(remote)
+            if after is None or after == before:
+                continue
+            if policy == FileSyncPolicy.MISSING and local_file_digest(local) is not None:
+                continue
+            await self.executor.transport.get_file(remote, local)
 
     def _remote_argv(self, staged):
         directory = os.path.abspath(self.spec.directory)
@@ -589,6 +633,8 @@ class RemoteRunner:
                     stdin_target = await self._stage_file(self.spec.stdin, used)
                     staged = {source: target for target, source in used.items()}
 
+        await self._prepare_cache_files(used)
+        staged = {source: target for target, source in used.items()}
         await self._prepare_output_files(set(used))
 
         output_name = self._file_name(self.spec.output_file)
@@ -671,6 +717,7 @@ class RemoteRunner:
             return_code = 0 if self._state == RunState.FINISHED else 1
 
         await self._sync_output_files(required=self._state == RunState.FINISHED)
+        await self._sync_cache_files()
         return self.reader.complete_result(
             self.result, output, error, return_code
         )
