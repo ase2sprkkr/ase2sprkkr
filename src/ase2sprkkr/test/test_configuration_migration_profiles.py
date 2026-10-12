@@ -106,3 +106,25 @@ def test_migration_does_not_overwrite_existing_local_profile(tmp_path, monkeypat
     assert migrated.profiles["local-2"].mpi() == 8
     assert migrated.profiles["local-2"].executable_dir() == "/opt/legacy"
     assert migrated.default_profile() == "local-2"
+
+
+def test_migration_does_not_freeze_implicit_mpi_defaults(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        ProfilesConfigurationContainer,
+        "_ase_config",
+        staticmethod(lambda: None),
+    )
+    source = tmp_path / "__init__.py"
+    destination = tmp_path / "config.yaml"
+    _write_legacy(source, "config.executables.dir = '/opt/legacy'\n")
+
+    migrated = migrate_legacy_configuration(source, destination, definition)
+
+    profile = migrated.profiles["local"]
+    assert profile.executable_dir() == "/opt/legacy"
+    assert profile.mpi() == "auto"
+    assert profile.mpi_warning() is True
+
+    assert load_yaml_document(destination)["profiles"]["local"] == {
+        "executable_dir": "/opt/legacy"
+    }
