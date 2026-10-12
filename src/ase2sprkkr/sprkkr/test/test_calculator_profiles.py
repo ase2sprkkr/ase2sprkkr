@@ -16,6 +16,13 @@ def fresh_profile_config(monkeypatch):
     return configuration
 
 
+def test_runtime_profile_defaults_to_auto_mpi():
+    profile = SPRKKRProfile()
+
+    assert profile.mpi == "auto"
+    assert profile.mpi_warning is True
+
+
 def test_calculator_uses_configured_default_profile(monkeypatch):
     configuration = fresh_profile_config(monkeypatch)
     configuration.profiles.set(
@@ -52,6 +59,11 @@ def test_calculator_accepts_named_profile(monkeypatch):
 
     assert calculator.profile.executable_dir == "/cluster"
     assert calculator.profile.mpi == 4
+    assert calculator.profile.mpi_warning is True
+
+    local = SPRKKR(profile="local")
+    assert local.profile.mpi == "auto"
+    assert local.profile.mpi_warning is True
 
 
 def test_calculator_profile_fields_are_single_authority(monkeypatch):
@@ -61,6 +73,7 @@ def test_calculator_profile_fields_are_single_authority(monkeypatch):
             executable_dir="/old",
             executable_suffix=".old",
             mpi=2,
+            mpi_warning=False,
         )
     )
 
@@ -72,4 +85,5 @@ def test_calculator_profile_fields_are_single_authority(monkeypatch):
         executable_dir="/new",
         executable_suffix=".new",
         mpi=6,
+        mpi_warning=False,
     )

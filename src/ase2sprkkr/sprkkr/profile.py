@@ -21,7 +21,8 @@ class SPRKKRProfile:
 
     executable_dir: Any = False
     executable_suffix: Any = ""
-    mpi: Any = False
+    mpi: Any = "auto"
+    mpi_warning: bool = True
 
     def _executable_suffix(self, override):
         if override is False:
@@ -147,7 +148,8 @@ def _configured_profile(profile, configuration):
         return SPRKKRProfile(
             executable_dir=False if profile.executable_dir is None else profile.executable_dir,
             executable_suffix="" if profile.executable_suffix is None else profile.executable_suffix,
-            mpi=False if profile.mpi is None else profile.mpi,
+            mpi="auto" if profile.mpi is None else profile.mpi,
+            mpi_warning=True if profile.mpi_warning is None else profile.mpi_warning,
         )
 
     if getattr(profile, "source", None) == "ase":
@@ -161,12 +163,16 @@ def _configured_profile(profile, configuration):
         executable_dir = False
     mpi = _profile_value(profile, "mpi")
     if mpi is None:
-        mpi = False
+        mpi = "auto"
+    mpi_warning = _profile_value(profile, "mpi_warning")
+    if mpi_warning is None:
+        mpi_warning = True
 
     return SPRKKRProfile(
         executable_dir=executable_dir,
         executable_suffix=suffix,
         mpi=mpi,
+        mpi_warning=mpi_warning,
     )
 
 
