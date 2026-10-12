@@ -7,6 +7,7 @@ from ase2sprkkr.configuration_migration import (
     migrate_legacy_configuration,
 )
 from ase2sprkkr.configuration_yaml import (
+    YamlConfigurationWarning,
     load_configuration_yaml,
     load_yaml_document,
     save_configuration_yaml,
@@ -149,12 +150,20 @@ def test_yaml_requires_mapping_root(tmp_path):
         load_yaml_document(path)
 
 
-def test_yaml_rejects_unknown_configuration_keys(tmp_path):
+def test_yaml_reports_unknown_configuration_keys(tmp_path):
     path = tmp_path / "config.yaml"
-    path.write_text("unknown_option: value\n", encoding="utf8")
+    path.write_text(
+        "unknown_option: value\n"
+        "nomad:\n"
+        "  token: still-loaded\n",
+        encoding="utf8",
+    )
+    config = fresh_config()
 
-    with pytest.raises((KeyError, ValueError)):
-        load_configuration_yaml(fresh_config(), path)
+    with pytest.warns(YamlConfigurationWarning, match="unknown_option"):
+        load_configuration_yaml(config, path)
+
+    assert config.nomad.token() == "still-loaded"
 
 
 def test_user_preferences_prefer_yaml_over_legacy_python(tmp_path, monkeypatch):
