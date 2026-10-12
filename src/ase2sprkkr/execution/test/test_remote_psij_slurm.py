@@ -95,6 +95,46 @@ def _remote_error(exc):
     pytest.fail(f"{exc}\n\nRemote stderr:\n{stderr or '<empty>'}")
 
 
+def _remote_run_diagnostics(ssh, reference):
+    """Return target-side state and scheduler stderr for a failed remote run."""
+    try:
+        state = json.loads(
+            subprocess.check_output(
+                ssh
+                + [
+                    "ase2sprkkr",
+                    "remote",
+                    "status",
+                    reference.directory,
+                    reference.native_id,
+                ],
+                text=True,
+                stderr=subprocess.STDOUT,
+            )
+        )
+    except Exception as exc:
+        return f"Could not read remote state: {exc}"
+
+    stderr = "<empty>"
+    error_file = state.get("error_file")
+    if error_file:
+        try:
+            stderr = subprocess.check_output(
+                ssh + ["cat", "--", error_file],
+                text=True,
+                stderr=subprocess.STDOUT,
+            )
+        except subprocess.CalledProcessError as exc:
+            stderr = exc.output or f"Could not read {error_file}"
+
+    return (
+        "Remote state:\n"
+        + json.dumps(state, indent=2, sort_keys=True)
+        + "\n\nScheduler stderr:\n"
+        + (stderr or "<empty>")
+    )
+
+
 def test_remote_executor_runs_psij_slurm_over_ssh():
     from ase.build import bulk
 
@@ -177,10 +217,41 @@ def test_remote_executor_runs_psij_slurm_over_ssh():
             ssh = ["ssh", *ssh_options, "tester@127.0.0.1"]
             _wait_for_ssh(ssh)
 
+            # The bind mount keeps host ownership and mode bits. The direct
+            # PSI/J test runs as root, but this test deliberately submits Slurm
+            # jobs as ``tester``. Copy the executables inside the container so
+            # the result does not depend on the host user's UID or directory
+            # permissions.
+            remote_executable_dir = "/home/tester/sprkkr"
+            subprocess.run(
+                [
+                    docker,
+                    "exec",
+                    container,
+                    "sh",
+                    "-c",
+                    "rm -rf /home/tester/sprkkr && "
+                    "cp -a /opt/sprkkr /home/tester/sprkkr && "
+                    "chown -R tester:tester /home/tester/sprkkr",
+                ],
+                check=True,
+            )
+            subprocess.run(
+                [
+                    docker,
+                    "exec",
+                    container,
+                    "test",
+                    "-x",
+                    f"{remote_executable_dir}/kkrscf{suffix}",
+                ],
+                check=True,
+            )
+
             workdir = tmp / "calculation"
             workdir.mkdir()
             profile = SPRKKRProfile(
-                executable_dir="/opt/sprkkr",
+                executable_dir=remote_executable_dir,
                 executable_suffix=suffix,
                 mpi=False,
                 executor="ssh",
@@ -218,7 +289,14 @@ def test_remote_executor_runs_psij_slurm_over_ssh():
             assert reference.computer == "tester@127.0.0.1"
             assert reference.directory == "/home/tester/ase2sprkkr-runs/calculation"
 
-            result = runner.wait()
+            try:
+                result = runner.wait()
+            except Exception as exc:
+                diagnostics = _remote_run_diagnostics(ssh, reference)
+                raise RuntimeError(
+                    f"Remote PSI/J/Slurm run failed: {exc}\n\n{diagnostics}"
+                ) from exc
+
             assert runner.state.value == "finished"
             assert result.return_code == 0
             assert len(result.iterations) == 2
