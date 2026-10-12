@@ -82,6 +82,12 @@ def run(args, global_args):
         request["directory"] = args.directory
         _print_json(submit_remote(request))
     elif args.remote_action == "status":
+        # A status query is also the recovery point for a target-side PSI/J
+        # agent killed by logout/reboot. The persisted native scheduler ids are
+        # sufficient for the replacement agent to attach instead of resubmit.
+        from ...execution.remote_psij import ensure_remote_psij_agent
+
+        ensure_remote_psij_agent(args.directory, args.run_id)
         states = [status_remote(args.directory, run_id) for run_id in args.run_id]
         _print_json(states[0] if len(states) == 1 else states)
     elif args.remote_action == "cancel":
