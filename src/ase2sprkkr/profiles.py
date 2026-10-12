@@ -167,11 +167,6 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
 
     reserved_names = frozenset(("legacy", "ase"))
     legacy_fields = ("mpi", "executable_dir", "executable_suffix")
-    legacy_option_names = {
-        "mpi": "running.mpi",
-        "executable_dir": "executables.dir",
-        "executable_suffix": "executables.suffix",
-    }
 
     def _add(self, id=None):
         """Create one stored profile while keeping ``ase`` strictly virtual."""
@@ -201,25 +196,26 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             return default() if callable(default) else default
         return value
 
-    def _warn_legacy_write(self, name):
-        option = self.legacy_option_names[name]
+    def _warn_legacy_write(self):
         warnings.warn(
-            f"config.{option} is deprecated; use an execution profile instead.\n"
-            "For example, configure the ASE SPR-KKR profile:\n"
+            "config.executables.dir is deprecated together with "
+            "config.executables.suffix and config.running.mpi; use an execution "
+            "profile instead.\n"
+            "Use the ASE [sprkkr] profile, for example:\n"
             "  [sprkkr]\n"
             "  command = /opt/sprkkr/kkrscf_v8\n"
             "  mpi = 8\n"
-            "or create a named ase2sprkkr profile:\n"
+            "or use a named ase2sprkkr profile:\n"
             "  ase2sprkkr config --set profiles.local "
             "'{mpi: 8, executable_dir: /opt/sprkkr, executable_suffix: _v8}'\n"
             "  ase2sprkkr config --set default_profile local",
             FutureWarning,
-            stacklevel=4,
+            stacklevel=3,
         )
 
     def set_legacy_value(self, name, value):
         """Stage a deprecated option into the internal legacy profile."""
-        self._warn_legacy_write(name)
+        self._warn_legacy_write()
         profile = self._legacy_profile(create=True)
         option = getattr(profile, name)
         transaction = ConfigurationTransaction.current(profile)

@@ -1,5 +1,6 @@
 import configparser
 from types import SimpleNamespace
+import warnings
 
 import pytest
 
@@ -120,6 +121,18 @@ def test_legacy_write_warning_shows_both_profile_migrations():
     assert "mpi = 8" in message
     assert "ase2sprkkr config --set profiles.local" in message
     assert "ase2sprkkr config --set default_profile local" in message
+
+
+def test_legacy_write_warning_is_emitted_once():
+    config = fresh_config()
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("default", FutureWarning)
+        config.running.mpi.set(8)
+        config.executables.dir.set("/opt/sprkkr")
+        config.executables.suffix.set("_v8")
+
+    assert len(caught) == 1
 
 
 def test_persisted_legacy_profile_backs_deprecated_options():
