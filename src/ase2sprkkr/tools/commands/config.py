@@ -2,6 +2,7 @@
 """Tool for ASE2SPRKKR user configuration."""
 
 from pathlib import Path
+from collections.abc import Mapping
 import sys
 
 if not __package__:
@@ -25,7 +26,12 @@ def parser(parser):
         "-S",
         "--set",
         nargs=2,
-        help='Set a configuration value and persist it to YAML. Example: "ase2sprkkr config -S default_profile local".',
+        help=(
+            "Set a configuration value and persist it to YAML. "
+            "Examples: '-S default_profile local', "
+            "'-S profiles.cluster.mpi 8', or "
+            "'-S profiles.cluster \"{mpi: 8, executable_dir: /opt/sprkkr}\"'."
+        ),
         metavar=("NAME", "VALUE"),
     )
     parser.add_argument(
@@ -148,7 +154,7 @@ def _prompt_cleanup():
     print()
     print("What should be done with the old Python init script?")
     print("  1) Keep it unchanged")
-    print("  2) Clean migrated ASE2SPRKKR settings from it")
+    print("  2) Clean migrated settings")
     print("  3) Delete it")
     while True:
         choice = input("Choose 1, 2, or 3: ").strip().lower()
@@ -187,6 +193,47 @@ def _migrate(args, legacy_file, file):
     else:
         Path(legacy_file).unlink()
         print(f"Deleted legacy init script: '{legacy_file}'.")
+
+
+def _parse_set_value(text):
+    """Parse a command-line value using YAML scalar/flow syntax."""
+    from ruamel.yaml import YAML
+
+    return YAML(typ="safe").load(text)
+
+
+def _set_configuration_value(config, name, value):
+    """Set one CLI value, creating a named profile when necessary."""
+    path = name.split(".")
+    if path[0] != "profiles":
+        config.find(name).set(value)
+        config.save_user_preferences()
+        return
+
+    if len(path) not in (2, 3) or not path[1]:
+        raise KeyError(name)
+
+    profile_name = path[1]
+    if profile_name in config.profiles.reserved_names:
+        raise ValueError(f"{profile_name!r} is a reserved profile name")
+
+    if len(path) == 2:
+        if not isinstance(value, Mapping):
+            raise TypeError(
+                f"Profile {profile_name!r} must be set from a mapping"
+            )
+        profile_values = value
+    else:
+        profile_values = {path[2]: value}
+
+    # Repeated-container staging validates the complete proposed profile and is
+    # atomic, so a bad field/value does not leave a half-created profile behind.
+    config.profiles.set(
+        {profile_name: profile_values},
+        unknown="fail",
+        merge=True,
+    )
+    config.save_user_preferences()
 
 
 def run(args, global_args):
@@ -233,18 +280,19 @@ def run(args, global_args):
         print(config._definition.description(verbose="all"))
         run = False
     if args.set:
-        from ...common.grammar_types import Variant
         from ...common.warnings import DataValidityError
 
         try:
-            try:
-                val = Variant().parse(args.set[1])
-                config.find(args.set[0]).set_permanent(val)
-            except DataValidityError:
-                config.find(args.set[0]).set_permanent(args.set[1])
+            value = _parse_set_value(args.set[1])
+            _set_configuration_value(config, args.set[0], value)
             print(f"Configuration '{args.set[0]}' has been set to '{args.set[1]}'.")
         except KeyError:
             print(f"Unknown configuration name '{args.set[0]}'.")
+        except (DataValidityError, TypeError, ValueError) as error:
+            print(
+                f"Invalid configuration value for '{args.set[0]}': "
+                f"{error}"
+            )
         except pyparsing.ParseBaseException:
             print(
                 f"Suspicious configuration value '{args.set[1]}'. If you are sure, "
