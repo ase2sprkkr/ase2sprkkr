@@ -71,6 +71,17 @@ class Executor:
 
     name = None
 
+    def resolve_mpi(self, mpi=None):
+        """Resolve an MPI setting for the machine where this executor runs.
+
+        Local executors use the normal ASE2SPRKKR MPI autodetection.  Executors
+        targeting another machine can override this method and perform the
+        resolution on that target instead.
+        """
+        from ..configuration import mpi_runner
+
+        return mpi_runner(mpi)
+
     def create_run(self, reader, spec: ExecutionSpec, callback=None) -> Runner:
         raise NotImplementedError
 
