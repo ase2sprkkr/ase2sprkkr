@@ -12,25 +12,35 @@ from dataclasses import dataclass, replace
 from typing import Any
 
 from ..configuration import config
-from ..execution import ExecutionSpec
+from ..execution import (
+    ExecutionSpec,
+    LocalExecutor,
+    PsijExecutor,
+    RemoteExecutor,
+    SshTransport,
+)
 
 
 @dataclass(frozen=True)
 class SPRKKRProfile:
-    """Describe how SPR-KKR executables are invoked on one computer."""
+    """Describe how and where SPR-KKR executables are invoked."""
 
     executable_dir: Any = False
     executable_suffix: Any = ""
     mpi: Any = False
+    executor: str = "local"
+    host: Any = None
+    local_root: Any = None
+    remote_root: Any = None
+    ssh_options: Any = ()
+    remote_command: Any = None
+    input_sync: str = "changed"
+    output_sync: str = "changed"
+    psij_backend: str = "slurm"
+    psij_url: Any = None
 
     def with_overrides(self, **overrides):
-        """Return this profile with non-``None`` overrides applied.
-
-        The profile is immutable, so actual changes create a copy. If all
-        supplied values are ``None`` or already equal to the current values,
-        return ``self`` instead. ``None`` therefore means "keep the profile
-        value", which matches the compatibility arguments of ``SPRKKR``.
-        """
+        """Return this profile with non-``None`` compatibility overrides applied."""
         allowed = {"mpi", "executable_dir", "executable_suffix"}
         unknown = set(overrides) - allowed
         if unknown:
@@ -156,6 +166,16 @@ def _configured_profile(profile, configuration):
             changes["executable_suffix"] = ""
         if profile.mpi is None:
             changes["mpi"] = False
+        if not profile.executor:
+            changes["executor"] = "local"
+        if profile.ssh_options is None:
+            changes["ssh_options"] = ()
+        if not profile.input_sync:
+            changes["input_sync"] = "changed"
+        if not profile.output_sync:
+            changes["output_sync"] = "changed"
+        if not profile.psij_backend:
+            changes["psij_backend"] = "slurm"
         return replace(profile, **changes) if changes else profile
 
     if getattr(profile, "source", None) == "ase":
@@ -175,7 +195,44 @@ def _configured_profile(profile, configuration):
         executable_dir=executable_dir,
         executable_suffix=suffix,
         mpi=mpi,
+        executor=_profile_value(profile, "executor") or "local",
+        host=_profile_value(profile, "host"),
+        local_root=_profile_value(profile, "local_root"),
+        remote_root=_profile_value(profile, "remote_root"),
+        ssh_options=tuple(_profile_value(profile, "ssh_options") or ()),
+        remote_command=_profile_value(profile, "remote_command"),
+        input_sync=_profile_value(profile, "input_sync") or "changed",
+        output_sync=_profile_value(profile, "output_sync") or "changed",
+        psij_backend=_profile_value(profile, "psij_backend") or "slurm",
+        psij_url=_profile_value(profile, "psij_url"),
     )
+
+
+def executor_from_profile(profile: SPRKKRProfile):
+    """Create an execution backend from a resolved runtime profile."""
+    if profile.executor == "local":
+        return LocalExecutor()
+
+    if profile.executor == "ssh":
+        if not profile.host:
+            raise ValueError("SSH execution profile requires 'host'")
+        kwargs = {
+            "local_root": profile.local_root,
+            "remote_root": profile.remote_root,
+            "input_files": profile.input_sync,
+            "output_files": profile.output_sync,
+        }
+        if profile.remote_command:
+            kwargs["command"] = tuple(profile.remote_command)
+        return RemoteExecutor(
+            SshTransport(profile.host, options=tuple(profile.ssh_options or ())),
+            **kwargs,
+        )
+
+    if profile.executor == "psij":
+        return PsijExecutor(profile.psij_backend, url=profile.psij_url)
+
+    raise ValueError(f"Unknown execution backend {profile.executor!r}")
 
 
 def resolve_sprkkr_profile(profile=None, *, configuration=None):
