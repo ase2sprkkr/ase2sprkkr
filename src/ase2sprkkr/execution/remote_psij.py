@@ -50,7 +50,13 @@ def _executor(request):
 
 def run_remote_psij_worker(directory, run_id, request):
     """Run one remote request through PSI/J on the target machine."""
-    from .remote import _read_state, _timestamp, _write_state
+    from .remote import (
+        _read_state,
+        _read_state_unlocked,
+        _state_lock,
+        _timestamp,
+        _write_state_unlocked,
+    )
 
     output_file = request.get("output_file") or os.path.join(directory, "stdout")
     error_file = request.get("error_file") or output_file + ".err"
@@ -63,26 +69,31 @@ def run_remote_psij_worker(directory, run_id, request):
         stdin=request.get("stdin"),
     )
     runner = _executor(request).create_run(_RemoteReader(), spec)
-    runner.submit()
 
-    reference = runner.reference
-    if reference is None:
-        raise RuntimeError("PSI/J did not provide a persistent job reference")
+    with _state_lock(directory, run_id):
+        state = _read_state_unlocked(directory, run_id)
+        if state.get("state") in _FINAL_STATE_NAMES:
+            return
+        if state.get("state") != RunState.QUEUED.value:
+            raise RuntimeError(
+                f"Cannot submit remote PSI/J run {run_id!r} from state "
+                f"{state.get('state')!r}"
+            )
 
-    state = _read_state(directory, run_id)
-    cancelled = state.get("state") == RunState.CANCELLED.value
-    if cancelled:
-        runner.cancel()
+        runner.submit()
+        reference = runner.reference
+        if reference is None:
+            raise RuntimeError("PSI/J did not provide a persistent job reference")
 
-    current = runner.state
-    _write_state(
-        directory,
-        run_id,
-        state=RunState.CANCELLED.value if cancelled else current.value,
-        pid=os.getpid(),
-        backend_reference=asdict(reference),
-        started_at=_timestamp(),
-    )
+        current = runner.state
+        _write_state_unlocked(
+            directory,
+            run_id,
+            state=current.value,
+            pid=os.getpid(),
+            backend_reference=asdict(reference),
+            started_at=_timestamp(),
+        )
 
     while current not in _FINAL_RUN_STATES:
         state = _read_state(directory, run_id)
@@ -92,32 +103,50 @@ def run_remote_psij_worker(directory, run_id, request):
         next_state = runner.state
         if next_state != current:
             current = next_state
-            if _read_state(directory, run_id).get("state") != RunState.CANCELLED.value:
-                _write_state(directory, run_id, state=current.value)
+            with _state_lock(directory, run_id):
+                state = _read_state_unlocked(directory, run_id)
+                if state.get("state") != RunState.CANCELLED.value:
+                    _write_state_unlocked(directory, run_id, state=current.value)
 
     result = runner.wait()
-    state = _read_state(directory, run_id)
-    final_state = state.get("state")
-    if final_state != RunState.CANCELLED.value:
-        final_state = runner.state.value
-    _write_state(
-        directory,
-        run_id,
-        state=final_state,
-        return_code=result.return_code,
-        finished_at=state.get("finished_at") or _timestamp(),
-    )
+    with _state_lock(directory, run_id):
+        state = _read_state_unlocked(directory, run_id)
+        final_state = state.get("state")
+        if final_state != RunState.CANCELLED.value:
+            final_state = runner.state.value
+        _write_state_unlocked(
+            directory,
+            run_id,
+            state=final_state,
+            return_code=result.return_code,
+            finished_at=state.get("finished_at") or _timestamp(),
+        )
 
 
 def cancel_remote_psij(directory, run_id, request, timeout=1.0):
     """Cancel the remote PSI/J job, then stop its detached helper process."""
-    from .remote import _read_state, _timestamp, _write_state
+    from .remote import (
+        _read_state,
+        _read_state_unlocked,
+        _state_lock,
+        _timestamp,
+        _write_state_unlocked,
+    )
 
-    state = _read_state(directory, run_id)
-    if state.get("state") in _FINAL_STATE_NAMES:
-        return state
+    with _state_lock(directory, run_id):
+        state = _read_state_unlocked(directory, run_id)
+        if state.get("state") in _FINAL_STATE_NAMES:
+            return state
 
-    reference = state.get("backend_reference")
+        reference = state.get("backend_reference")
+        state = _write_state_unlocked(
+            directory,
+            run_id,
+            state=RunState.CANCELLED.value,
+            finished_at=_timestamp(),
+        )
+        pid = state.get("pid")
+
     if reference is not None:
         runner = _executor(request).attach(
             RunReference(**reference),
@@ -125,13 +154,6 @@ def cancel_remote_psij(directory, run_id, request, timeout=1.0):
         )
         runner.cancel()
 
-    state = _write_state(
-        directory,
-        run_id,
-        state=RunState.CANCELLED.value,
-        finished_at=_timestamp(),
-    )
-    pid = state.get("pid")
     if not pid:
         return state
 

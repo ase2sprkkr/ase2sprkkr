@@ -1,13 +1,16 @@
 import json
 from datetime import datetime, timedelta, timezone
+from threading import Event, Thread
 
 import pytest
 
 from ..remote import (
     _run_directory,
     _write_state,
+    cancel_remote,
     clean_remote_runs,
     list_remote_runs,
+    run_remote_worker,
     status_remote,
     submit_remote,
 )
@@ -136,3 +139,83 @@ def test_remote_submit_rejects_duplicate_run_id(tmp_path, monkeypatch):
     submit_remote(request)
     with pytest.raises(RuntimeError, match="already exists"):
         submit_remote(request)
+
+
+def test_remote_cancel_waits_for_launch_handoff(tmp_path, monkeypatch):
+    workspace = tmp_path / "workspace"
+    run_id = "cancel-race"
+    request = _request(workspace, run_id, "out")
+    run_dir = _run_directory(workspace, run_id)
+    run_dir.mkdir(parents=True)
+    (run_dir / "request.json").write_text(json.dumps(request))
+    _write_state(
+        workspace,
+        run_id,
+        id=run_id,
+        state="queued",
+        directory=str(workspace),
+        pid=None,
+        finished_at=None,
+    )
+
+    popen_entered = Event()
+    allow_popen = Event()
+    terminated = Event()
+    cancel_done = Event()
+    worker_errors = []
+    killed = []
+
+    class FakeProcess:
+        pid = 4321
+
+        def wait(self):
+            assert terminated.wait(2)
+            return -15
+
+    def fake_popen(*args, **kwargs):
+        popen_entered.set()
+        assert allow_popen.wait(2)
+        return FakeProcess()
+
+    def fake_killpg(pid, sig):
+        killed.append((pid, sig))
+        terminated.set()
+
+    def fake_kill(pid, sig):
+        raise ProcessLookupError
+
+    monkeypatch.setattr("ase2sprkkr.execution.remote.subprocess.Popen", fake_popen)
+    monkeypatch.setattr("ase2sprkkr.execution.remote.os.killpg", fake_killpg)
+    monkeypatch.setattr("ase2sprkkr.execution.remote.os.kill", fake_kill)
+
+    def worker():
+        try:
+            run_remote_worker(workspace, run_id)
+        except BaseException as exc:
+            worker_errors.append(exc)
+
+    worker_thread = Thread(target=worker)
+    worker_thread.start()
+    assert popen_entered.wait(2)
+
+    cancel_result = []
+
+    def cancel():
+        cancel_result.append(cancel_remote(workspace, run_id))
+        cancel_done.set()
+
+    cancel_thread = Thread(target=cancel)
+    cancel_thread.start()
+
+    assert not cancel_done.wait(0.1)
+    allow_popen.set()
+
+    cancel_thread.join(2)
+    worker_thread.join(2)
+
+    assert not cancel_thread.is_alive()
+    assert not worker_thread.is_alive()
+    assert worker_errors == []
+    assert cancel_result[0]["state"] == "cancelled"
+    assert status_remote(workspace, run_id)["state"] == "cancelled"
+    assert killed and killed[0][0] == FakeProcess.pid
