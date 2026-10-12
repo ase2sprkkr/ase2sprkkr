@@ -23,6 +23,7 @@ def test_ase_command_directory_is_no_suffix():
 
     assert profile.executable_dir == "/opt/sprkkr/bin"
     assert profile.executable_suffix == ""
+    assert profile.mpi is False
 
 
 def test_ase_command_placeholder_maps_to_suffix():
@@ -58,7 +59,7 @@ def test_runtime_resolver_uses_ase_profile(monkeypatch):
     assert profile == SPRKKRProfile(
         executable_dir="/opt/sprkkr",
         executable_suffix=".x",
-        mpi=None,
+        mpi=False,
     )
 
 
@@ -102,9 +103,33 @@ def test_runtime_resolver_accepts_explicit_profile_name(monkeypatch):
 
     assert profile.mpi == 4
     assert profile.executable_dir is False
+    assert profile.executable_suffix == ""
 
 
-def test_runtime_profile_is_already_resolved():
-    profile = SPRKKRProfile("/bin", ".x", 3)
+def test_explicit_runtime_profile_is_normalized():
+    profile = resolve_sprkkr_profile(
+        SPRKKRProfile(executable_dir="/bin", executable_suffix=None, mpi=None)
+    )
 
-    assert resolve_sprkkr_profile(profile) is profile
+    assert profile == SPRKKRProfile("/bin", "", False)
+
+
+def test_run_overrides_are_applied_after_profile_resolution(monkeypatch):
+    monkeypatch.setattr(
+        ProfilesConfigurationContainer,
+        "_ase_config",
+        staticmethod(lambda: None),
+    )
+    configuration = definition.create_object()
+    configuration.profiles.set(
+        {"cluster": {"mpi": 4, "executable_dir": "/cluster", "executable_suffix": ".x"}}
+    )
+
+    profile = resolve_sprkkr_profile(
+        "cluster",
+        configuration=configuration,
+        mpi=2,
+        executable_suffix=".test",
+    )
+
+    assert profile == SPRKKRProfile("/cluster", ".test", 2)
