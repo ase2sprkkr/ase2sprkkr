@@ -18,7 +18,7 @@ from ..configuration import config
 from ..execution import LocalExecutor
 from ..potentials.potentials import Potential
 from ..common.doc import process_input_parameters_definition
-from ..sprkkr.profile import SPRKKRProfile
+from ..sprkkr.profile import SPRKKRProfile, executor_from_profile
 import warnings
 
 
@@ -151,6 +151,8 @@ class InputParameters(ConfigurationFile):
         reader = self.output_reader(calculator, print_output, directory)
         profile = profile or getattr(calculator, "profile", None) or SPRKKRProfile()
         executor = executor or getattr(calculator, "executor", None) or LocalExecutor()
+        if profile.executor != "local" and isinstance(executor, LocalExecutor):
+            executor = executor_from_profile(profile)
 
         execution_profile = profile
         if self._definition.mpi:
