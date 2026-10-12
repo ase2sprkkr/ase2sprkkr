@@ -220,6 +220,21 @@ class ConfigFileDefinition(ConfigurationRootDefinition):
 V = ConfigValueDefinition
 G = GeneratedConfigValueDefinition
 MPI = CustomMixed(Bool, Array(AlwaysQString.I), Integer.I)
+SYNC_POLICY = Keyword(
+    {
+        "changed": "Transfer files only when their content differs.",
+        "always": "Always transfer files.",
+        "missing": "Transfer files only when the destination is missing.",
+        "never": "Never transfer files.",
+    }
+)
+EXECUTOR = Keyword(
+    {
+        "local": "Run directly on this machine.",
+        "ssh": "Run through ASE2SPRKKR on a machine reached by SSH.",
+        "psij": "Submit through a PSI/J scheduler backend.",
+    }
+)
 
 """ The definition of ASE2SPRKKR configuration """
 definition = ConfigFileDefinition(
@@ -251,6 +266,66 @@ definition = ConfigFileDefinition(
                     AlwaysQString.I,
                     is_optional=True,
                     info="Suffix appended to SPR-KKR executable names for this profile.",
+                ),
+                V(
+                    "executor",
+                    EXECUTOR,
+                    is_optional=True,
+                    info="Execution backend for this profile. If unset, local execution is used.",
+                ),
+                V(
+                    "host",
+                    AlwaysQString.I,
+                    is_optional=True,
+                    info="SSH destination for an ssh executor, for example user@cluster.",
+                ),
+                V(
+                    "local_root",
+                    AlwaysQString.I,
+                    is_optional=True,
+                    info="Local root mapped into the remote workspace by an ssh executor.",
+                ),
+                V(
+                    "remote_root",
+                    AlwaysQString.I,
+                    is_optional=True,
+                    info="Remote root used for persistent workspaces by an ssh executor.",
+                ),
+                V(
+                    "ssh_options",
+                    Array(AlwaysQString.I),
+                    is_optional=True,
+                    info="Additional arguments passed to ssh, such as ['-p', '2222'].",
+                ),
+                V(
+                    "remote_command",
+                    Array(AlwaysQString.I),
+                    is_optional=True,
+                    info="Command prefix used to invoke the ASE2SPRKKR remote helper.",
+                ),
+                V(
+                    "input_sync",
+                    SYNC_POLICY,
+                    is_optional=True,
+                    info="Input-file synchronization policy for an ssh executor.",
+                ),
+                V(
+                    "output_sync",
+                    SYNC_POLICY,
+                    is_optional=True,
+                    info="Output-file synchronization policy for an ssh executor.",
+                ),
+                V(
+                    "psij_backend",
+                    AlwaysQString.I,
+                    is_optional=True,
+                    info="PSI/J executor backend, for example slurm or pbs.",
+                ),
+                V(
+                    "psij_url",
+                    AlwaysQString.I,
+                    is_optional=True,
+                    info="Optional PSI/J executor URL.",
                 ),
             ],
             is_repeated="DICT_SECTION",
