@@ -82,6 +82,9 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     output_file_templates = ()
     """Task-specific output file templates. ``{dataset}`` expands to ``CONTROL.DATASET``."""
 
+    cache_file_templates = ()
+    """Optional reusable file templates. ``{dataset}`` expands to ``CONTROL.DATASET``."""
+
     child_class = InputSectionDefinition
     """ Sections of the :class:`InputParameters` are defined by :class:`InputSectionDefinition` """
 
@@ -134,15 +137,21 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         )
 
     def input_files(self, parameters, directory):
-        """Return task-specific input files for one concrete calculation."""
+        """Return task-specific required input files for one concrete calculation."""
         return self._resolve_file_templates(
             parameters, directory, self.input_file_templates
         )
 
     def output_files(self, parameters, directory):
-        """Return task-specific output files for one concrete calculation."""
+        """Return task-specific required output files for one concrete calculation."""
         return self._resolve_file_templates(
             parameters, directory, self.output_file_templates
+        )
+
+    def cache_files(self, parameters, directory):
+        """Return optional reusable files for one concrete calculation."""
+        return self._resolve_file_templates(
+            parameters, directory, self.cache_file_templates
         )
 
     @add_to_signature(ConfigurationFileDefinition.__init__, prepend=True)
@@ -155,6 +164,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         result_reader=None,
         input_file_templates=(),
         output_file_templates=(),
+        cache_file_templates=(),
         **kwargs,
     ):
         """
@@ -175,25 +185,31 @@ class InputParametersDefinition(ConfigurationFileDefinition):
           (see InputParameters.result_reader)
 
         input_file_templates: sequence of str
-          Additional task-specific input files. ``{dataset}`` is replaced by
+          Additional task-specific required input files. ``{dataset}`` is replaced by
           ``CONTROL.DATASET`` by the default :meth:`input_files` implementation.
 
         output_file_templates: sequence of str
-          Additional task-specific output files. ``{dataset}`` is replaced by
+          Additional task-specific required output files. ``{dataset}`` is replaced by
           ``CONTROL.DATASET`` by the default :meth:`output_files` implementation.
+
+        cache_file_templates: sequence of str
+          Optional reusable files. ``{dataset}`` is replaced by ``CONTROL.DATASET``
+          by the default :meth:`cache_files` implementation. Missing cache files are
+          valid; execution backends decide how existing caches are synchronized.
 
         Notes
         -----
         Tasks whose file manifests depend on input values can override
-        :meth:`input_files` or :meth:`output_files`.  The default methods remain
-        useful through ``super()`` for combining static templates with dynamic
-        files.
+        :meth:`input_files`, :meth:`output_files` or :meth:`cache_files`. The default
+        methods remain useful through ``super()`` for combining static templates with
+        dynamic files.
         """
         self.executable = executable
         self.mpi = mpi
         self.result_reader = result_reader
         self.input_file_templates = tuple(input_file_templates)
         self.output_file_templates = tuple(output_file_templates)
+        self.cache_file_templates = tuple(cache_file_templates)
 
         super().__init__(name, members, **kwargs)
         # if not 'TASK' in self:

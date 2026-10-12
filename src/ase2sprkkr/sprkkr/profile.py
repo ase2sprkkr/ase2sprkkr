@@ -8,32 +8,55 @@ a calculation is prepared.
 from __future__ import annotations
 
 import os
+import shlex
 from dataclasses import dataclass, replace
 from typing import Any
 
 from ..configuration import config
-from ..execution import ExecutionSpec
+from ..execution import (
+    ExecutionSpec,
+    LocalExecutor,
+    PsijExecutor,
+    RemoteExecutor,
+    SshTransport,
+)
+from ..profiles import ase_command_profile_values
 
 
 @dataclass(frozen=True)
 class SPRKKRProfile:
-    """Describe how SPR-KKR executables are invoked on one computer."""
+    """Describe how and where SPR-KKR executables are invoked."""
 
     executable_dir: Any = False
     executable_suffix: Any = ""
     mpi: Any = False
+    executor: str = "local"
+    host: Any = None
+    local_root: Any = None
+    remote_root: Any = None
+    ssh_options: Any = ()
+    remote_command: Any = ()
+    input_sync: str = "changed"
+    output_sync: str = "changed"
+    psij_backend: Any = None
+    psij_url: Any = None
 
-    def _executable_suffix(self, override):
-        if override is False:
-            return ""
-        if override is True or override is None:
-            return self.executable_suffix or ""
-        return override
+    def with_overrides(self, **overrides):
+        """Return this profile with non-``None`` compatibility overrides applied."""
+        allowed = {"mpi", "executable_dir", "executable_suffix"}
+        unknown = set(overrides) - allowed
+        if unknown:
+            names = ", ".join(sorted(unknown))
+            raise TypeError(f"Unknown SPR-KKR profile override(s): {names}")
 
-    def _executable_dir(self, override):
-        if override is None:
-            return self.executable_dir
-        return override
+        if "mpi" in overrides and overrides["mpi"] is not None:
+            overrides["mpi"] = _normalize_mpi(overrides["mpi"])
+        changes = {
+            name: value
+            for name, value in overrides.items()
+            if value is not None and value != getattr(self, name)
+        }
+        return replace(self, **changes) if changes else self
 
     def create_execution(
         self,
@@ -44,25 +67,22 @@ class SPRKKRProfile:
         *,
         input_files=(),
         output_files=(),
+        cache_files=(),
         mpi_supported=False,
-        executable_suffix=None,
-        executable_dir=None,
-        mpi=None,
         gdb=False,
     ):
         """Create a concrete execution specification for one SPR-KKR task.
 
-        ``mpi`` is an already resolved MPI command. Resolving ``True``,
-        ``"auto"`` or a process count belongs to the executor, because only
-        the executor knows the machine on which the command will run.
+        ``mpi`` stored in this profile must already be resolved to a concrete
+        command by the executor. Resolving ``True``, ``"auto"`` or a process
+        count belongs to the executor, because only the executor knows the
+        machine on which the command will run.
         """
+        executable += self.executable_suffix or ""
+        if self.executable_dir:
+            executable = os.path.join(self.executable_dir, executable)
 
-        executable += self._executable_suffix(executable_suffix)
-        executable_dir = self._executable_dir(executable_dir)
-        if executable_dir is not False and executable_dir:
-            executable = os.path.join(executable_dir, executable)
-
-        mpi_command = mpi if mpi_supported else None
+        mpi_command = self.mpi if mpi_supported else None
 
         if mpi_command:
             input_name = input_file.name
@@ -92,6 +112,7 @@ class SPRKKRProfile:
             stdin=stdin,
             input_files=tuple(input_files),
             output_files=tuple(output_files),
+            cache_files=tuple(cache_files),
         )
 
 
@@ -104,34 +125,25 @@ def _profile_value(profile, name):
     return value() if callable(value) else value
 
 
+def _shell_argv(value):
+    """Normalize a shell-style command string or argv sequence to a tuple."""
+    if not value:
+        return ()
+    if isinstance(value, str):
+        return tuple(shlex.split(value))
+    return tuple(value)
+
+
+def _normalize_mpi(value):
+    """Normalize an explicit MPI command while retaining symbolic modes."""
+    if isinstance(value, str) and value != "auto":
+        return _shell_argv(value)
+    return value
+
+
 def profile_from_ase_command(command):
-    """Translate ASE's ``[sprkkr] command`` into an SPR-KKR profile.
-
-    A command without ``{}`` denotes the directory containing the SPR-KKR
-    executables. A command of the form ``directory/{}suffix`` additionally
-    specifies the executable suffix. The placeholder is intentionally much
-    more restricted than a general format string: it must occur exactly once
-    and at the beginning of the final path component.
-    """
-    if not isinstance(command, str) or not command:
-        raise ValueError("ASE SPR-KKR command must be a non-empty path")
-
-    count = command.count("{}")
-    if count == 0:
-        return SPRKKRProfile(executable_dir=command)
-    if count != 1:
-        raise ValueError("ASE SPR-KKR command may contain at most one '{}' placeholder")
-
-    executable_dir, filename = os.path.split(command)
-    if "{}" in executable_dir or not filename.startswith("{}"):
-        raise ValueError(
-            "ASE SPR-KKR command placeholder must start the final path component, "
-            "for example '/opt/sprkkr/{}.mpi'"
-        )
-    return SPRKKRProfile(
-        executable_dir=executable_dir or False,
-        executable_suffix=filename[2:],
-    )
+    """Translate ASE's ``[sprkkr] command`` into an SPR-KKR profile."""
+    return SPRKKRProfile(**ase_command_profile_values(command))
 
 
 def _configured_profile(profile, configuration):
@@ -144,14 +156,30 @@ def _configured_profile(profile, configuration):
         )
 
     if isinstance(profile, SPRKKRProfile):
-        return SPRKKRProfile(
-            executable_dir=False if profile.executable_dir is None else profile.executable_dir,
-            executable_suffix="" if profile.executable_suffix is None else profile.executable_suffix,
-            mpi=False if profile.mpi is None else profile.mpi,
-        )
+        changes = {}
+        if profile.executable_dir is None:
+            changes["executable_dir"] = False
+        if profile.executable_suffix is None:
+            changes["executable_suffix"] = ""
+        mpi = False if profile.mpi is None else _normalize_mpi(profile.mpi)
+        if mpi != profile.mpi:
+            changes["mpi"] = mpi
+        if not profile.executor:
+            changes["executor"] = "local"
+        ssh_options = _shell_argv(profile.ssh_options)
+        if ssh_options != profile.ssh_options:
+            changes["ssh_options"] = ssh_options
+        remote_command = _shell_argv(profile.remote_command)
+        if remote_command != profile.remote_command:
+            changes["remote_command"] = remote_command
+        if not profile.input_sync:
+            changes["input_sync"] = "changed"
+        if not profile.output_sync:
+            changes["output_sync"] = "changed"
+        return replace(profile, **changes) if changes else profile
 
     if getattr(profile, "source", None) == "ase":
-        return profile_from_ase_command(profile.command())
+        profile = profile.configuration_profile()
 
     suffix = _profile_value(profile, "executable_suffix")
     if suffix is None:
@@ -162,38 +190,67 @@ def _configured_profile(profile, configuration):
     mpi = _profile_value(profile, "mpi")
     if mpi is None:
         mpi = False
+    else:
+        mpi = _normalize_mpi(mpi)
 
     return SPRKKRProfile(
         executable_dir=executable_dir,
         executable_suffix=suffix,
         mpi=mpi,
+        executor=_profile_value(profile, "executor") or "local",
+        host=_profile_value(profile, "host"),
+        local_root=_profile_value(profile, "local_root"),
+        remote_root=_profile_value(profile, "remote_root"),
+        ssh_options=_shell_argv(_profile_value(profile, "ssh_options")),
+        remote_command=_shell_argv(_profile_value(profile, "remote_command")),
+        input_sync=_profile_value(profile, "input_sync") or "changed",
+        output_sync=_profile_value(profile, "output_sync") or "changed",
+        psij_backend=_profile_value(profile, "psij_backend"),
+        psij_url=_profile_value(profile, "psij_url"),
     )
 
 
-def resolve_sprkkr_profile(
-    profile=None,
-    *,
-    configuration=None,
-    mpi=None,
-    executable_dir=None,
-    executable_suffix=None,
-):
+def executor_from_profile(profile: SPRKKRProfile):
+    """Create an execution backend from a resolved runtime profile."""
+    if profile.executor == "local":
+        return LocalExecutor()
+
+    if profile.executor == "ssh":
+        if not profile.host:
+            raise ValueError("SSH execution profile requires 'host'")
+        kwargs = {
+            "local_root": profile.local_root,
+            "remote_root": profile.remote_root,
+            "input_files": profile.input_sync,
+            "output_files": profile.output_sync,
+        }
+        if profile.remote_command:
+            kwargs["command"] = profile.remote_command
+        if profile.psij_backend is not None or profile.psij_url is not None:
+            kwargs["backend"] = "psij"
+            kwargs["backend_options"] = {
+                "backend": profile.psij_backend or "slurm",
+                "url": profile.psij_url,
+            }
+        return RemoteExecutor(
+            SshTransport(profile.host, options=profile.ssh_options),
+            **kwargs,
+        )
+
+    if profile.executor == "psij":
+        return PsijExecutor(profile.psij_backend or "slurm", url=profile.psij_url)
+
+    raise ValueError(f"Unknown execution backend {profile.executor!r}")
+
+
+def resolve_sprkkr_profile(profile=None, *, configuration=None):
     """Resolve a user/configuration profile into an immutable runtime profile.
 
     Resolution order for ``profile=None`` is the one defined by the profile
     configuration container: configured ``default_profile``, ASE's virtual
     profile, the deprecated legacy profile, then built-in defaults. A string
-    explicitly selects a named profile. Explicit execution-location arguments
-    override the resolved profile when they are not ``None``.
+    explicitly selects a named profile. Per-calculation compatibility
+    overrides are applied by ``SPRKKR`` after this resolution.
     """
     configuration = configuration or config
-    resolved = _configured_profile(profile, configuration)
-
-    changes = {}
-    if mpi is not None:
-        changes["mpi"] = mpi
-    if executable_dir is not None:
-        changes["executable_dir"] = executable_dir
-    if executable_suffix is not None:
-        changes["executable_suffix"] = executable_suffix
-    return replace(resolved, **changes) if changes else resolved
+    return _configured_profile(profile, configuration)

@@ -18,7 +18,7 @@ from ..configuration import config
 from ..execution import LocalExecutor
 from ..potentials.potentials import Potential
 from ..common.doc import process_input_parameters_definition
-from ..sprkkr.profile import SPRKKRProfile
+from ..sprkkr.profile import SPRKKRProfile, executor_from_profile
 import warnings
 
 
@@ -45,7 +45,7 @@ class InputParameters(ConfigurationFile):
         return out
 
     def resolve_executable_suffix(self, suffix: Union[str, bool]):
-        """ " Return the suffix, that is appended after the name of SPRKKR executable.
+        """ " Return the suffix, that is appended after the name of SPR-KKR executable.
 
         Parameters
         ----------
@@ -128,6 +128,10 @@ class InputParameters(ConfigurationFile):
         """Return task-specific output files for this concrete calculation."""
         return self._definition.output_files(self, directory)
 
+    def cache_files(self, directory):
+        """Return task-specific reusable cache files for this calculation."""
+        return self._definition.cache_files(self, directory)
+
     def run_process(
         self,
         calculator,
@@ -137,9 +141,6 @@ class InputParameters(ConfigurationFile):
         print_output=None,
         read_callback=None,
         run_async=False,
-        executable_suffix=None,
-        executable_dir=None,
-        mpi=None,
         callback=None,
         gdb=False,
         profile=None,
@@ -154,13 +155,14 @@ class InputParameters(ConfigurationFile):
         reader = self.output_reader(calculator, print_output, directory)
         profile = profile or getattr(calculator, "profile", None) or SPRKKRProfile()
         executor = executor or getattr(calculator, "executor", None) or LocalExecutor()
+        if profile.executor != "local" and isinstance(executor, LocalExecutor):
+            executor = executor_from_profile(profile)
 
+        execution_profile = profile
         if self._definition.mpi:
-            if mpi is None:
-                mpi = getattr(profile, "mpi", None)
-            mpi = executor.resolve_mpi(mpi)
-        else:
-            mpi = None
+            execution_profile = profile.with_overrides(
+                mpi=executor.resolve_mpi(profile.mpi)
+            )
 
         try:
 
@@ -190,18 +192,19 @@ class InputParameters(ConfigurationFile):
                 )
                 if file is not None
             )
+            cache_files = tuple(
+                file for file in self.cache_files(directory) if file is not None
+            )
 
-            spec = profile.create_execution(
+            spec = execution_profile.create_execution(
                 self._definition.executable,
                 input_file,
                 output_file,
                 directory,
                 input_files=input_files,
                 output_files=output_files,
+                cache_files=cache_files,
                 mpi_supported=self._definition.mpi,
-                executable_suffix=executable_suffix,
-                executable_dir=executable_dir,
-                mpi=mpi,
                 gdb=gdb,
             )
             runner = executor.create_run(reader, spec, callback=cleanup)
@@ -212,13 +215,13 @@ class InputParameters(ConfigurationFile):
             return runner.run()
         except FileNotFoundError as e:
             add = (
-                "Cannot find SPRKKR executable. Maybe, ase2sprkkr.config.executable.suffix "
-                "variable should be set (or the SPRKKR_EXECUTABLE_SUFFIX environment variable)?\n"
+                "Cannot find SPR-KKR executable. Check executable_dir and executable_suffix "
+                "in the selected SPR-KKR profile.\n"
             )
-            if mpi:
+            if execution_profile.mpi:
                 add += (
-                    "Also, pleas check that the MPI is functional on your machine, or explicitly disable "
-                    "MPI with mpi=False argument of calculate method (or set ase2sprkkr.config.running.mpi = False)\n\n"
+                    "Also, please check the MPI setting in the selected profile, or explicitly "
+                    "disable MPI with mpi=False in SPRKKR.calculate().\n\n"
                 )
             e.strerror = add + "SPRKKR cannot be run due to the following error: \n" + e.strerror
             raise

@@ -9,8 +9,8 @@ import pytest
 
 
 pytestmark = pytest.mark.skipif(
-    os.environ.get("ASE2SPRKKR_RUN_SLURM_TEST") != "1",
-    reason="set ASE2SPRKKR_RUN_SLURM_TEST=1 to run the Docker/Slurm integration test",
+    os.environ.get("ASE2SPRKKR_RUN_DOCKER_TESTS") != "1",
+    reason="set ASE2SPRKKR_RUN_DOCKER_TESTS=1 to run Docker integration tests",
 )
 
 

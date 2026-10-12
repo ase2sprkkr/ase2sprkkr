@@ -56,6 +56,7 @@ def _text_run(
     *,
     declared_input_files=(),
     declared_output_files=(),
+    declared_cache_files=(),
     code=None,
     **executor_kwargs,
 ):
@@ -78,6 +79,7 @@ def _text_run(
         stdin=input_file,
         input_files=(input_file, *declared_input_files),
         output_files=(output_file, *declared_output_files),
+        cache_files=declared_cache_files,
     )
     return executor, spec, workdir, remote_root
 
@@ -252,6 +254,23 @@ def test_remote_input_file_policies(tmp_path, policy, expected, uploaded):
     assert any(dst == remote_artifact for _, dst in transport.put_files) is uploaded
 
 
+def test_remote_input_policy_never_only_disables_transfer(tmp_path):
+    transport = _SpyTransport()
+    missing = tmp_path / "local" / "calculation" / "missing.dat"
+    executor, spec, _, _ = _text_run(
+        tmp_path,
+        transport,
+        declared_input_files=(missing,),
+        input_files="never",
+        code="print('done')",
+    )
+
+    result = executor.create_run(_Reader(), spec).run()
+
+    assert result.return_code == 0
+    assert all(src != missing for src, _ in transport.put_files)
+
+
 def test_remote_input_policy_always_requires_local_file(tmp_path):
     missing = tmp_path / "local" / "calculation" / "missing.dat"
     remote = tmp_path / "remote" / "calculation" / "missing.dat"
@@ -336,6 +355,21 @@ def test_remote_output_file_policies(tmp_path, policy, expected, downloaded):
     assert any(src == remote_artifact for src, _ in transport.get_files) is downloaded
 
 
+def test_remote_output_policy_never_only_disables_transfer(tmp_path):
+    missing = tmp_path / "local" / "calculation" / "missing-output.dat"
+    executor, spec, _, _ = _text_run(
+        tmp_path,
+        declared_output_files=(missing,),
+        output_files="never",
+        code="print('done')",
+    )
+
+    result = executor.create_run(_Reader(), spec).run()
+
+    assert result.return_code == 0
+    assert not missing.exists()
+
+
 def test_remote_executor_does_not_reuse_stale_output(tmp_path):
     transport = _SpyTransport()
     workdir = tmp_path / "local" / "calculation"
@@ -357,6 +391,130 @@ def test_remote_executor_does_not_reuse_stale_output(tmp_path):
 
     assert not remote_artifact.exists()
     assert not artifact.exists()
+
+
+def test_remote_cache_is_uploaded_and_changed_cache_is_downloaded(tmp_path):
+    transport = _SpyTransport()
+    cache = tmp_path / "local" / "calculation" / "cache.dat"
+    cache.parent.mkdir(parents=True)
+    cache.write_text("old")
+
+    executor, spec, _, remote_root = _text_run(
+        tmp_path,
+        transport,
+        declared_cache_files=(cache,),
+        code=(
+            "import pathlib; p=pathlib.Path('cache.dat'); "
+            "assert p.read_text() == 'old'; p.write_text('new'); print('done')"
+        ),
+    )
+    result = executor.create_run(_Reader(), spec).run()
+
+    remote_cache = remote_root / "calculation" / "cache.dat"
+    assert result.return_code == 0
+    assert cache.read_text() == "new"
+    assert any(dst == remote_cache for _, dst in transport.put_files)
+    assert (remote_cache, cache) in transport.get_files
+
+
+def test_remote_cache_created_by_run_is_downloaded(tmp_path):
+    transport = _SpyTransport()
+    cache = tmp_path / "local" / "calculation" / "cache.dat"
+
+    executor, spec, _, remote_root = _text_run(
+        tmp_path,
+        transport,
+        declared_cache_files=(cache,),
+        code="import pathlib; pathlib.Path('cache.dat').write_text('generated'); print('done')",
+    )
+    result = executor.create_run(_Reader(), spec).run()
+
+    remote_cache = remote_root / "calculation" / "cache.dat"
+    assert result.return_code == 0
+    assert cache.read_text() == "generated"
+    assert all(dst != remote_cache for _, dst in transport.put_files)
+    assert (remote_cache, cache) in transport.get_files
+
+
+def test_remote_unchanged_cache_is_not_downloaded(tmp_path):
+    transport = _SpyTransport()
+    cache = tmp_path / "local" / "calculation" / "cache.dat"
+    cache.parent.mkdir(parents=True)
+    cache.write_text("same")
+
+    executor, spec, _, remote_root = _text_run(
+        tmp_path,
+        transport,
+        declared_cache_files=(cache,),
+        code="import pathlib; assert pathlib.Path('cache.dat').read_text() == 'same'; print('done')",
+    )
+    executor.create_run(_Reader(), spec).run()
+
+    remote_cache = remote_root / "calculation" / "cache.dat"
+    assert (remote_cache, cache) not in transport.get_files
+
+
+def test_remote_cache_change_detection_uses_mtime(tmp_path):
+    transport = _SpyTransport()
+    cache = tmp_path / "local" / "calculation" / "cache.dat"
+    cache.parent.mkdir(parents=True)
+    cache.write_text("same")
+
+    executor, spec, _, remote_root = _text_run(
+        tmp_path,
+        transport,
+        declared_cache_files=(cache,),
+        code=(
+            "import os, pathlib; p=pathlib.Path('cache.dat'); s=p.stat(); "
+            "os.utime(p, ns=(s.st_atime_ns, s.st_mtime_ns + 1000000000)); print('done')"
+        ),
+    )
+    executor.create_run(_Reader(), spec).run()
+
+    remote_cache = remote_root / "calculation" / "cache.dat"
+    assert cache.read_text() == "same"
+    assert (remote_cache, cache) in transport.get_files
+
+
+def test_remote_cache_input_never_skips_upload(tmp_path):
+    transport = _SpyTransport()
+    cache = tmp_path / "local" / "calculation" / "cache.dat"
+    cache.parent.mkdir(parents=True)
+    cache.write_text("local")
+
+    executor, spec, _, remote_root = _text_run(
+        tmp_path,
+        transport,
+        declared_cache_files=(cache,),
+        input_files="never",
+        code="import pathlib; pathlib.Path('cache.dat').write_text('remote'); print('done')",
+    )
+    executor.create_run(_Reader(), spec).run()
+
+    remote_cache = remote_root / "calculation" / "cache.dat"
+    assert all(dst != remote_cache for _, dst in transport.put_files)
+    assert cache.read_text() == "remote"
+    assert (remote_cache, cache) in transport.get_files
+
+
+def test_remote_cache_output_never_skips_download(tmp_path):
+    transport = _SpyTransport()
+    cache = tmp_path / "local" / "calculation" / "cache.dat"
+    cache.parent.mkdir(parents=True)
+    cache.write_text("local")
+
+    executor, spec, _, remote_root = _text_run(
+        tmp_path,
+        transport,
+        declared_cache_files=(cache,),
+        output_files="never",
+        code="import pathlib; pathlib.Path('cache.dat').write_text('remote'); print('done')",
+    )
+    executor.create_run(_Reader(), spec).run()
+
+    remote_cache = remote_root / "calculation" / "cache.dat"
+    assert cache.read_text() == "local"
+    assert all(src != remote_cache for src, _ in transport.get_files)
 
 
 def test_remote_sync_policy_rejects_unknown_value(tmp_path):

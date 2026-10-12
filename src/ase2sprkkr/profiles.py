@@ -9,9 +9,49 @@ can only be modified through the deprecated configuration options.
 from __future__ import annotations
 
 from collections.abc import Iterator
+import os
+import shlex
+import warnings
 
 from .common.configuration_transaction import ConfigurationTransaction
 from .common.repeated_configuration_containers import RepeatedConfigurationContainer
+
+
+def ase_command_profile_values(command):
+    """Map ASE's canonical ``kkrscf`` command to the common profile fields.
+
+    ASE's ``command`` remains a real command line.  For SPR-KKR it must name
+    the canonical serial ``kkrscf`` executable directly.  Its directory and
+    suffix locate the other executables from the same installation.  Command
+    prefixes and wrappers are intentionally rejected because MPI and execution
+    policy can depend on the particular SPR-KKR task.
+    """
+    if not isinstance(command, str) or not command.strip():
+        raise ValueError(
+            "ASE SPR-KKR command must directly name the kkrscf executable"
+        )
+
+    try:
+        argv = shlex.split(command)
+    except ValueError as exc:
+        raise ValueError("ASE SPR-KKR command is not a valid command line") from exc
+
+    if len(argv) != 1:
+        raise ValueError(
+            "ASE SPR-KKR command must directly name the kkrscf executable; "
+            "command prefixes and wrappers are not supported"
+        )
+
+    executable_dir, filename = os.path.split(argv[0])
+    if not filename.startswith("kkrscf"):
+        raise ValueError(
+            "ASE SPR-KKR command must directly name the canonical kkrscf executable"
+        )
+
+    values = {"executable_suffix": filename[len("kkrscf"):]}
+    if executable_dir:
+        values["executable_dir"] = executable_dir
+    return values
 
 
 class ReadOnlyProfileValue:
@@ -67,38 +107,51 @@ class LegacyProfile:
 
     def set(self, *args, **kwargs):
         raise TypeError(
-            "The 'legacy' profile is read-only; change the deprecated "
-            "running.mpi/executables options or create a named profile instead"
+            "The 'legacy' profile is read-only; create a named profile or use "
+            "the ASE [sprkkr] profile instead"
         )
 
 
 class ASEProfile:
-    """Read-only view of ASE's ``[sprkkr]`` calculator configuration."""
+    """Typed read-only view of ASE's ``[sprkkr]`` calculator configuration."""
 
     name = "ase"
     source = "ase"
     read_only = True
 
-    def __init__(self, ase_config):
+    def __init__(self, profiles, ase_config):
+        self._profiles = profiles
         self._ase_config = ase_config
 
     @property
     def _section(self):
         return self._ase_config.parser["sprkkr"]
 
+    def configuration_profile(self):
+        """Return a typed, non-persistent profile snapshot."""
+        return self._profiles._parse_ase_profile(self._ase_config)
+
     def __getattr__(self, name):
         if name.startswith("_"):
             raise AttributeError(name)
-        if name not in self._section:
-            raise AttributeError(name)
-        return ReadOnlyProfileValue(lambda: self._section.get(name), name)
+        try:
+            getattr(self.configuration_profile(), name)
+        except AttributeError:
+            raise AttributeError(name) from None
+        return ReadOnlyProfileValue(
+            lambda: getattr(self.configuration_profile(), name)(),
+            name,
+        )
 
     @property
     def command(self):
         return ReadOnlyProfileValue(lambda: self._section.get("command"), "command")
 
     def as_dict(self, *args, **kwargs):
-        return dict(self._section.items())
+        values = self.configuration_profile().as_dict(
+            only_changed="explicit", generated=False
+        ) or {}
+        return {"command": self.command(), **values}
 
     get = as_dict
 
@@ -116,7 +169,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
     legacy_fields = ("mpi", "executable_dir", "executable_suffix")
 
     def _add(self, id=None):
-        """Create a stored profile while keeping ``ase`` strictly virtual."""
+        """Create one stored profile while keeping ``ase`` strictly virtual."""
         if id == "ase":
             raise ValueError("'ase' is a virtual profile and cannot be stored")
         return super()._add(id)
@@ -143,8 +196,26 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             return default() if callable(default) else default
         return value
 
+    def _warn_legacy_write(self):
+        warnings.warn(
+            "config.executables.dir is deprecated together with "
+            "config.executables.suffix and config.running.mpi; use an execution "
+            "profile instead.\n"
+            "Use the ASE [sprkkr] profile, for example:\n"
+            "  [sprkkr]\n"
+            "  command = /opt/sprkkr/kkrscf_v8\n"
+            "  mpi = 8\n"
+            "or use a named ase2sprkkr profile:\n"
+            "  ase2sprkkr config --set profiles.local "
+            "'{mpi: 8, executable_dir: /opt/sprkkr, executable_suffix: _v8}'\n"
+            "  ase2sprkkr config --set default_profile local",
+            FutureWarning,
+            stacklevel=3,
+        )
+
     def set_legacy_value(self, name, value):
         """Stage a deprecated option into the internal legacy profile."""
+        self._warn_legacy_write()
         profile = self._legacy_profile(create=True)
         option = getattr(profile, name)
         transaction = ConfigurationTransaction.current(profile)
@@ -165,6 +236,35 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         except (ImportError, AttributeError):
             return None
         return cfg
+
+    def _parse_ase_profile(self, cfg):
+        """Parse ASE's text configuration through the common profile schema."""
+        section = cfg.parser["sprkkr"]
+        command = section.get("command")
+        values = dict(section.items())
+        values.pop("command", None)
+
+        duplicate = {"executable_dir", "executable_suffix"} & values.keys()
+        if duplicate:
+            names = ", ".join(sorted(duplicate))
+            raise ValueError(
+                f"ASE [sprkkr] {names} must be expressed through the command option"
+            )
+
+        profile = self._definition.create_object(self, repeated=False)
+        parsed = {}
+        for name, value in values.items():
+            try:
+                option = getattr(profile, name)
+            except AttributeError:
+                raise KeyError(
+                    f"Unknown ASE SPR-KKR profile option {name!r}"
+                ) from None
+            parsed[name] = option._definition.type.parse(value)
+
+        parsed.update(ase_command_profile_values(command))
+        profile.set(parsed, unknown="fail")
+        return profile
 
     def _ase_available(self) -> bool:
         cfg = self._ase_config()
@@ -188,7 +288,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             raise KeyError(name)
         if name == "ase":
             if self._ase_available():
-                return ASEProfile(self._ase_config())
+                return ASEProfile(self, self._ase_config())
             raise KeyError(name)
         return super().__getitem__(name)
 

@@ -13,8 +13,8 @@ from uuid import uuid4
 import pytest
 
 pytestmark = pytest.mark.skipif(
-    os.environ.get("ASE2SPRKKR_RUN_SSH_TEST") != "1",
-    reason="set ASE2SPRKKR_RUN_SSH_TEST=1 to run this integration test",
+    os.environ.get("ASE2SPRKKR_RUN_DOCKER_TESTS") != "1",
+    reason="set ASE2SPRKKR_RUN_DOCKER_TESTS=1 to run Docker integration tests",
 )
 
 
