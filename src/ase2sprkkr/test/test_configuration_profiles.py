@@ -7,8 +7,24 @@ from ase2sprkkr.configuration import definition
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
 
 
+@pytest.fixture(autouse=True)
+def no_host_ase_profile(monkeypatch):
+    """Keep profile tests independent of the developer machine's ASE config."""
+    monkeypatch.setattr(
+        ProfilesConfigurationContainer,
+        "_ase_config",
+        staticmethod(lambda: None),
+    )
+
+
 def fresh_config():
     return definition.create_object()
+
+
+def ase_config(command="sprkkr"):
+    parser = configparser.ConfigParser()
+    parser["sprkkr"] = {"command": command}
+    return SimpleNamespace(parser=parser)
 
 
 def test_named_profile_is_persistent_configuration():
@@ -60,16 +76,12 @@ def test_reserved_virtual_profile_names_cannot_be_added():
 
 
 def test_ase_profile_is_live_read_only_virtual_view(monkeypatch):
-    parser = configparser.ConfigParser()
-    parser["sprkkr"] = {
-        "command": "mpirun -n 8 /opt/sprkkr/kkrscf",
-        "custom": "value",
-    }
-    ase_config = SimpleNamespace(parser=parser)
+    external = ase_config("mpirun -n 8 /opt/sprkkr/kkrscf")
+    external.parser["sprkkr"]["custom"] = "value"
     monkeypatch.setattr(
         ProfilesConfigurationContainer,
         "_ase_config",
-        staticmethod(lambda: ase_config),
+        staticmethod(lambda: external),
     )
 
     config = fresh_config()
@@ -79,7 +91,7 @@ def test_ase_profile_is_live_read_only_virtual_view(monkeypatch):
     assert profile.command() == "mpirun -n 8 /opt/sprkkr/kkrscf"
     assert profile.custom() == "value"
 
-    parser["sprkkr"]["command"] = "srun /opt/sprkkr/kkrscf"
+    external.parser["sprkkr"]["command"] = "srun /opt/sprkkr/kkrscf"
     assert profile.command() == "srun /opt/sprkkr/kkrscf"
 
     with pytest.raises(TypeError, match="read-only"):
@@ -102,3 +114,34 @@ def test_incomplete_ase_section_is_not_an_available_profile(monkeypatch):
     assert "ase" not in config.profiles
     with pytest.raises(KeyError):
         config.profiles["ase"]
+
+
+def test_profile_resolution_precedence(monkeypatch):
+    external = ase_config("ase-command")
+    monkeypatch.setattr(
+        ProfilesConfigurationContainer,
+        "_ase_config",
+        staticmethod(lambda: external),
+    )
+    config = fresh_config()
+    config.running.mpi.set(8)
+    local = config.profiles.add("local")
+    local.mpi.set(2)
+
+    # ASE is the implicit standard and wins over the deprecated legacy config.
+    assert config.profiles.resolve_name() == "ase"
+
+    # A configured ase2sprkkr default is an explicit user choice and wins.
+    config.default_profile.set("local")
+    assert config.profiles.resolve() is local
+
+    # A call-site selection is the most explicit choice of all.
+    assert config.profiles.resolve("legacy").source == "legacy"
+
+
+def test_unknown_explicit_default_profile_is_reported():
+    config = fresh_config()
+    config.default_profile.set("missing")
+
+    with pytest.raises(KeyError, match="Unknown execution profile"):
+        config.profiles.resolve()
