@@ -1,7 +1,7 @@
 """Stoner parameter input audited against SPR-KKR 9.7."""
 import numpy as np
 from ...common.warnings import DataValidityError
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters
+from ._file_manifests import TauCacheInputParametersDefinition
 from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
@@ -30,11 +30,12 @@ def input_parameters():
                     defaults={"GRID": 0, "NE": 1, "ImE": 0.0})
     for name in ("EMIN", "EMAX"):
         energy.copy_member(name, is_optional=True)
-    return InputParameters(
+    return TauCacheInputParametersDefinition(
         "stoner", [CONTROL("STONER"), TAU, MODE, STRCONST, energy, TASK("STONER"), SITES],
         executable="kkrgen", mpi=False, validators=_validate_stoner,
         info="Stoner parameter from the DOS and radial wave functions at EF.",
         description="No task-specific input options. Uses the VWN susceptibility kernel. "
+                    "Native STONER enables reading a TAU directory and falls back to the normal KKRGEN calculation when no reusable TAU cache is available. "
                     "The final STONER branch is skipped by SPR-KKR in MPI mode. "
                     "Only the fully relativistic, single-energy workflow is exposed; "
                     "numerical results and FULLPOT have not been verified.",
