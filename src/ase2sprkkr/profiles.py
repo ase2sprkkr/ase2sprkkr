@@ -151,7 +151,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         """Stage a deprecated option into the internal legacy profile."""
         profile = self._legacy_profile(create=True)
         option = getattr(profile, name)
-        transaction = ConfigurationTransaction.current()
+        transaction = ConfigurationTransaction.current(profile)
         if transaction is None:
             option.set(value)
         else:
@@ -205,18 +205,6 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             return self._ase_available()
         return super().__contains__(name)
 
-    def _get_members(self, name, unknown, is_option, lower_case, *, accept):
-        """Keep the mutable legacy backing profile private from generic lookup."""
-        if isinstance(name, str) and name.split(".", 1)[0] == "legacy":
-            return
-        yield from super()._get_members(
-            name,
-            unknown,
-            is_option,
-            lower_case,
-            accept=accept,
-        )
-
     def _virtual_names(self) -> Iterator[str]:
         if self._ase_available():
             yield "ase"
@@ -228,15 +216,35 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         yield from self._virtual_names()
 
     def __len__(self):
-        stored = super().__len__()
-        if "legacy" in self._values and not self._legacy_available():
-            stored -= 1
-        return stored + sum(1 for _ in self._virtual_names())
+        return sum(1 for _ in self)
 
     def available_items(self):
         """Iterate over persistent and virtual profiles through public views."""
         for name in self:
             yield name, self[name]
+
+    def _get_members(
+        self,
+        name,
+        unknown,
+        is_option,
+        lower_case,
+        *,
+        accept,
+    ):
+        # The backing legacy section is an implementation detail. In
+        # particular, generic lookup must not expose mutable options below the
+        # public read-only legacy profile.
+        head = name.split(".", 1)[0] if isinstance(name, str) else name
+        if head == "legacy":
+            return
+        yield from super()._get_members(
+            name,
+            unknown,
+            is_option,
+            lower_case,
+            accept=accept,
+        )
 
     def resolve_name(self, name=None):
         """Resolve a profile name according to configuration precedence."""

@@ -189,3 +189,31 @@ def test_user_preferences_fall_back_to_legacy_python(tmp_path, monkeypatch):
 
     assert config.default_profile() == "legacy"
     assert "legacy-name" in config.profiles
+
+
+def test_legacy_python_generated_options_load_into_legacy_profile(tmp_path, monkeypatch):
+    yaml_path = tmp_path / "config.yaml"
+    legacy_path = tmp_path / "__init__.py"
+    legacy_path.write_text(
+        "from ase2sprkkr.configuration import config\n"
+        "config.executables.suffix = '_legacy'\n"
+        "config.executables.dir = '/opt/sprkkr'\n"
+        "config.running.mpi = 4\n",
+        encoding="utf8",
+    )
+
+    config = fresh_config()
+    monkeypatch.setattr(configuration, "config", config)
+    monkeypatch.setattr(configuration, "user_preferences_file", lambda: str(yaml_path))
+    monkeypatch.setattr(configuration, "legacy_user_preferences_file", lambda: str(legacy_path))
+
+    configuration.load_user_preferences()
+
+    assert config.executables.suffix() == "_legacy"
+    assert config.executables.dir() == "/opt/sprkkr"
+    assert config.running.mpi() == 4
+    assert config.profiles["legacy"].as_dict() == {
+        "mpi": 4,
+        "executable_dir": "/opt/sprkkr",
+        "executable_suffix": "_legacy",
+    }
