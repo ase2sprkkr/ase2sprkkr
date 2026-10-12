@@ -1,8 +1,10 @@
 """Explicit SSH -> remote PSI/J -> Slurm -> SPR-KKR integration test."""
 
+import base64
 import json
 import os
 import shutil
+import struct
 import subprocess
 import tempfile
 import time
@@ -20,6 +22,62 @@ pytestmark = pytest.mark.skipif(
         "to run the SSH/PSI-J/Slurm integration test"
     ),
 )
+
+# Static, public test-only Ed25519 key material. Keeping it in this module makes
+# it part of the installed test package while avoiding key generation on every
+# integration-test run. It must never be used outside this isolated test.
+_TEST_SSH_SEED = bytes(range(1, 33))
+_TEST_SSH_PUBLIC = bytes.fromhex(
+    "79b5562e8fe654f94078b112e8a98ba7901f853ae695bed7e0e3910bad049664"
+)
+_TEST_SSH_PUBLIC_LINE = (
+    "ssh-ed25519 "
+    "AAAAC3NzaC1lZDI1NTE5AAAAIHm1Vi6P5lT5QHixEuipi6eQH4U65pW+1+DjkQutBJZk "
+    "ase2sprkkr test-only key\n"
+)
+
+
+def _ssh_string(value):
+    return struct.pack(">I", len(value)) + value
+
+
+def _write_test_ssh_key(directory):
+    """Serialize the packaged static test key into OpenSSH files."""
+    public_blob = _ssh_string(b"ssh-ed25519") + _ssh_string(_TEST_SSH_PUBLIC)
+    comment = b"ase2sprkkr test-only key"
+    private_blob = (
+        struct.pack(">II", 0x12345678, 0x12345678)
+        + _ssh_string(b"ssh-ed25519")
+        + _ssh_string(_TEST_SSH_PUBLIC)
+        + _ssh_string(_TEST_SSH_SEED + _TEST_SSH_PUBLIC)
+        + _ssh_string(comment)
+    )
+    padding = 1
+    while len(private_blob) % 8:
+        private_blob += bytes((padding,))
+        padding += 1
+
+    key_blob = (
+        b"openssh-key-v1\0"
+        + _ssh_string(b"none")
+        + _ssh_string(b"none")
+        + _ssh_string(b"")
+        + struct.pack(">I", 1)
+        + _ssh_string(public_blob)
+        + _ssh_string(private_blob)
+    )
+    encoded = base64.b64encode(key_blob).decode("ascii")
+    pem = (
+        "-----BEGIN OPENSSH PRIVATE KEY-----\n"
+        + "\n".join(encoded[i : i + 70] for i in range(0, len(encoded), 70))
+        + "\n-----END OPENSSH PRIVATE KEY-----\n"
+    )
+
+    key = Path(directory) / "id_ed25519"
+    key.write_text(pem, encoding="ascii")
+    key.chmod(0o600)
+    Path(str(key) + ".pub").write_text(_TEST_SSH_PUBLIC_LINE, encoding="ascii")
+    return key
 
 
 def _wait_for_ssh(ssh, attempts=80):
@@ -43,11 +101,8 @@ def test_remote_executor_runs_psij_slurm_over_ssh():
     from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
     docker = shutil.which("docker")
-    ssh_keygen = shutil.which("ssh-keygen")
     if docker is None:
         pytest.fail("Docker is required for the explicit SSH/PSI-J/Slurm test")
-    if ssh_keygen is None:
-        pytest.fail("ssh-keygen is required for the explicit SSH/PSI-J/Slurm test")
 
     executable_dir = config.executables.dir()
     if not executable_dir:
@@ -70,20 +125,7 @@ def test_remote_executor_runs_psij_slurm_over_ssh():
 
     with tempfile.TemporaryDirectory(prefix="ase2sprkkr-psij-ssh-") as tmp:
         tmp = Path(tmp)
-        key = tmp / "id_ed25519"
-        subprocess.run(
-            [
-                ssh_keygen,
-                "-q",
-                "-t",
-                "ed25519",
-                "-N",
-                "",
-                "-f",
-                str(key),
-            ],
-            check=True,
-        )
+        key = _write_test_ssh_key(tmp)
 
         try:
             subprocess.run(
