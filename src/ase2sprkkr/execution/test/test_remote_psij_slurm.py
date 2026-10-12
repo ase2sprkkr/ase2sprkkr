@@ -15,12 +15,8 @@ import pytest
 
 
 pytestmark = pytest.mark.skipif(
-    os.environ.get("ASE2SPRKKR_RUN_SSH_TEST") != "1"
-    or os.environ.get("ASE2SPRKKR_RUN_SLURM_TEST") != "1",
-    reason=(
-        "set ASE2SPRKKR_RUN_SSH_TEST=1 and ASE2SPRKKR_RUN_SLURM_TEST=1 "
-        "to run the SSH/PSI-J/Slurm integration test"
-    ),
+    os.environ.get("ASE2SPRKKR_RUN_DOCKER_TESTS") != "1",
+    reason="set ASE2SPRKKR_RUN_DOCKER_TESTS=1 to run Docker integration tests",
 )
 
 # Static, public test-only Ed25519 key material. Keeping it in this module makes
