@@ -17,37 +17,52 @@ description = "The user configuration is stored in ~/.config/ase2sprkkr/config.y
 
 
 def parser(parser):
-    parser.add_argument("-p", "--path", help="Just print the path to the configuration file.", action="store_true")
-    parser.add_argument("-P", "--print", help="Print the configuration file.", action="store_true")
+    parser.add_argument("-p", "--path", help="Print the path to config.yaml.", action="store_true")
+    parser.add_argument("-P", "--print", help="Print config.yaml.", action="store_true")
     parser.add_argument("-s", "--show", help="Print the resolved configuration.", action="store_true")
     parser.add_argument("-i", "--info", help="Show the description of the configuration options.", action="store_true")
     parser.add_argument(
         "-S",
         "--set",
         nargs=2,
-        help='Set the given configuration to the given value. Example: "ase2sprkkr config -S default_profile local".',
+        help='Set a configuration value and persist it to YAML. Example: "ase2sprkkr config -S default_profile local".',
         metavar=("NAME", "VALUE"),
     )
     parser.add_argument(
-        "-e", "--edit", help="Edit the YAML file using the editor in the $EDITOR environment variable.", action="store_true"
+        "-e", "--edit", help="Edit config.yaml using the editor in $EDITOR.", action="store_true"
     )
     parser.add_argument(
-        "-d", "--default", help="Create a commented YAML configuration file if it does not exist.", action="store_true"
+        "-d", "--default", help="Create a commented example config.yaml if it does not exist.", action="store_true"
     )
     parser.add_argument(
         "-D",
         "--overwrite-by-default",
         dest="default",
-        help="Write the commented default YAML configuration, overwriting an existing file.",
+        help="Write the commented example config.yaml, overwriting an existing file.",
         action="store_const",
         const="overwrite",
     )
-    parser.add_argument("-o", "--show-default", help="Show the default YAML configuration.", action="store_true")
+    parser.add_argument("-o", "--show-default", help="Show the commented example YAML configuration.", action="store_true")
     parser.add_argument(
         "-m",
         "--migrate",
         action="store_true",
         help="Migrate the deprecated Python user configuration to config.yaml.",
+    )
+    parser.add_argument(
+        "--init-script",
+        action="store_true",
+        help="Print the path to the deprecated Python __init__.py configuration.",
+    )
+    parser.add_argument(
+        "--print-init-script",
+        action="store_true",
+        help="Print the deprecated Python __init__.py configuration.",
+    )
+    parser.add_argument(
+        "--edit-init-script",
+        action="store_true",
+        help="Edit the deprecated Python __init__.py configuration using $EDITOR.",
     )
 
 
@@ -83,6 +98,20 @@ def default_content(file):
 """
 
 
+def _edit(file, *, create=None):
+    import os
+    import subprocess
+
+    editor = os.environ.get("EDITOR")
+    if not editor:
+        print("Please set the EDITOR environment variable.")
+        raise SystemExit(-1)
+    if create is not None and not Path(file).is_file():
+        Path(file).parent.mkdir(parents=True, exist_ok=True)
+        Path(file).write_text(create, encoding="utf8")
+    subprocess.run([editor, file])
+
+
 def run(args, global_args):
     import os
     import pyparsing
@@ -91,14 +120,12 @@ def run(args, global_args):
         legacy_user_preferences_file,
         user_preferences_file,
     )
-    import subprocess
 
     file = user_preferences_file()
-
+    legacy_file = legacy_user_preferences_file()
     run = True
 
     if args.migrate:
-        legacy_file = legacy_user_preferences_file()
         if os.path.isfile(file):
             print(f"YAML configuration already exists: '{file}'. Nothing was migrated.")
         elif not os.path.isfile(legacy_file):
@@ -110,9 +137,8 @@ def run(args, global_args):
     if args.default:
         if args.default == "overwrite" or not os.path.isfile(file):
             Path(file).parent.mkdir(parents=True, exist_ok=True)
-            with open(file, "w", encoding="utf8") as f:
-                f.write(default_content(file))
-            print(f"Configuration defaults have been written to file '{file}'.")
+            Path(file).write_text(default_content(file), encoding="utf8")
+            print(f"Example configuration has been written to '{file}'.")
         else:
             print("Configuration file already exists, so it has not been overwritten.")
         run = False
@@ -120,11 +146,13 @@ def run(args, global_args):
         print(file)
         run = False
     if args.print:
-        with open(file, "r", encoding="utf8") as f:
-            print(f.read())
+        if os.path.isfile(file):
+            print(Path(file).read_text(encoding="utf8"), end="")
+        else:
+            print(f"No YAML configuration found at '{file}'.")
         run = False
     if args.show_default:
-        print(default_content(file))
+        print(default_content(file), end="")
         run = False
     if args.info:
         print(config._definition.description(verbose="all"))
@@ -138,7 +166,6 @@ def run(args, global_args):
                 val = Variant().parse(args.set[1])
                 config.find(args.set[0]).set_permanent(val)
             except DataValidityError:
-                # If parsing using mixed failed, just try storing a string.
                 config.find(args.set[0]).set_permanent(args.set[1])
             print(f"Configuration '{args.set[0]}' has been set to '{args.set[1]}'.")
         except KeyError:
@@ -155,22 +182,36 @@ def run(args, global_args):
         pprint.pp(config.to_dict())
         run = False
     if args.edit:
-        if "EDITOR" not in os.environ:
-            print("Please set the EDITOR environment variable.")
-            raise SystemExit(-1)
-        if not os.path.isfile(file):
-            Path(file).parent.mkdir(parents=True, exist_ok=True)
-            Path(file).write_text(default_content(file), encoding="utf8")
-        subprocess.run([os.environ["EDITOR"], file])
+        _edit(file, create=default_content(file))
+        run = False
+    if args.init_script:
+        print(legacy_file)
+        run = False
+    if args.print_init_script:
+        if os.path.isfile(legacy_file):
+            print(Path(legacy_file).read_text(encoding="utf8"), end="")
+        else:
+            print(f"No legacy init script found at '{legacy_file}'.")
+        run = False
+    if args.edit_init_script:
+        if not os.path.isfile(legacy_file):
+            print(f"No legacy init script found at '{legacy_file}'.")
+        else:
+            _edit(legacy_file)
         run = False
 
     if run:
         if os.path.isfile(file):
-            print("# Content of the ASE2SPRKKR user configuration file")
-            print("#--------------------------------------------------")
-            print("")
-            with open(file, "r", encoding="utf8") as f:
-                print(f.read())
+            print("# Content of the ASE2SPRKKR YAML configuration")
+            print("#---------------------------------------------")
+            print()
+            print(Path(file).read_text(encoding="utf8"), end="")
+        elif os.path.isfile(legacy_file):
+            print("No YAML configuration exists.")
+            print()
+            print(f"Legacy Python configuration found at:\n    {legacy_file}")
+            print()
+            print("Run 'ase2sprkkr config --migrate' to migrate it to config.yaml.")
         else:
             print("# No custom user configuration found")
 
