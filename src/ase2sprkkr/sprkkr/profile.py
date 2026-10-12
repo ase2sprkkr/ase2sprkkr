@@ -11,7 +11,7 @@ import os
 from dataclasses import dataclass
 from typing import Any
 
-from ..configuration import config, mpi_runner
+from ..configuration import config
 from ..execution import ExecutionSpec
 from ..common.misc import first_non_none
 
@@ -51,15 +51,19 @@ class SPRKKRProfile:
         mpi=None,
         gdb=False,
     ):
-        """Create a concrete execution specification for one SPR-KKR task."""
+        """Create a concrete execution specification for one SPR-KKR task.
+
+        ``mpi`` is an already resolved MPI command.  Resolving ``True``,
+        ``"auto"`` or a process count belongs to the executor, because only
+        the executor knows the machine on which the command will run.
+        """
 
         executable += self._executable_suffix(executable_suffix)
         executable_dir = self._executable_dir(executable_dir)
         if executable_dir is not False and executable_dir:
             executable = os.path.join(executable_dir, executable)
 
-        mpi = first_non_none(mpi, self.mpi)
-        mpi_command = mpi_runner(mpi) if mpi_supported else None
+        mpi_command = mpi if mpi_supported else None
 
         if mpi_command:
             input_name = input_file.name
