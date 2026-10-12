@@ -103,11 +103,16 @@ def run_remote_psij_worker(directory, run_id, request):
         next_state = runner.state
         if next_state != current:
             current = next_state
-            with _state_lock(directory, run_id):
-                state = _read_state_unlocked(directory, run_id)
-                if state.get("state") != RunState.CANCELLED.value:
-                    _write_state_unlocked(directory, run_id, state=current.value)
+            if current not in _FINAL_RUN_STATES:
+                with _state_lock(directory, run_id):
+                    state = _read_state_unlocked(directory, run_id)
+                    if state.get("state") != RunState.CANCELLED.value:
+                        _write_state_unlocked(directory, run_id, state=current.value)
 
+    # A scheduler can report a final job state before the final stdout/stderr
+    # bytes have been observed by PsijRunner. Keep the remote run non-final
+    # until wait() has drained those files; follow_remote() treats a final
+    # state as permission to close the client-side streams.
     result = runner.wait()
     with _state_lock(directory, run_id):
         state = _read_state_unlocked(directory, run_id)
