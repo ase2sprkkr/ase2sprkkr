@@ -1,8 +1,4 @@
-"""Backend-independent execution primitives.
-
-This module deliberately knows nothing about SPR-KKR executable naming, MPI
-launchers or input syntax.  Those details belong to :mod:`sprkkr.profile`.
-"""
+"""Backend-independent calculation execution contracts."""
 
 from __future__ import annotations
 
@@ -29,9 +25,11 @@ class RunReference:
 
     executor: str
     native_id: str
+    computer: Optional[str] = None
     directory: Optional[str] = None
     input_file: Optional[str] = None
     output_file: Optional[str] = None
+    error_file: Optional[str] = None
 
 
 @dataclass(frozen=True)
@@ -43,10 +41,11 @@ class ExecutionSpec:
     output_file: Any
     directory: str
     stdin: Any = None
+    error_file: Any = None
 
 
-class Run(Protocol):
-    """A runnable or running calculation."""
+class Runner(Protocol):
+    """One concrete calculation execution."""
 
     result: Any
 
@@ -56,40 +55,27 @@ class Run(Protocol):
     @property
     def reference(self) -> Optional[RunReference]: ...
 
+    def submit(self) -> None: ...
+
+    def wait(self) -> Any: ...
+
     def run(self) -> Any: ...
 
     def cancel(self) -> None: ...
 
+    def add_output_listener(self, callback) -> None: ...
+
 
 class Executor:
-    """Base class for calculation execution backends."""
+    """Factory/backend for calculation runners."""
 
     name = None
 
-    def create_run(self, reader, spec: ExecutionSpec, callback=None) -> Run:
+    def create_run(self, reader, spec: ExecutionSpec, callback=None) -> Runner:
         raise NotImplementedError
 
-    def attach(self, reference: RunReference, **kwargs) -> Run:
-        """Reconnect to a persistent run.
-
-        The local executor cannot do this.  Scheduler-backed executors can
-        implement it using the native scheduler id stored in ``reference``.
-        """
+    def attach(self, reference: RunReference, reader, callback=None) -> Runner:
+        """Reconnect to a persistent run."""
         raise NotImplementedError(
             f"{type(self).__name__} cannot attach to an existing run"
-        )
-
-
-class LocalExecutor(Executor):
-    """Execute an already prepared command on the current machine."""
-
-    name = "local"
-
-    def create_run(self, reader, spec: ExecutionSpec, callback=None) -> Run:
-        return reader.create_process(
-            list(spec.argv),
-            spec.output_file,
-            stdin=spec.stdin,
-            input_file=spec.input_file.name,
-            callback=callback,
         )
