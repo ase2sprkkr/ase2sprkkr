@@ -8,6 +8,10 @@ from enum import Enum
 from typing import Any, Optional, Protocol, Sequence, Tuple
 
 
+class MpiNotFoundWarning(UserWarning):
+    """MPI autodetection was requested, but no MPI launcher was found."""
+
+
 class RunState(str, Enum):
     """Backend-independent state of a calculation run."""
 
@@ -79,7 +83,8 @@ class LaunchSpec:
     ``mpi`` is ``False`` for serial execution, ``True`` when MPI is required,
     ``"auto"`` when a local executor may fall back to serial execution, or an
     explicit launcher argv tuple. ``process_count`` is an optional requested
-    number of MPI ranks.
+    number of MPI ranks. ``mpi_warning`` controls whether failed MPI
+    autodetection emits :class:`MpiNotFoundWarning`.
 
     The remaining fields describe remote filesystem mapping and synchronization
     for this run. They intentionally belong to the run rather than to an
@@ -89,6 +94,7 @@ class LaunchSpec:
 
     mpi: Any = False
     process_count: Optional[int] = None
+    mpi_warning: bool = True
     local_root: Optional[str] = None
     remote_root: Optional[str] = None
     input_sync: str = "changed"
@@ -194,6 +200,7 @@ class Runner(Protocol):
 
 
 def _resource_path(value, directory):
+    """Return an absolute filesystem path for a run resource, when possible."""
     if value is None:
         return None
     value = getattr(value, "name", value)

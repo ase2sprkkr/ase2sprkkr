@@ -141,6 +141,7 @@ class SPRKKRProfile:
         mpi_launch = LaunchSpec.from_mpi(self.mpi) if mpi_supported else LaunchSpec()
         launch = replace(
             mpi_launch,
+            mpi_warning=self.mpi_warning,
             local_root=self.local_root,
             remote_root=self.remote_root,
             input_sync=self.input_sync,

@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import json
 import posixpath
+import warnings
 
-from .base import Executor, LaunchSpec, RunReference
+from .base import Executor, LaunchSpec, MpiNotFoundWarning, RunReference
 from .remote import (
     RemoteExecutor as _RemoteStagingExecutor,
     _METADATA_DIR,
@@ -34,6 +35,9 @@ class _RemoteRunContext(_RemoteStagingExecutor):
 
     async def _remote_home(self):
         return await self.endpoint._remote_home()
+
+    async def _submit(self, request):
+        return await self.endpoint._submit(request)
 
 
 class RemoteEndpointExecutor(Executor):
@@ -77,6 +81,23 @@ class RemoteEndpointExecutor(Executor):
         return json.loads(result.stdout.decode("utf8"))
 
     async def _submit(self, request):
+        launch = request.get("launch") or {}
+        if (
+            self.backend == "local"
+            and launch.get("mpi") == "auto"
+            and launch.get("mpi_warning", True)
+        ):
+            resolved = await self._json_request(
+                "resolve-mpi",
+                payload={"mpi": "auto"},
+            )
+            if not resolved.get("mpi"):
+                warnings.warn(
+                    "MPI autodetection did not find an MPI launcher on the remote host; "
+                    "the calculation will run without MPI.",
+                    MpiNotFoundWarning,
+                    stacklevel=3,
+                )
         return await self._json_request(
             "submit", request["directory"], payload=request
         )
