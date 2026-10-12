@@ -1,15 +1,16 @@
 """Execution-profile views used by the ase2sprkkr configuration.
 
-Persistent named profiles live in the ase2sprkkr configuration.  ``ase`` and
-``legacy`` are virtual read-only profiles backed by ASE and by the deprecated
-ase2sprkkr execution options respectively; they are never serialized as named
-ase2sprkkr profiles.
+Persistent named profiles live in the ase2sprkkr configuration. ``ase`` and
+``legacy`` are virtual read-only profiles. The legacy profile is backed by an
+internal normal profile which is written only through the deprecated options;
+the ASE profile is backed by ASE's own configuration.
 """
 
 from __future__ import annotations
 
 from collections.abc import Iterator
 
+from .common.configuration_transaction import ConfigurationTransaction
 from .common.repeated_configuration_containers import RepeatedConfigurationContainer
 
 
@@ -36,19 +37,23 @@ class ReadOnlyProfileValue:
 
 
 class LegacyProfile:
-    """Read-only view of the deprecated global execution options."""
+    """Read-only public view of the deprecated execution configuration."""
 
     name = "legacy"
     source = "legacy"
     read_only = True
 
-    def __init__(self, config):
-        self.mpi = ReadOnlyProfileValue(lambda: config.running.mpi(), "mpi")
+    def __init__(self, profiles):
+        self._profiles = profiles
+        self.mpi = ReadOnlyProfileValue(
+            lambda: profiles.legacy_value("mpi"), "mpi"
+        )
         self.executable_dir = ReadOnlyProfileValue(
-            lambda: config.executables.dir(), "executable_dir"
+            lambda: profiles.legacy_value("executable_dir"), "executable_dir"
         )
         self.executable_suffix = ReadOnlyProfileValue(
-            lambda: config.executables.suffix(), "executable_suffix"
+            lambda: profiles.legacy_value("executable_suffix"),
+            "executable_suffix",
         )
 
     def as_dict(self, *args, **kwargs):
@@ -71,7 +76,7 @@ class ASEProfile:
     """Read-only view of ASE's ``[sprkkr]`` calculator configuration.
 
     ASE calculator profiles are intentionally not copied into the ase2sprkkr
-    configuration.  Keeping this object as a live view also means changes made
+    configuration. Keeping this object as a live view also means changes made
     to ASE's in-memory configuration are immediately visible here.
     """
 
@@ -113,26 +118,51 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
     """Dict-like repeated section with virtual external profiles.
 
     Normal entries are stored by :class:`RepeatedConfigurationContainer` and
-    therefore participate in parsing/serialization.  Virtual entries are added
-    only by lookup/iteration, so the base implementation remains the sole
-    persistence path and cannot accidentally write them to ase2sprkkr config.
+    therefore participate in parsing/serialization. ``legacy`` uses a separate
+    internal section so deprecated options can use the same profile schema
+    without making that section mutable or persistent through the profiles API.
     """
 
     reserved_names = frozenset(("legacy", "ase"))
+    legacy_fields = ("mpi", "executable_dir", "executable_suffix")
+
+    def _legacy_profile(self, create=False):
+        """Return the internal mutable legacy profile used by old options."""
+        profile = getattr(self, "_legacy", None)
+        if profile is None and create:
+            profile = self._definition.create_object(self, repeated=False)
+            self._legacy = profile
+        return profile
 
     def _legacy_available(self) -> bool:
-        config = self._container
-        # Explicit presence matters, not whether the value differs from its
-        # default.  This also deliberately ignores the suffix environment
-        # default: an environment default alone is not a legacy config profile.
-        return any(
-            getattr(option, "_value", None) is not None
-            for option in (
-                config.running.mpi,
-                config.executables.dir,
-                config.executables.suffix,
-            )
+        profile = self._legacy_profile()
+        return profile is not None and any(
+            getattr(profile, name)._value is not None
+            for name in self.legacy_fields
         )
+
+    def legacy_value(self, name, default=None):
+        """Return a value from the internal legacy profile."""
+        profile = self._legacy_profile()
+        value = None if profile is None else getattr(profile, name)()
+        if value is None and default is not None:
+            return default() if callable(default) else default
+        return value
+
+    def set_legacy_value(self, name, value):
+        """Stage a deprecated option into the internal legacy profile."""
+        profile = self._legacy_profile(create=True)
+        option = getattr(profile, name)
+        transaction = ConfigurationTransaction.current()
+        if transaction is None:
+            option.set(value)
+        else:
+            option.stage(transaction, value)
+
+    def legacy_option(self, name, create=False):
+        """Return the mutable backing option for compatibility plumbing."""
+        profile = self._legacy_profile(create=create)
+        return None if profile is None else getattr(profile, name)
 
     @staticmethod
     def _ase_config():
@@ -150,7 +180,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             section = cfg.parser["sprkkr"]
         except KeyError:
             return False
-        # ``command`` is the common ASE profile requirement.  An incomplete
+        # ``command`` is the common ASE profile requirement. An incomplete
         # section should not silently become the preferred runnable profile.
         return bool(section.get("command"))
 
@@ -158,7 +188,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         if name == "ase" and self._ase_available():
             return ASEProfile(self._ase_config())
         if name == "legacy" and self._legacy_available():
-            return LegacyProfile(self._container)
+            return LegacyProfile(self)
         raise KeyError(name)
 
     def add(self, id=None):
@@ -186,10 +216,9 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             yield "legacy"
 
     def __iter__(self):
-        # Iteration is the public list of available profile names.  ``items``
-        # and ``values`` intentionally remain inherited and persistent-only,
-        # because the base repeated-container implementation uses them while
-        # staging, validating and serializing its contents.
+        # ``items`` and ``values`` intentionally remain inherited and contain
+        # persistent entries only. The repeated-container implementation uses
+        # them while staging, validating and serializing its contents.
         yield from super().__iter__()
         yield from self._virtual_names()
 
@@ -202,13 +231,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             yield name, self[name]
 
     def resolve_name(self, name=None):
-        """Resolve the profile name according to configuration precedence.
-
-        An explicit ``name`` wins.  Otherwise an explicitly configured
-        ``default_profile`` wins, followed by ASE and then by the deprecated
-        legacy configuration.  ``None`` means that no configured profile is
-        available and the caller may use its automatic fallback.
-        """
+        """Resolve a profile name according to configuration precedence."""
         if name is None:
             name = self._container.default_profile()
         if name is not None:
