@@ -3,7 +3,7 @@ from types import SimpleNamespace
 from ..calculator import SPRKKR
 
 
-def test_run_forwards_explicit_file_names(monkeypatch):
+def test_create_run_forwards_explicit_file_names(monkeypatch):
     calculator = SPRKKR(directory=False, empty_spheres=False)
     captured = {}
 
@@ -20,7 +20,7 @@ def test_run_forwards_explicit_file_names(monkeypatch):
 
     monkeypatch.setattr(calculator, "save_input", save_input)
 
-    calculator.run(
+    calculator.create_run(
         input_file="custom.inp",
         potential_file="custom.pot",
         output_file="custom.out",

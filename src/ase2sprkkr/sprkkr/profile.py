@@ -192,7 +192,7 @@ def _profile_value(profile, name):
 
 def _shell_argv(value):
     """Normalize a shell-style command string or argv sequence to a tuple."""
-    if not value:
+    if value is None:
         return ()
     if isinstance(value, str):
         return tuple(shlex.split(value))
@@ -201,9 +201,14 @@ def _shell_argv(value):
 
 def _normalize_mpi(value):
     """Normalize an explicit MPI command while retaining symbolic modes."""
-    if isinstance(value, str) and value != "auto":
-        return _shell_argv(value)
-    return value
+    if isinstance(value, str):
+        return value if value == "auto" else _shell_argv(value)
+    if value is None or isinstance(value, (bool, int)):
+        return value
+    try:
+        return tuple(value)
+    except TypeError:
+        return value
 
 
 def profile_from_ase_command(command):
@@ -227,15 +232,15 @@ def _configured_profile(profile, configuration):
         if profile.executable_suffix is None:
             changes["executable_suffix"] = ""
         mpi = False if profile.mpi is None else _normalize_mpi(profile.mpi)
-        if mpi != profile.mpi:
+        if type(mpi) is not type(profile.mpi) or mpi != profile.mpi:
             changes["mpi"] = mpi
         if not profile.executor:
             changes["executor"] = "local"
         ssh_options = _shell_argv(profile.ssh_options)
-        if ssh_options != profile.ssh_options:
+        if type(ssh_options) is not type(profile.ssh_options) or ssh_options != profile.ssh_options:
             changes["ssh_options"] = ssh_options
         remote_command = _shell_argv(profile.remote_command)
-        if remote_command != profile.remote_command:
+        if type(remote_command) is not type(profile.remote_command) or remote_command != profile.remote_command:
             changes["remote_command"] = remote_command
         if not profile.input_sync:
             changes["input_sync"] = "changed"

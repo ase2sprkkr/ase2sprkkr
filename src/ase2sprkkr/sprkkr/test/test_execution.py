@@ -7,7 +7,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from ...execution import ExecutionSpec, LocalExecutor, LocalRunner, RunState
+from ...execution import ExecutionSpec, LaunchSpec, LocalExecutor, LocalRunner, RunState
 from ..profile import SPRKKRProfile
 
 
@@ -93,7 +93,7 @@ def test_profile_builds_serial_command():
     assert spec.output_files == (output_file, task_output)
 
 
-def test_profile_builds_mpi_command():
+def test_profile_builds_portable_mpi_launch_intent():
     input_file = SimpleNamespace(name="/tmp/Fe.inp")
     profile = SPRKKRProfile(
         executable_dir="/opt/sprkkr",
@@ -109,14 +109,10 @@ def test_profile_builds_mpi_command():
         mpi_supported=True,
     )
 
-    assert spec.argv == (
-        "mpirun",
-        "-np",
-        "4",
-        "/opt/sprkkr/kkrscf_v97MPI",
-        "/tmp/Fe.inp",
-    )
-    assert spec.stdin is None
+    assert spec.argv == ("/opt/sprkkr/kkrscf_v97",)
+    assert spec.mpi_argv == ("/opt/sprkkr/kkrscf_v97MPI", "/tmp/Fe.inp")
+    assert spec.launch == LaunchSpec(mpi=("mpirun", "-np", "4"))
+    assert spec.stdin is input_file
 
 
 def test_non_mpi_task_does_not_use_profile_mpi():

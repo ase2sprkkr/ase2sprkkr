@@ -108,10 +108,8 @@ class LaunchSpec:
             if mpi < 1:
                 raise ValueError("MPI process count must be positive")
             return cls(mpi=True, process_count=mpi)
-        if mpi == "auto":
-            return cls(mpi="auto")
         if isinstance(mpi, str):
-            return cls(mpi=(mpi,))
+            return cls(mpi="auto" if mpi == "auto" else (mpi,))
         return cls(mpi=tuple(mpi))
 
 
