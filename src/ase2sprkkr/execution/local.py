@@ -6,10 +6,17 @@ import asyncio
 import errno
 import os
 import sys
+import warnings
 from dataclasses import replace
 from threading import Event, Lock, Thread
 
-from .base import ExecutionSpec, Executor, RunReference, RunState
+from .base import (
+    ExecutionSpec,
+    Executor,
+    MPIRunnerNotFoundWarning,
+    RunReference,
+    RunState,
+)
 
 
 def _mpi_command(launch):
@@ -20,6 +27,12 @@ def _mpi_command(launch):
     if not command:
         if launch.mpi == "auto":
             return None
+        if launch.mpi_warning:
+            warnings.warn(
+                "MPI was explicitly requested but no MPI launcher was found",
+                MPIRunnerNotFoundWarning,
+                stacklevel=2,
+            )
         raise FileNotFoundError(
             errno.ENOENT,
             "MPI was requested but no MPI launcher was found",
