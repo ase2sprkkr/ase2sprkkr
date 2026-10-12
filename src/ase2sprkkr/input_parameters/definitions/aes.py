@@ -36,7 +36,9 @@ def input_parameters():
             V("NEME", Integer(min=3), 10, is_always_added=False, info="Coarse matrix-element mesh; actual count is min(NEME, NE from TAU)."),
             V("PRINTME", False, info="Write matrix-element diagnostics."),
             V("PRINTAME", False, info="Print angular-matrix-element diagnostics."),
-        ]), SITES], executable="kkrgen", mpi=False, validators=_validate_aes,
+        ]), SITES], executable="kkrgen", mpi=False,
+        cache_file_templates=("ME", *(f"ME{i}" for i in range(1, 13))),
+        validators=_validate_aes,
         info="Fully relativistic Auger electron spectroscopy (ASA, NQ=1).",
         description="Requires an initial-state TAU directory on a uniform increasing mesh with at least three energies. "
                     "The source stops for NQ>1. ENERGY.NE must allocate enough capacity for the TAU file. "

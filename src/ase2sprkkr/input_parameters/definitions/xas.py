@@ -2,8 +2,9 @@
 import numpy as np
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
+from ._file_manifests import TauCacheInputParametersDefinition
 from ._sections import CONTROL, TASK, TAU, ENERGY, SITES, MODE
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ..input_parameters_definitions import InputValueDefinition as V
 
 
 def _validate_xas(parameters, _values, why):
@@ -32,7 +33,7 @@ def input_parameters():
     energy = ENERGY(emax=(4.0, "Upper bound in Ry; native XAS default", None),
                     defaults={"ImE": 0.01, "GRID": 6, "NE": 180})
     energy.copy_member("NE", type=SetOf(Integer(min=2), min_length=1, max_length=2))
-    return InputParameters("xas", [CONTROL("XAS"), TAU, MODE, energy,
+    return TauCacheInputParametersDefinition("xas", [CONTROL("XAS"), TAU, MODE, energy,
         TASK("XAS").copy([
             V("IT", Integer(min=1), 1, info="Atom type index, not site index."),
             V("CL", Keyword(*(f"{n}{s}" for n in range(1, 6) for s in "SPDF")), "2P", info="Initial core shell."),

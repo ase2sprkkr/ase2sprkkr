@@ -2,7 +2,8 @@
 import numpy as np
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ._file_manifests import TauCacheInputParametersDefinition
+from ..input_parameters_definitions import InputValueDefinition as V
 from ._sections import CONTROL, ENERGY, MODE, SITES, TASK, TAU
 
 
@@ -48,7 +49,7 @@ def input_parameters():
         V("FRAMEPHI", float, is_optional=True, info="Frame Euler angle in degrees."),
         V("FRAMEGAM", float, is_optional=True, info="Frame Euler angle in degrees."),
     ])
-    return InputParameters("xes", [CONTROL("XES"), TAU, MODE, energy, task, SITES],
+    return TauCacheInputParametersDefinition("xes", [CONTROL("XES"), TAU, MODE, energy, task, SITES],
         executable="kkrgen", mpi=False, validators=_validate,
         info="X-ray emission through the common XRAYSPEC workflow.",
         description="Requires an occupied-state TAU directory with NE matching ENERGY.NE, or a workflow producing it. "

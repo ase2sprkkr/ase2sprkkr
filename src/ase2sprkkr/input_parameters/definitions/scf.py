@@ -1,5 +1,4 @@
 """SCF task definition audited against SPR-KKR 9.7."""
-import os
 import numpy as np
 from ...common.grammar_types import Integer, SetOf, Keyword
 from ...common.warnings import DataValidityError
@@ -11,14 +10,12 @@ from ..input_parameters_definitions import InputParametersDefinition
 class SCFInputParametersDefinition(InputParametersDefinition):
     """SCF definition with files depending on the concrete parameters."""
 
-    def input_files(self, parameters, directory):
-        files = list(super().input_files(parameters, directory))
+    def cache_files(self, parameters, directory):
+        files = list(super().cache_files(parameters, directory))
         if parameters.SCF.FULLPOT():
             sfnfil = parameters.CONTROL.SFNFIL()
             if sfnfil:
-                path = resolve_file(directory, sfnfil)
-                if os.path.exists(path):
-                    files.append(path)
+                files.append(resolve_file(directory, sfnfil))
         return tuple(files)
 
     def output_files(self, parameters, directory):

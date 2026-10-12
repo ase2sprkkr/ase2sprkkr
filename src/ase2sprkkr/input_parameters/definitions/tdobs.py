@@ -3,8 +3,9 @@
 import numpy as np
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
+from ._file_manifests import TauCacheInputParametersDefinition
 from ._sections import CONTROL, TAU, ENERGY, TASK, SITES, MODE, CPA, STRCONST
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ..input_parameters_definitions import InputValueDefinition as V
 
 
 def _validate_tdobs(p, _values, why):
@@ -28,7 +29,7 @@ def _validate_tdobs(p, _values, why):
 def input_parameters():
     energy = ENERGY(emax=(1.0, "value of the highest energy", None), defaults={"GRID": 3, "NE": 300, "ImE": 0.01})
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
-    return InputParameters(
+    return TauCacheInputParametersDefinition(
         "tdobs",
         [
             CONTROL("TDOBS"),
