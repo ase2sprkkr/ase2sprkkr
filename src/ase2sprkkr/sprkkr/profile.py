@@ -23,17 +23,26 @@ class SPRKKRProfile:
     executable_suffix: Any = ""
     mpi: Any = False
 
-    def _executable_suffix(self, override):
-        if override is False:
-            return ""
-        if override is True or override is None:
-            return self.executable_suffix or ""
-        return override
+    def with_overrides(self, **overrides):
+        """Return this profile with non-``None`` overrides applied.
 
-    def _executable_dir(self, override):
-        if override is None:
-            return self.executable_dir
-        return override
+        The profile is immutable, so actual changes create a copy. If all
+        supplied values are ``None`` or already equal to the current values,
+        return ``self`` instead. ``None`` therefore means "keep the profile
+        value", which matches the compatibility arguments of ``SPRKKR``.
+        """
+        allowed = {"mpi", "executable_dir", "executable_suffix"}
+        unknown = set(overrides) - allowed
+        if unknown:
+            names = ", ".join(sorted(unknown))
+            raise TypeError(f"Unknown SPR-KKR profile override(s): {names}")
+
+        changes = {
+            name: value
+            for name, value in overrides.items()
+            if value is not None and value != getattr(self, name)
+        }
+        return replace(self, **changes) if changes else self
 
     def create_execution(
         self,
@@ -45,24 +54,20 @@ class SPRKKRProfile:
         input_files=(),
         output_files=(),
         mpi_supported=False,
-        executable_suffix=None,
-        executable_dir=None,
-        mpi=None,
         gdb=False,
     ):
         """Create a concrete execution specification for one SPR-KKR task.
 
-        ``mpi`` is an already resolved MPI command. Resolving ``True``,
-        ``"auto"`` or a process count belongs to the executor, because only
-        the executor knows the machine on which the command will run.
+        ``mpi`` stored in this profile must already be resolved to a concrete
+        command by the executor. Resolving ``True``, ``"auto"`` or a process
+        count belongs to the executor, because only the executor knows the
+        machine on which the command will run.
         """
+        executable += self.executable_suffix or ""
+        if self.executable_dir:
+            executable = os.path.join(self.executable_dir, executable)
 
-        executable += self._executable_suffix(executable_suffix)
-        executable_dir = self._executable_dir(executable_dir)
-        if executable_dir is not False and executable_dir:
-            executable = os.path.join(executable_dir, executable)
-
-        mpi_command = mpi if mpi_supported else None
+        mpi_command = self.mpi if mpi_supported else None
 
         if mpi_command:
             input_name = input_file.name
@@ -144,11 +149,14 @@ def _configured_profile(profile, configuration):
         )
 
     if isinstance(profile, SPRKKRProfile):
-        return SPRKKRProfile(
-            executable_dir=False if profile.executable_dir is None else profile.executable_dir,
-            executable_suffix="" if profile.executable_suffix is None else profile.executable_suffix,
-            mpi=False if profile.mpi is None else profile.mpi,
-        )
+        changes = {}
+        if profile.executable_dir is None:
+            changes["executable_dir"] = False
+        if profile.executable_suffix is None:
+            changes["executable_suffix"] = ""
+        if profile.mpi is None:
+            changes["mpi"] = False
+        return replace(profile, **changes) if changes else profile
 
     if getattr(profile, "source", None) == "ase":
         return profile_from_ase_command(profile.command())
@@ -170,30 +178,14 @@ def _configured_profile(profile, configuration):
     )
 
 
-def resolve_sprkkr_profile(
-    profile=None,
-    *,
-    configuration=None,
-    mpi=None,
-    executable_dir=None,
-    executable_suffix=None,
-):
+def resolve_sprkkr_profile(profile=None, *, configuration=None):
     """Resolve a user/configuration profile into an immutable runtime profile.
 
     Resolution order for ``profile=None`` is the one defined by the profile
     configuration container: configured ``default_profile``, ASE's virtual
     profile, the deprecated legacy profile, then built-in defaults. A string
-    explicitly selects a named profile. Explicit execution-location arguments
-    override the resolved profile when they are not ``None``.
+    explicitly selects a named profile. Per-calculation compatibility
+    overrides are applied by ``SPRKKR`` after this resolution.
     """
     configuration = configuration or config
-    resolved = _configured_profile(profile, configuration)
-
-    changes = {}
-    if mpi is not None:
-        changes["mpi"] = mpi
-    if executable_dir is not None:
-        changes["executable_dir"] = executable_dir
-    if executable_suffix is not None:
-        changes["executable_suffix"] = executable_suffix
-    return replace(resolved, **changes) if changes else resolved
+    return _configured_profile(profile, configuration)

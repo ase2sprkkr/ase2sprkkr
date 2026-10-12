@@ -107,29 +107,27 @@ def test_runtime_resolver_accepts_explicit_profile_name(monkeypatch):
 
 
 def test_explicit_runtime_profile_is_normalized():
-    profile = resolve_sprkkr_profile(
-        SPRKKRProfile(executable_dir="/bin", executable_suffix=None, mpi=None)
-    )
+    source = SPRKKRProfile(executable_dir="/bin", executable_suffix=None, mpi=None)
+
+    profile = resolve_sprkkr_profile(source)
 
     assert profile == SPRKKRProfile("/bin", "", False)
+    assert source == SPRKKRProfile("/bin", None, None)
 
 
-def test_run_overrides_are_applied_after_profile_resolution(monkeypatch):
-    monkeypatch.setattr(
-        ProfilesConfigurationContainer,
-        "_ase_config",
-        staticmethod(lambda: None),
-    )
-    configuration = definition.create_object()
-    configuration.profiles.set(
-        {"cluster": {"mpi": 4, "executable_dir": "/cluster", "executable_suffix": ".x"}}
-    )
+def test_profile_with_overrides_returns_self_when_no_change_is_needed():
+    profile = SPRKKRProfile("/cluster", ".x", 4)
 
-    profile = resolve_sprkkr_profile(
-        "cluster",
-        configuration=configuration,
-        mpi=2,
-        executable_suffix=".test",
-    )
+    assert profile.with_overrides() is profile
+    assert profile.with_overrides(mpi=None, executable_dir=None, executable_suffix=None) is profile
+    assert profile.with_overrides(mpi=4, executable_dir="/cluster", executable_suffix=".x") is profile
 
-    assert profile == SPRKKRProfile("/cluster", ".test", 2)
+
+def test_profile_with_overrides_copies_only_changed_values():
+    profile = SPRKKRProfile("/cluster", ".x", 4)
+
+    changed = profile.with_overrides(mpi=2, executable_suffix=False)
+
+    assert changed == SPRKKRProfile("/cluster", False, 2)
+    assert changed is not profile
+    assert profile == SPRKKRProfile("/cluster", ".x", 4)

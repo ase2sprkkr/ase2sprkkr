@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import os
 import sys
-from dataclasses import replace
 from ase.calculators.calculator import BaseCalculator, all_changes
 
 from .sprkkr_atoms import SPRKKRAtoms
@@ -179,8 +178,6 @@ class SPRKKR(BaseCalculator):
             self.directory = directory
         self.atoms = atoms
         self.potential = potential
-        """ Default value for mpi parameter of calculate - it determine the way whether and how
-        the mpi is employed. """
         self.input_file = input_file
         """ A pathname or an open named file for the input file (if not specified otherwise in the
         called method) """
@@ -194,8 +191,7 @@ class SPRKKR(BaseCalculator):
             self.input_parameters.set(options, unknown="find")
         self.print_output = print_output
         self.empty_spheres = empty_spheres
-        self.profile = resolve_sprkkr_profile(
-            profile,
+        self.profile = resolve_sprkkr_profile(profile).with_overrides(
             mpi=mpi,
             executable_dir=executable_dir,
             executable_suffix=executable_suffix,
@@ -207,30 +203,6 @@ class SPRKKR(BaseCalculator):
 
     print_output = config_property("print_output", config.running.print_output)
     empty_spheres = config_property("empty_spheres", config.running.empty_spheres)
-
-    @property
-    def mpi(self):
-        return self.profile.mpi
-
-    @mpi.setter
-    def mpi(self, value):
-        self.profile = replace(self.profile, mpi=False if value is None else value)
-
-    @property
-    def executable_dir(self):
-        return self.profile.executable_dir
-
-    @executable_dir.setter
-    def executable_dir(self, value):
-        self.profile = replace(self.profile, executable_dir=False if value is None else value)
-
-    @property
-    def executable_suffix(self):
-        return self.profile.executable_suffix
-
-    @executable_suffix.setter
-    def executable_suffix(self, value):
-        self.profile = replace(self.profile, executable_suffix="" if value is None else value)
 
     @property
     def input_parameters(self):
@@ -440,7 +412,7 @@ class SPRKKR(BaseCalculator):
         options={},
         task=None,
         empty_spheres: Optional[str | bool | tuple | abc.Mapping] = None,
-        mpi=None,
+        profile: Optional[SPRKKRProfile] = None,
         return_files=False,
     ):
         """
@@ -493,10 +465,9 @@ class SPRKKR(BaseCalculator):
         create_subdirs: boolean
             If true, create directories if they don't exists.
 
-        mpi: bool or None
-            Save input for a mpi calculation. None means to use the mpi value specified in the
-            constructor. Actually, the only difference is that the temporary input file has
-            to have filename.
+        profile: SPRKKRProfile or None
+            Execution profile used to decide whether a named input file is
+            required for MPI. None means the calculator profile.
 
         empty_spheres
             Whether to add empty spheres to the structure or not.
@@ -535,6 +506,7 @@ class SPRKKR(BaseCalculator):
             Output file. See return_files
 
         """
+        profile = self.profile if profile is None else profile
 
         def makepath(path, must_exist):
             if "/" not in path and directory:
@@ -696,7 +668,7 @@ class SPRKKR(BaseCalculator):
                 ifile,
                 directory,
                 templator,
-                input_parameters.is_mpi(self.mpi if mpi is None else mpi),
+                input_parameters.is_mpi(profile.mpi),
                 allow_temporary=return_files,
                 create_subdirs=create_subdirs,
                 mode="w+" if save_input else "r",
@@ -804,14 +776,11 @@ class SPRKKR(BaseCalculator):
         options={},
         task=None,
         empty_spheres: Optional[str | bool] = None,
-        mpi: bool = None,
         print_output=None,
         read_callback: Optional[callable] = None,
-        executable_suffix=None,
-        executable_dir=None,
         callback=None,
         gdb=False,
-        profile=None,
+        profile: Optional[SPRKKRProfile] = None,
         executor=None,
     ):
         """Prepare a calculation and return an unstarted Runner.
@@ -832,25 +801,11 @@ class SPRKKR(BaseCalculator):
             Receives output of the called executable.
             The second argument is either 'out' or 'err'
 
-        profile: ase2sprkkr.sprkkr.profile.SPRKKRProfile, str or None
-            Override the calculator execution profile for this run. A string
-            selects a named configured profile.
+        profile: ase2sprkkr.sprkkr.profile.SPRKKRProfile or None
+            Runtime execution profile for this run. None means the calculator profile.
 
         executor: ase2sprkkr.execution.Executor or None
             Override the calculator execution backend for this run.
-
-        executable_suffix: str or bool or None
-            If not None, override the suffix from the selected execution profile.
-
-        executable_dir: str or bool or None
-            If not None, override the executable directory from the selected profile.
-
-        mpi: bool or None
-            Runner for mpi to run a mpi calculation. True and int means autodetect: use True
-            for a cluster where mpi is able to autodetect the number of the processes, otherwise
-            use integer to specify the number of processes.
-            None means use the value from the selected profile.
-            E.g. mpi = [ 'mpirun', '-np', '4' ], mpi = 4
 
         ---------
         For the other parameters, see the save_input() method
@@ -859,12 +814,7 @@ class SPRKKR(BaseCalculator):
         if output_file is False:
             output_file = None
 
-        run_profile = resolve_sprkkr_profile(
-            self.profile if profile is None else profile,
-            mpi=mpi,
-            executable_dir=executable_dir,
-            executable_suffix=executable_suffix,
-        )
+        run_profile = self.profile if profile is None else profile
         print_output = first_non_none(print_output, self.print_output)
 
         with Directory.new(directory, default=self._directory) as directory:
@@ -878,7 +828,7 @@ class SPRKKR(BaseCalculator):
                 directory=directory,
                 create_subdirs=create_subdirs,
                 empty_spheres=empty_spheres,
-                mpi=run_profile.mpi,
+                profile=run_profile,
                 options=options,
                 task=task,
                 return_files=True,
@@ -893,7 +843,6 @@ class SPRKKR(BaseCalculator):
                     print_output=print_output,
                     read_callback=read_callback,
                     run_async=True,
-                    mpi=run_profile.mpi,
                     callback=callback,
                     gdb=gdb,
                     profile=run_profile,
@@ -965,6 +914,13 @@ class SPRKKR(BaseCalculator):
 
             This calculator ignore properties and system_changes.
 
+        profile: SPRKKRProfile, str or None
+            Profile for this calculation. None means the calculator profile.
+
+        mpi, executable_dir, executable_suffix
+            Compatibility overrides applied to the selected profile for this
+            calculation. None keeps the corresponding profile value.
+
         ---------
         For the other parameters, see the create_run() and save_input() methods
 
@@ -987,6 +943,13 @@ class SPRKKR(BaseCalculator):
 
         # There is no need to call this
         # super().calculate(atoms, properties, system_changes)
+        run_profile = resolve_sprkkr_profile(
+            self.profile if profile is None else profile
+        ).with_overrides(
+            mpi=mpi,
+            executable_dir=executable_dir,
+            executable_suffix=executable_suffix,
+        )
         runner = self.create_run(
             atoms=atoms,
             input_parameters=input_parameters,
@@ -999,13 +962,10 @@ class SPRKKR(BaseCalculator):
             options=options,
             task=task,
             empty_spheres=empty_spheres,
-            mpi=mpi,
             print_output=print_output,
             read_callback=read_callback,
-            executable_suffix=executable_suffix,
-            executable_dir=executable_dir,
             gdb=gdb,
-            profile=profile,
+            profile=run_profile,
             executor=executor,
         )
         result = runner.run()

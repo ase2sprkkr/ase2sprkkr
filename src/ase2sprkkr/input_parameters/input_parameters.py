@@ -137,9 +137,6 @@ class InputParameters(ConfigurationFile):
         print_output=None,
         read_callback=None,
         run_async=False,
-        executable_suffix=None,
-        executable_dir=None,
-        mpi=None,
         callback=None,
         gdb=False,
         profile=None,
@@ -155,12 +152,11 @@ class InputParameters(ConfigurationFile):
         profile = profile or getattr(calculator, "profile", None) or SPRKKRProfile()
         executor = executor or getattr(calculator, "executor", None) or LocalExecutor()
 
+        execution_profile = profile
         if self._definition.mpi:
-            if mpi is None:
-                mpi = getattr(profile, "mpi", None)
-            mpi = executor.resolve_mpi(mpi)
-        else:
-            mpi = None
+            execution_profile = profile.with_overrides(
+                mpi=executor.resolve_mpi(profile.mpi)
+            )
 
         try:
 
@@ -191,7 +187,7 @@ class InputParameters(ConfigurationFile):
                 if file is not None
             )
 
-            spec = profile.create_execution(
+            spec = execution_profile.create_execution(
                 self._definition.executable,
                 input_file,
                 output_file,
@@ -199,9 +195,6 @@ class InputParameters(ConfigurationFile):
                 input_files=input_files,
                 output_files=output_files,
                 mpi_supported=self._definition.mpi,
-                executable_suffix=executable_suffix,
-                executable_dir=executable_dir,
-                mpi=mpi,
                 gdb=gdb,
             )
             runner = executor.create_run(reader, spec, callback=cleanup)
@@ -212,13 +205,13 @@ class InputParameters(ConfigurationFile):
             return runner.run()
         except FileNotFoundError as e:
             add = (
-                "Cannot find SPRKKR executable. Maybe, ase2sprkkr.config.executable.suffix "
-                "variable should be set (or the SPRKKR_EXECUTABLE_SUFFIX environment variable)?\n"
+                "Cannot find SPR-KKR executable. Check executable_dir and executable_suffix "
+                "in the selected SPR-KKR profile.\n"
             )
-            if mpi:
+            if execution_profile.mpi:
                 add += (
-                    "Also, pleas check that the MPI is functional on your machine, or explicitly disable "
-                    "MPI with mpi=False argument of calculate method (or set ase2sprkkr.config.running.mpi = False)\n\n"
+                    "Also, please check the MPI setting in the selected profile, or explicitly "
+                    "disable MPI with mpi=False in SPRKKR.calculate().\n\n"
                 )
             e.strerror = add + "SPRKKR cannot be run due to the following error: \n" + e.strerror
             raise

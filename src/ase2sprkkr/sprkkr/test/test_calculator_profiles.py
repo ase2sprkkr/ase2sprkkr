@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 from ase2sprkkr.configuration import definition
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
 from ase2sprkkr.sprkkr import profile as profile_module
@@ -54,22 +56,74 @@ def test_calculator_accepts_named_profile(monkeypatch):
     assert calculator.profile.mpi == 4
 
 
-def test_calculator_profile_fields_are_single_authority(monkeypatch):
+def test_calculator_init_overrides_copy_explicit_profile(monkeypatch):
     fresh_profile_config(monkeypatch)
-    calculator = SPRKKR(
-        profile=SPRKKRProfile(
-            executable_dir="/old",
-            executable_suffix=".old",
-            mpi=2,
-        )
+    profile = SPRKKRProfile(
+        executable_dir="/old",
+        executable_suffix=".old",
+        mpi=2,
     )
 
-    calculator.executable_dir = "/new"
-    calculator.executable_suffix = ".new"
-    calculator.mpi = 6
+    calculator = SPRKKR(
+        profile=profile,
+        executable_dir="/new",
+        executable_suffix=".new",
+        mpi=6,
+    )
 
     assert calculator.profile == SPRKKRProfile(
         executable_dir="/new",
         executable_suffix=".new",
         mpi=6,
     )
+    assert calculator.profile is not profile
+    assert profile == SPRKKRProfile("/old", ".old", 2)
+
+
+def test_calculate_overrides_copy_explicit_profile(monkeypatch):
+    fresh_profile_config(monkeypatch)
+    calculator = SPRKKR(profile=SPRKKRProfile("/calculator", ".calc", 1))
+    profile = SPRKKRProfile("/cluster", ".x", 4)
+    captured = {}
+
+    class Runner:
+        def run(self):
+            return SimpleNamespace(task_name="DOS")
+
+    def create_run(self, **kwargs):
+        captured.update(kwargs)
+        return Runner()
+
+    monkeypatch.setattr(SPRKKR, "create_run", create_run)
+
+    calculator.calculate(
+        profile=profile,
+        mpi=2,
+        executable_dir="/override",
+        executable_suffix=False,
+    )
+
+    assert captured["profile"] == SPRKKRProfile("/override", False, 2)
+    assert captured["profile"] is not profile
+    assert profile == SPRKKRProfile("/cluster", ".x", 4)
+
+
+def test_calculate_reuses_profile_when_no_override_is_given(monkeypatch):
+    fresh_profile_config(monkeypatch)
+    profile = SPRKKRProfile("/cluster", ".x", 4)
+    calculator = SPRKKR(profile=profile)
+    captured = {}
+
+    class Runner:
+        def run(self):
+            return SimpleNamespace(task_name="DOS")
+
+    def create_run(self, **kwargs):
+        captured.update(kwargs)
+        return Runner()
+
+    monkeypatch.setattr(SPRKKR, "create_run", create_run)
+
+    calculator.calculate()
+
+    assert captured["profile"] is calculator.profile
