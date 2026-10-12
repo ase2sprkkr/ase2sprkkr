@@ -54,40 +54,47 @@ def parser(parser):
         "--migrate",
         action="store_true",
         help=(
-            "Migrate the deprecated Python user configuration to config.yaml "
-            "and convert legacy execution settings to a named profile."
+            "Migrate declarative settings from the Python configuration hook to "
+            "config.yaml, convert legacy execution settings to a named profile, "
+            "and remove migrated top-level assignments from the hook."
         ),
     )
     cleanup = parser.add_mutually_exclusive_group()
     cleanup.add_argument(
         "--keep-init",
         action="store_true",
-        help="After migration, keep the deprecated Python init script unchanged.",
+        help=(
+            "After migration, keep the Python hook unchanged instead of removing "
+            "migrated assignments."
+        ),
     )
     cleanup.add_argument(
         "--clean-init",
         action="store_true",
-        help="After migration, remove migrated ASE2SPRKKR assignments from the init script.",
+        help=(
+            "Remove migrated top-level ASE2SPRKKR assignments from the Python hook "
+            "after migration (the default)."
+        ),
     )
     cleanup.add_argument(
         "--delete-init",
         action="store_true",
-        help="After migration, delete the deprecated Python init script.",
+        help="After migration, delete the Python configuration hook completely.",
     )
     parser.add_argument(
         "--init-script",
         action="store_true",
-        help="Print the path to the deprecated Python __init__.py configuration.",
+        help="Print the path to the Python user-configuration hook.",
     )
     parser.add_argument(
         "--print-init-script",
         action="store_true",
-        help="Print the deprecated Python __init__.py configuration.",
+        help="Print the Python user-configuration hook.",
     )
     parser.add_argument(
         "--edit-init-script",
         action="store_true",
-        help="Edit the deprecated Python __init__.py configuration using $EDITOR.",
+        help="Edit the Python user-configuration hook using $EDITOR.",
     )
 
 
@@ -147,29 +154,6 @@ def _requested_cleanup(args):
     return None
 
 
-def _prompt_cleanup():
-    if not sys.stdin.isatty():
-        raise SystemExit(
-            "Migration needs a legacy-file action when stdin is not interactive: "
-            "use --keep-init, --clean-init, or --delete-init."
-        )
-
-    print()
-    print("What should be done with the old Python init script?")
-    print("  1) Keep it unchanged")
-    print("  2) Clean migrated settings")
-    print("  3) Delete it")
-    while True:
-        choice = input("Choose 1, 2, or 3: ").strip().lower()
-        if choice in ("1", "keep", "k"):
-            return "keep"
-        if choice in ("2", "clean", "c"):
-            return "clean"
-        if choice in ("3", "delete", "d"):
-            return "delete"
-        print("Please choose 1, 2, or 3.")
-
-
 def _migrate(args, legacy_file, file):
     from ...configuration import definition
     from ...configuration_migration import (
@@ -181,21 +165,21 @@ def _migrate(args, legacy_file, file):
         print(f"YAML configuration already exists: '{file}'. Nothing was migrated.")
         return
     if not Path(legacy_file).is_file():
-        print(f"No legacy configuration found at '{legacy_file}'.")
+        print(f"No Python configuration hook found at '{legacy_file}'.")
         return
 
     migrate_legacy_configuration(legacy_file, file, definition)
     print(f"Migrated '{legacy_file}' to '{file}'.")
 
-    action = _requested_cleanup(args) or _prompt_cleanup()
+    action = _requested_cleanup(args) or "clean"
     if action == "keep":
-        print(f"Kept legacy init script unchanged: '{legacy_file}'.")
+        print(f"Kept Python configuration hook unchanged: '{legacy_file}'.")
     elif action == "clean":
         count = clean_legacy_configuration(legacy_file)
         print(f"Removed {count} migrated configuration assignment(s) from '{legacy_file}'.")
     else:
         Path(legacy_file).unlink()
-        print(f"Deleted legacy init script: '{legacy_file}'.")
+        print(f"Deleted Python configuration hook: '{legacy_file}'.")
 
 
 def _parse_set_value(text):
@@ -317,11 +301,11 @@ def run(args, global_args):
         if os.path.isfile(legacy_file):
             print(Path(legacy_file).read_text(encoding="utf8"), end="")
         else:
-            print(f"No legacy init script found at '{legacy_file}'.")
+            print(f"No Python configuration hook found at '{legacy_file}'.")
         run = False
     if args.edit_init_script:
         if not os.path.isfile(legacy_file):
-            print(f"No legacy init script found at '{legacy_file}'.")
+            print(f"No Python configuration hook found at '{legacy_file}'.")
         else:
             _edit(legacy_file)
         run = False
@@ -335,9 +319,9 @@ def run(args, global_args):
         elif os.path.isfile(legacy_file):
             print("No YAML configuration exists.")
             print()
-            print(f"Legacy Python configuration found at:\n    {legacy_file}")
+            print(f"Python configuration hook found at:\n    {legacy_file}")
             print()
-            print("Run 'ase2sprkkr config --migrate' to migrate it to config.yaml.")
+            print("Run 'ase2sprkkr config --migrate' to migrate declarative settings to config.yaml.")
         else:
             print("# No custom user configuration found")
 
