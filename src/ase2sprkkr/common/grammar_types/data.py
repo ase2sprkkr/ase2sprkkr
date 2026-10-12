@@ -125,11 +125,9 @@ class RawData(GrammarType):
         self.lines = lines
         self.line_length = line_length
         self.include_ends_with = include_ends_with
-        self._line_dependency = (
-            DependentValue.create(lines)
-            if lines is not None and not isinstance(lines, Integral)
-            else None
-        )
+        self._line_dependency = None
+        if lines is not None and not isinstance(lines, Integral):
+            self._line_dependency = DependentValue.create(lines)
         self.forward = None
         super().__init__(*args, **kwargs)
 
@@ -222,9 +220,8 @@ class RawData(GrammarType):
         self.forward << self._n_lines_grammar(lines)
 
     def __del__(self):
-        dependency = getattr(self, "_line_dependency", None)
-        if dependency is not None:
-            dependency.unbind()
+        if self._line_dependency is not None:
+            self._line_dependency.unbind()
 
     def copy(self):
         out = super().copy()
