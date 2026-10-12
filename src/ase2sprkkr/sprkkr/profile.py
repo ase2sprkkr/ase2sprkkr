@@ -48,7 +48,8 @@ class LaunchParameters:
 
     executable_dir: Any = False
     executable_suffix: Any = ""
-    mpi: Any = False
+    mpi: Any = "auto"
+    mpi_warning: bool = True
     local_root: Any = None
     remote_root: Any = None
     input_sync: str = "changed"
@@ -66,7 +67,8 @@ class SPRKKRProfile:
 
     executable_dir: Any = False
     executable_suffix: Any = ""
-    mpi: Any = False
+    mpi: Any = "auto"
+    mpi_warning: bool = True
     executor: str = "local"
     host: Any = None
     local_root: Any = None
@@ -95,6 +97,7 @@ class SPRKKRProfile:
             executable_dir=self.executable_dir,
             executable_suffix=self.executable_suffix,
             mpi=self.mpi,
+            mpi_warning=self.mpi_warning,
             local_root=self.local_root,
             remote_root=self.remote_root,
             input_sync=self.input_sync,
@@ -220,9 +223,11 @@ def _configured_profile(profile, configuration):
             changes["executable_dir"] = False
         if profile.executable_suffix is None:
             changes["executable_suffix"] = ""
-        mpi = False if profile.mpi is None else _normalize_mpi(profile.mpi)
+        mpi = "auto" if profile.mpi is None else _normalize_mpi(profile.mpi)
         if type(mpi) is not type(profile.mpi) or mpi != profile.mpi:
             changes["mpi"] = mpi
+        if profile.mpi_warning is None:
+            changes["mpi_warning"] = True
         if not profile.executor:
             changes["executor"] = "local"
         ssh_options = _shell_argv(profile.ssh_options)
@@ -248,14 +253,18 @@ def _configured_profile(profile, configuration):
         executable_dir = False
     mpi = _profile_value(profile, "mpi")
     if mpi is None:
-        mpi = False
+        mpi = "auto"
     else:
         mpi = _normalize_mpi(mpi)
+    mpi_warning = _profile_value(profile, "mpi_warning")
+    if mpi_warning is None:
+        mpi_warning = True
 
     return SPRKKRProfile(
         executable_dir=executable_dir,
         executable_suffix=suffix,
         mpi=mpi,
+        mpi_warning=mpi_warning,
         executor=_profile_value(profile, "executor") or "local",
         host=_profile_value(profile, "host"),
         local_root=_profile_value(profile, "local_root"),
