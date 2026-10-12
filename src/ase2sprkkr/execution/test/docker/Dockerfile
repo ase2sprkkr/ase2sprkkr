@@ -41,10 +41,11 @@ RUN python3 -m venv "$VIRTUAL_ENV" \
 
 COPY slurm.conf /etc/slurm/slurm.conf
 COPY cgroup.conf /etc/slurm/cgroup.conf
-COPY entrypoint.sh /usr/local/bin/slurm-entrypoint
+COPY kkrscf /opt/sprkkr/kkrscf
+COPY entrypoint.sh /usr/local/bin/ase2sprkkr-test-entrypoint
 
 RUN useradd -m -s /bin/bash tester \
-    && chmod 0755 /usr/local/bin/slurm-entrypoint \
+    && chmod 0755 /opt/sprkkr/kkrscf /usr/local/bin/ase2sprkkr-test-entrypoint \
     && mkdir -p \
         /var/spool/slurmctld \
         /var/spool/slurmd \
@@ -54,9 +55,10 @@ RUN useradd -m -s /bin/bash tester \
         /var/lib/munge \
         /var/log/munge \
         /root/.config/ase2sprkkr \
+        /home/tester/.config/ase2sprkkr \
         /home/tester/.ssh \
         /workspace \
-    && chown -R tester:tester /home/tester/.ssh \
+    && chown -R tester:tester /home/tester/.config /home/tester/.ssh \
     && chmod 0700 /home/tester/.ssh \
     && printf '%s\n' \
         'PasswordAuthentication no' \
@@ -67,4 +69,6 @@ RUN useradd -m -s /bin/bash tester \
     && chown -R munge:munge /run/munge /var/lib/munge /var/log/munge
 
 WORKDIR /workspace
-ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/slurm-entrypoint"]
+EXPOSE 22
+ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/ase2sprkkr-test-entrypoint"]
+CMD ["sleep", "infinity"]

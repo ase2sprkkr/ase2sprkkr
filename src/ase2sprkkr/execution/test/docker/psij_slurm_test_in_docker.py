@@ -15,6 +15,8 @@ def main():
             atoms=bulk("Al"),
             directory=directory,
             executor=executor,
+            executable_dir="/opt/sprkkr",
+            executable_suffix="",
             mpi=False,
             empty_spheres=False,
             print_output=False,

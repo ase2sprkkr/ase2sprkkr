@@ -1,5 +1,5 @@
 #!/opt/venv/bin/python
-"""Small SPR-KKR SCF stand-in used by the Docker/SSH integration test."""
+"""Small SPR-KKR SCF stand-in used by the Docker integration tests."""
 
 import re
 import shutil
@@ -29,7 +29,7 @@ def main():
         raise FileNotFoundError(f"Input potential was not staged: {potential}")
 
     # Delay the first output as a real remote calculation would, then keep a
-    # deliberate gap after the first line.  The latter makes it deterministic
+    # deliberate gap after the first line. The latter makes it deterministic
     # that the client can observe live output while the process is still alive.
     time.sleep(0.25)
     with SCF_OUTPUT.open() as output:
