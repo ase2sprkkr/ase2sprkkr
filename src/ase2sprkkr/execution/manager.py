@@ -125,7 +125,13 @@ class DuplicateSubmissionError(RuntimeError):
 
 @dataclass(frozen=True)
 class RunRecord:
-    """Persistent identity and last known state of one ASE2SPRKKR run."""
+    """Persistent identity and last known state of one ASE2SPRKKR run.
+
+    ``state`` describes the complete ASE2SPRKKR lifecycle. ``backend_state``
+    records the last status reported by the execution backend. A terminal
+    backend state therefore normally corresponds to ``state == FINISHING``
+    until parsing, stage-out and local finalization have completed.
+    """
 
     id: str
     state: RunState
@@ -137,6 +143,7 @@ class RunRecord:
     endpoint: Optional[ExecutorEndpoint] = None
     submission: Optional[SubmissionKey] = None
     reference: Optional[RunReference] = None
+    backend_state: Optional[RunState] = None
     return_code: Optional[int] = None
     message: Optional[str] = None
     schema_version: int = _RUN_RECORD_SCHEMA_VERSION
@@ -150,6 +157,8 @@ class RunRecord:
             object.__setattr__(self, "reference", RunReference(**self.reference))
         if not isinstance(self.state, RunState):
             object.__setattr__(self, "state", RunState(self.state))
+        if self.backend_state is not None and not isinstance(self.backend_state, RunState):
+            object.__setattr__(self, "backend_state", RunState(self.backend_state))
         if self.schema_version != _RUN_RECORD_SCHEMA_VERSION:
             raise ValueError(
                 f"unsupported schema version {self.schema_version}; "
@@ -377,12 +386,22 @@ class ExecutionManager:
             return latest.state
         return requested
 
+    @staticmethod
+    def _merged_backend_state(latest, requested):
+        if requested is _UNCHANGED or requested is None:
+            return latest.backend_state
+        requested = RunState(requested)
+        if latest.backend_state in _FINAL_STATES:
+            return latest.backend_state
+        return requested
+
     def transition(
         self,
         record,
         *,
         state=None,
         reference=_UNCHANGED,
+        backend_state=_UNCHANGED,
         return_code=_UNCHANGED,
         message=_UNCHANGED,
     ):
@@ -393,6 +412,9 @@ class ExecutionManager:
                 "state": self._merged_state(latest, state),
                 "updated_at": _now(),
             }
+            merged_backend_state = self._merged_backend_state(latest, backend_state)
+            if merged_backend_state is not latest.backend_state:
+                changes["backend_state"] = merged_backend_state
             if (
                 reference is not _UNCHANGED
                 and reference is not None
@@ -428,9 +450,6 @@ class ExecutionManager:
         if status is not None:
             return self.update(record, status)
 
-        # Absence was positively established by the backend. Re-check under the
-        # per-run lock before releasing the reservation: another process may
-        # have persisted a reference while recovery was in flight.
         def mark_absent(latest):
             if latest.state != RunState.SUBMITTING or latest.reference is not None:
                 return latest
@@ -471,7 +490,6 @@ class ExecutionManager:
                     and self._is_stale_submitting(conflict)
                 )
 
-            # Backend I/O must happen outside the short submission lock.
             if not stale:
                 raise DuplicateSubmissionError(record, conflicts)
             progressed = False
@@ -487,9 +505,17 @@ class ExecutionManager:
                 raise DuplicateSubmissionError(record, conflicts)
 
     def update(self, record, status: RunStatus):
+        """Persist one backend status without declaring local finalization done."""
+        backend_state = RunState(status.state)
+        state = (
+            RunState.FINISHING
+            if backend_state in _FINAL_STATES
+            else backend_state
+        )
         return self.transition(
             record,
-            state=status.state,
+            state=state,
+            backend_state=backend_state,
             reference=status.reference,
             return_code=status.return_code,
             message=status.message,
@@ -630,6 +656,11 @@ class PersistentRunner:
         state = self._runner.state
         if state == RunState.NEW and self._record.state != RunState.NEW:
             state = self._record.state
+        elif state in _FINAL_STATES and self._record.state not in _FINAL_STATES:
+            # A backend/job may become terminal before the runner has completed
+            # parsing, stage-out and result finalization. Only the completion
+            # callback below is allowed to publish the final lifecycle state.
+            state = RunState.FINISHING
         if self._record.state != RunState.NEW and state != self._record.state:
             self._record = self.manager.transition(
                 self._record,
@@ -680,9 +711,11 @@ class PersistentRunner:
         return result
 
     def _sync_completion(self, result):
+        state = self._runner.state
         self._record = self.manager.transition(
             self._record,
-            state=self._runner.state,
+            state=state,
+            backend_state=state if state in _FINAL_STATES else _UNCHANGED,
             reference=self.reference,
             return_code=getattr(result, "return_code", None),
         )
@@ -692,9 +725,11 @@ class PersistentRunner:
             return self._runner.wait()
         finally:
             if self._record.state != RunState.NEW:
+                state = self._runner.state
                 self._record = self.manager.transition(
                     self._record,
-                    state=self._runner.state,
+                    state=state,
+                    backend_state=state if state in _FINAL_STATES else _UNCHANGED,
                     reference=self.reference,
                     return_code=getattr(self.result, "return_code", None),
                 )
