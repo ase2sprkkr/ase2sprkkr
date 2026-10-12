@@ -12,6 +12,7 @@ RUN apt-get update \
         libgfortran5 \
         liblapack3 \
         libopenblas0-pthread \
+        openssh-server \
         python3 \
         python3-pip \
         python3-venv \
@@ -42,16 +43,26 @@ COPY slurm.conf /etc/slurm/slurm.conf
 COPY cgroup.conf /etc/slurm/cgroup.conf
 COPY entrypoint.sh /usr/local/bin/slurm-entrypoint
 
-RUN chmod 0755 /usr/local/bin/slurm-entrypoint \
+RUN useradd -m -s /bin/bash tester \
+    && chmod 0755 /usr/local/bin/slurm-entrypoint \
     && mkdir -p \
         /var/spool/slurmctld \
         /var/spool/slurmd \
         /var/log/slurm \
         /run/munge \
+        /run/sshd \
         /var/lib/munge \
         /var/log/munge \
         /root/.config/ase2sprkkr \
+        /home/tester/.ssh \
         /workspace \
+    && chown -R tester:tester /home/tester/.ssh \
+    && chmod 0700 /home/tester/.ssh \
+    && printf '%s\n' \
+        'PasswordAuthentication no' \
+        'PermitRootLogin no' \
+        'PubkeyAuthentication yes' \
+        > /etc/ssh/sshd_config.d/ase2sprkkr-test.conf \
     && chown -R slurm:slurm /var/spool/slurmctld /var/log/slurm \
     && chown -R munge:munge /run/munge /var/lib/munge /var/log/munge
 
