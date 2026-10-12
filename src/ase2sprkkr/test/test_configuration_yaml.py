@@ -31,16 +31,51 @@ def test_yaml_round_trip_named_profiles(tmp_path):
     assert loaded.profiles["local"].executable_dir() == "/opt/sprkkr"
 
 
-def test_yaml_does_not_persist_virtual_legacy_profile(tmp_path):
+def test_yaml_persists_legacy_backing_profile(tmp_path):
     path = tmp_path / "config.yaml"
     config = fresh_config()
     config.running.mpi.set(8)
+    config.executables.dir.set("/opt/legacy")
 
     save_configuration_yaml(config, path)
     data = load_yaml_document(path)
 
-    assert "legacy" not in (data.get("profiles") or {})
+    assert data["profiles"]["legacy"] == {
+        "mpi": 8,
+        "executable_dir": "/opt/legacy",
+    }
     assert "running" not in data or "mpi" not in data["running"]
+    assert "executables" not in data or "dir" not in data["executables"]
+
+    loaded = fresh_config()
+    load_configuration_yaml(loaded, path)
+    assert loaded.running.mpi() == 8
+    assert loaded.executables.dir() == "/opt/legacy"
+    with pytest.raises(TypeError, match="read-only"):
+        loaded.profiles["legacy"].mpi.set(2)
+
+
+def test_yaml_does_not_persist_ase_profile(tmp_path, monkeypatch):
+    import configparser
+    from types import SimpleNamespace
+    from ase2sprkkr.profiles import ProfilesConfigurationContainer
+
+    parser = configparser.ConfigParser()
+    parser["sprkkr"] = {"command": "sprkkr"}
+    monkeypatch.setattr(
+        ProfilesConfigurationContainer,
+        "_ase_config",
+        staticmethod(lambda: SimpleNamespace(parser=parser)),
+    )
+
+    path = tmp_path / "config.yaml"
+    config = fresh_config()
+    assert "ase" in config.profiles
+
+    save_configuration_yaml(config, path)
+    data = load_yaml_document(path)
+
+    assert "ase" not in (data.get("profiles") or {})
 
 
 def test_yaml_save_preserves_comments(tmp_path):
