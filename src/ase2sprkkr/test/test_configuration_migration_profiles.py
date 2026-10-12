@@ -54,6 +54,53 @@ def test_migration_converts_legacy_execution_settings_to_default_profile(
     }
 
 
+def test_migration_does_not_freeze_implicit_mpi_defaults(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        ProfilesConfigurationContainer,
+        "_ase_config",
+        staticmethod(lambda: None),
+    )
+    source = tmp_path / "__init__.py"
+    destination = tmp_path / "config.yaml"
+    _write_legacy(source, "config.executables.dir = '/opt/sprkkr'\n")
+
+    migrated = migrate_legacy_configuration(source, destination, definition)
+
+    profile = migrated.profiles["local"]
+    assert profile.mpi() == "auto"
+    assert profile.mpi_warning() is True
+
+    data = load_yaml_document(destination)
+    assert data["profiles"]["local"] == {
+        "executable_dir": "/opt/sprkkr",
+    }
+
+
+def test_migration_keeps_explicit_default_mpi_policy(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        ProfilesConfigurationContainer,
+        "_ase_config",
+        staticmethod(lambda: None),
+    )
+    source = tmp_path / "__init__.py"
+    destination = tmp_path / "config.yaml"
+    _write_legacy(
+        source,
+        "config.executables.dir = '/opt/sprkkr'\n"
+        "config.running.mpi = 'auto'\n"
+        "config.running.mpi_warning = True\n",
+    )
+
+    migrate_legacy_configuration(source, destination, definition)
+
+    data = load_yaml_document(destination)
+    assert data["profiles"]["local"] == {
+        "mpi": "auto",
+        "mpi_warning": True,
+        "executable_dir": "/opt/sprkkr",
+    }
+
+
 def test_migration_keeps_ase_profile_precedence(tmp_path, monkeypatch):
     parser = configparser.ConfigParser()
     parser["sprkkr"] = {"command": "/opt/ase/kkrscf", "mpi": "2"}
