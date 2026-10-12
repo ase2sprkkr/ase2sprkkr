@@ -485,6 +485,10 @@ class RemoteRunner:
             return target
 
         policy = self.executor.input_files
+        if policy == FileSyncPolicy.NEVER:
+            used[target] = source
+            return target
+
         local_digest = local_file_digest(source)
         remote_digest = await self.executor.transport.file_digest(target)
 
@@ -499,8 +503,6 @@ class RemoteRunner:
                         f"Input file exists neither locally nor remotely: {source}"
                     )
                 await self.executor.transport.put_file(source, target)
-        elif policy == FileSyncPolicy.NEVER:
-            pass
         elif local_digest is None:
             if remote_digest is None:
                 raise FileNotFoundError(
@@ -514,7 +516,8 @@ class RemoteRunner:
 
     async def _prepare_cache_files(self, used):
         targets = {}
-        policy = self.executor.input_files
+        input_policy = self.executor.input_files
+        output_policy = self.executor.output_files
         for value in self.spec.cache_files:
             local = self._local_path(value)
             if local is None or local in targets:
@@ -525,23 +528,23 @@ class RemoteRunner:
                 raise ValueError(f"Remote cache target collision: {remote}")
 
             if previous is None:
-                local_digest = local_file_digest(local)
-                remote_digest = await self.executor.transport.file_digest(remote)
-                if policy == FileSyncPolicy.ALWAYS:
-                    if local_digest is not None:
-                        await self.executor.transport.put_file(local, remote)
-                elif policy == FileSyncPolicy.MISSING:
-                    if remote_digest is None and local_digest is not None:
-                        await self.executor.transport.put_file(local, remote)
-                elif policy == FileSyncPolicy.CHANGED:
-                    if local_digest is not None and local_digest != remote_digest:
+                if input_policy != FileSyncPolicy.NEVER:
+                    local_digest = local_file_digest(local)
+                    remote_digest = await self.executor.transport.file_digest(remote)
+                    if input_policy == FileSyncPolicy.ALWAYS:
+                        if local_digest is not None:
+                            await self.executor.transport.put_file(local, remote)
+                    elif input_policy == FileSyncPolicy.MISSING:
+                        if remote_digest is None and local_digest is not None:
+                            await self.executor.transport.put_file(local, remote)
+                    elif local_digest is not None and local_digest != remote_digest:
                         await self.executor.transport.put_file(local, remote)
                 used[remote] = local
 
-            targets[local] = (
-                remote,
-                await self.executor.transport.file_signature(remote),
-            )
+            before = None
+            if output_policy != FileSyncPolicy.NEVER:
+                before = await self.executor.transport.file_signature(remote)
+            targets[local] = (remote, before)
         self._cache_targets = targets
 
     async def _prepare_output_files(self, input_targets):
@@ -821,7 +824,7 @@ class RemoteExecutor(Executor):
 
     ``input_files`` and ``output_files`` select how declared artifacts are
     synchronized.  Accepted policies are ``changed``, ``always``, ``missing``
-    and ``never``.
+    and ``never``. ``never`` disables the corresponding transfer direction.
     """
 
     name = "remote"
