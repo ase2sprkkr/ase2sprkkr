@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 
 from ase2sprkkr.configuration import definition
-from ase2sprkkr.execution import RemoteExecutor
+from ase2sprkkr.execution import LaunchSpec, RemoteExecutor
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
 from ase2sprkkr.sprkkr import profile as profile_module
 from ase2sprkkr.sprkkr.calculator import SPRKKR
@@ -26,6 +26,31 @@ def test_runtime_profile_mpi_defaults():
     assert profile.mpi_warning is True
     assert profile.launch_parameters.mpi == "auto"
     assert profile.launch_parameters.mpi_warning is True
+
+
+def test_gdb_execution_forces_serial_launch(tmp_path):
+    profile = SPRKKRProfile(mpi=8, mpi_warning=False)
+    input_file = (tmp_path / "run.inp").open("w+")
+
+    spec = profile.create_execution(
+        "kkrscf",
+        input_file,
+        None,
+        str(tmp_path),
+        mpi_supported=True,
+        gdb=True,
+    )
+
+    assert spec.argv == ("gdb", "kkrscf")
+    assert spec.mpi_argv is None
+    assert spec.launch == LaunchSpec(
+        mpi=False,
+        mpi_warning=False,
+        input_sync="changed",
+        output_sync="changed",
+    )
+    assert spec.stdin is None
+    input_file.close()
 
 
 def test_calculator_uses_configured_default_profile(monkeypatch):
