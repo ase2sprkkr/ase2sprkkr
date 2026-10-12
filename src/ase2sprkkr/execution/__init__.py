@@ -12,9 +12,9 @@ from .base import (
 )
 from .local import LocalExecutor, LocalRunner
 from .manager import (
-    ManagedExecutor,
-    ManagedRunner,
-    RunManager,
+    CorruptRunRecord,
+    ExecutionManager,
+    PersistentRunner,
     RunRecord,
     RunStore,
 )
@@ -41,11 +41,11 @@ __all__ = [
     "RunTarget",
     "RunRecord",
     "RunStore",
-    "RunManager",
+    "CorruptRunRecord",
+    "ExecutionManager",
+    "PersistentRunner",
     "ExecutorPool",
     "default_executor_pool",
-    "ManagedRunner",
-    "ManagedExecutor",
     "RunConflictError",
     "RunRegistry",
     "TrackedRunner",
