@@ -15,6 +15,7 @@ from threading import Event, Lock, Thread
 from uuid import uuid4
 
 from .base import Executor, RunReference, RunState
+from .transport import _sha256_file
 
 
 _FINAL_STATES = {"finished", "failed", "cancelled"}
@@ -284,6 +285,7 @@ class RemoteRunner:
         self._thread = None
         self._exception = None
         self._follow_process = None
+        self._output_targets = {}
 
     @property
     def reference(self):
@@ -337,23 +339,69 @@ class RemoteRunner:
         try:
             return os.fspath(value)
         except TypeError as exc:
-            raise ValueError("Remote execution requires named input files") from exc
+            raise ValueError("Remote execution requires named files") from exc
 
-    async def _stage_file(self, value, used):
+    def _local_path(self, value):
         name = self._file_name(value)
         if name is None:
             return None
         if isinstance(name, int):
-            raise ValueError("Remote execution requires named input files")
-        source = os.path.abspath(name)
+            raise ValueError("Remote execution requires named files")
+        return os.path.abspath(name)
+
+    async def _stage_file(self, value, used):
+        source = self._local_path(value)
+        if source is None:
+            return None
         target = await self.executor.map_path(source)
         previous = used.get(target)
         if previous is not None and previous != source:
             raise ValueError(f"Remote input target collision: {target}")
-        if previous is None:
-            used[target] = source
+        if previous is not None:
+            return target
+
+        local_digest = _sha256_file(source)
+        remote_digest = await self.executor.transport.file_digest(target)
+        if local_digest is None:
+            if remote_digest is None:
+                raise FileNotFoundError(
+                    f"Input file exists neither locally nor remotely: {source}"
+                )
+        elif local_digest != remote_digest:
             await self.executor.transport.put_file(source, target)
+
+        used[target] = source
         return target
+
+    async def _prepare_output_files(self, input_targets):
+        primary = {
+            path for path in (
+                self._local_path(self.spec.output_file),
+                self._local_path(self.spec.error_file),
+            ) if path is not None
+        }
+        targets = {}
+        for value in self.spec.output_files:
+            local = self._local_path(value)
+            if local is None or local in primary or local in targets:
+                continue
+            remote = await self.executor.map_path(local)
+            targets[local] = remote
+            if remote not in input_targets:
+                await self.executor.transport.run(("rm", "-f", "--", remote))
+        self._output_targets = targets
+
+    async def _sync_output_files(self, required):
+        for local, remote in self._output_targets.items():
+            remote_digest = await self.executor.transport.file_digest(remote)
+            if remote_digest is None:
+                if required:
+                    raise FileNotFoundError(
+                        f"Declared remote output file was not created: {remote}"
+                    )
+                continue
+            if _sha256_file(local) != remote_digest:
+                await self.executor.transport.get_file(remote, local)
 
     def _remote_argv(self, staged):
         directory = os.path.abspath(self.spec.directory)
@@ -390,6 +438,8 @@ class RemoteRunner:
                 if stdin_target is None:
                     stdin_target = await self._stage_file(self.spec.stdin, used)
                     staged = {source: target for target, source in used.items()}
+
+        await self._prepare_output_files(set(used))
 
         output_name = self._file_name(self.spec.output_file)
         error_name = self._file_name(self.spec.error_file)
@@ -466,6 +516,8 @@ class RemoteRunner:
         return_code = status.get("return_code")
         if return_code is None:
             return_code = 0 if self._state == RunState.FINISHED else 1
+
+        await self._sync_output_files(required=self._state == RunState.FINISHED)
         return self.reader.complete_result(
             self.result, output, error, return_code
         )
