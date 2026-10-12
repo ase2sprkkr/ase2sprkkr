@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 import os
+import shlex
 import warnings
 
 from .common.configuration_transaction import ConfigurationTransaction
@@ -17,35 +18,39 @@ from .common.repeated_configuration_containers import RepeatedConfigurationConta
 
 
 def ase_command_profile_values(command):
-    """Map ASE's ``[sprkkr] command`` to the common profile fields.
+    """Map ASE's canonical ``kkrscf`` command to the common profile fields.
 
-    A command without ``{}`` denotes the executable directory. A command of
-    the form ``directory/{}suffix`` additionally specifies the executable
-    suffix. The placeholder is intentionally restricted to the beginning of
-    the final path component; it is not a general formatting language.
+    ASE's ``command`` remains a real command line.  For SPR-KKR it must name
+    the canonical serial ``kkrscf`` executable directly.  Its directory and
+    suffix locate the other executables from the same installation.  Command
+    prefixes and wrappers are intentionally rejected because MPI and execution
+    policy can depend on the particular SPR-KKR task.
     """
-    if not isinstance(command, str) or not command:
-        raise ValueError("ASE SPR-KKR command must be a non-empty path")
-
-    count = command.count("{}")
-    if count == 0:
-        return {"executable_dir": command}
-    if count != 1:
-        raise ValueError("ASE SPR-KKR command may contain at most one '{}' placeholder")
-
-    executable_dir, filename = os.path.split(command)
-    if "{}" in executable_dir or not filename.startswith("{}"):
+    if not isinstance(command, str) or not command.strip():
         raise ValueError(
-            "ASE SPR-KKR command placeholder must start the final path component, "
-            "for example '/opt/sprkkr/{}.mpi'"
+            "ASE SPR-KKR command must directly name the kkrscf executable"
         )
 
-    values = {}
+    try:
+        argv = shlex.split(command)
+    except ValueError as exc:
+        raise ValueError("ASE SPR-KKR command is not a valid command line") from exc
+
+    if len(argv) != 1:
+        raise ValueError(
+            "ASE SPR-KKR command must directly name the kkrscf executable; "
+            "command prefixes and wrappers are not supported"
+        )
+
+    executable_dir, filename = os.path.split(argv[0])
+    if not filename.startswith("kkrscf"):
+        raise ValueError(
+            "ASE SPR-KKR command must directly name the canonical kkrscf executable"
+        )
+
+    values = {"executable_suffix": filename[len("kkrscf"):]}
     if executable_dir:
         values["executable_dir"] = executable_dir
-    suffix = filename[2:]
-    if suffix:
-        values["executable_suffix"] = suffix
     return values
 
 
@@ -202,11 +207,11 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             f"config.{option} is deprecated; use an execution profile instead.\n"
             "For example, configure the ASE SPR-KKR profile:\n"
             "  [sprkkr]\n"
-            "  command = /opt/sprkkr/{}.mpi\n"
+            "  command = /opt/sprkkr/kkrscf_v8\n"
             "  mpi = 8\n"
             "or create a named ase2sprkkr profile:\n"
             "  ase2sprkkr config --set profiles.local "
-            "'{mpi: 8, executable_dir: /opt/sprkkr, executable_suffix: .mpi}'\n"
+            "'{mpi: 8, executable_dir: /opt/sprkkr, executable_suffix: _v8}'\n"
             "  ase2sprkkr config --set default_profile local",
             FutureWarning,
             stacklevel=4,

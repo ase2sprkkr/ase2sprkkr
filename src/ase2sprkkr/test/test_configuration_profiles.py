@@ -21,7 +21,7 @@ def fresh_config():
     return definition.create_object()
 
 
-def ase_config(command="sprkkr", **values):
+def ase_config(command="kkrscf", **values):
     parser = configparser.ConfigParser()
     section = {"command": command}
     section.update({name: str(value) for name, value in values.items()})
@@ -116,7 +116,7 @@ def test_legacy_write_warning_shows_both_profile_migrations():
     message = str(caught[0].message)
     assert "config.executables.dir is deprecated" in message
     assert "[sprkkr]" in message
-    assert "command = /opt/sprkkr/{}.mpi" in message
+    assert "command = /opt/sprkkr/kkrscf_v8" in message
     assert "mpi = 8" in message
     assert "ase2sprkkr config --set profiles.local" in message
     assert "ase2sprkkr config --set default_profile local" in message
@@ -156,7 +156,7 @@ def test_reserved_virtual_profile_names_cannot_be_added():
 
 def test_ase_profile_uses_common_profile_schema(monkeypatch):
     external = ase_config(
-        "/opt/sprkkr/{}.mpi",
+        "/opt/sprkkr/kkrscf.mpi",
         mpi=8,
         executor="ssh",
         host="user@cluster",
@@ -171,7 +171,7 @@ def test_ase_profile_uses_common_profile_schema(monkeypatch):
     config = fresh_config()
     profile = config.profiles["ase"]
 
-    assert profile.command() == "/opt/sprkkr/{}.mpi"
+    assert profile.command() == "/opt/sprkkr/kkrscf.mpi"
     assert profile.executable_dir() == "/opt/sprkkr"
     assert profile.executable_suffix() == ".mpi"
     assert profile.mpi() == 8
@@ -179,8 +179,6 @@ def test_ase_profile_uses_common_profile_schema(monkeypatch):
     assert profile.host() == "user@cluster"
     assert profile.input_sync() == "always"
 
-    # The virtual view remains live, but values are reparsed by the same
-    # configuration schema on every access.
     external.parser["sprkkr"]["mpi"] = "4"
     assert profile.mpi() == 4
 
@@ -190,8 +188,30 @@ def test_ase_profile_uses_common_profile_schema(monkeypatch):
     assert "ase" not in (config.as_dict().get("profiles") or {})
 
 
+@pytest.mark.parametrize(
+    "command",
+    (
+        "mpirun -n 8 /opt/sprkkr/kkrscf",
+        "srun /opt/sprkkr/kkrscf",
+        "/opt/sprkkr/kkrspec",
+        "/opt/sprkkr/{}.mpi",
+    ),
+)
+def test_ase_profile_rejects_noncanonical_command(monkeypatch, command):
+    external = ase_config(command)
+    monkeypatch.setattr(
+        ProfilesConfigurationContainer,
+        "_ase_config",
+        staticmethod(lambda: external),
+    )
+    config = fresh_config()
+
+    with pytest.raises(ValueError, match="kkrscf|prefixes|wrappers"):
+        config.profiles["ase"].configuration_profile()
+
+
 def test_ase_profile_reuses_common_validation(monkeypatch):
-    external = ase_config("/opt/sprkkr", executor="not-an-executor")
+    external = ase_config("/opt/sprkkr/kkrscf", executor="not-an-executor")
     monkeypatch.setattr(
         ProfilesConfigurationContainer,
         "_ase_config",
@@ -220,7 +240,7 @@ def test_incomplete_ase_section_is_not_an_available_profile(monkeypatch):
 
 
 def test_profile_resolution_precedence(monkeypatch):
-    external = ase_config("ase-command")
+    external = ase_config("kkrscf")
     monkeypatch.setattr(
         ProfilesConfigurationContainer,
         "_ase_config",
@@ -232,14 +252,11 @@ def test_profile_resolution_precedence(monkeypatch):
     local = config.profiles.add("local")
     local.mpi.set(2)
 
-    # ASE is the implicit standard and wins over the deprecated legacy config.
     assert config.profiles.resolve_name() == "ase"
 
-    # A configured ase2sprkkr default is an explicit user choice and wins.
     config.default_profile.set("local")
     assert config.profiles.resolve() is local
 
-    # A call-site selection is the most explicit choice of all.
     assert config.profiles.resolve("legacy").source == "legacy"
 
 

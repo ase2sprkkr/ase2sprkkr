@@ -13,7 +13,7 @@ def fresh_config():
 
 def _with_ase_profile(monkeypatch):
     parser = configparser.ConfigParser()
-    parser["sprkkr"] = {"command": "sprkkr"}
+    parser["sprkkr"] = {"command": "kkrscf"}
     monkeypatch.setattr(
         ProfilesConfigurationContainer,
         "_ase_config",
