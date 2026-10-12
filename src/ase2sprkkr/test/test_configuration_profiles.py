@@ -5,6 +5,7 @@ import warnings
 import pytest
 
 from ase2sprkkr.configuration import definition
+from ase2sprkkr.configuration_yaml import apply_yaml_document
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
 
 
@@ -64,8 +65,8 @@ def test_legacy_options_are_backed_by_internal_profile():
     with pytest.warns(FutureWarning):
         config.executables.dir.set("/opt/sprkkr")
 
-    assert config.profiles.legacy_option("mpi")() == 8
-    assert config.profiles.legacy_option("executable_dir")() == "/opt/sprkkr"
+    assert config.profiles.legacy_value("mpi") == 8
+    assert config.profiles.legacy_value("executable_dir") == "/opt/sprkkr"
     assert config.profiles["legacy"].as_dict() == {
         "mpi": 8,
         "executable_dir": "/opt/sprkkr",
@@ -138,7 +139,8 @@ def test_legacy_write_warning_is_emitted_once():
 def test_persisted_legacy_profile_backs_deprecated_options():
     config = fresh_config()
 
-    config.set(
+    apply_yaml_document(
+        config,
         {
             "profiles": {
                 "legacy": {
@@ -148,7 +150,6 @@ def test_persisted_legacy_profile_backs_deprecated_options():
                 }
             }
         },
-        unknown="fail",
     )
 
     assert config.running.mpi() == 6

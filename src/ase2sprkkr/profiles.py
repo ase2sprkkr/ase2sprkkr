@@ -8,7 +8,7 @@ can only be modified through the deprecated configuration options.
 
 from __future__ import annotations
 
-from collections.abc import Iterator
+from collections.abc import Iterator, Mapping
 import os
 import shlex
 import warnings
@@ -48,7 +48,7 @@ def ase_command_profile_values(command):
             "ASE SPR-KKR command must directly name the canonical kkrscf executable"
         )
 
-    values = {"executable_suffix": filename[len("kkrscf"):]}
+    values = {"executable_suffix": filename[len("kkrscf"): ]}
     if executable_dir:
         values["executable_dir"] = executable_dir
     return values
@@ -213,7 +213,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             stacklevel=3,
         )
 
-    def set_legacy_value(self, name, value):
+    def _set_legacy_value(self, name, value):
         """Stage a deprecated option into the internal legacy profile."""
         self._warn_legacy_write()
         profile = self._legacy_profile(create=True)
@@ -223,11 +223,6 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             option.set(value)
         else:
             option.stage(transaction, value)
-
-    def legacy_option(self, name, create=False):
-        """Return mutable backing option for compatibility plumbing only."""
-        profile = self._legacy_profile(create=create)
-        return None if profile is None else getattr(profile, name)
 
     @staticmethod
     def _ase_config():
@@ -275,6 +270,66 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         except KeyError:
             return False
         return bool(section.get("command"))
+
+    @classmethod
+    def _reserved_in(cls, values):
+        if isinstance(values, str):
+            names = (values,)
+        elif isinstance(values, Mapping):
+            names = values.keys()
+        else:
+            return ()
+        return tuple(sorted(cls.reserved_names.intersection(names)))
+
+    def stage(
+        self,
+        transaction,
+        values=None,
+        value=None,
+        *,
+        unknown="find",
+        merge=False,
+        **kwargs,
+    ):
+        """Stage public profile changes without exposing reserved profiles."""
+        reserved = self._reserved_in(values)
+        if reserved:
+            names = ", ".join(repr(name) for name in reserved)
+            raise ValueError(f"Reserved profiles are read-only: {names}")
+
+        legacy = self._values.get("legacy")
+        changed = super().stage(
+            transaction,
+            values,
+            value,
+            unknown=unknown,
+            merge=merge,
+            **kwargs,
+        )
+        if legacy is not None and not merge:
+            self._values["legacy"] = legacy
+            legacy._container = self
+        return changed
+
+    def _stage_persisted(
+        self,
+        transaction,
+        values=None,
+        value=None,
+        *,
+        unknown="find",
+        merge=False,
+        **kwargs,
+    ):
+        """Stage profiles read from persisted ASE2SPRKKR configuration."""
+        return super().stage(
+            transaction,
+            values,
+            value,
+            unknown=unknown,
+            merge=merge,
+            **kwargs,
+        )
 
     def add(self, id=None):
         if id in self.reserved_names:

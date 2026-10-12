@@ -103,10 +103,29 @@ def _validate_yaml_shape(data):
         raise ValueError("ASE2SPRKKR configuration YAML must contain a mapping")
 
 
+def _stage_persisted_configuration(config, transaction, data):
+    """Stage persisted data, including the private legacy profile."""
+    profiles = data.get("profiles", _MISSING)
+    values = {name: value for name, value in data.items() if name != "profiles"}
+    config.stage(transaction, values, unknown="fail")
+    if profiles is not _MISSING:
+        config.profiles._stage_persisted(
+            transaction,
+            profiles,
+            unknown="fail",
+        )
+
+
+def _set_persisted_configuration(config, data):
+    """Apply persisted data atomically through the privileged profile path."""
+    with config._mutation("set") as (transaction, _policy):
+        _stage_persisted_configuration(config, transaction, data)
+
+
 def apply_yaml_document(config, data):
     """Apply a complete YAML mapping atomically to a configuration object."""
     _validate_yaml_shape(data)
-    config.set(_typed_configuration(data), unknown="fail")
+    _set_persisted_configuration(config, _typed_configuration(data))
 
 
 def _recover_profiles(config, value, accepted, issues):
@@ -117,7 +136,13 @@ def _recover_profiles(config, value, accepted, issues):
     accepted_profiles = CommentedMap()
     for name, profile_data in value.items():
         try:
-            config.profiles.set({name: profile_data}, unknown="fail", merge=True)
+            with config.profiles._mutation("set") as (transaction, _policy):
+                config.profiles._stage_persisted(
+                    transaction,
+                    {name: profile_data},
+                    unknown="fail",
+                    merge=True,
+                )
         except _EXPECTED_USER_ERRORS as error:
             issues.append((f"profile {name!r}", error))
         else:
@@ -222,7 +247,7 @@ def _apply_with_recovery(config, data, *, file=None, warn=True):
     _validate_yaml_shape(data)
     typed_data = _typed_configuration(data)
     try:
-        config.set(typed_data, unknown="fail")
+        _set_persisted_configuration(config, typed_data)
     except _EXPECTED_USER_ERRORS:
         accepted, issues = _recover_configuration(config, typed_data)
     else:

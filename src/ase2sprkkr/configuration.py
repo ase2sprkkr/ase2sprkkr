@@ -34,7 +34,7 @@ def _legacy_value(section, name, default=None):
 
 
 def _set_legacy_value(section, value, name):
-    section._container.profiles.set_legacy_value(name, value)
+    section._container.profiles._set_legacy_value(name, value)
 
 
 def _legacy_mpi(section):
