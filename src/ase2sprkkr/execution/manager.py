@@ -23,11 +23,51 @@ from .pool import default_executor_pool
 
 _RUN_RECORD_SCHEMA_VERSION = 1
 _FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
+_STATE_RANK = {
+    RunState.NEW: 0,
+    RunState.SUBMITTING: 1,
+    RunState.QUEUED: 2,
+    RunState.RUNNING: 3,
+    RunState.FINISHING: 4,
+    RunState.FINISHED: 5,
+    RunState.FAILED: 5,
+    RunState.CANCELLED: 5,
+}
 _UNCHANGED = object()
 
 
 def _now():
     return datetime.now(timezone.utc).isoformat()
+
+
+@contextmanager
+def _filesystem_lock(path):
+    """Hold an exclusive one-byte/file lock on *path* across processes."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    with path.open("a+b") as lock_file:
+        if os.name == "nt":
+            import msvcrt
+
+            lock_file.seek(0, os.SEEK_END)
+            if lock_file.tell() == 0:
+                lock_file.write(b"\0")
+                lock_file.flush()
+            lock_file.seek(0)
+            msvcrt.locking(lock_file.fileno(), msvcrt.LK_LOCK, 1)
+            try:
+                yield
+            finally:
+                lock_file.seek(0)
+                msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
+        else:
+            import fcntl
+
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+            try:
+                yield
+            finally:
+                fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
 
 
 class CorruptRunRecord(RuntimeError):
@@ -130,6 +170,10 @@ class RunStore:
     def _path(self, record):
         return self.directory / self._bucket(record.created_at) / f"{record.id}.json"
 
+    def _run_lock_path(self, record):
+        path = self._path(record)
+        return path.with_name(f".{record.id}.lock")
+
     def _path_for_id(self, run_id):
         if not self.directory.is_dir():
             raise FileNotFoundError(run_id)
@@ -158,54 +202,46 @@ class RunStore:
         self._warned_corrupt.add(key)
         warnings.warn(str(exc), RuntimeWarning, stacklevel=3)
 
+    def _write_unlocked(self, record):
+        self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+        path = self._path(record)
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+        try:
+            temporary.write_text(json.dumps(asdict(record), sort_keys=True))
+            try:
+                os.chmod(temporary, 0o600)
+            except OSError:
+                pass
+            os.replace(temporary, path)
+        finally:
+            try:
+                temporary.unlink()
+            except FileNotFoundError:
+                pass
+        return record
+
     @contextmanager
     def submission_lock(self):
         """Serialize duplicate checking and the SUBMITTING record creation."""
         self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
-        path = self.directory / ".submit.lock"
-        with self._lock, path.open("a+b") as lock_file:
-            if os.name == "nt":
-                import msvcrt
-
-                lock_file.seek(0, os.SEEK_END)
-                if lock_file.tell() == 0:
-                    lock_file.write(b"\0")
-                    lock_file.flush()
-                lock_file.seek(0)
-                msvcrt.locking(lock_file.fileno(), msvcrt.LK_LOCK, 1)
-                try:
-                    yield
-                finally:
-                    lock_file.seek(0)
-                    msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
-            else:
-                import fcntl
-
-                fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
-                try:
-                    yield
-                finally:
-                    fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+        with self._lock, _filesystem_lock(self.directory / ".submit.lock"):
+            yield
 
     def save(self, record: RunRecord):
+        """Atomically store a complete record supplied by the caller."""
         with self._lock:
-            self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+            return self._write_unlocked(record)
+
+    def update(self, record: RunRecord, updater):
+        """Read latest, merge under a per-run lock, and atomically replace it."""
+        with self._lock, _filesystem_lock(self._run_lock_path(record)):
             path = self._path(record)
-            path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-            temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
-            try:
-                temporary.write_text(json.dumps(asdict(record), sort_keys=True))
-                try:
-                    os.chmod(temporary, 0o600)
-                except OSError:
-                    pass
-                os.replace(temporary, path)
-            finally:
-                try:
-                    temporary.unlink()
-                except FileNotFoundError:
-                    pass
-        return record
+            latest = self._decode(path) if path.is_file() else record
+            updated = updater(latest)
+            if updated.id != latest.id or updated.created_at != latest.created_at:
+                raise ValueError("Run update cannot change persistent identity")
+            return self._write_unlocked(updated)
 
     def get(self, run_id):
         return self._decode(self._path_for_id(run_id))
@@ -318,6 +354,19 @@ class ExecutionManager:
             submission=submission,
         )
 
+    @staticmethod
+    def _merged_state(latest, requested):
+        if requested is None:
+            return latest.state
+        requested = RunState(requested)
+        if latest.state in _FINAL_STATES:
+            return latest.state
+        if requested == RunState.UNKNOWN or latest.state == RunState.UNKNOWN:
+            return requested
+        if _STATE_RANK[requested] < _STATE_RANK[latest.state]:
+            return latest.state
+        return requested
+
     def transition(
         self,
         record,
@@ -327,19 +376,33 @@ class ExecutionManager:
         return_code=_UNCHANGED,
         message=_UNCHANGED,
     ):
-        """Persist one monotonic information update for *record*."""
-        new_state = record.state if state is None else RunState(state)
-        if record.state in _FINAL_STATES and new_state not in _FINAL_STATES:
-            new_state = record.state
+        """Merge one lifecycle update into the latest persisted record."""
+        def merge(latest):
+            final_locked = latest.state in _FINAL_STATES
+            changes = {
+                "state": self._merged_state(latest, state),
+                "updated_at": _now(),
+            }
+            # Backend identity is monotonic: once known, a stale snapshot must
+            # neither erase nor replace it.
+            if (
+                reference is not _UNCHANGED
+                and reference is not None
+                and latest.reference is None
+            ):
+                changes["reference"] = reference
 
-        changes = {"state": new_state, "updated_at": _now()}
-        if reference is not _UNCHANGED:
-            changes["reference"] = reference
-        if return_code is not _UNCHANGED and return_code is not None:
-            changes["return_code"] = return_code
-        if message is not _UNCHANGED and message is not None:
-            changes["message"] = message
-        return self.store.save(replace(record, **changes))
+            # Once a final outcome is known, later stale callbacks may only fill
+            # missing details. They cannot replace known precise information.
+            if return_code is not _UNCHANGED and return_code is not None:
+                if not final_locked or latest.return_code is None:
+                    changes["return_code"] = return_code
+            if message is not _UNCHANGED and message is not None:
+                if not final_locked or latest.message is None:
+                    changes["message"] = message
+            return replace(latest, **changes)
+
+        return self.store.update(record, merge)
 
     def reserve(self, record):
         """Atomically reserve *record*'s persistent submission namespace."""
@@ -511,6 +574,7 @@ class PersistentRunner:
                 state=state,
                 reference=self.reference,
             )
+            state = self._record.state
         return state
 
     def add_output_listener(self, callback):
