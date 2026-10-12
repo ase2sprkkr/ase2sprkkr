@@ -18,9 +18,8 @@ with TemporaryDirectory(prefix="ase2sprkkr-psij-") as directory:
         empty_spheres=False,
         print_output=False,
     )
-    runner = calculator.calculate(
+    runner = calculator.create_run(
         options={"NITER": 2, "NKTAB": 5, "NE": 5},
-        run_async=True,
     )
     assert isinstance(runner, PsijRunner)
     assert runner.state == RunState.NEW
