@@ -9,10 +9,8 @@ from ...common.grammar_types import Keyword, SetOf, Integer
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters import InputSection
 from ...physics.lattice_data import bravais_number
-from ..input_parameters_definitions import (
-    InputParametersDefinition as InputParameters,
-    InputValueDefinition as V,
-)
+from ._file_manifests import TauCacheInputParametersDefinition
+from ..input_parameters_definitions import InputValueDefinition as V
 from ._sections import CONTROL, CPA, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
@@ -393,7 +391,7 @@ class BSFTaskSection(InputSection):
 @cache
 def bsf_definition():
     """Return the single definition shared by the BSFEK and BSFKK aliases."""
-    out = InputParameters(
+    out = TauCacheInputParametersDefinition(
         "bsf",
         [
             CONTROL("BLOCHSF"),
