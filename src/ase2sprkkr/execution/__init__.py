@@ -1,7 +1,24 @@
 """Calculation execution subsystem."""
 
-from .base import ExecutionSpec, Executor, LaunchSpec, Runner, RunReference, RunState, RunTarget
+from .base import (
+    ExecutionSpec,
+    Executor,
+    LaunchSpec,
+    Runner,
+    RunReference,
+    RunState,
+    RunStatus,
+    RunTarget,
+)
 from .local import LocalExecutor, LocalRunner
+from .manager import (
+    ExecutorPool,
+    ManagedExecutor,
+    ManagedRunner,
+    RunManager,
+    RunRecord,
+    RunStore,
+)
 from .psij import PsijExecutor, PsijRunner
 from .remote import FileSyncPolicy, RemoteExecutor, RemoteRunner
 from .tracking import (
@@ -20,7 +37,14 @@ __all__ = [
     "Runner",
     "RunReference",
     "RunState",
+    "RunStatus",
     "RunTarget",
+    "RunRecord",
+    "RunStore",
+    "RunManager",
+    "ExecutorPool",
+    "ManagedRunner",
+    "ManagedExecutor",
     "RunConflictError",
     "RunRegistry",
     "TrackedRunner",

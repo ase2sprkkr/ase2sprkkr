@@ -17,6 +17,7 @@ class RunState(str, Enum):
     FINISHED = "finished"
     FAILED = "failed"
     CANCELLED = "cancelled"
+    LOST = "lost"
     UNKNOWN = "unknown"
 
 
@@ -57,6 +58,16 @@ class RunReference:
     def __post_init__(self):
         if isinstance(self.target, dict):
             object.__setattr__(self, "target", RunTarget(**self.target))
+
+
+@dataclass(frozen=True)
+class RunStatus:
+    """One backend status snapshot for a persistent run reference."""
+
+    reference: RunReference
+    state: RunState
+    return_code: Optional[int] = None
+    message: Optional[str] = None
 
 
 @dataclass(frozen=True)
@@ -185,6 +196,17 @@ class Executor:
         calculation decides how to materialize the returned launch request.
         """
         return LaunchSpec.from_mpi(mpi)
+
+    def status(self, *references: RunReference) -> Tuple[RunStatus, ...]:
+        """Return status snapshots for all supplied persistent references.
+
+        There is deliberately one API for one or many jobs. Backends may batch
+        the underlying query, for example into one scheduler status command.
+        The returned tuple always follows the input order.
+        """
+        from .status import status
+
+        return status(self, *references)
 
     def create_run(self, reader, spec: ExecutionSpec, callback=None) -> Runner:
         raise NotImplementedError

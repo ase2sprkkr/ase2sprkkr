@@ -32,7 +32,7 @@ def parser(parser):
 
     status = actions.add_parser("status")
     status.add_argument("directory")
-    status.add_argument("run_id")
+    status.add_argument("run_id", nargs="+")
 
     cancel = actions.add_parser("cancel")
     cancel.add_argument("directory")
@@ -82,7 +82,8 @@ def run(args, global_args):
         request["directory"] = args.directory
         _print_json(submit_remote(request))
     elif args.remote_action == "status":
-        _print_json(status_remote(args.directory, args.run_id))
+        states = [status_remote(args.directory, run_id) for run_id in args.run_id]
+        _print_json(states[0] if len(states) == 1 else states)
     elif args.remote_action == "cancel":
         _print_json(cancel_remote(args.directory, args.run_id))
     elif args.remote_action == "follow":
