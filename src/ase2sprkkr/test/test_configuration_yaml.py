@@ -55,6 +55,40 @@ def test_yaml_persists_legacy_backing_profile(tmp_path):
         loaded.profiles["legacy"].mpi.set(2)
 
 
+def test_set_permanent_writes_typed_yaml(tmp_path, monkeypatch):
+    path = tmp_path / "config.yaml"
+    monkeypatch.setattr(configuration, "user_preferences_file", lambda: str(path))
+    config = fresh_config()
+
+    config.running.mpi.set_permanent(6)
+    config.nomad.token.set_permanent("secret")
+
+    data = load_yaml_document(path)
+    assert data["profiles"]["legacy"]["mpi"] == 6
+    assert isinstance(data["profiles"]["legacy"]["mpi"], int)
+    assert data["nomad"]["token"] == "secret"
+
+
+def test_set_permanent_preserves_existing_yaml_comments(tmp_path, monkeypatch):
+    path = tmp_path / "config.yaml"
+    path.write_text(
+        "# keep me\n"
+        "nomad:\n"
+        "  token: old  # token comment\n",
+        encoding="utf8",
+    )
+    monkeypatch.setattr(configuration, "user_preferences_file", lambda: str(path))
+    config = fresh_config()
+    load_configuration_yaml(config, path)
+
+    config.nomad.token.set_permanent("new")
+
+    text = path.read_text(encoding="utf8")
+    assert "# keep me" in text
+    assert "# token comment" in text
+    assert "token: new" in text
+
+
 def test_yaml_does_not_persist_ase_profile(tmp_path, monkeypatch):
     import configparser
     from types import SimpleNamespace
