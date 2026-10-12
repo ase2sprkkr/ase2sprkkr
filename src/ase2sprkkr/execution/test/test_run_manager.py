@@ -2,7 +2,11 @@ import argparse
 import asyncio
 import json
 import sys
+import warnings
+from dataclasses import replace
 from types import SimpleNamespace
+
+import pytest
 
 from ase2sprkkr.execution import (
     ExecutionSpec,
@@ -65,6 +69,64 @@ def test_run_store_roundtrip_and_manager_batches_refresh(tmp_path):
         RunState.RUNNING,
         RunState.RUNNING,
     ]
+
+
+def test_run_store_shards_new_records_by_iso_date(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = RunManager(store=store)
+    record = manager.remember(RunReference(executor="test", native_id="one"))
+
+    bucket = record.created_at[:10]
+    path = tmp_path / "runs" / bucket / f"{record.id}.json"
+
+    assert path.is_file()
+    data = json.loads(path.read_text())
+    assert data["schema_version"] == 1
+
+
+def test_run_store_recent_listing_stops_at_limit(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = RunManager(store=store)
+    records = [
+        manager.remember(RunReference(executor="test", native_id=str(i)))
+        for i in range(3)
+    ]
+
+    recent = store.runs(newest=True, limit=2)
+
+    assert len(recent) == 2
+    assert {record.id for record in recent} <= {record.id for record in records}
+    assert records[-1].id in {record.id for record in recent}
+
+
+def test_run_store_listing_warns_once_and_skips_corrupt_record(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = RunManager(store=store)
+    valid = manager.remember(RunReference(executor="test", native_id="ok"))
+    broken = tmp_path / "runs" / valid.created_at[:10] / "broken.json"
+    broken.write_text("{")
+
+    with pytest.warns(RuntimeWarning, match="Corrupt run record"):
+        assert store.runs() == (valid,)
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        assert store.runs() == (valid,)
+    assert not caught
+
+
+def test_manager_update_preserves_stronger_known_result(tmp_path):
+    manager = RunManager(store=RunStore(tmp_path / "runs"))
+    reference = RunReference(executor="test", native_id="one")
+    record = manager.remember(reference, state=RunState.FINISHED)
+    record = manager.store.save(
+        replace(record, return_code=0, message="completed")
+    )
+
+    updated = manager.update(record, RunStatus(reference, RunState.RUNNING))
+
+    assert updated.state == RunState.FINISHED
+    assert updated.return_code == 0
+    assert updated.message == "completed"
 
 
 def test_executor_pool_reuses_profile_executor():

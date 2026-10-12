@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import warnings
 from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
@@ -16,6 +17,7 @@ from platformdirs import user_state_dir
 from .base import Executor, RunReference, RunState, RunStatus
 
 
+_RUN_RECORD_SCHEMA_VERSION = 1
 _FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED, RunState.LOST}
 
 
@@ -39,6 +41,14 @@ def _identity_backend(executor):
     return backend
 
 
+class CorruptRunRecord(RuntimeError):
+    """A persisted run record cannot be decoded or validated."""
+
+    def __init__(self, path, message):
+        self.path = Path(path)
+        super().__init__(f"Corrupt run record {self.path}: {message}")
+
+
 @dataclass(frozen=True)
 class RunRecord:
     """Persistent ase2sprkkr identity and last known state of one run."""
@@ -50,54 +60,125 @@ class RunRecord:
     updated_at: str
     return_code: Optional[int] = None
     message: Optional[str] = None
+    schema_version: int = _RUN_RECORD_SCHEMA_VERSION
 
     def __post_init__(self):
         if isinstance(self.reference, dict):
             object.__setattr__(self, "reference", RunReference(**self.reference))
         if not isinstance(self.state, RunState):
             object.__setattr__(self, "state", RunState(self.state))
+        if self.schema_version != _RUN_RECORD_SCHEMA_VERSION:
+            raise ValueError(
+                f"unsupported schema version {self.schema_version}; "
+                f"expected {_RUN_RECORD_SCHEMA_VERSION}"
+            )
 
 
 class RunStore:
-    """Small persistent store using one atomic JSON file per run."""
+    """Persistent run history stored as date-sharded atomic JSON files."""
 
     def __init__(self, directory=None):
         if directory is None:
             directory = Path(user_state_dir("ase2sprkkr")) / "runs"
         self.directory = Path(directory).expanduser()
         self._lock = RLock()
+        self._warned_corrupt = set()
 
-    def _path(self, run_id):
-        return self.directory / (str(run_id) + ".json")
+    @staticmethod
+    def _bucket(created_at):
+        try:
+            return datetime.fromisoformat(created_at).date().isoformat()
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"Invalid run creation timestamp: {created_at!r}") from exc
+
+    def _path(self, record):
+        return self.directory / self._bucket(record.created_at) / f"{record.id}.json"
+
+    def _path_for_id(self, run_id):
+        if not self.directory.is_dir():
+            raise FileNotFoundError(run_id)
+        filename = f"{run_id}.json"
+        for day in sorted(self.directory.iterdir(), reverse=True):
+            if day.is_dir():
+                path = day / filename
+                if path.is_file():
+                    return path
+        raise FileNotFoundError(run_id)
+
+    @staticmethod
+    def _decode(path):
+        try:
+            with path.open() as file:
+                return RunRecord(**json.load(file))
+        except CorruptRunRecord:
+            raise
+        except (json.JSONDecodeError, TypeError, ValueError, KeyError) as exc:
+            raise CorruptRunRecord(path, str(exc)) from exc
+
+    def _warn_corrupt(self, exc):
+        key = os.fspath(exc.path)
+        if key in self._warned_corrupt:
+            return
+        self._warned_corrupt.add(key)
+        warnings.warn(str(exc), RuntimeWarning, stacklevel=3)
 
     def save(self, record: RunRecord):
         with self._lock:
-            self.directory.mkdir(parents=True, exist_ok=True)
-            path = self._path(record.id)
-            temporary = path.with_suffix(".json.tmp")
-            temporary.write_text(json.dumps(asdict(record), sort_keys=True))
-            os.replace(temporary, path)
+            self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+            path = self._path(record)
+            path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+            temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+            try:
+                temporary.write_text(json.dumps(asdict(record), sort_keys=True))
+                try:
+                    os.chmod(temporary, 0o600)
+                except OSError:
+                    pass
+                os.replace(temporary, path)
+            finally:
+                try:
+                    temporary.unlink()
+                except FileNotFoundError:
+                    pass
         return record
 
     def get(self, run_id):
-        path = self._path(run_id)
-        with path.open() as file:
-            return RunRecord(**json.load(file))
+        return self._decode(self._path_for_id(run_id))
 
-    def runs(self, *, active=None):
+    def _day_directories(self, *, newest):
+        if not self.directory.is_dir():
+            return ()
+        days = [path for path in self.directory.iterdir() if path.is_dir()]
+        return tuple(sorted(days, key=lambda path: path.name, reverse=newest))
+
+    def _records_in_directory(self, directory, *, newest):
+        records = []
+        for path in directory.glob("*.json"):
+            try:
+                records.append(self._decode(path))
+            except CorruptRunRecord as exc:
+                self._warn_corrupt(exc)
+        return sorted(records, key=lambda record: record.created_at, reverse=newest)
+
+    def runs(self, *, active=None, limit=None, newest=False):
+        """Return stored runs, optionally filtering and limiting recent history."""
+        if limit is not None and limit < 0:
+            raise ValueError("limit must be non-negative")
+        if limit == 0:
+            return ()
+
         with self._lock:
-            if not self.directory.is_dir():
-                return ()
             records = []
-            for path in self.directory.glob("*.json"):
-                with path.open() as file:
-                    record = RunRecord(**json.load(file))
-                if active is True and record.state in _FINAL_STATES:
-                    continue
-                if active is False and record.state not in _FINAL_STATES:
-                    continue
-                records.append(record)
-            return tuple(sorted(records, key=lambda record: record.created_at))
+            for day in self._day_directories(newest=newest):
+                for record in self._records_in_directory(day, newest=newest):
+                    if active is True and record.state in _FINAL_STATES:
+                        continue
+                    if active is False and record.state not in _FINAL_STATES:
+                        continue
+                    records.append(record)
+                    if limit is not None and len(records) >= limit:
+                        return tuple(records)
+            return tuple(records)
 
 
 class ExecutorPool:
@@ -196,12 +277,17 @@ class RunManager:
         return self.store.save(record)
 
     def update(self, record, status: RunStatus):
+        state = status.state
+        if record.state in _FINAL_STATES and state not in _FINAL_STATES:
+            state = record.state
         updated = replace(
             record,
-            state=status.state,
+            state=state,
             updated_at=_now(),
-            return_code=status.return_code,
-            message=status.message,
+            return_code=(
+                record.return_code if status.return_code is None else status.return_code
+            ),
+            message=record.message if status.message is None else status.message,
         )
         return self.store.save(updated)
 
