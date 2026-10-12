@@ -112,6 +112,23 @@ def _recover_section(member, path, value, accepted, issues):
         accepted[path] = accepted_section
 
 
+def _valid_default_profile(config):
+    """Return an error if the configured implicit profile cannot be resolved."""
+    name = config.default_profile()
+    if name is None or name in config.profiles:
+        return None
+    return ValueError(f"unknown execution profile {name!r}")
+
+
+def _discard_invalid_default_profile(config, accepted, issues):
+    error = _valid_default_profile(config)
+    if error is None:
+        return
+    config.default_profile.set(None)
+    accepted.pop("default_profile", None)
+    issues.append(("default_profile", error))
+
+
 def _recover_configuration(config, data):
     """Recover valid logical units after an atomic load has failed."""
     accepted = CommentedMap()
@@ -144,6 +161,7 @@ def _recover_configuration(config, data):
         else:
             _recover_section(member, str(name), value, accepted, issues)
 
+    _discard_invalid_default_profile(config, accepted, issues)
     return accepted, issues
 
 
@@ -164,14 +182,18 @@ def _apply_with_recovery(config, data, *, file=None, warn=True):
         config.set(data, unknown="fail")
     except _EXPECTED_USER_ERRORS:
         accepted, issues = _recover_configuration(config, data)
-        if warn and issues:
-            warnings.warn(
-                _format_issues(file or "<YAML>", issues),
-                YamlConfigurationWarning,
-                stacklevel=3,
-            )
-        return accepted, issues
-    return data, []
+    else:
+        accepted = data
+        issues = []
+        _discard_invalid_default_profile(config, accepted, issues)
+
+    if warn and issues:
+        warnings.warn(
+            _format_issues(file or "<YAML>", issues),
+            YamlConfigurationWarning,
+            stacklevel=3,
+        )
+    return accepted, issues
 
 
 def load_configuration_yaml(config, file):
