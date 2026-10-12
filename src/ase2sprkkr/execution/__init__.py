@@ -2,6 +2,7 @@
 
 from .base import ExecutionSpec, Executor, Runner, RunReference, RunState
 from .local import LocalExecutor, LocalRunner
+from .psij import PsijExecutor, PsijRunner
 
 __all__ = [
     "ExecutionSpec",
@@ -11,4 +12,6 @@ __all__ = [
     "RunState",
     "LocalExecutor",
     "LocalRunner",
+    "PsijExecutor",
+    "PsijRunner",
 ]

@@ -40,6 +40,8 @@ def empty_spheres(atoms, method="auto", **kwargs):
             return es_finder.empty_spheres(atoms, **kwargs)
 
     if method in ("inhouse", "xband"):
+        from .xband import spheres
+
         return spheres.empty_spheres(atoms, **kwargs)
 
     raise ValueError("Unknown empty-spheres method {!r}; use 'auto', 'es_finder', or 'inhouse'".format(method))
@@ -78,4 +80,3 @@ def add_empty_spheres(atoms, *, copy=False, **kwargs):
 
 
 from . import es_finder  # NOQA
-from .xband import spheres  # NOQA

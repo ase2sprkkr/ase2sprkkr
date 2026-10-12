@@ -21,7 +21,7 @@ authors = [
   { email = "ase2sprkkr@ntc.zcu.cz" }
 ]
 readme = "README.md"
-description = "Wrapper/calculator for SPRKKR to be used within ASE (Atomic Simulation Environment)"
+description = "Wrapper/calculator for SPR-KKR to be used within ASE (Atomic Simulation Environment)"
 license-files = ["LICENCE"]
 
 dependencies = [
@@ -58,6 +58,9 @@ plotting = [
     "matplotlib",
     "scipy",
     "scikit-image",
+]
+psij = [
+    "psij-python>=0.9.11",
 ]
 
 [project.urls]
@@ -100,6 +103,7 @@ sdist.include = [
 
 	"src/ase2sprkkr/sprkkr/test/*.cif",
 	"src/ase2sprkkr/bindings/xband/tests/*.pot",
+	"src/ase2sprkkr/execution/test/slurm/*",
 	"src/ase2sprkkr/run_tests",
 
 	"src/ase2sprkkr/**/*.py",
