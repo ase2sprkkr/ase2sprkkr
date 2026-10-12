@@ -17,6 +17,7 @@ _FINAL_RUN_STATES = {
     RunState.FAILED,
     RunState.CANCELLED,
 }
+_FINAL_STATE_NAMES = {state.value for state in _FINAL_RUN_STATES}
 
 
 class _RemoteResult:
@@ -68,11 +69,16 @@ def run_remote_psij_worker(directory, run_id, request):
     if reference is None:
         raise RuntimeError("PSI/J did not provide a persistent job reference")
 
+    state = _read_state(directory, run_id)
+    cancelled = state.get("state") == RunState.CANCELLED.value
+    if cancelled:
+        runner.cancel()
+
     current = runner.state
     _write_state(
         directory,
         run_id,
-        state=current.value,
+        state=RunState.CANCELLED.value if cancelled else current.value,
         pid=os.getpid(),
         backend_reference=asdict(reference),
         started_at=_timestamp(),
@@ -108,7 +114,7 @@ def cancel_remote_psij(directory, run_id, request, timeout=1.0):
     from .remote import _read_state, _timestamp, _write_state
 
     state = _read_state(directory, run_id)
-    if state.get("state") in {state.value for state in _FINAL_RUN_STATES}:
+    if state.get("state") in _FINAL_STATE_NAMES:
         return state
 
     reference = state.get("backend_reference")
