@@ -1,4 +1,4 @@
-"""Run a tiny real SPR-KKR calculation through PSI/J and Slurm."""
+"""Inner workload for the PSI/J Slurm Docker integration test."""
 
 from tempfile import TemporaryDirectory
 
