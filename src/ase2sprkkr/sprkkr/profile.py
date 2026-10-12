@@ -118,7 +118,13 @@ class SPRKKRProfile:
         if self.executable_dir:
             executable = os.path.join(self.executable_dir, executable)
 
-        mpi_launch = LaunchSpec.from_mpi(self.mpi) if mpi_supported else LaunchSpec()
+        # ``gdb`` is the serial debugger mode. MPI debugging needs explicit
+        # launcher/terminal semantics and must not be inferred from this bool.
+        mpi_launch = (
+            LaunchSpec()
+            if gdb
+            else LaunchSpec.from_mpi(self.mpi) if mpi_supported else LaunchSpec()
+        )
         launch = replace(
             mpi_launch,
             mpi_warning=self.mpi_warning,
@@ -138,8 +144,6 @@ class SPRKKRProfile:
             mpi_argv = [executable + "MPI", input_name]
 
         if gdb:
-            if launch:
-                raise ValueError("gdb with deferred MPI execution is not supported")
             stdin = None
             print(f"run <{input_file.name}")
             argv = ["gdb", executable]
