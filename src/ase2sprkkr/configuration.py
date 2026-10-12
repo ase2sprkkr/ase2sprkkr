@@ -1,5 +1,4 @@
-"""This module contains configuration, that could be changed, preferrably
-by .config/ase2sprkkr/__init__.py file"""
+"""ASE2SPRKKR user configuration."""
 
 import os
 import re
@@ -64,32 +63,49 @@ def _set_legacy_executable_suffix(section, value):
     _set_legacy_value(section, value, "executable_suffix")
 
 
+def user_preferences_directory():
+    """Return the ASE2SPRKKR user configuration directory."""
+    return platformdirs.user_config_dir("ase2sprkkr", "ase2sprkkr")
+
+
 def user_preferences_file():
-    """Return filename with user preferences"""
-    return os.path.join(platformdirs.user_config_dir("ase2sprkkr", "ase2sprkkr"), "__init__.py")
+    """Return the preferred YAML user configuration filename."""
+    return os.path.join(user_preferences_directory(), "config.yaml")
+
+
+def legacy_user_preferences_file():
+    """Return the deprecated executable-Python configuration filename."""
+    return os.path.join(user_preferences_directory(), "__init__.py")
+
+
+def _load_legacy_user_preferences(file):
+    import types
+    import importlib.machinery
+
+    loader = importlib.machinery.SourceFileLoader("ase2sprkkr.personal", file)
+    mod = types.ModuleType(loader.name)
+    loader.exec_module(mod)
 
 
 def load_user_preferences():
-    """Load user defined preferences from
-    ``$HOME/.config/ase2sprkkr/__init__.py``
-    """
-    file = user_preferences_file()
+    """Load user preferences, preferring ``config.yaml`` over legacy Python."""
+    yaml_file = user_preferences_file()
+    legacy_file = legacy_user_preferences_file()
 
     try:
-        if os.path.isfile(file):
-            import types
-            import importlib.machinery
+        if os.path.isfile(yaml_file):
+            from .configuration_yaml import load_configuration_yaml
 
-            loader = importlib.machinery.SourceFileLoader("ase2sprkkr.personal", file)
-            mod = types.ModuleType(loader.name)
-            loader.exec_module(mod)
+            load_configuration_yaml(config, yaml_file)
+        elif os.path.isfile(legacy_file):
+            _load_legacy_user_preferences(legacy_file)
     except Exception as e:
-        import warnings
         import traceback
-        tb = "\n".join(traceback.format_exception(e))
 
+        tb = "\n".join(traceback.format_exception(e))
+        file = yaml_file if os.path.isfile(yaml_file) else legacy_file
         warnings.warn(
-            f"Can not import {file} file with the user preferences:\n"
+            f"Can not load {file} file with the user preferences:\n"
             f"{e}\n\n{tb}"
         )
 
@@ -168,33 +184,11 @@ class Configuration(RootConfigurationContainer):
 
     def store_value_permanent(self, name: str, value, doc=None, doc_regex: bool or str = False):
         """
-        Set/remove permanently the value with given name in the config file.
-        No name/value checking. If the value is present, it is
-        changed, otherwise, new line with setting the value is added to the file.
-        If the value is to be removed, all the lines value = .... will be removed
-        from the config file.
-
-        Parameters
-        ----------
-        name
-          Name of the value
-
-        value
-          Value to be set
-
-        doc
-          If it is not None:
-           - if the value is to be removed and it is preceeded by the line containing the given
-             docstring, prefixed by ' # ', the preceding line with docstring is removed as well.
-           - if the value is to be added, the docstring is added before the value as well.
-
-        doc_regex
-          If True, the doc parameter can be given as regular expression.
+        Set/remove permanently the value with given name in the legacy Python config file.
         """
-        global user_preference_file
-        file = user_preferences_file()
+        file = legacy_user_preferences_file()
         if not os.path.isfile(file):
-            raise ValueError("Please, generate the user prefernce file using 'ase2sprkkr config -d' first.")
+            raise ValueError("Please, generate the user preference file using 'ase2sprkkr config -d' first.")
 
         with open(file, "r+") as f:
             content = f.read()
@@ -239,19 +233,13 @@ class Configuration(RootConfigurationContainer):
 
 class ConfigurationOption(Option):
     def set_permanent(self, value, doc=None, doc_regex: Union[bool, str] = False):
-        """Set the value and store it in the config file
-
-        See :meth:`Configuration.store_value_permament` for the meaning of the parameters
-        """
+        """Set the value and store it in the config file."""
 
         self.set(value)
         self.store_permanent()
 
     def store_permanent(self, doc=None, doc_regex: Union[bool, str] = False):
-        """Store the actual value in the config file
-
-        See :meth:`Configuration.store_value_permament` for the meaning of the parameters
-        """
+        """Store the actual value in the config file."""
         val = self()
         if val is not None:
             val = self._definition.type.string(val)
