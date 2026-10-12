@@ -26,13 +26,7 @@ from ..profiles import ase_command_profile_values
 
 @dataclass(frozen=True)
 class ExecutorEndpoint:
-    """Identity of a reusable execution backend.
-
-    The endpoint contains only properties needed to establish communication
-    with an executor. It deliberately excludes launch/staging policy so that
-    profiles differing only in how a calculation is launched can share the
-    same long-lived executor instance.
-    """
+    """Identity of a reusable execution backend."""
 
     executor: str = "local"
     host: Any = None
@@ -58,12 +52,7 @@ class LaunchParameters:
 
 @dataclass(frozen=True)
 class SPRKKRProfile:
-    """Describe how and where SPR-KKR executables are invoked.
-
-    The public/runtime profile stays flat for configuration ergonomics. Code
-    that creates execution objects splits it into :attr:`endpoint` and
-    :attr:`launch_parameters` internally.
-    """
+    """Describe how and where SPR-KKR executables are invoked."""
 
     executable_dir: Any = False
     executable_suffix: Any = ""
@@ -133,18 +122,26 @@ class SPRKKRProfile:
         mpi_supported=False,
         gdb=False,
     ):
-        """Create the concrete execution specification for one run."""
+        """Create the concrete execution specification for one run.
+
+        ``gdb`` currently always forces serial execution.
+        """
         executable += self.executable_suffix or ""
         if self.executable_dir:
             executable = os.path.join(self.executable_dir, executable)
 
-        mpi_launch = LaunchSpec.from_mpi(self.mpi) if mpi_supported else LaunchSpec()
+        mpi_launch = (
+            LaunchSpec()
+            if gdb or not mpi_supported
+            else LaunchSpec.from_mpi(self.mpi)
+        )
         launch = replace(
             mpi_launch,
             local_root=self.local_root,
             remote_root=self.remote_root,
             input_sync=self.input_sync,
             output_sync=self.output_sync,
+            mpi_warning=self.mpi_warning,
         )
         argv = [executable]
         mpi_argv = None
@@ -157,8 +154,6 @@ class SPRKKRProfile:
             mpi_argv = [executable + "MPI", input_name]
 
         if gdb:
-            if launch:
-                raise ValueError("gdb with deferred MPI execution is not supported")
             stdin = None
             print(f"run <{input_file.name}")
             argv = ["gdb", executable]
