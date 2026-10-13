@@ -651,7 +651,8 @@ class SPRKKR(BaseCalculator):
                     warnings.warn(f"Failed to search empty-spheres. Error: {e}")
 
         def save_potential_file():
-            pf = from_input_name(potential_file or self.potential_file, ".pot", "%a.pot")
+            pf = self.potential_file if potential_file is None else potential_file
+            pf = from_input_name(pf, ".pot", "%a.pot")
             pf = self._open_file(
                 pf, directory, templator, True, allow_temporary=return_files, create_subdirs=create_subdirs
             )
@@ -660,7 +661,7 @@ class SPRKKR(BaseCalculator):
             return pf.name
 
         def open_input_file():
-            ifile = input_file or self.input_file
+            ifile = self.input_file if input_file is None else input_file
             if ifile is True:
                 ifile = "%l%_%a_%T.inp"
 
