@@ -303,7 +303,12 @@ class RunStore:
     def _decode(path):
         try:
             with path.open() as file:
-                return RunRecord(**json.load(file))
+                data = json.load(file)
+            # ``finished_at`` was added without changing the v1 schema number.
+            # Preserve records written by earlier development versions rather
+            # than treating an absent optional timestamp as corruption.
+            data.setdefault("finished_at", None)
+            return RunRecord(**data)
         except CorruptRunRecord:
             raise
         except (json.JSONDecodeError, TypeError, ValueError, KeyError) as exc:
