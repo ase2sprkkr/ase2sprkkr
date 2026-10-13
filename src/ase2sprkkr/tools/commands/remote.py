@@ -112,7 +112,7 @@ def run(args, global_args):
         request["directory"] = args.directory
         try:
             result = submit_remote(request)
-        except BaseException as exc:
+        except Exception as exc:
             _finalize_failed_worker_start(args.directory, request, exc)
             raise
         _print_json(result)

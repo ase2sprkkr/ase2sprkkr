@@ -1077,8 +1077,7 @@ class RemoteRunner:
 
     def cancel(self):
         if self._reference is None:
-            self._state = RunState.CANCELLED
-            return
+            raise RuntimeError("Run has not been submitted")
         status = _run_sync(
             self.executor._cancel(
                 self._reference.directory, self._reference.native_id

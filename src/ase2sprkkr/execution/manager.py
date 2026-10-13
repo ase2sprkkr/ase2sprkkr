@@ -963,7 +963,7 @@ class ExecutionManager:
             )
         else:
             result = reader.create_result(output_file, input_file)
-            result.complete(None, record.return_code)
+            result.complete(None, return_code)
         result.run_record = record
         return result
 

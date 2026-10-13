@@ -394,3 +394,57 @@ def test_psij_recovery_rejects_ambiguous_live_jobs(monkeypatch, tmp_path):
         executor.recover_submission(
             "duplicate", SimpleNamespace(directory=str(tmp_path))
         )
+
+
+def test_psij_submit_is_serialized_across_threads(monkeypatch, tmp_path):
+    class BlockingBackend(_Backend):
+        def __init__(self):
+            super().__init__()
+            self.calls = 0
+            self.first_entered = threading.Event()
+            self.second_entered = threading.Event()
+            self.release = threading.Event()
+
+        def submit(self, job):
+            self.calls += 1
+            (self.first_entered if self.calls == 1 else self.second_entered).set()
+            self.release.wait(1)
+            return super().submit(job)
+
+    backend = BlockingBackend()
+    executor = _executor(monkeypatch, backend)
+    input_file = open(tmp_path / "run.inp", "wb+")
+    input_file.write(b"input")
+    output_file = open(tmp_path / "run.out", "wb")
+    spec = ExecutionSpec(
+        argv=("program",),
+        input_file=input_file,
+        output_file=output_file,
+        directory=str(tmp_path),
+        stdin=input_file,
+    )
+    runner = executor.create_run(_Reader(), spec)
+    errors = []
+
+    def submit():
+        try:
+            runner.submit()
+        except RuntimeError as exc:
+            errors.append(exc)
+
+    first = threading.Thread(target=submit)
+    second = threading.Thread(target=submit)
+    first.start()
+    assert backend.first_entered.wait(1)
+    second.start()
+    assert not backend.second_entered.wait(0.2)
+    backend.release.set()
+    first.join(2)
+    second.join(2)
+
+    assert not first.is_alive()
+    assert not second.is_alive()
+    assert backend.calls == 1
+    assert len(errors) == 1
+    runner.wait()
+    input_file.close()

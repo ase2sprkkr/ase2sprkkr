@@ -136,3 +136,31 @@ def test_failed_history_without_return_code_is_not_parsed_as_success(tmp_path):
     assert parsed[0]["return_code"] != 0
     assert result.return_code != 0
     assert result.run_record.state == RunState.FAILED
+
+
+def test_missing_failed_history_uses_inferred_return_code(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    spec = _spec(tmp_path)
+    record = manager.new_record(
+        task="DOS",
+        directory=tmp_path,
+        artifacts=manager._artifacts_for_spec(spec),
+    )
+    store.save(record)
+    record = manager.finalize(record, state=RunState.FAILED)
+
+    class Result:
+        return_code = None
+
+        def complete(self, error, return_code):
+            self.return_code = return_code
+
+    class Reader:
+        def create_result(self, output, input_file):
+            return Result()
+
+    result = manager.load_result(record.id, reader=Reader())
+
+    assert result.return_code == 1
+    assert result.run_record.state == RunState.FAILED

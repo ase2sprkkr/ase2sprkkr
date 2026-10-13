@@ -210,6 +210,7 @@ class PsijRunner:
 
         self._listeners = []
         self._lock = Lock()
+        self._submit_lock = Lock()
         self._done = Event()
         self._exception = None
         self._finalization_failed = False
@@ -421,11 +422,12 @@ class PsijRunner:
 
     def submit(self):
         """Submit the job through PSI/J and return after the scheduler accepts it."""
-        if self._thread is not None or self.state != RunState.NEW:
-            raise RuntimeError(f"Run is already {self.state.value}")
-        self._prepare_io()
-        self.executor._job_executor.submit(self._job)
-        self._start_monitor()
+        with self._submit_lock:
+            if self._thread is not None or self.state != RunState.NEW:
+                raise RuntimeError(f"Run is already {self.state.value}")
+            self._prepare_io()
+            self.executor._job_executor.submit(self._job)
+            self._start_monitor()
 
     def wait(self):
         """Wait for the PSI/J job and output parsing to finish."""

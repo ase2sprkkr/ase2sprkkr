@@ -404,6 +404,10 @@ class RemoteEndpointExecutor(Executor):
                 states = await self._json_request("status", directory, *ids)
                 if len(ids) == 1:
                     states = (states,)
+                if len(states) != len(items):
+                    raise RuntimeError(
+                        "Remote endpoint returned wrong number of run statuses"
+                    )
                 for (index, reference), state in zip(items, states):
                     result[index] = RunStatus(
                         reference,
