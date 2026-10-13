@@ -233,8 +233,18 @@ class Executor:
     def create_run(self, reader, spec: ExecutionSpec, callback=None) -> Runner:
         raise NotImplementedError
 
-    def attach(self, reference: RunReference, reader, callback=None) -> Runner:
-        """Reconnect to a persistent run."""
+    def attach(
+        self,
+        reference: RunReference,
+        reader,
+        callback=None,
+        output_listener=None,
+    ) -> Runner:
+        """Reconnect to a persistent run.
+
+        Backends must install ``output_listener`` before monitoring starts so
+        an attach cannot lose output replayed immediately by the backend.
+        """
         raise NotImplementedError(
             f"{type(self).__name__} cannot attach to an existing run"
         )

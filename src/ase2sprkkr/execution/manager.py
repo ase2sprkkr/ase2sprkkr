@@ -887,12 +887,23 @@ class ExecutionManager:
                 current[record.id] = self.update(record, status)
         return tuple(current[record.id] for record in records)
 
-    def attach(self, run, executor=None, reader=None, callback=None):
+    def attach(
+        self,
+        run,
+        executor=None,
+        reader=None,
+        callback=None,
+        output_listener=None,
+    ):
         """Attach to a stored run, reconstructing its persisted endpoint by default.
 
         ``executor`` is retained as an explicit override for legacy records that
         predate endpoint persistence and for custom backends that cannot be
         reconstructed from :class:`ExecutorEndpoint` alone.
+
+        ``output_listener`` is installed by the backend before monitoring starts.
+        Attached runners therefore cannot lose output replayed immediately during
+        attach, including output from an already completed run.
         """
         record = self.store.get(run) if isinstance(run, str) else run
         if record.reference is None:
@@ -908,7 +919,10 @@ class ExecutionManager:
             executor,
             record,
             lambda completed: executor.attach(
-                record.reference, reader, callback=completed
+                record.reference,
+                reader,
+                callback=completed,
+                output_listener=output_listener,
             ),
             callback,
         )

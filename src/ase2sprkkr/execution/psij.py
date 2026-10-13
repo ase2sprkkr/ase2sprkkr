@@ -598,7 +598,13 @@ class PsijExecutor(Executor):
         # release the duplicate-submission reservation.
         return None
 
-    def attach(self, reference: RunReference, reader, callback=None):
+    def attach(
+        self,
+        reference: RunReference,
+        reader,
+        callback=None,
+        output_listener=None,
+    ):
         expected = f"psij:{self.backend}"
         if reference.executor != expected:
             raise ValueError(
@@ -616,11 +622,16 @@ class PsijExecutor(Executor):
             error_file=reference.error_file,
             directory=reference.directory,
         )
-        return PsijRunner(
+        runner = PsijRunner(
             self,
             reader,
             spec,
             callback=callback,
             job=job,
-            attached=True,
+            attached=False,
         )
+        runner._attached = True
+        if output_listener is not None:
+            runner.add_output_listener(output_listener)
+        runner._start_monitor()
+        return runner

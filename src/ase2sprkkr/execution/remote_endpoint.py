@@ -8,6 +8,7 @@ import os
 import posixpath
 import warnings
 from pathlib import Path, PurePosixPath
+from threading import Thread
 from uuid import uuid4
 
 from .base import (
@@ -152,7 +153,15 @@ class _RemoteRunContext:
             run_id=run_id,
         )
 
-    async def attach(self, reference, reader, callback=None, *, request=None):
+    async def attach(
+        self,
+        reference,
+        reader,
+        callback=None,
+        output_listener=None,
+        *,
+        request=None,
+    ):
         expected = f"remote:{self.backend}"
         if reference.executor != expected:
             raise ValueError(
@@ -254,12 +263,11 @@ class _RemoteRunContext:
                     output_sync=self.output_files.value,
                 ),
             )
-            return _RemoteRun(
+            runner = _RemoteRun(
                 self,
                 reader,
                 spec,
                 callback=callback,
-                reference=reference,
                 state=RunState(status.get("state", "unknown")),
                 output_targets=output_targets,
                 cache_targets=cache_targets,
@@ -267,6 +275,12 @@ class _RemoteRunContext:
                 cache_patterns=cache_patterns,
                 cache_before=cache_before,
             )
+            runner._reference = reference
+            if output_listener is not None:
+                runner.add_output_listener(output_listener)
+            runner._thread = Thread(target=runner._thread_main, daemon=True)
+            runner._thread.start()
+            return runner
         except BaseException:
             for file in opened:
                 file.close()
@@ -498,13 +512,36 @@ class RemoteEndpointExecutor(Executor):
         """Fetch missing historical input/output artifacts without attaching."""
         return _run_sync(self._fetch_artifacts(reference, artifacts))
 
-    async def _attach_with_saved_launch(self, reference, reader, callback=None):
+    async def _attach_with_saved_launch(
+        self,
+        reference,
+        reader,
+        callback=None,
+        output_listener=None,
+    ):
         request = await self._saved_request(reference.directory, reference.native_id)
         launch = LaunchSpec(**(request.get("launch") or {}))
         context = self._context(self, launch)
-        return await context.attach(reference, reader, callback=callback, request=request)
+        return await context.attach(
+            reference,
+            reader,
+            callback=callback,
+            output_listener=output_listener,
+            request=request,
+        )
 
-    def attach(self, reference: RunReference, reader, callback=None):
+    def attach(
+        self,
+        reference: RunReference,
+        reader,
+        callback=None,
+        output_listener=None,
+    ):
         return _run_sync(
-            self._attach_with_saved_launch(reference, reader, callback=callback)
+            self._attach_with_saved_launch(
+                reference,
+                reader,
+                callback=callback,
+                output_listener=output_listener,
+            )
         )
