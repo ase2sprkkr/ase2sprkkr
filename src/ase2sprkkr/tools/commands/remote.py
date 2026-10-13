@@ -67,6 +67,36 @@ def _print_json(value):
     print(json.dumps(value), flush=True)
 
 
+def _finalize_failed_worker_start(directory, request, exc):
+    """Turn a failed detached-worker start into an explicit terminal record.
+
+    ``submit_remote`` persists QUEUED metadata before starting the detached
+    worker. If process creation itself fails, leaving that record queued would
+    make recovery believe a computation exists and ``follow`` could wait
+    forever. Only rewrite the exact pre-start state; failures after a worker has
+    published a pid/state are left to the normal lifecycle machinery.
+    """
+    from ...execution.remote import _timestamp, _write_state, status_remote
+
+    run_id = request.get("id")
+    if not run_id:
+        return
+    try:
+        state = status_remote(directory, run_id)
+    except (FileNotFoundError, KeyError, ValueError, json.JSONDecodeError):
+        return
+    if state.get("state") != "queued" or state.get("pid") is not None:
+        return
+    _write_state(
+        directory,
+        run_id,
+        state="failed",
+        error=repr(exc),
+        return_code=None,
+        finished_at=_timestamp(),
+    )
+
+
 def run(args, global_args):
     from ...execution.remote import (
         cancel_remote,
@@ -80,7 +110,12 @@ def run(args, global_args):
     if args.remote_action == "submit":
         request = json.load(sys.stdin)
         request["directory"] = args.directory
-        _print_json(submit_remote(request))
+        try:
+            result = submit_remote(request)
+        except BaseException as exc:
+            _finalize_failed_worker_start(args.directory, request, exc)
+            raise
+        _print_json(result)
     elif args.remote_action == "status":
         # A status query is also the recovery point for a target-side PSI/J
         # agent killed by logout/reboot. The persisted native scheduler ids are
