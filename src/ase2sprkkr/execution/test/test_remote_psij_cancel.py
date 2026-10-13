@@ -1,7 +1,7 @@
 import json
 from types import SimpleNamespace
 
-from ..base import RunReference, RunState
+from ..base import RunReference, RunState, RunStatus
 from ..remote import _request_path, _run_directory, _write_state, status_remote
 from ..remote_psij import (
     _RemotePsijAgent,
@@ -36,6 +36,8 @@ def _record(workspace, run_id, *, state="queued", backend_reference=None):
         directory=str(workspace),
         pid=None,
         backend_reference=backend_reference,
+        created_at="2026-10-13T08:00:00+00:00",
+        started_at=None,
         finished_at=None,
     )
     return request
@@ -70,16 +72,26 @@ class _FakeRunner:
         return self.result
 
 
+_UNSET = object()
+
+
 class _FakeExecutor:
     def __init__(self, workspace):
         self.workspace = workspace
         self.created = []
         self.attached = []
+        self.persistent_ids = []
+        self.recovery_calls = []
+        self.recovery_status = _UNSET
 
     def create_run(self, reader, spec):
         runner = _FakeRunner(self.workspace, "job-{}".format(len(self.created) + 1))
         self.created.append(runner)
         return runner
+
+    def create_persistent_run(self, reader, spec, *, run_id, callback=None):
+        self.persistent_ids.append(run_id)
+        return self.create_run(reader, spec)
 
     def attach(self, reference, reader):
         runner = _FakeRunner(
@@ -89,6 +101,12 @@ class _FakeExecutor:
         )
         self.attached.append((reference, runner))
         return runner
+
+    def recover_submission(self, run_id, submission, *, submitted_at=None):
+        self.recovery_calls.append((run_id, submission.directory, submitted_at))
+        if self.recovery_status is _UNSET:
+            raise NotImplementedError
+        return self.recovery_status
 
 
 def test_remote_psij_agent_reuses_executor_for_multiple_runs(tmp_path, monkeypatch):
@@ -109,6 +127,7 @@ def test_remote_psij_agent_reuses_executor_for_multiple_runs(tmp_path, monkeypat
     assert agent._discover()
 
     assert created_executors == [{"backend": "slurm", "url": None}]
+    assert executor.persistent_ids == ["run-1", "run-2"]
     assert len(executor.created) == 2
     assert status_remote(workspace, "run-1")["backend_reference"]["native_id"] == "job-1"
     assert status_remote(workspace, "run-2")["backend_reference"]["native_id"] == "job-2"
@@ -149,6 +168,37 @@ def test_remote_psij_agent_recovers_existing_scheduler_job(tmp_path, monkeypatch
     assert executor.created == []
     assert len(executor.attached) == 1
     assert executor.attached[0][0].native_id == "job-existing"
+
+
+def test_remote_psij_agent_recovers_submit_crash_without_resubmitting(
+    tmp_path, monkeypatch
+):
+    workspace = tmp_path / "workspace"
+    _record(workspace, "run-1", state=RunState.SUBMITTING.value)
+    reference = RunReference(
+        executor="psij:slurm",
+        native_id="job-recovered",
+        directory=str(workspace),
+        output_file=str(workspace / "out"),
+        error_file=str(workspace / "err"),
+    )
+    executor = _FakeExecutor(workspace)
+    executor.recovery_status = RunStatus(reference, RunState.RUNNING)
+    monkeypatch.setattr(
+        "ase2sprkkr.execution.remote_psij._executor", lambda request: executor
+    )
+
+    agent = _RemotePsijAgent(workspace)
+    assert agent._discover()
+
+    state = status_remote(workspace, "run-1")
+    assert executor.created == []
+    assert executor.recovery_calls == [
+        ("run-1", str(workspace), "2026-10-13T08:00:00+00:00")
+    ]
+    assert state["backend_reference"]["native_id"] == "job-recovered"
+    assert state["state"] == RunState.RUNNING.value
+    assert len(executor.attached) == 1
 
 
 def test_remote_psij_cancel_is_serviced_by_shared_agent(tmp_path, monkeypatch):
