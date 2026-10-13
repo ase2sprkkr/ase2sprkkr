@@ -360,11 +360,11 @@ class Occupation:
         return sum(self._occupation.values())
 
     def check(self):
-        if not np.isclose(sum(self), 1.0):
+        if not np.isclose(self.total_occupation, 1.0):
             raise ValueError("Total occupation of the site should be equal to one")
 
     def to_tuple(self):
-        return zip(self.keys(), self.values())
+        return tuple(self._occupation.items())
 
     def atomic_types(self) -> Iterable[AtomicType]:
         """Returns the atomic types that can be present on the site."""

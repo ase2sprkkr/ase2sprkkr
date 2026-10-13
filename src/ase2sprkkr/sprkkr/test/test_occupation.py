@@ -30,3 +30,16 @@ class Test(TestCase):
         atoms.sites[0].break_symmetry()
         atoms.sites[0].occupation['Fe'] = 0.7
         assert atoms.symbols[0] == 'Fe'
+
+    def test_public_methods(self):
+        from ase2sprkkr.sprkkr.occupations import Occupation
+
+        occupation = Occupation({"Fe": 0.4, "Ni": 0.6})
+
+        occupation.check()
+        values = {atomic_type.symbol: value for atomic_type, value in occupation.to_tuple()}
+        assert values == {"Fe": 0.4, "Ni": 0.6}
+
+        occupation._occupation[occupation.atomic_type("Fe")] = 0.3
+        with pytest.raises(ValueError, match="equal to one"):
+            occupation.check()
