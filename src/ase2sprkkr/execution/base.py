@@ -201,8 +201,14 @@ class Executor:
             f"{type(self).__name__} cannot query persistent run status"
         )
 
-    def recover_submission(self, run_id, submission) -> Optional[RunStatus]:
+    def recover_submission(
+        self, run_id, submission, *, submitted_at=None
+    ) -> Optional[RunStatus]:
         """Recover a submit whose backend reference was not persisted.
+
+        ``submitted_at`` is the timestamp at which ASE2SPRKKR reserved the
+        submission. Scheduler backends may use it to bound accounting-history
+        queries after a job has left the live queue.
 
         Return a status with a reconstructed backend reference when the submit
         is found, ``None`` only when the backend can positively establish that

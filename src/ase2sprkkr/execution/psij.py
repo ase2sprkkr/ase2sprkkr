@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import asyncio
 import os
+import shlex
+import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
 from threading import Event, Lock, Thread
 
@@ -20,6 +23,26 @@ _STATE_MAP = {
     "COMPLETED": RunState.FINISHED,
     "FAILED": RunState.FAILED,
     "CANCELED": RunState.CANCELLED,
+}
+
+_SLURM_STATE_MAP = {
+    "PENDING": RunState.QUEUED,
+    "CONFIGURING": RunState.QUEUED,
+    "SUSPENDED": RunState.QUEUED,
+    "RUNNING": RunState.RUNNING,
+    "COMPLETING": RunState.RUNNING,
+    "RESIZING": RunState.RUNNING,
+    "COMPLETED": RunState.FINISHED,
+    "CANCELLED": RunState.CANCELLED,
+    "CANCELED": RunState.CANCELLED,
+    "BOOT_FAIL": RunState.FAILED,
+    "DEADLINE": RunState.FAILED,
+    "FAILED": RunState.FAILED,
+    "NODE_FAIL": RunState.FAILED,
+    "OUT_OF_MEMORY": RunState.FAILED,
+    "PREEMPTED": RunState.FAILED,
+    "REVOKED": RunState.FAILED,
+    "TIMEOUT": RunState.FAILED,
 }
 
 
@@ -45,6 +68,114 @@ def _path(value, directory=None):
     if directory and not os.path.isabs(path):
         path = os.path.join(directory, path)
     return os.path.abspath(path)
+
+
+def _scheduler_output(argv):
+    """Run one scheduler inspection command; failures remain transport failures."""
+    return subprocess.run(
+        tuple(argv),
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    ).stdout
+
+
+def _slurm_state(value):
+    """Map an extended Slurm state, including suffixes, to RunState."""
+    value = (value or "").strip().upper().split("+", 1)[0]
+    return _SLURM_STATE_MAP.get(value, RunState.UNKNOWN)
+
+
+def _slurm_exit_code(value):
+    if not value:
+        return None
+    code = value.split(":", 1)[0]
+    try:
+        return int(code)
+    except ValueError:
+        return None
+
+
+def _slurm_details(native_id):
+    """Return fields needed to reconstruct a live Slurm reference."""
+    output = _scheduler_output(("scontrol", "--oneliner", "show", "job", str(native_id)))
+    fields = {}
+    for token in shlex.split(output):
+        name, separator, value = token.partition("=")
+        if separator:
+            fields[name] = value
+    return fields
+
+
+def _slurm_current_matches(run_id):
+    """Find current user's live jobs carrying this ASE2SPRKKR identity."""
+    marker = f"ase2sprkkr:{run_id}"
+    output = _scheduler_output(
+        ("squeue", "--noheader", "--me", "--format=%i|%k|%T|%Z")
+    )
+    matches = []
+    for line in output.splitlines():
+        fields = line.split("|", 3)
+        if len(fields) != 4:
+            continue
+        native_id, comment, state, directory = (field.strip() for field in fields)
+        if comment == marker:
+            matches.append((native_id, state, directory))
+    return tuple(matches)
+
+
+def _slurm_accounting_stores_comments():
+    output = _scheduler_output(("scontrol", "show", "config"))
+    for line in output.splitlines():
+        name, separator, value = line.partition("=")
+        if separator and name.strip() == "AccountingStoreFlags":
+            flags = {flag.strip().lower() for flag in value.split(",")}
+            return "job_comment" in flags
+    return False
+
+
+def _slurm_time(value):
+    """Format an ASE2SPRKKR timestamp using Slurm's accepted local-time syntax."""
+    parsed = datetime.fromisoformat(value)
+    if parsed.tzinfo is not None:
+        parsed = parsed.astimezone()
+    return parsed.strftime("%Y-%m-%dT%H:%M:%S")
+
+
+def _slurm_accounting_matches(run_id, submitted_at):
+    """Look up a completed/recent job when comments are present in accounting."""
+    if submitted_at is None or not _slurm_accounting_stores_comments():
+        return ()
+    marker = f"ase2sprkkr:{run_id}"
+    output = _scheduler_output(
+        (
+            "sacct",
+            "-X",
+            "-n",
+            "-P",
+            f"--starttime={_slurm_time(submitted_at)}",
+            "--format=JobIDRaw,Comment,State,WorkDir,StdOut,StdErr,ExitCode",
+        )
+    )
+    matches = []
+    for line in output.splitlines():
+        fields = line.rstrip("|").split("|")
+        if len(fields) != 7:
+            continue
+        native_id, comment, state, directory, stdout, stderr, exit_code = fields
+        if comment.strip() == marker:
+            matches.append(
+                (
+                    native_id.strip(),
+                    state.strip(),
+                    directory.strip(),
+                    stdout.strip() or None,
+                    stderr.strip() or None,
+                    _slurm_exit_code(exit_code.strip()),
+                )
+            )
+    return tuple(matches)
 
 
 class PsijRunner:
@@ -391,6 +522,68 @@ class PsijExecutor(Executor):
                 )
             )
         return tuple(statuses)
+
+    @staticmethod
+    def _recovered_reference(backend, url, native_id, directory, output_file, error_file):
+        return RunReference(
+            executor=f"psij:{backend}",
+            native_id=str(native_id),
+            computer=url,
+            directory=directory or None,
+            output_file=output_file or None,
+            error_file=error_file or None,
+        )
+
+    def recover_submission(self, run_id, submission, *, submitted_at=None):
+        """Recover a Slurm submit by the ASE2SPRKKR run id stored in Comment."""
+        if self.backend.lower() != "slurm":
+            raise NotImplementedError(
+                f"PSI/J backend {self.backend!r} cannot recover uncertain submissions"
+            )
+
+        matches = _slurm_current_matches(run_id)
+        if len(matches) > 1:
+            raise RuntimeError(
+                f"Multiple live Slurm jobs carry ASE2SPRKKR run id {run_id!r}"
+            )
+        if matches:
+            native_id, state, directory = matches[0]
+            details = _slurm_details(native_id)
+            reference = self._recovered_reference(
+                self.backend,
+                self.url,
+                native_id,
+                details.get("WorkDir") or directory or submission.directory,
+                details.get("StdOut"),
+                details.get("StdErr"),
+            )
+            return RunStatus(reference, _slurm_state(state))
+
+        accounting = _slurm_accounting_matches(run_id, submitted_at)
+        if len(accounting) > 1:
+            raise RuntimeError(
+                f"Multiple Slurm accounting records carry ASE2SPRKKR run id {run_id!r}"
+            )
+        if accounting:
+            native_id, state, directory, stdout, stderr, return_code = accounting[0]
+            reference = self._recovered_reference(
+                self.backend,
+                self.url,
+                native_id,
+                directory or submission.directory,
+                stdout,
+                stderr,
+            )
+            return RunStatus(
+                reference,
+                _slurm_state(state),
+                return_code=return_code,
+            )
+
+        # squeue is authoritative for currently active jobs. Absence there means
+        # no live duplicate remains. Accounting is used only to preserve the
+        # history of a job that already finished before recovery.
+        return None
 
     def attach(self, reference: RunReference, reader, callback=None):
         expected = f"psij:{self.backend}"
