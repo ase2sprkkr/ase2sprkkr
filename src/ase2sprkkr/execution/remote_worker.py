@@ -1,8 +1,8 @@
-"""Detached worker used by :mod:`ase2sprkkr.execution.remote`."""
+"""Detached worker used by persistent local and remote execution."""
 
 import sys
 
-from .remote import run_remote_worker
+from .detached import run_detached_worker
 
 
 def main():
@@ -10,7 +10,7 @@ def main():
         raise SystemExit(
             "usage: python -m ase2sprkkr.execution.remote_worker DIRECTORY RUN_ID"
         )
-    run_remote_worker(sys.argv[1], sys.argv[2])
+    run_detached_worker(sys.argv[1], sys.argv[2])
 
 
 if __name__ == "__main__":
