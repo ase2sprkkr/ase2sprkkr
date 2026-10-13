@@ -231,9 +231,9 @@ class RunRecord:
     state: RunState
     created_at: str
     updated_at: str
-    finished_at: Optional[str]
     task: str
     directory: str
+    finished_at: Optional[str] = None
     dataset: Optional[str] = None
     endpoint: Optional[ExecutorEndpoint] = None
     submission: Optional[SubmissionKey] = None
@@ -424,6 +424,14 @@ class ExecutionManager:
     @staticmethod
     def _reference_key(reference):
         return reference.executor, reference.computer
+
+    @staticmethod
+    def _reader_for(record):
+        from ..outputs.task_result import KkrOutputReader
+
+        return KkrOutputReader.class_for_task(record.task)(
+            None, None, record.directory
+        )
 
     def register_executor(self, executor: Executor, endpoint=None, reference=None):
         """Register a live executor in the independent endpoint pool."""
@@ -889,6 +897,8 @@ class ExecutionManager:
         record = self.store.get(run) if isinstance(run, str) else run
         if record.reference is None:
             raise RuntimeError(f"Run {record.id} has no backend reference")
+        if reader is None:
+            reader = self._reader_for(record)
         if executor is None:
             executor = self.executor_for(record)
         else:
@@ -937,18 +947,17 @@ class ExecutionManager:
             raise RuntimeError(f"Run {record.id} has no persisted output artifact")
 
         if reader is None:
-            from ..outputs.task_result import KkrOutputReader
-
-            reader = KkrOutputReader.class_for_task(record.task)(
-                None, None, record.directory
-            )
+            reader = self._reader_for(record)
 
         output_file = artifacts.output_file
         input_file = artifacts.input_file
+        return_code = record.return_code
+        if return_code is None:
+            return_code = 0 if record.state == RunState.FINISHED else 1
         if os.path.isfile(output_file):
             result = reader.read_from_file(
                 output_file,
-                return_code=0 if record.return_code is None else record.return_code,
+                return_code=return_code,
                 input_file=input_file,
                 directory=record.directory,
             )
