@@ -144,9 +144,7 @@ def _slurm_time(value):
 
 
 def _slurm_accounting_matches(run_id, submitted_at):
-    """Look up a completed/recent job when comments are present in accounting."""
-    if submitted_at is None or not _slurm_accounting_stores_comments():
-        return ()
+    """Look up a completed/recent job by its persisted Slurm comment."""
     marker = f"ase2sprkkr:{run_id}"
     output = _scheduler_output(
         (
@@ -565,6 +563,12 @@ class PsijExecutor(Executor):
             )
             return RunStatus(reference, _slurm_state(state))
 
+        if submitted_at is None or not _slurm_accounting_stores_comments():
+            raise NotImplementedError(
+                "Slurm cannot safely determine whether this submission already "
+                "finished because job comments are unavailable in accounting"
+            )
+
         accounting = _slurm_accounting_matches(run_id, submitted_at)
         if len(accounting) > 1:
             raise RuntimeError(
@@ -586,9 +590,10 @@ class PsijExecutor(Executor):
                 return_code=return_code,
             )
 
-        # squeue is authoritative for currently active jobs. Absence there means
-        # no live duplicate remains. Accounting is used only to preserve the
-        # history of a job that already finished before recovery.
+        # At this point neither the live queue nor accounting history contains
+        # the persistent run id, and accounting is known to retain job comments.
+        # This is the only Slurm case in which absence is strong enough to
+        # release the duplicate-submission reservation.
         return None
 
     def attach(self, reference: RunReference, reader, callback=None):
