@@ -161,9 +161,10 @@ class InputParameters(ConfigurationFile):
         ``run_async=False`` executes synchronously and returns a TaskResult.
         ``run_async=True`` returns an unstarted Runner.
 
-        ``persistent`` may be ``False``/``None`` (disabled), ``True`` (use the
-        process-wide default execution manager), or an explicit
-        :class:`~ase2sprkkr.execution.ExecutionManager`.
+        ``persistent`` may be ``False`` (disabled), ``True`` (use the
+        process-wide default execution manager), an explicit
+        :class:`~ase2sprkkr.execution.ExecutionManager`, or ``None`` to use the
+        calculator-level default.
         """
         print_output = calculator.value_or_default("print_output", print_output)
         reader = self.output_reader(calculator, print_output, directory)
@@ -174,7 +175,7 @@ class InputParameters(ConfigurationFile):
         if executor is None:
             executor = executor_from_profile(profile)
         if persistent is None:
-            persistent = getattr(calculator, "persistent", False)
+            persistent = calculator.persistent
         manager = resolve_execution_manager(persistent)
 
         execution_profile = profile
