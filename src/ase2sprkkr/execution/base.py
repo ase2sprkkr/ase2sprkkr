@@ -239,11 +239,14 @@ class Executor:
         reader,
         callback=None,
         output_listener=None,
+        start=True,
     ) -> Runner:
         """Reconnect to a persistent run.
 
-        Backends must install ``output_listener`` before monitoring starts so
-        an attach cannot lose output replayed immediately by the backend.
+        ``output_listener`` is part of runner construction, while ``start``
+        controls the lifecycle side effect. Backends must install the listener
+        before honoring ``start=True`` so immediately replayed output is never
+        lost.
         """
         raise NotImplementedError(
             f"{type(self).__name__} cannot attach to an existing run"

@@ -1,7 +1,7 @@
 from dataclasses import replace
 from types import SimpleNamespace
 
-from ase2sprkkr.execution.base import ExecutionSpec, LaunchSpec, RunReference, RunState
+from ase2sprkkr.execution.base import LaunchSpec, RunReference, RunState
 from ase2sprkkr.execution.local import LocalExecutor
 from ase2sprkkr.execution.manager import ExecutionManager, RunStore
 from ase2sprkkr.execution.psij import PsijExecutor, PsijRunner
@@ -33,7 +33,7 @@ class _AttachedRunner:
 
 
 class _AttachExecutor(LocalExecutor):
-    def attach(self, reference, reader, callback=None, output_listener=None):
+    def attach(self, reference, reader, callback=None, output_listener=None, start=True):
         if output_listener is not None:
             output_listener("manager replay\n", "out")
         return _AttachedRunner(reference, callback=callback)
@@ -61,17 +61,7 @@ def test_manager_attach_forwards_initial_output_listener(tmp_path):
     assert output == [("manager replay\n", "out")]
 
 
-def test_remote_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
-    events = []
-
-    def immediate_monitor(self):
-        self._emit_output(b"remote replay\n", "out")
-        if self.callback is not None:
-            self.callback(self.result)
-        self._done.set()
-
-    monkeypatch.setattr(_RemoteRun, "_thread_main", immediate_monitor)
-
+def _remote_context(tmp_path):
     class Endpoint:
         backend = "local"
         backend_options = {}
@@ -110,6 +100,20 @@ def test_remote_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
             "cache_files": (),
         },
     }
+    return context, reference, request
+
+
+def test_remote_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
+    events = []
+
+    def immediate_monitor(self):
+        self._emit_output(b"remote replay\n", "out")
+        if self.callback is not None:
+            self.callback(self.result)
+        self._done.set()
+
+    monkeypatch.setattr(_RemoteRun, "_thread_main", immediate_monitor)
+    context, reference, request = _remote_context(tmp_path)
 
     import asyncio
 
@@ -127,17 +131,37 @@ def test_remote_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
     assert events == [("remote replay\n", "out"), ("finished", None)]
 
 
-def test_psij_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
+def test_remote_attach_can_defer_monitor_start(monkeypatch, tmp_path):
     events = []
 
     def immediate_monitor(self):
-        self._emit_output(b"psij replay\n", "out")
-        if self.callback is not None:
-            self.callback(self.result)
+        self._emit_output(b"remote replay\n", "out")
         self._done.set()
 
-    monkeypatch.setattr(PsijRunner, "_thread_main", immediate_monitor)
+    monkeypatch.setattr(_RemoteRun, "_thread_main", immediate_monitor)
+    context, reference, request = _remote_context(tmp_path)
 
+    import asyncio
+
+    runner = asyncio.run(
+        context.attach(
+            reference,
+            _Reader(),
+            output_listener=lambda text, kind: events.append((text, kind)),
+            start=False,
+            request=request,
+        )
+    )
+
+    assert runner._thread is None
+    assert events == []
+
+    runner.start()
+    runner._done.wait(1)
+    assert events == [("remote replay\n", "out")]
+
+
+def _psij_executor():
     class Job:
         def __init__(self):
             self.native_id = "42"
@@ -154,16 +178,32 @@ def test_psij_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
     executor._psij = SimpleNamespace(Job=Job)
     executor._job_executor = JobExecutor()
     executor._status_jobs = {}
+    return executor
 
-    reference = RunReference(
+
+def _psij_reference(tmp_path):
+    return RunReference(
         executor="psij:slurm",
         native_id="42",
         directory=str(tmp_path),
         output_file=str(tmp_path / "output.out"),
         error_file=str(tmp_path / "error.err"),
     )
-    runner = executor.attach(
-        reference,
+
+
+def test_psij_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
+    events = []
+
+    def immediate_monitor(self):
+        self._emit_output(b"psij replay\n", "out")
+        if self.callback is not None:
+            self.callback(self.result)
+        self._done.set()
+
+    monkeypatch.setattr(PsijRunner, "_thread_main", immediate_monitor)
+
+    runner = _psij_executor().attach(
+        _psij_reference(tmp_path),
         _Reader(),
         callback=lambda result: events.append(("finished", None)),
         output_listener=lambda text, kind: events.append((text, kind)),
@@ -171,3 +211,27 @@ def test_psij_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
     runner._done.wait(1)
 
     assert events == [("psij replay\n", "out"), ("finished", None)]
+
+
+def test_psij_attach_can_defer_monitor_start(monkeypatch, tmp_path):
+    events = []
+
+    def immediate_monitor(self):
+        self._emit_output(b"psij replay\n", "out")
+        self._done.set()
+
+    monkeypatch.setattr(PsijRunner, "_thread_main", immediate_monitor)
+
+    runner = _psij_executor().attach(
+        _psij_reference(tmp_path),
+        _Reader(),
+        output_listener=lambda text, kind: events.append((text, kind)),
+        start=False,
+    )
+
+    assert runner._thread is None
+    assert events == []
+
+    runner.start()
+    runner._done.wait(1)
+    assert events == [("psij replay\n", "out")]

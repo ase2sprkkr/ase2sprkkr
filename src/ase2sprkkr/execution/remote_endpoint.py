@@ -8,7 +8,6 @@ import os
 import posixpath
 import warnings
 from pathlib import Path, PurePosixPath
-from threading import Thread
 from uuid import uuid4
 
 from .base import (
@@ -159,6 +158,7 @@ class _RemoteRunContext:
         reader,
         callback=None,
         output_listener=None,
+        start=True,
         *,
         request=None,
     ):
@@ -263,11 +263,14 @@ class _RemoteRunContext:
                     output_sync=self.output_files.value,
                 ),
             )
-            runner = _RemoteRun(
+            return _RemoteRun(
                 self,
                 reader,
                 spec,
                 callback=callback,
+                output_listener=output_listener,
+                start=start,
+                reference=reference,
                 state=RunState(status.get("state", "unknown")),
                 output_targets=output_targets,
                 cache_targets=cache_targets,
@@ -275,12 +278,6 @@ class _RemoteRunContext:
                 cache_patterns=cache_patterns,
                 cache_before=cache_before,
             )
-            runner._reference = reference
-            if output_listener is not None:
-                runner.add_output_listener(output_listener)
-            runner._thread = Thread(target=runner._thread_main, daemon=True)
-            runner._thread.start()
-            return runner
         except BaseException:
             for file in opened:
                 file.close()
@@ -518,6 +515,7 @@ class RemoteEndpointExecutor(Executor):
         reader,
         callback=None,
         output_listener=None,
+        start=True,
     ):
         request = await self._saved_request(reference.directory, reference.native_id)
         launch = LaunchSpec(**(request.get("launch") or {}))
@@ -527,6 +525,7 @@ class RemoteEndpointExecutor(Executor):
             reader,
             callback=callback,
             output_listener=output_listener,
+            start=start,
             request=request,
         )
 
@@ -536,6 +535,7 @@ class RemoteEndpointExecutor(Executor):
         reader,
         callback=None,
         output_listener=None,
+        start=True,
     ):
         return _run_sync(
             self._attach_with_saved_launch(
@@ -543,5 +543,6 @@ class RemoteEndpointExecutor(Executor):
                 reader,
                 callback=callback,
                 output_listener=output_listener,
+                start=start,
             )
         )

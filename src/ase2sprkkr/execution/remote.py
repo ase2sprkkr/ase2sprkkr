@@ -451,6 +451,8 @@ class RemoteRunner:
         spec,
         callback=None,
         *,
+        output_listener=None,
+        start=False,
         reference=None,
         state=RunState.NEW,
         output_targets=None,
@@ -467,7 +469,7 @@ class RemoteRunner:
 
         self._state = RunState(state)
         self._reference = reference
-        self._listeners = []
+        self._listeners = [] if output_listener is None else [output_listener]
         self._lock = Lock()
         self._done = Event()
         self._thread = None
@@ -479,9 +481,8 @@ class RemoteRunner:
         self._cache_patterns = tuple(cache_patterns or ())
         self._cache_before = dict(cache_before or {})
 
-        if reference is not None:
-            self._thread = Thread(target=self._thread_main, daemon=True)
-            self._thread.start()
+        if start:
+            self.start()
 
     @property
     def reference(self):
@@ -1028,6 +1029,21 @@ class RemoteRunner:
                     self._exception = exc
             self._done.set()
 
+    def _start_monitor(self):
+        with self._lock:
+            if self._thread is not None:
+                return
+            if self._reference is None:
+                raise RuntimeError("Run has no backend reference")
+            self._thread = Thread(target=self._thread_main, daemon=True)
+            self._thread.start()
+
+    def start(self):
+        """Start submission or monitoring, depending on runner state."""
+        if self._reference is None:
+            return self.submit()
+        return self._start_monitor()
+
     async def _submit_async(self):
         run_id = uuid4().hex
         remote_directory = await self.executor.map_directory(self.spec.directory)
@@ -1055,20 +1071,21 @@ class RemoteRunner:
                 output_file=status.get("output_file"),
                 error_file=status.get("error_file"),
             )
-            self._thread = Thread(target=self._thread_main, daemon=True)
-            self._thread.start()
+        self._start_monitor()
 
     def wait(self):
-        if self._state == RunState.NEW:
-            raise RuntimeError("Run has not been submitted")
+        if self._thread is None:
+            if self._state == RunState.NEW:
+                raise RuntimeError("Run has not been submitted")
+            raise RuntimeError("Attached run has not been started")
         self._done.wait()
         if self._exception is not None:
             raise self._exception
         return self.result
 
     def run(self):
-        if self._state == RunState.NEW:
-            self.submit()
+        if self._thread is None:
+            self.start()
         return self.wait()
 
     async def run_async(self):

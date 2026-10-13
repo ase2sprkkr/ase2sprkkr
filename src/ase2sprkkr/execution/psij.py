@@ -191,6 +191,8 @@ class PsijRunner:
         spec: ExecutionSpec,
         callback=None,
         *,
+        output_listener=None,
+        start=False,
         job=None,
         attached=False,
         run_id=None,
@@ -208,7 +210,7 @@ class PsijRunner:
         self._stderr_path = _path(spec.error_file, spec.directory) or self._stdout_path + ".err"
         self._stdin_path = _path(spec.stdin, spec.directory)
 
-        self._listeners = []
+        self._listeners = [] if output_listener is None else [output_listener]
         self._lock = Lock()
         self._submit_lock = Lock()
         self._done = Event()
@@ -220,8 +222,8 @@ class PsijRunner:
         self._psij = executor._psij
         self._job = job or self._create_job()
 
-        if attached:
-            self._start_monitor()
+        if start:
+            self.start()
 
     def _mpi_launcher(self):
         # Slurm's native launcher knows the scheduler allocation. Other PSI/J
@@ -420,6 +422,12 @@ class PsijRunner:
             self._thread = Thread(target=self._thread_main, daemon=True)
             self._thread.start()
 
+    def start(self):
+        """Start submission or monitoring of an attached job."""
+        if self._attached:
+            return self._start_monitor()
+        return self.submit()
+
     def submit(self):
         """Submit the job through PSI/J and return after the scheduler accepts it."""
         with self._submit_lock:
@@ -432,7 +440,7 @@ class PsijRunner:
     def wait(self):
         """Wait for the PSI/J job and output parsing to finish."""
         if self._thread is None:
-            raise RuntimeError("Run has not been submitted")
+            raise RuntimeError("Run has not been started")
         self._done.wait()
         if self._exception is not None:
             raise self._exception
@@ -440,12 +448,12 @@ class PsijRunner:
 
     def run(self):
         if self._thread is None:
-            self.submit()
+            self.start()
         return self.wait()
 
     async def run_async(self):
         if self._thread is None:
-            self.submit()
+            self.start()
         return await asyncio.to_thread(self.wait)
 
     def cancel(self):
@@ -604,6 +612,7 @@ class PsijExecutor(Executor):
         reader,
         callback=None,
         output_listener=None,
+        start=True,
     ):
         expected = f"psij:{self.backend}"
         if reference.executor != expected:
@@ -622,16 +631,13 @@ class PsijExecutor(Executor):
             error_file=reference.error_file,
             directory=reference.directory,
         )
-        runner = PsijRunner(
+        return PsijRunner(
             self,
             reader,
             spec,
             callback=callback,
+            output_listener=output_listener,
+            start=start,
             job=job,
-            attached=False,
+            attached=True,
         )
-        runner._attached = True
-        if output_listener is not None:
-            runner.add_output_listener(output_listener)
-        runner._start_monitor()
-        return runner
