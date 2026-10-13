@@ -9,10 +9,12 @@ import os
 import io
 import pkgutil
 import importlib
+import pyparsing as pp
 from ..outputs.task_result import KkrOutputReader
 from . import definitions
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
+from ..common.warnings import DataValidityError
 from typing import Union
 from ..configuration import config
 from ..potentials.potentials import Potential
@@ -284,6 +286,7 @@ class InputParameters(ConfigurationFile):
         for i in self._members:
             if name in i:
                 self._members[i][name] = value
+                break
         else:
             raise KeyError("No option with name {} in any of the members".format(name))
 
@@ -399,7 +402,7 @@ class InputParameters(ConfigurationFile):
             try:
                 out = d.read_from_file(filename, allow_dangerous=allow_dangerous)
                 return out
-            except Exception as e:
+            except (pp.ParseBaseException, DataValidityError) as e:
                 last = e
         raise last
 
