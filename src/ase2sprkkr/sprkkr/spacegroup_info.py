@@ -123,7 +123,8 @@ class RegionSpacegroupInfo(BaseSpacegroupInfo):
         self.for_atoms = region
 
     def recompute(self):
-        self._dataset.recompute()
+        self.info.recompute()
+        return self
 
 
 class SpacegroupInfo(BaseSpacegroupInfo):
