@@ -20,6 +20,7 @@ from ..configuration import config
 from ..potentials.potentials import Potential
 from ..common.doc import process_input_parameters_definition
 from ..sprkkr.profile import SPRKKRProfile, executor_from_profile
+from ..execution.base import ExecutionResources, ResourceOwnedRunner
 from ..execution.persistence import resolve_execution_manager
 import warnings
 
@@ -165,28 +166,35 @@ class InputParameters(ConfigurationFile):
         process-wide default execution manager), or an explicit
         :class:`~ase2sprkkr.execution.ExecutionManager`.
         """
-        print_output = calculator.value_or_default("print_output", print_output)
-        reader = self.output_reader(calculator, print_output, directory)
-        explicit_profile = profile is not None
-        profile = profile or getattr(calculator, "profile", None) or SPRKKRProfile()
-        if executor is None and not explicit_profile:
-            executor = getattr(calculator, "executor", None)
-        if executor is None:
-            executor = executor_from_profile(profile)
-        if persistent is None:
-            persistent = getattr(calculator, "persistent", False)
-        manager = resolve_execution_manager(persistent)
+        resources = ExecutionResources(input_file, output_file)
+        handed_off = False
 
-        execution_profile = profile
-        if self._definition.mpi:
-            execution_profile = profile.with_overrides(
-                mpi=executor.resolve_mpi(profile.mpi)
-            )
+        try:
+            print_output = calculator.value_or_default("print_output", print_output)
+            reader = self.output_reader(calculator, print_output, directory)
+            explicit_profile = profile is not None
+            profile = profile or getattr(calculator, "profile", None) or SPRKKRProfile()
+            if executor is None and not explicit_profile:
+                executor = getattr(calculator, "executor", None)
+            if executor is None:
+                executor = executor_from_profile(profile)
+            if persistent is None:
+                persistent = getattr(calculator, "persistent", False)
+            manager = resolve_execution_manager(persistent)
+
+            execution_profile = profile
+            if self._definition.mpi:
+                execution_profile = profile.with_overrides(
+                    mpi=executor.resolve_mpi(profile.mpi)
+                )
+        except BaseException:
+            resources.close(suppress_errors=True)
+            raise
 
         try:
 
-            def cleanup(out):
-                input_file.close()
+            def completed(out):
+                resources.close(suppress_errors=True)
                 if callback:
                     callback(out)
 
@@ -227,7 +235,7 @@ class InputParameters(ConfigurationFile):
                 gdb=gdb,
             )
             if manager is None:
-                runner = executor.create_run(reader, spec, callback=cleanup)
+                runner = executor.create_run(reader, spec, callback=completed)
             else:
                 runner = manager.create_run(
                     executor,
@@ -235,10 +243,13 @@ class InputParameters(ConfigurationFile):
                     spec,
                     task=self._execution_task_name,
                     dataset=self.CONTROL.DATASET.result,
-                    callback=cleanup,
+                    callback=completed,
                 )
             if read_callback:
                 runner.add_output_listener(read_callback)
+
+            runner = ResourceOwnedRunner(runner, resources)
+            handed_off = True
             if run_async:
                 return runner
             return runner.run()
@@ -254,6 +265,9 @@ class InputParameters(ConfigurationFile):
                 )
             e.strerror = add + "SPRKKR cannot be run due to the following error: \n" + e.strerror
             raise
+        finally:
+            if not handed_off:
+                resources.close(suppress_errors=True)
 
     def output_reader(self, calculator=None, print_output=False, directory=None):
         """Return the task-specific output reader/parser."""
