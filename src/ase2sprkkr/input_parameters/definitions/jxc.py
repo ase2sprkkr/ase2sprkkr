@@ -1,7 +1,20 @@
 """JXC task input parameters definition"""
 
+from ._file_manifests import resolve_file
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
+
+
+class JxcInputParametersDefinition(InputParametersDefinition):
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        dataset = parameters.CONTROL.DATASET()
+        if parameters.MODE.MODE() == "SP-SREL":
+            files.append(resolve_file(directory, f"{dataset}*Jij*"))
+        else:
+            files.append(resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat"))
+        files.append(resolve_file(directory, f"{dataset}*.agr"))
+        return tuple(files)
 
 
 def _jxc_mode_warning_condition(value):
@@ -26,7 +39,7 @@ def _jxc_nonmag_warning_condition(value):
 def input_parameters():
     """JXC -JXC task input parameters definition"""
     mmode = MODE["MODE"].copy(warning_condition=_jxc_mode_warning_condition)
-    input_parameters = InputParameters(
+    input_parameters = JxcInputParametersDefinition(
         "jxc",
         [
             CONTROL("JXC"),

@@ -56,3 +56,25 @@ def test_phagen_outputs_follow_explicit_potential_name(tmp_path):
         str(tmp_path / "Fe.pot_ex_sprkkr"),
         str(tmp_path / "Fe.pot.only_coulomb"),
     )
+
+
+def test_jxc_frel_declares_tensor_and_plot_outputs(tmp_path):
+    parameters = InputParameters.create("JXC")
+    parameters.CONTROL.DATASET = "Fe"
+    parameters.MODE.MODE = "FREL"
+
+    assert parameters.output_files(str(tmp_path)) == (
+        str(tmp_path / "Fe_XCPLTEN_Jij.dat"),
+        str(tmp_path / "Fe*.agr"),
+    )
+
+
+def test_jxc_sp_srel_declares_scalar_and_plot_outputs(tmp_path):
+    parameters = InputParameters.create("JXC")
+    parameters.CONTROL.DATASET = "Fe"
+    parameters.MODE.MODE = "SP-SREL"
+
+    assert parameters.output_files(str(tmp_path)) == (
+        str(tmp_path / "Fe*Jij*"),
+        str(tmp_path / "Fe*.agr"),
+    )
