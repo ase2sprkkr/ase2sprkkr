@@ -367,7 +367,49 @@ class LocalExecutor(Executor):
     def create_run(self, reader, spec: ExecutionSpec, callback=None):
         return LocalRunner(reader, materialize_local_spec(spec), callback=callback)
 
+    def create_persistent_run(
+        self, reader, spec: ExecutionSpec, *, run_id: str, callback=None
+    ):
+        # Persistent local jobs are owned by the same detached helper protocol
+        # used on remote targets. This leaves a reconnectable controller behind
+        # when the client process exits.
+        from .local_persistent import LocalPersistentRunner
+
+        return LocalPersistentRunner(
+            self,
+            reader,
+            spec,
+            run_id=run_id,
+            callback=callback,
+        )
+
+    def recover_submission(self, run_id, submission, *, submitted_at=None):
+        from .local_persistent import recover_local_submission
+
+        return recover_local_submission(run_id, submission)
+
+    def attach(
+        self,
+        reference: RunReference,
+        reader,
+        callback=None,
+        output_listener=None,
+        start=True,
+    ):
+        from .local_persistent import attach_local
+
+        return attach_local(
+            self,
+            reference,
+            reader,
+            callback=callback,
+            output_listener=output_listener,
+            start=start,
+        )
+
     def status(self, *references: RunReference):
+        from .local_persistent import detached_local_status
+
         for reference in references:
             if reference.executor != self.name:
                 raise ValueError(
@@ -376,13 +418,18 @@ class LocalExecutor(Executor):
 
         statuses = []
         for reference in references:
+            detached = detached_local_status(reference)
+            if detached is not None:
+                statuses.append(detached)
+                continue
+
             try:
                 pid = int(reference.native_id)
             except (TypeError, ValueError):
                 state = RunState.UNKNOWN
             else:
-                # Local execution has no reconnectable controller. Once the
-                # process is gone, its final outcome cannot be inferred from PID.
+                # Legacy records used a process PID as their only controller.
+                # Keep status compatibility, but such runs cannot be attached.
                 state = RunState.RUNNING if _pid_running(pid) else RunState.UNKNOWN
             statuses.append(RunStatus(reference, state))
         return tuple(statuses)
