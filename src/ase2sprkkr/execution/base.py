@@ -7,7 +7,7 @@ import os
 import warnings
 from dataclasses import dataclass
 from enum import Enum
-from threading import Lock
+from threading import Event, Lock
 from typing import Any, Optional, Protocol, Sequence, Tuple
 
 
@@ -130,16 +130,26 @@ class ExecutionResources:
 
 
 class ResourceOwnedRunner:
-    """Runner proxy owning the file resources prepared for one execution.
+    """Runner proxy owning resources and the public submit/cancel boundary.
 
     Resources remain owned by the caller until this proxy is constructed. From
     that point they are released on completion, on a synchronous submission
     failure, or explicitly through :meth:`close` while the run is still new.
+
+    Cancellation is latched and thread-safe even before submission. If
+    :meth:`cancel` wins the race with :meth:`submit`, the backend runner is not
+    submitted and ``submit()`` raises :class:`asyncio.CancelledError`. If the
+    request arrives while backend submission is already in progress, cancellation
+    is dispatched exactly once after that submission boundary completes.
     """
 
     def __init__(self, runner, resources: ExecutionResources):
         self._runner = runner
         self._resources = resources
+        self._submission_lock = Lock()
+        self._cancel_requested = Event()
+        self._submitted = False
+        self._cancel_dispatched = False
 
     def __getattr__(self, name):
         return getattr(self._runner, name)
@@ -150,6 +160,10 @@ class ResourceOwnedRunner:
 
     @property
     def state(self):
+        if self._cancel_requested.is_set():
+            with self._submission_lock:
+                if not self._submitted:
+                    return RunState.CANCELLED
         return self._runner.state
 
     @property
@@ -159,14 +173,32 @@ class ResourceOwnedRunner:
     def _release_after_failure(self):
         self._resources.close(suppress_errors=True)
 
+    def _raise_if_cancelled_before_submit(self):
+        if not self._cancel_requested.is_set():
+            return
+        with self._submission_lock:
+            if not self._submitted:
+                raise asyncio.CancelledError("Run was cancelled before submission")
+
     def submit(self):
-        try:
-            return self._runner.submit()
-        except BaseException:
-            self._release_after_failure()
-            raise
+        with self._submission_lock:
+            if self._cancel_requested.is_set():
+                self._resources.close()
+                raise asyncio.CancelledError("Run was cancelled before submission")
+            try:
+                result = self._runner.submit()
+            except BaseException:
+                self._release_after_failure()
+                raise
+            self._submitted = True
+            cancel_after_submit = self._cancel_requested.is_set()
+
+        if cancel_after_submit:
+            self.cancel()
+        return result
 
     def wait(self):
+        self._raise_if_cancelled_before_submit()
         try:
             result = self._runner.wait()
         except BaseException:
@@ -176,11 +208,13 @@ class ResourceOwnedRunner:
         return result
 
     def run(self):
+        self._raise_if_cancelled_before_submit()
         if self.state == RunState.NEW:
             self.submit()
         return self.wait()
 
     async def run_async(self):
+        self._raise_if_cancelled_before_submit()
         if self.state == RunState.NEW:
             self.submit()
         try:
@@ -196,11 +230,16 @@ class ResourceOwnedRunner:
         return result
 
     def cancel(self):
-        state = self.state
-        result = self._runner.cancel()
-        if state == RunState.NEW:
-            self._resources.close()
-        return result
+        self._cancel_requested.set()
+        with self._submission_lock:
+            if not self._submitted:
+                self._resources.close()
+                return None
+            if self._cancel_dispatched:
+                return None
+            result = self._runner.cancel()
+            self._cancel_dispatched = True
+            return result
 
     def close(self):
         """Release resources belonging to a run that has not been started."""
