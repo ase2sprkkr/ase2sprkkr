@@ -18,12 +18,12 @@ from .base import (
     RunStatus,
     SubmissionNotStarted,
 )
-from .remote import (
+from .detached import (
     _request_path,
     _run_directory,
-    cancel_remote,
-    status_remote,
-    submit_remote,
+    cancel_detached,
+    status_detached,
+    submit_detached,
 )
 from .transport import AtomicLocalFile
 
@@ -75,7 +75,7 @@ def detached_local_status(reference):
     if not reference.directory:
         return None
     try:
-        state = status_remote(reference.directory, reference.native_id)
+        state = status_detached(reference.directory, reference.native_id)
     except (FileNotFoundError, json.JSONDecodeError):
         return None
     return RunStatus(
@@ -90,10 +90,10 @@ def recover_local_submission(run_id, submission):
     """Recover a local detached submit whose reference was not persisted."""
     directory = os.path.abspath(os.fspath(submission.directory))
     try:
-        state = status_remote(directory, run_id)
+        state = status_detached(directory, run_id)
         request = json.loads(_request_path(directory, run_id).read_text())
     except FileNotFoundError:
-        # ``submit_remote`` creates the state before it starts the helper, so
+        # ``submit_detached`` creates the state before it starts the helper, so
         # absence on this same filesystem proves that submission did not happen.
         return None
     reference = _reference_from_request(run_id, directory, request)
@@ -232,7 +232,7 @@ class LocalPersistentRunner:
         mirrors_committed = False
         try:
             while True:
-                status = status_remote(
+                status = status_detached(
                     self._reference.directory, self._reference.native_id
                 )
                 had_data = False
@@ -350,10 +350,10 @@ class LocalPersistentRunner:
                 request = self._request()
             except Exception as exc:
                 raise SubmissionNotStarted(str(exc)) from exc
-            # submit_remote creates recoverable target state before spawning the
-            # detached helper. An exception from it is therefore conservatively
+            # submit_detached creates recoverable target state before spawning
+            # the helper. An exception from it is therefore conservatively
             # treated as uncertain by ExecutionManager.
-            status = submit_remote(request)
+            status = submit_detached(request)
             self._state = RunState(status.get("state", "queued"))
             self._return_code = status.get("return_code")
             self._reference = _reference(self._run_id, self.spec)
@@ -382,7 +382,7 @@ class LocalPersistentRunner:
     def cancel(self):
         if self._reference is None:
             raise RuntimeError("Run has not been submitted")
-        state = cancel_remote(
+        state = cancel_detached(
             self._reference.directory, self._reference.native_id
         )
         self._state = RunState(state.get("state", "cancelled"))
