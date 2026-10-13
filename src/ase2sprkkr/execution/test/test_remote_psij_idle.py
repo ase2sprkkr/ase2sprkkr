@@ -67,7 +67,6 @@ def _record(workspace):
             "input_file": reference.input_file,
             "output_file": reference.output_file,
             "error_file": reference.error_file,
-            "target": reference.target,
         },
         created_at="2026-10-12T00:00:00+00:00",
         finished_at=None,
