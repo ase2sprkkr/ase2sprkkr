@@ -192,7 +192,7 @@ class SpacegroupInfo(BaseSpacegroupInfo):
         """Update the occupancy info and spagroup_kinds array"""
         if invalidate_spacegroup:
             self._dataset = None
-        if if_required and not self.check_spacegroup_kinds():
+        if not if_required and not self.check_spacegroup_kinds():
             return
         sgi = np.empty(len(self.atoms), dtype=int)
         stypes = {}
