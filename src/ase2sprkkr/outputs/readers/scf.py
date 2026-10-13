@@ -70,8 +70,7 @@ class ScfResult(TaskResult):
         can be used for further calculations with the (hopefully) converged wavefunctions etc."""
         if self._calculator:
             return self._calculator.copy_with_potential(self.potential_filename)
-        else:
-            SPRKKR(potential=self.potential_filename)
+        return SPRKKR(potential=self.potential_filename)
 
     @cached_property
     def sfn_filename(self):
@@ -415,7 +414,7 @@ class ScfOutputParser(SprKkrOutputParser):
                         f"orbital moment: {out['moment']['orbital']:>13.6e} "
                     )
 
-            if self.print_output == "info":
+            if self.print_info:
                 if not iterations:
                     print(
                         "ERROR: No iteration has been finished. There is probably an error in the input files, please, examine the SPR-KKR output file."
