@@ -11,6 +11,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 from ...sprkkr.sprkkr_atoms import SPRKKRAtoms, SpacegroupInfo  # NOQA: E402
 from ...sprkkr.spacegroup_info import SpacegroupInfoBlock  # NOQA: E402
+from ...sprkkr.atoms_region import AtomsRegion  # NOQA: E402
 
 
 class Test(TestCase):
@@ -91,3 +92,59 @@ class Test(TestCase):
         with sgi.block_updating():
             with self.assertRaises(NotImplementedError):
                 sgi.recompute(atomic_kinds=np.array([0]))
+
+    def test_update_spacegroup_kinds_if_required_repairs_invalid_state_only(self):
+        atoms = SPRKKRAtoms("NaCl", symmetry=False)
+        _ = atoms.sites
+        sgi = atoms.spacegroup_info
+
+        assert sgi.check_spacegroup_kinds()
+        kinds = atoms.arrays["spacegroup_kinds"].copy()
+
+        with patch.object(atoms, "set_array", wraps=atoms.set_array) as set_array:
+            sgi.update_spacegroup_kinds(if_required=True)
+            set_array.assert_not_called()
+
+        kind = str(int(kinds[0]))
+        del atoms.info["occupancy"][kind]
+        assert not sgi.check_spacegroup_kinds()
+
+        sgi.update_spacegroup_kinds(if_required=True)
+
+        assert sgi.check_spacegroup_kinds()
+        np.testing.assert_array_equal(atoms.arrays["spacegroup_kinds"], kinds)
+        assert kind in atoms.info["occupancy"]
+
+    def test_site_type_change_invalidates_dataset_and_rebuilds_kinds(self):
+        atoms = SPRKKRAtoms("NaCl", symmetry=False)
+        sites = atoms.sites
+        atoms.spacegroup_info._dataset = object()
+
+        sites[1].site_type = sites[0].site_type
+
+        assert atoms.spacegroup_info._dataset is None
+        assert atoms.spacegroup_info.check_spacegroup_kinds()
+        np.testing.assert_array_equal(atoms.arrays["spacegroup_kinds"], [0, 0])
+        assert list(atoms.info["occupancy"]) == ["0"]
+
+    def test_region_info_is_cached_and_dataset_is_refreshed(self):
+        atoms = SPRKKRAtoms(
+            "HHe",
+            positions=[[0.0, 0.0, 0.0], [0.0, 0.0, 0.5]],
+            cell=np.eye(3),
+            pbc=False,
+            symmetry=False,
+        )
+        region = AtomsRegion("left", slice(0, 1), np.eye(3), [False, False, False], atoms=atoms)
+        sgi = atoms.spacegroup_info
+
+        info = sgi.info_for_region(region)
+        assert info is sgi.info_for_region(region)
+        assert info.for_atoms is region
+        assert info.dataset is False
+
+        info._dataset = object()
+        sgi.recompute()
+
+        assert sgi.info_for_region(region) is info
+        assert info.dataset is False
