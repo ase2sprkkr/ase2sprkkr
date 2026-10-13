@@ -241,17 +241,17 @@ class SpacegroupInfo(BaseSpacegroupInfo):
             self.symmetry = symmetry
         if self._block:
             if init:
-                self.__block.init = True
+                self._block.init = True
             if copy:
                 self._block.copy = True
             if update_info:
                 self._block.update_info = True
-            if atomic_kinds:
+            if atomic_kinds is not None:
                 raise NotImplementedError(
                     "Calling recompute during _block with atomic_kinds specified is not implemented"
                 )
             if not consider_old:
-                self.consider_old = False
+                self._block.consider_old = False
             self._block.angular_precision = min(angular_precision, self._block.angular_precision)
             self._block.precision = min(precision, self._block.precision)
             self._block.do = True
@@ -321,15 +321,19 @@ class SpacegroupInfo(BaseSpacegroupInfo):
 
     @contextmanager
     def block_updating(self, always_recompute=False, **kwargs):
-        if not self._block:
+        if self._block is None:
             block = self._block = SpacegroupInfoBlock()
         else:
-            block = self._block.raise_counter()
-        yield
-        if always_recompute:
-            self.recompute(**kwargs)
-        self._block = self._block.lower_counter()
-        block.recompute(self)
+            block = self._block
+            block.raise_counter()
+        try:
+            yield
+            if always_recompute:
+                self.recompute(**kwargs)
+        finally:
+            self._block = block.lower_counter()
+            if self._block is None:
+                block.recompute(self)
 
 
 class SpacegroupInfoBlock:
