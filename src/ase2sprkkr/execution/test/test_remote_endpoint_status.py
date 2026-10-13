@@ -1,12 +1,13 @@
 from types import SimpleNamespace
 
+import pytest
+
 from ase2sprkkr.execution import RunReference, RunState
 from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
 
 
 class _Transport:
     host = "cluster"
-
 
 
 def test_remote_endpoint_status_uses_pooled_endpoint_backend():
@@ -45,6 +46,27 @@ def test_remote_endpoint_status_uses_pooled_endpoint_backend():
         RunState.FINISHED,
     )
     assert statuses[1].return_code == 0
+
+
+def test_remote_endpoint_rejects_missing_status_rows():
+    executor = RemoteEndpointExecutor(_Transport())
+
+    async def request(action, *args, payload=None):
+        return [{"state": "running"}]
+
+    executor._json_request = request
+    references = tuple(
+        RunReference(
+            executor="remote:local",
+            native_id=f"job-{index}",
+            computer="cluster",
+            directory="/work/case",
+        )
+        for index in range(2)
+    )
+
+    with pytest.raises(RuntimeError, match="wrong number"):
+        executor.status(*references)
 
 
 def test_remote_recovery_accepts_submission_timestamp(monkeypatch):

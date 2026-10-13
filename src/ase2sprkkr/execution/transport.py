@@ -14,6 +14,7 @@ import subprocess
 from functools import lru_cache
 from pathlib import Path, PurePosixPath
 from typing import Optional, Protocol
+from uuid import uuid4
 
 
 class RunningCommand(Protocol):
@@ -141,6 +142,57 @@ def _literal_prefix(pattern):
     return prefix
 
 
+def _local_temporary_path(destination):
+    destination = Path(destination)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    return destination.with_name(f".{destination.name}.{uuid4().hex}.tmp")
+
+
+class AtomicLocalFile:
+    """File-like sink that replaces its destination only on explicit commit.
+
+    ``name`` intentionally reports the final path so TaskResult/provenance never
+    exposes the temporary replay path used during an attach.
+    """
+
+    def __init__(self, destination):
+        self.destination = Path(destination)
+        self.temporary_path = _local_temporary_path(self.destination)
+        self._file = self.temporary_path.open("w+b")
+        self.name = os.fspath(self.destination)
+        self._finished = False
+
+    def write(self, data):
+        return self._file.write(data)
+
+    def flush(self):
+        return self._file.flush()
+
+    def fileno(self):
+        return self._file.fileno()
+
+    def commit(self):
+        if self._finished:
+            return
+        self._file.flush()
+        self._file.close()
+        os.replace(self.temporary_path, self.destination)
+        self._finished = True
+
+    def discard(self):
+        if self._finished:
+            return
+        self._file.close()
+        try:
+            self.temporary_path.unlink()
+        except FileNotFoundError:
+            pass
+        self._finished = True
+
+    def close(self):
+        self.discard()
+
+
 class Transport:
     """Run commands and move files on one target machine.
 
@@ -252,9 +304,16 @@ class LocalTransport(Transport):
 
     async def put_file(self, source, destination):
         destination = Path(destination)
-        destination.parent.mkdir(parents=True, exist_ok=True)
+        temporary = _local_temporary_path(destination)
         loop = asyncio.get_running_loop()
-        await loop.run_in_executor(None, shutil.copyfile, source, destination)
+        try:
+            await loop.run_in_executor(None, shutil.copyfile, source, temporary)
+            os.replace(temporary, destination)
+        finally:
+            try:
+                temporary.unlink()
+            except FileNotFoundError:
+                pass
 
     async def get_file(self, source, destination):
         await self.put_file(source, destination)
@@ -336,32 +395,48 @@ class SshTransport(Transport):
         parent = posixpath.dirname(destination)
         if parent:
             await self.run(("mkdir", "-p", "--", parent))
+        temporary = posixpath.join(
+            parent or ".",
+            f".{posixpath.basename(destination)}.{uuid4().hex}.tmp",
+        )
 
-        command = self._command(("sh", "-c", 'cat > "$1"', "sh", destination))
-        with open(source, "rb") as source_file:
-            process = await asyncio.create_subprocess_exec(
-                *command,
-                stdin=source_file,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE,
-            )
-            await _completed_process(process, command)
+        command = self._command(("sh", "-c", 'cat > "$1"', "sh", temporary))
+        try:
+            with open(source, "rb") as source_file:
+                process = await asyncio.create_subprocess_exec(
+                    *command,
+                    stdin=source_file,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE,
+                )
+                await _completed_process(process, command)
+            await self.run(("mv", "-f", "--", temporary, destination))
+        except BaseException:
+            await self.run(("rm", "-f", "--", temporary), check=False)
+            raise
 
     async def get_file(self, source, destination):
         destination = Path(destination)
-        destination.parent.mkdir(parents=True, exist_ok=True)
+        temporary = _local_temporary_path(destination)
         command = self._command(("cat", "--", os.fspath(source)))
-        with destination.open("wb") as destination_file:
-            process = await asyncio.create_subprocess_exec(
-                *command,
-                stdout=destination_file,
-                stderr=asyncio.subprocess.PIPE,
-            )
-            _, stderr = await process.communicate()
-            if process.returncode:
-                raise subprocess.CalledProcessError(
-                    process.returncode, command, stderr=stderr
+        try:
+            with temporary.open("wb") as destination_file:
+                process = await asyncio.create_subprocess_exec(
+                    *command,
+                    stdout=destination_file,
+                    stderr=asyncio.subprocess.PIPE,
                 )
+                _, stderr = await process.communicate()
+                if process.returncode:
+                    raise subprocess.CalledProcessError(
+                        process.returncode, command, stderr=stderr
+                    )
+            os.replace(temporary, destination)
+        finally:
+            try:
+                temporary.unlink()
+            except FileNotFoundError:
+                pass
 
     async def expand_files(self, sources, root):
         root = posixpath.normpath(os.fspath(root))

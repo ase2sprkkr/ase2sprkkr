@@ -3,7 +3,7 @@ import json
 from ase2sprkkr.execution import LocalTransport, RemoteExecutor, RunReference
 
 
-def test_remote_executor_fetches_missing_historical_artifacts(tmp_path):
+def test_remote_executor_fetches_missing_historical_result_files(tmp_path):
     local_root = tmp_path / "local"
     remote_root = tmp_path / "remote"
     local_directory = local_root / "calculation"
@@ -48,7 +48,7 @@ def test_remote_executor_fetches_missing_historical_artifacts(tmp_path):
         directory=str(remote_directory),
     )
 
-    executor.fetch_artifacts(reference, artifacts=None)
+    executor.fetch_result_files(reference, result_files=None)
 
     assert (local_directory / "run.inp").read_text() == "input"
     assert (local_directory / "start.pot").read_text() == "potential"

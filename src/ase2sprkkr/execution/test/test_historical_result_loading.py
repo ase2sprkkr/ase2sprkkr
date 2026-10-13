@@ -46,9 +46,9 @@ class _HistoryExecutor(Executor):
         self.runner = _Runner(callback)
         return self.runner
 
-    def fetch_artifacts(self, reference, artifacts):
-        self.fetch_calls.append((reference, artifacts))
-        with open(artifacts.output_file, "w") as output:
+    def fetch_result_files(self, reference, result_files):
+        self.fetch_calls.append((reference, result_files))
+        with open(result_files.output_file, "w") as output:
             output.write("restored output")
 
 
@@ -66,7 +66,7 @@ def _spec(tmp_path):
     )
 
 
-def test_history_listing_does_not_fetch_missing_artifacts(tmp_path):
+def test_history_listing_does_not_fetch_missing_result_files(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _HistoryExecutor()
@@ -84,7 +84,7 @@ def test_history_listing_does_not_fetch_missing_artifacts(tmp_path):
     assert executor.fetch_calls == []
 
 
-def test_load_result_fetches_missing_artifacts_on_demand(tmp_path):
+def test_load_result_fetches_missing_result_files_on_demand(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _HistoryExecutor()
@@ -110,3 +110,57 @@ def test_load_result_fetches_missing_artifacts_on_demand(tmp_path):
     assert parsed[0][0] == str(tmp_path / "run.out")
     assert result.return_code == 0
     assert result.run_record.state == RunState.FINISHED
+
+
+def test_failed_history_without_return_code_is_not_parsed_as_success(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    spec = _spec(tmp_path)
+    (tmp_path / "run.out").write_text("failed output")
+    record = manager.new_record(
+        task="DOS",
+        directory=tmp_path,
+        result_files=manager._result_files_for_spec(spec),
+    )
+    store.save(record)
+    record = manager.finalize(record, state=RunState.FAILED)
+    parsed = []
+
+    class Reader:
+        def read_from_file(self, output, **kwargs):
+            parsed.append(kwargs)
+            return SimpleNamespace(return_code=kwargs["return_code"])
+
+    result = manager.load_result(record.id, reader=Reader())
+
+    assert parsed[0]["return_code"] != 0
+    assert result.return_code != 0
+    assert result.run_record.state == RunState.FAILED
+
+
+def test_missing_failed_history_uses_inferred_return_code(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    spec = _spec(tmp_path)
+    record = manager.new_record(
+        task="DOS",
+        directory=tmp_path,
+        result_files=manager._result_files_for_spec(spec),
+    )
+    store.save(record)
+    record = manager.finalize(record, state=RunState.FAILED)
+
+    class Result:
+        return_code = None
+
+        def complete(self, error, return_code):
+            self.return_code = return_code
+
+    class Reader:
+        def create_result(self, output, input_file):
+            return Result()
+
+    result = manager.load_result(record.id, reader=Reader())
+
+    assert result.return_code == 1
+    assert result.run_record.state == RunState.FAILED

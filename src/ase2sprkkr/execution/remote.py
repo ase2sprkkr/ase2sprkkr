@@ -19,7 +19,14 @@ from pathlib import Path
 from threading import Event, Lock, Thread
 from uuid import uuid4
 
-from .base import ExecutionSpec, LaunchSpec, RunReference, RunState
+from .base import (
+    ExecutionSpec,
+    LaunchSpec,
+    OutputObservers,
+    RunReference,
+    RunState,
+    SubmissionNotStarted,
+)
 from .transport import expand_local_files, has_file_magic, local_file_digest
 
 
@@ -189,9 +196,12 @@ def _terminate_process_group(directory, run_id, pid, timeout):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         try:
-            os.kill(pid, 0)
+            os.killpg(pid, 0)
         except ProcessLookupError:
             return _read_state(directory, run_id)
+        except PermissionError:
+            # The group still exists but is not signalable by this process.
+            pass
         time.sleep(0.05)
 
     try:
@@ -451,6 +461,8 @@ class RemoteRunner:
         spec,
         callback=None,
         *,
+        output_listener=None,
+        start=False,
         reference=None,
         state=RunState.NEW,
         output_targets=None,
@@ -467,11 +479,15 @@ class RemoteRunner:
 
         self._state = RunState(state)
         self._reference = reference
-        self._listeners = []
+        self._output_observers = OutputObservers(output_listener)
         self._lock = Lock()
         self._done = Event()
         self._thread = None
         self._exception = None
+        self._callback_exception = None
+        self._return_code = None
+        self._file_retrieval_state = "pending"
+        self._file_retrieval_message = None
         self._follow_process = None
         self._output_targets = dict(output_targets or {})
         self._cache_targets = dict(cache_targets or {})
@@ -479,9 +495,8 @@ class RemoteRunner:
         self._cache_patterns = tuple(cache_patterns or ())
         self._cache_before = dict(cache_before or {})
 
-        if reference is not None:
-            self._thread = Thread(target=self._thread_main, daemon=True)
-            self._thread.start()
+        if start:
+            self.start()
 
     @property
     def reference(self):
@@ -502,11 +517,27 @@ class RemoteRunner:
             )
         )
         self._state = RunState(status.get("state", "unknown"))
+        if status.get("return_code") is not None:
+            self._return_code = status["return_code"]
         return self._state
 
+    @property
+    def return_code(self):
+        return self._return_code
+
+    @property
+    def file_retrieval_state(self):
+        return self._file_retrieval_state
+
+    @property
+    def file_retrieval_message(self):
+        return self._file_retrieval_message
+
     def add_output_listener(self, callback):
-        with self._lock:
-            self._listeners.append(callback)
+        self._output_observers.add(callback)
+
+    def add_output_error_listener(self, callback):
+        self._output_observers.add_error_listener(callback)
 
     def _emit_output(self, data, kind):
         if not data:
@@ -514,10 +545,7 @@ class RemoteRunner:
         text = data.decode("utf8")
         if self.reader.print_output:
             print(text, end="", file=sys.stderr if kind == "err" else sys.stdout)
-        with self._lock:
-            listeners = tuple(self._listeners)
-        for callback in listeners:
-            callback(text, kind)
+        self._output_observers.emit(text, kind)
 
     def _write_output(self, data, kind):
         target = (
@@ -960,81 +988,145 @@ class RemoteRunner:
         parse_task = asyncio.create_task(
             self.reader.parse_streams(stdout, stderr, self.result)
         )
-        self._follow_process = await self.executor._follow(
-            self._reference.directory, self._reference.native_id
-        )
-        stdout_task = asyncio.create_task(
-            self._pump(self._follow_process.stdout, stdout, "out")
-        )
-        stderr_task = asyncio.create_task(
-            self._pump(self._follow_process.stderr, stderr, "err")
-        )
+        stdout_task = stderr_task = None
+        outputs_committed = False
         try:
-            follow_return_code, _, _ = await asyncio.gather(
-                self._follow_process.wait(), stdout_task, stderr_task
+            try:
+                self._follow_process = await self.executor._follow(
+                    self._reference.directory, self._reference.native_id
+                )
+                stdout_task = asyncio.create_task(
+                    self._pump(self._follow_process.stdout, stdout, "out")
+                )
+                stderr_task = asyncio.create_task(
+                    self._pump(self._follow_process.stderr, stderr, "err")
+                )
+                follow_return_code, _, _ = await asyncio.gather(
+                    self._follow_process.wait(), stdout_task, stderr_task
+                )
+            except Exception as exc:
+                self._file_retrieval_state = "failed"
+                self._file_retrieval_message = str(exc)
+                try:
+                    status = await self.executor._status(
+                        self._reference.directory, self._reference.native_id
+                    )
+                    self._state = RunState(status.get("state", "unknown"))
+                    if status.get("return_code") is not None:
+                        self._return_code = status["return_code"]
+                except Exception:
+                    pass
+                raise
+
+            status = await self.executor._status(
+                self._reference.directory, self._reference.native_id
             )
+            self._state = RunState(status.get("state", "unknown"))
+            if follow_return_code != 0 and self._state not in (
+                RunState.FINISHED,
+                RunState.FAILED,
+                RunState.CANCELLED,
+            ):
+                exc = RuntimeError(
+                    "Remote output stream ended before the remote run finished"
+                )
+                self._file_retrieval_state = "failed"
+                self._file_retrieval_message = str(exc)
+                raise exc
+            self._return_code = status.get("return_code")
+            if self._return_code is None:
+                self._return_code = 0 if self._state == RunState.FINISHED else 1
+
+            try:
+                await self._sync_output_files(required=self._state == RunState.FINISHED)
+                await self._sync_cache_files()
+            except Exception as exc:
+                self._file_retrieval_state = "failed"
+                self._file_retrieval_message = str(exc)
+                raise
+            else:
+                self._file_retrieval_state = "available"
+                self._file_retrieval_message = None
+
+            # Attached runs replay into AtomicLocalFile sinks. Publish those
+            # files only after follow and stage-out have both succeeded.
+            self._finish_output_files(commit=True)
+            outputs_committed = True
+
             output, error = await parse_task
+            return self.reader.complete_result(
+                self.result, output, error, self._return_code
+            )
         finally:
-            for task in (stdout_task, stderr_task, parse_task):
+            tasks = tuple(
+                task
+                for task in (stdout_task, stderr_task, parse_task)
+                if task is not None
+            )
+            for task in tasks:
                 if not task.done():
                     task.cancel()
-            await asyncio.gather(
-                stdout_task, stderr_task, parse_task, return_exceptions=True
-            )
+            if tasks:
+                await asyncio.gather(*tasks, return_exceptions=True)
+            if not outputs_committed:
+                self._finish_output_files(commit=False)
 
-        status = await self.executor._status(
-            self._reference.directory, self._reference.native_id
-        )
-        self._state = RunState(status.get("state", "unknown"))
-        if follow_return_code != 0 and self._state not in (
-            RunState.FINISHED,
-            RunState.FAILED,
-            RunState.CANCELLED,
-        ):
-            raise RuntimeError(
-                "Remote output stream ended before the remote run finished"
-            )
-        return_code = status.get("return_code")
-        if return_code is None:
-            return_code = 0 if self._state == RunState.FINISHED else 1
-
-        await self._sync_output_files(required=self._state == RunState.FINISHED)
-        await self._sync_cache_files()
-        return self.reader.complete_result(self.result, output, error, return_code)
-
-    def _close_output_files(self):
+    def _finish_output_files(self, *, commit):
         closed = set()
         for file in (self.spec.output_file, self.spec.error_file):
             if file is None or id(file) in closed:
                 continue
             closed.add(id(file))
-            if hasattr(file, "close"):
+            method = getattr(file, "commit" if commit else "discard", None)
+            if method is not None:
+                method()
+            elif hasattr(file, "close"):
                 file.close()
+
+    def _close_output_files(self):
+        self._finish_output_files(commit=False)
 
     def _thread_main(self):
         try:
             asyncio.run(self._monitor())
         except BaseException as exc:
             self._exception = exc
-            if self._state not in (RunState.CANCELLED, RunState.FINISHED):
-                self._state = RunState.FAILED
         finally:
             self._close_output_files()
             try:
                 if self.callback:
                     self.callback(self.result)
             except BaseException as exc:
-                if self._exception is None:
-                    self._exception = exc
+                self._callback_exception = exc
             self._done.set()
+
+    def _start_monitor(self):
+        with self._lock:
+            if self._thread is not None:
+                return
+            if self._reference is None:
+                raise RuntimeError("Run has no backend reference")
+            self._thread = Thread(target=self._thread_main, daemon=True)
+            self._thread.start()
+
+    def start(self):
+        """Start submission or monitoring, depending on runner state."""
+        if self._reference is None:
+            return self.submit()
+        return self._start_monitor()
 
     async def _submit_async(self):
         run_id = uuid4().hex
-        remote_directory = await self.executor.map_directory(self.spec.directory)
-        await self.executor.transport.run(
-            ("mkdir", "-p", "--", remote_directory)
-        )
-        request = await self._prepare_request(run_id, remote_directory)
+        try:
+            remote_directory = await self.executor.map_directory(self.spec.directory)
+            await self.executor.transport.run(
+                ("mkdir", "-p", "--", remote_directory)
+            )
+            request = await self._prepare_request(run_id, remote_directory)
+        except Exception as exc:
+            raise SubmissionNotStarted(str(exc)) from exc
+        # Once the request itself starts, a transport error cannot prove that
+        # the target helper did not accept the persistent run.
         status = await self.executor._submit(request)
         return run_id, status
 
@@ -1045,6 +1137,7 @@ class RemoteRunner:
 
             run_id, status = _run_sync(self._submit_async())
             self._state = RunState(status["state"])
+            self._return_code = status.get("return_code")
             directory = status["directory"]
             self._reference = RunReference(
                 executor=f"remote:{self.executor.backend}",
@@ -1055,20 +1148,23 @@ class RemoteRunner:
                 output_file=status.get("output_file"),
                 error_file=status.get("error_file"),
             )
-            self._thread = Thread(target=self._thread_main, daemon=True)
-            self._thread.start()
+        self._start_monitor()
 
     def wait(self):
-        if self._state == RunState.NEW:
-            raise RuntimeError("Run has not been submitted")
+        if self._thread is None:
+            if self._state == RunState.NEW:
+                raise RuntimeError("Run has not been submitted")
+            raise RuntimeError("Attached run has not been started")
         self._done.wait()
         if self._exception is not None:
             raise self._exception
+        if self._callback_exception is not None:
+            raise self._callback_exception
         return self.result
 
     def run(self):
-        if self._state == RunState.NEW:
-            self.submit()
+        if self._thread is None:
+            self.start()
         return self.wait()
 
     async def run_async(self):
@@ -1077,11 +1173,12 @@ class RemoteRunner:
 
     def cancel(self):
         if self._reference is None:
-            self._state = RunState.CANCELLED
-            return
+            raise RuntimeError("Run has not been submitted")
         status = _run_sync(
             self.executor._cancel(
                 self._reference.directory, self._reference.native_id
             )
         )
         self._state = RunState(status.get("state", "cancelled"))
+        if status.get("return_code") is not None:
+            self._return_code = status["return_code"]

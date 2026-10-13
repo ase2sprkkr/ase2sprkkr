@@ -63,7 +63,14 @@ def _wait_for_live_output(runner, output_seen, output, timeout=30):
 
 def test_remote_executor_over_ssh(docker_execution_image):
     from ase.build import bulk
-    from ase2sprkkr.execution import RemoteExecutor, SshTransport
+    from ase2sprkkr.execution import (
+        ExecutionManager,
+        ExecutorPool,
+        RemoteExecutor,
+        RunStore,
+        SshTransport,
+    )
+    from ase2sprkkr.outputs.task_result import KkrOutputReader
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
@@ -141,6 +148,9 @@ def test_remote_executor_over_ssh(docker_execution_image):
                 local_root=tmp,
                 remote_root="/home/tester/ase2sprkkr-runs",
             )
+            manager = ExecutionManager(
+                RunStore(tmp / "runs"), executor_pool=ExecutorPool()
+            )
             output_seen = Event()
             output = []
             first_output_at = []
@@ -159,6 +169,7 @@ def test_remote_executor_over_ssh(docker_execution_image):
                 directory=workdir,
                 executor=executor,
                 profile=profile,
+                persistent=manager,
                 empty_spheres=False,
                 print_output=False,
             )
@@ -199,6 +210,26 @@ def test_remote_executor_over_ssh(docker_execution_image):
                 ssh + ["cmp", "--", remote_potential, remote_pot_new],
                 check=True,
             )
+
+            # Simulate a client restart. A fresh manager/pool knows only the
+            # persisted run id; it must reconstruct SSH endpoint identity and
+            # the saved per-run LaunchSpec before replaying the finished output.
+            run_id = runner.id
+            restarted = ExecutionManager(
+                RunStore(tmp / "runs"), executor_pool=ExecutorPool()
+            )
+            record = restarted.store.get(run_id)
+            reader = KkrOutputReader.class_for_task(record.task)(
+                None, None, record.directory
+            )
+            attached = restarted.attach(run_id, reader=reader)
+            replayed = attached.wait()
+
+            assert attached.executor is not executor
+            assert attached.executor.transport.host == "tester@127.0.0.1"
+            assert attached.executor.transport.options == options
+            assert replayed.return_code == 0
+            assert len(replayed.iterations) > 0
         finally:
             subprocess.run(
                 [docker, "rm", "-f", container],

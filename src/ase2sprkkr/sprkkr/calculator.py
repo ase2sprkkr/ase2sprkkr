@@ -501,8 +501,8 @@ class SPRKKR(BaseCalculator):
         potential_filename: str or file
             Potential file. See return_files
 
-        output_filename: str or file
-            Output file. See return_files
+        output_filename: str or file or None
+            Output file. None when output_file is False. See return_files
 
         """
         profile = self.profile if profile is None else profile
@@ -757,10 +757,9 @@ class SPRKKR(BaseCalculator):
                 if output_file:
                     output_file = output_file.name
 
-            if output_file:
-                return input_parameters, input_file, potential_file, output_file
-            else:
-                return input_parameters, input_file, potential_file
+            if output_file is False:
+                output_file = None
+            return input_parameters, input_file, potential_file, output_file
 
     def create_run(
         self,
@@ -781,6 +780,7 @@ class SPRKKR(BaseCalculator):
         gdb=False,
         profile: Optional[SPRKKRProfile] = None,
         executor=None,
+        persistent=None,
     ):
         """Prepare a calculation and return an unstarted Runner.
 
@@ -806,12 +806,14 @@ class SPRKKR(BaseCalculator):
         executor: ase2sprkkr.execution.Executor or None
             Override the calculator execution backend for this run.
 
+        persistent: bool, ExecutionManager or None
+            Persistent execution policy. ``True`` uses the default execution
+            manager, ``False`` disables persistence, and an explicit manager
+            stores the run in that manager.
+
         ---------
         For the other parameters, see the save_input() method
         """
-
-        if output_file is False:
-            output_file = None
 
         run_profile = self.profile if profile is None else profile
         print_output = first_non_none(print_output, self.print_output)
@@ -846,6 +848,7 @@ class SPRKKR(BaseCalculator):
                     gdb=gdb,
                     profile=run_profile,
                     executor=self.executor if executor is None else executor,
+                    persistent=persistent,
                 )
 
     def value_or_default(self, name, value):
@@ -891,6 +894,7 @@ class SPRKKR(BaseCalculator):
         gdb=False,
         profile=None,
         executor=None,
+        persistent=None,
     ):
         """
         ASE-interface method for the calculation.  This method runs the appropriate task(s)
@@ -904,7 +908,7 @@ class SPRKKR(BaseCalculator):
         Parameters
         ----------
         properties: list or str
-            List of what needs to be calculated. Can be any combination of ‘energy’, ‘forces’, ‘stress’, ‘dipole’, ‘charges’, ‘magmom’ and ‘magmoms’.
+            List of what needs to be calculated. Can be any combination of ‘energy’, ‘forces’, ‘stress’, 'dipole', 'charges', 'magmom' and 'magmoms'.
 
         system_changes: list of str
             List of what has changed since last calculation.  Can be
@@ -919,6 +923,9 @@ class SPRKKR(BaseCalculator):
         mpi, executable_dir, executable_suffix
             Compatibility overrides applied to the selected profile for this
             calculation. None keeps the corresponding profile value.
+
+        persistent: bool, ExecutionManager or None
+            Persistent execution policy, forwarded to :meth:`create_run`.
 
         ---------
         For the other parameters, see the create_run() and save_input() methods
@@ -966,6 +973,7 @@ class SPRKKR(BaseCalculator):
             gdb=gdb,
             profile=run_profile,
             executor=executor,
+            persistent=persistent,
         )
         result = runner.run()
         self._update_from_result(

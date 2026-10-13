@@ -5,9 +5,9 @@ from types import SimpleNamespace
 import pytest
 
 from ase2sprkkr.execution import (
-    ArtifactState,
     ExecutionManager,
     Executor,
+    ResultFilesState,
     RunReference,
     RunState,
     RunStatus,
@@ -72,7 +72,7 @@ def _spec(tmp_path):
     return SimpleNamespace(directory=str(tmp_path))
 
 
-def _artifact_spec(tmp_path):
+def _result_files_spec(tmp_path):
     input_file = tmp_path / "run.inp"
     output_file = tmp_path / "run.out"
     generated = tmp_path / "case.dat"
@@ -109,6 +109,7 @@ def test_persistent_run_is_first_saved_as_submitting(tmp_path):
     assert seen == [RunState.SUBMITTING]
     stored = store.get(run.id)
     assert stored.state == RunState.QUEUED
+    assert stored.finished_at is None
     assert stored.reference == backend.reference
     assert stored.task == "SCF"
     assert stored.dataset == "case"
@@ -126,6 +127,7 @@ def test_run_id_exists_before_submit_and_double_submit_is_rejected(tmp_path):
 
     assert run.id
     assert run.record.state == RunState.NEW
+    assert run.record.finished_at is None
 
     run.submit()
     with pytest.raises(RuntimeError, match="already queued"):
@@ -149,13 +151,34 @@ def test_completion_callback_persists_final_result(tmp_path):
     stored = store.get(run.id)
     assert stored.state == RunState.FINISHED
     assert stored.return_code == 0
+    assert stored.finished_at == stored.updated_at
 
 
-def test_completion_captures_artifacts_but_not_cache(tmp_path):
+@pytest.mark.parametrize(
+    "state", (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED)
+)
+def test_first_terminal_transition_sets_immutable_finished_at(tmp_path, state):
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    record = manager.new_record(task="DOS", directory=tmp_path)
+    record = manager.transition(record, state=RunState.RUNNING)
+    assert record.finished_at is None
+
+    record = manager.transition(record, state=RunState.FINISHING)
+    assert record.finished_at is None
+
+    record = manager.transition(record, state=state)
+    finished_at = record.finished_at
+    assert finished_at == record.updated_at
+
+    updated = manager.transition(record, message="later metadata update")
+    assert updated.finished_at == finished_at
+
+
+def test_completion_captures_result_files_but_not_cache(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
-    spec = _artifact_spec(tmp_path)
+    spec = _result_files_spec(tmp_path)
     run = manager.create_run(executor, object(), spec, task="DOS", dataset="case")
 
     run.submit()
@@ -165,41 +188,43 @@ def test_completion_captures_artifacts_but_not_cache(tmp_path):
 
     stored = store.get(run.id)
     assert stored.state == RunState.FINISHED
-    assert stored.artifacts.state == ArtifactState.CURRENT
-    assert stored.artifacts.captured_at is not None
-    assert {fingerprint.path for fingerprint in stored.artifacts.fingerprints} == {
+    assert stored.result_files.state == ResultFilesState.CURRENT
+    assert stored.result_files.captured_at is not None
+    assert {fingerprint.path for fingerprint in stored.result_files.fingerprints} == {
         str(tmp_path / "run.inp"),
         str(tmp_path / "run.out"),
         str(tmp_path / "case.dat"),
     }
-    assert str(tmp_path / "cache.dat") not in stored.artifacts.manifests
+    assert str(tmp_path / "cache.dat") not in stored.result_files.manifests
 
 
-def test_changed_artifact_marks_overwritten_without_changing_outcome(tmp_path):
+def test_changed_result_file_marks_overwritten_without_changing_outcome(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
-    spec = _artifact_spec(tmp_path)
+    spec = _result_files_spec(tmp_path)
     run = manager.create_run(executor, object(), spec, task="DOS")
 
     run.submit()
     (tmp_path / "run.out").write_text("output")
     (tmp_path / "case.dat").write_text("first")
     executor.runners[0].finish()
+    finished = store.get(run.id)
     (tmp_path / "case.dat").write_text("changed contents")
 
-    updated = manager.check_artifacts(run.id)
+    updated = manager.check_result_files(run.id)
 
     assert updated.state == RunState.FINISHED
     assert updated.return_code == 0
-    assert updated.artifacts.state == ArtifactState.OVERWRITTEN
+    assert updated.result_files.state == ResultFilesState.OVERWRITTEN
+    assert updated.finished_at == finished.finished_at
 
 
 def test_changed_cache_does_not_mark_result_overwritten(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
-    spec = _artifact_spec(tmp_path)
+    spec = _result_files_spec(tmp_path)
     run = manager.create_run(executor, object(), spec, task="DOS")
 
     run.submit()
@@ -208,17 +233,17 @@ def test_changed_cache_does_not_mark_result_overwritten(tmp_path):
     executor.runners[0].finish()
     (tmp_path / "cache.dat").write_text("cache-after-with-different-size")
 
-    updated = manager.check_artifacts(run.id)
+    updated = manager.check_result_files(run.id)
 
     assert updated.state == RunState.FINISHED
-    assert updated.artifacts.state == ArtifactState.CURRENT
+    assert updated.result_files.state == ResultFilesState.CURRENT
 
 
 def test_load_result_parses_persisted_output_without_backend_refresh(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
-    spec = _artifact_spec(tmp_path)
+    spec = _result_files_spec(tmp_path)
     run = manager.create_run(executor, object(), spec, task="DOS")
 
     run.submit()
@@ -287,6 +312,7 @@ def test_run_store_shards_records_and_marks_schema(tmp_path):
 
     assert path.is_file()
     assert data["schema_version"] == 1
+    assert data["finished_at"] is None
 
 
 def test_run_store_listing_warns_once_and_skips_corrupt_record(tmp_path):
@@ -317,9 +343,11 @@ def test_weaker_observation_does_not_degrade_final_record(tmp_path):
         return_code=0,
         message="completed",
     )
+    finished_at = record.finished_at
 
     updated = manager.update(record, RunStatus(reference, RunState.RUNNING))
 
     assert updated.state == RunState.FINISHED
     assert updated.return_code == 0
     assert updated.message == "completed"
+    assert updated.finished_at == finished_at
