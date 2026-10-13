@@ -44,64 +44,61 @@ def create_gaussian_broadener(
         if n > 2:
             dx[1:-1] = 0.5 * (x[2:] - x[:-2])
         if np.any(dx <= 0):
-            raise ValueError("x must be strictly increasing.")
+            raise ValueError("x must contain unique values.")
         return dx
+
+    x = _ensure_1d_array(x_in, "x_in")
+    if x_out is None:
+        xout = x.copy()
+    else:
+        xout = _ensure_1d_array(x_out, "x_out")
+
+    sort_in = np.argsort(x)
+    x_sorted = x[sort_in]
+    sort_out = np.argsort(xout)
+    xout_sorted = xout[sort_out]
+
+    N = x_sorted.size
+    M = xout_sorted.size
+
+    if sigma is None and fwhm is None:
+        raise ValueError("Either sigma or fwhm must be provided.")
+    if fwhm is not None:
+        if np.ndim(fwhm) == 0:
+            sigma_vals = np.full(N, _fwhm_to_sigma(float(fwhm)))
+        else:
+            fwhm_arr = np.asarray(fwhm, dtype=float)
+            if fwhm_arr.shape != (N,):
+                raise ValueError("fwhm must be scalar or same length as x_in.")
+            sigma_vals = _fwhm_to_sigma(fwhm_arr[sort_in])
+    else:
+        if np.ndim(sigma) == 0:
+            sigma_vals = np.full(N, float(sigma))
+        else:
+            sigma_arr = np.asarray(sigma, dtype=float)
+            if sigma_arr.shape != (N,):
+                raise ValueError("sigma must be scalar or same length as x_in.")
+            sigma_vals = sigma_arr[sort_in]
+
+    if np.any(sigma_vals < 0):
+        raise ValueError("sigma must be non-negative.")
+
+    dx_in = _compute_bin_widths(x_sorted)
+    dx_out = _compute_bin_widths(xout_sorted)
 
     def gaussian_weight_matrix() -> Tuple[Union[np.ndarray, "sp.csr_matrix"], np.ndarray]:
         """
-        Build weight matrix W such that y_out = W @ y_in (if include_dx=True).
+        Build weight matrix W such that y_out = W @ y_in_sorted (if include_dx=True).
 
         Parameters (high level)
         - x_in, x_out: input/output grids (1D). If x_out is None, x_out := x_in.
-        - sigma/fwhm: scalar or array of length len(x_in).
+        - sigma/fwhm: scalar or array of length len(x_in), associated point-wise with x_in.
         - include_dx: if True, W columns already include Δx_in factor.
         - discrete_normalize: if True, normalize each kernel column using Δx_out so
                              discrete sums approximate continuous integrals.
         - method: "auto", "dense", or "sparse".
         - return_sparse: if True and scipy.sparse is available, returns csr matrix in sparse mode.
         """
-        x = _ensure_1d_array(x_in, "x_in")
-        if x_out is None:
-            xout = x.copy()
-        else:
-            xout = _ensure_1d_array(x_out, "x_out")
-
-        # sort for stable building
-        sort_in = np.argsort(x)
-        x_sorted = x[sort_in]
-
-        sort_out = np.argsort(xout)
-        xout_sorted = xout[sort_out]
-
-        dx_in = _compute_bin_widths(x_sorted)
-        dx_out = _compute_bin_widths(xout_sorted)
-
-        N = x_sorted.size
-        M = xout_sorted.size
-
-        # sigma array
-        if sigma is None and fwhm is None:
-            raise ValueError("Either sigma or fwhm must be provided.")
-        if fwhm is not None:
-            if np.ndim(fwhm) == 0:
-                sigma_vals = np.full(N, _fwhm_to_sigma(float(fwhm)))
-            else:
-                fwhm_arr = np.asarray(fwhm, dtype=float)
-                if fwhm_arr.shape != (N,):
-                    raise ValueError("fwhm must be scalar or same length as x_in.")
-                sigma_vals = _fwhm_to_sigma(fwhm_arr)
-        else:
-            if np.ndim(sigma) == 0:
-                sigma_vals = np.full(N, float(sigma))
-            else:
-                sigma_arr = np.asarray(sigma, dtype=float)
-                if sigma_arr.shape != (N,):
-                    raise ValueError("sigma must be scalar or same length as x_in.")
-                sigma_vals = sigma_arr
-
-        if np.any(sigma_vals < 0):
-            raise ValueError("sigma must be non-negative.")
-
         approx_ops = int(N) * int(M)
         if method == "auto":
             method_use = "dense" if approx_ops <= 10_000_000 else "sparse"
@@ -112,33 +109,24 @@ def create_gaussian_broadener(
 
         zero_mask = sigma_vals == 0.0
 
-        # Dense: build K then optionally renormalize columns w.r.t. dx_out
         if method_use == "dense":
-            Xout = xout_sorted[:, None]  # (M,1)
-            Xin = x_sorted[None, :]  # (1,N)
-            Sigma = sigma_vals[None, :]  # (1,N)
+            Xout = xout_sorted[:, None]
+            Xin = x_sorted[None, :]
+            Sigma = sigma_vals[None, :]
             with np.errstate(divide="ignore", invalid="ignore"):
                 diff = (Xout - Xin) / Sigma
                 K = np.exp(-0.5 * diff * diff) / (np.sqrt(2.0 * np.pi) * Sigma)
                 if np.any(zero_mask):
                     K[:, zero_mask] = 0.0
 
-            # discrete normalize each column if requested:
             if discrete_normalize:
-                # column_norm = sum_j K[j,i] * dx_out_j  (approx. continuous integral)
-                col_norm = (K * dx_out[:, None]).sum(axis=0)  # shape (N,)
-                # avoid division by zero: for sigma==0 keep col_norm=1 (we will assign delta)
+                col_norm = (K * dx_out[:, None]).sum(axis=0)
                 col_norm_safe = col_norm.copy()
                 col_norm_safe[col_norm_safe == 0] = 1.0
                 K = K / col_norm_safe[None, :]
 
-            # Now include dx_in if requested. If include_dx=False, W contains only kernel values K.
-            if include_dx:
-                W_sorted = K * dx_in[None, :]
-            else:
-                W_sorted = K
+            W_sorted = K * dx_in[None, :] if include_dx else K
 
-            # handle sigma==0 deltas: assign mass to nearest output bin
             if np.any(zero_mask):
                 cols = np.nonzero(zero_mask)[0]
                 for col in cols:
@@ -147,100 +135,94 @@ def create_gaussian_broadener(
                     j = np.clip(j, 0, M - 1)
                     if j > 0 and abs(xout_sorted[j - 1] - xi) <= abs(xout_sorted[j] - xi):
                         j -= 1
-                    # zero the column and place delta mass:
                     W_sorted[:, col] = 0.0
-                    if include_dx:
-                        W_sorted[j, col] = dx_in[col]
-                    else:
-                        # kernel-only matrix: place a 1.0 at that bin so user can multiply by dx_in later
-                        W_sorted[j, col] = 1.0
+                    W_sorted[j, col] = dx_in[col] if include_dx else 1.0
 
-            # restore output order
             inv_sort_out = np.argsort(sort_out)
             W = W_sorted[inv_sort_out, :]
             return W, xout.copy()
 
-        # Sparse: similar logic but construct lists for COO format
-        else:
-            rows = []
-            cols = []
-            data = []
-            for i in range(N):
-                si = sigma_vals[i]
-                xi = x_sorted[i]
-                dxi = dx_in[i]
-                if si == 0.0:
-                    # delta -> nearest output row
-                    j = np.searchsorted(xout_sorted, xi)
-                    j = np.clip(j, 0, M - 1)
-                    if j > 0 and abs(xout_sorted[j - 1] - xi) <= abs(xout_sorted[j] - xi):
-                        j -= 1
-                    rows.append(j)
-                    cols.append(i)
-                    data.append(dxi if include_dx else 1.0)
-                    continue
+        rows = []
+        cols = []
+        data = []
+        for i in range(N):
+            si = sigma_vals[i]
+            xi = x_sorted[i]
+            dxi = dx_in[i]
+            if si == 0.0:
+                j = np.searchsorted(xout_sorted, xi)
+                j = np.clip(j, 0, M - 1)
+                if j > 0 and abs(xout_sorted[j - 1] - xi) <= abs(xout_sorted[j] - xi):
+                    j -= 1
+                rows.append(j)
+                cols.append(i)
+                data.append(dxi if include_dx else 1.0)
+                continue
 
-                cutoff = n_sigma * si
-                xmin = xi - cutoff
-                xmax = xi + cutoff
-                j0 = np.searchsorted(xout_sorted, xmin, side="left")
-                j1 = np.searchsorted(xout_sorted, xmax, side="right")
-                if j0 >= j1:
-                    continue
-                xseg = xout_sorted[j0:j1]
-                diff = (xseg - xi) / si
-                Kseg = np.exp(-0.5 * diff * diff) / (np.sqrt(2.0 * np.pi) * si)
+            cutoff = n_sigma * si
+            xmin = xi - cutoff
+            xmax = xi + cutoff
+            j0 = np.searchsorted(xout_sorted, xmin, side="left")
+            j1 = np.searchsorted(xout_sorted, xmax, side="right")
+            if j0 >= j1:
+                continue
+            xseg = xout_sorted[j0:j1]
+            diff = (xseg - xi) / si
+            Kseg = np.exp(-0.5 * diff * diff) / (np.sqrt(2.0 * np.pi) * si)
 
-                if discrete_normalize:
-                    # normalization scalar for this column
-                    norm = (Kseg * dx_out[j0:j1]).sum()
-                    if norm == 0:
-                        norm = 1.0
-                    Kseg = Kseg / norm
+            if discrete_normalize:
+                norm = (Kseg * dx_out[j0:j1]).sum()
+                if norm == 0:
+                    norm = 1.0
+                Kseg = Kseg / norm
 
-                if include_dx:
-                    wseg = Kseg * dxi
-                else:
-                    wseg = Kseg
+            wseg = Kseg * dxi if include_dx else Kseg
+            rows.extend((np.arange(j0, j1)).tolist())
+            cols.extend([i] * (j1 - j0))
+            data.extend(wseg.tolist())
 
-                rows.extend((np.arange(j0, j1)).tolist())
-                cols.extend([i] * (j1 - j0))
-                data.extend(wseg.tolist())
+        if sp is None:
+            W_sorted = np.zeros((M, N), dtype=float)
+            for r, c, v in zip(rows, cols, data):
+                W_sorted[r, c] += v
+            inv_sort_out = np.argsort(sort_out)
+            W = W_sorted[inv_sort_out, :]
+            return W, xout.copy()
 
-            if sp is None:
-                W_sorted = np.zeros((M, N), dtype=float)
-                for r, c, v in zip(rows, cols, data):
-                    W_sorted[r, c] += v
-                inv_sort_out = np.argsort(sort_out)
-                W = W_sorted[inv_sort_out, :]
-                return W, xout.copy()
-            else:
-                W_sorted_csr = sp.csr_matrix((data, (rows, cols)), shape=(M, N))
-                inv_sort_out = np.argsort(sort_out)
-                W = W_sorted_csr[inv_sort_out, :]
-                if return_sparse:
-                    return W, xout.copy()
-                else:
-                    return W.toarray(), xout.copy()
+        W_sorted_csr = sp.csr_matrix((data, (rows, cols)), shape=(M, N))
+        inv_sort_out = np.argsort(sort_out)
+        W = W_sorted_csr[inv_sort_out, :]
+        if return_sparse:
+            return W, xout.copy()
+        return W.toarray(), xout.copy()
 
     W = gaussian_weight_matrix()[0]
 
     def broaden(y_orig):
         """
-        Apply Gaussian broadening to F0 using the precomputed matrix.
+        Apply Gaussian broadening along the last (energy) axis.
+
+        The values on that axis are associated point-wise with ``x_in`` and are
+        therefore reordered together with an unsorted input grid before applying
+        the precomputed matrix.
 
         Parameters
         ----------
-        y_orig : array_like, shape (NV, Nx_orig)
-            Functions to broaden along the last axis (energy)
+        y_orig : array_like, shape (..., len(x_in))
+            Function values to broaden along the last axis.
 
         Returns
         -------
-        y_broadened : ndarray, shape (NV, Nx_orig)
-            Broadened functions
+        y_broadened : ndarray, shape (..., len(x_out))
+            Broadened values in the original ``x_out`` order.
         """
-        out = W @ y_orig.reshape(y_orig.shape[:1] + (-1,))
-        return out.reshape(y_orig.shape)
+        y = np.asarray(y_orig)
+        if y.ndim == 0 or y.shape[-1] != N:
+            raise ValueError("The last axis of y_orig must have the same length as x_in.")
+        y_sorted = y[..., sort_in]
+        flat = y_sorted.reshape((-1, N)).T
+        out = W @ flat
+        return np.asarray(out).T.reshape(y.shape[:-1] + (M,))
 
     return broaden
 
@@ -353,7 +335,6 @@ def compute_wlortab(energies, n_valence):
     -------
     wlortab : ndarray, shape (len(energies),)
     """
-    # Polynomial coefficients from INILORBRD (Fortran)
     CF1 = np.array(
         [
             0.001766920594,
@@ -399,14 +380,8 @@ def compute_wlortab(energies, n_valence):
         pwrs = np.hstack([np.ones((pwrs.shape[0], 1)), pwrs])
         wlortab[mask] = pwrs @ CFZ
 
-    # For 0 < E <= 2.5 eV: Fortran uses YLAG(N=2, i.e. linear) from (0,0) to (2.5, poly(2.5))
-    # This is a simple linear ramp: wlortab(E) = wlortab(2.5) * E / 2.5
-    # First, evaluate poly(2.5) by linearly interpolating (N=2 YLAG) the already-filled wlortab
-    # at E=2.5 using the two nearest grid points.
-    # For simplicity (dense grid), just evaluate the polynomial directly at 2.5.
     idx25 = np.searchsorted(energies, 2.5, side="right")
     idx25 = np.clip(idx25, 1, len(energies) - 1)
-    # linear interpolation of the polynomial wlortab between the two surrounding grid points
     e_lo, e_hi = energies[idx25 - 1], energies[idx25]
     if e_hi > e_lo:
         t = (2.5 - e_lo) / (e_hi - e_lo)
@@ -416,13 +391,9 @@ def compute_wlortab(energies, n_valence):
 
     mask_low = (energies > 0) & (energies <= 2.5)
     if mask_low.any():
-        # Linear from (0, 0) to (2.5, y25)
         wlortab[mask_low] = y25 * energies[mask_low] / 2.5
 
-    # Clamp to minimum 0.0001 (Fortran: MAX(0.0001, WLORTAB(I)) for all I)
     wlortab = np.maximum(0.0001, wlortab)
-    # Points at E <= 0 stay 0 (Fortran sets to 0.0 before clamping,
-    # but clamping makes them 0.0001; keep 0 to match the G=G0 behaviour for the zero-signal region)
     wlortab[energies <= 0] = 0.0
 
     return wlortab
