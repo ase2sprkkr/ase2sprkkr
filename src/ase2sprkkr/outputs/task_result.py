@@ -1,11 +1,11 @@
 """This module contains classes, used by parsers of the output files"""
 
+import asyncio
 import os
 import re
 import importlib
 from . import readers
 from ..common.decorators import cached_property, cached_class_property, maybeclassmethod
-from ..common.process_output_reader import run_coro_sync
 from ..common.file_utils import FilePath, filename_from_file
 from ..potentials.potentials import Potential
 from ..input_parameters import input_parameters as input_parameters
@@ -34,6 +34,8 @@ class TaskResult:
 
         input_filename = filename_from_file(input_file, None)
         self.input_file = FilePath(input_filename, self.directory) if input_filename is not None else None
+        if self.input_file is not None:
+            self.files.add_file("input", self.input_file)
 
     @cached_property
     def directory(self):
@@ -143,10 +145,10 @@ class TaskResult:
     @classmethod
     def from_file(cls, file):
         def read_output_for(task):
-            process = KkrOutputReader.class_for_task(task or "")
-            process = process(None, None, os.path.dirname(file))
+            reader = KkrOutputReader.class_for_task(task or "")
+            reader = reader(None, None, os.path.dirname(file))
             f.seek(0)
-            return process.read_from_file(f)
+            return reader.read_from_file(f)
 
         with open(file, "rb") as f:
             raw_out = f.read()
@@ -164,105 +166,97 @@ class TaskResult:
             return out
 
 
-class KkrProcess:
-    def __init__(self, reader, output_parser, coroutine, result, callback=None):
-        self.reader = reader
-        self.output_parser = output_parser
-        self.coroutine = coroutine
-        self.result = result
-        self.callback = callback
-
-    def run(self):
-        result = self.result
-        try:
-            result, error, return_code = run_coro_sync(self.coroutine)
-            self.result.complete(error, return_code)
-        finally:
-            if self.callback:
-                self.callback(self.result)
-        return self.result
-
-    def stop_the_process(self):
-        self.output_parser.stop_the_process()
-
-    async def run_async(self):
-        result, error, return_code = await self.coroutine
-        self.result.complete(error, return_code)
-        return self.result
-
-
 class KkrOutputReader:
-    """Class, that runs a process and reads its output using the underlying
-    output parser (see :class:`ase2sprkkr.common.process_output_reader.ProcessOutputParser`)
-    and return the appropriate TaskResult.
+    """Parse SPR-KKR output streams into a TaskResult.
 
-    Descendants should define parser_class and result_class property.
+    Execution is handled by :mod:`ase2sprkkr.execution`; this class owns only
+    task-specific parsing and result construction.
     """
 
-    def __init__(self, input_parameters, calculator, directory, print_output=False, read_callback=None):
+    def __init__(self, input_parameters, calculator, directory, print_output=False):
         self.input_parameters = input_parameters
-        """ Input parameters, that command to read the output (thus probably the ones, that
-      run the process that produced the output. It is used e.g. for determining the potential file,
-      which belongs to the output.
-      """
         self.calculator = calculator
         self.directory = directory
-        """ Calculator, that can be used for further processing of the results. """
-        self.parser = self.parser_class(print_output, read_callback)
+        self.parser = self.parser_class(print_output)
 
-    def _create_result(self, output_file, input_file=None):
-        """Create an object that stores results of the KKR output parsing."""
+    @property
+    def print_output(self):
+        """Whether raw process output should be mirrored to the terminal."""
+        return bool(self.parser.print_output)
+
+    def create_result(self, output_file, input_file=None):
+        """Create the TaskResult before parsing starts."""
         return self.result_class(
-            self.input_parameters, self.calculator, self.directory, output_file=output_file, input_file=input_file
+            self.input_parameters,
+            self.calculator,
+            self.directory,
+            output_file=output_file,
+            input_file=input_file,
         )
 
-    def _create_process(self, coroutine, result, callback=None):
-        """Create an object that can run the desired process (either reading from file or running a process)
+    async def parse_streams(self, stdout, stderr, result):
+        """Parse simultaneously growing stdout and stderr streams.
 
-        Returns
-        -------
-        KkrProcess
-            An object that can run the process and return the result.
+        Parser failures are returned to the execution backend rather than
+        raised immediately.  The backend must first observe the process exit
+        status: a truncated output stream is often only a symptom of the
+        executable having failed, and that failure is the more useful error.
         """
-        return KkrProcess(self, self.parser, coroutine, result, callback=callback)
+        return await asyncio.gather(
+            self.parser.read_output(stdout, result),
+            self.parser.read_error(stderr, result),
+            return_exceptions=True,
+        )
 
-    def create_process(self, cmd, outfile, input_file=None, callback=None, **kwargs):
-        """Create an object that takes care of running the command and parsing the results"""
-        result = self._create_result(filename_from_file(outfile, None), input_file)
-        coroutine = self.parser.run_async(cmd, outfile, self.directory, [result], **kwargs)
-        return self._create_process(coroutine, result, callback=callback)
+    def complete_result(self, result, output, error, return_code):
+        """Finalize a result after the execution backend completes."""
+        if return_code != 0:
+            self.parser.result(
+                None if isinstance(output, BaseException) else output,
+                None if isinstance(error, BaseException) else error,
+                return_code,
+            )
+        if isinstance(output, BaseException):
+            raise output
+        if isinstance(error, BaseException):
+            raise error
+
+        _output, error, return_code = self.parser.result(
+            output, error, return_code
+        )
+        result.complete(error, return_code)
+        return result
 
     @maybeclassmethod
     def read_from_file(self, cls, output, error=None, return_code=0, input_file=None, directory=None):
-        """Creates an object that takes care of reading and parsing of the output of a sprkkr process"""
+        """Parse output of an already finished SPR-KKR calculation."""
         if self is None:
             self = cls(None, None, directory)
-        result = self._create_result(output, input_file)
+        result = self.create_result(output, input_file)
         output_source = output if hasattr(output, "read") else result.path_to("output")
 
-        coroutine = self.parser.read_output_file(output_source, error, [result], return_code)
-        return self._create_process(coroutine, result).run()
+        _parsed_output, parsed_error, parsed_return_code = self.parser.read_from_file(
+            output_source, error, [result], return_code
+        )
+        result.complete(parsed_error, parsed_return_code)
+        return result
 
     @staticmethod
     def class_for_task(task):
         if not task:
             return DefaultOutputReader
-
-        module_name = f"{readers.__name__}.{task.lower()}"
         try:
             mod = importlib.import_module(f".{task.lower()}", readers.__name__)
-        except ModuleNotFoundError as exc:
-            if exc.name == module_name:
-                return DefaultOutputReader
-            raise
+            clsname = task.title() + "OutputReader"
+            cls = getattr(mod, clsname)
+            if not cls:
+                raise Exception(
+                    f"Can not determine the class to read the results of task {task}"
+                    "No {clsname} class in the module {oo.__name__}.{task}"
+                )
+        except ModuleNotFoundError:
+            cls = DefaultOutputReader
 
-        clsname = task.title() + "OutputReader"
-        cls = getattr(mod, clsname)
-        if not cls:
-            raise Exception(
-                f"Can not determine the class to read the results of task {task}"
-                "No {clsname} class in the module {oo.__name__}.{task}"
-            )
         return cls
 
 

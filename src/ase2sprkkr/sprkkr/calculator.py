@@ -27,12 +27,14 @@ import abc
 import subprocess
 import tempfile
 import collections
-from datetime import datetime
+import datetime
 from typing import Union, Any, Dict, Optional
 from pathlib import Path
 import re
+import warnings
 from ..common.misc import config_property, first_non_none
 from ..configuration import config
+from .profile import SPRKKRProfile, resolve_sprkkr_profile
 
 
 class SPRKKR(BaseCalculator):
@@ -66,6 +68,8 @@ class SPRKKR(BaseCalculator):
         empty_spheres: Optional[Union[str, bool, Dict]] = None,
         executable_suffix=None,
         executable_dir: Optional[Union[str, bool]] = None,
+        profile=None,
+        executor=None,
         **kwargs,
     ):
         """
@@ -104,8 +108,7 @@ class SPRKKR(BaseCalculator):
         mpi: Union[list,string,int,bool]
           Runner for mpi to run a mpi calculation. True and int means autodetect: use True
           for a cluster where mpi is able to autodetect the number of the processes, otherwise
-          use integer to specify the number of processes. None means use the value from
-          config.running.mpi.
+          use integer to specify the number of processes. None means use the selected profile.
           E.g. mpi = [ 'mpirun', '-np', '4' ], mpi = 4
 
         input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None
@@ -132,14 +135,13 @@ class SPRKKR(BaseCalculator):
         executable_suffix: str or bool or None
           String to be added to the runned executable. In some environments, the version
           and the hostname is added to the name of sprkkr executables.
-          True: use config.config.executable.suffix, by default initialized
-                by SPRKKR_EXECUTABLE_SUFFIX environment variable
-          False: do not append anything (the same as '')
+          None means use the selected execution profile.
+          False means do not append anything (the same as '').
 
         executable_dir
-          If the SPRKKR exacutables are not in path, or you want to control which
+          If the SPR-KKR executables are not in path, or you want to control which
           executables will be runned, please supply this parameter.
-          None means use the default from config.config.executable.dir (if exists).
+          None means use the selected execution profile.
           False means use only the executable in PATH.
 
         empty_spheres
@@ -175,8 +177,6 @@ class SPRKKR(BaseCalculator):
             self.directory = directory
         self.atoms = atoms
         self.potential = potential
-        """ Default value for mpi parameter of calculate - it determine the way whether and how
-        the mpi is employed. """
         self.input_file = input_file
         """ A pathname or an open named file for the input file (if not specified otherwise in the
         called method) """
@@ -184,24 +184,25 @@ class SPRKKR(BaseCalculator):
         """ A pathname or an open file for the output of the runned SPR-KKR task (if not specified
         otherwise in the called method) """
         self.potential_file = potential_file
-        """ A pathname or an open named file for the potential file to be used (if not specified otherwise in the called method) """
+        """ A pathname or an open named file for the potential file to be used (if not specified otherwise in the
+        called method) """
         self.input_parameters = input_parameters
         if options:
             self.input_parameters.set(options, unknown="find")
         self.print_output = print_output
         self.empty_spheres = empty_spheres
-        self.executable_suffix = executable_suffix
-        self.executable_dir = executable_dir
-        self.mpi = mpi
+        self.profile = resolve_sprkkr_profile(profile).with_overrides(
+            mpi=mpi,
+            executable_dir=executable_dir,
+            executable_suffix=executable_suffix,
+        )
+        self.executor = executor
         self.label = label
         self._counter = 0
         # For %c template in file names
 
     print_output = config_property("print_output", config.running.print_output)
-    mpi = config_property("mpi", config.running.mpi)
     empty_spheres = config_property("empty_spheres", config.running.empty_spheres)
-    executable_dir = config_property("executable_dir", config.executables.dir)
-    executable_suffix = config_property("exectable_suffix", config.executables.suffix)
 
     @property
     def input_parameters(self):
@@ -310,7 +311,7 @@ class SPRKKR(BaseCalculator):
         atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms
         """
         if self._atoms is None:
-            if self._potential is None or isinstance(self._potential, bool):
+            if not self._potential or isinstance(self._potential, (bool, str)):
                 return None
             if isinstance(self._potential, str):
                 self._potential = Potential.from_file(self._potential)
@@ -411,8 +412,9 @@ class SPRKKR(BaseCalculator):
         options={},
         task=None,
         empty_spheres: Optional[str | bool | tuple | abc.Mapping] = None,
-        mpi=None,
+        profile: Optional[SPRKKRProfile] = None,
         return_files=False,
+        restart_scf: bool = False,
     ):
         """
         Save input and potential files for a calculation.
@@ -433,7 +435,7 @@ class SPRKKR(BaseCalculator):
             The input parameters is written into the input file,
                whose name is given by input_file argument.
 
-        potential: sprkkr.potential.Potentials.Potential or str or None or False
+        potential: sprkkr.potential.potentials.Potential or str or None or False
             If it is None, the self.potential value is used instead (see the later options)
             If False, the potential filename is specified in the input_parameters.
             If True,  create the potential according to the atoms and write to the resulting <potential_file> file.
@@ -464,10 +466,9 @@ class SPRKKR(BaseCalculator):
         create_subdirs: boolean
             If true, create directories if they don't exists.
 
-        mpi: bool or None
-            Save input for a mpi calculation. None means to use the mpi value specified in the
-            constructor. Actually, the only difference is that the temporary input file has
-            to have filename.
+        profile: SPRKKRProfile or None
+            Execution profile used to decide whether a named input file is
+            required for MPI. None means the calculator profile.
 
         empty_spheres
             Whether to add empty spheres to the structure or not.
@@ -490,6 +491,11 @@ class SPRKKR(BaseCalculator):
         return_files: boolean
             Return open files object instead of just string filenames.
 
+        restart_scf: bool
+            For an SCF calculation, write ``SCFSTATUS START`` to the potential
+            used by this run while preserving the canonical in-memory potential
+            and its converged electronic data.
+
 
         Returns
         -------
@@ -502,10 +508,11 @@ class SPRKKR(BaseCalculator):
         potential_filename: str or file
             Potential file. See return_files
 
-        output_filename: str or file
-            Output file. See return_files
+        output_filename: str or file or None
+            Output file. None when output_file is False. See return_files
 
         """
+        profile = self.profile if profile is None else profile
 
         def makepath(path, must_exist):
             if "/" not in path and directory:
@@ -571,7 +578,7 @@ class SPRKKR(BaseCalculator):
                     " it from the atoms object, or <False> to use the POTENTIAL option from the input (parameters) file"
                 )
             elif isinstance(potential, str):
-                if potential_file:
+                if potential_file or restart_scf:
                     potential = Potential.from_file(potential)
                 else:
                     # Set the potential file and clear the potential. Thus,
@@ -644,14 +651,17 @@ class SPRKKR(BaseCalculator):
                     empty_spheres = {"min_radius": empty_spheres[0], "max_radius": empty_spheres[1]}
                 if not isinstance(empty_spheres, collections.abc.Mapping):
                     empty_spheres = {}
-                add_empty_spheres(atoms, **empty_spheres)
+                try:
+                    add_empty_spheres(atoms, **empty_spheres)
+                except Exception as e:
+                    warnings.warn(f"Failed to search empty-spheres. Error: {e}")
 
         def save_potential_file():
             pf = from_input_name(potential_file or self.potential_file, ".pot", "%a.pot")
             pf = self._open_file(
                 pf, directory, templator, True, allow_temporary=return_files, create_subdirs=create_subdirs
             )
-            potential.save_to_file(pf, atoms)
+            potential.save_to_file(pf, atoms, restart_scf=restart_scf)
             pf.close()
             return pf.name
 
@@ -664,7 +674,7 @@ class SPRKKR(BaseCalculator):
                 ifile,
                 directory,
                 templator,
-                input_parameters.is_mpi(self.mpi if mpi is None else mpi),
+                input_parameters.is_mpi(profile.mpi),
                 allow_temporary=return_files,
                 create_subdirs=create_subdirs,
                 mode="w+" if save_input else "r",
@@ -679,7 +689,7 @@ class SPRKKR(BaseCalculator):
             if potential_file:
                 # use the relative potential file name to avoid too-long-
                 # -potential-file-name problem
-                # dirr = os.path.dirname( input_file.name ) if input_file.name else directory
+                # dirr = os.path.dirname(input_file.name) if input_file.name else directory
                 input_parameters.CONTROL.POTFIL = os.path.abspath(potential_file)
                 input_parameters.CONTROL.POTFIL.result = os.path.relpath(potential_file, directory)
             if not input_parameters.CONTROL.DATASET.is_set():
@@ -727,6 +737,13 @@ class SPRKKR(BaseCalculator):
         # HERE starts the execution
         potential, atoms, potential_file, save_input = resolve_potential_and_atoms(potential, atoms, potential_file)
         input_parameters, input_file, save_input = resolve_input_parameters(input_parameters, input_file, save_input)
+        if restart_scf:
+            if str(taskname()).strip().upper() != "SCF":
+                raise ValueError("restart_scf=True is only valid for an SCF calculation.")
+            if not isinstance(potential, Potential):
+                raise ValueError(
+                    "restart_scf=True requires a writable Potential or atoms from which one can be generated."
+                )
         resolve_empty_spheres(empty_spheres)
 
         templator = FilenameTemplator(self, taskname, symbols)
@@ -754,12 +771,11 @@ class SPRKKR(BaseCalculator):
                 if output_file:
                     output_file = output_file.name
 
-            if output_file:
-                return input_parameters, input_file, potential_file, output_file
-            else:
-                return input_parameters, input_file, potential_file
+            if output_file is False:
+                output_file = None
+            return input_parameters, input_file, potential_file, output_file
 
-    def run(
+    def create_run(
         self,
         atoms=None,
         input_parameters=None,
@@ -772,54 +788,54 @@ class SPRKKR(BaseCalculator):
         options={},
         task=None,
         empty_spheres: Optional[str | bool] = None,
-        mpi: bool = None,
         print_output=None,
         read_callback: Optional[callable] = None,
-        run_async: bool = False,
-        executable_suffix=None,
-        executable_dir=None,
         callback=None,
         gdb=False,
+        profile: Optional[SPRKKRProfile] = None,
+        executor=None,
+        persistent=None,
+        restart_scf: bool = False,
     ):
-        """
-        Do the calculation, return various results.
+        """Prepare a calculation and return an unstarted Runner.
+
+        The returned Runner owns execution. Creating it prepares the SPR-KKR
+        input/output files but does not execute the task and does not update
+        the calculator state.
 
         Parameters
         ----------
 
         print_output: bool or str or None
             Print output to stdout, too.
-            If print_output=='info' only a few info lines per iteration will be printed.
+            If print_output=='info' only a few lines per iteration will be printed.
             None means to use a default value (specified in constructor)
 
         read_callback: callable(str,str)
             Receives output of the called executable.
             The second argument is either 'out' or 'err'
 
-        run_async: bool
-            If True, KkrProcess that can be runned async is returned
+        profile: ase2sprkkr.sprkkr.profile.SPRKKRProfile or None
+            Runtime execution profile for this run. None means the calculator profile.
 
-        executable_suffix: str or bool or None
-            If not None, it overrides the executable_postifx, that have been specified in the
-            calculator have been created.
+        executor: ase2sprkkr.execution.Executor or None
+            Override the calculator execution backend for this run.
 
-        executable_dir: str or bool or None
-            If not None, it overrides the executable_dir, that have been specified in the
-            calculator have been created.
+        persistent: bool, ExecutionManager or None
+            Persistent execution policy. ``True`` uses the default execution
+            manager, ``False`` disables persistence, and an explicit manager
+            stores the run in that manager.
 
-        mpi: bool or None
-            Runner for mpi to run a mpi calculation. True and int means autodetect: use True
-            for a cluster where mpi is able to autodetect the number of the processes, otherwise
-            use integer to specify the number of processes.
-            None means use the default value (specified in the calculator's contructor).
-            E.g. mpi = [ 'mpirun', '-np', '4' ], mpi = 4
+        restart_scf: bool
+            Request a fresh SCF cycle from the supplied electronic potential.
+            The canonical in-memory potential is not changed.
 
         ---------
         For the other parameters, see the save_input() method
         """
 
-        if output_file is False:
-            output_file = None
+        run_profile = self.profile if profile is None else profile
+        print_output = first_non_none(print_output, self.print_output)
 
         with Directory.new(directory, default=self._directory) as directory:
             input_parameters, input_file, _, output_file = self.save_input(
@@ -829,49 +845,50 @@ class SPRKKR(BaseCalculator):
                 input_file=input_file,
                 potential_file=potential_file,
                 output_file=output_file,
+                directory=directory,
+                create_subdirs=create_subdirs,
                 empty_spheres=empty_spheres,
-                mpi=mpi,
+                profile=run_profile,
                 options=options,
                 task=task,
                 return_files=True,
-                directory=directory,
+                restart_scf=restart_scf,
             )
 
-            executable_suffix = first_non_none(executable_suffix, self.executable_suffix)
-            executable_dir = first_non_none(executable_dir, self.executable_dir)
-            print_output = first_non_none(print_output, self.print_output)
-            mpi = first_non_none(mpi, self.mpi)
-            empty_spheres = first_non_none(empty_spheres, self.empty_spheres)
-
             with directory.chdir():
-                out = input_parameters.run_process(
+                return input_parameters.run_process(
                     self,
                     input_file,
                     output_file,
                     directory=os.path.abspath("."),
                     print_output=print_output,
                     read_callback=read_callback,
-                    run_async=run_async,
-                    executable_suffix=executable_suffix,
-                    executable_dir=executable_dir,
-                    mpi=mpi,
+                    run_async=True,
                     callback=callback,
                     gdb=gdb,
+                    profile=run_profile,
+                    executor=self.executor if executor is None else executor,
+                    persistent=persistent,
                 )
-            if input_parameters.TASK.TASK() == "SCF" and not potential and not atoms:
-                try:
-                    pot = out.potential
-                except (ValueError, FileNotFoundError):
-                    pot = None
-                if pot:
-                    self.potential = pot
-            return out
 
     def value_or_default(self, name, value):
         """Return the default value of the parameter, if the given value is None"""
         if value is None:
             value = getattr(self, name)
         return value
+
+    def _update_from_result(self, result, *, adopt_potential=False):
+        """Update calculator state from a completed synchronous result."""
+        if hasattr(result, "energy"):
+            self.results["energy"] = result.energy
+
+        if adopt_potential:
+            try:
+                potential = result.potential
+            except (ValueError, FileNotFoundError):
+                return
+            if potential:
+                self.potential = potential
 
     def calculate(
         self,
@@ -891,11 +908,14 @@ class SPRKKR(BaseCalculator):
         task=None,
         print_output=None,
         read_callback: Optional[callable] = None,
-        run_async: bool = False,
         executable_suffix=None,
         callback=None,
         executable_dir=None,
         gdb=False,
+        profile=None,
+        executor=None,
+        persistent=None,
+        restart_scf: bool = False,
     ):
         """
         ASE-interface method for the calculation.  This method runs the appropriate task(s)
@@ -918,8 +938,22 @@ class SPRKKR(BaseCalculator):
 
             This calculator ignore properties and system_changes.
 
+        profile: SPRKKRProfile, str or None
+            Profile for this calculation. None means the calculator profile.
+
+        mpi, executable_dir, executable_suffix
+            Compatibility overrides applied to the selected profile for this
+            calculation. None keeps the corresponding profile value.
+
+        persistent: bool, ExecutionManager or None
+            Persistent execution policy, forwarded to :meth:`create_run`.
+
+        restart_scf: bool
+            Request a fresh SCF cycle from the supplied electronic potential.
+            The canonical in-memory potential is not changed.
+
         ---------
-        For the other parameters, see the run() and save_input() methods
+        For the other parameters, see the create_run() and save_input() methods
 
         ---------
 
@@ -940,34 +974,41 @@ class SPRKKR(BaseCalculator):
 
         # There is no need to call this
         # super().calculate(atoms, properties, system_changes)
-        def cleanup(out):
-            if callback:
-                callback(out)
-            if hasattr(out, "energy"):
-                self.results.update({"energy": out.energy})
-
-        out = self.run(
-            atoms,
-            input_parameters,
-            potential,
-            input_file,
-            potential_file,
-            output_file,
-            directory,
-            create_subdirs,
-            options,
-            task,
-            empty_spheres,
-            mpi,
-            print_output,
-            read_callback,
-            run_async,
-            executable_suffix,
-            executable_dir,
-            cleanup,
-            gdb,
+        run_profile = resolve_sprkkr_profile(
+            self.profile if profile is None else profile
+        ).with_overrides(
+            mpi=mpi,
+            executable_dir=executable_dir,
+            executable_suffix=executable_suffix,
         )
-        return out
+        runner = self.create_run(
+            atoms=atoms,
+            input_parameters=input_parameters,
+            potential=potential,
+            input_file=input_file,
+            potential_file=potential_file,
+            output_file=output_file,
+            directory=directory,
+            create_subdirs=create_subdirs,
+            options=options,
+            task=task,
+            empty_spheres=empty_spheres,
+            print_output=print_output,
+            read_callback=read_callback,
+            gdb=gdb,
+            profile=run_profile,
+            executor=executor,
+            persistent=persistent,
+            restart_scf=restart_scf,
+        )
+        result = runner.run()
+        self._update_from_result(
+            result,
+            adopt_potential=(result.task_name.upper() == "SCF" and not potential and not atoms),
+        )
+        if callback:
+            callback(result)
+        return result
 
     def scf(self, *args, **kwargs):
         """A shortcut for calculating a SCF task"""

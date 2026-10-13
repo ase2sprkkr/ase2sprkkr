@@ -1,8 +1,6 @@
 """Containers for configuration parameters of SPR-KKR task.
 
 These configuration parameters are supplied to SPR-KKR executables as input files.
-The containers are also the objects, that take care about executing the SPR-KKR
-executables.
 """
 
 from __future__ import annotations
@@ -11,16 +9,16 @@ import os
 import io
 import pkgutil
 import importlib
-import pyparsing as pp
 from ..outputs.task_result import KkrOutputReader
 from . import definitions
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
-from ..common.warnings import DataValidityError
 from typing import Union
-from ..configuration import config, mpi_runner
+from ..configuration import config
 from ..potentials.potentials import Potential
 from ..common.doc import process_input_parameters_definition
+from ..sprkkr.profile import SPRKKRProfile, executor_from_profile
+from ..execution.persistence import resolve_execution_manager
 import warnings
 
 
@@ -29,18 +27,16 @@ class InputSection(ConfigurationSection):
 
 
 class InputParameters(ConfigurationFile):
-    """It holds the configuration values for a SPR-KKR task and run the task
+    """It holds the configuration values for the task.
 
-    This class is a ConfigurationContainer, thus, it holds the configuration values
-    for the task. Moreover, according to its definition, it can run the task -
-    execute the executable with proper parameters - and instantiate the result class,
-    which then parse the output of the task.
+    According to its definition it can also prepare and execute the
+    corresponding SPR-KKR calculation through an execution backend.
     """
 
     @property
     def potential(self):
         pot = getattr(self, "_potential", None)
-        potfil = self.CONTROL.POTFIL.result()
+        potfil = self.CONTROL.POTFIL.result
         if pot:
             if potfil == pot[0]:
                 return pot[1]
@@ -85,6 +81,13 @@ class InputParameters(ConfigurationFile):
         (see InputParametersDefinition class)"""
         return self._definition.name
 
+    @property
+    def _execution_task_name(self):
+        """Return the task encoded by the concrete input parameters."""
+        task_section = getattr(self, "TASK", None)
+        task_option = getattr(task_section, "TASK", None) if task_section is not None else None
+        return task_option() if task_option is not None else self.task_name
+
     def uses_separate_single_site_contour(self):
         """Whether SPR-KKR evaluates single-site terms on a separate contour.
 
@@ -124,6 +127,18 @@ class InputParameters(ConfigurationFile):
         """
         return mpi and self._definition.mpi
 
+    def input_files(self, directory):
+        """Return task-specific input files for this concrete calculation."""
+        return self._definition.input_files(self, directory)
+
+    def output_files(self, directory):
+        """Return task-specific output files for this concrete calculation."""
+        return self._definition.output_files(self, directory)
+
+    def cache_files(self, directory):
+        """Return task-specific reusable cache files for this calculation."""
+        return self._definition.cache_files(self, directory)
+
     def run_process(
         self,
         calculator,
@@ -133,69 +148,38 @@ class InputParameters(ConfigurationFile):
         print_output=None,
         read_callback=None,
         run_async=False,
-        executable_suffix=None,
-        executable_dir=None,
-        mpi=None,
         callback=None,
         gdb=False,
+        profile=None,
+        executor=None,
+        persistent=None,
     ):
-        """
-        Run the process that calculate the task specified by this input paameters
+        """Run the SPR-KKR task described by these input parameters.
 
-        calculator: ase2sprkkr.sprkkr.calculator.SPRKKR
-          Calculator, used for running the task. Various configurations are readed from them.
+        ``run_async=False`` executes synchronously and returns a TaskResult.
+        ``run_async=True`` returns an unstarted Runner.
 
-        directory: str
-          Where to run the calculation
-
-        input_file: file
-          File, where the input parameters for the task are stored.
-
-        output_file: file
-          File, where the output will be writed. It should be opened for writing (in binary mode)
-
-        print_output: bool or str
-          Print the output to the stdout, too? String value 'info' prints only selected infromations
-          (depending on the task runned)
-
-        read_callback: callable
-          The function will be called for each line
-
-        run_async: bool
-          Whether directly execute the process, or return the coroutine to run it
-
-        executable_suffix: str or None
-          Postfix, appended to the name of the called executable (sometimes, SPRKKR executables are
-          compiled so that the resulting executables has postfixies)
-
-        callback: Optional[callable]
-          A function, that will be called with the result object, when the calculation is finished.
-
-        mpi: list or str or bool
-          Run the task using mpi? See :func:`ase2sprkkr.config.mpi_runner` for the possible values.
-
-        Return
-        ------
-        out: mixed
-          The result of ase2sprkkr.common.process_output_reader.ProcessOutputParser.run() method: the
-          parsed output of the runned task.
-
+        ``persistent`` may be ``False``/``None`` (disabled), ``True`` (use the
+        process-wide default execution manager), or an explicit
+        :class:`~ase2sprkkr.execution.ExecutionManager`.
         """
         print_output = calculator.value_or_default("print_output", print_output)
-        executable_suffix = self.resolve_executable_suffix(executable_suffix)
-        executable_suffix = calculator.value_or_default("executable_suffix", executable_suffix)
-        mpi = calculator.value_or_default("mpi", mpi)
+        reader = self.output_reader(calculator, print_output, directory)
+        explicit_profile = profile is not None
+        profile = profile or getattr(calculator, "profile", None) or SPRKKRProfile()
+        if executor is None and not explicit_profile:
+            executor = getattr(calculator, "executor", None)
+        if executor is None:
+            executor = executor_from_profile(profile)
+        if persistent is None:
+            persistent = getattr(calculator, "persistent", False)
+        manager = resolve_execution_manager(persistent)
 
-        d = self._definition
-        executable = d.executable
-        executable += executable_suffix
-        if executable_dir is not False:
-            if executable_dir is None:
-                executable_dir = config.executables.dir()
-            if executable_dir:
-                executable = os.path.join(executable_dir, executable)
-
-        runner = self.process_runner(calculator, print_output, read_callback, directory)
+        execution_profile = profile
+        if self._definition.mpi:
+            execution_profile = profile.with_overrides(
+                mpi=executor.resolve_mpi(profile.mpi)
+            )
 
         try:
 
@@ -204,59 +188,73 @@ class InputParameters(ConfigurationFile):
                 if callback:
                     callback(out)
 
-            mpi = mpi_runner(mpi) if self._definition.mpi else None
-            if mpi:
-                fname = input_file.name
-                # max length of the argument in SPRKKR
-                if len(fname) > 80:
-                    fname = os.path.relpath(fname, directory)
-                executable = mpi + [executable + "MPI", fname]
-                stdin = None
-            else:
-                executable = [executable]
-                stdin = input_file
-            if gdb:
-                stdin = None
-                if mpi:
-                    print(f"run {input_file.name}")
-                    executable = executable[:-1]
-                else:
-                    print(f"run <{input_file.name}")
-                executable = ["gdb"] + executable
-            out = runner.create_process(
-                executable, output_file, stdin=stdin, input_file=input_file.name, callback=cleanup
+            potential_file = self.CONTROL.POTFIL.result
+            if potential_file and not os.path.isabs(potential_file):
+                potential_file = os.path.join(directory, potential_file)
+
+            input_files = tuple(
+                file
+                for file in (
+                    input_file,
+                    potential_file,
+                    *self.input_files(directory),
+                )
+                if file is not None
             )
-            if not run_async:
-                out = out.run()
-            return out
+            output_files = tuple(
+                file
+                for file in (
+                    output_file,
+                    *self.output_files(directory),
+                )
+                if file is not None
+            )
+            cache_files = tuple(
+                file for file in self.cache_files(directory) if file is not None
+            )
+
+            spec = execution_profile.create_execution(
+                self._definition.executable,
+                input_file,
+                output_file,
+                directory,
+                input_files=input_files,
+                output_files=output_files,
+                cache_files=cache_files,
+                mpi_supported=self._definition.mpi,
+                gdb=gdb,
+            )
+            if manager is None:
+                runner = executor.create_run(reader, spec, callback=cleanup)
+            else:
+                runner = manager.create_run(
+                    executor,
+                    reader,
+                    spec,
+                    task=self._execution_task_name,
+                    dataset=self.CONTROL.DATASET.result,
+                    callback=cleanup,
+                )
+            if read_callback:
+                runner.add_output_listener(read_callback)
+            if run_async:
+                return runner
+            return runner.run()
         except FileNotFoundError as e:
             add = (
-                "Cannot find SPRKKR executable. Maybe, ase2sprkkr.config.executable.suffix "
-                "variable should be set (or the SPRKKR_EXECUTABLE_SUFFIX environment variable)?\n"
+                "Cannot find SPR-KKR executable. Check executable_dir and executable_suffix "
+                "in the selected SPR-KKR profile.\n"
             )
-            if mpi:
+            if execution_profile.mpi:
                 add += (
-                    "Also, pleas check that the MPI is functional on your machine, or explicitly disable "
-                    "MPI with mpi=False argument of calculate method (or set ase2sprkkr.config.running.mpi = False)\n\n"
+                    "Also, please check the MPI setting in the selected profile, or explicitly "
+                    "disable MPI with mpi=False in SPRKKR.calculate().\n\n"
                 )
             e.strerror = add + "SPRKKR cannot be run due to the following error: \n" + e.strerror
             raise
 
-    def process_runner(self, calculator=None, print_output=False, read_callback=None, directory=None):
-        """Return the result readed: the class that parse the output
-        of the runned task
-
-        Parameters
-        ----------
-
-        calculator:
-          Calculator, which will be attached to the resulting class
-          for ruther processing the results.
-
-        print_output: bool or str
-          Whether to print output to the stdout.
-          'info' means only print a short summary
-        """
+    def output_reader(self, calculator=None, print_output=False, directory=None):
+        """Return the task-specific output reader/parser."""
         cls = self._definition.result_reader
 
         if not directory and calculator and calculator.directory:
@@ -265,21 +263,12 @@ class InputParameters(ConfigurationFile):
         if cls is None:
             task = self.TASK.TASK().lower()
             cls = KkrOutputReader.class_for_task(task)
-        return cls(self, calculator, directory, print_output, read_callback)
+        return cls(self, calculator, directory, print_output)
 
     def read_output_from_file(self, filename, directory=None):
-        """Read output of a previously runned task from a file and parse it in a same
-        way, as the process would be runned again.
-
-        filename
-          Filename, from which the result will be read
-
-        directory
-          A directory, to which are related the paths in the output
-          Default None means the directory, where the file is
-        """
+        """Read and parse output of a previously run task."""
         directory = directory or os.path.dirname(filename)
-        return self.process_runner(directory=directory).read_from_file(filename)
+        return self.output_reader(directory=directory).read_from_file(filename)
 
     def executable_params(self, directory=None):
         """
@@ -295,7 +284,6 @@ class InputParameters(ConfigurationFile):
         for i in self._members:
             if name in i:
                 self._members[i][name] = value
-                break
         else:
             raise KeyError("No option with name {} in any of the members".format(name))
 
@@ -382,7 +370,7 @@ class InputParameters(ConfigurationFile):
         Return
         ------
         input_parameters: InputParameters
-          Input parameters with the default values for the given task.
+          Input parameters with the default values for the task.
         """
         out = cls(cls.definition(name))
         out._requested_task_name = name.upper()
@@ -411,7 +399,7 @@ class InputParameters(ConfigurationFile):
             try:
                 out = d.read_from_file(filename, allow_dangerous=allow_dangerous)
                 return out
-            except (pp.ParseBaseException, DataValidityError) as e:
+            except Exception as e:
                 last = e
         raise last
 

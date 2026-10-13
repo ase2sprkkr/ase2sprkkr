@@ -1,6 +1,7 @@
 import os
 import tempfile
 import re
+from types import SimpleNamespace
 import pytest
 
 if __package__:
@@ -11,6 +12,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 if True:
     from ..input_parameters import InputParameters
+    from ..input_parameters_definitions import InputParametersDefinition
     from ...common.warnings import DataValidityError, DataValidityWarning
     from ...common.grammar_types import Keyword
 
@@ -23,14 +25,55 @@ class TestDefinitions(TestCase):
         ip.TASK.NK2 = 10
         ip.TASK.K2 = [0.0, 1.0, 0.0]
 
-    def test_set_option(self):
-        ip = InputParameters.create("SCF")
+    def test_task_file_templates_and_overrides(self, tmp_path):
+        parameters = SimpleNamespace(
+            CONTROL=SimpleNamespace(DATASET=lambda: "Fe")
+        )
 
-        ip.set_option("DATASET", "changed")
-        assert ip.CONTROL.DATASET() == "changed"
+        class DynamicDefinition(InputParametersDefinition):
+            def output_files(self, parameters, directory):
+                return (
+                    *super().output_files(parameters, directory),
+                    os.path.join(directory, "dynamic.out"),
+                )
 
-        with pytest.raises(KeyError, match="No option with name UNKNOWN_OPTION"):
-            ip.set_option("UNKNOWN_OPTION", 1)
+        definition = DynamicDefinition(
+            "test",
+            [],
+            input_file_templates=("{dataset}.aux",),
+            output_file_templates=("{dataset}.dat",),
+        )
+
+        assert definition.input_files(parameters, str(tmp_path)) == (
+            str(tmp_path / "Fe.aux"),
+        )
+        assert definition.output_files(parameters, str(tmp_path)) == (
+            str(tmp_path / "Fe.dat"),
+            str(tmp_path / "dynamic.out"),
+        )
+
+    def test_input_parameters_delegate_file_manifests(self, tmp_path, monkeypatch):
+        parameters = InputParameters.create("DOS")
+        definition = parameters._definition
+        calls = []
+
+        def input_files(actual_parameters, directory):
+            calls.append(("input", actual_parameters, directory))
+            return ("input.dat",)
+
+        def output_files(actual_parameters, directory):
+            calls.append(("output", actual_parameters, directory))
+            return ("output.dat",)
+
+        monkeypatch.setattr(definition, "input_files", input_files)
+        monkeypatch.setattr(definition, "output_files", output_files)
+
+        assert parameters.input_files(str(tmp_path)) == ("input.dat",)
+        assert parameters.output_files(str(tmp_path)) == ("output.dat",)
+        assert calls == [
+            ("input", parameters, str(tmp_path)),
+            ("output", parameters, str(tmp_path)),
+        ]
 
     def test_bsf_definitions_are_shared(self):
         definition = InputParameters.definition("BSF")
@@ -92,7 +135,7 @@ class TestDefinitions(TestCase):
             ip.TASK["KPATH"].set(1)
 
     def test_bsf_mode_conflict_warns_when_parsing(self):
-        definition = InputParameters.definition("BSFEK")
+        definition = InputParameters.definition("BSF")
 
         bsfek = InputParameters.create("BSFEK")
         bsfek.CONTROL.POTFIL = "x"

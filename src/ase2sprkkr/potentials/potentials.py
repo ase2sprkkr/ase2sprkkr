@@ -142,10 +142,9 @@ class Potential(ConfigurationFile):
         """Save the potential, optionally restarting SCF only in serialized output.
 
         ``restart_scf`` is an execution/serialization intent, not potential state.
-        All normal synchronization from atoms is performed first.  The value
+        All normal synchronization from atoms is performed first. The value
         written for ``SCFSTATUS`` is then overridden to ``START`` without
-        changing the canonical status or discarding any converged electronic
-        data stored in the potential.
+        changing the canonical status or discarding converged electronic data.
         """
         self.set_from_atoms()
         if atoms is not False:
