@@ -10,6 +10,7 @@ import sys
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
+from types import SimpleNamespace
 
 from .base import ExecutionSpec, LaunchSpec, RunReference, RunState
 from .psij import PsijExecutor
@@ -222,7 +223,9 @@ class _RemotePsijAgent:
         output_file = request.get("output_file") or os.path.join(self.directory, "stdout")
         error_file = request.get("error_file") or output_file + ".err"
         spec = _execution_spec(self.directory, request, output_file, error_file)
-        runner = executor.create_run(_RemoteReader(), spec)
+        runner = executor.create_persistent_run(
+            _RemoteReader(), spec, run_id=run_id
+        )
 
         with _state_lock(self.directory, run_id):
             state = _read_state_unlocked(self.directory, run_id)
@@ -243,29 +246,153 @@ class _RemotePsijAgent:
                     f"Cannot submit remote PSI/J run {run_id!r} from state "
                     f"{state.get('state')!r}"
                 )
-
-            runner.submit()
-            reference = runner.reference
-            if reference is None:
-                raise RuntimeError("PSI/J did not provide a persistent job reference")
-
-            current = runner.state
-            published = (
-                current
-                if current in (RunState.QUEUED, RunState.RUNNING)
-                else RunState.QUEUED
+            started_at = state.get("started_at") or _timestamp()
+            _write_state_unlocked(
+                self.directory,
+                run_id,
+                state=RunState.SUBMITTING.value,
+                pid=os.getpid(),
+                started_at=started_at,
+                submission_error=None,
             )
+
+        try:
+            runner.submit()
+        except BaseException as exc:
+            # Submission failure can be ambiguous: the scheduler may already
+            # have accepted the job even if the client call raised. Keep the
+            # explicit SUBMITTING state and let recovery by persistent run id
+            # decide whether a scheduler job exists before releasing the run.
+            with _state_lock(self.directory, run_id):
+                latest = _read_state_unlocked(self.directory, run_id)
+                if (
+                    latest.get("state") == RunState.SUBMITTING.value
+                    and latest.get("backend_reference") is None
+                ):
+                    _write_state_unlocked(
+                        self.directory,
+                        run_id,
+                        submission_error=repr(exc),
+                        error=repr(exc),
+                    )
+            return True
+
+        reference = runner.reference
+        if reference is None:
+            with _state_lock(self.directory, run_id):
+                _write_state_unlocked(
+                    self.directory,
+                    run_id,
+                    submission_error="PSI/J did not provide a persistent job reference",
+                    error="PSI/J did not provide a persistent job reference",
+                )
+            return True
+
+        current = runner.state
+        published = (
+            current
+            if current in (RunState.QUEUED, RunState.RUNNING)
+            else RunState.QUEUED
+        )
+        with _state_lock(self.directory, run_id):
+            latest = _read_state_unlocked(self.directory, run_id)
             _write_state_unlocked(
                 self.directory,
                 run_id,
                 state=published.value,
                 pid=os.getpid(),
                 backend_reference=asdict(reference),
-                started_at=state.get("started_at") or _timestamp(),
+                started_at=latest.get("started_at") or _timestamp(),
+                submission_error=None,
+                error=None,
             )
 
         self._active[run_id] = _ActiveRun(runner, current)
         return True
+
+    def _recover_submitting(self, run_id, state, request):
+        """Recover the scheduler identity after a target-agent submit crash."""
+        from .remote import (
+            _read_state_unlocked,
+            _state_lock,
+            _timestamp,
+            _write_state_unlocked,
+        )
+
+        executor = self._executor_for(request)
+        submission = SimpleNamespace(
+            directory=request.get("directory") or os.fspath(self.directory)
+        )
+        try:
+            status = executor.recover_submission(
+                run_id,
+                submission,
+                submitted_at=state.get("started_at") or state.get("created_at"),
+            )
+        except NotImplementedError:
+            # Absence cannot be proven. Leaving SUBMITTING is deliberately safer
+            # than creating a duplicate scheduler job.
+            return False
+
+        if status is None:
+            with _state_lock(self.directory, run_id):
+                latest = _read_state_unlocked(self.directory, run_id)
+                if (
+                    latest.get("state") != RunState.SUBMITTING.value
+                    or latest.get("backend_reference") is not None
+                ):
+                    return False
+                if latest.get("cancel_requested"):
+                    _write_state_unlocked(
+                        self.directory,
+                        run_id,
+                        state=RunState.CANCELLED.value,
+                        finished_at=latest.get("finished_at") or _timestamp(),
+                    )
+                elif latest.get("submission_error"):
+                    _write_state_unlocked(
+                        self.directory,
+                        run_id,
+                        state=RunState.FAILED.value,
+                        return_code=None,
+                        finished_at=latest.get("finished_at") or _timestamp(),
+                    )
+                else:
+                    # The previous agent died after reserving the submit but the
+                    # scheduler positively confirms that no such job exists.
+                    # Return to QUEUED so this agent may submit it exactly once.
+                    _write_state_unlocked(
+                        self.directory,
+                        run_id,
+                        state=RunState.QUEUED.value,
+                        pid=None,
+                    )
+            return True
+
+        reference = status.reference
+        if reference is None:
+            raise RuntimeError("Recovered PSI/J submission lacks a job reference")
+        recovered_state = RunState(status.state)
+        with _state_lock(self.directory, run_id):
+            latest = _read_state_unlocked(self.directory, run_id)
+            if latest.get("state") != RunState.SUBMITTING.value:
+                return False
+            changes = {
+                "state": recovered_state.value,
+                "backend_reference": asdict(reference),
+                "pid": os.getpid(),
+                "submission_error": None,
+                "error": status.message,
+            }
+            if status.return_code is not None:
+                changes["return_code"] = status.return_code
+            if recovered_state in _FINAL_RUN_STATES:
+                changes["finished_at"] = latest.get("finished_at") or _timestamp()
+            recovered = _write_state_unlocked(self.directory, run_id, **changes)
+
+        if recovered_state in _FINAL_RUN_STATES:
+            return True
+        return self._attach(run_id, recovered, request)
 
     def _attach(self, run_id, state, request):
         reference = state.get("backend_reference")
@@ -289,6 +416,10 @@ class _RemotePsijAgent:
                     activity = self._attach(run_id, state, request) or activity
                 elif state.get("state") == RunState.QUEUED.value:
                     activity = self._submit(run_id, request) or activity
+                elif state.get("state") == RunState.SUBMITTING.value:
+                    activity = (
+                        self._recover_submitting(run_id, state, request) or activity
+                    )
             except BaseException as exc:
                 self._fail(run_id, exc)
                 activity = True
