@@ -18,7 +18,7 @@ class Mesh:
 
     def interpolate(self, coors, value):
         """Interpolate values in the given coors to the mesh coors."""
-        return self.interpolator(self.coors, value)(coors)
+        return self.interpolator_for_coors(coors, value)(self.coors)
 
     def interpolator(self, values):
         return self.interpolator_for_coors(self.coors, values)
