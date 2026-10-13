@@ -71,7 +71,6 @@ def _reference_from_request(run_id, directory, request):
 
 
 def detached_local_status(reference):
-    """Return detached-helper status, or ``None`` for legacy PID references."""
     if not reference.directory:
         return None
     try:
@@ -87,14 +86,11 @@ def detached_local_status(reference):
 
 
 def recover_local_submission(run_id, submission):
-    """Recover a local detached submit whose reference was not persisted."""
     directory = os.path.abspath(os.fspath(submission.directory))
     try:
         state = status_detached(directory, run_id)
         request = json.loads(_request_path(directory, run_id).read_text())
     except FileNotFoundError:
-        # ``submit_detached`` creates the state before it starts the helper, so
-        # absence on this same filesystem proves that submission did not happen.
         return None
     reference = _reference_from_request(run_id, directory, request)
     return RunStatus(
@@ -155,6 +151,10 @@ class LocalPersistentRunner:
         if status is not None and status.return_code is not None:
             self._return_code = status.return_code
         return self._state
+
+    @property
+    def exception(self):
+        return self._exception
 
     @property
     def return_code(self):
@@ -263,8 +263,6 @@ class LocalPersistentRunner:
 
             stdout.feed_eof()
             stderr.feed_eof()
-            # Replay becomes authoritative once the detached execution and full
-            # stream replay have completed. Parsing is deliberately separate.
             self._finish_mirrors(output_target, error_target, commit=True)
             mirrors_committed = True
             output, error = await parse_task
@@ -331,8 +329,6 @@ class LocalPersistentRunner:
             "launch": asdict(self.spec.launch),
             "input_file": _file_path(self.spec.input_file, directory),
             "stdin": _file_path(self.spec.stdin, directory),
-            # The helper owns private streams. The monitor mirrors them to the
-            # user-facing output paths and can replay them after a restart.
             "output_file": os.fspath(run_directory / "stdout"),
             "error_file": os.fspath(run_directory / "stderr"),
             "client_input_file": _file_path(self.spec.input_file, directory),
@@ -350,9 +346,6 @@ class LocalPersistentRunner:
                 request = self._request()
             except Exception as exc:
                 raise SubmissionNotStarted(str(exc)) from exc
-            # submit_detached creates recoverable target state before spawning
-            # the helper. An exception from it is therefore conservatively
-            # treated as uncertain by ExecutionManager.
             status = submit_detached(request)
             self._state = RunState(status.get("state", "queued"))
             self._return_code = status.get("return_code")
