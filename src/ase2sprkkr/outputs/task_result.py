@@ -245,18 +245,22 @@ class KkrOutputReader:
     def class_for_task(task):
         if not task:
             return DefaultOutputReader
+
+        module_name = f"{readers.__name__}.{task.lower()}"
         try:
             mod = importlib.import_module(f".{task.lower()}", readers.__name__)
-            clsname = task.title() + "OutputReader"
-            cls = getattr(mod, clsname)
-            if not cls:
-                raise Exception(
-                    f"Can not determine the class to read the results of task {task}"
-                    "No {clsname} class in the module {oo.__name__}.{task}"
-                )
-        except ModuleNotFoundError:
-            cls = DefaultOutputReader
+        except ModuleNotFoundError as exc:
+            if exc.name == module_name:
+                return DefaultOutputReader
+            raise
 
+        clsname = task.title() + "OutputReader"
+        cls = getattr(mod, clsname)
+        if not cls:
+            raise Exception(
+                f"Can not determine the class to read the results of task {task}"
+                "No {clsname} class in the module {oo.__name__}.{task}"
+            )
         return cls
 
 
