@@ -7,8 +7,6 @@ _pool = None
 
 import multiprocessing as mp
 
-mp.set_start_method("spawn", force=True)
-
 
 @contextlib.contextmanager
 def ignore_signal(num):
@@ -30,7 +28,10 @@ def in_subprocess(lmbda, module=None, *args, **kwargs):
     global _pool
 
     if not _pool:
-        _pool = ProcessPoolExecutor(max_workers=1)
+        _pool = ProcessPoolExecutor(
+            max_workers=1,
+            mp_context=mp.get_context("spawn"),
+        )
     try:
         with ignore_signal(signal.SIGCHLD):
             if module:
