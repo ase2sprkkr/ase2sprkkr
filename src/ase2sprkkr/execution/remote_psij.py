@@ -304,6 +304,7 @@ class _RemotePsijAgent:
                 backend_reference=asdict(reference),
                 started_at=latest.get("started_at") or _timestamp(),
                 submission_error=None,
+                recovery_error=None,
                 error=None,
             )
 
@@ -333,6 +334,23 @@ class _RemotePsijAgent:
             # Absence cannot be proven. Leaving SUBMITTING is deliberately safer
             # than creating a duplicate scheduler job.
             return False
+        except Exception as exc:
+            # Scheduler/accounting inspection is itself an external operation.
+            # A transient failure here says nothing about whether the job was
+            # accepted, so never turn it into a terminal run state.
+            with _state_lock(self.directory, run_id):
+                latest = _read_state_unlocked(self.directory, run_id)
+                if (
+                    latest.get("state") == RunState.SUBMITTING.value
+                    and latest.get("backend_reference") is None
+                ):
+                    _write_state_unlocked(
+                        self.directory,
+                        run_id,
+                        recovery_error=repr(exc),
+                        error=repr(exc),
+                    )
+            return False
 
         if status is None:
             with _state_lock(self.directory, run_id):
@@ -348,6 +366,7 @@ class _RemotePsijAgent:
                         run_id,
                         state=RunState.CANCELLED.value,
                         finished_at=latest.get("finished_at") or _timestamp(),
+                        recovery_error=None,
                     )
                 elif latest.get("submission_error"):
                     _write_state_unlocked(
@@ -356,6 +375,7 @@ class _RemotePsijAgent:
                         state=RunState.FAILED.value,
                         return_code=None,
                         finished_at=latest.get("finished_at") or _timestamp(),
+                        recovery_error=None,
                     )
                 else:
                     # The previous agent died after reserving the submit but the
@@ -366,6 +386,7 @@ class _RemotePsijAgent:
                         run_id,
                         state=RunState.QUEUED.value,
                         pid=None,
+                        recovery_error=None,
                     )
             return True
 
@@ -382,6 +403,7 @@ class _RemotePsijAgent:
                 "backend_reference": asdict(reference),
                 "pid": os.getpid(),
                 "submission_error": None,
+                "recovery_error": None,
                 "error": status.message,
             }
             if status.return_code is not None:
