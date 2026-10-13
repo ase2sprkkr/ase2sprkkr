@@ -1,11 +1,20 @@
 """ Potential is object that holds data form SPR-KKR potential file """
 
+from os import PathLike, fsdecode
+from pathlib import Path
+from io import StringIO
+from typing import Union
+
 from ..sprkkr.configuration import ConfigurationFile
 from ..sprkkr.io_data import ReadIoData, WriteIoData
 from ..common.decorators import class_property, cache
-from io import StringIO
+from ..common.file_fingerprints import file_fingerprint
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
-from typing import Union
+
+
+class PotentialFileChanged(RuntimeError):
+  """A potential file changed while it was being parsed."""
+
 
 class Potential(ConfigurationFile):
   """ It holds data form SPR-KKR potential file
@@ -95,10 +104,43 @@ class Potential(ConfigurationFile):
       return definition.potential_definition
 
   @staticmethod
-  def from_file(filename, atoms=None, allow_dangerous=False):
-      """ Create a potential from a given potential file. """
+  def from_file(filename, atoms=None, allow_dangerous=False, *,
+                check_file_unchanged=False):
+      """Create a potential from a given potential file.
+
+      If ``check_file_unchanged`` is true, ``filename`` must be a filesystem
+      path. A cheap metadata fingerprint is captured before and after parsing;
+      ``PotentialFileChanged`` is raised if the file was replaced or rewritten
+      while it was being read. The check is opt-in so ordinary reads do not pay
+      for additional filesystem operations.
+      """
+      fingerprint = None
+      path = None
+      if check_file_unchanged:
+          if not isinstance(filename, (str, bytes, PathLike)):
+              raise TypeError(
+                  "check_file_unchanged=True requires a filesystem path"
+              )
+          path = Path(fsdecode(filename))
+          fingerprint = file_fingerprint(path)
+
       pd = Potential.potential_definition
-      return pd.read_from_file(filename, atoms=atoms, allow_dangerous=allow_dangerous)
+      potential = pd.read_from_file(
+          filename, atoms=atoms, allow_dangerous=allow_dangerous
+      )
+
+      if check_file_unchanged:
+          try:
+              current = file_fingerprint(path)
+          except OSError as exc:
+              raise PotentialFileChanged(
+                  f"Potential file changed while it was being read: {path}"
+              ) from exc
+          if current != fingerprint:
+              raise PotentialFileChanged(
+                  f"Potential file changed while it was being read: {path}"
+              )
+      return potential
 
   @classmethod
   def from_string(cls, string:str, atoms=None, allow_dangerous=False):
