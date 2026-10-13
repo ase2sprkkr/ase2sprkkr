@@ -131,9 +131,33 @@ class Potential(ConfigurationFile):
     def __str__(self):
         return "SPRKKR POTENTIAL"
 
-    def save_to_file(self, file, atoms=None, *, validate: Union[str, bool] = "save"):
+    def save_to_file(
+        self,
+        file,
+        atoms=None,
+        *,
+        validate: Union[str, bool] = "save",
+        restart_scf: bool = False,
+    ):
+        """Save the potential, optionally restarting SCF only in serialized output.
+
+        ``restart_scf`` is an execution/serialization intent, not potential state.
+        All normal synchronization from atoms is performed first. The value
+        written for ``SCFSTATUS`` is then overridden to ``START`` without
+        changing the canonical status or discarding converged electronic data.
+        """
         self.set_from_atoms()
-        super().save_to_file(file, atoms, validate=validate)
+        if atoms is not False:
+            self.set_from_atoms(atoms)
+
+        status = self.SCF_INFO.SCFSTATUS
+        if restart_scf:
+            status.result = "START"
+        try:
+            return super().save_to_file(file, False, validate=validate)
+        finally:
+            if restart_scf:
+                status.clear_result()
 
 
 # At last - to avoid circular import problem

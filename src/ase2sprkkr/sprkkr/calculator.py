@@ -184,7 +184,8 @@ class SPRKKR(BaseCalculator):
         """ A pathname or an open file for the output of the runned SPR-KKR task (if not specified
         otherwise in the called method) """
         self.potential_file = potential_file
-        """ A pathname or an open named file for the potential file to be used (if not specified otherwise in the called method) """
+        """ A pathname or an open named file for the potential file to be used (if not specified otherwise in the
+        called method) """
         self.input_parameters = input_parameters
         if options:
             self.input_parameters.set(options, unknown="find")
@@ -413,6 +414,7 @@ class SPRKKR(BaseCalculator):
         empty_spheres: Optional[str | bool | tuple | abc.Mapping] = None,
         profile: Optional[SPRKKRProfile] = None,
         return_files=False,
+        restart_scf: bool = False,
     ):
         """
         Save input and potential files for a calculation.
@@ -488,6 +490,11 @@ class SPRKKR(BaseCalculator):
 
         return_files: boolean
             Return open files object instead of just string filenames.
+
+        restart_scf: bool
+            For an SCF calculation, write ``SCFSTATUS START`` to the potential
+            used by this run while preserving the canonical in-memory potential
+            and its converged electronic data.
 
 
         Returns
@@ -571,7 +578,7 @@ class SPRKKR(BaseCalculator):
                     " it from the atoms object, or <False> to use the POTENTIAL option from the input (parameters) file"
                 )
             elif isinstance(potential, str):
-                if potential_file:
+                if potential_file or restart_scf:
                     potential = Potential.from_file(potential)
                 else:
                     # Set the potential file and clear the potential. Thus,
@@ -654,7 +661,7 @@ class SPRKKR(BaseCalculator):
             pf = self._open_file(
                 pf, directory, templator, True, allow_temporary=return_files, create_subdirs=create_subdirs
             )
-            potential.save_to_file(pf, atoms)
+            potential.save_to_file(pf, atoms, restart_scf=restart_scf)
             pf.close()
             return pf.name
 
@@ -682,7 +689,7 @@ class SPRKKR(BaseCalculator):
             if potential_file:
                 # use the relative potential file name to avoid too-long-
                 # -potential-file-name problem
-                # dirr = os.path.dirname( input_file.name ) if input_file.name else directory
+                # dirr = os.path.dirname(input_file.name) if input_file.name else directory
                 input_parameters.CONTROL.POTFIL = os.path.abspath(potential_file)
                 input_parameters.CONTROL.POTFIL.result = os.path.relpath(potential_file, directory)
             if not input_parameters.CONTROL.DATASET.is_set():
@@ -730,6 +737,13 @@ class SPRKKR(BaseCalculator):
         # HERE starts the execution
         potential, atoms, potential_file, save_input = resolve_potential_and_atoms(potential, atoms, potential_file)
         input_parameters, input_file, save_input = resolve_input_parameters(input_parameters, input_file, save_input)
+        if restart_scf:
+            if str(taskname()).strip().upper() != "SCF":
+                raise ValueError("restart_scf=True is only valid for an SCF calculation.")
+            if not isinstance(potential, Potential):
+                raise ValueError(
+                    "restart_scf=True requires a writable Potential or atoms from which one can be generated."
+                )
         resolve_empty_spheres(empty_spheres)
 
         templator = FilenameTemplator(self, taskname, symbols)
@@ -781,6 +795,7 @@ class SPRKKR(BaseCalculator):
         profile: Optional[SPRKKRProfile] = None,
         executor=None,
         persistent=None,
+        restart_scf: bool = False,
     ):
         """Prepare a calculation and return an unstarted Runner.
 
@@ -811,6 +826,10 @@ class SPRKKR(BaseCalculator):
             manager, ``False`` disables persistence, and an explicit manager
             stores the run in that manager.
 
+        restart_scf: bool
+            Request a fresh SCF cycle from the supplied electronic potential.
+            The canonical in-memory potential is not changed.
+
         ---------
         For the other parameters, see the save_input() method
         """
@@ -833,6 +852,7 @@ class SPRKKR(BaseCalculator):
                 options=options,
                 task=task,
                 return_files=True,
+                restart_scf=restart_scf,
             )
 
             with directory.chdir():
@@ -895,6 +915,7 @@ class SPRKKR(BaseCalculator):
         profile=None,
         executor=None,
         persistent=None,
+        restart_scf: bool = False,
     ):
         """
         ASE-interface method for the calculation.  This method runs the appropriate task(s)
@@ -926,6 +947,10 @@ class SPRKKR(BaseCalculator):
 
         persistent: bool, ExecutionManager or None
             Persistent execution policy, forwarded to :meth:`create_run`.
+
+        restart_scf: bool
+            Request a fresh SCF cycle from the supplied electronic potential.
+            The canonical in-memory potential is not changed.
 
         ---------
         For the other parameters, see the create_run() and save_input() methods
@@ -974,6 +999,7 @@ class SPRKKR(BaseCalculator):
             profile=run_profile,
             executor=executor,
             persistent=persistent,
+            restart_scf=restart_scf,
         )
         result = runner.run()
         self._update_from_result(
