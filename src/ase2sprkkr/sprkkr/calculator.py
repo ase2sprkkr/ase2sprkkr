@@ -308,6 +308,7 @@ class SPRKKR(BaseCalculator):
         Return
         ------
         atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms
+
         """
         if self._atoms is None:
             if not self._potential or isinstance(self._potential, (bool, str)):
@@ -413,6 +414,7 @@ class SPRKKR(BaseCalculator):
         empty_spheres: Optional[str | bool | tuple | abc.Mapping] = None,
         profile: Optional[SPRKKRProfile] = None,
         return_files=False,
+        restart_scf: bool = False,
     ):
         """
         Save input and potential files for a calculation.
@@ -454,7 +456,7 @@ class SPRKKR(BaseCalculator):
         output_file: str or bool or None
             A filename or a filename template (see FilenameTemplator class) where to save the output
             None means to use the default value from the Calculator.
-            See the __init__ method for the meaning of other options.
+            See the __init__ method for the meaning of other values.
 
         directory:
             Path, to which the relative names of the files above will be resolved.
@@ -488,6 +490,11 @@ class SPRKKR(BaseCalculator):
 
         return_files: boolean
             Return open files object instead of just string filenames.
+
+        restart_scf: bool
+            For an SCF calculation, write ``SCFSTATUS START`` to the potential
+            used by this run while preserving the canonical in-memory potential
+            and its converged electronic data.
 
 
         Returns
@@ -571,7 +578,7 @@ class SPRKKR(BaseCalculator):
                     " it from the atoms object, or <False> to use the POTENTIAL option from the input (parameters) file"
                 )
             elif isinstance(potential, str):
-                if potential_file:
+                if potential_file or restart_scf:
                     potential = Potential.from_file(potential)
                 else:
                     # Set the potential file and clear the potential. Thus,
@@ -654,7 +661,7 @@ class SPRKKR(BaseCalculator):
             pf = self._open_file(
                 pf, directory, templator, True, allow_temporary=return_files, create_subdirs=create_subdirs
             )
-            potential.save_to_file(pf, atoms)
+            potential.save_to_file(pf, atoms, restart_scf=restart_scf)
             pf.close()
             return pf.name
 
@@ -709,56 +716,63 @@ class SPRKKR(BaseCalculator):
             if atoms:
                 return filename_from_symbols(atoms.symbols)
             for i in "POTFIL", "DATASET":
-                i = input_parameters.CONTROL[i]
+                i=input_parameters.CONTROL[i]
                 if i.is_set():
                     return Path(i()).stem
             for i in (input_file, potential_file, self.input_file, self.potential_file):
                 if isinstance(i, str):
-                    i = Path(i).stem
-                    if "%" not in i:  # thus i is not template
+                    i=Path(i).stem
+                    if not '%' in i:  # thus i is not template
                         return i
-            return "sprkkr"
+            return 'sprkkr'
 
         def taskname():
             if task:
                 return task
             if input_parameters:
                 return input_parameters.task_name
-            return "SPRKKR"
+            return 'SPRKKR'
 
         # ALL auxiliary procedures defined
         # HERE starts the execution
         potential, atoms, potential_file, save_input = resolve_potential_and_atoms(potential, atoms, potential_file)
         input_parameters, input_file, save_input = resolve_input_parameters(input_parameters, input_file, save_input)
+        if restart_scf:
+            if str(taskname()).strip().upper() != "SCF":
+                raise ValueError("restart_scf=True is only valid for an SCF calculation.")
+            if not isinstance(potential, Potential):
+                raise ValueError(
+                    "restart_scf=True requires a writable Potential or atoms from which one can be generated."
+                )
         resolve_empty_spheres(empty_spheres)
 
         templator = FilenameTemplator(self, taskname, symbols)
         with Directory.new(directory, default=self._directory) as directory:
             directory = directory.path
-            input_file = open_input_file()
+            input_file=open_input_file()
             if potential:
-                potential_file = save_potential_file()
+                potential_file=save_potential_file()
             if save_input:
                 save_input_file()
             else:
                 # This branch can occur if the potential have been explicitly set to False,
                 # which means not to create the potential (and take it from the input_parameters)
-                dirr = os.path.dirname(input_file.name) if input_file.name else directory
-                potential_file = os.path.join(dirr, input_parameters.CONTROL.POTFIL.result)
+                dirr=os.path.dirname(input_file.name) if input_file.name else directory
+                potential_file=os.path.join(dirr, input_parameters.CONTROL.POTFIL.result)
             if output_file is not False:
-                output_file = open_output_file()
+                output_file=open_output_file()
 
             # All is saved and opened - return the values
             if not return_files:
                 for f in input_file, output_file:
-                    if hasattr(f, "close"):
+                    if hasattr(f, 'close'):
                         f.close()
-                input_file = input_file.name
+                input_file=input_file.name
                 if output_file:
-                    output_file = output_file.name
+                    output_file=output_file.name
 
             if output_file is False:
-                output_file = None
+                output_file=None
             return input_parameters, input_file, potential_file, output_file
 
     def create_run(
@@ -781,6 +795,7 @@ class SPRKKR(BaseCalculator):
         profile: Optional[SPRKKRProfile] = None,
         executor=None,
         persistent=None,
+        restart_scf: bool = False,
     ):
         """Prepare a calculation and return an unstarted Runner.
 
@@ -811,6 +826,10 @@ class SPRKKR(BaseCalculator):
             manager, ``False`` disables persistence, and an explicit manager
             stores the run in that manager.
 
+        restart_scf: bool
+            Request a fresh SCF cycle from the supplied electronic potential.
+            The canonical in-memory potential is not changed.
+
         ---------
         For the other parameters, see the save_input() method
         """
@@ -833,6 +852,7 @@ class SPRKKR(BaseCalculator):
                 options=options,
                 task=task,
                 return_files=True,
+                restart_scf=restart_scf,
             )
 
             with directory.chdir():
@@ -895,6 +915,7 @@ class SPRKKR(BaseCalculator):
         profile=None,
         executor=None,
         persistent=None,
+        restart_scf: bool = False,
     ):
         """
         ASE-interface method for the calculation.  This method runs the appropriate task(s)
@@ -926,6 +947,10 @@ class SPRKKR(BaseCalculator):
 
         persistent: bool, ExecutionManager or None
             Persistent execution policy, forwarded to :meth:`create_run`.
+
+        restart_scf: bool
+            Request a fresh SCF cycle from the supplied electronic potential.
+            The canonical in-memory potential is not changed.
 
         ---------
         For the other parameters, see the create_run() and save_input() methods
@@ -974,6 +999,7 @@ class SPRKKR(BaseCalculator):
             profile=run_profile,
             executor=executor,
             persistent=persistent,
+            restart_scf=restart_scf,
         )
         result = runner.run()
         self._update_from_result(
