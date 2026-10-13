@@ -478,7 +478,11 @@ class ExecutionManager:
         fingerprints = []
         seen = set()
         for manifest in artifacts.manifests:
-            matches = glob.glob(manifest, recursive=True) if glob.has_magic(manifest) else (manifest,)
+            matches = (
+                glob.glob(manifest, recursive=True)
+                if glob.has_magic(manifest)
+                else (manifest,)
+            )
             for path in sorted(matches):
                 path = os.path.abspath(path)
                 if path in seen or not os.path.isfile(path):
@@ -486,9 +490,25 @@ class ExecutionManager:
                 seen.add(path)
                 stat = os.stat(path)
                 fingerprints.append(
-                    FileFingerprint(path=path, size=stat.st_size, mtime_ns=stat.st_mtime_ns)
+                    FileFingerprint(
+                        path=path,
+                        size=stat.st_size,
+                        mtime_ns=stat.st_mtime_ns,
+                    )
                 )
         return tuple(sorted(fingerprints, key=lambda value: value.path))
+
+    @staticmethod
+    def _artifacts_missing(artifacts):
+        if artifacts is None:
+            return False
+        for manifest in artifacts.manifests:
+            if glob.has_magic(manifest):
+                if not glob.glob(manifest, recursive=True):
+                    return True
+            elif not os.path.isfile(manifest):
+                return True
+        return False
 
     def _capture_artifacts(self, artifacts):
         if artifacts is None or artifacts.captured_at is not None:
@@ -608,7 +628,9 @@ class ExecutionManager:
         if record.state != RunState.SUBMITTING or record.reference is not None:
             return False
         now = now or datetime.now(timezone.utc)
-        return (now - _timestamp(record.updated_at)).total_seconds() >= self.submitting_grace
+        return (
+            now - _timestamp(record.updated_at)
+        ).total_seconds() >= self.submitting_grace
 
     def recover_submitting(self, record):
         """Recover one stale SUBMITTING record without guessing on uncertainty."""
@@ -617,7 +639,11 @@ class ExecutionManager:
             return record
         executor = self.executor_for(record)
         try:
-            status = executor.recover_submission(record.id, record.submission)
+            status = executor.recover_submission(
+                record.id,
+                record.submission,
+                submitted_at=record.updated_at,
+            )
         except NotImplementedError:
             return record
         if status is not None:
@@ -704,7 +730,11 @@ class ExecutionManager:
 
     def check_artifacts(self, run):
         """Refresh only artifact freshness, never the calculation outcome."""
-        record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
+        record = (
+            self.store.get(run)
+            if isinstance(run, str)
+            else self.store.get(run.id)
+        )
         artifacts = record.artifacts
         if (
             record.state not in _FINAL_STATES
@@ -800,7 +830,9 @@ class ExecutionManager:
 
     def refresh(self, records=None):
         """Refresh referenced runs, reconstructing endpoints when necessary."""
-        records = tuple(self.store.runs(active=True) if records is None else records)
+        records = tuple(
+            self.store.runs(active=True) if records is None else records
+        )
         current = {record.id: record for record in records}
         groups = {}
         for record in records:
@@ -834,16 +866,33 @@ class ExecutionManager:
         )
 
     def load_result(self, run, reader=None):
-        """Load a historical TaskResult from local artifacts without refreshing status.
+        """Load a historical TaskResult, fetching missing remote artifacts on demand.
 
-        Missing output is represented by an incomplete task-specific result so
-        history browsing does not require every artifact to still be available.
-        The returned object exposes the refreshed persistent record as
-        ``run_record``.
+        Ordinary history listing remains metadata-only. Network/filesystem
+        retrieval is performed here only when a declared artifact is missing
+        locally and the persisted endpoint supports ``fetch_artifacts``.
+        Missing output after that attempt is represented by an incomplete
+        task-specific result. The returned object exposes the refreshed
+        persistent record as ``run_record``.
         """
-        record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
+        record = (
+            self.store.get(run)
+            if isinstance(run, str)
+            else self.store.get(run.id)
+        )
         if record.state not in _FINAL_STATES:
             raise RuntimeError(f"Run {record.id} is not finished")
+
+        artifacts = record.artifacts
+        if (
+            self._artifacts_missing(artifacts)
+            and record.reference is not None
+        ):
+            executor = self.executor_for(record)
+            fetch_artifacts = getattr(executor, "fetch_artifacts", None)
+            if fetch_artifacts is not None:
+                fetch_artifacts(record.reference, artifacts)
+
         record = self.check_artifacts(record)
         artifacts = record.artifacts
         if artifacts is None or artifacts.output_file is None:

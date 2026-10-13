@@ -439,7 +439,7 @@ class RemoteEndpointExecutor(Executor):
             message=state.get("error"),
         )
 
-    def recover_submission(self, run_id, submission):
+    def recover_submission(self, run_id, submission, *, submitted_at=None):
         return _run_sync(self._recover_submission(run_id, submission))
 
     def create_run(self, reader, spec, callback=None):

@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 from ase2sprkkr.execution import RunReference, RunState
 from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
 
@@ -43,3 +45,21 @@ def test_remote_endpoint_status_uses_pooled_endpoint_backend():
         RunState.FINISHED,
     )
     assert statuses[1].return_code == 0
+
+
+def test_remote_recovery_accepts_submission_timestamp(monkeypatch):
+    executor = RemoteEndpointExecutor(_Transport())
+    calls = []
+
+    async def recover(run_id, submission):
+        calls.append((run_id, submission.directory))
+        return None
+
+    monkeypatch.setattr(executor, "_recover_submission", recover)
+
+    assert executor.recover_submission(
+        "run-1",
+        SimpleNamespace(directory="/work/case"),
+        submitted_at="2026-10-13T08:00:00+02:00",
+    ) is None
+    assert calls == [("run-1", "/work/case")]
