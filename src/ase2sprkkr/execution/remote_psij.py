@@ -376,7 +376,7 @@ class _RemotePsijAgent:
         while True:
             activity = self._discover()
             activity = self._poll_active() or activity
-            if activity:
+            if self._active or activity:
                 idle_since = None
             elif idle_since is None:
                 idle_since = time.monotonic()
@@ -386,12 +386,13 @@ class _RemotePsijAgent:
 
 
 def run_remote_psij_worker(directory, run_id, request):
-    """Join or become the short-lived workspace PSI/J agent.
+    """Join or become the workspace PSI/J agent.
 
     The first detached worker owns the workspace agent lock and shares PSI/J
-    executors for submissions, refreshes and cancellation requests that arrive
-    close together. The agent exits after a short period without such activity,
-    even if scheduler jobs are still running; a later request starts it again.
+    executors for submissions, refreshes and cancellation requests. The agent
+    stays alive while it owns active jobs so their monitor threads can publish
+    final state without depending on a later client poll, and exits after a
+    short idle period once no active jobs remain.
     """
     directory = Path(directory).expanduser().resolve()
     lock = _try_agent_lock(directory)
