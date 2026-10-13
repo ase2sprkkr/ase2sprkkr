@@ -11,10 +11,12 @@ import os
 import io
 import pkgutil
 import importlib
+import pyparsing as pp
 from ..outputs.task_result import KkrOutputReader
 from . import definitions
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
+from ..common.warnings import DataValidityError
 from typing import Union
 from ..configuration import config, mpi_runner
 from ..potentials.potentials import Potential
@@ -152,9 +154,8 @@ class InputParameters(ConfigurationFile):
         output_file: file
           File, where the output will be writed. It should be opened for writing (in binary mode)
 
-        print_output: bool or str
-          Print the output to the stdout, too? String value 'info' prints only selected infromations
-          (depending on the task runned)
+        print_output: Optional[Union[bool,str]]
+          Print output to stdout, too.
 
         read_callback: callable
           The function will be called for each line
@@ -163,11 +164,10 @@ class InputParameters(ConfigurationFile):
           Whether directly execute the process, or return the coroutine to run it
 
         executable_suffix: str or None
-          Postfix, appended to the name of the called executable (sometimes, SPRKKR executables are
-          compiled so that the resulting executables has postfixies)
+          Postfix appended to the name of the called executable.
 
         callback: Optional[callable]
-          A function, that will be called with the result object, when the calculation is finished.
+          A function called with the result object when the calculation is finished.
 
         mpi: list or str or bool
           Run the task using mpi? See :func:`ase2sprkkr.config.mpi_runner` for the possible values.
@@ -175,9 +175,7 @@ class InputParameters(ConfigurationFile):
         Return
         ------
         out: mixed
-          The result of ase2sprkkr.common.process_output_reader.ProcessOutputParser.run() method: the
-          parsed output of the runned task.
-
+          The result of ase2sprkkr.common.process_output_reader.ProcessOutputParser.run() method.
         """
         print_output = calculator.value_or_default("print_output", print_output)
         executable_suffix = self.resolve_executable_suffix(executable_suffix)
@@ -205,7 +203,6 @@ class InputParameters(ConfigurationFile):
             mpi = mpi_runner(mpi) if self._definition.mpi else None
             if mpi:
                 fname = input_file.name
-                # max length of the argument in SPRKKR
                 if len(fname) > 80:
                     fname = os.path.relpath(fname, directory)
                 executable = mpi + [executable + "MPI", fname]
@@ -334,7 +331,6 @@ class InputParameters(ConfigurationFile):
 
     @cached_class_property
     def definitions():
-        # user = os.path.join(platformdirs.user_config_dir('ase2sprkkr', 'ase2sprkkr'), 'input_parameters')
         ip = InputParameters
         return {n: ip.definition(n) for n in ip.definition_modules}
 
@@ -345,21 +341,7 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def create_input_parameters(cls, arg):
-        """
-        Create input_parameters object
-
-        Parameters
-        ----------
-        arg: str or InputParameters
-          If an InputParameters object is given, it is returned as is.
-          If a string is given, it is interpreted either as a filename
-          (from which the parameters are read) or the task name, for
-          which the default parameters are used
-
-        Return
-        ------
-        input_parameters: InputParameters
-        """
+        """Create input_parameters object from a task name, filename, file, or object."""
         if isinstance(arg, str):
             name = cls.is_it_an_input_parameters_name(arg)
             if name:
@@ -371,17 +353,7 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def create(cls, name):
-        """Create input parameters for the given task name
-        Parameters
-        ----------
-        name: str
-          Name of the task (e.g. 'SCF', 'PHAGEN')
-
-        Return
-        ------
-        input_parameters: InputParameters
-          Input parameters with the default values for the given task.
-        """
+        """Create input parameters for the given task name."""
         out = cls(cls.definition(name))
         out._requested_task_name = name.upper()
         return out
@@ -393,7 +365,11 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Read an input file and create a new InputParameters object from the readed stuff
+        """Read an input file and autodetect the matching task definition.
+
+        Only exceptions that describe invalid input for the attempted definition
+        are treated as an autodetection mismatch.  Programming errors and errors
+        in parser hooks are allowed to propagate immediately.
 
         Parameters
         ----------
@@ -407,9 +383,8 @@ class InputParameters(ConfigurationFile):
         definitions = cls.definitions
         for d in definitions.values():
             try:
-                out = d.read_from_file(filename, allow_dangerous=allow_dangerous)
-                return out
-            except Exception as e:
+                return d.read_from_file(filename, allow_dangerous=allow_dangerous)
+            except (pp.ParseBaseException, DataValidityError) as e:
                 last = e
         raise last
 
@@ -447,6 +422,5 @@ class InputParameters(ConfigurationFile):
         super().save_to_file(file, atoms, validate=validate)
 
 
-# at least, to avoid a circular import
 from ..sprkkr import calculator  # NOQA: E402
 from . import input_parameters_definitions as ipdefs  # NOQA: E402
