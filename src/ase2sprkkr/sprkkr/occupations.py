@@ -10,6 +10,7 @@ from collections.abc import Iterable
 from .sites import SiteType, SitePropertyProxy
 from .radial_meshes import Mesh
 
+
 class SiteOccupation(SitePropertyProxy):
     """
     Proxy for the Occupation of a Site that raises a RuntimeError before any
@@ -40,11 +41,10 @@ class SiteOccupation(SitePropertyProxy):
     def set(
         self,
         dct: Union[Dict[Union[AtomicType, str], float], List[Tuple[Union[AtomicType, str], float]]],
-        update_atoms=True,
         for_mesh=None,
     ) -> None:
         self._check_mutation_allowed()
-        self._get_target().set(dct, update_atoms, for_mesh)
+        self._get_target().set(dct, for_mesh)
 
     def __setitem__(self, name, value):
         self._check_mutation_allowed()
@@ -75,7 +75,6 @@ class SiteOccupation(SitePropertyProxy):
         self.set(x)
 
 
-
 class Occupation:
     """Occupation of the atomic site, given by AtomicType : value
 
@@ -89,10 +88,12 @@ class Occupation:
 
     @staticmethod
     def for_atom_from_ase_atoms(atoms, i: Integral):
-        if "spacegroup_kinds" in atoms.arrays and "occupancy" in atoms.arrays:
-            occ = atoms.arrays["occupancy"].get(atoms.arrays["spacegroup_kinds"][i], None)
+        occupancy = atoms.info.get("occupancy", {})
+        if "spacegroup_kinds" in atoms.arrays:
+            key = atoms.arrays["spacegroup_kinds"][i]
         else:
-            occ = None
+            key = i
+        occ = occupancy.get(key, occupancy.get(str(key)))
         if not occ:
             occ = {atoms.symbols[i]: 1.0}
         return Occupation(occ)
@@ -101,7 +102,7 @@ class Occupation:
     def to_occupation(occupation, site):
         """Create an occupation object associated with the given sites object"""
         if not isinstance(occupation, Occupation):
-            occupation = Occupation(occupation, site, update_atoms=False)
+            occupation = Occupation(occupation, site)
         elif site is not None:
             if occupation.site is None:
                 occupation._site_type = site
@@ -114,12 +115,11 @@ class Occupation:
         dct: Dict[Union[AtomicType, str], float],
         site_type: Optional[SiteType] = None,
         mesh: Optional[Mesh] = None,
-        update_atoms=False,
     ):
         self._site_type = site_type
         if mesh is None and site_type:
             mesh = site_type.mesh
-        self.set(dct, update_atoms, for_mesh=mesh)
+        self._set(dct, for_mesh=mesh)
 
     def copy(self, site: Optional[SiteType] = None, for_mesh=None) -> Occupation:
         """Create a copy of the object, associated with a given site."""
@@ -130,15 +130,18 @@ class Occupation:
     def set(
         self,
         dct: Union[Dict[Union[AtomicType, str], float], List[Tuple[Union[AtomicType, str], float]]],
-        update_atoms=True,
         for_mesh=None,
     ) -> None:
-        """Set (replace) the occupation data.
+        """Set (replace) the occupation data and synchronize the owning Atoms object."""
+        self._set(dct, for_mesh)
+        self._update_atoms()
 
-        The method automatically updates the symbols, atomic numbers and the occupancy property (if exists)
-        of the underlying Atoms object.
-        """
-
+    def _set(
+        self,
+        dct: Union[Dict[Union[AtomicType, str], float], List[Tuple[Union[AtomicType, str], float]]],
+        for_mesh=None,
+    ) -> None:
+        """Set occupation data without synchronizing, for object initialization."""
         if isinstance(dct, (int, str, AtomicType)):
             dct = {dct: 1.0}
         if hasattr(dct, "items"):
@@ -149,8 +152,6 @@ class Occupation:
             for_mesh = self.mesh
         self._occupation = dict((AtomicType.to_atomic_type(i, for_mesh), j) for i, j in iterator)
         self._normalize()
-        if update_atoms:
-            self._update_atoms()
 
     @property
     def site(self):
@@ -213,10 +214,12 @@ class Occupation:
         key = self._find_key(name)
         to = AtomicType.to_atomic_type(to, self.mesh)
         self._occupation = dict((k if k is not key else to, v) for k, v in self._occupation.items())
+        self._update_atoms()
 
     def clean(self):
         """Remove all items with zero probability."""
         self._occupation = dict((k, v) for k, v in self._occupation.items() if v > 0)
+        self._update_atoms()
 
     def __setitem__(self, name, value):
         try:
@@ -229,6 +232,7 @@ class Occupation:
                     f"Cannot add an atomic type using an integer key {name}. Please use a string (chemical symbol)."
                 )
             self.add(name, value)
+            return
         self._update_atoms()
 
     @property
@@ -259,15 +263,18 @@ class Occupation:
             if prim.atomic_number == number:
                 return
             prim.atomic_number = number
-        else:
-            for i in self._occupation.keys():
-                i.atomic_number = number
-                return
+            self._update_atoms()
+            return
+        for atomic_type in self._occupation:
+            atomic_type.atomic_number = number
+            self._update_atoms()
+            return
 
     @property
     def primary_symbol(self):
         """Return the chemical symbol of the atom at the site.
-        If there are more atoms on the site, return the "main one"."""
+        If there are more atoms on the site, return the one
+        with the largest occupation"""
         primary = self.primary_atomic_type
         return primary.symbol if primary else "X"
 
@@ -286,6 +293,7 @@ class Occupation:
         name = self._find_key(name)
         del self._occupation[name]
         self._normalize()
+        self._update_atoms()
 
     def _normalize(self, to=1.0, except_from=None):
         """
