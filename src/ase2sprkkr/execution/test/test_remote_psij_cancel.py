@@ -83,6 +83,7 @@ class _FakeExecutor:
         self.persistent_ids = []
         self.recovery_calls = []
         self.recovery_status = _UNSET
+        self.attach_error = None
 
     def create_run(self, reader, spec):
         runner = _FakeRunner(self.workspace, "job-{}".format(len(self.created) + 1))
@@ -94,6 +95,8 @@ class _FakeExecutor:
         return self.create_run(reader, spec)
 
     def attach(self, reference, reader):
+        if self.attach_error is not None:
+            raise self.attach_error
         runner = _FakeRunner(
             self.workspace,
             reference.native_id,
@@ -170,6 +173,44 @@ def test_remote_psij_agent_recovers_existing_scheduler_job(tmp_path, monkeypatch
     assert executor.created == []
     assert len(executor.attached) == 1
     assert executor.attached[0][0].native_id == "job-existing"
+
+
+def test_remote_psij_attach_failure_preserves_running_state(tmp_path, monkeypatch):
+    workspace = tmp_path / "workspace"
+    reference = RunReference(
+        executor="psij:slurm",
+        native_id="job-existing",
+        directory=str(workspace),
+        output_file=str(workspace / "out"),
+        error_file=str(workspace / "err"),
+    )
+    _record(
+        workspace,
+        "run-1",
+        state=RunState.RUNNING.value,
+        backend_reference={
+            "executor": reference.executor,
+            "native_id": reference.native_id,
+            "computer": reference.computer,
+            "directory": reference.directory,
+            "input_file": reference.input_file,
+            "output_file": reference.output_file,
+            "error_file": reference.error_file,
+        },
+    )
+    executor = _FakeExecutor(workspace)
+    executor.attach_error = RuntimeError("scheduler temporarily unavailable")
+    monkeypatch.setattr(
+        "ase2sprkkr.execution.remote_psij._executor", lambda request: executor
+    )
+
+    agent = _RemotePsijAgent(workspace)
+    assert agent._discover()
+
+    state = status_remote(workspace, "run-1")
+    assert state["state"] == RunState.RUNNING.value
+    assert state["finished_at"] is None
+    assert "scheduler temporarily unavailable" in state["attach_error"]
 
 
 def test_remote_psij_agent_recovers_submit_crash_without_resubmitting(
