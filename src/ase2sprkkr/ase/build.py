@@ -6,7 +6,7 @@ from fractions import Fraction
 import numbers
 import numpy as np
 import ase
-from typing import List, Union, Optional, Tuple
+from typing import Iterable, List, Union, Optional, Tuple
 from ase.build import surface
 
 from ..common import backward_compatibility
@@ -89,7 +89,7 @@ def aperiodic_times(
 
 
 def stack(
-    atomses: List[ase.Atoms],
+    atomses: Iterable[ase.Atoms],
     axis: int,
     at: Optional[List[Optional[List[int]]]] = None,
     relative: bool = False,
@@ -165,13 +165,11 @@ def stack(
     periodic
       The pbc of the resulting object along the axis.
     """
-    try:
-        atoms0 = atomses[0]
-        remains = atomses[1:]
-    except TypeError:
-        iterator = iter(atomses)
-        atoms0 = next(iterator)
-        remains = [i for i in iterator]
+    atomses = list(atomses)
+    if not atomses:
+        raise ValueError("At least one Atoms object has to be supplied.")
+    atoms0 = atomses[0]
+    remains = atomses[1:]
 
     out = atoms0.copy()
 
@@ -190,9 +188,12 @@ def stack(
         if not valid_at(i):
             return None
         a = at[i]
-        if isinstance(a, (int, float)):
-            o = out.cell[axis]
-            o *= a / np.linalg.norm(out)
+        if isinstance(a, numbers.Real):
+            o = np.asarray(out.cell[axis], dtype=float).copy()
+            norm = np.linalg.norm(o)
+            if np.isclose(norm, 0.0):
+                raise ValueError("A scalar 'at' value requires a non-zero stacking cell vector.")
+            o *= a / norm
         else:
             o = a
         return o
@@ -235,7 +236,6 @@ def stack(
     for i, a in enumerate(remains, start=1):
         update_origin(i)
         out += a
-        out.pbc *= a.pbc
         # ``-0`` is ``0`` in Python, so slicing with ``[-len(a):]`` for an
         # empty Atoms object selects every position already in ``out``.  The
         # origin shift below would then move all previously stacked atoms.
