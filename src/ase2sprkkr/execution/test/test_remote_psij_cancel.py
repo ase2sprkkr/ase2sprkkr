@@ -106,6 +106,8 @@ class _FakeExecutor:
         self.recovery_calls.append((run_id, submission.directory, submitted_at))
         if self.recovery_status is _UNSET:
             raise NotImplementedError
+        if isinstance(self.recovery_status, BaseException):
+            raise self.recovery_status
         return self.recovery_status
 
 
@@ -199,6 +201,25 @@ def test_remote_psij_agent_recovers_submit_crash_without_resubmitting(
     assert state["backend_reference"]["native_id"] == "job-recovered"
     assert state["state"] == RunState.RUNNING.value
     assert len(executor.attached) == 1
+
+
+def test_remote_psij_recovery_failure_stays_submitting(tmp_path, monkeypatch):
+    workspace = tmp_path / "workspace"
+    _record(workspace, "run-1", state=RunState.SUBMITTING.value)
+    executor = _FakeExecutor(workspace)
+    executor.recovery_status = RuntimeError("scheduler temporarily unavailable")
+    monkeypatch.setattr(
+        "ase2sprkkr.execution.remote_psij._executor", lambda request: executor
+    )
+
+    agent = _RemotePsijAgent(workspace)
+    assert not agent._discover()
+
+    state = status_remote(workspace, "run-1")
+    assert state["state"] == RunState.SUBMITTING.value
+    assert state["backend_reference"] is None
+    assert "scheduler temporarily unavailable" in state["recovery_error"]
+    assert state["finished_at"] is None
 
 
 def test_remote_psij_cancel_is_serviced_by_shared_agent(tmp_path, monkeypatch):
