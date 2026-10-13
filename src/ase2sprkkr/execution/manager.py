@@ -716,15 +716,27 @@ class ExecutionManager:
             message=status.message,
         )
 
-    def finalize(self, record, *, state, reference=None, return_code=None):
+    def finalize(
+        self,
+        record,
+        *,
+        state,
+        reference=None,
+        return_code=None,
+        backend_state=None,
+        message=None,
+    ):
         """Publish local finalization and capture immutable artifact fingerprints."""
         artifacts = self._capture_artifacts(record.artifacts)
+        if backend_state is None:
+            backend_state = state if state in _FINAL_STATES else _UNCHANGED
         return self.transition(
             record,
             state=state,
-            backend_state=state if state in _FINAL_STATES else _UNCHANGED,
+            backend_state=backend_state,
             reference=reference,
             return_code=return_code,
+            message=message,
             artifacts=artifacts,
         )
 
@@ -1005,13 +1017,25 @@ class PersistentRunner:
         )
         return result
 
+    def _completion_state(self):
+        backend_state = self._runner.state
+        exception = getattr(self._runner, "_exception", None)
+        state = (
+            RunState.FAILED
+            if exception is not None and backend_state != RunState.CANCELLED
+            else backend_state
+        )
+        return state, backend_state, exception
+
     def _sync_completion(self, result):
-        state = self._runner.state
+        state, backend_state, exception = self._completion_state()
         self._record = self.manager.finalize(
             self._record,
             state=state,
+            backend_state=backend_state,
             reference=self.reference,
             return_code=getattr(result, "return_code", None),
+            message=None if exception is None else str(exception),
         )
 
     def wait(self):
@@ -1019,12 +1043,14 @@ class PersistentRunner:
             return self._runner.wait()
         finally:
             if self._record.state != RunState.NEW:
-                state = self._runner.state
+                state, backend_state, exception = self._completion_state()
                 self._record = self.manager.finalize(
                     self._record,
                     state=state,
+                    backend_state=backend_state,
                     reference=self.reference,
                     return_code=getattr(self.result, "return_code", None),
+                    message=None if exception is None else str(exception),
                 )
 
     def run(self):
