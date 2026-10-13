@@ -311,7 +311,7 @@ class SPRKKR(BaseCalculator):
         atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms
         """
         if self._atoms is None:
-            if not self._potential or isinstance(self._potential, (bool, str)):
+            if self._potential is None or isinstance(self._potential, bool):
                 return None
             if isinstance(self._potential, str):
                 self._potential = Potential.from_file(self._potential)
