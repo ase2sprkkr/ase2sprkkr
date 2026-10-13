@@ -369,7 +369,7 @@ class Site:
             st = x._site_type
             n_st = cache.get(st, None)
             if not n_st:
-                cache[st] = n_st = st.copy(atoms=False)
+                cache[st] = n_st = st.copy(atoms=atoms)
             return x.copy(site_type=n_st)
 
         try:
@@ -554,6 +554,7 @@ class Site:
         copy the exiting one.
         """
         out = copy.copy(self)
+        out.magnetisation = self.magnetisation.copy()
         if site_type:
             if not isinstance(site_type, SiteType):
                 site_type = out._site_type.copy()

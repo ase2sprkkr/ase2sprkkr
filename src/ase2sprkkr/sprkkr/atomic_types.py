@@ -328,15 +328,14 @@ n_semicore: {n_semicore}""")
         return self.copy(mesh)
 
     def copy(self, for_mesh=None):
+        """Return an independent copy, optionally remeshed to ``for_mesh``."""
         out = copy.copy(self)
-        if out.potential is not None:
-            out.potential = out.potential.copy(for_mesh)
-        if out.charge is not None:
-            out.charge = out.charge.copy(for_mesh)
-        if out.moments is not None:
-            out.moments = out.moments.copy()
-        if for_mesh is not None:
-            out._mesh = for_mesh
+        target_mesh = self.mesh if for_mesh is None else for_mesh
+        out._mesh = target_mesh
+        out._potential = self.potential.copy(target_mesh) if self.potential is not None else None
+        out._charge = self.charge.copy(target_mesh) if self.charge is not None else None
+        out._moments = self.moments.copy() if self.moments is not None else None
+        out.magnetisation = self.magnetisation.copy()
         return out
 
     def remesh(self, mesh, map: "Dict[AtomicType,AtomicType]"):
