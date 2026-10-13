@@ -7,6 +7,8 @@ import sys
 import time
 from pathlib import Path
 
+import ase2sprkkr
+
 
 POTFIL_RE = re.compile(
     r"\bPOTFIL\s*=\s*(?:\"([^\"]+)\"|'([^']+)'|([^\s]+))",
@@ -14,9 +16,7 @@ POTFIL_RE = re.compile(
 )
 NITER_RE = re.compile(r"\bNITER\s*=\s*(\d+)", re.IGNORECASE)
 ITERATION_START_RE = re.compile(r"(?=^.*\bEMIN\s+=)", re.MULTILINE)
-SCF_OUTPUT = Path(
-    "/workspace/ase2sprkkr/src/ase2sprkkr/outputs/examples/scf.out"
-)
+SCF_OUTPUT = Path(ase2sprkkr.__file__).resolve().parent / "outputs" / "examples" / "scf.out"
 
 
 def _requested_iterations(parameters):
