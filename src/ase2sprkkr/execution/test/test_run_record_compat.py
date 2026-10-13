@@ -1,6 +1,6 @@
 import json
 
-from ase2sprkkr.execution import RunState, RunStore
+from ase2sprkkr.execution import RunRecord, RunState, RunStore
 
 
 def test_schema_v1_record_without_finished_at_remains_readable(tmp_path):
@@ -26,4 +26,21 @@ def test_schema_v1_record_without_finished_at_remains_readable(tmp_path):
     record = store.get("legacy")
 
     assert record.state == RunState.FINISHED
+    assert record.finished_at is None
+
+
+def test_run_record_constructor_does_not_require_finished_at(tmp_path):
+    created_at = "2026-10-12T12:34:56+00:00"
+
+    record = RunRecord(
+        "legacy",
+        RunState.RUNNING,
+        created_at,
+        created_at,
+        "DOS",
+        str(tmp_path),
+    )
+
+    assert record.task == "DOS"
+    assert record.directory == str(tmp_path)
     assert record.finished_at is None
