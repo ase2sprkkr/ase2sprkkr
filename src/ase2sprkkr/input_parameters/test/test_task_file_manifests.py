@@ -35,3 +35,24 @@ def test_bsf_reuses_dataset_tau_directory_as_optional_cache(tmp_path):
     parameters.CONTROL.DATASET = "Fe"
 
     assert parameters.cache_files(str(tmp_path)) == (str(tmp_path / "Fe.tau.dir"),)
+
+
+def test_gilbert_fluctuation_file_is_required_for_m_t(tmp_path):
+    parameters = InputParameters.create("GILBERT")
+    parameters.TASK.SETFLUCT = "M_T"
+    parameters.TASK.FLUCTFIL = "magnetization.dat"
+
+    assert parameters.input_files(str(tmp_path)) == (
+        str(tmp_path / "magnetization.dat"),
+    )
+
+
+def test_phagen_outputs_follow_explicit_potential_name(tmp_path):
+    parameters = InputParameters.create("PHAGEN")
+    parameters.CONTROL.POTFIL = "Fe.pot"
+    parameters.CONTROL.DATASET = "unrelated"
+
+    assert parameters.output_files(str(tmp_path)) == (
+        str(tmp_path / "Fe.pot_ex_sprkkr"),
+        str(tmp_path / "Fe.pot.only_coulomb"),
+    )
