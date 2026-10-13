@@ -23,6 +23,15 @@ class TestDefinitions(TestCase):
         ip.TASK.NK2 = 10
         ip.TASK.K2 = [0.0, 1.0, 0.0]
 
+    def test_set_option(self):
+        ip = InputParameters.create("SCF")
+
+        ip.set_option("DATASET", "changed")
+        assert ip.CONTROL.DATASET() == "changed"
+
+        with pytest.raises(KeyError, match="No option with name UNKNOWN_OPTION"):
+            ip.set_option("UNKNOWN_OPTION", 1)
+
     def test_bsf_definitions_are_shared(self):
         definition = InputParameters.definition("BSF")
         assert definition is InputParameters.definition("BSFEK")
@@ -83,7 +92,7 @@ class TestDefinitions(TestCase):
             ip.TASK["KPATH"].set(1)
 
     def test_bsf_mode_conflict_warns_when_parsing(self):
-        definition = InputParameters.definition("BSF")
+        definition = InputParameters.definition("BSFEK")
 
         bsfek = InputParameters.create("BSFEK")
         bsfek.CONTROL.POTFIL = "x"

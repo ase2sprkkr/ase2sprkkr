@@ -293,6 +293,7 @@ class InputParameters(ConfigurationFile):
         for i in self._members:
             if name in i:
                 self._members[i][name] = value
+                break
         else:
             raise KeyError("No option with name {} in any of the members".format(name))
 
