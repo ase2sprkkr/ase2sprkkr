@@ -8,6 +8,7 @@ import numpy as np
 from ase import Atoms
 
 from ..atoms_region import AtomsRegion  # NOQA E402
+from ..spacegroup_info import RegionSpacegroupInfo  # NOQA E402
 
 
 class TestAtomsRegion(TestCase):
@@ -61,6 +62,33 @@ class TestAtomsRegion(TestCase):
 
         self.assertIs(region.spacegroup_info, expected)
         self.assertIs(region.atoms.spacegroup_info.region, region)
+
+    def test_region_spacegroup_dataset_recomputes_through_parent(self):
+        expected = object()
+
+        class SpacegroupInfo:
+            def __init__(inner_self):
+                inner_self.region_info = None
+                inner_self.calls = 0
+
+            def info_for_region(inner_self, region):
+                if inner_self.region_info is None:
+                    inner_self.region_info = RegionSpacegroupInfo(inner_self, region)
+                return inner_self.region_info
+
+            def recompute(inner_self):
+                inner_self.calls += 1
+                inner_self.region_info._dataset = expected
+                return inner_self
+
+        class Parent:
+            spacegroup_info = SpacegroupInfo()
+
+        region = AtomsRegion("test", slice(None), np.eye(3))
+        region.atoms = Parent()
+
+        self.assertIs(region.spacegroup_info.dataset, expected)
+        self.assertEqual(region.atoms.spacegroup_info.calls, 1)
 
     def test_copy_for_atoms_preserves_incomplete_cell_and_pbc(self):
         parent = Atoms(
