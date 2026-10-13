@@ -13,9 +13,12 @@ from .base import (
 from .endpoint import ExecutorEndpoint
 from .local import LocalExecutor, LocalRunner
 from .manager import (
+    ArtifactRecord,
+    ArtifactState,
     CorruptRunRecord,
     DuplicateSubmissionError,
     ExecutionManager,
+    FileFingerprint,
     PersistentRunner,
     RunRecord,
     RunStore,
@@ -43,6 +46,9 @@ __all__ = [
     "RunStatus",
     "SubmissionKey",
     "DuplicateSubmissionError",
+    "FileFingerprint",
+    "ArtifactState",
+    "ArtifactRecord",
     "RunRecord",
     "RunStore",
     "CorruptRunRecord",

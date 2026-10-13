@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import asyncio
+import glob
 import json
 import os
 import warnings
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
+from enum import Enum
 from pathlib import Path
 from threading import RLock
 from typing import Optional
@@ -47,6 +49,26 @@ def _timestamp(value):
     return parsed
 
 
+def _artifact_path(value, directory):
+    """Return a stable absolute local path for a declared artifact."""
+    if value is None:
+        return None
+    value = getattr(value, "name", value)
+    try:
+        path = os.fspath(value)
+    except TypeError:
+        return None
+    if isinstance(path, int):
+        return None
+    if not os.path.isabs(path):
+        path = os.path.join(directory, path)
+    return os.path.abspath(path)
+
+
+def _unique(values):
+    return tuple(dict.fromkeys(value for value in values if value is not None))
+
+
 @contextmanager
 def _filesystem_lock(path):
     """Hold an exclusive one-byte/file lock on *path* across processes."""
@@ -83,6 +105,69 @@ class CorruptRunRecord(RuntimeError):
     def __init__(self, path, message):
         self.path = Path(path)
         super().__init__(f"Corrupt run record {self.path}: {message}")
+
+
+class ArtifactState(str, Enum):
+    """Freshness of files belonging to a completed calculation."""
+
+    CURRENT = "current"
+    OVERWRITTEN = "overwritten"
+
+
+@dataclass(frozen=True)
+class FileFingerprint:
+    """Cheap local identity used to notice later artifact changes."""
+
+    path: str
+    size: int
+    mtime_ns: int
+
+    def __post_init__(self):
+        object.__setattr__(self, "path", os.fspath(self.path))
+
+
+@dataclass(frozen=True)
+class ArtifactRecord:
+    """Persistent artifact manifest and the snapshot captured at finalization.
+
+    Cache files are intentionally absent. Reusable caches may legitimately be
+    updated by later calculations and therefore never make a historical result
+    ``OVERWRITTEN``.
+    """
+
+    input_file: Optional[str] = None
+    output_file: Optional[str] = None
+    input_files: tuple[str, ...] = ()
+    output_files: tuple[str, ...] = ()
+    fingerprints: tuple[FileFingerprint, ...] = ()
+    captured_at: Optional[str] = None
+    state: ArtifactState = ArtifactState.CURRENT
+
+    def __post_init__(self):
+        for name in ("input_file", "output_file"):
+            value = getattr(self, name)
+            if value is not None:
+                object.__setattr__(self, name, os.fspath(value))
+        for name in ("input_files", "output_files"):
+            object.__setattr__(
+                self,
+                name,
+                tuple(os.fspath(value) for value in getattr(self, name)),
+            )
+        object.__setattr__(
+            self,
+            "fingerprints",
+            tuple(
+                value if isinstance(value, FileFingerprint) else FileFingerprint(**value)
+                for value in self.fingerprints
+            ),
+        )
+        if not isinstance(self.state, ArtifactState):
+            object.__setattr__(self, "state", ArtifactState(self.state))
+
+    @property
+    def manifests(self):
+        return _unique((*self.input_files, *self.output_files))
 
 
 @dataclass(frozen=True)
@@ -131,6 +216,10 @@ class RunRecord:
     records the last status reported by the execution backend. A terminal
     backend state therefore normally corresponds to ``state == FINISHING``
     until parsing, stage-out and local finalization have completed.
+
+    Artifact freshness is independent of calculation outcome. A successful run
+    remains ``FINISHED`` when its files are later changed; only
+    ``artifacts.state`` becomes ``OVERWRITTEN``.
     """
 
     id: str
@@ -146,6 +235,7 @@ class RunRecord:
     backend_state: Optional[RunState] = None
     return_code: Optional[int] = None
     message: Optional[str] = None
+    artifacts: Optional[ArtifactRecord] = None
     schema_version: int = _RUN_RECORD_SCHEMA_VERSION
 
     def __post_init__(self):
@@ -155,6 +245,8 @@ class RunRecord:
             object.__setattr__(self, "submission", SubmissionKey(**self.submission))
         if isinstance(self.reference, dict):
             object.__setattr__(self, "reference", RunReference(**self.reference))
+        if isinstance(self.artifacts, dict):
+            object.__setattr__(self, "artifacts", ArtifactRecord(**self.artifacts))
         if not isinstance(self.state, RunState):
             object.__setattr__(self, "state", RunState(self.state))
         if self.backend_state is not None and not isinstance(self.backend_state, RunState):
@@ -278,7 +370,7 @@ class RunStore:
         return sorted(records, key=lambda record: record.created_at, reverse=newest)
 
     def runs(self, *, active=None, limit=None, newest=False):
-        """Return stored runs without querying execution backends."""
+        """Return stored runs without querying backends or touching artifacts."""
         if limit is not None and limit < 0:
             raise ValueError("limit must be non-negative")
         if limit == 0:
@@ -349,6 +441,65 @@ class ExecutionManager:
             )
         return executor
 
+    @staticmethod
+    def _artifacts_for_spec(spec):
+        directory = os.path.abspath(os.fspath(spec.directory))
+        input_file = _artifact_path(getattr(spec, "input_file", None), directory)
+        output_file = _artifact_path(getattr(spec, "output_file", None), directory)
+        input_files = _unique(
+            (
+                input_file,
+                *(
+                    _artifact_path(value, directory)
+                    for value in getattr(spec, "input_files", ())
+                ),
+            )
+        )
+        output_files = _unique(
+            (
+                output_file,
+                *(
+                    _artifact_path(value, directory)
+                    for value in getattr(spec, "output_files", ())
+                ),
+            )
+        )
+        return ArtifactRecord(
+            input_file=input_file,
+            output_file=output_file,
+            input_files=input_files,
+            output_files=output_files,
+        )
+
+    @staticmethod
+    def _artifact_snapshot(artifacts):
+        if artifacts is None:
+            return ()
+        fingerprints = []
+        seen = set()
+        for manifest in artifacts.manifests:
+            matches = glob.glob(manifest, recursive=True) if glob.has_magic(manifest) else (manifest,)
+            for path in sorted(matches):
+                path = os.path.abspath(path)
+                if path in seen or not os.path.isfile(path):
+                    continue
+                seen.add(path)
+                stat = os.stat(path)
+                fingerprints.append(
+                    FileFingerprint(path=path, size=stat.st_size, mtime_ns=stat.st_mtime_ns)
+                )
+        return tuple(sorted(fingerprints, key=lambda value: value.path))
+
+    def _capture_artifacts(self, artifacts):
+        if artifacts is None or artifacts.captured_at is not None:
+            return artifacts
+        return replace(
+            artifacts,
+            fingerprints=self._artifact_snapshot(artifacts),
+            captured_at=_now(),
+            state=ArtifactState.CURRENT,
+        )
+
     def new_record(
         self,
         *,
@@ -357,6 +508,7 @@ class ExecutionManager:
         dataset=None,
         endpoint=None,
         submission=None,
+        artifacts=None,
         run_id=None,
     ):
         """Create the in-memory identity of an unsubmitted persistent run."""
@@ -371,6 +523,7 @@ class ExecutionManager:
             directory=os.path.abspath(os.fspath(directory)),
             endpoint=endpoint,
             submission=submission,
+            artifacts=artifacts,
         )
 
     @staticmethod
@@ -395,6 +548,21 @@ class ExecutionManager:
             return latest.backend_state
         return requested
 
+    @staticmethod
+    def _merged_artifacts(latest, requested):
+        if requested is _UNCHANGED or requested is None:
+            return latest.artifacts
+        if isinstance(requested, dict):
+            requested = ArtifactRecord(**requested)
+        current = latest.artifacts
+        if current is None:
+            return requested
+        if current.state == ArtifactState.OVERWRITTEN:
+            return current
+        if current.captured_at is not None and requested.captured_at is not None:
+            return current
+        return requested
+
     def transition(
         self,
         record,
@@ -404,8 +572,10 @@ class ExecutionManager:
         backend_state=_UNCHANGED,
         return_code=_UNCHANGED,
         message=_UNCHANGED,
+        artifacts=_UNCHANGED,
     ):
         """Merge one lifecycle update into the latest persisted record."""
+
         def merge(latest):
             final_locked = latest.state in _FINAL_STATES
             changes = {
@@ -415,6 +585,9 @@ class ExecutionManager:
             merged_backend_state = self._merged_backend_state(latest, backend_state)
             if merged_backend_state is not latest.backend_state:
                 changes["backend_state"] = merged_backend_state
+            merged_artifacts = self._merged_artifacts(latest, artifacts)
+            if merged_artifacts is not latest.artifacts:
+                changes["artifacts"] = merged_artifacts
             if (
                 reference is not _UNCHANGED
                 and reference is not None
@@ -507,11 +680,7 @@ class ExecutionManager:
     def update(self, record, status: RunStatus):
         """Persist one backend status without declaring local finalization done."""
         backend_state = RunState(status.state)
-        state = (
-            RunState.FINISHING
-            if backend_state in _FINAL_STATES
-            else backend_state
-        )
+        state = RunState.FINISHING if backend_state in _FINAL_STATES else backend_state
         return self.transition(
             record,
             state=state,
@@ -520,6 +689,44 @@ class ExecutionManager:
             return_code=status.return_code,
             message=status.message,
         )
+
+    def finalize(self, record, *, state, reference=None, return_code=None):
+        """Publish local finalization and capture immutable artifact fingerprints."""
+        artifacts = self._capture_artifacts(record.artifacts)
+        return self.transition(
+            record,
+            state=state,
+            backend_state=state if state in _FINAL_STATES else _UNCHANGED,
+            reference=reference,
+            return_code=return_code,
+            artifacts=artifacts,
+        )
+
+    def check_artifacts(self, run):
+        """Refresh only artifact freshness, never the calculation outcome."""
+        record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
+        artifacts = record.artifacts
+        if (
+            record.state not in _FINAL_STATES
+            or artifacts is None
+            or artifacts.captured_at is None
+            or artifacts.state == ArtifactState.OVERWRITTEN
+        ):
+            return record
+        if self._artifact_snapshot(artifacts) == artifacts.fingerprints:
+            return record
+
+        def mark_overwritten(latest):
+            current = latest.artifacts
+            if current is None or current.state == ArtifactState.OVERWRITTEN:
+                return latest
+            return replace(
+                latest,
+                updated_at=_now(),
+                artifacts=replace(current, state=ArtifactState.OVERWRITTEN),
+            )
+
+        return self.store.update(record, mark_overwritten)
 
     @staticmethod
     def _complete(persistent, result, callback):
@@ -575,6 +782,7 @@ class ExecutionManager:
             directory=spec.directory,
             endpoint=endpoint,
             submission=submission,
+            artifacts=self._artifacts_for_spec(spec),
             run_id=run_id,
         )
         self.register_executor(executor, endpoint)
@@ -624,6 +832,44 @@ class ExecutionManager:
             ),
             callback,
         )
+
+    def load_result(self, run, reader=None):
+        """Load a historical TaskResult from local artifacts without refreshing status.
+
+        Missing output is represented by an incomplete task-specific result so
+        history browsing does not require every artifact to still be available.
+        The returned object exposes the refreshed persistent record as
+        ``run_record``.
+        """
+        record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
+        if record.state not in _FINAL_STATES:
+            raise RuntimeError(f"Run {record.id} is not finished")
+        record = self.check_artifacts(record)
+        artifacts = record.artifacts
+        if artifacts is None or artifacts.output_file is None:
+            raise RuntimeError(f"Run {record.id} has no persisted output artifact")
+
+        if reader is None:
+            from ..outputs.task_result import KkrOutputReader
+
+            reader = KkrOutputReader.class_for_task(record.task)(
+                None, None, record.directory
+            )
+
+        output_file = artifacts.output_file
+        input_file = artifacts.input_file
+        if os.path.isfile(output_file):
+            result = reader.read_from_file(
+                output_file,
+                return_code=0 if record.return_code is None else record.return_code,
+                input_file=input_file,
+                directory=record.directory,
+            )
+        else:
+            result = reader.create_result(output_file, input_file)
+            result.complete(None, record.return_code)
+        result.run_record = record
+        return result
 
 
 class PersistentRunner:
@@ -712,10 +958,9 @@ class PersistentRunner:
 
     def _sync_completion(self, result):
         state = self._runner.state
-        self._record = self.manager.transition(
+        self._record = self.manager.finalize(
             self._record,
             state=state,
-            backend_state=state if state in _FINAL_STATES else _UNCHANGED,
             reference=self.reference,
             return_code=getattr(result, "return_code", None),
         )
@@ -726,10 +971,9 @@ class PersistentRunner:
         finally:
             if self._record.state != RunState.NEW:
                 state = self._runner.state
-                self._record = self.manager.transition(
+                self._record = self.manager.finalize(
                     self._record,
                     state=state,
-                    backend_state=state if state in _FINAL_STATES else _UNCHANGED,
                     reference=self.reference,
                     return_code=getattr(self.result, "return_code", None),
                 )
@@ -742,6 +986,17 @@ class PersistentRunner:
     async def run_async(self):
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(None, self.run)
+
+    def refresh(self):
+        """Refresh this run's persisted backend status."""
+        self._record = self.manager.refresh((self._record,))[0]
+        return self._record
+
+    def load_result(self, reader=None):
+        """Reload this run from its persisted artifacts."""
+        result = self.manager.load_result(self._record, reader=reader)
+        self._record = result.run_record
+        return result
 
     def cancel(self):
         try:
