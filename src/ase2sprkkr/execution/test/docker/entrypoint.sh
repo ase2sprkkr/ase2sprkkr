@@ -46,7 +46,9 @@ chown tester:tester /home/tester/.config/ase2sprkkr/__init__.py
 
 cat > /usr/local/bin/ase2sprkkr <<'SH'
 #!/bin/sh
-export PYTHONPATH=/workspace/ase2sprkkr/src${PYTHONPATH:+:$PYTHONPATH}
+# Source checkouts mount the repository and need ``src`` on PYTHONPATH, while
+# installed-wheel tests mount site-packages directly. Keep both layouts valid.
+export PYTHONPATH=/workspace/ase2sprkkr/src:/workspace/ase2sprkkr${PYTHONPATH:+:$PYTHONPATH}
 exec /opt/venv/bin/python -m ase2sprkkr.tools.ase2sprkkr "$@"
 SH
 chmod 0755 /usr/local/bin/ase2sprkkr

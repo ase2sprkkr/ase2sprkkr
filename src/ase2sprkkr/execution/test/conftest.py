@@ -17,6 +17,15 @@ class DockerExecutionImage:
     image: str
 
 
+def _package_mount_root() -> Path:
+    """Return a host path importable inside both source and wheel test layouts."""
+    package_dir = Path(__file__).resolve().parents[2]
+    package_parent = package_dir.parent
+    if package_parent.name == "src":
+        return package_parent.parent
+    return package_parent
+
+
 @pytest.fixture(scope="session")
 def docker_execution_image():
     """Build the common execution-test image once per pytest session."""
@@ -24,7 +33,7 @@ def docker_execution_image():
     if docker is None:
         pytest.skip("Docker is required for the execution integration tests")
 
-    repository = Path(__file__).resolve().parents[4]
+    repository = _package_mount_root()
     context = Path(__file__).with_name("docker")
     image = "ase2sprkkr-execution-test"
     subprocess.run([docker, "build", "-t", image, str(context)], check=True)
