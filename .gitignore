@@ -1,6 +1,7 @@
 **.pyc
 **/.*.swp
 **/.gdb_history
+*.so
 CMakeFiles/*
 dist/**
 src/ase2sprkkr.egg-info/**

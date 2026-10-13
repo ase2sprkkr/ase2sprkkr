@@ -5,7 +5,6 @@ This command just run the tests
 
 from pathlib import Path
 import sys
-import argparse
 
 if not __package__:
     __package__ = "ase2sprkkr.tools.commands"
@@ -21,7 +20,10 @@ unknowns = "pytest_arguments"
 
 
 def parser(parser):
-    parser.add_argument("pytest_arguments", help="Arguments for pytest.", nargs=argparse.REMAINDER)
+    # Pytest arguments must stay in parse_known_args()'s remainder.  Declaring
+    # an argparse.REMAINDER positional here splits unknown options such as
+    # ``-k EXPRESSION`` and loses their original ordering.
+    parser.set_defaults(pytest_arguments=[])
     parser.add_argument(
         "--no-kkr",
         help="Do not run SPRKKR executables, just test the interface only.",

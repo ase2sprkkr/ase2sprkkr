@@ -23,6 +23,16 @@ class TestBuild(TestCase):
         self.assertEqual(sum(si.symbols == "X"), 11)
         self.assertEqual(si.positions, (atoms * (1, 1, 11)).positions)
 
+    def test_deprecated_hkl_warns(self):
+        atoms = bulk("Cu", "sc", a=2.0)
+        with pytest.warns(DeprecationWarning, match="hkl parameter"):
+            semiinfinite_system(atoms, 1, hkl=(0, 0, 1))
+
+    def test_deprecated_hkl2_warns(self):
+        atoms = bulk("Cu", "sc", a=2.0)
+        with pytest.warns(DeprecationWarning, match="hkl2 parameter"):
+            semiinfinite_system(atoms, 1, atoms2=atoms.copy(), hkl2=(0, 0, 1))
+
     @pytest.mark.parametrize(
         "repeat, symbols",
         (

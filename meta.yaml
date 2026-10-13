@@ -1,58 +1,69 @@
-{% set data = load_setup_py_data(from_recipe_dir=True) %}
-{% set version = data.get('version') %}
-{% set rversion = version %}
-{% set name = data.get('name') %}
+{% set pyproject = load_file_data("pyproject.toml") %}
+{% set project = pyproject["project"] %}
+{% set name = project["name"] %}
+{# Conda package versions cannot contain '-', while pyproject uses a PEP 440-compatible spelling such as 3.6.0-beta. #}
+{% set version = project["version"] | replace("-", ".") %}
 
 package:
   name: {{ name }}
-  version: {{ rversion }}
+  version: "{{ version }}"
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  #url: file://{{ environ.get('PWD') }}/dist/{{ name }}-{{ version }}.tar.gz
+  # meta.yaml lives in the repository root; build exactly the checked-out source.
+  path: .
 
 build:
-  noarch: python
   number: 0
-  script: python -m pip install --no-deps --ignore-installed .
+  skip: true  # [not linux or py<38]
+  script: "{{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv"
 
 requirements:
-
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('fortran') }}
+    - cmake >=3.15
+    - ninja
   host:
-    - python >=3.7
+    - python >=3.8
     - pip
-
+    - scikit-build-core ==0.11.5
+    - cython
+    - numpy  # [py<310]
+    - numpy >=2.1  # [py>=310]
   run:
-    - python >=3.7
-    - ase
+    - python >=3.8
+    - ase >=3.22.0
+    - colorama
     - spglib
-    - pyparsing
+    - pyparsing >=3.0
     - elementy
     - platformdirs
     - packaging
+    - pytest
+    - pyyaml
     - ruamel.yaml >=0.18.16
+    - requests
+    - argcomplete
+    - unyt
+    - numpy  # [py<310]
+    - numpy >=2.1  # [py>=310]
+    - networkx <3.3  # [py>=314]
 
 test:
-  source_files:
-    - src
-  requires:
-    - pytest
-  files:
-    - src/run_tests
   imports:
     - ase2sprkkr
+    - ase2sprkkr.bindings.xband.spheres
+    - ase2sprkkr.bindings.xband.symmetry
   commands:
-    - DO_NOT_RUN_SPRKKR=1 ./src/run_tests
+    - ase2sprkkr --help
 
 about:
   home: https://ase2sprkkr.github.io/ase2sprkkr/
+  dev_url: https://github.com/ase2sprkkr/ase2sprkkr/
   license: MIT
-  summary: 'SPR-KKR wrapper for ASE - Atomic Simulation Environment'
+  license_file: LICENCE
+  summary: Wrapper/calculator for SPR-KKR to be used within ASE (Atomic Simulation Environment)
   description: |
-    SPR-KKR is the band structure program package for electronic structure
-    calculations. This packages provide wrapper that allows to use SPR-KKR
-    within ASE - Atomic Simulation Environtment
-
-  dev_url: 'https://github.com/ase2sprkkr/ase2sprkkr/'
-#doc_url: https://pypi.python.org/pypi/imagesize
-#doc_source_url: https://github.com/shibukawa/imagesize_py/blob/master/README.rst
+    ASE2SPRKKR provides an ASE calculator and Python interface for the SPR-KKR
+    electronic-structure package, including input/output handling and compiled
+    XBand helper bindings used by the package.

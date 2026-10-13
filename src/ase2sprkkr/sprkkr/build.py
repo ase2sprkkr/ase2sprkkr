@@ -6,6 +6,7 @@ from ..ase.build import aperiodic_times, stack as _stack, rotate
 from .atoms_region import AtomsRegion
 from .sprkkr_atoms import SPRKKRAtoms
 import math
+import warnings
 import numpy as np
 from ase import Atoms
 
@@ -66,10 +67,11 @@ def semiinfinite_system(
         repeat = (repeat, math.floor(repeat) + math.ceil(repeat) - repeat)
 
     if hkl is not None:
-        DeprecationWarning(
-            "hkl parameter for semiinfinite system is deprecated,"
-            "please use ase2sprkkr.ase.buil.rotate() before calling "
-            "the function"
+        warnings.warn(
+            "hkl parameter for semiinfinite_system() is deprecated; "
+            "call ase2sprkkr.ase.build.rotate() explicitly before this function",
+            DeprecationWarning,
+            stacklevel=2,
         )
         atoms1 = rotate(atoms, hkl)
     else:
@@ -92,12 +94,13 @@ def semiinfinite_system(
     if atoms2 is None:
         atoms2 = vacuum_like(atoms1 if hkl2 is None else atoms)
     if hkl2 is not None:
-        atoms2 = rotate(atoms2, hkl2)
-        DeprecationWarning(
-            "hkl2 parameter for semiinfinite system is deprecated,"
-            "please use ase2sprkkr.ase.buil.rotate() before calling "
-            "the function"
+        warnings.warn(
+            "hkl2 parameter for semiinfinite_system() is deprecated; "
+            "call ase2sprkkr.ase.build.rotate() explicitly before this function",
+            DeprecationWarning,
+            stacklevel=2,
         )
+        atoms2 = rotate(atoms2, hkl2)
 
     catoms = aperiodic_times(atoms1, repeat[0], axis=axis)
     catoms2 = aperiodic_times(atoms2, repeat[1], axis=axis, direction=-1)

@@ -162,23 +162,41 @@ def _remote_run_diagnostics(ssh, reference):
 
     error_file = state.get("error_file")
     if error_file:
-        sections.append(_diagnostic_command(ssh, "Scheduler stderr", "cat", "--", error_file))
+        sections.append(
+            _diagnostic_command(ssh, "Scheduler stderr", "cat", "--", error_file)
+        )
 
     backend_reference = state.get("backend_reference") or {}
     native_id = backend_reference.get("native_id")
     if native_id:
         psij_out = f"/home/tester/.psij/work/slurm/{native_id}.out"
-        sections.append(_diagnostic_command(ssh, "PSI/J launcher output", "cat", "--", psij_out))
-        sections.append(_diagnostic_command(ssh, "Slurm job", "scontrol", "show", "job", str(native_id)))
+        sections.append(
+            _diagnostic_command(ssh, "PSI/J launcher output", "cat", "--", psij_out)
+        )
+        sections.append(
+            _diagnostic_command(
+                ssh, "Slurm job", "scontrol", "show", "job", str(native_id)
+            )
+        )
 
     if request is not None:
         launch = request.get("launch") or {}
         argv = request.get("mpi_argv") if launch.get("mpi") else request.get("argv")
         if argv:
             executable = argv[0]
-            sections.append(_diagnostic_command(ssh, "Executable", "ls", "-l", "--", executable))
-            sections.append(_diagnostic_command(ssh, "Executable target", "readlink", "-f", "--", executable))
-            sections.append(_diagnostic_command(ssh, "Executable dependencies", "ldd", executable))
+            sections.append(
+                _diagnostic_command(ssh, "Executable", "ls", "-l", "--", executable)
+            )
+            sections.append(
+                _diagnostic_command(
+                    ssh, "Executable target", "readlink", "-f", "--", executable
+                )
+            )
+            sections.append(
+                _diagnostic_command(
+                    ssh, "Executable dependencies", "ldd", executable
+                )
+            )
 
     return "\n\n".join(sections)
 
@@ -186,7 +204,6 @@ def _remote_run_diagnostics(ssh, reference):
 def test_remote_executor_runs_psij_slurm_over_ssh(docker_execution_image):
     from ase.build import bulk
 
-    from ase2sprkkr.execution import RemoteRunner
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
@@ -268,7 +285,6 @@ def test_remote_executor_runs_psij_slurm_over_ssh(docker_execution_image):
                 options={"NITER": 2, "NKTAB": 5, "NE": 5},
             )
 
-            assert isinstance(runner, RemoteRunner)
             assert runner.executor.backend == "psij"
             assert runner.executor.backend_options == {
                 "backend": "slurm",

@@ -5,7 +5,6 @@ requires = [
     "cython",
 		"numpy"
 ]
-#build-backend = "setuptools.build_meta"
 
 [project.scripts]
 ase2sprkkr = "ase2sprkkr.tools.ase2sprkkr:run"
@@ -77,10 +76,8 @@ SPRKKR = "ase2sprkkr.ase.register:SPRKKRFormat"
 SPRKKR = "ase2sprkkr.ase.register"
 
 [tool.scikit-build]
-logging.level = "DEBUG"
 ninja.make-fallback = false
 cmake.version = ">=3.15"
-build.verbose = true
 wheel.packages = ["src/ase2sprkkr"]
 sdist.exclude = [
 	"**/*",
@@ -104,8 +101,8 @@ sdist.include = [
 
 	"src/ase2sprkkr/sprkkr/test/*.cif",
 	"src/ase2sprkkr/bindings/xband/tests/*.pot",
+	"src/ase2sprkkr/execution/test/docker/*",
 	"src/ase2sprkkr/execution/test/slurm/*",
-	"src/ase2sprkkr/run_tests",
 
 	"src/ase2sprkkr/**/*.py",
 	"src/ase2sprkkr/**/*.pyx",
@@ -121,7 +118,7 @@ sdist.include = [
 	"docs/**",
 
 	"pyproject.toml",
-  "meta.yaml"
+	"meta.yaml",
 ]
 wheel.exclude = [
 	"**/*.pyx",

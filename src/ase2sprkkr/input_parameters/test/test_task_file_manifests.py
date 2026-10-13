@@ -1,4 +1,4 @@
-from ase2sprkkr.input_parameters import InputParameters
+from ase2sprkkr.input_parameters.input_parameters import InputParameters
 
 
 def test_dos_output_is_namespaced_by_dataset(tmp_path):

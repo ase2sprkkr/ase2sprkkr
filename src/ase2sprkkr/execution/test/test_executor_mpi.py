@@ -1,3 +1,4 @@
+import asyncio
 import warnings
 from types import SimpleNamespace
 
@@ -134,8 +135,7 @@ def test_local_auto_can_disable_missing_mpi_warning(monkeypatch, tmp_path):
     input_file.close()
 
 
-@pytest.mark.asyncio
-async def test_remote_endpoint_warns_from_remote_autodetection(monkeypatch):
+def test_remote_endpoint_warns_from_remote_autodetection(monkeypatch):
     endpoint = object.__new__(RemoteEndpointExecutor)
     endpoint.backend = "local"
     calls = []
@@ -153,13 +153,12 @@ async def test_remote_endpoint_warns_from_remote_autodetection(monkeypatch):
     }
 
     with pytest.warns(MpiNotFoundWarning, match="remote host"):
-        await endpoint._submit(payload)
+        asyncio.run(endpoint._submit(payload))
 
     assert [call[0] for call in calls] == ["resolve-mpi", "submit"]
 
 
-@pytest.mark.asyncio
-async def test_remote_endpoint_skips_warning_probe_when_disabled(monkeypatch):
+def test_remote_endpoint_skips_warning_probe_when_disabled(monkeypatch):
     endpoint = object.__new__(RemoteEndpointExecutor)
     endpoint.backend = "local"
     calls = []
@@ -174,7 +173,7 @@ async def test_remote_endpoint_skips_warning_probe_when_disabled(monkeypatch):
         "launch": {"mpi": "auto", "mpi_warning": False},
     }
 
-    await endpoint._submit(payload)
+    asyncio.run(endpoint._submit(payload))
 
     assert [call[0] for call in calls] == ["submit"]
 

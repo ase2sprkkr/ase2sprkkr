@@ -11,8 +11,22 @@ from .. import es_finder  # NOQA: E402
 
 
 class TestEsFinder(TestCase):
-    def test_es_finder(self):
+    def test_radii_ratios_map_is_copied(self):
+        original = dict(es_finder.winger_seitz_radii)
 
+        radii = es_finder._prepare_radii_ratios_map(None)
+        radii["DefinitelyNotAnElement"] = 1.0
+
+        self.assertEqual(original, es_finder.winger_seitz_radii)
+        self.assertIsNot(radii, es_finder.winger_seitz_radii)
+
+    def test_radii_ratios_map_overrides_defaults(self):
+        radii = es_finder._prepare_radii_ratios_map({"Co": 123.0})
+
+        self.assertEqual(123.0, radii["Co"])
+        self.assertEqual(es_finder.winger_seitz_radii.keys(), radii.keys())
+
+    def test_es_finder(self):
         if not es_finder.is_enabled:
             raise unittest.SkipTest("ES finder cannot be imported, skipping the test")
 

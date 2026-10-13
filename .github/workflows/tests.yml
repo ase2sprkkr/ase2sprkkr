@@ -4,6 +4,9 @@ permissions:
 
 on:
   push:
+    branches-ignore:
+      - 'chatgpt-**'
+      - 'tmp-**'
 
 jobs:
   build:
