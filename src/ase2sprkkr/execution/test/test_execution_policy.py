@@ -10,6 +10,7 @@ from ase2sprkkr.execution.base import (
     RunState,
     SubmissionNotStarted,
 )
+from ase2sprkkr.execution.detached import _terminate_process_group
 from ase2sprkkr.execution.endpoint import endpoint_for_executor
 from ase2sprkkr.execution.local import LocalExecutor, LocalRunner
 from ase2sprkkr.execution.manager import (
@@ -20,7 +21,6 @@ from ase2sprkkr.execution.manager import (
     RunStore,
     SubmissionKey,
 )
-from ase2sprkkr.execution.remote import _terminate_process_group
 from ase2sprkkr.execution.remote_psij import _RemotePsijAgent
 from ase2sprkkr.execution.transport import AtomicLocalFile, LocalTransport
 
@@ -222,7 +222,7 @@ def test_process_group_cancel_checks_group_not_only_leader(tmp_path, monkeypatch
         lambda *args: (_ for _ in ()).throw(AssertionError("leader-only check used")),
     )
     monkeypatch.setattr(
-        "ase2sprkkr.execution.remote._read_state",
+        "ase2sprkkr.execution.detached._read_state",
         lambda directory, run_id: {"state": "cancelled"},
     )
 
