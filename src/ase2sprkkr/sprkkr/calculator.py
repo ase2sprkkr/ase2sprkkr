@@ -184,7 +184,8 @@ class SPRKKR(BaseCalculator):
         """ A pathname or an open file for the output of the runned SPR-KKR task (if not specified
         otherwise in the called method) """
         self.potential_file = potential_file
-        """ A pathname or an open named file for the potential file to be used (if not specified otherwise in the called method) """
+        """ A pathname or an open named file for the potential file to be used (if not specified otherwise in the
+        called method) """
         self.input_parameters = input_parameters
         if options:
             self.input_parameters.set(options, unknown="find")
@@ -308,7 +309,6 @@ class SPRKKR(BaseCalculator):
         Return
         ------
         atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms
-
         """
         if self._atoms is None:
             if not self._potential or isinstance(self._potential, (bool, str)):
@@ -456,7 +456,7 @@ class SPRKKR(BaseCalculator):
         output_file: str or bool or None
             A filename or a filename template (see FilenameTemplator class) where to save the output
             None means to use the default value from the Calculator.
-            See the __init__ method for the meaning of other values.
+            See the __init__ method for the meaning of other options.
 
         directory:
             Path, to which the relative names of the files above will be resolved.
@@ -689,7 +689,7 @@ class SPRKKR(BaseCalculator):
             if potential_file:
                 # use the relative potential file name to avoid too-long-
                 # -potential-file-name problem
-                # dirr = os.path.dirname( input_file.name ) if input_file.name else directory
+                # dirr = os.path.dirname(input_file.name) if input_file.name else directory
                 input_parameters.CONTROL.POTFIL = os.path.abspath(potential_file)
                 input_parameters.CONTROL.POTFIL.result = os.path.relpath(potential_file, directory)
             if not input_parameters.CONTROL.DATASET.is_set():
@@ -716,22 +716,22 @@ class SPRKKR(BaseCalculator):
             if atoms:
                 return filename_from_symbols(atoms.symbols)
             for i in "POTFIL", "DATASET":
-                i=input_parameters.CONTROL[i]
+                i = input_parameters.CONTROL[i]
                 if i.is_set():
                     return Path(i()).stem
             for i in (input_file, potential_file, self.input_file, self.potential_file):
                 if isinstance(i, str):
-                    i=Path(i).stem
-                    if not '%' in i:  # thus i is not template
+                    i = Path(i).stem
+                    if "%" not in i:  # thus i is not template
                         return i
-            return 'sprkkr'
+            return "sprkkr"
 
         def taskname():
             if task:
                 return task
             if input_parameters:
                 return input_parameters.task_name
-            return 'SPRKKR'
+            return "SPRKKR"
 
         # ALL auxiliary procedures defined
         # HERE starts the execution
@@ -749,30 +749,30 @@ class SPRKKR(BaseCalculator):
         templator = FilenameTemplator(self, taskname, symbols)
         with Directory.new(directory, default=self._directory) as directory:
             directory = directory.path
-            input_file=open_input_file()
+            input_file = open_input_file()
             if potential:
-                potential_file=save_potential_file()
+                potential_file = save_potential_file()
             if save_input:
                 save_input_file()
             else:
                 # This branch can occur if the potential have been explicitly set to False,
                 # which means not to create the potential (and take it from the input_parameters)
-                dirr=os.path.dirname(input_file.name) if input_file.name else directory
-                potential_file=os.path.join(dirr, input_parameters.CONTROL.POTFIL.result)
+                dirr = os.path.dirname(input_file.name) if input_file.name else directory
+                potential_file = os.path.join(dirr, input_parameters.CONTROL.POTFIL.result)
             if output_file is not False:
-                output_file=open_output_file()
+                output_file = open_output_file()
 
             # All is saved and opened - return the values
             if not return_files:
                 for f in input_file, output_file:
-                    if hasattr(f, 'close'):
+                    if hasattr(f, "close"):
                         f.close()
-                input_file=input_file.name
+                input_file = input_file.name
                 if output_file:
-                    output_file=output_file.name
+                    output_file = output_file.name
 
             if output_file is False:
-                output_file=None
+                output_file = None
             return input_parameters, input_file, potential_file, output_file
 
     def create_run(
