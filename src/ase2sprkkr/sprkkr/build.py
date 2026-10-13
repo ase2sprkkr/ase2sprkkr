@@ -115,7 +115,7 @@ def stack(atomses: Dict[str, Atoms], axis: int, *args, inherit_cell=True, **kwar
     """
     cnt = None
     out = _stack(atomses.values(), axis=axis, *args, **kwargs)
-    last = list(atomses.items())[-1]
+    last = next(reversed(atomses))
 
     if inherit_cell is True:
         inherit_cell = np.ones(3, dtype=bool)
@@ -124,7 +124,7 @@ def stack(atomses: Dict[str, Atoms], axis: int, *args, inherit_cell=True, **kwar
     SPRKKRAtoms.promote_ase_atoms(out, update_info=False)
     with out.spacegroup_info.block_updating(True):
         for name, atoms in atomses.items():
-            if atoms is last:
+            if name == last:
                 upto = None
             else:
                 upto = (cnt or 0) + len(atoms)
