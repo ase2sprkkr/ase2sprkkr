@@ -501,8 +501,8 @@ class SPRKKR(BaseCalculator):
         potential_filename: str or file
             Potential file. See return_files
 
-        output_filename: str or file
-            Output file. See return_files
+        output_filename: str or file or None
+            Output file. None when output_file is False. See return_files
 
         """
         profile = self.profile if profile is None else profile
@@ -757,10 +757,9 @@ class SPRKKR(BaseCalculator):
                 if output_file:
                     output_file = output_file.name
 
-            if output_file:
-                return input_parameters, input_file, potential_file, output_file
-            else:
-                return input_parameters, input_file, potential_file
+            if output_file is False:
+                output_file = None
+            return input_parameters, input_file, potential_file, output_file
 
     def create_run(
         self,
@@ -809,9 +808,6 @@ class SPRKKR(BaseCalculator):
         ---------
         For the other parameters, see the save_input() method
         """
-
-        if output_file is False:
-            output_file = None
 
         run_profile = self.profile if profile is None else profile
         print_output = first_non_none(print_output, self.print_output)
@@ -904,7 +900,7 @@ class SPRKKR(BaseCalculator):
         Parameters
         ----------
         properties: list or str
-            List of what needs to be calculated. Can be any combination of ‘energy’, ‘forces’, ‘stress’, ‘dipole’, ‘charges’, ‘magmom’ and ‘magmoms’.
+            List of what needs to be calculated. Can be any combination of ‘energy’, ‘forces’, ‘stress’, 'dipole', 'charges', 'magmom' and 'magmoms'.
 
         system_changes: list of str
             List of what has changed since last calculation.  Can be
