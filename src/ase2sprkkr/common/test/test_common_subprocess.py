@@ -1,4 +1,6 @@
+import functools
 import multiprocessing as mp
+import signal
 import subprocess as stdlib_subprocess
 import sys
 
@@ -49,6 +51,32 @@ assert mp.get_start_method() == before
             )
             self.assertEqual(method, "spawn")
         finally:
+            if subprocess_module._pool:
+                subprocess_module._pool.shutdown()
+                subprocess_module._pool = None
+
+    def test_sigchld_is_ignored_only_in_worker(self):
+        original_ignore_signal = subprocess_module.ignore_signal
+
+        def fail_if_called_in_parent(_num):
+            raise AssertionError("SIGCHLD must not be changed in the parent process")
+
+        subprocess_module.ignore_signal = fail_if_called_in_parent
+        try:
+            handler = subprocess_module.in_subprocess(
+                "getsignal",
+                "signal",
+                (signal.SIGCHLD,),
+                {},
+            )
+            self.assertEqual(handler, signal.SIG_IGN)
+
+            handler = subprocess_module.in_subprocess(
+                functools.partial(signal.getsignal, signal.SIGCHLD),
+            )
+            self.assertEqual(handler, signal.SIG_IGN)
+        finally:
+            subprocess_module.ignore_signal = original_ignore_signal
             if subprocess_module._pool:
                 subprocess_module._pool.shutdown()
                 subprocess_module._pool = None
