@@ -75,11 +75,8 @@ class SiteType:
         return len(self.sites) > 1
 
     def break_symmetry(self):
-        if not self.sites:
-            return
-        itr = iter(self.sites)
-        for i in itr:
-            i.break_symmetry()
+        for site in tuple(self.sites):
+            site.break_symmetry()
 
     def _clear_data(self):
         self.occupation._clear_data()
