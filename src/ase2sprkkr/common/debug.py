@@ -21,7 +21,6 @@ def add_debug_hook(only_original=False):
             import pdb
 
             traceback.print_exception(type, value, tb)
-            print
             pdb.pm()
 
     original_hook = sys.excepthook
@@ -30,27 +29,33 @@ def add_debug_hook(only_original=False):
         sys.excepthook = info
 
 
-def backtrace_pyparsing(term, fn):
+def backtrace_pyparsing(term, fn, _visited=None):
+    if _visited is None:
+        _visited = set()
+
+    identity = id(term)
+    if identity in _visited:
+        return
+    _visited.add(identity)
+
     fn(term)
     if hasattr(term, "exprs"):
-        for i in term.exprs:
-            debug_pyparsing(i)
-    else:
-        term = getattr(term, "expr", None)
-        if term:
-            debug_pyparsing(term)
+        for child in term.exprs:
+            backtrace_pyparsing(child, fn, _visited)
+    elif hasattr(term, "expr") and term.expr is not None:
+        backtrace_pyparsing(term.expr, fn, _visited)
 
 
 def debug_pyparsing(term):
     backtrace_pyparsing(term, lambda term: term.set_debug(True))
 
 
-def check_whitespaces(term, chars={'\t', ' ', '\r'}):
+def check_whitespaces(term, chars=frozenset({"\t", " ", "\r"})):
+    def check(item):
+        if item.whiteChars != chars:
+            raise ValueError("Bad white chars")
 
-    def check(term):
-        if term.whiteChars != chars:
-            raise ValueError('Bad white chars')
-        backtrace_pyparsing(term, check)
+    backtrace_pyparsing(term, check)
 
 
 def print_grammar(expr, indent=0, stack=None):

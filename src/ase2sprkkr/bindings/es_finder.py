@@ -24,15 +24,24 @@ except ImportError as error:
 from ase import Atoms
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 from ..physics.winger_seitz_radii import winger_seitz_radii
-from typing import Dict, Union
+from typing import Dict, Mapping, Optional, Union
 from .empty_spheres import EmptySpheresResult
+
+
+def _prepare_radii_ratios_map(
+    radii_ratios_map: Optional[Mapping[str, float]],
+) -> Dict[str, float]:
+    radii = dict(winger_seitz_radii)
+    if radii_ratios_map is not None:
+        radii.update(radii_ratios_map)
+    return radii
 
 
 def empty_spheres(
     atoms: Atoms,
     *,
     overlap_matrix: Union[float, np.ndarray] = 0.18,
-    radii_ratios_map: Dict[str, float] = None,
+    radii_ratios_map: Optional[Mapping[str, float]] = None,
     max_es_overlap: float = 0.24,  # Maximum overlap of ES
     adjust_overlap: float = 0.28,  # Overlap that will be adjusted to max. overlap
     min_es_radius: float = 0.2,  # Min. accepted sphere radius
@@ -61,10 +70,10 @@ def empty_spheres(
       #TODO
 
     radii_ratios_map
-      Dict, that defines the ratios of radii of used chemical elements.
+      Mapping that defines the ratios of radii of used chemical elements.
       It is dimensionless value (it is not the sizes, only
       the ratios of the given values, that matter).
-      The default walues are :mod:`Winger-Seitz radii<ase2sprkkr.physics.winger_seitz_radii>`.
+      The default values are :mod:`Wigner-Seitz radii<ase2sprkkr.physics.winger_seitz_radii>`.
       If only some of the elements are provided, they are supplemented with the default values.
 
     max_es_overlap
@@ -102,10 +111,7 @@ def empty_spheres(
     for i in ("atoms", "overlap_matrix", "radii_ratios_map"):
         del params[i]
 
-    if radii_ratios_map:
-        radii_ratios_map = {**winger_seitz_radii, **radii_ratios_map}
-    else:
-        radii_ratios_map = winger_seitz_radii
+    radii_ratios_map = _prepare_radii_ratios_map(radii_ratios_map)
 
     atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
     sym_dataset = atoms.spacegroup_info.dataset
