@@ -211,6 +211,22 @@ class _RemotePsijAgent:
                 )
         self._active.pop(run_id, None)
 
+    def _record_retryable_error(self, run_id, field, exc):
+        from .remote import (
+            _read_state_unlocked,
+            _state_lock,
+            _write_state_unlocked,
+        )
+
+        with _state_lock(self.directory, run_id):
+            state = _read_state_unlocked(self.directory, run_id)
+            if state.get("state") not in _FINAL_STATE_NAMES:
+                _write_state_unlocked(
+                    self.directory,
+                    run_id,
+                    **{field: repr(exc), "error": repr(exc)},
+                )
+
     def _submit(self, run_id, request):
         from .remote import (
             _read_state_unlocked,
@@ -305,6 +321,7 @@ class _RemotePsijAgent:
                 started_at=latest.get("started_at") or _timestamp(),
                 submission_error=None,
                 recovery_error=None,
+                attach_error=None,
                 error=None,
             )
 
@@ -338,18 +355,7 @@ class _RemotePsijAgent:
             # Scheduler/accounting inspection is itself an external operation.
             # A transient failure here says nothing about whether the job was
             # accepted, so never turn it into a terminal run state.
-            with _state_lock(self.directory, run_id):
-                latest = _read_state_unlocked(self.directory, run_id)
-                if (
-                    latest.get("state") == RunState.SUBMITTING.value
-                    and latest.get("backend_reference") is None
-                ):
-                    _write_state_unlocked(
-                        self.directory,
-                        run_id,
-                        recovery_error=repr(exc),
-                        error=repr(exc),
-                    )
+            self._record_retryable_error(run_id, "recovery_error", exc)
             return False
 
         if status is None:
@@ -421,11 +427,29 @@ class _RemotePsijAgent:
         if reference is None:
             return False
         executor = self._executor_for(request)
-        runner = executor.attach(RunReference(**reference), _RemoteReader())
+        try:
+            runner = executor.attach(RunReference(**reference), _RemoteReader())
+        except Exception as exc:
+            # Reconnection is an external scheduler operation. Keep the last
+            # known lifecycle state and retry while the agent is alive instead
+            # of converting a transient scheduler outage into FAILED.
+            self._record_retryable_error(run_id, "attach_error", exc)
+            return True
         self._active[run_id] = _ActiveRun(
             runner,
             RunState(state.get("state", RunState.UNKNOWN.value)),
         )
+        from .remote import _read_state_unlocked, _state_lock, _write_state_unlocked
+
+        with _state_lock(self.directory, run_id):
+            latest = _read_state_unlocked(self.directory, run_id)
+            if latest.get("state") not in _FINAL_STATE_NAMES:
+                _write_state_unlocked(
+                    self.directory,
+                    run_id,
+                    attach_error=None,
+                    error=None if latest.get("error") == latest.get("attach_error") else latest.get("error"),
+                )
         return True
 
     def _discover(self):
