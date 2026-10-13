@@ -7,8 +7,6 @@ _pool = None
 
 import multiprocessing as mp
 
-mp.set_start_method("spawn", force=True)
-
 
 @contextlib.contextmanager
 def ignore_signal(num):
@@ -20,23 +18,30 @@ def ignore_signal(num):
         signal.signal(num, old)
 
 
+def _call(lmbda):
+    with ignore_signal(signal.SIGCHLD):
+        return lmbda()
+
+
 def _call_function(name, module, args, kwargs):
     mod = importlib.import_module(module)
-    out = getattr(mod, name)(*args, **kwargs)
-    return out
+    with ignore_signal(signal.SIGCHLD):
+        return getattr(mod, name)(*args, **kwargs)
 
 
 def in_subprocess(lmbda, module=None, *args, **kwargs):
     global _pool
 
     if not _pool:
-        _pool = ProcessPoolExecutor(max_workers=1)
+        _pool = ProcessPoolExecutor(
+            max_workers=1,
+            mp_context=mp.get_context("spawn"),
+        )
     try:
-        with ignore_signal(signal.SIGCHLD):
-            if module:
-                future = _pool.submit(_call_function, lmbda, module, *args, **kwargs)
-            else:
-                future = _pool.submit(lmbda)
+        if module:
+            future = _pool.submit(_call_function, lmbda, module, *args, **kwargs)
+        else:
+            future = _pool.submit(_call, lmbda)
         return future.result()
     except Exception as e:
         _pool.shutdown(False)
