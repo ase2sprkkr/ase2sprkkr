@@ -54,6 +54,18 @@ def endpoint_for_executor(executor) -> ExecutorEndpoint:
         )
     if isinstance(executor, RemoteEndpointExecutor):
         transport = executor.transport
+        psij_backend = None
+        psij_url = None
+        if executor.backend == "psij":
+            options = executor.backend_options or {}
+            # ``RemoteEndpointExecutor(..., backend="psij")`` is a complete
+            # public configuration even when no options are supplied: the
+            # target-side PSI/J backend then defaults to Slurm. Persist that
+            # default explicitly so restart reconstruction cannot silently
+            # turn the endpoint into the ordinary remote-local backend.
+            psij_backend = options.get("backend") or "slurm"
+            psij_url = options.get("url")
+
         if not isinstance(transport, SshTransport):
             return ExecutorEndpoint(
                 executor=(
@@ -65,32 +77,16 @@ def endpoint_for_executor(executor) -> ExecutorEndpoint:
                 ),
                 host=getattr(transport, "host", None),
                 remote_command=executor.command,
-                psij_backend=(
-                    (executor.backend_options or {}).get("backend")
-                    if executor.backend == "psij"
-                    else None
-                ),
-                psij_url=(
-                    (executor.backend_options or {}).get("url")
-                    if executor.backend == "psij"
-                    else None
-                ),
+                psij_backend=psij_backend,
+                psij_url=psij_url,
             )
         return ExecutorEndpoint(
             executor="ssh",
             host=transport.host,
             ssh_options=transport.options,
             remote_command=executor.command,
-            psij_backend=(
-                (executor.backend_options or {}).get("backend")
-                if executor.backend == "psij"
-                else None
-            ),
-            psij_url=(
-                (executor.backend_options or {}).get("url")
-                if executor.backend == "psij"
-                else None
-            ),
+            psij_backend=psij_backend,
+            psij_url=psij_url,
         )
 
     # Custom executors can participate in duplicate-submit protection in this
