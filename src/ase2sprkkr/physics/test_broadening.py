@@ -18,6 +18,15 @@ def _sorted_reference(x, y, sigma=None, fwhm=None, **kwargs):
     return broadener(y_sorted)
 
 
+def _bin_widths(x):
+    x = np.asarray(x, dtype=float)
+    dx = np.empty_like(x)
+    dx[0] = x[1] - x[0]
+    dx[-1] = x[-1] - x[-2]
+    dx[1:-1] = 0.5 * (x[2:] - x[:-2])
+    return dx
+
+
 def test_gaussian_unsorted_grid_reorders_data_and_sigma():
     x = np.array([2.0, 0.0, 1.0, 3.0])
     y = np.array([20.0, 1.0, 7.0, 3.0])
@@ -62,6 +71,30 @@ def test_gaussian_broadens_last_axis_and_supports_distinct_output_grid():
 
     assert actual.shape == (2, len(x_out))
     np.testing.assert_allclose(actual, reference)
+
+
+def test_gaussian_preserves_discrete_integral_for_multiple_spectra_and_variable_width():
+    x = np.array([-2.0, -0.7, 0.0, 0.8, 2.5])
+    x_out = np.array([-4.0, -2.5, -1.5, -0.5, 0.2, 1.1, 2.0, 3.4, 5.0])
+    sigma = np.array([0.2, 0.35, 0.5, 0.7, 0.9])
+    y = np.array(
+        [
+            [0.2, 1.0, 0.7, 0.3, 0.1],
+            [1.2, 0.4, 0.8, 1.1, 0.6],
+        ]
+    )
+
+    broadened = create_gaussian_broadener(
+        x,
+        sigma=sigma,
+        x_out=x_out,
+        method="dense",
+    )(y)
+
+    integral_in = y @ _bin_widths(x)
+    integral_out = broadened @ _bin_widths(x_out)
+
+    np.testing.assert_allclose(integral_out, integral_in, rtol=1e-12, atol=1e-12)
 
 
 def test_gaussian_rejects_wrong_energy_axis_length():
