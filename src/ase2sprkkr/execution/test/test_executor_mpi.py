@@ -39,7 +39,10 @@ def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
             return runner
 
     profile = SPRKKRProfile(mpi="auto")
-    calculator = SimpleNamespace(value_or_default=lambda name, value: value)
+    calculator = SimpleNamespace(
+        value_or_default=lambda name, value: value,
+        persistent=False,
+    )
 
     with (tmp_path / "run.inp").open("w+") as input_file, (
         tmp_path / "run.out"
@@ -213,6 +216,7 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
     calculator = SimpleNamespace(
         value_or_default=lambda name, value: value,
         executor=None,
+        persistent=False,
     )
 
     with (tmp_path / "run.inp").open("w+") as input_file, (

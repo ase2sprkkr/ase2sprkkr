@@ -17,6 +17,10 @@ class _FinalizationRunner:
         self.result = SimpleNamespace(return_code=None)
         self._exception = None
 
+    @property
+    def exception(self):
+        return self._exception
+
     def submit(self):
         self.reference = RunReference(executor="test", native_id="job-1")
         self.state = RunState.QUEUED

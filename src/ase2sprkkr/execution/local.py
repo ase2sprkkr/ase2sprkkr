@@ -132,6 +132,10 @@ class LocalRunner:
         return self._state
 
     @property
+    def exception(self):
+        return self._exception
+
+    @property
     def reference(self):
         if self._pid is None:
             return None

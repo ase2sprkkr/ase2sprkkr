@@ -123,6 +123,17 @@ class AtomsRegion:
         self.incomplete_pbc = pbc
 
     @property
+    def info(self):
+        """ASE metadata shared with the parent atoms object.
+
+        ``AtomsRegion`` deliberately presents the subset-oriented part of the
+        :class:`ase.Atoms` interface used by symmetry and occupation code. ASE
+        ``info`` is object-level metadata rather than a per-atom array, so the
+        authoritative representation is the parent's dictionary.
+        """
+        return self.atoms.info
+
+    @property
     def slice(self):
         return self._slice
 
@@ -174,7 +185,7 @@ class AtomsRegion:
 
     @cached_property
     def set_of_ids(self):
-        """Returns set of ids of sites that belongs to the region"""
+        """Return ids of sites that belong to the region."""
         return set(self.ids)
 
     @property

@@ -170,6 +170,10 @@ class ResourceOwnedRunner:
     def reference(self):
         return self._runner.reference
 
+    @property
+    def exception(self):
+        return self._runner.exception
+
     def _release_after_failure(self):
         self._resources.close(suppress_errors=True)
 
@@ -393,6 +397,9 @@ class Runner(Protocol):
 
     @property
     def reference(self) -> Optional[RunReference]: ...
+
+    @property
+    def exception(self) -> Optional[BaseException]: ...
 
     def submit(self) -> None: ...
 
