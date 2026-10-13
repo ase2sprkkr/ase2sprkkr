@@ -129,7 +129,7 @@ class AtomsRegion:
     @slice.setter
     def slice(self, slice):
         self._slice = slice
-        self._clear_cache
+        self._clear_cache()
 
     def _clear_cache(self):
         for i in ("ids", "set_of_ids", "arrays"):
@@ -151,6 +151,7 @@ class AtomsRegion:
         atoms = self.atoms[self.slice]
         atoms.cell = self.cell
         atoms.pbc = self.pbc
+        return atoms
 
     @property
     def symbols(self):
@@ -217,13 +218,19 @@ class AtomsRegion:
 
     @property
     def spacegroup_info(self):
-        return self.atoms.spacegroup_info.for_region(self)
+        return self.atoms.spacegroup_info.info_for_region(self)
 
     def copy_for_atoms(self, atoms, slice=None):
-        region = AtomsRegion(
-            self.name, self.slice if slice is None else slice, self.cell, self.pbc, self.inherit_cell, atoms
+        # ``incomplete_cell`` and ``incomplete_pbc`` are the canonical stored
+        # representation of inherited axes.  Copy them directly so implicit
+        # inheritance via a zero cell vector / ``pbc=None`` is preserved too.
+        return AtomsRegion(
+            self.name,
+            self.slice if slice is None else slice,
+            self.incomplete_cell.copy(),
+            np.array(self.incomplete_pbc, dtype=object, copy=True),
+            atoms=atoms,
         )
-        return region
 
     def __repr__(self):
         return f"<AtomsRegion {self.name}>"
