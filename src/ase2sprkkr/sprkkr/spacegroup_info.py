@@ -178,14 +178,20 @@ class SpacegroupInfo(BaseSpacegroupInfo):
     def check_spacegroup_kinds(self):
         """Returns True, if the spacegroup_kinds array match the sites info."""
         a = self.atoms
-        if "spacegroup_kinds" in a.arrays:
+        if "spacegroup_kinds" not in a.arrays:
             return False
         kinds = {}
         sites = {}
         occ = a.info.get("occupancy", {})
-        for site, kind in zip(a.sites, a.array("spacegroup_kinds")):
+        for site, kind in zip(a.sites, a.arrays["spacegroup_kinds"]):
             st = site.site_type
-            if kinds.setdefault(kind, st) != st or sites.setdefault(st, kind) != kind or str(kind) not in occ:
+            key = str(int(kind))
+            if (
+                kinds.setdefault(kind, st) != st
+                or sites.setdefault(st, kind) != kind
+                or key not in occ
+                or occ[key] != st.occupation.to_dict(True)
+            ):
                 return False
         return True
 
@@ -193,7 +199,7 @@ class SpacegroupInfo(BaseSpacegroupInfo):
         """Update the occupancy info and spagroup_kinds array"""
         if invalidate_spacegroup:
             self._dataset = None
-        if not if_required and not self.check_spacegroup_kinds():
+        if if_required and self.check_spacegroup_kinds():
             return
         sgi = np.empty(len(self.atoms), dtype=int)
         stypes = {}
