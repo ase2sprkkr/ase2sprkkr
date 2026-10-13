@@ -874,13 +874,21 @@ class ExecutionManager:
                 current[record.id] = self.update(record, status)
         return tuple(current[record.id] for record in records)
 
-    def attach(self, run, executor, reader, callback=None):
-        """Attach to a stored run using an explicitly supplied backend."""
+    def attach(self, run, executor=None, reader=None, callback=None):
+        """Attach to a stored run, reconstructing its persisted endpoint by default.
+
+        ``executor`` is retained as an explicit override for legacy records that
+        predate endpoint persistence and for custom backends that cannot be
+        reconstructed from :class:`ExecutorEndpoint` alone.
+        """
         record = self.store.get(run) if isinstance(run, str) else run
         if record.reference is None:
             raise RuntimeError(f"Run {record.id} has no backend reference")
-        endpoint = record.endpoint or endpoint_for_executor(executor)
-        self.register_executor(executor, endpoint, record.reference)
+        if executor is None:
+            executor = self.executor_for(record)
+        else:
+            endpoint = record.endpoint or endpoint_for_executor(executor)
+            self.register_executor(executor, endpoint, record.reference)
         return self._wrap_runner(
             executor,
             record,
