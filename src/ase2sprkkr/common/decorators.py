@@ -240,7 +240,7 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
 
             def add_pars():
                 for i in pars:
-                    if i in excluding:
+                    if i.name in excluding:
                         continue
                     if i.name not in new_pars:
                         yield i
@@ -249,8 +249,7 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
                         if n.kind != P.KEYWORD_ONLY:
                             continue
                         # keyword only parameters retain the old position, taken new default and annotation
-                        P(i.name, i.kind, default=n.default, annotation=n.annotation)
-                        yield n
+                        yield i.replace(default=n.default, annotation=n.annotation)
 
             add_pars = [i for i in add_pars()]
         else:

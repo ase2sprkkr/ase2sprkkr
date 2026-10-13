@@ -142,6 +142,19 @@ class TestSites(TestCase):
         self.assertAlmostEqual(0.3 * 5.0 / 4.0, site.occupation[0])
         self.assertAlmostEqual(0.5 * 5.0 / 4.0, site.occupation[1])
 
+    def test_occupancy_is_keyed_by_spacegroup_kind(self):
+        atoms = SPRKKRAtoms("Na2")
+        sites = atoms.sites
+        sites[1].site_type = sites[0].site_type
+        atoms.set_array("spacegroup_kinds", np.array([7, 7], dtype=int))
+        atoms.info["occupancy"] = {}
+
+        sites[0].site_type.occupation = {"Na": 0.75, "Cl": 0.25}
+
+        assert set(atoms.info["occupancy"]) == {"7"}
+        assert SiteType._ase_occupation(atoms, 0) == atoms.info["occupancy"]["7"]
+        assert SiteType._ase_occupation(atoms, 1) == atoms.info["occupancy"]["7"]
+
     @pytest.mark.skip
     @run_sprkkr
     def test_charge(self, temporary_dir):

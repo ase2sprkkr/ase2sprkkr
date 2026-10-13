@@ -1,6 +1,7 @@
 from ase.build import bulk
 import os
 import re
+from datetime import datetime
 from pathlib import Path
 from ase import Atoms
 import numpy as np
@@ -14,7 +15,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 
 if True:
-    from ..calculator import SPRKKR
+    from ..calculator import SPRKKR, FilenameTemplator
     from ...potentials.potentials import Potential
     from ..build import semiinfinite_system
 
@@ -26,6 +27,29 @@ def _fast_atoms(b, jrws=20, r1=2e-6):
 
 
 class TestCalculator(TestCase):
+    def test_filename_template_date(self):
+        calculator = SPRKKR()
+        templator = FilenameTemplator(calculator, lambda: "SCF", lambda: "Fe")
+
+        rendered = templator("%d")
+        datetime.strptime(rendered, "%Y-%m-%d_%H:%M")
+        self.assertEqual(templator("%d"), rendered)
+
+    def test_atoms_lazy_loads_string_potential(self):
+        from unittest.mock import patch
+
+        atoms = bulk("Fe")
+        loaded_potential = type("LoadedPotential", (), {"atoms": atoms})()
+        calculator = SPRKKR(potential="x.pot")
+
+        self.assertEqual(calculator._potential, "x.pot")
+        with patch.object(Potential, "from_file", return_value=loaded_potential) as from_file:
+            self.assertIs(calculator.atoms, atoms)
+            from_file.assert_called_once_with("x.pot")
+            self.assertIs(calculator._potential, loaded_potential)
+            self.assertIs(calculator.atoms, atoms)
+            from_file.assert_called_once_with("x.pot")
+
     @pytest.mark.slow
     def test_2D(self, temporary_dir):
         a = Atoms(symbols="C", positions=[[0, 0, 0]], cell=[[1, 0, 0], [0, 1, 0], [0, 0, 1]], pbc=[1, 1, 1])

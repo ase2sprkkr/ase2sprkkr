@@ -124,14 +124,17 @@ class RadialPotential(RadialValue):
     @property
     def julich(self):
         """Potential in Julich format"""
-        out = np.empy_like(self._value)
-        out[0] = self.up
-        out[1] = self.down
+        return np.stack((self.up, self.down))
 
     @julich.setter
     def julich(self, value):
-        self._value[0] = 0.5 * (value[0] + value[1]) - 2 * self.zr
-        self._value[1] = 0.5 * (value[0] - value[1])
+        value = np.asarray(value)
+        self._value = np.stack(
+            (
+                0.5 * (value[0] + value[1]) - 2 * self.zr,
+                0.5 * (value[0] - value[1]),
+            )
+        )
         self._clear()
 
     @property
@@ -147,6 +150,6 @@ class RadialPotential(RadialValue):
         if "interpolator" in self.__dict__:
             del self.__dict__["interpolator"]
 
-    @cached_property
+    @property
     def zr(self):
-        return self._z / self._mesh.coors
+        return self.z / self._mesh.coors
