@@ -214,6 +214,7 @@ class PsijRunner:
         self._lock = Lock()
         self._done = Event()
         self._exception = None
+        self._finalization_failed = False
         self._thread = None
         self._attached = attached
 
@@ -280,6 +281,8 @@ class PsijRunner:
 
     @property
     def state(self):
+        if self._finalization_failed:
+            return RunState.FAILED
         state = getattr(getattr(self._job, "status", None), "state", None)
         return _STATE_MAP.get(getattr(state, "name", None), RunState.UNKNOWN)
 
@@ -399,6 +402,9 @@ class PsijRunner:
             asyncio.run(self._monitor())
         except BaseException as exc:
             self._exception = exc
+            state = getattr(getattr(self._job, "status", None), "state", None)
+            if getattr(state, "name", None) != "CANCELED":
+                self._finalization_failed = True
         finally:
             try:
                 if self.callback:
