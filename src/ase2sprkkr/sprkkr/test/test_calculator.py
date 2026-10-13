@@ -1,6 +1,7 @@
 from ase.build import bulk
 import os
 import re
+from datetime import datetime
 from pathlib import Path
 from ase import Atoms
 import numpy as np
@@ -14,7 +15,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 
 if True:
-    from ..calculator import SPRKKR
+    from ..calculator import SPRKKR, FilenameTemplator
     from ...potentials.potentials import Potential
     from ..build import semiinfinite_system
 
@@ -26,6 +27,14 @@ def _fast_atoms(b, jrws=20, r1=2e-6):
 
 
 class TestCalculator(TestCase):
+    def test_filename_template_date(self):
+        calculator = SPRKKR()
+        templator = FilenameTemplator(calculator, lambda: "SCF", lambda: "Fe")
+
+        rendered = templator("%d")
+        datetime.strptime(rendered, "%Y-%m-%d_%H:%M")
+        self.assertEqual(templator("%d"), rendered)
+
     def test_atoms_lazy_loads_string_potential(self):
         from unittest.mock import patch
 
