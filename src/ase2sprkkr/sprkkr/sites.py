@@ -18,21 +18,22 @@ class SiteType:
     """
 
     @staticmethod
+    def _ase_occupation(atoms, index, default=None):
+        """Return ASE occupancy for an atom, keyed canonically by spacegroup kind."""
+        occupancy = atoms.info.get("occupancy", {})
+        if "spacegroup_kinds" in atoms.arrays:
+            key = atoms.arrays["spacegroup_kinds"][index]
+        else:
+            key = index
+        return occupancy.get(key, occupancy.get(str(key), default))
+
+    @staticmethod
     def creator(atoms):
         symbols = atoms.symbols
-        if "spacegroup_kinds" in atoms.arrays and "occupancy" in atoms.info:
-            kinds = atoms.arrays["spacegroup_kinds"]
-            occ = atoms.info["occupancy"]
 
-            def create(index):
-                symbol = symbols[index]
-                symbol = occ.get(kinds[index], symbol)
-                symbol = occ.get(str(kinds[index]), symbol)
-                return SiteType(atoms, symbol)
-        else:
-
-            def create(index):
-                return SiteType(atoms, symbols[index])
+        def create(index):
+            symbol = SiteType._ase_occupation(atoms, index, symbols[index])
+            return SiteType(atoms, symbol)
 
         return create
 
@@ -74,11 +75,8 @@ class SiteType:
         return len(self.sites) > 1
 
     def break_symmetry(self):
-        if not self.sites:
-            return
-        itr = iter(self.sites)
-        for i in itr:
-            i.break_symmetry()
+        for site in tuple(self.sites):
+            site.break_symmetry()
 
     def _clear_data(self):
         self.occupation._clear_data()
@@ -162,10 +160,10 @@ class SiteType:
                 raise ValueError("This atomic site is not from the provided Atoms object")
             atoms = self.atoms
             an = atoms.get_atomic_numbers()
-            oc = atoms.info.get("occupancy", {})
             for i in ids:
-                if i in oc and oc[i]:
-                    self._occupation = Occupation(oc[i], self)
+                occupation = self._ase_occupation(atoms, i)
+                if occupation:
+                    self._occupation = Occupation(occupation, self)
                     return self._occupation
             for i in ids:
                 if an[i]:
@@ -211,18 +209,36 @@ class SiteType:
         return [i[0] for i in enum if i[1] is self]
 
     def update_atoms(self):
-        """Update atomic numbers and occupation according to the sites data."""
+        """Synchronize this site type into the canonical ASE representation.
+
+        Updating an occupation does not change the SiteType-to-kind mapping, so
+        normally only the affected atomic numbers and one occupancy entry are
+        rewritten.  A full kind rebuild is used only when the existing mapping
+        is missing or inconsistent.
+        """
         index = self.index()
         if not len(index):
             return
-        an = self.atoms.get_atomic_numbers()
-        pan = self.occupation.primary_atomic_number
-        an[index] = pan
-        self.atoms.set_atomic_numbers(an)
-        occ = self.atoms.info.get("occupancy", {})
-        for i in index:
-            occ[i] = self._occupation.as_dict
-        self.atoms.info["occupancy"] = occ
+
+        atoms = self.atoms
+        atomic_numbers = atoms.get_atomic_numbers()
+        atomic_numbers[index] = self.occupation.primary_atomic_number
+        atoms.set_atomic_numbers(atomic_numbers)
+
+        kinds = atoms.arrays.get("spacegroup_kinds")
+        if kinds is None:
+            atoms.spacegroup_info.update_spacegroup_kinds(if_required=True)
+            return
+
+        site_kinds = np.unique(kinds[index])
+        if len(site_kinds) != 1:
+            atoms.spacegroup_info.update_spacegroup_kinds(if_required=True)
+            return
+
+        kind = int(site_kinds[0])
+        occupancy = atoms.info.setdefault("occupancy", {})
+        occupancy.pop(kind, None)
+        occupancy[str(kind)] = self._occupation.to_dict(True)
 
     def __str__(self):
         return f"SiteType:{self.occupation}"
@@ -350,7 +366,7 @@ class Site:
             st = x._site_type
             n_st = cache.get(st, None)
             if not n_st:
-                cache[st] = n_st = st.copy(atoms=False)
+                cache[st] = n_st = st.copy(atoms=atoms)
             return x.copy(site_type=n_st)
 
         try:
@@ -419,10 +435,7 @@ class Site:
     def _check_mutation_allowed(self):
         """Raise if this site's SiteType is shared with other symmetry-equivalent sites.
 
-        This is the single authoritative place for the symmetry check used by
-        both the Site property setters and by :class:`SitePropertyProxy`.
-        When the check fails the caller is directed to call :meth:`break_symmetry`
-        first so they understand how to resolve the situation.
+        This is the single authoritative place for this logic.
         """
         if self.has_symmetry:
             raise RuntimeError(
@@ -538,6 +551,7 @@ class Site:
         copy the exiting one.
         """
         out = copy.copy(self)
+        out.magnetisation = self.magnetisation.copy()
         if site_type:
             if not isinstance(site_type, SiteType):
                 site_type = out._site_type.copy()

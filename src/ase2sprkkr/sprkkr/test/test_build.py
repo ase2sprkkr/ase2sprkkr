@@ -7,7 +7,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 import pytest
 import numpy as np
 
-from ..build import semiinfinite_system  # NOQA E402
+from ..build import semiinfinite_system, stack  # NOQA E402
 from ..sprkkr_atoms import SPRKKRAtoms  # NOQA E402
 from ase.build import bulk  # NOQA E402
 
@@ -43,3 +43,10 @@ class TestBuild(TestCase):
         self.assertEqual(system.regions["central"].ids, np.arange(1, len(system) - 1))
         self.assertEqual(system.regions["right"].ids, np.array([len(system) - 1]))
         self.assertEqual(len(np.unique(system.positions, axis=0)), len(system))
+
+    def test_stack_last_region_is_open_ended(self):
+        atoms = bulk("Cu", "sc", a=2.0)
+        system = stack({"first": atoms, "last": atoms}, axis=2)
+
+        self.assertEqual(system.regions["first"].slice.stop, len(atoms))
+        self.assertIsNone(system.regions["last"].slice.stop)

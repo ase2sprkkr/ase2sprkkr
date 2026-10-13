@@ -52,6 +52,30 @@ class TestBuild(TestCase):
             stack([atoms, a2], axis=2).positions, np.concatenate([atoms.positions, a2.positions + atoms.cell[2]])
         )
 
+    def test_stack_scalar_at_uses_stacking_cell_vector_length(self):
+        atoms = bulk("Cu", "sc", a=2.0)
+
+        stacked = stack([atoms, atoms], axis=2, at=[None, 3.0, 6.0])
+
+        np.testing.assert_allclose(stacked.positions[:, 2], [0.0, 3.0])
+        np.testing.assert_allclose(stacked.cell[2], [0.0, 0.0, 6.0])
+
+    def test_stack_accepts_iterator(self):
+        atoms = bulk("Cu", "sc", a=2.0)
+
+        stacked = stack((atoms.copy() for _ in range(3)), axis=2)
+
+        self.assertEqual(stacked.positions, (atoms * (1, 1, 3)).positions)
+        self.assertEqual(stacked.cell, (atoms * (1, 1, 3)).cell)
+
+    def test_stack_periodic_argument_wins_on_stacking_axis(self):
+        atoms = bulk("Cu", "sc", a=2.0)
+        atoms.pbc[2] = False
+
+        stacked = stack([atoms, atoms], axis=2, periodic=True)
+
+        assert stacked.pbc[2]
+
     def test_stack_empty_atoms(self):
         atoms = bulk("Cu", "sc", a=2.0)
         empty = atoms * (1, 1, 0)

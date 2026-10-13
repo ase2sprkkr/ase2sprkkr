@@ -36,6 +36,38 @@ class TestSPRKKRAtoms(TestCase):
         SPRKKRAtoms.promote_ase_atoms(a)
         self.assertNotEqual(id2, id(a.sites[2].site_type))
 
+    def test_extend_spacegroup_kinds(self):
+        a = SPRKKRAtoms("NaCl")
+        a.arrays["spacegroup_kinds"] = np.array([0, 1])
+        a.info["occupancy"] = {
+            "0": {"Na": 1.0},
+            "1": {"Cl": 1.0},
+        }
+
+        b = SPRKKRAtoms("NaCl")
+        b.arrays["spacegroup_kinds"] = np.array([0, 1])
+        b.info["occupancy"] = {
+            "0": {"Na": 0.5, "K": 0.5},
+            "1": {"Cl": 0.5, "I": 0.5},
+        }
+
+        a.extend(b)
+
+        np.testing.assert_array_equal(a.arrays["spacegroup_kinds"], [0, 1, 2, 3])
+        self.assertEqual(a.info["occupancy"]["0"], {"Na": 1.0})
+        self.assertEqual(a.info["occupancy"]["1"], {"Cl": 1.0})
+        self.assertEqual(a.info["occupancy"]["2"], {"Na": 0.5, "K": 0.5})
+        self.assertEqual(a.info["occupancy"]["3"], {"Cl": 0.5, "I": 0.5})
+
+        a = SPRKKRAtoms("Na")
+        a.arrays["spacegroup_kinds"] = np.array([0])
+        b = SPRKKRAtoms("Cl")
+        b.arrays["spacegroup_kinds"] = np.array([0])
+
+        a.extend(b)
+
+        np.testing.assert_array_equal(a.arrays["spacegroup_kinds"], [0, 1])
+
     def test_atoms(self):
         a = Atoms("NaCl")
         a.set_cell([[2,0,0],[0,2,0],[0,0,2]])
