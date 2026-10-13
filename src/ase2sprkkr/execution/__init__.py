@@ -10,13 +10,19 @@ from .base import (
     RunState,
     RunStatus,
 )
+from .endpoint import ExecutorEndpoint
 from .local import LocalExecutor, LocalRunner
 from .manager import (
+    ArtifactRecord,
+    ArtifactState,
     CorruptRunRecord,
+    DuplicateSubmissionError,
     ExecutionManager,
+    FileFingerprint,
     PersistentRunner,
     RunRecord,
     RunStore,
+    SubmissionKey,
 )
 from .pool import ExecutorPool, default_executor_pool
 from .psij import PsijExecutor, PsijRunner
@@ -31,12 +37,18 @@ RemoteExecutor = RemoteEndpointExecutor
 __all__ = [
     "ExecutionSpec",
     "Executor",
+    "ExecutorEndpoint",
     "LaunchSpec",
     "MpiNotFoundWarning",
     "Runner",
     "RunReference",
     "RunState",
     "RunStatus",
+    "SubmissionKey",
+    "DuplicateSubmissionError",
+    "FileFingerprint",
+    "ArtifactState",
+    "ArtifactRecord",
     "RunRecord",
     "RunStore",
     "CorruptRunRecord",

@@ -10,7 +10,14 @@ import warnings
 from dataclasses import replace
 from threading import Event, Lock, Thread
 
-from .base import ExecutionSpec, Executor, MpiNotFoundWarning, RunReference, RunState
+from .base import (
+    ExecutionSpec,
+    Executor,
+    MpiNotFoundWarning,
+    RunReference,
+    RunState,
+    RunStatus,
+)
 
 
 def _mpi_command(launch):
@@ -71,6 +78,22 @@ def _path(value, directory):
     if not os.path.isabs(path):
         path = os.path.join(directory, path)
     return os.path.abspath(path)
+
+
+def _pid_running(pid):
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    except OSError as exc:
+        if exc.errno == errno.ESRCH:
+            return False
+        if exc.errno == errno.EPERM:
+            return True
+        raise
+    return True
 
 
 class LocalRunner:
@@ -343,3 +366,23 @@ class LocalExecutor(Executor):
 
     def create_run(self, reader, spec: ExecutionSpec, callback=None):
         return LocalRunner(reader, materialize_local_spec(spec), callback=callback)
+
+    def status(self, *references: RunReference):
+        for reference in references:
+            if reference.executor != self.name:
+                raise ValueError(
+                    f"Run reference belongs to {reference.executor!r}, not {self.name!r}"
+                )
+
+        statuses = []
+        for reference in references:
+            try:
+                pid = int(reference.native_id)
+            except (TypeError, ValueError):
+                state = RunState.UNKNOWN
+            else:
+                # Local execution has no reconnectable controller. Once the
+                # process is gone, its final outcome cannot be inferred from PID.
+                state = RunState.RUNNING if _pid_running(pid) else RunState.UNKNOWN
+            statuses.append(RunStatus(reference, state))
+        return tuple(statuses)

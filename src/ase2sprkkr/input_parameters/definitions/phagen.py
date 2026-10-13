@@ -1,13 +1,24 @@
 """PHAGEN task input parameters definition"""
 
-# from ...common.grammar_types import
+from ._file_manifests import resolve_file
 from .sections import CONTROL, TASK, TAU, ENERGY, SCF
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters
-# ,InputValueDefinition as V
+from ..input_parameters_definitions import InputParametersDefinition
+
+
+class PhagenInputParametersDefinition(InputParametersDefinition):
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        potfil = parameters.CONTROL.POTFIL()
+        if potfil:
+            files.extend((
+                resolve_file(directory, f"{potfil}_ex_sprkkr"),
+                resolve_file(directory, f"{potfil}.only_coulomb"),
+            ))
+        return tuple(files)
 
 
 def input_parameters():
-    return InputParameters(
+    return PhagenInputParametersDefinition(
         "phagen",
         [CONTROL("PHAGEN"), TASK("PHAGEN"), TAU, ENERGY(), SCF],
         info="PHAGEN",

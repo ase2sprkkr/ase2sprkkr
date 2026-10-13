@@ -65,6 +65,7 @@ def test_remote_executor_over_ssh(docker_execution_image):
     from ase.build import bulk
     from ase2sprkkr.execution import RemoteExecutor, SshTransport
     from ase2sprkkr.sprkkr.calculator import SPRKKR
+    from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
     docker = docker_execution_image.docker
     repository = docker_execution_image.repository
@@ -132,6 +133,11 @@ def test_remote_executor_over_ssh(docker_execution_image):
 
             executor = RemoteExecutor(
                 SshTransport("tester@127.0.0.1", options=options),
+            )
+            profile = SPRKKRProfile(
+                executable_dir="/opt/sprkkr",
+                executable_suffix="",
+                mpi=False,
                 local_root=tmp,
                 remote_root="/home/tester/ase2sprkkr-runs",
             )
@@ -152,9 +158,7 @@ def test_remote_executor_over_ssh(docker_execution_image):
                 atoms=bulk("Al"),
                 directory=workdir,
                 executor=executor,
-                executable_dir="/opt/sprkkr",
-                executable_suffix="",
-                mpi=False,
+                profile=profile,
                 empty_spheres=False,
                 print_output=False,
             )

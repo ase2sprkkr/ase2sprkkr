@@ -177,6 +177,10 @@ class Executor:
 
     name = None
 
+    def submission_directory(self, spec: ExecutionSpec) -> str:
+        """Return this run's directory in the backend filesystem namespace."""
+        return os.path.abspath(os.fspath(spec.directory))
+
     def resolve_mpi(self, mpi=None):
         """Convert profile MPI syntax to portable launch intent.
 
@@ -186,15 +190,45 @@ class Executor:
         return LaunchSpec.from_mpi(mpi)
 
     def status(self, *references: RunReference) -> Tuple[RunStatus, ...]:
-        """Return status snapshots for all supplied persistent references.
+        """Return ordered status snapshots for persistent run references.
 
-        There is deliberately one API for one or many jobs. Backends may batch
-        the underlying query, for example into one scheduler status command.
-        The returned tuple always follows the input order.
+        Backends override this method directly. There is deliberately one API
+        for one or many jobs so scheduler-backed executors can batch queries.
         """
-        from .status import status
+        if not references:
+            return ()
+        raise NotImplementedError(
+            f"{type(self).__name__} cannot query persistent run status"
+        )
 
-        return status(self, *references)
+    def recover_submission(
+        self, run_id, submission, *, submitted_at=None
+    ) -> Optional[RunStatus]:
+        """Recover a submit whose backend reference was not persisted.
+
+        ``submitted_at`` is the timestamp at which ASE2SPRKKR reserved the
+        submission. Scheduler backends may use it to bound accounting-history
+        queries after a job has left the live queue.
+
+        Return a status with a reconstructed backend reference when the submit
+        is found, ``None`` only when the backend can positively establish that
+        it does not exist, and raise :class:`NotImplementedError` when this
+        backend cannot perform such recovery. Transport/backend failures should
+        propagate rather than being mistaken for absence.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} cannot recover an uncertain submission"
+        )
+
+    def create_persistent_run(
+        self, reader, spec: ExecutionSpec, *, run_id: str, callback=None
+    ) -> Runner:
+        """Create a run with an ASE2SPRKKR identity known before submission.
+
+        Backends that can expose the identity to an external scheduler or helper
+        override this method. Other backends use the normal runner unchanged.
+        """
+        return self.create_run(reader, spec, callback=callback)
 
     def create_run(self, reader, spec: ExecutionSpec, callback=None) -> Runner:
         raise NotImplementedError

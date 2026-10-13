@@ -81,6 +81,13 @@ class InputParameters(ConfigurationFile):
         (see InputParametersDefinition class)"""
         return self._definition.name
 
+    @property
+    def _execution_task_name(self):
+        """Return the task encoded by the concrete input parameters."""
+        task_section = getattr(self, "TASK", None)
+        task_option = getattr(task_section, "TASK", None) if task_section is not None else None
+        return task_option() if task_option is not None else self.task_name
+
     def uses_separate_single_site_contour(self):
         """Whether SPR-KKR evaluates single-site terms on a separate contour.
 
@@ -224,7 +231,7 @@ class InputParameters(ConfigurationFile):
                     executor,
                     reader,
                     spec,
-                    task=self.task_name,
+                    task=self._execution_task_name,
                     dataset=self.CONTROL.DATASET.result,
                     callback=cleanup,
                 )

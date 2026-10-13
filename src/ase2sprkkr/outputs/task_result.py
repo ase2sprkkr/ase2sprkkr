@@ -34,6 +34,8 @@ class TaskResult:
 
         input_filename = filename_from_file(input_file, None)
         self.input_file = FilePath(input_filename, self.directory) if input_filename is not None else None
+        if self.input_file is not None:
+            self.files.add_file("input", self.input_file)
 
     @cached_property
     def directory(self):

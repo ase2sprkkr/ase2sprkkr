@@ -5,6 +5,7 @@ from types import SimpleNamespace
 import pytest
 
 from ase2sprkkr.execution import (
+    ArtifactState,
     ExecutionManager,
     Executor,
     RunReference,
@@ -71,6 +72,23 @@ def _spec(tmp_path):
     return SimpleNamespace(directory=str(tmp_path))
 
 
+def _artifact_spec(tmp_path):
+    input_file = tmp_path / "run.inp"
+    output_file = tmp_path / "run.out"
+    generated = tmp_path / "case.dat"
+    cache = tmp_path / "cache.dat"
+    input_file.write_text("input")
+    cache.write_text("cache-before")
+    return SimpleNamespace(
+        directory=str(tmp_path),
+        input_file=str(input_file),
+        output_file=str(output_file),
+        input_files=(str(input_file),),
+        output_files=(str(output_file), str(generated)),
+        cache_files=(str(cache),),
+    )
+
+
 def test_persistent_run_is_first_saved_as_submitting(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
@@ -131,6 +149,105 @@ def test_completion_callback_persists_final_result(tmp_path):
     stored = store.get(run.id)
     assert stored.state == RunState.FINISHED
     assert stored.return_code == 0
+
+
+def test_completion_captures_artifacts_but_not_cache(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    spec = _artifact_spec(tmp_path)
+    run = manager.create_run(executor, object(), spec, task="DOS", dataset="case")
+
+    run.submit()
+    (tmp_path / "run.out").write_text("output")
+    (tmp_path / "case.dat").write_text("data")
+    executor.runners[0].finish()
+
+    stored = store.get(run.id)
+    assert stored.state == RunState.FINISHED
+    assert stored.artifacts.state == ArtifactState.CURRENT
+    assert stored.artifacts.captured_at is not None
+    assert {fingerprint.path for fingerprint in stored.artifacts.fingerprints} == {
+        str(tmp_path / "run.inp"),
+        str(tmp_path / "run.out"),
+        str(tmp_path / "case.dat"),
+    }
+    assert str(tmp_path / "cache.dat") not in stored.artifacts.manifests
+
+
+def test_changed_artifact_marks_overwritten_without_changing_outcome(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    spec = _artifact_spec(tmp_path)
+    run = manager.create_run(executor, object(), spec, task="DOS")
+
+    run.submit()
+    (tmp_path / "run.out").write_text("output")
+    (tmp_path / "case.dat").write_text("first")
+    executor.runners[0].finish()
+    (tmp_path / "case.dat").write_text("changed contents")
+
+    updated = manager.check_artifacts(run.id)
+
+    assert updated.state == RunState.FINISHED
+    assert updated.return_code == 0
+    assert updated.artifacts.state == ArtifactState.OVERWRITTEN
+
+
+def test_changed_cache_does_not_mark_result_overwritten(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    spec = _artifact_spec(tmp_path)
+    run = manager.create_run(executor, object(), spec, task="DOS")
+
+    run.submit()
+    (tmp_path / "run.out").write_text("output")
+    (tmp_path / "case.dat").write_text("data")
+    executor.runners[0].finish()
+    (tmp_path / "cache.dat").write_text("cache-after-with-different-size")
+
+    updated = manager.check_artifacts(run.id)
+
+    assert updated.state == RunState.FINISHED
+    assert updated.artifacts.state == ArtifactState.CURRENT
+
+
+def test_load_result_parses_persisted_output_without_backend_refresh(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    spec = _artifact_spec(tmp_path)
+    run = manager.create_run(executor, object(), spec, task="DOS")
+
+    run.submit()
+    (tmp_path / "run.out").write_text("output")
+    (tmp_path / "case.dat").write_text("data")
+    executor.runners[0].finish()
+
+    calls = []
+
+    class Reader:
+        def read_from_file(self, output, **kwargs):
+            calls.append((output, kwargs))
+            return SimpleNamespace(return_code=kwargs["return_code"])
+
+    result = manager.load_result(run.id, reader=Reader())
+
+    assert calls == [
+        (
+            str(tmp_path / "run.out"),
+            {
+                "return_code": 0,
+                "input_file": str(tmp_path / "run.inp"),
+                "directory": str(tmp_path),
+            },
+        )
+    ]
+    assert result.return_code == 0
+    assert result.run_record.state == RunState.FINISHED
+    assert executor.status_calls == []
 
 
 def test_refresh_batches_referenced_runs(tmp_path):
