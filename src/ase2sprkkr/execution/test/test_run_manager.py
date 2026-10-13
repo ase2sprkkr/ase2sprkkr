@@ -109,6 +109,7 @@ def test_persistent_run_is_first_saved_as_submitting(tmp_path):
     assert seen == [RunState.SUBMITTING]
     stored = store.get(run.id)
     assert stored.state == RunState.QUEUED
+    assert stored.finished_at is None
     assert stored.reference == backend.reference
     assert stored.task == "SCF"
     assert stored.dataset == "case"
@@ -126,6 +127,7 @@ def test_run_id_exists_before_submit_and_double_submit_is_rejected(tmp_path):
 
     assert run.id
     assert run.record.state == RunState.NEW
+    assert run.record.finished_at is None
 
     run.submit()
     with pytest.raises(RuntimeError, match="already queued"):
@@ -149,6 +151,27 @@ def test_completion_callback_persists_final_result(tmp_path):
     stored = store.get(run.id)
     assert stored.state == RunState.FINISHED
     assert stored.return_code == 0
+    assert stored.finished_at == stored.updated_at
+
+
+@pytest.mark.parametrize(
+    "state", (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED)
+)
+def test_first_terminal_transition_sets_immutable_finished_at(tmp_path, state):
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    record = manager.new_record(task="DOS", directory=tmp_path)
+    record = manager.transition(record, state=RunState.RUNNING)
+    assert record.finished_at is None
+
+    record = manager.transition(record, state=RunState.FINISHING)
+    assert record.finished_at is None
+
+    record = manager.transition(record, state=state)
+    finished_at = record.finished_at
+    assert finished_at == record.updated_at
+
+    updated = manager.transition(record, message="later metadata update")
+    assert updated.finished_at == finished_at
 
 
 def test_completion_captures_artifacts_but_not_cache(tmp_path):
@@ -186,6 +209,7 @@ def test_changed_artifact_marks_overwritten_without_changing_outcome(tmp_path):
     (tmp_path / "run.out").write_text("output")
     (tmp_path / "case.dat").write_text("first")
     executor.runners[0].finish()
+    finished = store.get(run.id)
     (tmp_path / "case.dat").write_text("changed contents")
 
     updated = manager.check_artifacts(run.id)
@@ -193,6 +217,7 @@ def test_changed_artifact_marks_overwritten_without_changing_outcome(tmp_path):
     assert updated.state == RunState.FINISHED
     assert updated.return_code == 0
     assert updated.artifacts.state == ArtifactState.OVERWRITTEN
+    assert updated.finished_at == finished.finished_at
 
 
 def test_changed_cache_does_not_mark_result_overwritten(tmp_path):
@@ -287,6 +312,7 @@ def test_run_store_shards_records_and_marks_schema(tmp_path):
 
     assert path.is_file()
     assert data["schema_version"] == 1
+    assert data["finished_at"] is None
 
 
 def test_run_store_listing_warns_once_and_skips_corrupt_record(tmp_path):
@@ -317,9 +343,11 @@ def test_weaker_observation_does_not_degrade_final_record(tmp_path):
         return_code=0,
         message="completed",
     )
+    finished_at = record.finished_at
 
     updated = manager.update(record, RunStatus(reference, RunState.RUNNING))
 
     assert updated.state == RunState.FINISHED
     assert updated.return_code == 0
     assert updated.message == "completed"
+    assert updated.finished_at == finished_at

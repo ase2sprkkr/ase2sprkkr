@@ -217,6 +217,11 @@ class RunRecord:
     backend state therefore normally corresponds to ``state == FINISHING``
     until parsing, stage-out and local finalization have completed.
 
+    ``finished_at`` records the first transition of the ASE2SPRKKR lifecycle to
+    ``FINISHED``, ``FAILED`` or ``CANCELLED`` and is immutable afterwards.
+    Later metadata changes, including artifact invalidation, update
+    ``updated_at`` but never ``finished_at``.
+
     Artifact freshness is independent of calculation outcome. A successful run
     remains ``FINISHED`` when its files are later changed; only
     ``artifacts.state`` becomes ``OVERWRITTEN``.
@@ -226,6 +231,7 @@ class RunRecord:
     state: RunState
     created_at: str
     updated_at: str
+    finished_at: Optional[str]
     task: str
     directory: str
     dataset: Optional[str] = None
@@ -538,6 +544,7 @@ class ExecutionManager:
             state=RunState.NEW,
             created_at=now,
             updated_at=now,
+            finished_at=None,
             task=str(task).upper(),
             dataset=None if dataset is None else str(dataset),
             directory=os.path.abspath(os.fspath(directory)),
@@ -598,10 +605,14 @@ class ExecutionManager:
 
         def merge(latest):
             final_locked = latest.state in _FINAL_STATES
+            now = _now()
+            merged_state = self._merged_state(latest, state)
             changes = {
-                "state": self._merged_state(latest, state),
-                "updated_at": _now(),
+                "state": merged_state,
+                "updated_at": now,
             }
+            if latest.state not in _FINAL_STATES and merged_state in _FINAL_STATES:
+                changes["finished_at"] = now
             merged_backend_state = self._merged_backend_state(latest, backend_state)
             if merged_backend_state is not latest.backend_state:
                 changes["backend_state"] = merged_backend_state
@@ -652,10 +663,12 @@ class ExecutionManager:
         def mark_absent(latest):
             if latest.state != RunState.SUBMITTING or latest.reference is not None:
                 return latest
+            now = _now()
             return replace(
                 latest,
                 state=RunState.FAILED,
-                updated_at=_now(),
+                updated_at=now,
+                finished_at=now,
                 message="Stale submission was not found by its execution backend",
             )
 
