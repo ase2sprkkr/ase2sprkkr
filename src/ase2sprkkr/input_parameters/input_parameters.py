@@ -179,7 +179,7 @@ class InputParameters(ConfigurationFile):
             if executor is None:
                 executor = executor_from_profile(profile)
             if persistent is None:
-                persistent = getattr(calculator, "persistent", False)
+                persistent = calculator.persistent
             manager = resolve_execution_manager(persistent)
 
             execution_profile = profile

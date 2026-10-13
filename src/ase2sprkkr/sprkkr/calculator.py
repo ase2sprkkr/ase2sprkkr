@@ -69,6 +69,7 @@ class SPRKKR(BaseCalculator):
         executable_dir: Optional[Union[str, bool]] = None,
         profile=None,
         executor=None,
+        persistent=False,
         **kwargs,
     ):
         """
@@ -150,6 +151,11 @@ class SPRKKR(BaseCalculator):
           config.config.calculator_parameters.empty_spheres.
           Dict means True, and the dict is passed as kwargs to the
           ``ase.bindings.empty_spheres.add_empty_spheres`` method.
+
+        persistent: bool, ExecutionManager or None
+          Default persistent execution policy for calculations. False disables
+          persistence, True uses the default execution manager, and an explicit
+          manager stores runs in that manager. A per-call None uses this value.
         """
 
         if kwargs:
@@ -196,6 +202,7 @@ class SPRKKR(BaseCalculator):
             executable_suffix=executable_suffix,
         )
         self.executor = executor
+        self.persistent = persistent
         self.label = label
         self._counter = 0
         # For %c template in file names
