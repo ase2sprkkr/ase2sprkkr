@@ -37,6 +37,18 @@ class _RemoteRun(RemoteRunner):
         super().__init__(*args, **kwargs)
         self._run_id = run_id
 
+    async def _prepare_request(self, run_id, remote_directory):
+        request = await super()._prepare_request(run_id, remote_directory)
+        input_files = []
+        for value in self.spec.input_files:
+            source = self._local_path(value)
+            if source is not None:
+                input_files.append(await self.executor.map_path(source))
+        request.setdefault("client_sync", {})["input_files"] = list(
+            dict.fromkeys(input_files)
+        )
+        return request
+
     async def _submit_async(self):
         run_id = self._run_id or uuid4().hex
         remote_directory = await self.executor.map_directory(self.spec.directory)
@@ -437,6 +449,50 @@ class RemoteEndpointExecutor(Executor):
         return self._context(self, spec.launch).create_run(
             reader, spec, callback=callback, run_id=run_id
         )
+
+    async def _fetch_artifacts(self, reference, artifacts):
+        request = await self._saved_request(reference.directory, reference.native_id)
+        launch = LaunchSpec(**(request.get("launch") or {}))
+        context = self._context(self, launch)
+        sync = request.get("client_sync") or {}
+
+        exact = []
+        input_file = request.get("input_file") or reference.input_file
+        if input_file is not None:
+            exact.append(input_file)
+        output_file = sync.get("output_file") or reference.output_file
+        if output_file is not None:
+            exact.append(output_file)
+        exact.extend(sync.get("input_files", ()))
+        exact.extend(sync.get("output_files", ()))
+
+        seen = set()
+        for remote in exact:
+            if remote in seen:
+                continue
+            seen.add(remote)
+            local = await context.unmap_path(remote)
+            if local.is_file():
+                continue
+            if await self.transport.file_signature(remote) is None:
+                continue
+            await self.transport.get_file(remote, local)
+
+        remote_root = await context._resolved_remote_root()
+        patterns = tuple(sync.get("input_files", ())) + tuple(
+            sync.get("output_patterns", ())
+        )
+        for pattern in patterns:
+            if not any(character in pattern for character in "*?["):
+                continue
+            for remote in await self.transport.expand_files(pattern, remote_root):
+                local = await context.unmap_path(remote)
+                if not local.is_file():
+                    await self.transport.get_file(remote, local)
+
+    def fetch_artifacts(self, reference, artifacts):
+        """Fetch missing historical input/output artifacts without attaching."""
+        return _run_sync(self._fetch_artifacts(reference, artifacts))
 
     async def _attach_with_saved_launch(self, reference, reader, callback=None):
         request = await self._saved_request(reference.directory, reference.native_id)
