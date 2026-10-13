@@ -11,7 +11,15 @@ from datetime import datetime
 from pathlib import Path
 from threading import Event, Lock, Thread
 
-from .base import ExecutionSpec, Executor, RunReference, RunState, RunStatus
+from .base import (
+    ExecutionSpec,
+    Executor,
+    OutputObservers,
+    RunReference,
+    RunState,
+    RunStatus,
+    SubmissionNotStarted,
+)
 
 
 _STATE_MAP = {
@@ -210,12 +218,13 @@ class PsijRunner:
         self._stderr_path = _path(spec.error_file, spec.directory) or self._stdout_path + ".err"
         self._stdin_path = _path(spec.stdin, spec.directory)
 
-        self._listeners = [] if output_listener is None else [output_listener]
+        self._output_observers = OutputObservers(output_listener)
         self._lock = Lock()
         self._submit_lock = Lock()
         self._done = Event()
         self._exception = None
-        self._finalization_failed = False
+        self._callback_exception = None
+        self._return_code = None
         self._thread = None
         self._attached = attached
 
@@ -282,10 +291,14 @@ class PsijRunner:
 
     @property
     def state(self):
-        if self._finalization_failed:
-            return RunState.FAILED
         state = getattr(getattr(self._job, "status", None), "state", None)
         return _STATE_MAP.get(getattr(state, "name", None), RunState.UNKNOWN)
+
+    @property
+    def return_code(self):
+        if self._return_code is not None:
+            return self._return_code
+        return getattr(getattr(self._job, "status", None), "exit_code", None)
 
     @property
     def reference(self):
@@ -304,8 +317,11 @@ class PsijRunner:
 
     def add_output_listener(self, callback):
         """Receive raw output as ``callback(text, kind)``."""
-        with self._lock:
-            self._listeners.append(callback)
+        self._output_observers.add(callback)
+
+    def add_output_error_listener(self, callback):
+        """Receive ``callback(observer, exception)`` for failed output observers."""
+        self._output_observers.add_error_listener(callback)
 
     def _emit_output(self, data, kind):
         if not data:
@@ -313,10 +329,7 @@ class PsijRunner:
         text = data.decode("utf8")
         if self.reader.print_output:
             print(text, end="", file=sys.stderr if kind == "err" else sys.stdout)
-        with self._lock:
-            listeners = tuple(self._listeners)
-        for callback in listeners:
-            callback(text, kind)
+        self._output_observers.emit(text, kind)
 
     @staticmethod
     def _flush(value):
@@ -392,27 +405,29 @@ class PsijRunner:
             finished.set()
             await asyncio.gather(*followers, return_exceptions=False)
 
+        self._return_code = getattr(status, "exit_code", None)
+        if self._return_code is None:
+            self._return_code = (
+                0
+                if getattr(getattr(status, "state", None), "name", None) == "COMPLETED"
+                else 1
+            )
         output, error = await parse_task
-        return_code = getattr(status, "exit_code", None)
-        if return_code is None:
-            return_code = 0 if getattr(getattr(status, "state", None), "name", None) == "COMPLETED" else 1
-        return self.reader.complete_result(self.result, output, error, return_code)
+        return self.reader.complete_result(
+            self.result, output, error, self._return_code
+        )
 
     def _thread_main(self):
         try:
             asyncio.run(self._monitor())
         except BaseException as exc:
             self._exception = exc
-            state = getattr(getattr(self._job, "status", None), "state", None)
-            if getattr(state, "name", None) != "CANCELED":
-                self._finalization_failed = True
         finally:
             try:
                 if self.callback:
                     self.callback(self.result)
             except BaseException as exc:
-                if self._exception is None:
-                    self._exception = exc
+                self._callback_exception = exc
             self._done.set()
 
     def _start_monitor(self):
@@ -433,7 +448,10 @@ class PsijRunner:
         with self._submit_lock:
             if self._thread is not None or self.state != RunState.NEW:
                 raise RuntimeError(f"Run is already {self.state.value}")
-            self._prepare_io()
+            try:
+                self._prepare_io()
+            except Exception as exc:
+                raise SubmissionNotStarted(str(exc)) from exc
             self.executor._job_executor.submit(self._job)
             self._start_monitor()
 
@@ -444,6 +462,8 @@ class PsijRunner:
         self._done.wait()
         if self._exception is not None:
             raise self._exception
+        if self._callback_exception is not None:
+            raise self._callback_exception
         return self.result
 
     def run(self):

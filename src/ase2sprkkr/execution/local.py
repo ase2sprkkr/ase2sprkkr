@@ -14,9 +14,11 @@ from .base import (
     ExecutionSpec,
     Executor,
     MpiNotFoundWarning,
+    OutputObservers,
     RunReference,
     RunState,
     RunStatus,
+    SubmissionNotStarted,
 )
 
 
@@ -111,7 +113,7 @@ class LocalRunner:
         self.result = reader.create_result(spec.output_file, spec.input_file)
 
         self._state = RunState.NEW
-        self._listeners = []
+        self._output_observers = OutputObservers()
         self._lock = Lock()
         self._cancel_requested = Event()
         self._started = Event()
@@ -123,6 +125,7 @@ class LocalRunner:
         self._pid = None
         self._stop_task = None
         self._exception = None
+        self._callback_exception = None
 
     @property
     def state(self):
@@ -144,10 +147,14 @@ class LocalRunner:
     def add_output_listener(self, callback):
         """Receive raw output as ``callback(text, kind)``.
 
-        ``kind`` is ``"out"`` or ``"err"``.
+        ``kind`` is ``"out"`` or ``"err"``. Observer failures never affect the
+        subprocess lifecycle.
         """
-        with self._lock:
-            self._listeners.append(callback)
+        self._output_observers.add(callback)
+
+    def add_output_error_listener(self, callback):
+        """Receive ``callback(observer, exception)`` for failed output observers."""
+        self._output_observers.add_error_listener(callback)
 
     def _emit_output(self, data, kind):
         if not data:
@@ -156,11 +163,7 @@ class LocalRunner:
         text = data.decode("utf8")
         if self.reader.print_output:
             print(text, end="", file=sys.stderr if kind == "err" else sys.stdout)
-
-        with self._lock:
-            listeners = tuple(self._listeners)
-        for callback in listeners:
-            callback(text, kind)
+        self._output_observers.emit(text, kind)
 
     def _output_target(self, kind):
         if kind == "err" and self.spec.error_file is not None:
@@ -240,6 +243,7 @@ class LocalRunner:
 
     async def _execute(self):
         self._loop = asyncio.get_running_loop()
+        execution_finished = False
 
         if self._cancel_requested.is_set():
             self._state = RunState.CANCELLED
@@ -265,38 +269,49 @@ class LocalRunner:
 
             stdout = asyncio.StreamReader()
             stderr = asyncio.StreamReader()
-
-            tasks = [
-                asyncio.create_task(
-                    self.reader.parse_streams(stdout, stderr, self.result)
-                ),
-                asyncio.create_task(self._process.wait()),
-                asyncio.create_task(self._pump(self._process.stdout, stdout, "out")),
-                asyncio.create_task(self._pump(self._process.stderr, stderr, "err")),
-            ]
+            parse_task = asyncio.create_task(
+                self.reader.parse_streams(stdout, stderr, self.result)
+            )
+            wait_task = asyncio.create_task(self._process.wait())
+            stdout_task = asyncio.create_task(
+                self._pump(self._process.stdout, stdout, "out")
+            )
+            stderr_task = asyncio.create_task(
+                self._pump(self._process.stderr, stderr, "err")
+            )
+            tasks = (parse_task, wait_task, stdout_task, stderr_task)
 
             try:
-                (output, error), return_code, _, _ = await asyncio.gather(*tasks)
+                return_code, _, _ = await asyncio.gather(
+                    wait_task, stdout_task, stderr_task
+                )
+                self._state = (
+                    RunState.CANCELLED
+                    if self._cancel_requested.is_set()
+                    else RunState.FINISHED
+                    if return_code == 0
+                    else RunState.FAILED
+                )
+                execution_finished = True
+                output, error = await parse_task
+                return self.reader.complete_result(
+                    self.result, output, error, return_code
+                )
             finally:
                 for task in tasks:
                     if not task.done():
                         task.cancel()
                 await asyncio.gather(*tasks, return_exceptions=True)
-
-            result = self.reader.complete_result(
-                self.result, output, error, return_code
-            )
-            self._state = RunState.FINISHED
-            return result
         except BaseException:
             self._started.set()
-            self._state = (
-                RunState.CANCELLED
-                if self._cancel_requested.is_set()
-                else RunState.FAILED
-            )
-            if self._process is not None and self._process.returncode is None:
-                await self._stop_process()
+            if not execution_finished:
+                self._state = (
+                    RunState.CANCELLED
+                    if self._cancel_requested.is_set()
+                    else RunState.FAILED
+                )
+                if self._process is not None and self._process.returncode is None:
+                    await self._stop_process()
             raise
         finally:
             if self._stop_task is not None:
@@ -315,8 +330,7 @@ class LocalRunner:
                 if self.callback:
                     self.callback(self.result)
             except BaseException as exc:
-                if self._exception is None:
-                    self._exception = exc
+                self._callback_exception = exc
             self._done.set()
 
     def submit(self):
@@ -332,6 +346,10 @@ class LocalRunner:
             self._thread.start()
 
         self._started.wait()
+        if self._pid is None:
+            self._done.wait()
+            if self._exception is not None:
+                raise SubmissionNotStarted(str(self._exception)) from self._exception
 
     def wait(self):
         """Wait for a submitted run and return its TaskResult."""
@@ -343,6 +361,8 @@ class LocalRunner:
         self._done.wait()
         if self._exception is not None:
             raise self._exception
+        if self._callback_exception is not None:
+            raise self._callback_exception
         return self.result
 
     def run(self):

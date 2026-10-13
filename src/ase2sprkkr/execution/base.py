@@ -3,13 +3,71 @@
 from __future__ import annotations
 
 import os
+import warnings
 from dataclasses import dataclass
 from enum import Enum
+from threading import Lock
 from typing import Any, Optional, Protocol, Sequence, Tuple
 
 
 class MpiNotFoundWarning(UserWarning):
     """MPI autodetection was requested, but no MPI launcher was found."""
+
+
+class OutputObserverWarning(RuntimeWarning):
+    """An output observer failed while the calculation itself keeps running."""
+
+
+class SubmissionNotStarted(RuntimeError):
+    """Submission failed before the backend could possibly accept the run."""
+
+
+class OutputObservers:
+    """Deliver output without allowing observers to control execution outcome."""
+
+    def __init__(self, listener=None):
+        self._listeners = [] if listener is None else [listener]
+        self._error_listeners = []
+        self._lock = Lock()
+
+    def add(self, callback):
+        with self._lock:
+            self._listeners.append(callback)
+
+    def add_error_listener(self, callback):
+        with self._lock:
+            self._error_listeners.append(callback)
+
+    def emit(self, text, kind):
+        with self._lock:
+            listeners = tuple(self._listeners)
+        for callback in listeners:
+            try:
+                callback(text, kind)
+            except Exception as exc:
+                with self._lock:
+                    try:
+                        self._listeners.remove(callback)
+                    except ValueError:
+                        pass
+                    handlers = tuple(self._error_listeners)
+                if not handlers:
+                    warnings.warn(
+                        f"Output observer {callback!r} failed: {exc}",
+                        OutputObserverWarning,
+                        stacklevel=4,
+                    )
+                    continue
+                for handler in handlers:
+                    try:
+                        handler(callback, exc)
+                    except Exception as handler_exc:
+                        warnings.warn(
+                            f"Output observer error handler {handler!r} failed: "
+                            f"{handler_exc}",
+                            OutputObserverWarning,
+                            stacklevel=4,
+                        )
 
 
 class RunState(str, Enum):
@@ -170,6 +228,8 @@ class Runner(Protocol):
     def cancel(self) -> None: ...
 
     def add_output_listener(self, callback) -> None: ...
+
+    def add_output_error_listener(self, callback) -> None: ...
 
 
 class Executor:

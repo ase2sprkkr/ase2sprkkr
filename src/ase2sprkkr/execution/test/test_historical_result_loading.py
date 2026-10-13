@@ -46,9 +46,9 @@ class _HistoryExecutor(Executor):
         self.runner = _Runner(callback)
         return self.runner
 
-    def fetch_artifacts(self, reference, artifacts):
-        self.fetch_calls.append((reference, artifacts))
-        with open(artifacts.output_file, "w") as output:
+    def fetch_result_files(self, reference, result_files):
+        self.fetch_calls.append((reference, result_files))
+        with open(result_files.output_file, "w") as output:
             output.write("restored output")
 
 
@@ -66,7 +66,7 @@ def _spec(tmp_path):
     )
 
 
-def test_history_listing_does_not_fetch_missing_artifacts(tmp_path):
+def test_history_listing_does_not_fetch_missing_result_files(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _HistoryExecutor()
@@ -84,7 +84,7 @@ def test_history_listing_does_not_fetch_missing_artifacts(tmp_path):
     assert executor.fetch_calls == []
 
 
-def test_load_result_fetches_missing_artifacts_on_demand(tmp_path):
+def test_load_result_fetches_missing_result_files_on_demand(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _HistoryExecutor()
@@ -120,7 +120,7 @@ def test_failed_history_without_return_code_is_not_parsed_as_success(tmp_path):
     record = manager.new_record(
         task="DOS",
         directory=tmp_path,
-        artifacts=manager._artifacts_for_spec(spec),
+        result_files=manager._result_files_for_spec(spec),
     )
     store.save(record)
     record = manager.finalize(record, state=RunState.FAILED)
@@ -145,7 +145,7 @@ def test_missing_failed_history_uses_inferred_return_code(tmp_path):
     record = manager.new_record(
         task="DOS",
         directory=tmp_path,
-        artifacts=manager._artifacts_for_spec(spec),
+        result_files=manager._result_files_for_spec(spec),
     )
     store.save(record)
     record = manager.finalize(record, state=RunState.FAILED)

@@ -5,9 +5,9 @@ from types import SimpleNamespace
 import pytest
 
 from ase2sprkkr.execution import (
-    ArtifactState,
     ExecutionManager,
     Executor,
+    ResultFilesState,
     RunReference,
     RunState,
     RunStatus,
@@ -72,7 +72,7 @@ def _spec(tmp_path):
     return SimpleNamespace(directory=str(tmp_path))
 
 
-def _artifact_spec(tmp_path):
+def _result_files_spec(tmp_path):
     input_file = tmp_path / "run.inp"
     output_file = tmp_path / "run.out"
     generated = tmp_path / "case.dat"
@@ -174,11 +174,11 @@ def test_first_terminal_transition_sets_immutable_finished_at(tmp_path, state):
     assert updated.finished_at == finished_at
 
 
-def test_completion_captures_artifacts_but_not_cache(tmp_path):
+def test_completion_captures_result_files_but_not_cache(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
-    spec = _artifact_spec(tmp_path)
+    spec = _result_files_spec(tmp_path)
     run = manager.create_run(executor, object(), spec, task="DOS", dataset="case")
 
     run.submit()
@@ -188,21 +188,21 @@ def test_completion_captures_artifacts_but_not_cache(tmp_path):
 
     stored = store.get(run.id)
     assert stored.state == RunState.FINISHED
-    assert stored.artifacts.state == ArtifactState.CURRENT
-    assert stored.artifacts.captured_at is not None
-    assert {fingerprint.path for fingerprint in stored.artifacts.fingerprints} == {
+    assert stored.result_files.state == ResultFilesState.CURRENT
+    assert stored.result_files.captured_at is not None
+    assert {fingerprint.path for fingerprint in stored.result_files.fingerprints} == {
         str(tmp_path / "run.inp"),
         str(tmp_path / "run.out"),
         str(tmp_path / "case.dat"),
     }
-    assert str(tmp_path / "cache.dat") not in stored.artifacts.manifests
+    assert str(tmp_path / "cache.dat") not in stored.result_files.manifests
 
 
-def test_changed_artifact_marks_overwritten_without_changing_outcome(tmp_path):
+def test_changed_result_file_marks_overwritten_without_changing_outcome(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
-    spec = _artifact_spec(tmp_path)
+    spec = _result_files_spec(tmp_path)
     run = manager.create_run(executor, object(), spec, task="DOS")
 
     run.submit()
@@ -212,11 +212,11 @@ def test_changed_artifact_marks_overwritten_without_changing_outcome(tmp_path):
     finished = store.get(run.id)
     (tmp_path / "case.dat").write_text("changed contents")
 
-    updated = manager.check_artifacts(run.id)
+    updated = manager.check_result_files(run.id)
 
     assert updated.state == RunState.FINISHED
     assert updated.return_code == 0
-    assert updated.artifacts.state == ArtifactState.OVERWRITTEN
+    assert updated.result_files.state == ResultFilesState.OVERWRITTEN
     assert updated.finished_at == finished.finished_at
 
 
@@ -224,7 +224,7 @@ def test_changed_cache_does_not_mark_result_overwritten(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
-    spec = _artifact_spec(tmp_path)
+    spec = _result_files_spec(tmp_path)
     run = manager.create_run(executor, object(), spec, task="DOS")
 
     run.submit()
@@ -233,17 +233,17 @@ def test_changed_cache_does_not_mark_result_overwritten(tmp_path):
     executor.runners[0].finish()
     (tmp_path / "cache.dat").write_text("cache-after-with-different-size")
 
-    updated = manager.check_artifacts(run.id)
+    updated = manager.check_result_files(run.id)
 
     assert updated.state == RunState.FINISHED
-    assert updated.artifacts.state == ArtifactState.CURRENT
+    assert updated.result_files.state == ResultFilesState.CURRENT
 
 
 def test_load_result_parses_persisted_output_without_backend_refresh(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
-    spec = _artifact_spec(tmp_path)
+    spec = _result_files_spec(tmp_path)
     run = manager.create_run(executor, object(), spec, task="DOS")
 
     run.submit()

@@ -25,6 +25,8 @@ _FINAL_STATE_NAMES = {state.value for state in _FINAL_RUN_STATES}
 _AGENT_LOCK_FILE = "psij-agent.lock"
 _AGENT_POLL_INTERVAL = 0.1
 _AGENT_IDLE_TIMEOUT = 5.0
+_RETRY_INITIAL = 0.5
+_RETRY_MAX = 10.0
 
 
 class _RemoteResult:
@@ -165,6 +167,20 @@ class _RemotePsijAgent:
         self.directory = Path(directory).expanduser().resolve()
         self._executors = {}
         self._active = {}
+        self._retry = {}
+
+    def _retry_ready(self, run_id):
+        retry = self._retry.get(run_id)
+        return retry is None or time.monotonic() >= retry[1]
+
+    def _schedule_retry(self, run_id):
+        attempts = self._retry.get(run_id, (0, 0.0))[0] + 1
+        exponent = min(attempts - 1, 10)
+        delay = min(_RETRY_INITIAL * (2**exponent), _RETRY_MAX)
+        self._retry[run_id] = (attempts, time.monotonic() + delay)
+
+    def _clear_retry(self, run_id):
+        self._retry.pop(run_id, None)
 
     def _executor_for(self, request):
         key = _executor_key(request)
@@ -177,10 +193,15 @@ class _RemotePsijAgent:
     def _runs(self):
         from .remote import _request_path, list_remote_runs
 
+        current = set()
         for state in list_remote_runs(self.directory):
-            if state.get("state") in _FINAL_STATE_NAMES:
-                continue
             run_id = state.get("id")
+            if run_id:
+                current.add(run_id)
+            if state.get("state") in _FINAL_STATE_NAMES:
+                if run_id:
+                    self._clear_retry(run_id)
+                continue
             if not run_id:
                 continue
             try:
@@ -189,6 +210,9 @@ class _RemotePsijAgent:
                 continue
             if request.get("executor", "local") == "psij":
                 yield run_id, state, request
+        for run_id in tuple(self._retry):
+            if run_id not in current:
+                self._clear_retry(run_id)
 
     def _fail(self, run_id, exc):
         from .remote import (
@@ -210,6 +234,7 @@ class _RemotePsijAgent:
                     finished_at=state.get("finished_at") or _timestamp(),
                 )
         self._active.pop(run_id, None)
+        self._clear_retry(run_id)
 
     def _record_retryable_error(self, run_id, field, exc):
         from .remote import (
@@ -239,9 +264,7 @@ class _RemotePsijAgent:
         output_file = request.get("output_file") or os.path.join(self.directory, "stdout")
         error_file = request.get("error_file") or output_file + ".err"
         spec = _execution_spec(self.directory, request, output_file, error_file)
-        runner = executor.create_persistent_run(
-            _RemoteReader(), spec, run_id=run_id
-        )
+        runner = executor.create_persistent_run(_RemoteReader(), spec, run_id=run_id)
 
         with _state_lock(self.directory, run_id):
             state = _read_state_unlocked(self.directory, run_id)
@@ -325,6 +348,7 @@ class _RemotePsijAgent:
                 error=None,
             )
 
+        self._clear_retry(run_id)
         self._active[run_id] = _ActiveRun(runner, current)
         return True
 
@@ -352,12 +376,11 @@ class _RemotePsijAgent:
             # than creating a duplicate scheduler job.
             return False
         except Exception as exc:
-            # Scheduler/accounting inspection is itself an external operation.
-            # A transient failure here says nothing about whether the job was
-            # accepted, so never turn it into a terminal run state.
             self._record_retryable_error(run_id, "recovery_error", exc)
+            self._schedule_retry(run_id)
             return False
 
+        self._clear_retry(run_id)
         if status is None:
             with _state_lock(self.directory, run_id):
                 latest = _read_state_unlocked(self.directory, run_id)
@@ -384,9 +407,6 @@ class _RemotePsijAgent:
                         recovery_error=None,
                     )
                 else:
-                    # The previous agent died after reserving the submit but the
-                    # scheduler positively confirms that no such job exists.
-                    # Return to QUEUED so this agent may submit it exactly once.
                     _write_state_unlocked(
                         self.directory,
                         run_id,
@@ -430,11 +450,10 @@ class _RemotePsijAgent:
         try:
             runner = executor.attach(RunReference(**reference), _RemoteReader())
         except Exception as exc:
-            # Reconnection is an external scheduler operation. Keep the last
-            # known lifecycle state and retry while the agent is alive instead
-            # of converting a transient scheduler outage into FAILED.
             self._record_retryable_error(run_id, "attach_error", exc)
+            self._schedule_retry(run_id)
             return True
+        self._clear_retry(run_id)
         self._active[run_id] = _ActiveRun(
             runner,
             RunState(state.get("state", RunState.UNKNOWN.value)),
@@ -448,14 +467,18 @@ class _RemotePsijAgent:
                     self.directory,
                     run_id,
                     attach_error=None,
-                    error=None if latest.get("error") == latest.get("attach_error") else latest.get("error"),
+                    error=(
+                        None
+                        if latest.get("error") == latest.get("attach_error")
+                        else latest.get("error")
+                    ),
                 )
         return True
 
     def _discover(self):
         activity = False
         for run_id, state, request in self._runs():
-            if run_id in self._active:
+            if run_id in self._active or not self._retry_ready(run_id):
                 continue
             try:
                 if state.get("backend_reference") is not None:
@@ -463,9 +486,7 @@ class _RemotePsijAgent:
                 elif state.get("state") == RunState.QUEUED.value:
                     activity = self._submit(run_id, request) or activity
                 elif state.get("state") == RunState.SUBMITTING.value:
-                    activity = (
-                        self._recover_submitting(run_id, state, request) or activity
-                    )
+                    activity = self._recover_submitting(run_id, state, request) or activity
             except BaseException as exc:
                 self._fail(run_id, exc)
                 activity = True
@@ -481,17 +502,21 @@ class _RemotePsijAgent:
 
         try:
             result = active.runner.wait()
-            return_code = result.return_code
+            return_code = getattr(active.runner, "return_code", None)
+            if return_code is None:
+                return_code = result.return_code
             final = active.runner.state
-            if final not in _FINAL_RUN_STATES:
-                final = RunState.FINISHED if return_code == 0 else RunState.FAILED
         except BaseException as exc:
+            final = active.runner.state
+            return_code = getattr(active.runner, "return_code", None)
             if requested_cancel:
                 final = RunState.CANCELLED
-                return_code = None
-            else:
+            elif final not in _FINAL_RUN_STATES:
                 self._fail(run_id, exc)
                 return
+
+        if final not in _FINAL_RUN_STATES:
+            final = RunState.FINISHED if return_code == 0 else RunState.FAILED
 
         with _state_lock(self.directory, run_id):
             state = _read_state_unlocked(self.directory, run_id)
@@ -505,6 +530,7 @@ class _RemotePsijAgent:
                 finished_at=state.get("finished_at") or _timestamp(),
             )
         self._active.pop(run_id, None)
+        self._clear_retry(run_id)
 
     def _poll_active(self):
         from .remote import (
@@ -534,7 +560,10 @@ class _RemotePsijAgent:
                         self._finish(run_id, active, requested_cancel)
                         continue
 
-                if current in (RunState.QUEUED, RunState.RUNNING) and current != active.last_state:
+                if (
+                    current in (RunState.QUEUED, RunState.RUNNING)
+                    and current != active.last_state
+                ):
                     with _state_lock(self.directory, run_id):
                         current_state = _read_state_unlocked(self.directory, run_id)
                         if current_state.get("state") not in _FINAL_STATE_NAMES:
@@ -553,7 +582,7 @@ class _RemotePsijAgent:
         while True:
             activity = self._discover()
             activity = self._poll_active() or activity
-            if self._active or activity:
+            if self._active or activity or self._retry:
                 idle_since = None
             elif idle_since is None:
                 idle_since = time.monotonic()
@@ -563,14 +592,7 @@ class _RemotePsijAgent:
 
 
 def run_remote_psij_worker(directory, run_id, request):
-    """Join or become the workspace PSI/J agent.
-
-    The first detached worker owns the workspace agent lock and shares PSI/J
-    executors for submissions, refreshes and cancellation requests. The agent
-    stays alive while it owns active jobs so their monitor threads can publish
-    final state without depending on a later client poll, and exits after a
-    short idle period once no active jobs remain.
-    """
+    """Join or become the workspace PSI/J agent."""
     directory = Path(directory).expanduser().resolve()
     lock = _try_agent_lock(directory)
     if lock is None:
