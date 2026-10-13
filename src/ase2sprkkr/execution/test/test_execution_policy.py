@@ -13,10 +13,10 @@ from ase2sprkkr.execution.base import (
 from ase2sprkkr.execution.endpoint import endpoint_for_executor
 from ase2sprkkr.execution.local import LocalExecutor, LocalRunner
 from ase2sprkkr.execution.manager import (
-    ArtifactRecord,
     ExecutionManager,
     FileRetrievalState,
     PersistentRunner,
+    ResultFilesRecord,
     RunStore,
     SubmissionKey,
 )
@@ -153,7 +153,7 @@ def test_definite_pre_submit_failure_becomes_failed_without_backend_state(tmp_pa
 def test_uncertain_submit_without_reference_stays_submitting(tmp_path):
     manager, runner = _persistent_wrapper(tmp_path, _UncertainRunner())
 
-    with pytest.raises(OSError, match="connection lost"):
+    with pytest.raises(OSError, match="connection lost during submit"):
         runner.submit()
 
     record = manager.store.get(runner.id)
@@ -166,7 +166,7 @@ def test_file_retrieval_failure_does_not_change_finished_state(tmp_path):
     record = manager.new_record(
         task="SCF",
         directory=tmp_path,
-        artifacts=ArtifactRecord(output_file=str(tmp_path / "out")),
+        result_files=ResultFilesRecord(output_file=str(tmp_path / "out")),
     )
     record = manager.store.save(record)
     record = manager.transition(record, state=RunState.FINISHED)
@@ -176,8 +176,8 @@ def test_file_retrieval_failure_does_not_change_finished_state(tmp_path):
     )
 
     assert record.state == RunState.FINISHED
-    assert record.artifacts.retrieval_state == FileRetrievalState.FAILED
-    assert record.artifacts.retrieval_message == "ssh disconnected"
+    assert record.result_files.retrieval_state == FileRetrievalState.FAILED
+    assert record.result_files.retrieval_message == "ssh disconnected"
 
 
 def test_atomic_local_file_preserves_old_destination_until_commit(tmp_path):
