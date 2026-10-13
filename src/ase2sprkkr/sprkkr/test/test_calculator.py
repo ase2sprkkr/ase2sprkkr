@@ -26,6 +26,49 @@ def _fast_atoms(b, jrws=20, r1=2e-6):
 
 
 class TestCalculator(TestCase):
+    def test_create_run_forwards_persistent(self, temporary_dir, monkeypatch):
+        calculator = SPRKKR(directory=temporary_dir, mpi=False)
+        persistent = object()
+        runner = object()
+        captured = {}
+
+        class InputParameters:
+            def run_process(self, *args, **kwargs):
+                captured.update(kwargs)
+                return runner
+
+        monkeypatch.setattr(
+            calculator,
+            "save_input",
+            lambda **kwargs: (InputParameters(), "input.inp", None, "output.out"),
+        )
+
+        assert calculator.create_run(persistent=persistent) is runner
+        assert captured["persistent"] is persistent
+
+    def test_calculate_forwards_persistent(self, monkeypatch):
+        calculator = SPRKKR(mpi=False)
+        persistent = object()
+        captured = {}
+
+        class Result:
+            task_name = "DOS"
+
+        result = Result()
+
+        class Runner:
+            def run(self):
+                return result
+
+        def create_run(**kwargs):
+            captured.update(kwargs)
+            return Runner()
+
+        monkeypatch.setattr(calculator, "create_run", create_run)
+
+        assert calculator.calculate(persistent=persistent) is result
+        assert captured["persistent"] is persistent
+
     @pytest.mark.slow
     def test_2D(self, temporary_dir):
         a = Atoms(symbols="C", positions=[[0, 0, 0]], cell=[[1, 0, 0], [0, 1, 0], [0, 0, 1]], pbc=[1, 1, 1])

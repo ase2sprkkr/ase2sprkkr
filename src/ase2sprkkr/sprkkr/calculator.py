@@ -780,6 +780,7 @@ class SPRKKR(BaseCalculator):
         gdb=False,
         profile: Optional[SPRKKRProfile] = None,
         executor=None,
+        persistent=None,
     ):
         """Prepare a calculation and return an unstarted Runner.
 
@@ -804,6 +805,11 @@ class SPRKKR(BaseCalculator):
 
         executor: ase2sprkkr.execution.Executor or None
             Override the calculator execution backend for this run.
+
+        persistent: bool or ase2sprkkr.sprkkr.runner.ExecutionManager or None
+            Create a persistent runner. True uses a default ExecutionManager,
+            an ExecutionManager instance selects that manager, and None keeps
+            the run_process() fallback behavior.
 
         ---------
         For the other parameters, see the save_input() method
@@ -842,6 +848,7 @@ class SPRKKR(BaseCalculator):
                     gdb=gdb,
                     profile=run_profile,
                     executor=self.executor if executor is None else executor,
+                    persistent=persistent,
                 )
 
     def value_or_default(self, name, value):
@@ -887,6 +894,7 @@ class SPRKKR(BaseCalculator):
         gdb=False,
         profile=None,
         executor=None,
+        persistent=None,
     ):
         """
         ASE-interface method for the calculation.  This method runs the appropriate task(s)
@@ -915,6 +923,11 @@ class SPRKKR(BaseCalculator):
         mpi, executable_dir, executable_suffix
             Compatibility overrides applied to the selected profile for this
             calculation. None keeps the corresponding profile value.
+
+        persistent: bool or ase2sprkkr.sprkkr.runner.ExecutionManager or None
+            Forwarded to create_run(). True requests persistence, an
+            ExecutionManager instance selects the manager, and None preserves
+            the backend fallback behavior.
 
         ---------
         For the other parameters, see the create_run() and save_input() methods
@@ -962,6 +975,7 @@ class SPRKKR(BaseCalculator):
             gdb=gdb,
             profile=run_profile,
             executor=executor,
+            persistent=persistent,
         )
         result = runner.run()
         self._update_from_result(
