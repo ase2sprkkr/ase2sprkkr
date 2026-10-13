@@ -543,13 +543,9 @@ class SPRKKR(BaseCalculator):
 
             if potential is None:
                 potential = bool(atoms or self._atoms)
-            # this is a bit tricky - both of them must not be defined - however, there is a mess with default values
-            pot_specified = False
-            if potential.__class__ is bool:
-                pot_specified = not potential
-            else:
-                pot_specified = potential
-            if (pot_specified == bool(atoms)) and (atoms or not self._atoms):
+
+            potential_specified = potential is not None and potential is not True
+            if atoms is not None and potential_specified:
                 raise ValueError(
                     "You can not provide both a potential and atoms object to the SPRKKR calculate method, "
                     "just one from them is generated from the another."

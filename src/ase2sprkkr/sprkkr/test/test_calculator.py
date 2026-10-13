@@ -50,6 +50,15 @@ class TestCalculator(TestCase):
             self.assertIs(calculator.atoms, atoms)
             from_file.assert_called_once_with("x.pot")
 
+    def test_save_input_rejects_atoms_with_explicit_potential(self):
+        atoms = bulk("Fe")
+        potential = Potential.from_atoms(bulk("Cu"))
+        calculator = SPRKKR()
+
+        for explicit_potential in (potential, "explicit.pot"):
+            with self.assertRaisesRegex(ValueError, "both a potential and atoms"):
+                calculator.save_input(atoms=atoms, potential=explicit_potential)
+
     @pytest.mark.slow
     def test_2D(self, temporary_dir):
         a = Atoms(symbols="C", positions=[[0, 0, 0]], cell=[[1, 0, 0], [0, 1, 0], [0, 0, 1]], pbc=[1, 1, 1])
