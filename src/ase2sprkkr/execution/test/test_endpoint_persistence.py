@@ -8,8 +8,8 @@ from ase2sprkkr.execution import (
     RunState,
     RunStore,
     SshTransport,
-    endpoint_for_executor,
 )
+from ase2sprkkr.execution.endpoint import endpoint_for_executor
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 
