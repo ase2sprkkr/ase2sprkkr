@@ -110,3 +110,29 @@ def test_load_result_fetches_missing_artifacts_on_demand(tmp_path):
     assert parsed[0][0] == str(tmp_path / "run.out")
     assert result.return_code == 0
     assert result.run_record.state == RunState.FINISHED
+
+
+def test_failed_history_without_return_code_is_not_parsed_as_success(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    spec = _spec(tmp_path)
+    (tmp_path / "run.out").write_text("failed output")
+    record = manager.new_record(
+        task="DOS",
+        directory=tmp_path,
+        artifacts=manager._artifacts_for_spec(spec),
+    )
+    store.save(record)
+    record = manager.finalize(record, state=RunState.FAILED)
+    parsed = []
+
+    class Reader:
+        def read_from_file(self, output, **kwargs):
+            parsed.append(kwargs)
+            return SimpleNamespace(return_code=kwargs["return_code"])
+
+    result = manager.load_result(record.id, reader=Reader())
+
+    assert parsed[0]["return_code"] != 0
+    assert result.return_code != 0
+    assert result.run_record.state == RunState.FAILED
