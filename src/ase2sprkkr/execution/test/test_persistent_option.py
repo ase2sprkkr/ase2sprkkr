@@ -2,6 +2,7 @@ from types import SimpleNamespace
 
 from ase2sprkkr.execution import ExecutionManager, Executor, RunReference, RunState, RunStore
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
+from ase2sprkkr.sprkkr.calculator import SPRKKR
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 
@@ -70,6 +71,14 @@ def _calculator(profile, *, executor=None, persistent=False):
         persistent=persistent,
         value_or_default=lambda name, value: value,
     )
+
+
+def test_sprkkr_constructor_stores_persistent_policy(tmp_path):
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+
+    calculator = SPRKKR(persistent=manager)
+
+    assert calculator.persistent is manager
 
 
 def test_explicit_manager_persists_canonical_task_and_dataset(tmp_path, monkeypatch):
