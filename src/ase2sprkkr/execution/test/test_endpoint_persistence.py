@@ -8,6 +8,7 @@ from ase2sprkkr.execution import (
     RunState,
     RunStore,
     SshTransport,
+    endpoint_for_executor,
 )
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
@@ -136,3 +137,18 @@ def test_pool_reconstructs_and_reuses_ssh_endpoint():
     assert first.transport.options == ("-p", "2222")
     assert first.backend == "psij"
     assert first.backend_options == {"backend": "slurm", "url": "local://slurm"}
+
+
+def test_default_remote_psij_endpoint_survives_restart():
+    live = RemoteEndpointExecutor(
+        SshTransport("cluster"),
+        backend="psij",
+    )
+
+    endpoint = endpoint_for_executor(live)
+    restored = ExecutorPool().for_endpoint(endpoint)
+
+    assert endpoint.psij_backend == "slurm"
+    assert isinstance(restored, RemoteEndpointExecutor)
+    assert restored.backend == "psij"
+    assert restored.backend_options == {"backend": "slurm", "url": None}
