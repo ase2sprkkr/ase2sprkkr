@@ -9,6 +9,9 @@ import numpy as np
 from ase.data import atomic_numbers, chemical_symbols
 
 
+_UNSET = object()
+
+
 class AtomicType:
     """Atomic type represent a type of atom, that could be placed at the atomic site.
 
@@ -126,19 +129,30 @@ class AtomicType:
         if self.charge:
             self.charge.mesh = mesh
 
-    def _check_n_electrons(self):
+    def _check_n_electrons(
+        self,
+        *,
+        n_core=_UNSET,
+        n_valence=_UNSET,
+        n_semicore=_UNSET,
+        n_electrons=_UNSET,
+    ):
+        n_core = self._n_core if n_core is _UNSET else n_core
+        n_valence = self._n_valence if n_valence is _UNSET else n_valence
+        n_semicore = self._n_semicore if n_semicore is _UNSET else n_semicore
+        n_electrons = self._n_electrons if n_electrons is _UNSET else n_electrons
         if (
-            self._n_core is not None
-            and self._n_valence is not None
-            and self._n_semicore is not None
-            and self._n_electrons is not None
-            and self._n_core + self._n_valence + self._n_semicore != self._n_electrons
+            n_core is not None
+            and n_valence is not None
+            and n_semicore is not None
+            and n_electrons is not None
+            and n_core + n_valence + n_semicore != n_electrons
         ):
             raise ValueError(f"""The following atom setup is inconsistent:
-n_electrons: {self._n_electrons},
-n_core: {self._n_core},
-n_valence: {self._n_valence},
-n_semicore: {self._n_semicore}""")
+n_electrons: {n_electrons},
+n_core: {n_core},
+n_valence: {n_valence},
+n_semicore: {n_semicore}""")
 
     @property
     def atomic_number(self):
@@ -198,10 +212,10 @@ n_semicore: {self._n_semicore}""")
 
     @n_electrons.setter
     def n_electrons(self, v):
+        self._check_n_electrons(n_electrons=v)
         self._n_electrons = v
         if self._potential:
             self._potential.z = v
-        self.__check_n_electrons()
 
     @property
     def n_valence(self):
@@ -217,19 +231,19 @@ n_semicore: {self._n_semicore}""")
 
     @n_valence.setter
     def n_valence(self, v):
+        self._check_n_electrons(n_valence=v)
         self._n_valence = v
-        self.__check_n_electrons()
 
     @property
     def n_core(self):
         if self._n_core is not None:
-            self._n_core
+            return self._n_core
         return self.n_electrons - self.n_valence - self.n_semicore
 
     @n_core.setter
     def n_core(self, v):
+        self._check_n_electrons(n_core=v)
         self._n_core = v
-        self.__check_n_electrons()
 
     @property
     def n_semicore(self):
@@ -241,8 +255,8 @@ n_semicore: {self._n_semicore}""")
 
     @n_semicore.setter
     def n_semicore(self, v):
+        self._check_n_electrons(n_semicore=v)
         self._n_semicore = v
-        self.__check_n_electrons()
 
     def __repr__(self):
         return f"({self.atomic_number})" if self.symbol == "X" else self.symbol
@@ -314,15 +328,14 @@ n_semicore: {self._n_semicore}""")
         return self.copy(mesh)
 
     def copy(self, for_mesh=None):
+        """Return an independent copy, optionally remeshed to ``for_mesh``."""
         out = copy.copy(self)
-        if out.potential is not None:
-            out.potential = out.potential.copy(for_mesh)
-        if out.charge is not None:
-            out.charge = out.charge.copy(for_mesh)
-        if out.moments is not None:
-            out.moments = out.moments.copy()
-        if for_mesh is not None:
-            out._mesh = for_mesh
+        target_mesh = self.mesh if for_mesh is None else for_mesh
+        out._mesh = target_mesh
+        out._potential = self.potential.copy(target_mesh) if self.potential is not None else None
+        out._charge = self.charge.copy(target_mesh) if self.charge is not None else None
+        out._moments = self.moments.copy() if self.moments is not None else None
+        out.magnetisation = self.magnetisation.copy()
         return out
 
     def remesh(self, mesh, map: "Dict[AtomicType,AtomicType]"):
