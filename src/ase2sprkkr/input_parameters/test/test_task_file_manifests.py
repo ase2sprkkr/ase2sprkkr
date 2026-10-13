@@ -21,3 +21,10 @@ def test_scf_fullpot_shape_function_is_optional_cache(tmp_path):
     parameters.CONTROL.SFNFIL = "Fe.sfn"
 
     assert parameters.cache_files(str(tmp_path)) == (str(tmp_path / "Fe.sfn"),)
+
+
+def test_xas_reuses_dataset_tau_directory_as_optional_cache(tmp_path):
+    parameters = InputParameters.create("XAS")
+    parameters.CONTROL.DATASET = "Fe"
+
+    assert parameters.cache_files(str(tmp_path)) == (str(tmp_path / "Fe.tau.dir"),)

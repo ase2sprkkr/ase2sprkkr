@@ -1,13 +1,14 @@
 """XAS task input parameters definition"""
 
 from ...common.grammar_types import DefKeyword, flag
+from ._file_manifests import TauCacheInputParametersDefinition
 from .sections import CONTROL, TASK, TAU, ENERGY, SITES, MODE
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ..input_parameters_definitions import InputValueDefinition as V
 
 
 def input_parameters():
     """XAS -xas task input parameters definition"""
-    input_parameters = InputParameters(
+    input_parameters = TauCacheInputParametersDefinition(
         "xas",
         [
             CONTROL("XAS"),
