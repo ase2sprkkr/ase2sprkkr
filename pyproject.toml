@@ -118,6 +118,7 @@ sdist.include = [
 	"docs/**",
 
 	"pyproject.toml",
+	"meta.yaml",
 ]
 wheel.exclude = [
 	"**/*.pyx",
