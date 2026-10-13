@@ -69,6 +69,7 @@ class SPRKKR(BaseCalculator):
         executable_dir: Optional[Union[str, bool]] = None,
         profile=None,
         executor=None,
+        persistent=False,
         **kwargs,
     ):
         """
@@ -150,6 +151,12 @@ class SPRKKR(BaseCalculator):
           config.config.calculator_parameters.empty_spheres.
           Dict means True, and the dict is passed as kwargs to the
           ``ase.bindings.empty_spheres.add_empty_spheres`` method.
+
+        persistent: bool or ExecutionManager
+          Default persistent execution policy. ``True`` uses the process-wide
+          default execution manager, ``False`` disables persistence, and an
+          explicit manager stores runs in that manager. Per-call ``None`` uses
+          this calculator-level default.
         """
 
         if kwargs:
@@ -196,6 +203,7 @@ class SPRKKR(BaseCalculator):
             executable_suffix=executable_suffix,
         )
         self.executor = executor
+        self.persistent = persistent
         self.label = label
         self._counter = 0
         # For %c template in file names
@@ -434,7 +442,7 @@ class SPRKKR(BaseCalculator):
             The input parameters is written into the input file,
                whose name is given by input_file argument.
 
-        potential: sprkkr.potential.potentials.Potential or str or None or False
+        potential: sprkkr.potential.Potential or str or None or False
             If it is None, the self.potential value is used instead (see the later options)
             If False, the potential filename is specified in the input_parameters.
             If True,  create the potential according to the atoms and write to the resulting <potential_file> file.
@@ -816,7 +824,7 @@ class SPRKKR(BaseCalculator):
         persistent: bool, ExecutionManager or None
             Persistent execution policy. ``True`` uses the default execution
             manager, ``False`` disables persistence, and an explicit manager
-            stores the run in that manager.
+            stores the run in that manager. ``None`` uses the calculator default.
 
         restart_scf: bool
             Request a fresh SCF cycle from the supplied electronic potential.
@@ -939,6 +947,7 @@ class SPRKKR(BaseCalculator):
 
         persistent: bool, ExecutionManager or None
             Persistent execution policy, forwarded to :meth:`create_run`.
+            ``None`` uses the calculator-level default.
 
         restart_scf: bool
             Request a fresh SCF cycle from the supplied electronic potential.
