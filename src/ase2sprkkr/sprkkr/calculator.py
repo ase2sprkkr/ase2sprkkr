@@ -27,11 +27,10 @@ import abc
 import subprocess
 import tempfile
 import collections
-import datetime
+from datetime import datetime
 from typing import Union, Any, Dict, Optional
 from pathlib import Path
 import re
-import warnings
 from ..common.misc import config_property, first_non_none
 from ..configuration import config
 from .profile import SPRKKRProfile, resolve_sprkkr_profile
@@ -70,6 +69,7 @@ class SPRKKR(BaseCalculator):
         executable_dir: Optional[Union[str, bool]] = None,
         profile=None,
         executor=None,
+        persistent=False,
         **kwargs,
     ):
         """
@@ -151,6 +151,11 @@ class SPRKKR(BaseCalculator):
           config.config.calculator_parameters.empty_spheres.
           Dict means True, and the dict is passed as kwargs to the
           ``ase.bindings.empty_spheres.add_empty_spheres`` method.
+
+        persistent: bool, ExecutionManager or None
+          Default persistent execution policy for calculations. False disables
+          persistence, True uses the default execution manager, and an explicit
+          manager stores runs in that manager. A per-call None uses this value.
         """
 
         if kwargs:
@@ -197,6 +202,7 @@ class SPRKKR(BaseCalculator):
             executable_suffix=executable_suffix,
         )
         self.executor = executor
+        self.persistent = persistent
         self.label = label
         self._counter = 0
         # For %c template in file names
@@ -311,7 +317,7 @@ class SPRKKR(BaseCalculator):
         atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms
         """
         if self._atoms is None:
-            if not self._potential or isinstance(self._potential, (bool, str)):
+            if self._potential is None or isinstance(self._potential, bool):
                 return None
             if isinstance(self._potential, str):
                 self._potential = Potential.from_file(self._potential)
@@ -544,13 +550,9 @@ class SPRKKR(BaseCalculator):
 
             if potential is None:
                 potential = bool(atoms or self._atoms)
-            # this is a bit tricky - both of them must not be defined - however, there is a mess with default values
-            pot_specified = False
-            if potential.__class__ is bool:
-                pot_specified = not potential
-            else:
-                pot_specified = potential
-            if (pot_specified == bool(atoms)) and (atoms or not self._atoms):
+
+            potential_specified = potential is not None and potential is not True
+            if atoms is not None and potential_specified:
                 raise ValueError(
                     "You can not provide both a potential and atoms object to the SPRKKR calculate method, "
                     "just one from them is generated from the another."
@@ -651,13 +653,11 @@ class SPRKKR(BaseCalculator):
                     empty_spheres = {"min_radius": empty_spheres[0], "max_radius": empty_spheres[1]}
                 if not isinstance(empty_spheres, collections.abc.Mapping):
                     empty_spheres = {}
-                try:
-                    add_empty_spheres(atoms, **empty_spheres)
-                except Exception as e:
-                    warnings.warn(f"Failed to search empty-spheres. Error: {e}")
+                add_empty_spheres(atoms, **empty_spheres)
 
         def save_potential_file():
-            pf = from_input_name(potential_file or self.potential_file, ".pot", "%a.pot")
+            pf = self.potential_file if potential_file is None else potential_file
+            pf = from_input_name(pf, ".pot", "%a.pot")
             pf = self._open_file(
                 pf, directory, templator, True, allow_temporary=return_files, create_subdirs=create_subdirs
             )
@@ -666,7 +666,7 @@ class SPRKKR(BaseCalculator):
             return pf.name
 
         def open_input_file():
-            ifile = input_file or self.input_file
+            ifile = self.input_file if input_file is None else input_file
             if ifile is True:
                 ifile = "%l%_%a_%T.inp"
 

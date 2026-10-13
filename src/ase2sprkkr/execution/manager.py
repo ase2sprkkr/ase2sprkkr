@@ -18,6 +18,7 @@ from uuid import uuid4
 
 from platformdirs import user_state_dir
 
+from ..common.file_locks import FileLock
 from .base import (
     Executor,
     RunReference,
@@ -73,36 +74,6 @@ def _result_file_path(value, directory):
 
 def _unique(values):
     return tuple(dict.fromkeys(value for value in values if value is not None))
-
-
-@contextmanager
-def _filesystem_lock(path):
-    """Hold an exclusive one-byte/file lock on *path* across processes."""
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    with path.open("a+b") as lock_file:
-        if os.name == "nt":
-            import msvcrt
-
-            lock_file.seek(0, os.SEEK_END)
-            if lock_file.tell() == 0:
-                lock_file.write(b"\0")
-                lock_file.flush()
-            lock_file.seek(0)
-            msvcrt.locking(lock_file.fileno(), msvcrt.LK_LOCK, 1)
-            try:
-                yield
-            finally:
-                lock_file.seek(0)
-                msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
-        else:
-            import fcntl
-
-            fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
-            try:
-                yield
-            finally:
-                fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
 
 
 class CorruptRunRecord(RuntimeError):
@@ -367,7 +338,7 @@ class RunStore:
     def submission_lock(self):
         """Serialize duplicate checking and the SUBMITTING record creation."""
         self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
-        with self._lock, _filesystem_lock(self.directory / ".submit.lock"):
+        with self._lock, FileLock(self.directory / ".submit.lock"):
             yield
 
     def save(self, record: RunRecord):
@@ -377,7 +348,7 @@ class RunStore:
 
     def update(self, record: RunRecord, updater):
         """Read latest, merge under a per-run lock, and atomically replace it."""
-        with self._lock, _filesystem_lock(self._run_lock_path(record)):
+        with self._lock, FileLock(self._run_lock_path(record)):
             path = self._path(record)
             latest = self._decode(path) if path.is_file() else record
             updated = updater(latest)
@@ -974,7 +945,7 @@ class ExecutionManager:
         Ordinary history listing remains metadata-only. Network/filesystem
         retrieval is performed here only when a declared result file is missing
         locally and the persisted endpoint supports ``fetch_result_files``.
-        Retrieval outcome is recorded independently of the calculation state.
+        Retrieval outcome is recorded independently of the calculation lifecycle itself.
         """
         record = (
             self.store.get(run)

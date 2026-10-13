@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import os
 import warnings
 from dataclasses import dataclass
@@ -82,6 +83,141 @@ class RunState(str, Enum):
     FAILED = "failed"
     CANCELLED = "cancelled"
     UNKNOWN = "unknown"
+
+
+class ExecutionResources:
+    """Closable resources whose ownership is transferred to a calculation run.
+
+    Closing is idempotent and thread-safe. Duplicate objects are closed only
+    once, which matters when two execution roles reference the same file handle.
+    """
+
+    def __init__(self, *resources):
+        self._resources = tuple(resources)
+        self._closed = False
+        self._lock = Lock()
+
+    @property
+    def closed(self):
+        with self._lock:
+            return self._closed
+
+    def close(self, *, suppress_errors=False):
+        with self._lock:
+            if self._closed:
+                return
+            self._closed = True
+            resources = self._resources
+            self._resources = ()
+
+        first_error = None
+        seen = set()
+        for resource in resources:
+            if resource is None or id(resource) in seen:
+                continue
+            seen.add(id(resource))
+            close = getattr(resource, "close", None)
+            if close is None or getattr(resource, "closed", False):
+                continue
+            try:
+                close()
+            except BaseException as exc:
+                if first_error is None:
+                    first_error = exc
+
+        if first_error is not None and not suppress_errors:
+            raise first_error
+
+
+class ResourceOwnedRunner:
+    """Runner proxy owning the file resources prepared for one execution.
+
+    Resources remain owned by the caller until this proxy is constructed. From
+    that point they are released on completion, on a synchronous submission
+    failure, or explicitly through :meth:`close` while the run is still new.
+    """
+
+    def __init__(self, runner, resources: ExecutionResources):
+        self._runner = runner
+        self._resources = resources
+
+    def __getattr__(self, name):
+        return getattr(self._runner, name)
+
+    @property
+    def result(self):
+        return self._runner.result
+
+    @property
+    def state(self):
+        return self._runner.state
+
+    @property
+    def reference(self):
+        return self._runner.reference
+
+    def _release_after_failure(self):
+        self._resources.close(suppress_errors=True)
+
+    def submit(self):
+        try:
+            return self._runner.submit()
+        except BaseException:
+            self._release_after_failure()
+            raise
+
+    def wait(self):
+        try:
+            result = self._runner.wait()
+        except BaseException:
+            self._release_after_failure()
+            raise
+        self._resources.close()
+        return result
+
+    def run(self):
+        if self.state == RunState.NEW:
+            self.submit()
+        return self.wait()
+
+    async def run_async(self):
+        if self.state == RunState.NEW:
+            self.submit()
+        try:
+            run_async = getattr(self._runner, "run_async", None)
+            if run_async is not None:
+                result = await run_async()
+            else:
+                result = await asyncio.to_thread(self._runner.wait)
+        except BaseException:
+            self._release_after_failure()
+            raise
+        self._resources.close()
+        return result
+
+    def cancel(self):
+        state = self.state
+        result = self._runner.cancel()
+        if state == RunState.NEW:
+            self._resources.close()
+        return result
+
+    def close(self):
+        """Release resources belonging to a run that has not been started."""
+        if self._resources.closed:
+            return
+        state = self.state
+        if state != RunState.NEW:
+            raise RuntimeError(
+                f"Cannot close execution resources while run is {state.value}"
+            )
+        self._resources.close()
+
+    def add_output_listener(self, callback):
+        return self._runner.add_output_listener(callback)
+
+    def add_output_error_listener(self, callback):
+        return self._runner.add_output_error_listener(callback)
 
 
 @dataclass(frozen=True)

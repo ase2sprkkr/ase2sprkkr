@@ -1,10 +1,12 @@
 """Calculation execution subsystem."""
 
 from .base import (
+    ExecutionResources,
     ExecutionSpec,
     Executor,
     LaunchSpec,
     MpiNotFoundWarning,
+    ResourceOwnedRunner,
     Runner,
     RunReference,
     RunState,
@@ -36,11 +38,13 @@ from .transport import LocalTransport, RunningCommand, SshTransport, Transport
 RemoteExecutor = RemoteEndpointExecutor
 
 __all__ = [
+    "ExecutionResources",
     "ExecutionSpec",
     "Executor",
     "ExecutorEndpoint",
     "LaunchSpec",
     "MpiNotFoundWarning",
+    "ResourceOwnedRunner",
     "Runner",
     "RunReference",
     "RunState",

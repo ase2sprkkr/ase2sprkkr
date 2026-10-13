@@ -1,4 +1,4 @@
-"""PSI/J backend used by the detached remote execution helper."""
+"""PSI/J backend used by the detached execution helper."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from types import SimpleNamespace
 
+from ..common.file_locks import FileLock
 from .base import ExecutionSpec, LaunchSpec, RunReference, RunState
 from .psij import PsijExecutor
 
@@ -86,30 +87,18 @@ def _agent_lock_path(directory):
 
 
 def _try_agent_lock(directory):
-    """Return an exclusively locked file, or ``None`` if an agent owns it."""
-    import fcntl
-
-    path = _agent_lock_path(directory)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    lock = path.open("a+b")
-    try:
-        fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except BlockingIOError:
-        lock.close()
+    """Return an acquired lock, or ``None`` if an agent owns it."""
+    lock = FileLock(_agent_lock_path(directory))
+    if not lock.acquire(blocking=False):
         return None
     return lock
 
 
 def _agent_is_running(directory):
-    import fcntl
-
     lock = _try_agent_lock(directory)
     if lock is None:
         return True
-    try:
-        fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
-    finally:
-        lock.close()
+    lock.release()
     return False
 
 
@@ -132,7 +121,7 @@ def _spawn_agent(directory, run_id):
 
 def ensure_remote_psij_agent(directory, run_ids):
     """Ensure an agent exists when a requested PSI/J run needs attention."""
-    from .remote import _read_state, _request_path
+    from .detached import _read_state, _request_path
 
     directory = Path(directory).expanduser().resolve()
     if _agent_is_running(directory):
@@ -161,7 +150,7 @@ class _ActiveRun:
 
 
 class _RemotePsijAgent:
-    """Temporarily own shared PSI/J executors for one remote workspace."""
+    """Temporarily own shared PSI/J executors for one detached workspace."""
 
     def __init__(self, directory):
         self.directory = Path(directory).expanduser().resolve()
@@ -191,10 +180,10 @@ class _RemotePsijAgent:
         return executor
 
     def _runs(self):
-        from .remote import _request_path, list_remote_runs
+        from .detached import _request_path, list_detached_runs
 
         current = set()
-        for state in list_remote_runs(self.directory):
+        for state in list_detached_runs(self.directory):
             run_id = state.get("id")
             if run_id:
                 current.add(run_id)
@@ -215,7 +204,7 @@ class _RemotePsijAgent:
                 self._clear_retry(run_id)
 
     def _fail(self, run_id, exc):
-        from .remote import (
+        from .detached import (
             _read_state_unlocked,
             _state_lock,
             _timestamp,
@@ -237,7 +226,7 @@ class _RemotePsijAgent:
         self._clear_retry(run_id)
 
     def _record_retryable_error(self, run_id, field, exc):
-        from .remote import (
+        from .detached import (
             _read_state_unlocked,
             _state_lock,
             _write_state_unlocked,
@@ -253,7 +242,7 @@ class _RemotePsijAgent:
                 )
 
     def _submit(self, run_id, request):
-        from .remote import (
+        from .detached import (
             _read_state_unlocked,
             _state_lock,
             _timestamp,
@@ -354,7 +343,7 @@ class _RemotePsijAgent:
 
     def _recover_submitting(self, run_id, state, request):
         """Recover the scheduler identity after a target-agent submit crash."""
-        from .remote import (
+        from .detached import (
             _read_state_unlocked,
             _state_lock,
             _timestamp,
@@ -458,7 +447,7 @@ class _RemotePsijAgent:
             runner,
             RunState(state.get("state", RunState.UNKNOWN.value)),
         )
-        from .remote import _read_state_unlocked, _state_lock, _write_state_unlocked
+        from .detached import _read_state_unlocked, _state_lock, _write_state_unlocked
 
         with _state_lock(self.directory, run_id):
             latest = _read_state_unlocked(self.directory, run_id)
@@ -493,7 +482,7 @@ class _RemotePsijAgent:
         return activity
 
     def _finish(self, run_id, active, requested_cancel):
-        from .remote import (
+        from .detached import (
             _read_state_unlocked,
             _state_lock,
             _timestamp,
@@ -533,7 +522,7 @@ class _RemotePsijAgent:
         self._clear_retry(run_id)
 
     def _poll_active(self):
-        from .remote import (
+        from .detached import (
             _read_state,
             _read_state_unlocked,
             _state_lock,
@@ -600,17 +589,12 @@ def run_remote_psij_worker(directory, run_id, request):
     try:
         _RemotePsijAgent(directory).run()
     finally:
-        import fcntl
-
-        try:
-            fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
-        finally:
-            lock.close()
+        lock.release()
 
 
 def cancel_remote_psij(directory, run_id, request, timeout=1.0):
     """Request cancellation through the target-side PSI/J agent."""
-    from .remote import (
+    from .detached import (
         _read_state,
         _read_state_unlocked,
         _state_lock,
