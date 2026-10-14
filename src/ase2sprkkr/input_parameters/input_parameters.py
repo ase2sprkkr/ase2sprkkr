@@ -297,12 +297,14 @@ class InputParameters(ConfigurationFile):
         return f"<Configuration container {self._get_path()}>"
 
     def set_option(self, name, value):
-        for i in self._members:
-            if name in i:
-                self._members[i][name] = value
-                break
-        else:
-            raise KeyError("No option with name {} in any of the members".format(name))
+        """Set the first option matching *name* anywhere in this input file."""
+        try:
+            option = self.get_member(name, is_option=True)
+        except KeyError:
+            raise KeyError(
+                f"No option with name {name} in any of the members"
+            ) from None
+        option.set(value)
 
     @cached_class_property
     def definition_modules():

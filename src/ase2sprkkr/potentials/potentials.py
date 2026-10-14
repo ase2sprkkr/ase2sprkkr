@@ -200,13 +200,14 @@ class Potential(ConfigurationFile):
         if atoms is not False:
             self.set_from_atoms(atoms)
 
-        status = self.SCF_INFO.SCFSTATUS
+        status = None
         if restart_scf:
+            status = self.SCF_INFO.SCFSTATUS
             status.result = "START"
         try:
             return super().save_to_file(file, False, validate=validate)
         finally:
-            if restart_scf:
+            if status is not None:
                 status.clear_result()
 
 
