@@ -4,7 +4,6 @@ import ase.io
 import numpy as np
 import pytest
 
-from ..calculator import SPRKKR
 from ..radial import RadialCharge, RadialPotential
 from ..radial_meshes import ExponentialMesh
 from ..sites import SiteType
@@ -141,32 +140,6 @@ class TestSites:
         assert set(atoms.info["occupancy"]) == {"7"}
         assert SiteType._ase_occupation(atoms, 0) == atoms.info["occupancy"]["7"]
         assert SiteType._ase_occupation(atoms, 1) == atoms.info["occupancy"]["7"]
-
-    @pytest.mark.skip(reason="legacy slow integration test")
-    def test_charge(self, calc_args):
-        from ase.build import bulk
-
-        atoms = bulk("Li")
-        calculator = SPRKKR(atoms=atoms, **calc_args())
-        calculator.input_parameters.SCF.MIX = 1.0
-
-        for site in atoms.sites:
-            site.mesh.jrws = 30
-            site.mesh.r1 = 1e-6
-
-        output = calculator.calculate(options={"NITER": 2}, atoms=atoms)
-        atoms2 = output.atoms
-        output = calculator.calculate(options={"NITER": 0}, atoms=atoms)
-        atoms1 = output.atoms
-        assert atoms2.sites[0].potential.vt != atoms1.sites[0].potential.vt
-        output2 = calculator.calculate(atoms=atoms1, options={"NITER": 1})
-        assert atoms2.sites[0].potential.vt == output2.atoms.sites[0].potential.vt
-        assert atoms2.sites[0].potential.bt == output2.atoms.sites[0].potential.bt
-        assert atoms2.sites[0].charge.raw_value == output2.atoms.sites[0].charge.raw_value
-        atoms1.atoms.sites[0].potential.vt *= 2
-        atoms1.atoms.sites[0].potential.bt *= 2
-        output3 = calculator.calculate(atoms=atoms1, options={"NITER": 1})
-        assert atoms2.sites[0].potential.vt != output3.atoms.sites[0].potential.vt
 
     def test_occupancy_and_spacegroup_kinds(self):
         atoms = ase.io.read(os.path.join(os.path.dirname(__file__), "test2.cif"))
