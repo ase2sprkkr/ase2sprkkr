@@ -129,6 +129,9 @@ class TestCase:
     def assertIs(self, a, b, msg=None):
         assert a is b, msg
 
+    def assertIsNot(self, a, b, msg=None):
+        assert a is not b, msg
+
     def assertIsInstance(self, value, cls, msg=None):
         assert isinstance(value, cls), msg
 
