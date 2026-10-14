@@ -1,6 +1,11 @@
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 
 
+def test_task_definitions_declare_potential_production():
+    assert InputParameters.definition("SCF").produces_potential
+    assert not InputParameters.definition("DOS").produces_potential
+
+
 def test_dos_output_is_namespaced_by_dataset(tmp_path):
     parameters = InputParameters.create("DOS")
     parameters.CONTROL.DATASET = "Fe"
