@@ -10,13 +10,9 @@ from ...common.configuration_transaction import (
 from ...common.options import CustomOption, Option
 from ...common.warnings import DataValidityError, DataValidityErrors
 from .. import input_parameters_definitions as cd
+from ._test_callbacks import validator_error_if_three as _validator_error_if_three
 
 V = cd.InputValueDefinition
-
-
-def _validator_error_if_three(option, values, why):
-    if option() == 3:
-        return DataValidityError(f"{why}: VALUE must not be three")
 
 
 def test_transaction_converts_each_value_once():
