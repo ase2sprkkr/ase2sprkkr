@@ -9,6 +9,8 @@ from ..input_parameters_definitions import InputParametersDefinition
 class SCFInputParametersDefinition(InputParametersDefinition):
     """SCF definition with files depending on the concrete parameters."""
 
+    produces_potential = True
+
     @staticmethod
     def _path(directory, filename):
         return filename if os.path.isabs(filename) else os.path.join(directory, filename)
