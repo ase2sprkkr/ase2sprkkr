@@ -64,6 +64,8 @@ class ScfResult(TaskResult):
     It also allows to plot the convergence of values during iterations.
     """
 
+    produces_potential = True
+
     @cached_property
     def calculator(self):
         """The calculator that has the new (output) potential assigned - i.e. that

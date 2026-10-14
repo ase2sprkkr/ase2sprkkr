@@ -15,6 +15,9 @@ from .result_options import create_files_section
 class TaskResult:
     """A base class for a result of a runned task (kkrscf executable)"""
 
+    produces_potential = False
+    """Whether this result produces a new potential usable by later tasks."""
+
     sfn_generated = None
     """Whether this calculation generated rather than reused its SFN file."""
 

@@ -3,6 +3,12 @@ from pathlib import Path
 
 from ..readers import scf as scf_reader
 from ..readers.scf import ScfOutputParser, ScfResult
+from ..task_result import TaskResult
+
+
+def test_result_potential_production_capability():
+    assert TaskResult.produces_potential is False
+    assert ScfResult.produces_potential is True
 
 
 def test_scf_result_calculator_without_original_calculator(monkeypatch, tmp_path):
