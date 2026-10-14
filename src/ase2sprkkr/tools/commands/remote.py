@@ -141,9 +141,9 @@ def run(args, global_args):
     elif args.remote_action == "clean":
         _print_json(clean_remote_runs(args.directory, older_than=args.older_than))
     elif args.remote_action == "resolve-mpi":
-        from ...configuration import mpi_runner
+        from ...execution.mpi import resolve_mpi_command
 
         request = json.load(sys.stdin)
-        _print_json({"mpi": mpi_runner(request.get("mpi"))})
+        _print_json({"mpi": resolve_mpi_command(request.get("mpi"))})
     else:
         raise ValueError("Unknown remote action: {}".format(args.remote_action))
