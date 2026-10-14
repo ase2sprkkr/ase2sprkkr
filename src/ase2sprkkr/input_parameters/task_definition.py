@@ -95,13 +95,13 @@ class TaskDefinition:
         if self.result_reader is not None:
             return self.result_reader
 
-        # Keep reader discovery behind the task boundary.  The import is local
-        # to avoid an input-parameters/output-reader import cycle at startup.
-        from ..outputs.task_result import KkrOutputReader
+        from ..outputs.reader_registry import reader_registry
+        from ..outputs.readers.default import DefaultOutputReader
 
-        return KkrOutputReader.class_for_task(
-            self.input_parameters_definition.name
-        )
+        try:
+            return reader_registry[self.input_parameters_definition.name]
+        except KeyError:
+            return DefaultOutputReader
 
     def prepare_from_result(self, parameters, result):
         """Prepare newly created task parameters from a previous result."""
