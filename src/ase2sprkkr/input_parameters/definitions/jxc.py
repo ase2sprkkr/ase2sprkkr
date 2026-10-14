@@ -53,6 +53,7 @@ def input_parameters():
                     V(
                         "DMI",
                         flag,
+                        default_value=False,
                         is_required=False,
                         info="Calculate Dzyaloshinskii-Moriya interaction vectors.",
                     ),
