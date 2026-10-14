@@ -5,7 +5,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from ..base import ExecutionSpec, LaunchSpec, RunState
+from ..base import ExecutionSpec, LaunchSpec, RunState, SubmissionNotStarted
 from ..remote import FileSyncPolicy
 from ..remote_endpoint import RemoteEndpointExecutor
 from ..transport import LocalTransport
@@ -102,6 +102,17 @@ def _text_run(
         ),
     )
     return executor, spec, workdir, remote_root
+
+
+def _expose_shared_input(remote_root, name, data):
+    """Simulate an input already visible in the remote view of shared storage."""
+    remote = remote_root / "calculation" / name
+    remote.parent.mkdir(parents=True, exist_ok=True)
+    if isinstance(data, str):
+        remote.write_text(data)
+    else:
+        remote.write_bytes(data)
+    return remote
 
 
 def test_remote_executor_local_transport_streams_output(tmp_path):
@@ -250,7 +261,7 @@ def test_remote_executor_uses_remote_only_input(tmp_path):
         ("changed", "local", True),
         ("always", "local", True),
         ("missing", "remote", False),
-        ("never", "remote", False),
+        ("never", "local", False),
     ],
 )
 def test_remote_input_file_policies(tmp_path, policy, expected, uploaded):
@@ -261,15 +272,17 @@ def test_remote_input_file_policies(tmp_path, policy, expected, uploaded):
     artifact.write_text("local")
     remote_artifact = tmp_path / "remote" / "calculation" / "artifact.dat"
     remote_artifact.parent.mkdir(parents=True)
-    remote_artifact.write_text("remote")
+    remote_artifact.write_text("local" if policy == "never" else "remote")
 
-    executor, spec, _, _ = _text_run(
+    executor, spec, _, remote_root = _text_run(
         tmp_path,
         transport,
         declared_input_files=(artifact,),
         input_files=policy,
         code="import pathlib; print(pathlib.Path('artifact.dat').read_text())",
     )
+    if policy == "never":
+        _expose_shared_input(remote_root, "input.txt", b"hello")
     result = executor.create_run(_Reader(), spec).run()
 
     assert result.output == (expected + "\n").encode()
@@ -279,13 +292,14 @@ def test_remote_input_file_policies(tmp_path, policy, expected, uploaded):
 def test_remote_input_policy_never_only_disables_transfer(tmp_path):
     transport = _SpyTransport()
     missing = tmp_path / "local" / "calculation" / "missing.dat"
-    executor, spec, _, _ = _text_run(
+    executor, spec, _, remote_root = _text_run(
         tmp_path,
         transport,
         declared_input_files=(missing,),
         input_files="never",
         code="print('done')",
     )
+    _expose_shared_input(remote_root, "input.txt", b"hello")
 
     result = executor.create_run(_Reader(), spec).run()
 
@@ -302,7 +316,7 @@ def test_remote_input_policy_always_requires_local_file(tmp_path):
         tmp_path, declared_input_files=(missing,), input_files="always"
     )
 
-    with pytest.raises(FileNotFoundError, match="Local input file"):
+    with pytest.raises(SubmissionNotStarted, match="Local input file"):
         executor.create_run(_Reader(), spec).run()
 
 
@@ -511,9 +525,10 @@ def test_remote_cache_input_never_skips_upload(tmp_path):
         input_files="never",
         code="import pathlib; pathlib.Path('cache.dat').write_text('remote'); print('done')",
     )
+    _expose_shared_input(remote_root, "input.txt", b"hello")
+    remote_cache = _expose_shared_input(remote_root, "cache.dat", "local")
     executor.create_run(_Reader(), spec).run()
 
-    remote_cache = remote_root / "calculation" / "cache.dat"
     assert all(dst != remote_cache for _, dst in transport.put_files)
     assert cache.read_text() == "remote"
     assert (remote_cache, cache) in transport.get_files

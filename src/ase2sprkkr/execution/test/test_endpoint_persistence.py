@@ -79,8 +79,15 @@ def test_attach_reconstructs_persisted_endpoint_and_reader_after_restart(tmp_pat
         def __init__(self):
             self.calls = []
 
-        def attach(self, reference, reader, callback=None):
-            self.calls.append((reference, reader, callback))
+        def attach(
+            self,
+            reference,
+            reader,
+            callback=None,
+            output_listener=None,
+            start=True,
+        ):
+            self.calls.append((reference, reader, callback, output_listener, start))
             return AttachedRunner(reference)
 
     class RecordingPool:
@@ -115,6 +122,7 @@ def test_attach_reconstructs_persisted_endpoint_and_reader_after_restart(tmp_pat
     assert executor.calls[0][0] == reference
     assert executor.calls[0][1] is not None
     assert executor.calls[0][1].directory == str(tmp_path)
+    assert executor.calls[0][3:] == (None, True)
 
 
 def test_pool_reconstructs_and_reuses_ssh_endpoint():

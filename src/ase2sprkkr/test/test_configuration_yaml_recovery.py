@@ -215,7 +215,8 @@ def test_save_preserves_only_invalid_children_of_known_section(tmp_path):
 
     data = load_yaml_document(path)
     assert data["running"]["print_output"] == "definitely-not-valid"
-    assert data["running"]["mpi_warning"] is False
+    assert "mpi_warning" not in data["running"]
+    assert data["profiles"]["legacy"]["mpi_warning"] is False
 
 
 def test_invalid_default_profile_survives_unrelated_save(tmp_path):

@@ -12,6 +12,7 @@ from pathlib import Path
 import shlex
 import warnings
 
+import numpy as np
 from ruamel.yaml import YAML
 from ruamel.yaml.comments import CommentedMap
 
@@ -55,6 +56,8 @@ def dump_yaml_document(file, data):
 
 def _shell_string(value):
     """Serialize an argv-like value as one shell-escaped command string."""
+    if isinstance(value, np.ndarray):
+        value = value.tolist()
     if isinstance(value, (list, tuple)):
         return shlex.join([str(item) for item in value])
     return value
@@ -89,6 +92,11 @@ def _typed_configuration(data):
         ssh_options = profile.get("ssh_options")
         if isinstance(ssh_options, str):
             profile["ssh_options"] = shlex.split(ssh_options)
+        mpi = profile.get("mpi")
+        if isinstance(mpi, str) and mpi != "auto":
+            argv = shlex.split(mpi)
+            if len(argv) > 1:
+                profile["mpi"] = argv
     return out
 
 
@@ -296,8 +304,15 @@ def save_configuration_yaml(config, file, document=None):
 
 def _update_mapping(target, values, accepted):
     """Synchronize known values while leaving unaccepted raw nodes untouched."""
-    for key in tuple(accepted):
-        if key not in values and key in target:
+    for key, known_value in tuple(accepted.items()):
+        if key in values or key not in target:
+            continue
+        current = target[key]
+        if isinstance(current, Mapping) and isinstance(known_value, Mapping):
+            _update_mapping(current, {}, known_value)
+            if not current:
+                del target[key]
+        else:
             del target[key]
 
     for key, value in values.items():

@@ -3,6 +3,7 @@
 from ._file_manifests import resolve_file
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
+from ...common.grammar_types import flag
 
 
 class JxcInputParametersDefinition(InputParametersDefinition):
@@ -49,6 +50,12 @@ def input_parameters():
             ENERGY(),
             TASK("JXC").copy(
                 [
+                    V(
+                        "DMI",
+                        flag,
+                        is_required=False,
+                        info="Calculate Dzyaloshinskii-Moriya interaction vectors.",
+                    ),
                     V(
                         "CLURAD",
                         2.2,

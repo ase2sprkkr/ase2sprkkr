@@ -14,7 +14,10 @@ def input_parameters():
             CONTROL("XAS"),
             TAU,
             MODE,
-            ENERGY(defaults={"EMAX": 4.0, "ImE": 0.01, "GRID": 6, "NE": 180}),
+            ENERGY(
+                emax=(4.0, "The real part of the highest E-value", None),
+                defaults={"ImE": 0.01, "GRID": 6, "NE": 180},
+            ),
             TASK("XAS").copy(
                 [
                     V("IT", int, 1, is_required=True, info="""atom type IT"""),

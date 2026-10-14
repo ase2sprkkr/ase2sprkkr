@@ -21,6 +21,7 @@ class _FakeRunner:
         self.state = RunState.NEW
         self.reference = None
         self.result = SimpleNamespace(return_code=None)
+        self.exception = None
         self.on_submit = None
 
     def submit(self):
@@ -279,7 +280,8 @@ def test_refresh_batches_referenced_runs(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
-    manager.register_executor(executor)
+    representative = RunReference(executor="test", native_id="registered")
+    manager.register_executor(executor, reference=representative)
 
     records = []
     for native_id in ("one", "two"):

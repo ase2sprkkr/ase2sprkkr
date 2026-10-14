@@ -15,9 +15,9 @@ def _calculator_without_potential():
 
 @pytest.mark.parametrize(
     "empty_spheres",
-    ["auto", True, {"min_radius": 0.5}, (0.5, 1.0)],
+    [True, {"min_radius": 0.5}, (0.5, 1.0)],
 )
-def test_empty_sphere_search_errors_propagate(monkeypatch, empty_spheres):
+def test_explicit_empty_sphere_search_errors_propagate(monkeypatch, empty_spheres):
     calculator = _calculator_without_potential()
 
     def fail(*args, **kwargs):

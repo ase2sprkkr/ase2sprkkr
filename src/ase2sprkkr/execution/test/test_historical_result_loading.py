@@ -3,6 +3,7 @@ from types import SimpleNamespace
 from ase2sprkkr.execution import (
     ExecutionManager,
     Executor,
+    ExecutorPool,
     RunReference,
     RunState,
     RunStore,
@@ -15,6 +16,7 @@ class _Runner:
         self.state = RunState.NEW
         self.reference = None
         self.result = SimpleNamespace(return_code=None)
+        self.exception = None
 
     def submit(self):
         self.reference = RunReference(executor="history", native_id="job-1")
@@ -66,9 +68,13 @@ def _spec(tmp_path):
     )
 
 
+def _manager(store):
+    return ExecutionManager(store, executor_pool=ExecutorPool())
+
+
 def test_history_listing_does_not_fetch_missing_result_files(tmp_path):
     store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
+    manager = _manager(store)
     executor = _HistoryExecutor()
     spec = _spec(tmp_path)
     run = manager.create_run(executor, object(), spec, task="DOS")
@@ -86,7 +92,7 @@ def test_history_listing_does_not_fetch_missing_result_files(tmp_path):
 
 def test_load_result_fetches_missing_result_files_on_demand(tmp_path):
     store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
+    manager = _manager(store)
     executor = _HistoryExecutor()
     spec = _spec(tmp_path)
     run = manager.create_run(executor, object(), spec, task="DOS")
@@ -114,7 +120,7 @@ def test_load_result_fetches_missing_result_files_on_demand(tmp_path):
 
 def test_failed_history_without_return_code_is_not_parsed_as_success(tmp_path):
     store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
+    manager = _manager(store)
     spec = _spec(tmp_path)
     (tmp_path / "run.out").write_text("failed output")
     record = manager.new_record(
@@ -140,7 +146,7 @@ def test_failed_history_without_return_code_is_not_parsed_as_success(tmp_path):
 
 def test_missing_failed_history_uses_inferred_return_code(tmp_path):
     store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
+    manager = _manager(store)
     spec = _spec(tmp_path)
     record = manager.new_record(
         task="DOS",

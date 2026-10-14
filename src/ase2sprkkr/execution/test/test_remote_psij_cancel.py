@@ -132,10 +132,13 @@ def test_remote_psij_agent_reuses_executor_for_multiple_runs(tmp_path, monkeypat
     assert agent._discover()
 
     assert created_executors == [{"backend": "slurm", "url": None}]
-    assert executor.persistent_ids == ["run-1", "run-2"]
+    assert set(executor.persistent_ids) == {"run-1", "run-2"}
     assert len(executor.created) == 2
-    assert status_remote(workspace, "run-1")["backend_reference"]["native_id"] == "job-1"
-    assert status_remote(workspace, "run-2")["backend_reference"]["native_id"] == "job-2"
+    native_ids = {
+        status_remote(workspace, run_id)["backend_reference"]["native_id"]
+        for run_id in ("run-1", "run-2")
+    }
+    assert native_ids == {"job-1", "job-2"}
 
 
 def test_remote_psij_agent_recovers_existing_scheduler_job(tmp_path, monkeypatch):

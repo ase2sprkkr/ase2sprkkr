@@ -13,6 +13,15 @@ from ase2sprkkr.sprkkr.profile import (
 )
 
 
+def test_configured_profiles_expose_mutability_contract():
+    config = definition.create_object()
+
+    profile = config.profiles.add("cluster")
+
+    assert profile.read_only is False
+    assert config.profiles["cluster"].read_only is False
+
+
 def test_profile_shell_strings_round_trip_to_runtime_argv(tmp_path):
     path = tmp_path / "config.yaml"
     path.write_text(

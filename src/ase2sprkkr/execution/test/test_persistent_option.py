@@ -11,6 +11,7 @@ class _Runner:
         self.state = RunState.NEW
         self.reference = None
         self.result = SimpleNamespace(return_code=0)
+        self.exception = None
 
     def submit(self):
         self.reference = RunReference(executor="fake", native_id="job-1")
@@ -57,9 +58,9 @@ def _parameters(monkeypatch):
         "output_reader",
         lambda self, *args, **kwargs: SimpleNamespace(print_output=False),
     )
-    monkeypatch.setattr(parameters, "input_files", lambda directory: ())
-    monkeypatch.setattr(parameters, "output_files", lambda directory: ())
-    monkeypatch.setattr(parameters, "cache_files", lambda directory: ())
+    monkeypatch.setattr(InputParameters, "input_files", lambda self, directory: ())
+    monkeypatch.setattr(InputParameters, "output_files", lambda self, directory: ())
+    monkeypatch.setattr(InputParameters, "cache_files", lambda self, directory: ())
     return parameters
 
 

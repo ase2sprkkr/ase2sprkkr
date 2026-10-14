@@ -31,7 +31,7 @@ def _request(workspace, run_id, output_name):
 
 def test_remote_run_metadata_is_isolated_per_run(tmp_path, monkeypatch):
     workspace = tmp_path / "workspace"
-    monkeypatch.setattr("ase2sprkkr.execution.remote.subprocess.Popen", lambda *a, **k: None)
+    monkeypatch.setattr("ase2sprkkr.execution.detached.subprocess.Popen", lambda *a, **k: None)
 
     first = submit_remote(_request(workspace, "run-one", "one.out"))
     second = submit_remote(_request(workspace, "run-two", "two.out"))
@@ -133,7 +133,7 @@ def test_remote_clean_without_age_removes_all_completed_runs(tmp_path):
 
 def test_remote_submit_rejects_duplicate_run_id(tmp_path, monkeypatch):
     workspace = tmp_path / "workspace"
-    monkeypatch.setattr("ase2sprkkr.execution.remote.subprocess.Popen", lambda *a, **k: None)
+    monkeypatch.setattr("ase2sprkkr.execution.detached.subprocess.Popen", lambda *a, **k: None)
     request = _request(workspace, "same", "out")
 
     submit_remote(request)
@@ -181,12 +181,8 @@ def test_remote_cancel_waits_for_launch_handoff(tmp_path, monkeypatch):
         killed.append((pid, sig))
         terminated.set()
 
-    def fake_kill(pid, sig):
-        raise ProcessLookupError
-
-    monkeypatch.setattr("ase2sprkkr.execution.remote.subprocess.Popen", fake_popen)
-    monkeypatch.setattr("ase2sprkkr.execution.remote.os.killpg", fake_killpg)
-    monkeypatch.setattr("ase2sprkkr.execution.remote.os.kill", fake_kill)
+    monkeypatch.setattr("ase2sprkkr.execution.detached.subprocess.Popen", fake_popen)
+    monkeypatch.setattr("ase2sprkkr.execution.detached.os.killpg", fake_killpg)
 
     def worker():
         try:

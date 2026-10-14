@@ -3,12 +3,11 @@ from types import SimpleNamespace
 import pytest
 
 from ase2sprkkr.configuration import definition
-from ase2sprkkr.execution import LocalExecutor, SshTransport
+from ase2sprkkr.execution import ExecutorPool, LocalExecutor, RunState, SshTransport
 from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
 from ase2sprkkr.input_parameters import input_parameters as input_parameters_module
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
-from ase2sprkkr.sprkkr import profile as profile_module
 from ase2sprkkr.sprkkr.profile import (
     SPRKKRProfile,
     executor_from_profile,
@@ -84,7 +83,6 @@ def test_ssh_profile_creates_endpoint_only_executor():
     assert executor.transport.host == "user@cluster"
     assert executor.transport.options == ("-p", "2222")
     assert executor.command == ("custom-ase2sprkkr", "remote")
-    # Staging belongs to the concrete execution, not the pooled endpoint.
     input_file = SimpleNamespace(name="/home/user/work/test.inp")
     spec = profile.create_execution(
         "kkrscf",
@@ -109,9 +107,15 @@ def test_psij_profile_creates_configured_executor(monkeypatch):
 
     class FakePsijExecutor:
         def __init__(self, backend, *, url=None):
+            self.backend = backend
+            self.url = url
             created.append((backend, url))
 
-    monkeypatch.setattr(profile_module, "PsijExecutor", FakePsijExecutor)
+    monkeypatch.setattr("ase2sprkkr.execution.psij.PsijExecutor", FakePsijExecutor)
+    monkeypatch.setattr(
+        "ase2sprkkr.execution.pool.default_executor_pool",
+        lambda: ExecutorPool(),
+    )
 
     executor = executor_from_profile(
         SPRKKRProfile(
@@ -126,7 +130,7 @@ def test_psij_profile_creates_configured_executor(monkeypatch):
 
 
 def test_unknown_runtime_executor_is_rejected():
-    with pytest.raises(ValueError, match="Unknown execution backend"):
+    with pytest.raises(ValueError, match="unsupported execution endpoint"):
         executor_from_profile(SPRKKRProfile(executor="custom"))
 
 
@@ -134,7 +138,7 @@ def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_pat
     parameters = InputParameters.create("DOS")
     parameters.CONTROL.DATASET = "test"
     parameters.CONTROL.POTFIL = "test.pot"
-    runner = object()
+    runner = SimpleNamespace(state=RunState.NEW, result=object())
     calls = []
 
     class FakeExecutor:
@@ -162,6 +166,7 @@ def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_pat
     calculator = SimpleNamespace(
         profile=profile,
         executor=LocalExecutor(),
+        persistent=False,
         value_or_default=lambda name, value: value,
     )
 
@@ -180,7 +185,7 @@ def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_pat
         input_file.close()
         output_file.close()
 
-    assert result is runner
+    assert result.result is runner.result
     assert calls[0] == ("factory", "ssh")
     assert calls[1] == ("resolve_mpi", 8)
     assert calls[2][0] == "create_run"

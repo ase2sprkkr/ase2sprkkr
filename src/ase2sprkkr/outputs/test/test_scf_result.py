@@ -3,6 +3,20 @@ from pathlib import Path
 
 from ..readers import scf as scf_reader
 from ..readers.scf import ScfOutputParser, ScfResult
+from ..task_result import TaskResult
+
+
+def test_scf_output_without_input_file_preserves_result_semantics(tmp_path):
+    source = Path(__file__).parent.parent / "examples" / "scf.out"
+    output = tmp_path / "scf.out"
+    output.write_bytes(source.read_bytes())
+
+    result = TaskResult.from_file(output)
+
+    assert isinstance(result, ScfResult)
+    assert result.input_parameters is None
+    assert result.task_name == "scf"
+    assert result.produces_potential is True
 
 
 def test_scf_result_calculator_without_original_calculator(monkeypatch, tmp_path):

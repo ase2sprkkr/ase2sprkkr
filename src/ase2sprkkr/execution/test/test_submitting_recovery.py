@@ -19,6 +19,7 @@ class _Runner:
         self.state = RunState.NEW
         self.reference = None
         self.result = SimpleNamespace(return_code=None)
+        self.exception = None
 
     def submit(self):
         self.state = RunState.QUEUED
@@ -48,8 +49,8 @@ class _RecoveringExecutor(Executor):
     def create_run(self, reader, spec, callback=None):
         return _Runner()
 
-    def recover_submission(self, run_id, submission):
-        self.recovery_calls.append((run_id, submission))
+    def recover_submission(self, run_id, submission, *, submitted_at=None):
+        self.recovery_calls.append((run_id, submission, submitted_at))
         if self.recovered is NotImplemented:
             raise NotImplementedError
         return self.recovered
@@ -83,6 +84,7 @@ def test_confirmed_absent_stale_submission_releases_namespace(tmp_path):
     assert "not found" in old.message
     assert replacement.record.state == RunState.QUEUED
     assert executor.recovery_calls[0][0] == abandoned.id
+    assert executor.recovery_calls[0][2] is not None
 
 
 def test_recovered_submission_keeps_duplicate_protection(tmp_path):

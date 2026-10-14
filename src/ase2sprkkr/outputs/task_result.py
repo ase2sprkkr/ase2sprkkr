@@ -15,12 +15,26 @@ from .result_options import create_files_section
 class TaskResult:
     """A base class for a result of a runned task (kkrscf executable)"""
 
+    produces_potential = False
+    """Whether this result produces a new potential usable by later tasks."""
+
     sfn_generated = None
     """Whether this calculation generated rather than reused its SFN file."""
 
-    def __init__(self, input_parameters, calculator, directory, output_file=None, input_file=None):
+    def __init__(
+        self,
+        input_parameters,
+        calculator,
+        directory,
+        output_file=None,
+        input_file=None,
+        task_name=None,
+    ):
         self._input_parameters = input_parameters
         self._calculator = calculator
+        self._task_name = (
+            str(task_name).strip().lower() if task_name is not None else None
+        )
         self.files = create_files_section(self)
         self._directory = filename_from_file(directory, None, realpath=True)
 
@@ -55,6 +69,8 @@ class TaskResult:
 
     @property
     def task_name(self):
+        if self._task_name is not None:
+            return self._task_name
         return self.input_parameters.task_name
 
     @cached_property
@@ -146,7 +162,12 @@ class TaskResult:
     def from_file(cls, file):
         def read_output_for(task):
             reader = KkrOutputReader.class_for_task(task or "")
-            reader = reader(None, None, os.path.dirname(file))
+            reader = reader(
+                None,
+                None,
+                os.path.dirname(file),
+                task_name=task,
+            )
             f.seek(0)
             return reader.read_from_file(f)
 
@@ -173,10 +194,24 @@ class KkrOutputReader:
     task-specific parsing and result construction.
     """
 
-    def __init__(self, input_parameters, calculator, directory, print_output=False):
+    def __init__(
+        self,
+        input_parameters,
+        calculator,
+        directory,
+        print_output=False,
+        task_name=None,
+    ):
         self.input_parameters = input_parameters
         self.calculator = calculator
         self.directory = directory
+        self.task_name = (
+            task_name
+            if task_name is not None
+            else input_parameters.task_name
+            if input_parameters is not None
+            else None
+        )
         self.parser = self.parser_class(print_output)
 
     @property
@@ -192,6 +227,7 @@ class KkrOutputReader:
             self.directory,
             output_file=output_file,
             input_file=input_file,
+            task_name=self.task_name,
         )
 
     async def parse_streams(self, stdout, stderr, result):

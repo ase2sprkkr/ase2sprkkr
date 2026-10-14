@@ -10,6 +10,7 @@ from ...execution import (
     LocalExecutor,
     MpiNotFoundWarning,
     RemoteEndpointExecutor,
+    RunState,
 )
 from ...execution.local import materialize_local_spec
 from ...input_parameters.input_parameters import InputParameters
@@ -26,7 +27,7 @@ def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
     )
 
     seen = {}
-    runner = object()
+    runner = SimpleNamespace(state=RunState.NEW, result=object())
 
     class Executor:
         def resolve_mpi(self, mpi):
@@ -57,7 +58,7 @@ def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
             executor=Executor(),
         )
 
-        assert created is runner
+        assert created.result is runner.result
         assert seen["executor_mpi"] == "auto"
         assert seen["spec"].argv == ("kkrscf",)
         assert seen["spec"].mpi_argv == ("kkrscfMPI", input_file.name)
@@ -190,7 +191,7 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
         lambda self, calculator, print_output, directory: reader,
     )
 
-    runner = object()
+    runner = SimpleNamespace(state=RunState.NEW, result=object())
     seen = {}
 
     class ExplicitLocalExecutor(LocalExecutor):
@@ -232,7 +233,7 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
             executor=executor,
         )
 
-        assert created is runner
+        assert created.result is runner.result
         assert seen["mpi"] == "auto"
         assert seen["spec"].argv == ("kkrscf",)
         assert seen["spec"].mpi_argv is None

@@ -321,6 +321,15 @@ class RemoteEndpointExecutor(Executor):
             launch = LaunchSpec(**dict(launch))
         return _RemoteRunContext(endpoint, launch)
 
+    def _validate_reference(self, reference):
+        expected = f"remote:{self.backend}"
+        if reference.executor != expected:
+            raise ValueError(
+                f"Run reference belongs to {reference.executor!r}, not {expected!r}"
+            )
+        if not reference.native_id or not reference.directory:
+            raise ValueError("Remote run reference lacks run id or directory")
+
     async def _resolve_submission_directory(self, directory):
         directory = posixpath.normpath(os.fspath(directory))
         if directory == "~":
@@ -354,18 +363,12 @@ class RemoteEndpointExecutor(Executor):
         return posixpath.join(remote_root, *PurePosixPath(*relative.parts).parts)
 
     def status(self, *references: RunReference):
-        expected = f"remote:{self.backend}"
         for reference in references:
-            if reference.executor != expected:
-                raise ValueError(
-                    f"Run reference belongs to {reference.executor!r}, not {expected!r}"
-                )
+            self._validate_reference(reference)
         if not references:
             return ()
         by_directory = {}
         for index, reference in enumerate(references):
-            if not reference.directory:
-                raise ValueError("Remote run reference lacks directory")
             by_directory.setdefault(reference.directory, []).append((index, reference))
 
         async def query():
@@ -457,6 +460,7 @@ class RemoteEndpointExecutor(Executor):
     async def _attach_with_saved_launch(
         self, reference, reader, callback=None, output_listener=None, start=True
     ):
+        self._validate_reference(reference)
         request = await self._saved_request(reference.directory, reference.native_id)
         launch = LaunchSpec(**(request.get("launch") or {}))
         context = self._context(self, launch)

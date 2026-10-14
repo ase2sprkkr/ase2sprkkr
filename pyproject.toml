@@ -11,7 +11,7 @@ ase2sprkkr = "ase2sprkkr.tools.ase2sprkkr:run"
 
 [project]
 name = "ase2sprkkr"
-version = "3.6.0-beta"
+version = "3.6.0-beta1"
 requires-python = ">=3.8"
 authors = [
   { name = "Matyáš Novák", email = "novakmat@fzu.cz" },

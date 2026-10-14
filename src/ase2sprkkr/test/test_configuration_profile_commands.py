@@ -16,3 +16,12 @@ def test_profile_commands_are_saved_as_shell_strings(tmp_path):
     assert data["profiles"]["cluster"]["ssh_options"] == (
         "-p 2222 -i '/tmp/key file'"
     )
+
+
+def test_single_argument_mpi_runner_remains_an_argv_sequence():
+    config = definition.create_object()
+    profile = config.profiles.add("cluster")
+
+    profile.mpi.set(["srun"])
+
+    assert profile.mpi().tolist() == ["srun"]

@@ -14,6 +14,8 @@ import os
 import shlex
 import warnings
 
+import pyparsing as pp
+
 from .common.configuration_transaction import ConfigurationTransaction
 from .common.repeated_configuration_containers import RepeatedConfigurationContainer
 
@@ -280,6 +282,20 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             return None
         return cfg
 
+    @staticmethod
+    def _parse_ase_value(section, name, option, value):
+        """Parse one ASE INI value using the common profile type contract."""
+        value_type = option._definition.type
+        try:
+            return value_type.parse(value)
+        except pp.ParseBaseException as exc:
+            try:
+                return section.getboolean(name)
+            except ValueError:
+                raise ValueError(
+                    f"Invalid ASE SPR-KKR profile option {name!r}: {value!r}"
+                ) from exc
+
     def _parse_ase_profile(self, cfg):
         """Parse ASE's text configuration through the common profile schema."""
         section = cfg.parser["sprkkr"]
@@ -303,7 +319,7 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
                 raise KeyError(
                     f"Unknown ASE SPR-KKR profile option {name!r}"
                 ) from None
-            parsed[name] = option._definition.type.parse(value)
+            parsed[name] = self._parse_ase_value(section, name, option, value)
 
         parsed.update(ase_command_profile_values(command))
         profile.set(parsed, unknown="fail")
