@@ -115,11 +115,47 @@ Variant = VariantGenerator("PotMixed", Boolean.I, QString.I, doc=""" Variant typ
 
 
 class CustomMixed(BaseMixed):
+    """Mixed type restricted to an explicit set of grammar types.
+
+    Unlike :class:`BaseMixed`, Python values must be dispatched only to one of
+    the configured alternatives.  In particular, the string alternative is
+    used only for actual strings; it must not silently stringify mappings or
+    other unsupported objects.
+    """
+
     @add_to_signature(BaseMixed.__init__, prepend=True)
     def __init__(self, types, string_type=LineString.I, *args, **kwargs):
-        self.types = types
+        self.types = tuple(types)
         self.string_type = string_type
         super().__init__(*args, **kwargs)
+
+    def get_type(self, value):
+        if isinstance(value, str):
+            if self.string_type not in self.types:
+                raise ValueError(f"String values are not allowed for {self}")
+            return self.string_type
+
+        if isinstance(value, recognized_set_types):
+            for candidate in self.types:
+                if not getattr(candidate, "array_access", False):
+                    continue
+                try:
+                    converted = candidate.convert(value)
+                    candidate.validate(converted)
+                except (TypeError, ValueError, KeyError):
+                    continue
+                return candidate
+            raise ValueError(f"Unsupported sequence value {value!r} for {self}")
+
+        try:
+            inferred = type_from_value(value)
+        except (TypeError, ValueError, KeyError) as exc:
+            raise ValueError(f"Unsupported value {value!r} for {self}") from exc
+
+        for candidate in self.types:
+            if candidate is inferred or candidate.__class__ is inferred.__class__:
+                return candidate
+        raise ValueError(f"Value {value!r} has a type not allowed for {self}")
 
 
 mixed = Mixed.I = Mixed()  # NOQA: E741
