@@ -283,11 +283,12 @@ class KkrOutputReader:
         if not task:
             return DefaultOutputReader
 
+        from ..common.module_registry import RegistryEntryNotFound
         from .reader_registry import reader_registry
 
         try:
             return reader_registry[task]
-        except KeyError:
+        except RegistryEntryNotFound:
             return DefaultOutputReader
 
 

@@ -1,6 +1,6 @@
 """Discovery of task-specific SPR-KKR output readers."""
 
-from ..common.module_registry import ModuleRegistry
+from ..common.module_registry import ModuleRegistry, RegistryEntryNotFound
 from . import readers
 
 
@@ -13,9 +13,9 @@ class OutputReaderRegistry(ModuleRegistry):
     def value_from_module(self, name, module):
         class_name = name.title() + "OutputReader"
         try:
-            return getattr(module, class_name)
-        except AttributeError as exc:
-            raise KeyError(name) from exc
+            return vars(module)[class_name]
+        except KeyError as exc:
+            raise RegistryEntryNotFound(name) from exc
 
 
 reader_registry = OutputReaderRegistry()

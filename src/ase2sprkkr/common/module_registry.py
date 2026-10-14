@@ -6,6 +6,10 @@ import importlib
 import pkgutil
 
 
+class RegistryEntryNotFound(KeyError):
+    """A requested registry entry is not provided by the package."""
+
+
 class ModuleRegistry:
     """Lazily discover and load one named value from package modules.
 
@@ -13,6 +17,10 @@ class ModuleRegistry:
     modules. Values are imported and materialized only when requested.
     Subclasses can customize extraction, validation and aliasing without
     duplicating discovery machinery.
+
+    ``attribute`` names the value exported by each registry module. The base
+    registry returns that value unchanged; whether an exported callable is a
+    factory is domain-specific policy and belongs in a specialized registry.
     """
 
     def __init__(self, package, attribute=None, *, aliases=None, include=None):
@@ -56,11 +64,9 @@ class ModuleRegistry:
 
         module_name = self._discover_module_names().get(name)
         if module_name is None:
-            raise KeyError(name)
+            raise RegistryEntryNotFound(name)
 
         module = importlib.import_module(f".{module_name}", self.package.__name__)
-        if self.attribute is not None and not hasattr(module, self.attribute):
-            raise KeyError(name)
         self._modules[name] = module
         return module
 
@@ -68,8 +74,10 @@ class ModuleRegistry:
         """Extract the registered value from a loaded module."""
         if self.attribute is None:
             raise NotImplementedError
-        value = getattr(module, self.attribute)
-        return value() if callable(value) else value
+        try:
+            return vars(module)[self.attribute]
+        except KeyError as exc:
+            raise RegistryEntryNotFound(name) from exc
 
     def prepare_value(self, name, module, value):
         """Validate or transform a freshly loaded value."""
@@ -103,21 +111,19 @@ class ModuleRegistry:
         return value
 
     def __contains__(self, name):
-        try:
-            requested = self.normalize_name(name)
-        except Exception:
-            return False
+        requested = self.normalize_name(name)
         canonical = self.aliases.get(requested, requested)
         return canonical in self._discover_module_names()
 
     def names(self, *, include_aliases=True):
         """Return discovered names without importing registry modules."""
-        names = list(self._discover_module_names())
+        module_names = self._discover_module_names()
+        names = list(module_names)
         if include_aliases:
             names.extend(
                 alias
                 for alias, target in self.aliases.items()
-                if alias not in names and target in self._discover_module_names()
+                if alias not in module_names and target in module_names
             )
         return tuple(names)
 

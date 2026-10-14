@@ -6,7 +6,7 @@ import copy
 import os
 
 from ..common.doc import process_input_parameters_definition
-from ..common.module_registry import ModuleRegistry
+from ..common.module_registry import ModuleRegistry, RegistryEntryNotFound
 
 
 class TaskDefinition:
@@ -100,7 +100,7 @@ class TaskDefinition:
 
         try:
             return reader_registry[self.input_parameters_definition.name]
-        except KeyError:
+        except RegistryEntryNotFound:
             return DefaultOutputReader
 
     def prepare_from_result(self, parameters, result):
@@ -124,6 +124,10 @@ class TaskRegistry(ModuleRegistry):
             aliases=self.aliases,
             include=lambda name: not name.startswith("_") and name != "sections",
         )
+
+    def value_from_module(self, name, module):
+        value = super().value_from_module(name, module)
+        return value() if callable(value) else value
 
     def prepare_value(self, name, module, value):
         if not isinstance(value, TaskDefinition):
