@@ -31,12 +31,13 @@ def _package_mount_root() -> Path:
 @pytest.fixture(autouse=True)
 def isolated_default_executor_pool():
     """Keep the process-wide executor pool from leaking between test cases."""
-    previous = execution_pool._default_pool
-    execution_pool._default_pool = None
+    previous = execution_pool._DEFAULT_EXECUTOR_POOL
+    execution_pool._DEFAULT_EXECUTOR_POOL = execution_pool.ExecutorPool()
     try:
         yield
     finally:
-        execution_pool._default_pool = previous
+        execution_pool._DEFAULT_EXECUTOR_POOL.close()
+        execution_pool._DEFAULT_EXECUTOR_POOL = previous
 
 
 @pytest.fixture(scope="session")
