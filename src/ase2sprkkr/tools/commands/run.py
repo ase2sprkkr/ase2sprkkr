@@ -29,7 +29,7 @@ def parser(parser):
         "-t",
         "--task",
         dest="task",
-        choices=TASKS.modules.keys(),
+        choices=tuple(name.lower() for name in TASKS.names(include_aliases=True)),
         type=str.lower,
         help="Task to compute.",
     )
