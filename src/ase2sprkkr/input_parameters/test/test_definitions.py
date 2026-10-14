@@ -13,6 +13,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 if True:
     from ..input_parameters import InputParameters
     from ..input_parameters_definitions import InputParametersDefinition
+    from ..task_definition import TaskDefinition
     from ...common.warnings import DataValidityError, DataValidityWarning
     from ...common.grammar_types import Keyword
 
@@ -38,17 +39,18 @@ class TestDefinitions(TestCase):
         parameters = SimpleNamespace(
             CONTROL=SimpleNamespace(DATASET=lambda: "Fe")
         )
+        schema = InputParametersDefinition("test", [])
 
-        class DynamicDefinition(InputParametersDefinition):
+        class DynamicTaskDefinition(TaskDefinition):
             def output_files(self, parameters, directory):
                 return (
                     *super().output_files(parameters, directory),
                     os.path.join(directory, "dynamic.out"),
                 )
 
-        definition = DynamicDefinition(
-            "test",
-            [],
+        definition = DynamicTaskDefinition(
+            schema,
+            name="TEST",
             input_file_templates=("{dataset}.aux",),
             output_file_templates=("{dataset}.dat",),
         )
@@ -63,7 +65,7 @@ class TestDefinitions(TestCase):
 
     def test_input_parameters_delegate_file_manifests(self, tmp_path, monkeypatch):
         parameters = InputParameters.create("DOS")
-        definition = parameters._definition
+        definition = parameters.task_definition
         calls = []
 
         def input_files(actual_parameters, directory):
@@ -84,10 +86,56 @@ class TestDefinitions(TestCase):
             ("output", parameters, str(tmp_path)),
         ]
 
+    def test_task_binding_is_authoritative(self):
+        parameters = InputParameters.create("SCF")
+
+        assert parameters.task_name == "SCF"
+        assert parameters._definition is parameters.task_definition.input_parameters_definition
+        assert parameters.task_definition.executable == "kkrscf"
+        assert parameters.task_definition.mpi is True
+
+    def test_copy_preserves_task_binding(self):
+        parameters = InputParameters.create("BSFEK")
+        copied = parameters.copy(copy_values=True)
+
+        assert copied.task_definition is parameters.task_definition
+        assert copied.task_name == "BSFEK"
+        assert copied._definition is copied.task_definition.input_parameters_definition
+        assert copied.ENERGY.NE().tolist() == [200]
+
+    def test_change_task_changes_task_and_schema_atomically(self):
+        parameters = InputParameters.create("DOS")
+        parameters.change_task("SCF")
+
+        assert parameters.task_name == "SCF"
+        assert parameters.task_definition.name == "SCF"
+        assert parameters._definition is parameters.task_definition.input_parameters_definition
+
+    def test_direct_schema_objects_are_detached(self):
+        schema = InputParametersDefinition.definition_from_dict(
+            {"TEST": []}
+        )
+        parameters = schema.create_object()
+
+        assert parameters.task_definition is None
+        assert parameters.task_name == schema.name
+        with pytest.raises(RuntimeError, match="not bound"):
+            parameters.is_mpi()
+
     def test_bsf_definitions_are_shared(self):
         definition = InputParameters.definition("BSF")
         assert definition is InputParameters.definition("BSFEK")
         assert definition is InputParameters.definition("BSFKK")
+
+        bsf = InputParameters.task_registry["BSF"]
+        bsfek = InputParameters.task_registry["BSFEK"]
+        bsfkk = InputParameters.task_registry["BSFKK"]
+        assert bsfek is not bsf
+        assert bsfkk is not bsf
+        assert bsfek.input_parameters_definition is definition
+        assert bsfkk.input_parameters_definition is definition
+        assert bsfek.name == "BSFEK"
+        assert bsfkk.name == "BSFKK"
 
     def test_bsf_mode_is_inferred_when_parsing(self):
         definition = InputParameters.definition("BSFEK")
@@ -217,20 +265,19 @@ class TestDefinitions(TestCase):
         with pytest.raises(DataValidityError, match="NKDIR cannot be greater than 9"):
             ip.TASK.NKDIR = 10
 
-    def change_task(self):
-        ip = InputParameters.create_task("DOS")
+    def test_change_task(self):
+        ip = InputParameters.create("DOS")
         ip.ENERGY.EMIN = 2
         ip.ENERGY.EMAX = 5
-        ip.change_task("SCF")
-        assert ip.ENERGY.EMIN == 2
-        with pytest.raises(AttributeError):
-            ip.ENERGY.EMIN
+        ip.change_task("SCF", retain_values=True)
+        assert ip.task_name == "SCF"
+        assert ip.ENERGY.EMIN() == 2
 
-    def jxc(self):
-        ip = InputParameters.create_task("SCF")
+    def test_jxc_warnings_survive_task_switch(self):
+        ip = InputParameters.create("SCF")
         ip.MODE.MODE = "nrel"
         with pytest.warns(UserWarning):
-            ip.change_task("jxc")
+            ip.change_task("jxc", retain_values=True)
         with pytest.warns(UserWarning):
             ip.MODE.MODE = "srel"
         ip.MODE.MODE = "frel"
@@ -309,12 +356,14 @@ class TestDefinitions(TestCase):
                 check(t, name)
                 t = InputParameters.from_file(filename)
                 check(t, name)
+                assert t.task_definition is not None
+                assert t._definition is t.task_definition.input_parameters_definition
 
                 if name == "scf":
                     self.assertFalse("MODE" in t.to_string())
                 if name == "arpes":
-                    for i in ["AIPES", "SPLEED", "BAND"]:
-                        t.TASK.TASK = i
+                    for task_name in ["AIPES", "SPLEED", "BAND"]:
+                        t.TASK.TASK = task_name
 
             except Exception as e:
                 raise Exception(f'Parsing of "{i}" failed with the reason: \n {e}').with_traceback(e.__traceback__)
