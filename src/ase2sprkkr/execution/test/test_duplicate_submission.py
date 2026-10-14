@@ -18,6 +18,7 @@ class _Runner:
         self.state = RunState.NEW
         self.reference = None
         self.result = SimpleNamespace(return_code=None)
+        self.exception = None
 
     def submit(self):
         self.reference = RunReference(executor="test", native_id="job")
