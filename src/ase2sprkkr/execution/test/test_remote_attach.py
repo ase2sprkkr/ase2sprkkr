@@ -68,7 +68,8 @@ def test_remote_executor_attach_reconnects_running_run_and_restores_stage_out(tm
             "-c",
             (
                 "import pathlib,time; "
-                "time.sleep(0.25); "
+                "release=pathlib.Path('release'); "
+                "while not release.exists(): time.sleep(0.01); "
                 "pathlib.Path('generated.dat').write_text('generated'); "
                 "pathlib.Path('cache.dat').write_text('after'); "
                 "print('done')"
@@ -93,6 +94,7 @@ def test_remote_executor_attach_reconnects_running_run_and_restores_stage_out(tm
     # A fresh endpoint object must be able to reconstruct all per-run staging
     # policy from the persisted request; no live runner state is required.
     attached = _executor().attach(reference, _Reader())
+    (remote_root / "calculation" / "release").write_text("go")
 
     assert attached.reference == reference
     result = attached.wait()
