@@ -1,6 +1,7 @@
 import asyncio
 from pathlib import Path
 
+from ..base import SubmissionNotStarted
 from ..transport import LocalTransport
 from .test_remote import _Reader, _text_run
 
@@ -80,7 +81,7 @@ def test_remote_executor_rejects_unmatched_input_wildcard(tmp_path):
 
     try:
         executor.create_run(_Reader(), spec).run()
-    except FileNotFoundError as exc:
+    except SubmissionNotStarted as exc:
         assert "input pattern did not match" in str(exc)
     else:
         raise AssertionError("unmatched input wildcard was accepted")
