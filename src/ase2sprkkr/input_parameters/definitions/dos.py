@@ -1,24 +1,29 @@
-"""DOS task input parameters definition"""
+"""DOS task definition."""
 
 from .sections import CONTROL, TAU, ENERGY, TASK, SITES
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters
+from ..input_parameters_definitions import InputParametersDefinition
+from ..task_definition import TaskDefinition
 
 
-def input_parameters():
-    return InputParameters(
+def task_definition():
+    schema = InputParametersDefinition(
         "dos",
         [
             CONTROL("DOS"),
             TAU,
-            ENERGY(emax=(1.0, "value of the highest energy", None), defaults={"GRID": 3, "NE": 300, "ImE": 0.01}),
+            ENERGY(
+                emax=(1.0, "value of the highest energy", None),
+                defaults={"GRID": 3, "NE": 300, "ImE": 0.01},
+            ),
             TASK("DOS"),
             SITES,
         ],
+        info="DOS - The density of states computation",
+    )
+    return TaskDefinition(
+        schema,
+        name="DOS",
         executable="kkrgen",
         mpi=True,
         output_file_templates=("{dataset}.dos",),
-        info="DOS - The density of states computation",
     )
-
-
-""" DOS - density of states input parameters definition"""
