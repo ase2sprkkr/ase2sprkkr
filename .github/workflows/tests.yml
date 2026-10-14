@@ -17,6 +17,7 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.8']
+        selection: ['not slow', 'slow']
     steps:
     - uses: actions/checkout@v6
     - uses: actions/setup-python@v6
@@ -31,3 +32,4 @@ jobs:
         timeout --signal=TERM 900
         env PYTHONUNBUFFERED=1 DO_NOT_RUN_SPRKKR=1
         "$GITHUB_WORKSPACE/run_tests" -vv -o faulthandler_timeout=120
+        -m "${{ matrix.selection }}"
