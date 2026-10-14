@@ -1,16 +1,10 @@
 """Tests for Brillouin-zone construction used by the interactive k-path tool."""
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pytest
-import matplotlib.pyplot as plt
 from ase import Atoms
 from ase.cell import Cell
-
-if __package__:
-    from .init_tests import TestCase, patch_package
-else:
-    from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
 
 from ..k_path import brillouin_zone, k_path_gui
 
@@ -30,7 +24,6 @@ def test_brillouin_zone_topology(cell, expected_faces, expected_vertices):
     assert np.allclose(reciprocal, cell.reciprocal())
     assert len(faces) == expected_faces
     assert len(vertices) == expected_vertices
-    # Every BZ face must be a polygon, not an open or degenerate segment.
     assert all(face.shape[1] == 3 and len(face) >= 3 for face in faces)
 
 
@@ -45,8 +38,6 @@ def test_k_path_gui_normalizes_cell_without_modifying_atoms(cell, monkeypatch):
     drawn = []
 
     def show(*, block):
-        # Exercise the actual plot construction and rendering without waiting
-        # for interactive input. Closing without a selection returns None.
         plt.gcf().canvas.draw()
         drawn.append(True)
         assert block is False

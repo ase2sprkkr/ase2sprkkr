@@ -1,27 +1,21 @@
-if __package__:
-    from .init_tests import TestCase, patch_package
-else:
-    from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
-
-import pytest
 import numpy as np
+import pytest
+from ase.build import bulk
 
-from ..build import semiinfinite_system, stack  # NOQA E402
-from ..sprkkr_atoms import SPRKKRAtoms  # NOQA E402
-from ase.build import bulk  # NOQA E402
+from ..build import semiinfinite_system, stack
+from ..sprkkr_atoms import SPRKKRAtoms
 
 
-class TestBuild(TestCase):
+class TestBuild:
     @pytest.mark.slow
     def test(self):
         atoms = bulk("LiCl", "rocksalt", a=5.64)
-        si = semiinfinite_system(atoms, (4.2))
-        self.assertEqual(len(si), 22)
-        self.assertEqual(sum(si.symbols == "Li"), 6)
-        self.assertEqual(sum(si.symbols == "Cl"), 5)
-        self.assertEqual(sum(si.symbols == "X"), 11)
-        self.assertEqual(si.positions, (atoms * (1, 1, 11)).positions)
+        si = semiinfinite_system(atoms, 4.2)
+        assert len(si) == 22
+        assert sum(si.symbols == "Li") == 6
+        assert sum(si.symbols == "Cl") == 5
+        assert sum(si.symbols == "X") == 11
+        np.testing.assert_allclose(si.positions, (atoms * (1, 1, 11)).positions)
 
     def test_deprecated_hkl_warns(self):
         atoms = bulk("Cu", "sc", a=2.0)
@@ -46,17 +40,17 @@ class TestBuild(TestCase):
         SPRKKRAtoms.promote_ase_atoms(atoms)
         system = semiinfinite_system(atoms, repeat)
 
-        self.assertEqual(str(system.symbols), symbols)
-        self.assertEqual(system.positions, (atoms * (1, 1, len(system))).positions)
-        self.assertEqual(system.cell[2], len(system) * atoms.cell[2])
-        self.assertEqual(system.regions["left"].ids, np.array([0]))
-        self.assertEqual(system.regions["central"].ids, np.arange(1, len(system) - 1))
-        self.assertEqual(system.regions["right"].ids, np.array([len(system) - 1]))
-        self.assertEqual(len(np.unique(system.positions, axis=0)), len(system))
+        assert str(system.symbols) == symbols
+        np.testing.assert_allclose(system.positions, (atoms * (1, 1, len(system))).positions)
+        np.testing.assert_allclose(system.cell[2], len(system) * atoms.cell[2])
+        np.testing.assert_array_equal(system.regions["left"].ids, [0])
+        np.testing.assert_array_equal(system.regions["central"].ids, np.arange(1, len(system) - 1))
+        np.testing.assert_array_equal(system.regions["right"].ids, [len(system) - 1])
+        assert len(np.unique(system.positions, axis=0)) == len(system)
 
     def test_stack_last_region_is_open_ended(self):
         atoms = bulk("Cu", "sc", a=2.0)
         system = stack({"first": atoms, "last": atoms}, axis=2)
 
-        self.assertEqual(system.regions["first"].slice.stop, len(atoms))
-        self.assertIsNone(system.regions["last"].slice.stop)
+        assert system.regions["first"].slice.stop == len(atoms)
+        assert system.regions["last"].slice.stop is None
