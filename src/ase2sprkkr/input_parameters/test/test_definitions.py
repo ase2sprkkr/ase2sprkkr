@@ -10,6 +10,7 @@ from ...common.grammar_types import Keyword
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
+from ..task_definition import TASKS
 
 
 class TestDefinitions:
@@ -83,7 +84,7 @@ class TestDefinitions:
         assert definition is InputParameters.definition("BSFKK")
 
     def test_bsf_mode_is_inferred_when_parsing(self):
-        definition = InputParameters.definition("BSFEK")
+        task = TASKS.definition("BSFEK")
         for name in ("BSFEK", "BSFKK"):
             ip = InputParameters.create(name)
             ip.CONTROL.POTFIL = "x"
@@ -92,7 +93,7 @@ class TestDefinitions:
             else:
                 self.set_bsfkk_grid(ip)
                 ip.TASK.KA = [[0.0, 0.0, 0.0]]
-            parsed = definition.read_from_string(ip.to_string(validate=True))
+            parsed = task.read_input_parameters_from_string(ip.to_string(validate=True))
             assert ip.name == "bsf"
             assert parsed.name == "bsf"
             np.testing.assert_equal(ip.to_dict(), parsed.to_dict())
@@ -137,7 +138,7 @@ class TestDefinitions:
             ip.TASK["KPATH"].set(1)
 
     def test_bsf_mode_conflict_warns_when_parsing(self):
-        definition = InputParameters.definition("BSFEK")
+        task = TASKS.definition("BSFEK")
 
         bsfek = InputParameters.create("BSFEK")
         bsfek.CONTROL.POTFIL = "x"
@@ -146,7 +147,7 @@ class TestDefinitions:
             "\tKPATH=1", "\tKPATH=1\n\tNK1=10"
         )
         with pytest.warns(DataValidityError, match="cannot be used in BSF-EK"):
-            definition.read_from_string(text)
+            task.read_input_parameters_from_string(text)
 
         bsfkk = InputParameters.create("BSFKK")
         bsfkk.CONTROL.POTFIL = "x"
@@ -155,7 +156,7 @@ class TestDefinitions:
             "\tNK1=10", "\tNK=300\n\tNK1=10"
         )
         with pytest.warns(DataValidityError, match="cannot be used in BSF-KK"):
-            definition.read_from_string(text)
+            task.read_input_parameters_from_string(text)
 
     def test_bsfkk_grid_is_required(self):
         ip = InputParameters.create("BSFKK")
@@ -176,7 +177,7 @@ class TestDefinitions:
         assert "\n\tKA={0.0,0.0,0.0}" in out
         assert "\n\tKA1=" not in out
 
-        parsed = InputParameters.definition("BSF").read_from_string(out)
+        parsed = TASKS.definition("BSF").read_input_parameters_from_string(out)
         np.testing.assert_equal(bsfkk.to_dict(), parsed.to_dict())
 
         bsfek = InputParameters.create("BSFEK")
@@ -199,7 +200,7 @@ class TestDefinitions:
                 assert ip.TASK.KPATH() == str(path)
                 text = ip.to_string(validate=True)
                 assert f"\n\tKPATH={path}\n" in text
-                parsed = InputParameters.definition("BSF").read_from_string(text)
+                parsed = TASKS.definition("BSF").read_input_parameters_from_string(text)
                 assert parsed.TASK.KPATH() == str(path)
         for path in (8, 9, 11, "custom"):
             with pytest.raises(DataValidityError):
@@ -214,7 +215,7 @@ class TestDefinitions:
         for name in InputParameters.definitions:
             ip = InputParameters.create_input_parameters(name)
             ip.CONTROL.POTFIL = "xxx"
-            definition = ip._definition
+            task = ip.task_definition
             try:
                 out = ip.to_string(validate=True)
             except DataValidityError:
@@ -235,13 +236,13 @@ class TestDefinitions:
                 if name == "BSFEK":
                     raise Exception("This tasks should not be runnable using the defaults argument")
 
-            ip2 = definition.read_from_string(out)
+            ip2 = task.read_input_parameters_from_string(out)
             np.testing.assert_equal(ip.to_dict(), ip2.to_dict())
 
             if name == "SCF":
                 ip.MODE.MDIR[1] = 1.0, 1.0, 1.0
                 ip.MODE.MDIR[4] = 1.0, 1.0, 1.0
-                ip2 = definition.read_from_string(ip.to_string())
+                ip2 = task.read_input_parameters_from_string(ip.to_string())
                 np.testing.assert_equal(ip.to_dict(), ip2.to_dict())
 
     def test_sfn_filename_default(self):
@@ -275,11 +276,12 @@ class TestDefinitions:
                 if not filename_entry.endswith(".in"):
                     continue
                 filename = os.path.join(path, filename_entry)
-                assert filename_entry[:-3].upper() in InputParameters.definitions
-                definition = InputParameters.definitions[filename_entry[:-3].upper()]
-                parameters = definition.read_from_file(filename)
-
                 name = filename_entry[:-3]
+                uname = name.upper()
+                assert uname in InputParameters.definitions
+                task = TASKS.definition(uname)
+                parameters = task.read_input_parameters(filename)
+
                 check(parameters, name)
                 parameters = InputParameters.from_file(filename)
                 check(parameters, name)
@@ -287,17 +289,18 @@ class TestDefinitions:
                 if name == "scf":
                     assert "MODE" not in parameters.to_string()
                 if name == "arpes":
-                    for task in ["AIPES", "SPLEED", "BAND"]:
-                        parameters.TASK.TASK = task
+                    for task_name in ["AIPES", "SPLEED", "BAND"]:
+                        parameters.TASK.TASK = task_name
 
             except Exception as exc:
                 raise Exception(
                     f'Parsing of "{filename_entry}" failed with the reason: \n {exc}'
                 ).with_traceback(exc.__traceback__)
 
-        definition = InputParameters.definitions["PHAGEN"]
+        task = TASKS.definition("PHAGEN")
+        definition = task.input_parameters_definition
         definition["TASK"]["TASK"].default_value = "scf"
-        parameters = definition.read_from_file(os.path.join(path, "phagen.in"))
+        parameters = task.read_input_parameters(os.path.join(path, "phagen.in"))
         assert parameters.TASK.TASK() == "PHAGEN"
 
         with tempfile.TemporaryFile("w+") as fp:

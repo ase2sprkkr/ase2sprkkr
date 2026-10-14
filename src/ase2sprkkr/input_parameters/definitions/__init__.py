@@ -1,12 +1,19 @@
 """
-sprkkr.input_parameters.definitions - definitions of InputParameterss: definition of configurtion options and their
-default values for SPR-KKR input_parameters.
+SPR-KKR task definitions.
 
-Each contained module should have input_parameters attribute, that holds the definition of a task. The modules
-should be named according to the name of the contained task (e.g. DOS, ARPES, SCF, ...)
+Each task module exports a ``task_definition()`` factory. The factory returns a
+:class:`~ase2sprkkr.input_parameters.task_definition.TaskDefinition`, which
+owns both task execution semantics and the corresponding input-file schema.
+Modules are discovered lazily with :mod:`pkgutil`; user task modules can be
+placed in the configured input-parameters directory as before.
 """
 
 import platformdirs
 import os
 
-__path__.append(os.path.join(platformdirs.user_config_dir("ase2sprkkr", "ase2sprkkr"), "input_parameters"))
+__path__.append(
+    os.path.join(
+        platformdirs.user_config_dir("ase2sprkkr", "ase2sprkkr"),
+        "input_parameters",
+    )
+)

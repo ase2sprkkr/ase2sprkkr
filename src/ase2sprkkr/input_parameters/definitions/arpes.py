@@ -1,4 +1,4 @@
-"""ARPES task input parameters definition"""
+"""ARPES task definition."""
 
 from ...common.grammar_types import SetOf, DefKeyword, Keyword, Range, Array, flag
 from .sections import CONTROL, TAU, ENERGY, SITES
@@ -7,6 +7,7 @@ from ..input_parameters_definitions import (
     InputValueDefinition as V,
     InputSectionDefinition as Section,
 )
+from ..task_definition import TaskDefinition
 from ...sprkkr.sprkkr_grammar_types import Site
 from ...common.warnings import DataValidityError
 
@@ -33,7 +34,6 @@ def angular_scan_errors(parameters):
         points = electron[count]()
         points = 1 if points is None else points
         if (span > 1e-5) != (points > 1):
-            # BETA1 is the reader's explicit exception for a sample-tilt scan.
             if angle == 'PHI' and span <= 1e-5 and 'BETA1' in electron and electron.BETA1() is not None:
                 continue
             errors.append(f'SPEC_EL.{angle} and SPEC_EL.{count} must specify a consistent angular scan: '
@@ -46,8 +46,8 @@ def _validate_angular_scan(parameters, _container, why):
         return [DataValidityError(message) for message in angular_scan_errors(parameters)]
 
 
-def input_parameters():
-    return InputParameters(
+def task_definition():
+    schema = InputParameters(
         "arpes",
         [
             CONTROL("ARPES"),
@@ -57,12 +57,8 @@ def input_parameters():
                 emax=(None, "Maximum of the energy window in Ry (absolute energy)", 5.0),
                 add=[
                     V("EWORK_EV", 4.2, info="Inner potential of the bulk crystal in eV"),
-                    V(
-                        "IMV_INI_EV", 0.05, info="Imaginary part of the potential in eV (initial state)"
-                    ),  # alternatively you can use VIL (in eV) or IMV_INI (in Ry)'),
-                    V(
-                        "IMV_FIN_EV", 2.0, info="Imaginary part of the potential in eV (final state)"
-                    ),  # alternatively you can use VIH (in eV) or IMV_FIN (in Ry)'),
+                    V("IMV_INI_EV", 0.05, info="Imaginary part of the potential in eV (initial state)"),
+                    V("IMV_FIN_EV", 2.0, info="Imaginary part of the potential in eV (final state)"),
                 ],
                 defaults={"GRID": 1, "NE": 300},
             ),
@@ -109,13 +105,8 @@ def input_parameters():
                     V("PHI", 0.0, info="Direction of the photon (the azimuth coordinate)"),
                     V("POL_P", DefKeyword("P", "S", "C+", "C-"), info="Polarization of the light"),
                     V("EPHOT", 25.0, info="Photon energy in eV"),
-                    # Expert
                     V("ALQ", expert=45.0, info="Alignment of polarization vector or pol.ellipsis"),
-                    V(
-                        "DELQ",
-                        expert=0.0,
-                        info="Phase shift between real and imaginary part of e-vector, delq=90 for circular polarized light",
-                    ),
+                    V("DELQ", expert=0.0, info="Phase shift between real and imaginary part of e-vector, delq=90 for circular polarized light"),
                     V(
                         "NPOL",
                         Keyword(
@@ -153,13 +144,7 @@ def input_parameters():
                         expert=0,
                         info="Helicity of the photons",
                     ),
-                    V(
-                        "IFSP",
-                        Keyword({0: "fixed", 1: "variable"}),
-                        is_expert=True,
-                        is_required=False,
-                        info="Photon azimuth angle type",
-                    ),
+                    V("IFSP", Keyword({0: "fixed", 1: "variable"}), is_expert=True, is_required=False, info="Photon azimuth angle type"),
                     V("THETA_FIX", float, is_expert=True, info="Light and electrons are at fixed polarization angle"),
                 ],
                 info="",
@@ -169,48 +154,16 @@ def input_parameters():
                 [
                     V("THETA", Range(float), _electron_angle_default, info="Scattering angle", is_required=False),
                     V("PHI", Range(float), _electron_angle_default, info="Scattering angle", is_required=False),
-                    V(
-                        "NT",
-                        int,
-                        1,
-                        info="Number of angular values for a rotation in polar coordinate.",
-                        is_required=False,
-                    ),
-                    V(
-                        "NP",
-                        int,
-                        1,
-                        info="Number of angular values for a rotation in azimuth coordinate.",
-                        is_required=False,
-                    ),
+                    V("NT", int, 1, info="Number of angular values for a rotation in polar coordinate.", is_required=False),
+                    V("NP", int, 1, info="Number of angular values for a rotation in azimuth coordinate.", is_required=False),
                     V("KA", Range(float), info="Scatering in momentum space ", is_required=False),
-                    V(
-                        "K1",
-                        Range(float),
-                        info="Translating vector of the scatering in momentum space ",
-                        is_required=False,
-                    ),
+                    V("K1", Range(float), info="Translating vector of the scatering in momentum space ", is_required=False),
                     V("NK1", int, info="Number of momentum steps for the integration", is_required=False),
-                    V(
-                        "K2",
-                        Range(float),
-                        info="Translating vector 2 of the scatering in momentum space ",
-                        is_required=False,
-                    ),
+                    V("K2", Range(float), info="Translating vector 2 of the scatering in momentum space ", is_required=False),
                     V("NK2", int, info="Number of momentum steps 2 for the integration", is_required=False),
-                    V(
-                        "K3",
-                        Range(float),
-                        info="Translating vector 3 of the scatering in momentum space ",
-                        is_required=False,
-                    ),
+                    V("K3", Range(float), info="Translating vector 3 of the scatering in momentum space ", is_required=False),
                     V("NK3", int, info="Number of momentum steps 3 for the integration", is_required=False),
-                    V(
-                        "K4",
-                        Range(float),
-                        info="Translating vector 4 of the scatering in momentum space ",
-                        is_required=False,
-                    ),
+                    V("K4", Range(float), info="Translating vector 4 of the scatering in momentum space ", is_required=False),
                     V("NK4", int, info="Number of momentum steps 4 for the integration", is_required=False),
                     V("POL_E", DefKeyword("PZ")),
                     V("SPOL", int, _electron_spol_default, is_required=False),
@@ -218,7 +171,6 @@ def input_parameters():
                     V("BETA1", float, is_required=False, info="Begin of the rotation"),
                     V("BETA2", float, is_required=False, info="End of the rotation"),
                     V("ROTAXIS", SetOf(int, length=3), is_required=False, info="Axis of the rotation"),
-                    # expert
                     V(
                         "TYP",
                         Keyword(
@@ -237,30 +189,10 @@ def input_parameters():
                     V("ISTR", SetOf(int, length=2), expert=[0, 0], info="beam number (h,k)"),
                     V("POL0", SetOf(int, length=3), expert=[0, 0, 0], info="initial pol."),
                     V("POL0L", SetOf(int, length=3), expert=[0, 0, 0], info="initial pol. in the laboratory system"),
-                    V(
-                        "Q1",
-                        complex,
-                        expert=1.0 + 0.0j,
-                        info="Amplitude 1 of the photoelectron used in spin polarized calculations",
-                    ),
-                    V(
-                        "Q2",
-                        complex,
-                        expert=0.0 + 0.0j,
-                        info="Amplitude 2 of the photoelectron used in spin polarized calculations",
-                    ),
-                    V(
-                        "Q3",
-                        complex,
-                        expert=0.0 + 0.0j,
-                        info="Amplitude 3 of the photoelectron used in spin polarized calculations",
-                    ),
-                    V(
-                        "Q4",
-                        complex,
-                        expert=1.0 + 0.0j,
-                        info="Amplitude 4 of the photoelectron used in spin polarized calculations",
-                    ),
+                    V("Q1", complex, expert=1.0 + 0.0j, info="Amplitude 1 of the photoelectron used in spin polarized calculations"),
+                    V("Q2", complex, expert=0.0 + 0.0j, info="Amplitude 2 of the photoelectron used in spin polarized calculations"),
+                    V("Q3", complex, expert=0.0 + 0.0j, info="Amplitude 3 of the photoelectron used in spin polarized calculations"),
+                    V("Q4", complex, expert=1.0 + 0.0j, info="Amplitude 4 of the photoelectron used in spin polarized calculations"),
                 ],
             ),
             Section(
@@ -274,10 +206,12 @@ def input_parameters():
                 ],
             ),
         ],
-        executable="kkrspec",
         validators=_validate_angular_scan,
         info="ARPES - Angle resolved photoemission spectroscopy",
     )
-
-
-""" ARPES task input parameters definition"""
+    return TaskDefinition(
+        schema,
+        name="ARPES",
+        executable="kkrspec",
+        mpi=True,
+    )

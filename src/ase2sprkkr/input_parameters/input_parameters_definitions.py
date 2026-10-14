@@ -1,12 +1,10 @@
 """
-This file contains the classes for definitions of InputParameterss:
-the list of sections and their allowed (or standard) options
-and their value formats. InputParameterss and potentials have a simlilar
-structure, so they share common functionalities from
-sprkkr.common.configuration_definitions
+Definitions of SPR-KKR input-parameter file formats.
+
+An InputParametersDefinition describes only the input-file schema. Execution,
+result-reader and auxiliary-file policy belong to TaskDefinition.
 """
 
-import os
 import pyparsing as pp
 from ..common.container_definitions import dict_from_parsed
 from ..sprkkr.configuration import (
@@ -18,7 +16,7 @@ from ..sprkkr.configuration import (
 )
 from ..common.grammar_types import mixed, flag
 from ..common.grammar import generate_grammar, delimitedList
-from ..common.decorators import add_to_signature, cached_class_property, cache
+from ..common.decorators import cached_class_property, cache
 from .input_parameters import InputParameters, InputSection
 
 with generate_grammar():
@@ -26,8 +24,7 @@ with generate_grammar():
 
 
 class InputValueDefinition(ConfigurationValueDefinition):
-    """This class describes the format of one value of
-    a task configuration"""
+    """Describe the format of one input-parameter value."""
 
     @cached_class_property
     def delimiter():
@@ -35,30 +32,23 @@ class InputValueDefinition(ConfigurationValueDefinition):
             return pp.Suppress("=").set_name("=")
 
     prefix = "\t"
-
     type_from_type_map = {bool: flag}
     type_of_dangerous = mixed
 
     def copy(self, **kwargs):
         """Copy input-specific definition metadata not represented by constructor args."""
         copied = super().copy(**kwargs)
-        if hasattr(self, '_energy_default_value'):
+        if hasattr(self, "_energy_default_value"):
             copied._energy_default_value = self._energy_default_value
         return copied
 
 
 class InputSectionDefinition(ConfigurationSectionDefinition):
-    """This class describes the format of one
-    value of a task section"""
+    """Describe the format of one input-parameter section."""
 
     child_class = InputValueDefinition
-    """ standard child class """
-
     result_class = InputSection
-    """ The standard class for InputParameters section """
-
     custom_class = staticmethod(CustomConfigurationValue.factory(InputValueDefinition, mixed))
-    """ Factory for custom values in the input sections. """
 
     @cached_class_property
     def delimiter():
@@ -70,32 +60,13 @@ class InputSectionDefinition(ConfigurationSectionDefinition):
 
 
 class InputParametersDefinition(ConfigurationFileDefinition):
-    """This class describes the format of a task file."""
+    """Describe only the syntax and semantics of an SPR-KKR input file."""
 
     save_hook = None
-    """ Input parameters can have a save_hook defined, which is executed before saving the
-  parameters. The arguments of the hook are ``filename, atoms, self``. """
-
-    input_file_templates = ()
-    """Task-specific input file templates. ``{dataset}`` expands to ``CONTROL.DATASET``."""
-
-    output_file_templates = ()
-    """Task-specific output file templates. ``{dataset}`` expands to ``CONTROL.DATASET``."""
-
-    cache_file_templates = ()
-    """Optional reusable file templates. ``{dataset}`` expands to ``CONTROL.DATASET``."""
-
     child_class = InputSectionDefinition
-    """ Sections of the :class:`InputParameters` are defined by :class:`InputSectionDefinition` """
-
     result_class = InputParameters
-    """ The parsing of a potential file results in an instance of :class:`InputParameters` """
-
     custom_class = staticmethod(CustomConfigurationSection.factory(InputSectionDefinition))
-    """ The class factory for custom sections in the container """
-
     configuration_type_name = "INPUT PARAMETERS"
-    """ Name of the container type in the runtime documentation """
 
     @cached_class_property
     def delimiter():
@@ -120,100 +91,17 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     def custom_value_grammar(cls):
         value = cls.child_class.custom_member_grammar()
         delim = cls.child_class.delimiter
-        return delimitedList(value, delim).set_parse_action(lambda x: dict_from_parsed(x.asList()))
+        return delimitedList(value, delim).set_parse_action(
+            lambda x: dict_from_parsed(x.asList())
+        )
 
     def _generic_info(self):
-        return f"Input parameters for task {self.name}"
+        return f"Input parameters file format {self.name}"
 
-    @staticmethod
-    def _resolve_file_templates(parameters, directory, templates):
-        dataset = parameters.CONTROL.DATASET()
-        return tuple(
-            path if os.path.isabs(path) else os.path.join(directory, path)
-            for path in (
-                os.fspath(template).format(dataset=dataset)
-                for template in templates
-            )
+    def read_from_file(self, *args, **kwargs):
+        """Reject creation of task-less runtime parameters through a raw schema."""
+        raise TypeError(
+            "InputParametersDefinition is a file schema, not a task factory; "
+            "parse input through TaskDefinition.read_input_parameters() or "
+            "InputParameters.from_file()."
         )
-
-    def input_files(self, parameters, directory):
-        """Return task-specific required input files for one concrete calculation."""
-        return self._resolve_file_templates(
-            parameters, directory, self.input_file_templates
-        )
-
-    def output_files(self, parameters, directory):
-        """Return task-specific required output files for one concrete calculation."""
-        return self._resolve_file_templates(
-            parameters, directory, self.output_file_templates
-        )
-
-    def cache_files(self, parameters, directory):
-        """Return optional reusable files for one concrete calculation."""
-        return self._resolve_file_templates(
-            parameters, directory, self.cache_file_templates
-        )
-
-    @add_to_signature(ConfigurationFileDefinition.__init__, prepend=True)
-    def __init__(
-        self,
-        name,
-        members=None,
-        executable="kkrscf",
-        mpi=True,
-        result_reader=None,
-        input_file_templates=(),
-        output_file_templates=(),
-        cache_file_templates=(),
-        **kwargs,
-    ):
-        """
-        Parameters
-        ---------
-        others:
-          For the meaning of the others parameters please see :class:`ConfigurationRootDefinition`
-
-        executable: str
-          Executable to run
-
-        mpi: bool
-          Whether to run MPI version of the executable
-
-        result_reader: common.process_output_reader.ProcessOutputParser
-          Class, that runs the process and read the results. Default NONE
-          means, that the class is determined from the TASK name
-          (see InputParameters.result_reader)
-
-        input_file_templates: sequence of str
-          Additional task-specific required input files. ``{dataset}`` is replaced by
-          ``CONTROL.DATASET`` by the default :meth:`input_files` implementation.
-
-        output_file_templates: sequence of str
-          Additional task-specific required output files. ``{dataset}`` is replaced by
-          ``CONTROL.DATASET`` by the default :meth:`output_files` implementation.
-
-        cache_file_templates: sequence of str
-          Optional reusable files. ``{dataset}`` is replaced by ``CONTROL.DATASET``
-          by the default :meth:`cache_files` implementation. Missing cache files are
-          valid; execution backends decide how existing caches are synchronized.
-
-        Notes
-        -----
-        Tasks whose file manifests depend on input values can override
-        :meth:`input_files`, :meth:`output_files` or :meth:`cache_files`. The default
-        methods remain useful through ``super()`` for combining static templates with
-        dynamic files.
-        """
-        self.executable = executable
-        self.mpi = mpi
-        self.result_reader = result_reader
-        self.input_file_templates = tuple(input_file_templates)
-        self.output_file_templates = tuple(output_file_templates)
-        self.cache_file_templates = tuple(cache_file_templates)
-
-        super().__init__(name, members, **kwargs)
-        # if not 'TASK' in self:
-        #    breakpoint()
-        #    self['TASK'] = InputSectionDefinition('TASK', [ InputValueDefinition('TASK', DefKeyword(self.name), name_in_grammar=False) ] )
-        # elif not 'TASK' in self['TASK']:
-        #    self['TASK']['TASK'] = InputValueDefinition(DefKeyword(self.name), name_in_grammar=False)

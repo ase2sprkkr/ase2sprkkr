@@ -1,13 +1,14 @@
-"""SCF task input parameters definition"""
+"""SCF task definition."""
 
 import os
 
 from .sections import CONTROL, TAU, ENERGY, SCF, SITES, STRCONST, CPA, MODE, TASK
 from ..input_parameters_definitions import InputParametersDefinition
+from ..task_definition import TaskDefinition
 
 
-class SCFInputParametersDefinition(InputParametersDefinition):
-    """SCF definition with files depending on the concrete parameters."""
+class SCFTaskDefinition(TaskDefinition):
+    """SCF task with files depending on the concrete parameters."""
 
     @staticmethod
     def _path(directory, filename):
@@ -29,15 +30,16 @@ class SCFInputParametersDefinition(InputParametersDefinition):
         return tuple(files)
 
 
-def input_parameters():
-    return SCFInputParametersDefinition(
+def task_definition():
+    schema = InputParametersDefinition(
         "scf",
         [CONTROL("SCF"), TASK("SCF"), TAU, ENERGY(), SCF, SITES, STRCONST, CPA, MODE],
         info="SCF - Calculate a self-consistent potential",
         description="",
+    )
+    return SCFTaskDefinition(
+        schema,
+        name="SCF",
         executable="kkrscf",
         mpi=True,
     )
-
-
-""" SCF task input parameters definition"""

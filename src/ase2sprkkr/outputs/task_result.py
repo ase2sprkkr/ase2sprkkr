@@ -129,8 +129,10 @@ class TaskResult:
     def new_task(self, task):
         out = self._calculator.copy_with_potential(self.potential_filename)
         out.input_parameters = task
-        if isinstance(task, str) and task.lower() == "jxc":
-            out.input_parameters.set("EMIN", self.last_iteration.energy.EMIN())
+        out.input_parameters.task_definition.prepare_parameters_from_result(
+            out.input_parameters,
+            self,
+        )
         return out
 
     def complete(self, error, return_code):

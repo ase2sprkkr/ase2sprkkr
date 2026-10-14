@@ -13,6 +13,7 @@ sys.path.append(str(Path(__file__).resolve().parents[3]))
 
 from ...common.tools import parse_named_option, main  # NOQA
 from ... import InputParameters  # NOQA
+from ...input_parameters.task_definition import TASKS  # NOQA
 
 
 help = "Run SPRKKR calculation."
@@ -28,7 +29,7 @@ def parser(parser):
         "-t",
         "--task",
         dest="task",
-        choices=InputParameters.definition_modules.keys(),
+        choices=TASKS.modules.keys(),
         type=str.lower,
         help="Task to compute.",
     )

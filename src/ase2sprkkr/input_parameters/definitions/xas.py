@@ -1,14 +1,13 @@
-"""XAS task input parameters definition"""
+"""XAS task definition."""
 
 from ...common.grammar_types import DefKeyword, flag
-from ._file_manifests import TauCacheInputParametersDefinition
+from ._file_manifests import TauCacheTaskDefinition
 from .sections import CONTROL, TASK, TAU, ENERGY, SITES, MODE
-from ..input_parameters_definitions import InputValueDefinition as V
+from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
 
 
-def input_parameters():
-    """XAS -xas task input parameters definition"""
-    input_parameters = TauCacheInputParametersDefinition(
+def task_definition():
+    schema = InputParametersDefinition(
         "xas",
         [
             CONTROL("XAS"),
@@ -20,8 +19,8 @@ def input_parameters():
             ),
             TASK("XAS").copy(
                 [
-                    V("IT", int, 1, is_required=True, info="""atom type IT"""),
-                    V("CL", str, "2P", is_required=True, info="""initial core level shell"""),
+                    V("IT", int, 1, is_required=True, info="atom type IT"),
+                    V("CL", str, "2P", is_required=True, info="initial core level shell"),
                     V("MECHECK", flag, False, is_optional=True),
                     V(
                         "OUTPUT",
@@ -41,7 +40,7 @@ def input_parameters():
                         0.0,
                         is_expert=True,
                         is_optional=True,
-                        info="Polar angle θ (FRAMETET) defining the orientation of the electric field vector of the incident light with respect to the material surface normal. Default is FRAMETET = 0, meaning the field lies along the surface normal.",
+                        info="Polar angle θ defining the incident electric field orientation relative to the surface normal.",
                     ),
                     V(
                         "FRAMEPHI",
@@ -49,14 +48,17 @@ def input_parameters():
                         0.0,
                         is_expert=True,
                         is_optional=True,
-                        info="Azimuthal angle φ (FRAMEPHI) defining the in-plane rotation of the electric field vector of the incident light relative to the surface reference axis. Default is FRAMEPHI = 0, corresponding to alignment with the x-axis of the surface frame.",
+                        info="Azimuthal angle φ defining the in-plane incident electric field orientation.",
                     ),
                 ]
             ),
             SITES,
         ],
-        executable="kkrgen",
-        mpi=True,
         info="Calculates X-ray absorption spectra",
     )
-    return input_parameters
+    return TauCacheTaskDefinition(
+        schema,
+        name="XAS",
+        executable="kkrgen",
+        mpi=True,
+    )
