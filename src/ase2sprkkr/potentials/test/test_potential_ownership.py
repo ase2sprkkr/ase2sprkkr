@@ -9,10 +9,12 @@ from ase2sprkkr.potentials import potentials as potentials_module
 from ase2sprkkr.potentials.potentials import Potential, PotentialFileChanged
 
 
-def test_potential_from_file_attaches_itself_to_loaded_atoms():
-    path = Path(__file__).parent.parent / "examples" / "FePt.new.pot"
+def _example_potential():
+    return Path(__file__).parent.parent / "examples" / "FePt.new.pot"
 
-    potential = Potential.from_file(path)
+
+def test_potential_from_file_attaches_itself_to_loaded_atoms():
+    potential = Potential.from_file(_example_potential())
     atoms = potential.atoms
 
     assert atoms is not None
@@ -20,8 +22,46 @@ def test_potential_from_file_attaches_itself_to_loaded_atoms():
     assert atoms.potential is potential
 
 
+def test_potential_from_file_attaches_to_supplied_atoms():
+    source = Potential.from_file(_example_potential())
+    atoms = source.atoms.copy()
+    assert not atoms.has_potential()
+
+    potential = Potential.from_file(_example_potential(), atoms=atoms)
+
+    assert potential.atoms is atoms
+    assert atoms.potential is potential
+
+
+def test_replacing_attached_potential_detaches_previous_one():
+    previous = Potential.from_file(_example_potential())
+    atoms = previous.atoms
+
+    replacement = Potential.from_file(_example_potential(), atoms=atoms)
+
+    assert atoms.potential is replacement
+    assert replacement.atoms is atoms
+    assert previous._atoms is None
+
+    previous_atoms = previous.atoms
+    assert previous_atoms is not atoms
+    assert previous_atoms.potential is previous
+
+
+def test_reassigning_potential_atoms_detaches_old_atoms():
+    potential = Potential.from_file(_example_potential())
+    old_atoms = potential.atoms
+    new_atoms = old_atoms.copy()
+
+    potential.atoms = new_atoms
+
+    assert not old_atoms.has_potential()
+    assert new_atoms.potential is potential
+    assert potential.atoms is new_atoms
+
+
 def test_file_unchanged_check_is_opt_in(monkeypatch):
-    path = Path(__file__).parent.parent / "examples" / "FePt.new.pot"
+    path = _example_potential()
 
     monkeypatch.setattr(
         potentials_module,
@@ -33,7 +73,7 @@ def test_file_unchanged_check_is_opt_in(monkeypatch):
 
 
 def test_file_unchanged_check_rejects_rewrite(monkeypatch):
-    path = Path(__file__).parent.parent / "examples" / "FePt.new.pot"
+    path = _example_potential()
     original = file_fingerprint(path)
     changed = original._replace(size=original.size + 1)
     fingerprints = iter((original, changed))

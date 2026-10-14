@@ -33,11 +33,41 @@ class Potential(ConfigurationFile):
         if set_from_atoms and atoms:
             self.set_from_atoms()
 
+    def _attach_atoms(self, atoms):
+        """Make this potential the potential attached to ``atoms``.
+
+        A Potential may be associated with atoms without being their attached
+        potential (for example a temporary Potential created from atoms). This
+        helper establishes the stronger, bidirectional attachment relationship.
+        """
+        atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
+        previous_atoms = self._atoms
+        if (
+            previous_atoms is not None
+            and previous_atoms is not atoms
+            and previous_atoms._potential is self
+        ):
+            previous_atoms._potential = None
+
+        if atoms is not None:
+            previous_potential = atoms._potential
+            if (
+                previous_potential is not None
+                and previous_potential is not self
+                and previous_potential._atoms is atoms
+            ):
+                previous_potential._atoms = None
+
+        self._atoms = atoms
+        if atoms is not None:
+            atoms._potential = self
+        return atoms
+
     def read_from_file(self, file, atoms=None, allow_dangerous=False):
         super().read_from_file(file, allow_dangerous=allow_dangerous)
         self.make_complete()
         if atoms is not False:
-            self._atoms = self.update_atoms(atoms or self._atoms)
+            self._attach_atoms(self.update_atoms(atoms or self._atoms))
 
     def make_complete(self):
         """Call this function, if you set manually all the properties necessary
@@ -47,12 +77,12 @@ class Potential(ConfigurationFile):
     @property
     def atoms(self):
         if self._atoms is None and self._complete:
-            self._atoms = self.update_atoms()
+            self._attach_atoms(self.update_atoms())
         return self._atoms
 
     @atoms.setter
     def atoms(self, atoms):
-        self._atoms = atoms
+        self._attach_atoms(atoms)
 
     def update_atoms(self, atoms=None):
         """Update the ASE object from the values contained in the sections
@@ -95,6 +125,17 @@ class Potential(ConfigurationFile):
         atoms.update_sites_from_symbols()
         super().set_from_atoms(atoms, io_data)
         self.make_complete()
+
+    def is_scf_converged(self, atoms=None):
+        """Return whether this potential represents a converged SCF state."""
+        status = self.SCF_INFO.SCFSTATUS()
+        if status == "CONVERGED":
+            return True
+        if status != "START":
+            return False
+
+        atoms = atoms or self._atoms
+        return atoms is not None and atoms.sprkkr_has_converged_data()
 
     @class_property
     @cache
