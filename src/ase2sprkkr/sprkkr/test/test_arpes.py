@@ -1,34 +1,32 @@
+import os
+
 import numpy as np
 import pytest
 from ase.atoms import Atoms
 
-if __package__:
-    from .init_tests import TestCase, patch_package
-else:
-    from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
+from ..calculator import SPRKKR
 
 
-from ..calculator import SPRKKR  # NOQA
-from ...potentials.potentials import Potential  # NOQA
+@pytest.mark.slow
+def test_arpes_run(calc_args):
+    if os.environ.get("DO_NOT_RUN_SPRKKR", ""):
+        pytest.skip("SPR-KKR execution disabled by DO_NOT_RUN_SPRKKR")
 
+    atoms = Atoms(
+        symbols="Cu",
+        cell=np.array([(1.0, 0, 0), (0, 1, 0), (0, 0, 1)]),
+        pbc=True,
+    )
+    calculator = SPRKKR(atoms=atoms, **calc_args())
+    calculator.input_parameters.SCF.NITER = 1
+    calculator.set("NE", 10)
+    calculator.set("NKTAB", 10)
 
-class TestCalculator(TestCase):
-    @pytest.mark.slow
-    def test_run(self, temporary_dir):
-        if not self.run_sprkkr():
-            return
+    scf_output = calculator.calculate(**calc_args())
+    arpes_calculator = scf_output.calculator
+    arpes_calculator.input_parameters = "arpes"
+    arpes_calculator.set("NE", 10)
+    arpes_calculator.set("NKTAB", 10)
 
-        a = Atoms(symbols="Cu", cell=np.array([(1.0, 0, 0), (0, 1, 0), (0, 0, 1)]))
-        a.pbc = True
-        xx = SPRKKR(atoms=a, **self.calc_args())
-        xx.input_parameters.SCF.NITER = 1
-        xx.set("NE", 10)
-        xx.set("NKTAB", 10)
-        out = xx.calculate(**self.calc_args())
-        calc = out.calculator
-        calc.input_parameters = "arpes"
-        xx.set("NE", 10)
-        xx.set("NKTAB", 10)
-        out2 = out.calculator.calculate(**self.calc_args())
-        self.assertTrue(isinstance(out2.spc.ENERGY(), np.ndarray))
+    arpes_output = arpes_calculator.calculate(**calc_args())
+    assert isinstance(arpes_output.spc.ENERGY(), np.ndarray)

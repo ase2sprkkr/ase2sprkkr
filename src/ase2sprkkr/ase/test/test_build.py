@@ -1,16 +1,10 @@
 from ase.build import bulk
 import numpy as np
 
-if __package__:
-    from .init_tests import TestCase, patch_package
-else:
-    from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
-
-from ..build import aperiodic_times, stack, rotate, _minimal_surface_layers  # NOQA: E402
+from ..build import aperiodic_times, stack, rotate, _minimal_surface_layers
 
 
-class TestBuild(TestCase):
+class TestBuild:
     def test(self):
         atoms = bulk("LiCl", "rocksalt", a=5.64)
         assert len(aperiodic_times(atoms, (2.1, 1, 1))) == 6
@@ -19,38 +13,37 @@ class TestBuild(TestCase):
         assert len(aperiodic_times(atoms, (1, 3.1, 1))) == 7
         assert len(aperiodic_times(atoms, (1, 3.1, 2.1))) == 18
         at = aperiodic_times(atoms, (1, 3.1, 1))
-        self.assertEqual(at.positions[::2], np.arange(4)[:, None] * atoms.cell[1] + atoms.positions[0])
-        self.assertEqual(at.positions[1::2], np.arange(3)[:, None] * atoms.cell[1] + atoms.positions[1])
-        self.assertEqual("LiClLiClLiClLi", str(at.symbols))
-        self.assertEqual(at.pbc, np.asarray([True, False, True]))
+        np.testing.assert_allclose(at.positions[::2], np.arange(4)[:, None] * atoms.cell[1] + atoms.positions[0])
+        np.testing.assert_allclose(at.positions[1::2], np.arange(3)[:, None] * atoms.cell[1] + atoms.positions[1])
+        assert str(at.symbols) == "LiClLiClLiClLi"
+        np.testing.assert_array_equal(at.pbc, [True, False, True])
         cell = atoms.cell.copy()
         cell[1] *= 3.1
-        assert (at.cell == cell).all()
+        np.testing.assert_allclose(at.cell, cell)
 
         at = aperiodic_times(atoms, (1, 3.9, 1), direction=-1)
-        self.assertEqual(
+        np.testing.assert_allclose(
             at.positions[::2], np.arange(4)[:, None] * atoms.cell[1] + atoms.positions[1] - 0.1 * atoms.cell[1]
         )
-        self.assertEqual(
+        np.testing.assert_allclose(
             at.positions[1::2], np.arange(1, 4)[:, None] * atoms.cell[1] + atoms.positions[0] - 0.1 * atoms.cell[1]
         )
-        self.assertEqual("ClLiClLiClLiCl", str(at.symbols))
-        self.assertEqual(at.pbc, np.asarray([True, False, True]))
+        assert str(at.symbols) == "ClLiClLiClLiCl"
+        np.testing.assert_array_equal(at.pbc, [True, False, True])
         cell[1] = atoms.cell[1] * 3.9
-        assert (at.cell == cell).all()
+        np.testing.assert_allclose(at.cell, cell)
 
     def test_stack(self):
         atoms = bulk("LiCl", "rocksalt", a=5.64)
 
-        self.assertEqual(stack([atoms, atoms, atoms], axis=2).positions, (atoms * (1, 1, 3)).positions)
+        np.testing.assert_allclose(stack([atoms, atoms, atoms], axis=2).positions, (atoms * (1, 1, 3)).positions)
 
         a2 = atoms.copy()
         a2.symbols = "KN"
         a2.positions = a2.positions + 1
-        self.assertEqual(str(stack([atoms, a2], axis=2).symbols), "LiClKN")
-        self.assertEqual(
-            stack([atoms, a2], axis=2).positions, np.concatenate([atoms.positions, a2.positions + atoms.cell[2]])
-        )
+        stacked = stack([atoms, a2], axis=2)
+        assert str(stacked.symbols) == "LiClKN"
+        np.testing.assert_allclose(stacked.positions, np.concatenate([atoms.positions, a2.positions + atoms.cell[2]]))
 
     def test_stack_scalar_at_uses_stacking_cell_vector_length(self):
         atoms = bulk("Cu", "sc", a=2.0)
@@ -64,9 +57,10 @@ class TestBuild(TestCase):
         atoms = bulk("Cu", "sc", a=2.0)
 
         stacked = stack((atoms.copy() for _ in range(3)), axis=2)
+        expected = atoms * (1, 1, 3)
 
-        self.assertEqual(stacked.positions, (atoms * (1, 1, 3)).positions)
-        self.assertEqual(stacked.cell, (atoms * (1, 1, 3)).cell)
+        np.testing.assert_allclose(stacked.positions, expected.positions)
+        np.testing.assert_allclose(stacked.cell, expected.cell)
 
     def test_stack_periodic_argument_wins_on_stacking_axis(self):
         atoms = bulk("Cu", "sc", a=2.0)
@@ -79,26 +73,27 @@ class TestBuild(TestCase):
     def test_stack_empty_atoms(self):
         atoms = bulk("Cu", "sc", a=2.0)
         empty = atoms * (1, 1, 0)
+        expected = atoms * (1, 1, 2)
 
         middle_empty = stack([atoms, empty, atoms], axis=2)
-        self.assertEqual(middle_empty.positions, (atoms * (1, 1, 2)).positions)
-        self.assertEqual(middle_empty.cell, (atoms * (1, 1, 2)).cell)
+        np.testing.assert_allclose(middle_empty.positions, expected.positions)
+        np.testing.assert_allclose(middle_empty.cell, expected.cell)
 
         trailing_empty = stack([atoms, atoms, empty], axis=2)
-        self.assertEqual(trailing_empty.positions, (atoms * (1, 1, 2)).positions)
-        self.assertEqual(trailing_empty.cell[2], 2 * atoms.cell[2])
+        np.testing.assert_allclose(trailing_empty.positions, expected.positions)
+        np.testing.assert_allclose(trailing_empty.cell[2], 2 * atoms.cell[2])
 
     def test_minimal_surface_layers(self):
         atoms = bulk("Cu", "fcc", cubic=True)
 
-        self.assertEqual(_minimal_surface_layers(atoms, (1, 0, 0)), 1)
-        self.assertEqual(_minimal_surface_layers(atoms, (1, 1, 0)), 2)
-        self.assertEqual(_minimal_surface_layers(atoms, (1, 1, 1)), 3)
+        assert _minimal_surface_layers(atoms, (1, 0, 0)) == 1
+        assert _minimal_surface_layers(atoms, (1, 1, 0)) == 2
+        assert _minimal_surface_layers(atoms, (1, 1, 1)) == 3
 
     def test_rotate_fcc_au_111(self):
         atoms = bulk("Au", "fcc", cubic=True)
         rotated = rotate(atoms, (1, 1, 1))
 
-        self.assertEqual(_minimal_surface_layers(atoms, (1, 1, 1)), 3)
-        self.assertEqual(rotated.pbc, np.asarray([True, True, True]))
-        self.assertEqual(len(rotated), 3 * len(atoms))
+        assert _minimal_surface_layers(atoms, (1, 1, 1)) == 3
+        np.testing.assert_array_equal(rotated.pbc, [True, True, True])
+        assert len(rotated) == 3 * len(atoms)

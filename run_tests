@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
-# The wheel installed by the preceding build step must be tested.  A CI-wide
+# The wheel installed by the preceding build step must be tested. A CI-wide
 # PYTHONPATH pointing at ``src`` would shadow its compiled extension modules.
 unset PYTHONPATH
 
-# The repository root contains ``ase2sprkkr -> src/ase2sprkkr``.  Since the
-# current directory is always sys.path[0], run from a fresh directory so that
-# this compatibility symlink cannot shadow the installed wheel.
+# Run from a fresh directory so the repository checkout cannot accidentally
+# satisfy imports or receive files created by tests intended for the installed
+# wheel.
 TEST_WORKDIR=$(mktemp -d)
 cd "$TEST_WORKDIR"
 

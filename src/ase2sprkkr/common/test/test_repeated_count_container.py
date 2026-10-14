@@ -1,25 +1,21 @@
-import pyparsing as pp
+import pytest
 
-if __package__:
-    from .init_tests import TestCase, patch_package
-else:
-    from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
-
-from ...common.grammar import generate_grammar
-from ...input_parameters import input_parameters_definitions as cd  # NOQA: E402
 from ...common.repetition import Repeated
+from ...input_parameters import input_parameters_definitions as cd
+
 
 V = cd.InputValueDefinition
 
+
 class S(cd.InputSectionDefinition):
     custom_class = None
+
 
 class IP(cd.InputParametersDefinition):
     custom_class = None
 
 
-class TestRepeatedCountParsing(TestCase):
+class TestRepeatedCountParsing:
     def test_container_callbacks_are_deferred_until_first_use(self):
         class CountingValue(V):
             def __init__(self, *args, **kwargs):
@@ -48,81 +44,79 @@ class TestRepeatedCountParsing(TestCase):
         parent = S("PARENT", members=[V("N", int), item])
         root = IP([parent])
 
-        # First, test not-repeated at all
         data = "PARENT\n\tN=3\n\tITEM\n\t\t1\n\t"
         parsed = root.read_from_string(data)
-        p = parsed.PARENT
-        self.assertEqual(p.ITEM.VAL(), 1)
+        assert parsed.PARENT.ITEM.VAL() == 1
 
         data = "PARENT\n\tITEM\n\t\t10\n\tITEM\n\t\t20\n"
-        with self.assertRaises(Exception):
+        with pytest.raises(Exception):
             parent.parse(data)
 
-        # Then, test repeated, any number of repetition
-        item = S("ITEM", members=[V("VAL", int, name_in_grammar=False)], is_repeated=Repeated.REPEATED, repeated_with_name=True)
+        item = S(
+            "ITEM",
+            members=[V("VAL", int, name_in_grammar=False)],
+            is_repeated=Repeated.REPEATED,
+            repeated_with_name=True,
+        )
         parent = S("PARENT", members=[V("N", int), item])
         root = IP([parent])
 
-        # repeated-header style: two ITEM blocks each with one unnamed integer
-        data = "PARENT\n\tN=2\n\tITEM\n\t\t10\n\tITEM\n\t\t20\n"
-        parsed = root.read_from_string(data)
         data = "PARENT\n\tN=2\n\tITEM\n\t\t10\n\tITEM\n\t\t20\n\tITEM\n\t\t30\n"
         parsed = root.read_from_string(data)
+        items = parsed.PARENT.ITEM
+        assert len(items) == 3
+        assert items[0]["VAL"]() == 10
+        assert items[1]["VAL"]() == 20
+        assert items[2]["VAL"]() == 30
 
-        p = parsed.PARENT
-        items = p.ITEM
-        self.assertEqual(len(items), 3)
-        self.assertEqual(items[0]['VAL'](), 10)
-        self.assertEqual(items[1]['VAL'](), 20)
-        self.assertEqual(items[2]['VAL'](), 30)
-
-        # End-to-end parse: ITEM is repeated exactly twice
-        # Define VAL as a nameless line inside ITEM to avoid duplicate-name collisions
-        item = S("ITEM", members=[V("VAL", int, name_in_grammar=False)], is_repeated=Repeated.REPEATED, repeated_count=2, repeated_with_name=True)
+        item = S(
+            "ITEM",
+            members=[V("VAL", int, name_in_grammar=False)],
+            is_repeated=Repeated.REPEATED,
+            repeated_count=2,
+            repeated_with_name=True,
+        )
         parent = S("PARENT", members=[V("N", int), item])
         root = IP([parent])
 
-        # repeated-header style: two ITEM blocks each with one unnamed integer
         data = "PARENT\n\tN=2\n\tITEM\n\t\t10\n\tITEM\n\t\t20\n"
         parsed = root.read_from_string(data)
-        p = parsed.PARENT
-        items = p.ITEM
-        self.assertEqual(len(items), 2)
-        self.assertEqual(items[0]['VAL'](), 10)
-        self.assertEqual(items[1]['VAL'](), 20)
+        items = parsed.PARENT.ITEM
+        assert len(items) == 2
+        assert items[0]["VAL"]() == 10
+        assert items[1]["VAL"]() == 20
 
-        # too few items -> expect parse error
         data_few = "PARENT\n\tITEM\n\t\t10\n"
-        with self.assertRaises(Exception):
+        with pytest.raises(Exception):
             parent.parse(data_few)
 
-        # too many items -> expect parse error
         data_many = "PARENT\n\tN=2\n\tITEM\n\t\t10\n\tITEM\n\t\t20\n\tITEM\n\t\t30\n"
-        with self.assertRaises(Exception):
+        with pytest.raises(Exception):
             parent.parse(data_many)
 
     def test_repeated_count_from_dependency(self):
-        # End-to-end parse: ITEM repetition count depends on N
-        item = S("ITEM", members=[V("VAL", int, name_in_grammar=False)], is_repeated=Repeated.REPEATED, repeated_count="N", repeated_with_name=True)
+        item = S(
+            "ITEM",
+            members=[V("VAL", int, name_in_grammar=False)],
+            is_repeated=Repeated.REPEATED,
+            repeated_count="N",
+            repeated_with_name=True,
+        )
         parent = S("PARENT", members=[V("N", int), item])
         root = IP([parent])
 
-        # repeated-header style: N before, then N ITEM blocks each with one unnamed integer
         data = "PARENT\n\tN=3\n\tITEM\n\t\t1\n\tITEM\n\t\t2\n\tITEM\n\t\t3\n"
         parsed = root.read_from_string(data)
-        p = parsed.PARENT
-        items = p.ITEM
-        self.assertEqual(len(items), 3)
-        self.assertEqual([it['VAL']() for it in items.values()], [1, 2, 3])
+        items = parsed.PARENT.ITEM
+        assert len(items) == 3
+        assert [it["VAL"]() for it in items.values()] == [1, 2, 3]
 
-        # too few
         data_few = "PARENT\n\tN=3\n\tITEM\n\t\t1\n\tITEM\n\t\t2\n"
-        with self.assertRaises(Exception):
+        with pytest.raises(Exception):
             parent.parse(data_few)
 
-        # too many
         data_many = "PARENT\n\tN=3\n\tITEM\n\t\t1\n\tITEM\n\t\t2\n\tITEM\n\t\t3\n\tITEM\n\t\t4\n"
-        with self.assertRaises(Exception):
+        with pytest.raises(Exception):
             parent.parse(data_many)
 
     def test_repeated_count_one_can_be_parsed_repeatedly(self):
@@ -143,30 +137,31 @@ class TestRepeatedCountParsing(TestCase):
         assert second.PARENT.ITEM[0].VAL() == 10
 
     def test_repeated_count_callable(self):
-        # End-to-end parse: callable doubles the given N -> 2 -> 4 items
         def double_n(N):
             return int(N) * 2
 
-        item = S("ITEM", members=[V("VAL", int, name_in_grammar=False)], is_repeated=Repeated.REPEATED, repeated_count=double_n, repeated_with_name=True)
+        item = S(
+            "ITEM",
+            members=[V("VAL", int, name_in_grammar=False)],
+            is_repeated=Repeated.REPEATED,
+            repeated_count=double_n,
+            repeated_with_name=True,
+        )
         parent = S("PARENT", members=[V("N", int), item])
         root = IP([parent])
 
-        # repeated-header style: N=2 then 4 ITEM blocks in total because callable doubles N
         data = "PARENT\n\tN=2\n\tITEM\n\t\t1\n\tITEM\n\t\t2\n\tITEM\n\t\t3\n\tITEM\n\t\t4\n"
         parsed = root.read_from_string(data)
-        p = parsed.PARENT
-        items = p.ITEM
-        self.assertEqual(len(items), 4)
-        self.assertEqual([it['VAL']() for it in items.values()], [1, 2, 3, 4])
+        items = parsed.PARENT.ITEM
+        assert len(items) == 4
+        assert [it["VAL"]() for it in items.values()] == [1, 2, 3, 4]
 
-        # too few
         data_few = "PARENT\n\tN=2\n\tITEM\n\t\t1\n\tITEM\n\t\t2\n"
-        with self.assertRaises(Exception):
+        with pytest.raises(Exception):
             parent.parse(data_few)
 
-        # too many
         data_many = "PARENT\n\tN=2\n\tITEM\n\t\t1\n\tITEM\n\t\t2\n\tITEM\n\t\t3\n\tITEM\n\t\t4\n\tITEM\n\t\t5\n"
-        with self.assertRaises(Exception):
+        with pytest.raises(Exception):
             parent.parse(data_many)
 
     def test_repeated_count_callable_with_multiple_dependencies(self):
@@ -189,11 +184,7 @@ class TestRepeatedCountParsing(TestCase):
             "\tITEM\n\t\t20\n"
             "\tITEM\n\t\t30\n"
         )
-
-        self.assertEqual(
-            [instance["VAL"]() for instance in parsed.PARENT.ITEM.values()],
-            [10, 20, 30],
-        )
+        assert [instance["VAL"]() for instance in parsed.PARENT.ITEM.values()] == [10, 20, 30]
 
     def test_repeated_count_dependency_from_parent_section(self):
         item = S(
@@ -220,28 +211,12 @@ class TestRepeatedCountParsing(TestCase):
         assert child["N"].grammar_hooks == []
         assert parsed.PARENT.CHILD.get_member("N") is parsed.PARENT.CHILD["N"]
         assert parsed.PARENT.CHILD.get_member("..N") is parsed.PARENT["N"]
-        assert (
-            parsed.PARENT.CHILD.ITEM.get_member("..N")
-            is parsed.PARENT.CHILD["N"]
-        )
-        assert (
-            parsed.PARENT.CHILD.ITEM.get_member("....N")
-            is parsed.PARENT["N"]
-        )
-        assert (
-            parsed.PARENT.CHILD.ITEM[0].get_member("..N")
-            is parsed.PARENT.CHILD["N"]
-        )
+        assert parsed.PARENT.CHILD.ITEM.get_member("..N") is parsed.PARENT.CHILD["N"]
+        assert parsed.PARENT.CHILD.ITEM.get_member("....N") is parsed.PARENT["N"]
+        assert parsed.PARENT.CHILD.ITEM[0].get_member("..N") is parsed.PARENT.CHILD["N"]
         assert parsed.PARENT.CHILD.ITEM.get_member(0) is parsed.PARENT.CHILD.ITEM[0]
-        assert (
-            parsed.PARENT.CHILD.ITEM.get_member("0.VAL")
-            is parsed.PARENT.CHILD.ITEM[0]["VAL"]
-        )
-
-        self.assertEqual(
-            [instance["VAL"]() for instance in parsed.PARENT.CHILD.ITEM.values()],
-            [10, 20],
-        )
+        assert parsed.PARENT.CHILD.ITEM.get_member("0.VAL") is parsed.PARENT.CHILD.ITEM[0]["VAL"]
+        assert [instance["VAL"]() for instance in parsed.PARENT.CHILD.ITEM.values()] == [10, 20]
 
         rows = S(
             "ROWS",
