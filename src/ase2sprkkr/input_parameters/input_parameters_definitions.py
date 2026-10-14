@@ -70,11 +70,14 @@ class InputSectionDefinition(ConfigurationSectionDefinition):
 
 
 class InputParametersDefinition(ConfigurationFileDefinition):
-    """This class describes the format of a task file."""
+    """This class describes the format and execution semantics of a task file."""
 
     save_hook = None
     """ Input parameters can have a save_hook defined, which is executed before saving the
   parameters. The arguments of the hook are ``filename, atoms, self``. """
+
+    produces_potential = False
+    """Whether a successful task produces a new potential/calculation state."""
 
     input_file_templates = ()
     """Task-specific input file templates. ``{dataset}`` expands to ``CONTROL.DATASET``."""
@@ -92,7 +95,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     """ The parsing of a potential file results in an instance of :class:`InputParameters` """
 
     custom_class = staticmethod(CustomConfigurationSection.factory(InputSectionDefinition))
-    """ The class factory for custom sections in the container """
+    """ Factory for custom sections in the container """
 
     configuration_type_name = "INPUT PARAMETERS"
     """ Name of the container type in the runtime documentation """
