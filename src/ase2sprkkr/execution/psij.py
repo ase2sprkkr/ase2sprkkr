@@ -224,6 +224,7 @@ class PsijRunner:
         self._done = Event()
         self._exception = None
         self._callback_exception = None
+        self._finalization_failed = False
         self._return_code = None
         self._thread = None
         self._attached = attached
@@ -235,9 +236,6 @@ class PsijRunner:
             self.start()
 
     def _mpi_launcher(self):
-        # Slurm's native launcher knows the scheduler allocation. Other PSI/J
-        # backends commonly use mpirun; users needing a custom command can use
-        # an explicit MPI launcher in the profile instead.
         return "srun" if self.executor.backend.lower() == "slurm" else "mpirun"
 
     def _job_command(self):
@@ -246,8 +244,6 @@ class PsijRunner:
             return tuple(self.spec.argv), None, None
 
         if isinstance(launch.mpi, tuple):
-            # An explicit launcher is already a concrete command. Preserve it
-            # instead of asking PSI/J to reinterpret it.
             return (*launch.mpi, *self.spec.mpi_argv), None, None
 
         resources = None
@@ -291,8 +287,14 @@ class PsijRunner:
 
     @property
     def state(self):
+        if self._finalization_failed:
+            return RunState.FAILED
         state = getattr(getattr(self._job, "status", None), "state", None)
         return _STATE_MAP.get(getattr(state, "name", None), RunState.UNKNOWN)
+
+    @property
+    def exception(self):
+        return self._exception
 
     @property
     def return_code(self):
@@ -316,11 +318,9 @@ class PsijRunner:
         )
 
     def add_output_listener(self, callback):
-        """Receive raw output as ``callback(text, kind)``."""
         self._output_observers.add(callback)
 
     def add_output_error_listener(self, callback):
-        """Receive ``callback(observer, exception)`` for failed output observers."""
         self._output_observers.add_error_listener(callback)
 
     def _emit_output(self, data, kind):
@@ -345,11 +345,8 @@ class PsijRunner:
         self._flush(self.spec.input_file)
         self._flush(self.spec.output_file)
         self._flush(self.spec.error_file)
-
-        # PSI/J opens stdout/stderr itself. Do not keep another writer open.
         self._close(self.spec.output_file)
         self._close(self.spec.error_file)
-
         Path(self._stdout_path).parent.mkdir(parents=True, exist_ok=True)
         Path(self._stderr_path).parent.mkdir(parents=True, exist_ok=True)
         Path(self._stdout_path).write_bytes(b"")
@@ -380,7 +377,6 @@ class PsijRunner:
                     if empty_after_finish:
                         break
                     empty_after_finish = True
-
                 await asyncio.sleep(self.executor.poll_interval)
         finally:
             stream.feed_eof()
@@ -389,7 +385,6 @@ class PsijRunner:
         stdout = asyncio.StreamReader()
         stderr = asyncio.StreamReader()
         finished = asyncio.Event()
-
         parse_task = asyncio.create_task(
             self.reader.parse_streams(stdout, stderr, self.result)
         )
@@ -397,7 +392,6 @@ class PsijRunner:
             asyncio.create_task(self._follow_file(self._stdout_path, stdout, "out", finished)),
             asyncio.create_task(self._follow_file(self._stderr_path, stderr, "err", finished)),
         ]
-
         status = None
         try:
             status = await asyncio.to_thread(self._job.wait)
@@ -422,6 +416,7 @@ class PsijRunner:
             asyncio.run(self._monitor())
         except BaseException as exc:
             self._exception = exc
+            self._finalization_failed = True
         finally:
             try:
                 if self.callback:
@@ -438,13 +433,11 @@ class PsijRunner:
             self._thread.start()
 
     def start(self):
-        """Start submission or monitoring of an attached job."""
         if self._attached:
             return self._start_monitor()
         return self.submit()
 
     def submit(self):
-        """Submit the job through PSI/J and return after the scheduler accepts it."""
         with self._submit_lock:
             if self._thread is not None or self.state != RunState.NEW:
                 raise RuntimeError(f"Run is already {self.state.value}")
@@ -456,7 +449,6 @@ class PsijRunner:
             self._start_monitor()
 
     def wait(self):
-        """Wait for the PSI/J job and output parsing to finish."""
         if self._thread is None:
             raise RuntimeError("Run has not been started")
         self._done.wait()
@@ -477,7 +469,6 @@ class PsijRunner:
         return await asyncio.to_thread(self.wait)
 
     def cancel(self):
-        """Cancel the scheduler job through PSI/J."""
         if self._thread is None and not self._attached:
             raise RuntimeError("Run has not been submitted")
         self._job.cancel()
@@ -569,7 +560,6 @@ class PsijExecutor(Executor):
         )
 
     def recover_submission(self, run_id, submission, *, submitted_at=None):
-        """Recover a Slurm submit by the ASE2SPRKKR run id stored in Comment."""
         if self.backend.lower() != "slurm":
             raise NotImplementedError(
                 f"PSI/J backend {self.backend!r} cannot recover uncertain submissions"
@@ -619,11 +609,6 @@ class PsijExecutor(Executor):
                 _slurm_state(state),
                 return_code=return_code,
             )
-
-        # At this point neither the live queue nor accounting history contains
-        # the persistent run id, and accounting is known to retain job comments.
-        # This is the only Slurm case in which absence is strong enough to
-        # release the duplicate-submission reservation.
         return None
 
     def attach(

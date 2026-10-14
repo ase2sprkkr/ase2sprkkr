@@ -157,6 +157,10 @@ class LocalPersistentRunner:
         return self._state
 
     @property
+    def exception(self):
+        return self._exception
+
+    @property
     def return_code(self):
         return self._return_code
 

@@ -114,11 +114,26 @@ class TestCase:
         with pytest.raises(a):
             b()
 
+    def assertRaisesRegex(self, exception, regex, callable=None, *args, **kwargs):
+        if callable is None:
+            return pytest.raises(exception, match=regex)
+        with pytest.raises(exception, match=regex):
+            callable(*args, **kwargs)
+
     def assertAlmostEqual(self, a, b, **kwargs):
         np.testing.assert_almost_equal(a, b, **kwargs)
 
     def assertIsNone(self, a):
         assert a is None
+
+    def assertIs(self, a, b, msg=None):
+        assert a is b, msg
+
+    def assertIsNot(self, a, b, msg=None):
+        assert a is not b, msg
+
+    def assertIsInstance(self, value, cls, msg=None):
+        assert isinstance(value, cls), msg
 
     @staticmethod
     def runAsync(corr):

@@ -76,6 +76,14 @@ def _unique(values):
     return tuple(dict.fromkeys(value for value in values if value is not None))
 
 
+def _processing_state(backend_state):
+    """Map a terminal backend outcome to the still-running finalization phase."""
+    backend_state = RunState(backend_state)
+    if backend_state in (RunState.FINISHED, RunState.FAILED):
+        return RunState.FINISHING
+    return backend_state
+
+
 class CorruptRunRecord(RuntimeError):
     """A persisted run record cannot be decoded or validated."""
 
@@ -206,11 +214,13 @@ class DuplicateSubmissionError(RuntimeError):
 
 @dataclass(frozen=True)
 class RunRecord:
-    """Persistent identity and last known execution state of one run.
+    """Persistent identity and last known lifecycle state of one run.
 
-    ``state`` describes submission/execution/cancellation outcome. It does not
-    encode output parsing or user callback failures. ``backend_state`` records
-    the last status reported by the execution backend.
+    ``state`` is the public run lifecycle, including result finalization.
+    A terminal backend outcome is therefore represented as ``FINISHING`` until
+    output parsing and the completion callback have finished. A finalization
+    error makes the public state ``FAILED`` even if the backend itself exited
+    successfully. ``backend_state`` records that independent backend outcome.
 
     ``finished_at`` records the first terminal lifecycle transition and is
     immutable afterwards. Later metadata changes, including result-file
@@ -724,11 +734,11 @@ class ExecutionManager:
                 raise DuplicateSubmissionError(record, conflicts)
 
     def update(self, record, status: RunStatus):
-        """Persist one backend status without changing result-processing state."""
+        """Persist a backend status while keeping result finalization explicit."""
         backend_state = RunState(status.state)
         return self.transition(
             record,
-            state=backend_state,
+            state=_processing_state(backend_state),
             backend_state=backend_state,
             reference=status.reference,
             return_code=status.return_code,
@@ -1034,14 +1044,15 @@ class PersistentRunner:
 
     @property
     def state(self):
-        state = self._runner.state
-        if state == RunState.NEW and self._record.state != RunState.NEW:
+        backend_state = self._runner.state
+        state = _processing_state(backend_state)
+        if backend_state == RunState.NEW and self._record.state != RunState.NEW:
             state = self._record.state
         if self._record.state != RunState.NEW and state != self._record.state:
             self._record = self.manager.transition(
                 self._record,
                 state=state,
-                backend_state=state,
+                backend_state=backend_state,
                 reference=self.reference,
             )
             state = self._record.state
@@ -1069,13 +1080,13 @@ class PersistentRunner:
         except BaseException:
             reference = self.reference
             if reference is not None:
-                state = self._runner.state
-                if state == RunState.NEW:
-                    state = RunState.QUEUED
+                backend_state = self._runner.state
+                if backend_state == RunState.NEW:
+                    backend_state = RunState.QUEUED
                 self._record = self.manager.transition(
                     self._record,
-                    state=state,
-                    backend_state=state,
+                    state=_processing_state(backend_state),
+                    backend_state=backend_state,
                     reference=reference,
                 )
             raise
@@ -1088,13 +1099,13 @@ class PersistentRunner:
             self._record.endpoint,
             reference,
         )
-        state = self._runner.state
-        if state == RunState.NEW:
-            state = RunState.QUEUED
+        backend_state = self._runner.state
+        if backend_state == RunState.NEW:
+            backend_state = RunState.QUEUED
         self._record = self.manager.transition(
             self._record,
-            state=state,
-            backend_state=state,
+            state=_processing_state(backend_state),
+            backend_state=backend_state,
             reference=reference,
         )
         self._sync_file_retrieval()
@@ -1112,13 +1123,16 @@ class PersistentRunner:
 
     def _sync_completion(self, result):
         self._sync_file_retrieval()
-        state = self._runner.state
+        backend_state = self._runner.state
+        error = self._runner.exception
+        state = RunState.FAILED if error is not None else backend_state
         self._record = self.manager.finalize(
             self._record,
             state=state,
-            backend_state=state,
+            backend_state=backend_state,
             reference=self.reference,
             return_code=getattr(result, "return_code", None),
+            message=None if error is None else str(error),
         )
 
     def wait(self):
@@ -1126,15 +1140,7 @@ class PersistentRunner:
             return self._runner.wait()
         finally:
             if self._record.state != RunState.NEW:
-                self._sync_file_retrieval()
-                state = self._runner.state
-                self._record = self.manager.finalize(
-                    self._record,
-                    state=state,
-                    backend_state=state,
-                    reference=self.reference,
-                    return_code=getattr(self.result, "return_code", None),
-                )
+                self._sync_completion(self.result)
 
     def run(self):
         if self._record.state == RunState.NEW:
@@ -1161,9 +1167,10 @@ class PersistentRunner:
             return self._runner.cancel()
         finally:
             if self._record.state != RunState.NEW:
+                backend_state = self._runner.state
                 self._record = self.manager.transition(
                     self._record,
-                    state=self._runner.state,
-                    backend_state=self._runner.state,
+                    state=_processing_state(backend_state),
+                    backend_state=backend_state,
                     reference=self.reference,
                 )

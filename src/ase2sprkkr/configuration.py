@@ -264,21 +264,26 @@ class ConfigFileDefinition(ConfigurationRootDefinition):
 
 V = ConfigValueDefinition
 G = GeneratedConfigValueDefinition
-MPI = CustomMixed(Bool, Array(AlwaysQString.I), Integer.I)
+MPI = CustomMixed(
+    (Bool.I, Array(AlwaysQString.I), Integer.I, AlwaysQString.I),
+    string_type=AlwaysQString.I,
+)
 SYNC_POLICY = Keyword(
     {
         "changed": "Transfer files only when their content differs.",
         "always": "Always transfer files.",
         "missing": "Transfer files only when the destination is missing.",
         "never": "Never transfer files.",
-    }
+    },
+    transform=None,
 )
 EXECUTOR = Keyword(
     {
         "local": "Run directly on this machine.",
         "ssh": "Run through ASE2SPRKKR on a machine reached by SSH.",
         "psij": "Submit through a PSI/J scheduler backend.",
-    }
+    },
+    transform=None,
 )
 
 """ The definition of ASE2SPRKKR configuration """
