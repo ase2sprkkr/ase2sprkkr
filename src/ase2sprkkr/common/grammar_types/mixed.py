@@ -118,10 +118,12 @@ class CustomMixed(BaseMixed):
     """Mixed type restricted to an explicit set of grammar types.
 
     Unlike :class:`BaseMixed`, Python values must be dispatched only to one of
-    the configured alternatives.  In particular, the string alternative is
+    the configured alternatives. In particular, the string alternative is
     used only for actual strings; it must not silently stringify mappings or
     other unsupported objects.
     """
+
+    is_the_same_value = staticmethod(compare_numpy_values)
 
     @add_to_signature(BaseMixed.__init__, prepend=True)
     def __init__(self, types, string_type=LineString.I, *args, **kwargs):
