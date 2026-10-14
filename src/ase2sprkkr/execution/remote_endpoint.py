@@ -145,11 +145,7 @@ class _RemoteRunContext:
     async def attach(
         self, reference, reader, callback=None, output_listener=None, start=True, *, request=None
     ):
-        expected = f"remote:{self.backend}"
-        if reference.executor != expected:
-            raise ValueError(
-                f"Run reference belongs to {reference.executor!r}, not {expected!r}"
-            )
+        self.endpoint._validate_reference_executor(reference)
         if not reference.native_id or not reference.directory:
             raise ValueError("Remote run reference lacks run id or directory")
 
@@ -275,6 +271,13 @@ class RemoteEndpointExecutor(Executor):
         self.computer = getattr(transport, "host", None)
         self._remote_home_cache = None
 
+    def _validate_reference_executor(self, reference):
+        expected = f"remote:{self.backend}"
+        if reference.executor != expected:
+            raise ValueError(
+                f"Run reference belongs to {reference.executor!r}, not {expected!r}"
+            )
+
     async def _remote_home(self):
         if self._remote_home_cache is None:
             result = await self.transport.run(("sh", "-c", 'printf "%s" "$HOME"'))
@@ -354,12 +357,8 @@ class RemoteEndpointExecutor(Executor):
         return posixpath.join(remote_root, *PurePosixPath(*relative.parts).parts)
 
     def status(self, *references: RunReference):
-        expected = f"remote:{self.backend}"
         for reference in references:
-            if reference.executor != expected:
-                raise ValueError(
-                    f"Run reference belongs to {reference.executor!r}, not {expected!r}"
-                )
+            self._validate_reference_executor(reference)
         if not references:
             return ()
         by_directory = {}
@@ -457,6 +456,9 @@ class RemoteEndpointExecutor(Executor):
     async def _attach_with_saved_launch(
         self, reference, reader, callback=None, output_listener=None, start=True
     ):
+        self._validate_reference_executor(reference)
+        if not reference.native_id or not reference.directory:
+            raise ValueError("Remote run reference lacks run id or directory")
         request = await self._saved_request(reference.directory, reference.native_id)
         launch = LaunchSpec(**(request.get("launch") or {}))
         context = self._context(self, launch)
