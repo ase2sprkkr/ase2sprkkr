@@ -8,9 +8,14 @@ on:
       - 'chatgpt-**'
       - 'tmp-**'
 
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     strategy:
       matrix:
         # in this example, there is a newer version already installed, 3.7.7, so the older version will be downloaded
@@ -29,6 +34,7 @@ jobs:
 
   execution-integration:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
     - uses: actions/checkout@v6
     - uses: actions/setup-python@v6

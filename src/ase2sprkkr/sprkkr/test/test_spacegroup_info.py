@@ -1,36 +1,27 @@
 from unittest.mock import patch
 
-from ase.build import bulk
 import numpy as np
+import pytest
+from ase.build import bulk
 
-if __package__:
-    from .init_tests import TestCase, patch_package
-else:
-    from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
-
-from ...sprkkr.sprkkr_atoms import SPRKKRAtoms, SpacegroupInfo  # NOQA: E402
-from ...sprkkr.spacegroup_info import SpacegroupInfoBlock  # NOQA: E402
-from ...sprkkr.atoms_region import AtomsRegion  # NOQA: E402
+from ..atoms_region import AtomsRegion
+from ..spacegroup_info import SpacegroupInfoBlock
+from ..sprkkr_atoms import SPRKKRAtoms, SpacegroupInfo
 
 
-class Test(TestCase):
+class TestSpacegroupInfo:
     def test_spacegroup_info(self):
-
-        def ssert(mapping, out):
-            self.assertEqual(out, np.asarray(mapping))
-
         atoms = bulk("NaCl", "rocksalt", a=5.64)
         sgi = SpacegroupInfo(atoms)
-        ssert([0, 1], sgi.equivalent_sites)
-        self.assertEqual(225, sgi.spacegroup_number())
-        self.assertEqual(225, sgi.dataset.number)
+        np.testing.assert_array_equal(sgi.equivalent_sites, [0, 1])
+        assert sgi.spacegroup_number() == 225
+        assert sgi.dataset.number == 225
 
         atoms = SPRKKRAtoms("ION")
         atoms.set_positions(np.arange(9).reshape((3, 3)))
         sgi = SpacegroupInfo(atoms)
         assert sgi.dataset is False
-        ssert([0, 1, 2], sgi.equivalent_sites)
+        np.testing.assert_array_equal(sgi.equivalent_sites, [0, 1, 2])
 
     def test_nested_block_updating(self):
         sgi = SpacegroupInfo(SPRKKRAtoms("H"))
@@ -54,7 +45,7 @@ class Test(TestCase):
         sgi = SpacegroupInfo(SPRKKRAtoms("H"))
 
         with patch.object(SpacegroupInfoBlock, "recompute") as recompute:
-            with self.assertRaises(RuntimeError):
+            with pytest.raises(RuntimeError):
                 with sgi.block_updating():
                     raise RuntimeError("boom")
 
@@ -90,7 +81,7 @@ class Test(TestCase):
         sgi = SpacegroupInfo(SPRKKRAtoms("H"))
 
         with sgi.block_updating():
-            with self.assertRaises(NotImplementedError):
+            with pytest.raises(NotImplementedError):
                 sgi.recompute(atomic_kinds=np.array([0]))
 
     def test_update_spacegroup_kinds_if_required_repairs_invalid_state_only(self):

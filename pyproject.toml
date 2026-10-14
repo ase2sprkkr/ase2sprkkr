@@ -100,7 +100,6 @@ sdist.include = [
 	"src/ase2sprkkr/examples/README",
 
 	"src/ase2sprkkr/sprkkr/test/*.cif",
-	"src/ase2sprkkr/bindings/xband/tests/*.pot",
 	"src/ase2sprkkr/execution/test/docker/*",
 	"src/ase2sprkkr/execution/test/slurm/*",
 
@@ -131,6 +130,7 @@ wheel.exclude = [
 ]
 
 [tool.pytest.ini_options]
+faulthandler_timeout = 120
 markers = [
 	"slow: long-running test (typically over about 1 second)",
 ]
