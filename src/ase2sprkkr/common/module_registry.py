@@ -7,14 +7,14 @@ import pkgutil
 
 
 class ModuleRegistry:
-    """Lazily discover and load one named definition from package modules.
+    """Lazily discover and load one named value from package modules.
 
-    Modules are discovered with :mod:`pkgutil`; the definition itself is loaded
-    only when requested.  Subclasses can validate/transform loaded values and
-    aliases without duplicating the discovery machinery.
+    Modules are discovered with :mod:`pkgutil`; values themselves are loaded
+    only when requested. Subclasses can customize extraction, validation and
+    aliasing without duplicating discovery machinery.
     """
 
-    def __init__(self, package, attribute, *, aliases=None):
+    def __init__(self, package, attribute=None, *, aliases=None):
         self.package = package
         self.attribute = attribute
         self.aliases = {
@@ -51,14 +51,21 @@ class ModuleRegistry:
             raise KeyError(name)
 
         module = importlib.import_module(f".{module_name}", self.package.__name__)
-        if not hasattr(module, self.attribute):
+        if self.attribute is not None and not hasattr(module, self.attribute):
             self._missing.add(name)
             raise KeyError(name)
         self._modules[name] = module
         return module
 
+    def value_from_module(self, name, module):
+        """Extract the registered value from a loaded module."""
+        if self.attribute is None:
+            raise NotImplementedError
+        value = getattr(module, self.attribute)
+        return value() if callable(value) else value
+
     def prepare_value(self, name, module, value):
-        """Validate or transform a freshly loaded definition."""
+        """Validate or transform a freshly loaded value."""
         return value
 
     def alias_value(self, alias, value):
@@ -67,9 +74,7 @@ class ModuleRegistry:
 
     def _load_value(self, name):
         module = self._load_module(name)
-        value = getattr(module, self.attribute)
-        if callable(value):
-            value = value()
+        value = self.value_from_module(name, module)
         value = self.prepare_value(name, module, value)
         self._values[name] = value
         return value
@@ -118,7 +123,7 @@ class ModuleRegistry:
 
     @property
     def modules(self):
-        """Loaded definition modules, keyed by normalized definition name."""
+        """Loaded registry modules, keyed by normalized name."""
         for name in self.names(include_aliases=False):
             self._load_module(name)
         return dict(self._modules)
