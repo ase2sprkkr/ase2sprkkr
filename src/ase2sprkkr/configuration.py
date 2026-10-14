@@ -265,7 +265,7 @@ class ConfigFileDefinition(ConfigurationRootDefinition):
 V = ConfigValueDefinition
 G = GeneratedConfigValueDefinition
 MPI = CustomMixed(
-    (Bool.I, Array(AlwaysQString.I, min_length=2), Integer.I, AlwaysQString.I),
+    (Bool.I, Integer.I, Array(AlwaysQString.I), AlwaysQString.I),
     string_type=AlwaysQString.I,
 )
 SYNC_POLICY = Keyword(
