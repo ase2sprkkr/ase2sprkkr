@@ -7,20 +7,22 @@ from ...common.generated_configuration_definitions import Length
 from ...common.grammar_types import Array
 from ...common.warnings import DataValidityError
 from ...potentials.definitions.potential import potential_definition
-from ..definitions.jxc import input_parameters as jxc_input_parameters
-from ..definitions.scf import input_parameters as scf_input_parameters
 from ..definitions.sections import ENERGY, TAU
-from ..definitions.torque import input_parameters as torque_input_parameters
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import (
     InputParametersDefinition,
     InputSectionDefinition,
     InputValueDefinition,
 )
+from ..task_definition import TASKS, TaskDefinition
 
 
 def _copy_validator(_item, _values, _why):
     return None
+
+
+def _parameters_for_schema(schema):
+    return TaskDefinition(schema, name="TEST").create_input_parameters()
 
 
 DEFINITION_HOOK_ATTRIBUTES = (
@@ -107,8 +109,8 @@ class TestDefinitionCallbacks:
                     5.0,
                 ),
             ),
-            torque_input_parameters(),
-            jxc_input_parameters(),
+            TASKS.definition("TORQUE").input_parameters_definition,
+            TASKS.definition("JXC").input_parameters_definition,
         ]
 
         hooks = []
@@ -152,7 +154,8 @@ class TestInputParametersPickle:
             ]
         )
 
-        restored = pickle.loads(pickle.dumps(definition)).create_object()
+        restored_definition = pickle.loads(pickle.dumps(definition))
+        restored = _parameters_for_schema(restored_definition)
         restored.CONTROL.VALUES.set([1, 2])
 
         assert restored.CONTROL.NVALUES() == 2
@@ -190,14 +193,14 @@ class TestInputParametersPickle:
                 )
             ]
         )
-        parameters = definition.create_object()
+        parameters = _parameters_for_schema(definition)
         parameters.CONTROL.set(FIRST=[1], SECOND=[1])
 
         with pytest.raises(DataValidityError):
             parameters.CONTROL.SECOND.set([1, 2])
 
     def test_scf_input_parameters_pickle(self):
-        pickle.dumps(scf_input_parameters())
+        pickle.dumps(TASKS.definition("SCF").input_parameters_definition)
 
     def test_uninitialized_container_dunder_lookup_does_not_recurse(self):
         obj = object.__new__(InputParameters)
