@@ -7,6 +7,7 @@ from ..input_parameters_definitions import (
     InputValueDefinition as V,
     InputSectionDefinition as Section,
 )
+from ..task_definition import TaskDefinition
 from ...sprkkr.sprkkr_grammar_types import Site
 from ...common.warnings import DataValidityError
 
@@ -46,8 +47,8 @@ def _validate_angular_scan(parameters, _container, why):
         return [DataValidityError(message) for message in angular_scan_errors(parameters)]
 
 
-def input_parameters():
-    return InputParameters(
+def task_definition():
+    schema = InputParameters(
         "arpes",
         [
             CONTROL("ARPES"),
@@ -274,9 +275,13 @@ def input_parameters():
                 ],
             ),
         ],
-        executable="kkrspec",
         validators=_validate_angular_scan,
         info="ARPES - Angle resolved photoemission spectroscopy",
+    )
+    return TaskDefinition(
+        schema,
+        name="ARPES",
+        executable="kkrspec",
     )
 
 

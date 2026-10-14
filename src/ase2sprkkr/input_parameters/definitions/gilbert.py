@@ -4,9 +4,10 @@ from ...common.grammar_types import real, Keyword
 from ._file_manifests import resolve_file
 from .sections import CONTROL, TAU, ENERGY, SITES, TASK
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
+from ..task_definition import TaskDefinition
 
 
-class GilbertInputParametersDefinition(InputParametersDefinition):
+class GilbertTaskDefinition(TaskDefinition):
     def input_files(self, parameters, directory):
         files = list(super().input_files(parameters, directory))
         if parameters.TASK.SETFLUCT() == "M_T" and parameters.TASK.FLUCTFIL():
@@ -14,8 +15,8 @@ class GilbertInputParametersDefinition(InputParametersDefinition):
         return tuple(files)
 
 
-def input_parameters():
-    return GilbertInputParametersDefinition(
+def task_definition():
+    schema = InputParametersDefinition(
         "gilbert",
         [
             CONTROL("GILBERT"),
@@ -61,8 +62,12 @@ def input_parameters():
                 ]
             ),
         ],
-        executable="kkrchi",
         info="GILBERT - The Gilbert damping parameter calculation",
+    )
+    return GilbertTaskDefinition(
+        schema,
+        name="GILBERT",
+        executable="kkrchi",
     )
 
 

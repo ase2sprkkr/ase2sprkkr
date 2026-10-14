@@ -10,6 +10,7 @@ from ...common.grammar_types import Keyword
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
+from ..task_definition import TaskDefinition
 
 
 class TestDefinitions:
@@ -31,17 +32,18 @@ class TestDefinitions:
 
     def test_task_file_templates_and_overrides(self, tmp_path):
         parameters = SimpleNamespace(CONTROL=SimpleNamespace(DATASET=lambda: "Fe"))
+        schema = InputParametersDefinition("test", [])
 
-        class DynamicDefinition(InputParametersDefinition):
+        class DynamicTaskDefinition(TaskDefinition):
             def output_files(self, parameters, directory):
                 return (
                     *super().output_files(parameters, directory),
                     os.path.join(directory, "dynamic.out"),
                 )
 
-        definition = DynamicDefinition(
-            "test",
-            [],
+        definition = DynamicTaskDefinition(
+            schema,
+            name="TEST",
             input_file_templates=("{dataset}.aux",),
             output_file_templates=("{dataset}.dat",),
         )
@@ -56,7 +58,7 @@ class TestDefinitions:
 
     def test_input_parameters_delegate_file_manifests(self, tmp_path, monkeypatch):
         parameters = InputParameters.create("DOS")
-        definition = parameters._definition
+        definition = parameters.task_definition
         calls = []
 
         def input_files(actual_parameters, directory):
@@ -283,6 +285,11 @@ class TestDefinitions:
                 check(parameters, name)
                 parameters = InputParameters.from_file(filename)
                 check(parameters, name)
+                assert parameters.task_definition is not None
+                assert (
+                    parameters._definition
+                    is parameters.task_definition.input_parameters_definition
+                )
 
                 if name == "scf":
                     assert "MODE" not in parameters.to_string()

@@ -1,14 +1,14 @@
 """XAS task input parameters definition"""
 
 from ...common.grammar_types import DefKeyword, flag
-from ._file_manifests import TauCacheInputParametersDefinition
+from ._file_manifests import TauCacheTaskDefinition
 from .sections import CONTROL, TASK, TAU, ENERGY, SITES, MODE
-from ..input_parameters_definitions import InputValueDefinition as V
+from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
 
 
-def input_parameters():
+def task_definition():
     """XAS -xas task input parameters definition"""
-    input_parameters = TauCacheInputParametersDefinition(
+    schema = InputParametersDefinition(
         "xas",
         [
             CONTROL("XAS"),
@@ -55,8 +55,11 @@ def input_parameters():
             ),
             SITES,
         ],
-        executable="kkrgen",
-        mpi=True,
         info="Calculates X-ray absorption spectra",
     )
-    return input_parameters
+    return TauCacheTaskDefinition(
+        schema,
+        name="XAS",
+        executable="kkrgen",
+        mpi=True,
+    )

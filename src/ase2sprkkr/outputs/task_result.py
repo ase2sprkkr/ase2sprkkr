@@ -1,10 +1,8 @@
-"""This module contains classes, used by parsers of the output files"""
+"""This module contains classes used by parsers of SPR-KKR output files."""
 
 import asyncio
 import os
 import re
-import importlib
-from . import readers
 from ..common.decorators import cached_property, cached_class_property, maybeclassmethod
 from ..common.file_utils import FilePath, filename_from_file
 from ..potentials.potentials import Potential
@@ -127,10 +125,12 @@ class TaskResult:
         )
 
     def new_task(self, task):
+        """Create a calculator for *task* continuing from this result."""
         out = self._calculator.copy_with_potential(self.potential_filename)
         out.input_parameters = task
-        if isinstance(task, str) and task.lower() == "jxc":
-            out.input_parameters.set("EMIN", self.last_iteration.energy.EMIN())
+        out.input_parameters.task_definition.prepare_from_result(
+            out.input_parameters, self
+        )
         return out
 
     def complete(self, error, return_code):
@@ -234,7 +234,7 @@ class KkrOutputReader:
         """Parse simultaneously growing stdout and stderr streams.
 
         Parser failures are returned to the execution backend rather than
-        raised immediately.  The backend must first observe the process exit
+        raised immediately. The backend must first observe the process exit
         status: a truncated output stream is often only a symptom of the
         executable having failed, and that failure is the more useful error.
         """
@@ -279,25 +279,17 @@ class KkrOutputReader:
 
     @staticmethod
     def class_for_task(task):
+        """Compatibility facade for task-specific output-reader discovery."""
         if not task:
             return DefaultOutputReader
 
-        module_name = f"{readers.__name__}.{task.lower()}"
-        try:
-            mod = importlib.import_module(f".{task.lower()}", readers.__name__)
-        except ModuleNotFoundError as exc:
-            if exc.name == module_name:
-                return DefaultOutputReader
-            raise
+        from ..common.module_registry import RegistryEntryNotFound
+        from .reader_registry import reader_registry
 
-        clsname = task.title() + "OutputReader"
-        cls = getattr(mod, clsname)
-        if not cls:
-            raise Exception(
-                f"Can not determine the class to read the results of task {task}"
-                "No {clsname} class in the module {oo.__name__}.{task}"
-            )
-        return cls
+        try:
+            return reader_registry[task]
+        except RegistryEntryNotFound:
+            return DefaultOutputReader
 
 
 from ..outputs.readers.default import DefaultOutputReader  # NOQA
