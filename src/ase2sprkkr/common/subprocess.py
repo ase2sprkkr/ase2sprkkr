@@ -44,6 +44,7 @@ def in_subprocess(lmbda, module=None, *args, **kwargs):
             future = _pool.submit(_call, lmbda)
         return future.result()
     except Exception as e:
-        _pool.shutdown(False)
+        pool = _pool
         _pool = None
-        raise RuntimeError(f"Error when running the supbprocess: {e}") from e
+        pool.shutdown(wait=True)
+        raise RuntimeError(f"Error when running the subprocess: {e}") from e
