@@ -122,6 +122,7 @@ class TaskRegistry(ModuleRegistry):
             package,
             "task_definition",
             aliases=self.aliases,
+            include=lambda name: not name.startswith("_") and name != "sections",
         )
 
     def prepare_value(self, name, module, value):

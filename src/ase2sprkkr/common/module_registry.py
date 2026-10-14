@@ -1,4 +1,4 @@
-"""Reusable discovery registry for definitions stored in Python modules."""
+"""Reusable discovery registry for values stored in Python modules."""
 
 from __future__ import annotations
 
@@ -9,22 +9,23 @@ import pkgutil
 class ModuleRegistry:
     """Lazily discover and load one named value from package modules.
 
-    Modules are discovered with :mod:`pkgutil`; values themselves are loaded
-    only when requested. Subclasses can customize extraction, validation and
-    aliasing without duplicating discovery machinery.
+    Module names are discovered with :mod:`pkgutil` without importing the
+    modules. Values are imported and materialized only when requested.
+    Subclasses can customize extraction, validation and aliasing without
+    duplicating discovery machinery.
     """
 
-    def __init__(self, package, attribute=None, *, aliases=None):
+    def __init__(self, package, attribute=None, *, aliases=None, include=None):
         self.package = package
         self.attribute = attribute
         self.aliases = {
             self.normalize_name(alias): self.normalize_name(target)
             for alias, target in (aliases or {}).items()
         }
+        self._include = include or (lambda name: not name.startswith("_"))
         self._module_names = None
         self._modules = {}
         self._values = {}
-        self._missing = set()
 
     @staticmethod
     def normalize_name(name):
@@ -32,27 +33,33 @@ class ModuleRegistry:
 
     def _discover_module_names(self):
         if self._module_names is None:
-            self._module_names = {
-                item.name.upper(): item.name
-                for item in pkgutil.iter_modules(self.package.__path__)
-                if not item.name.startswith("_")
-            }
+            discovered = {}
+            for item in sorted(
+                pkgutil.iter_modules(self.package.__path__),
+                key=lambda item: item.name,
+            ):
+                if not self._include(item.name):
+                    continue
+                name = self.normalize_name(item.name)
+                if name in discovered:
+                    raise ValueError(
+                        f"Duplicate module registry key {name!r} in "
+                        f"{self.package.__name__}"
+                    )
+                discovered[name] = item.name
+            self._module_names = discovered
         return self._module_names
 
     def _load_module(self, name):
-        if name in self._missing:
-            raise KeyError(name)
         if name in self._modules:
             return self._modules[name]
 
         module_name = self._discover_module_names().get(name)
         if module_name is None:
-            self._missing.add(name)
             raise KeyError(name)
 
         module = importlib.import_module(f".{module_name}", self.package.__name__)
         if self.attribute is not None and not hasattr(module, self.attribute):
-            self._missing.add(name)
             raise KeyError(name)
         self._modules[name] = module
         return module
@@ -97,33 +104,30 @@ class ModuleRegistry:
 
     def __contains__(self, name):
         try:
-            self[name]
-        except KeyError:
+            requested = self.normalize_name(name)
+        except Exception:
             return False
-        return True
+        canonical = self.aliases.get(requested, requested)
+        return canonical in self._discover_module_names()
 
     def names(self, *, include_aliases=True):
-        names = []
-        for name in self._discover_module_names():
-            try:
-                self[name]
-            except KeyError:
-                continue
-            names.append(name)
+        """Return discovered names without importing registry modules."""
+        names = list(self._discover_module_names())
         if include_aliases:
             names.extend(
                 alias
                 for alias, target in self.aliases.items()
-                if target in names
+                if alias not in names and target in self._discover_module_names()
             )
         return tuple(names)
 
     def values(self, *, include_aliases=False):
+        """Load and return registered values."""
         return tuple(self[name] for name in self.names(include_aliases=include_aliases))
 
     @property
     def modules(self):
-        """Loaded registry modules, keyed by normalized name."""
+        """Load and return canonical registry modules."""
         for name in self.names(include_aliases=False):
             self._load_module(name)
         return dict(self._modules)
