@@ -13,47 +13,17 @@ from ...common.warnings import DataValidityError, DataValidityWarning
 from .. import input_parameters as input_parameters
 from .. import input_parameters_definitions as cd
 from ._pytest_helpers import assert_equal, assert_not_valid, assert_parse, parse
+from ._test_callbacks import (
+    root_validator_matching_values as _root_validator_matching_values,
+    root_validator_reject_all as _root_validator_reject_all,
+    root_validator_warning as _root_validator_warning,
+    section_validator_warning as _section_validator_warning,
+    validator_error_if_three as _validator_error_if_three,
+    validator_warning_if_two as _validator_warning_if_two,
+    warning_condition_if_two as _warning_condition_if_two,
+)
 
 V = cd.InputValueDefinition
-
-
-def _validator_warning_if_two(option, values, why):
-    assert values is option._container
-    if option() == 2:
-        return DataValidityWarning(f"{why}: VALUE should not be two")
-
-
-def _validator_error_if_three(option, values, why):
-    if option() == 3:
-        return DataValidityError(f"{why}: VALUE must not be three")
-
-
-def _warning_condition_if_two(value):
-    if value == 2:
-        return "VALUE should not be two"
-
-
-def _section_validator_warning(section, values, why):
-    assert values is section
-    if values["VALUE"]() == 4:
-        return DataValidityWarning(f"{why}: section received its runtime object")
-
-
-def _root_validator_warning(root, values, why):
-    assert values is root
-    if values["CONTROL"]["VALUE"]() == 5:
-        return DataValidityWarning(f"{why}: root received its runtime object")
-
-
-def _root_validator_matching_values(root, values, why):
-    if values["SECTION_A"]["VALUE"]() != values["SECTION_B"]["MODE"]():
-        return DataValidityError(
-            f"{why}: values in SECTION_A and SECTION_B must match"
-        )
-
-
-def _root_validator_reject_all(root, values, why):
-    return DataValidityError(f"{why}: root validator rejects the configuration")
 
 
 @pytest.mark.parametrize("copy_values", [False, True])
