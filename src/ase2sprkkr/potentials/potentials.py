@@ -96,6 +96,17 @@ class Potential(ConfigurationFile):
         super().set_from_atoms(atoms, io_data)
         self.make_complete()
 
+    def is_scf_converged(self, atoms=None):
+        """Return whether this potential represents a converged SCF state."""
+        status = self.SCF_INFO.SCFSTATUS()
+        if status == "CONVERGED":
+            return True
+        if status != "START":
+            return False
+
+        atoms = atoms or self._atoms
+        return atoms is not None and atoms.sprkkr_has_converged_data()
+
     @class_property
     @cache
     def potential_definition(cls):
