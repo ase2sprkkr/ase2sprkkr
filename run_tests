@@ -9,6 +9,7 @@ unset PYTHONPATH
 # satisfy imports or receive files created by tests intended for the installed
 # wheel.
 TEST_WORKDIR=$(mktemp -d)
+trap 'rm -rf "$TEST_WORKDIR"' EXIT
 cd "$TEST_WORKDIR"
 
 # Fail early and explicitly if the wheel did not provide its compiled modules.
