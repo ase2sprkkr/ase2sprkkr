@@ -57,6 +57,14 @@ class TaskResult:
     def task_name(self):
         return self.input_parameters.task_name
 
+    @property
+    def produces_potential(self):
+        """Whether this task semantically produces a new authoritative potential."""
+        parameters = self.input_parameters
+        if parameters is None:
+            return False
+        return bool(parameters.definition(parameters.task_name).produces_potential)
+
     @cached_property
     def input_parameters(self):
         if self._input_parameters:
