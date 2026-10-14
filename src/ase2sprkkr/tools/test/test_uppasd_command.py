@@ -1,11 +1,6 @@
-if __package__:
-    from .init_tests import TestCase, patch_package
-else:
-    from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
-
 from pathlib import Path
 from types import SimpleNamespace
+
 from ase import Atoms
 
 from ..commands import uppasd
@@ -44,7 +39,7 @@ class FakeOutput:
         return True
 
 
-class TestUppasdCommand(TestCase):
+class TestUppasdCommand:
     def test_run_passes_selector_to_current_exports(self, monkeypatch, tmp_path):
         atoms = make_atoms()
         selector = Selector(iq=[1, 3], it={1, 2})
