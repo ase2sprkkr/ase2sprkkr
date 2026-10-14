@@ -1,12 +1,4 @@
-import tempfile
-
-if __package__:
-    from .init_tests import TestCase, patch_package
-else:
-    from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
-
-from ..process_output_reader import ProcessOutputParser  # NOQA: E402
+from ..process_output_reader import ProcessOutputParser
 
 
 class _OutputParser(ProcessOutputParser):
@@ -23,19 +15,14 @@ class _OutputParser(ProcessOutputParser):
         return out
 
 
-class TestProcessOutputParser(TestCase):
-    def test_read_output_file(self):
-        parser = _OutputParser()
-        with tempfile.NamedTemporaryFile() as output, tempfile.NamedTemporaryFile() as error:
-            output.write(b"one\ntwo\n")
-            output.flush()
-            error.write(b"warning\n")
-            error.flush()
+def test_read_output_file(tmp_path):
+    output = tmp_path / "stdout"
+    error = tmp_path / "stderr"
+    output.write_bytes(b"one\ntwo\n")
+    error.write_bytes(b"warning\n")
 
-            out, err, return_code = parser.read_from_file(
-                output.name, error.name
-            )
+    out, err, return_code = _OutputParser().read_from_file(output, error)
 
-        self.assertEqual(out, b"one\ntwo\n")
-        self.assertEqual(err, b"warning\n")
-        self.assertEqual(return_code, 0)
+    assert out == b"one\ntwo\n"
+    assert err == b"warning\n"
+    assert return_code == 0
