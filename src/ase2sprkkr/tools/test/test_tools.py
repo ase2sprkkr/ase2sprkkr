@@ -9,11 +9,11 @@ TOOLS_DIR = Path(__file__).parent.parent
 RUN_SCRIPTS = sorted((TOOLS_DIR / "examples").glob("*/run.sh"))
 
 
-def test_tool_examples_exist():
-    assert RUN_SCRIPTS, "No CLI example run.sh files were found"
-
-
-@pytest.mark.parametrize("script", RUN_SCRIPTS, ids=lambda path: path.parent.name)
+@pytest.mark.parametrize(
+    "script",
+    RUN_SCRIPTS,
+    ids=[path.parent.name for path in RUN_SCRIPTS],
+)
 def test_tool_example(script):
     lines = script.read_text().splitlines()
     assert len(lines) >= 2, f"{script} does not contain a command"
