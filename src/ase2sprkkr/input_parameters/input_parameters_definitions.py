@@ -76,9 +76,6 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     """ Input parameters can have a save_hook defined, which is executed before saving the
   parameters. The arguments of the hook are ``filename, atoms, self``. """
 
-    produces_potential = False
-    """Whether a successful task produces a new potential/calculation state."""
-
     input_file_templates = ()
     """Task-specific input file templates. ``{dataset}`` expands to ``CONTROL.DATASET``."""
 
@@ -165,6 +162,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         executable="kkrscf",
         mpi=True,
         result_reader=None,
+        produces_potential=False,
         input_file_templates=(),
         output_file_templates=(),
         cache_file_templates=(),
@@ -186,6 +184,10 @@ class InputParametersDefinition(ConfigurationFileDefinition):
           Class, that runs the process and read the results. Default NONE
           means, that the class is determined from the TASK name
           (see InputParameters.result_reader)
+
+        produces_potential: bool
+          Whether a successful task produces a new potential that defines a new
+          calculation state for subsequent tasks.
 
         input_file_templates: sequence of str
           Additional task-specific required input files. ``{dataset}`` is replaced by
@@ -210,6 +212,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         self.executable = executable
         self.mpi = mpi
         self.result_reader = result_reader
+        self.produces_potential = bool(produces_potential)
         self.input_file_templates = tuple(input_file_templates)
         self.output_file_templates = tuple(output_file_templates)
         self.cache_file_templates = tuple(cache_file_templates)
