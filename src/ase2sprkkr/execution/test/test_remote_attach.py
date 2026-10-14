@@ -67,12 +67,13 @@ def test_remote_executor_attach_reconnects_running_run_and_restores_stage_out(tm
             sys.executable,
             "-c",
             (
-                "import pathlib,time; "
-                "release=pathlib.Path('release'); "
-                "while not release.exists(): time.sleep(0.01); "
-                "pathlib.Path('generated.dat').write_text('generated'); "
-                "pathlib.Path('cache.dat').write_text('after'); "
-                "print('done')"
+                "import pathlib,time\n"
+                "release=pathlib.Path('release')\n"
+                "while not release.exists():\n"
+                "    time.sleep(0.01)\n"
+                "pathlib.Path('generated.dat').write_text('generated')\n"
+                "pathlib.Path('cache.dat').write_text('after')\n"
+                "print('done')\n"
             ),
         ),
         input_file=input_file,

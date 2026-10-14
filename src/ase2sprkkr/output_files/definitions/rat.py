@@ -163,7 +163,12 @@ class RATOutputFile(CommonOutputFile):
             if lorentz[k]:
                 data = lorentz[k](data)
             if gauss:
+                # RAT stores spectra as (energy, group, state, polarization),
+                # while the generic Gaussian broadener deliberately operates on
+                # the last axis. Keep that contract explicit at this boundary.
+                data = np.moveaxis(data, 0, -1)
                 data = gauss(data)
+                data = np.moveaxis(data, -1, 0)
             return data
 
         return broaden

@@ -216,11 +216,14 @@ def _set_configuration_value(config, name, value):
 
     # Repeated-container staging validates the complete proposed profile and is
     # atomic, so a bad field/value does not leave a half-created profile behind.
-    config.profiles.set(
-        {profile_name: profile_values},
-        unknown="fail",
-        merge=True,
-    )
+    try:
+        config.profiles.set(
+            {profile_name: profile_values},
+            unknown="fail",
+            merge=True,
+        )
+    except KeyError as error:
+        raise ValueError(f"Invalid profile option: {error}") from error
     config.save_user_preferences()
 
 
