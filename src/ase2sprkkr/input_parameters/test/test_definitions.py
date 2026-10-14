@@ -1,23 +1,18 @@
 import os
-import tempfile
 import re
+import tempfile
 from types import SimpleNamespace
+
+import numpy as np
 import pytest
 
-if __package__:
-    from .init_tests import TestCase, patch_package
-else:
-    from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
-
-if True:
-    from ..input_parameters import InputParameters
-    from ..input_parameters_definitions import InputParametersDefinition
-    from ...common.warnings import DataValidityError, DataValidityWarning
-    from ...common.grammar_types import Keyword
+from ...common.grammar_types import Keyword
+from ...common.warnings import DataValidityError, DataValidityWarning
+from ..input_parameters import InputParameters
+from ..input_parameters_definitions import InputParametersDefinition
 
 
-class TestDefinitions(TestCase):
+class TestDefinitions:
     @staticmethod
     def set_bsfkk_grid(ip):
         ip.TASK.NK1 = 10
@@ -35,9 +30,7 @@ class TestDefinitions(TestCase):
             ip.set_option("UNKNOWN_OPTION", 1)
 
     def test_task_file_templates_and_overrides(self, tmp_path):
-        parameters = SimpleNamespace(
-            CONTROL=SimpleNamespace(DATASET=lambda: "Fe")
-        )
+        parameters = SimpleNamespace(CONTROL=SimpleNamespace(DATASET=lambda: "Fe"))
 
         class DynamicDefinition(InputParametersDefinition):
             def output_files(self, parameters, directory):
@@ -102,7 +95,7 @@ class TestDefinitions(TestCase):
             parsed = definition.read_from_string(ip.to_string(validate=True))
             assert ip.name == "bsf"
             assert parsed.name == "bsf"
-            self.assertEqual(ip.to_dict(), parsed.to_dict())
+            np.testing.assert_equal(ip.to_dict(), parsed.to_dict())
 
     def test_bsfek_k_path_is_checked_when_saving(self):
         ip = InputParameters.create("BSFEK")
@@ -184,7 +177,7 @@ class TestDefinitions(TestCase):
         assert "\n\tKA1=" not in out
 
         parsed = InputParameters.definition("BSF").read_from_string(out)
-        self.assertEqual(bsfkk.to_dict(), parsed.to_dict())
+        np.testing.assert_equal(bsfkk.to_dict(), parsed.to_dict())
 
         bsfek = InputParameters.create("BSFEK")
         bsfek.CONTROL.POTFIL = "x"
@@ -199,7 +192,7 @@ class TestDefinitions(TestCase):
         path_type = ip.TASK.KPATH._definition.type
         assert isinstance(path_type, Keyword)
         paths = (0, 1, 2, 3, 4, 5, 6, 7, 10)
-        assert {value for value, _ in path_type.items()} == {path for path in paths}
+        assert {value for value, _ in path_type.items()} == set(paths)
         for path in paths:
             for value in (path, str(path)):
                 ip.TASK.KPATH = value
@@ -217,58 +210,39 @@ class TestDefinitions(TestCase):
         with pytest.raises(DataValidityError, match="NKDIR cannot be greater than 9"):
             ip.TASK.NKDIR = 10
 
-    def change_task(self):
-        ip = InputParameters.create_task("DOS")
-        ip.ENERGY.EMIN = 2
-        ip.ENERGY.EMAX = 5
-        ip.change_task("SCF")
-        assert ip.ENERGY.EMIN == 2
-        with pytest.raises(AttributeError):
-            ip.ENERGY.EMIN
-
-    def jxc(self):
-        ip = InputParameters.create_task("SCF")
-        ip.MODE.MODE = "nrel"
-        with pytest.warns(UserWarning):
-            ip.change_task("jxc")
-        with pytest.warns(UserWarning):
-            ip.MODE.MODE = "srel"
-        ip.MODE.MODE = "frel"
-        ip.change_task("scf")
-
     def test_defaults(self):
-        for i in InputParameters.definitions:
-            ip = InputParameters.create_input_parameters(i)
+        for name in InputParameters.definitions:
+            ip = InputParameters.create_input_parameters(name)
             ip.CONTROL.POTFIL = "xxx"
-            df = ip._definition
+            definition = ip._definition
             try:
                 out = ip.to_string(validate=True)
             except DataValidityError:
-                if i == "BSFEK":
+                if name == "BSFEK":
                     ip.TASK.KPATH = 1
                     out = ip.to_string(validate=True)
-                    with pytest.raises(Exception):
+                    with pytest.raises(DataValidityError):
                         ip.TASK.NKDIR = 2
                     ip.TASK.KPATH = None
                     ip.TASK.NKDIR = 2
                     out = ip.to_string(validate=True)
-                elif i in ("BSF", "BSFKK"):
+                elif name in ("BSF", "BSFKK"):
                     self.set_bsfkk_grid(ip)
                     out = ip.to_string(validate=True)
                 else:
                     raise
             else:
-                if i == "BSFEK":
-                    raise Exception("This tasks should not be runnable using the defaults argument")
+                if name == "BSFEK":
+                    pytest.fail("BSFEK should not be runnable using only default arguments")
 
-            ip2 = df.read_from_string(out)
-            self.assertEqual(ip.to_dict(), ip2.to_dict())
+            ip2 = definition.read_from_string(out)
+            np.testing.assert_equal(ip.to_dict(), ip2.to_dict())
 
-            if i == "SCF":
+            if name == "SCF":
                 ip.MODE.MDIR[1] = 1.0, 1.0, 1.0
                 ip.MODE.MDIR[4] = 1.0, 1.0, 1.0
-                ip2 = df.read_from_string(ip.to_string())
-                self.assertEqual(ip.to_dict(), ip2.to_dict())
+                ip2 = definition.read_from_string(ip.to_string())
+                np.testing.assert_equal(ip.to_dict(), ip2.to_dict())
 
     def test_sfn_filename_default(self):
         ip = InputParameters.create("SCF")
@@ -286,47 +260,43 @@ class TestDefinitions(TestCase):
         assert "SFNFIL=custom.sfn" in ip.CONTROL.to_string()
 
     @pytest.mark.slow
-    def test_definitions(self):
+    def test_definitions(self, monkeypatch):
         path = os.path.join(os.path.dirname(__file__), "../examples")
 
-        def check(t, name):
-            self.assertEqual(t.name, name)
+        def check(parameters, name):
+            assert parameters.name == name
             uname = name.upper()
-            self.assertEqual(t.__class__, InputParameters)
-            self.assertEqual(t["CONTROL"]["ADSI"](), uname)
-            self.assertEqual(t.TASK.TASK(), uname)
+            assert parameters.__class__ is InputParameters
+            assert parameters["CONTROL"]["ADSI"]() == uname
+            assert parameters.TASK.TASK() == uname
 
-        for i in os.listdir(path):
-            try:
-                if not i.endswith(".in"):
-                    continue
-                filename = os.path.join(path, i)
-                self.assertTrue(i[:-3].upper() in InputParameters.definitions)
-                td = InputParameters.definitions[i[:-3].upper()]
-                t = td.read_from_file(filename)
+        for filename_entry in os.listdir(path):
+            if not filename_entry.endswith(".in"):
+                continue
+            filename = os.path.join(path, filename_entry)
+            assert filename_entry[:-3].upper() in InputParameters.definitions
+            definition = InputParameters.definitions[filename_entry[:-3].upper()]
+            parameters = definition.read_from_file(filename)
 
-                name = i[:-3]
-                check(t, name)
-                t = InputParameters.from_file(filename)
-                check(t, name)
+            name = filename_entry[:-3]
+            check(parameters, name)
+            parameters = InputParameters.from_file(filename)
+            check(parameters, name)
 
-                if name == "scf":
-                    self.assertFalse("MODE" in t.to_string())
-                if name == "arpes":
-                    for i in ["AIPES", "SPLEED", "BAND"]:
-                        t.TASK.TASK = i
+            if name == "scf":
+                assert "MODE" not in parameters.to_string()
+            if name == "arpes":
+                for task in ["AIPES", "SPLEED", "BAND"]:
+                    parameters.TASK.TASK = task
 
-            except Exception as e:
-                raise Exception(f'Parsing of "{i}" failed with the reason: \n {e}').with_traceback(e.__traceback__)
-
-        td = InputParameters.definitions["PHAGEN"]
-        td["TASK"]["TASK"].default_value = "scf"
-        t = td.read_from_file(os.path.join(path, "phagen.in"))
-        self.assertEqual(t.TASK.TASK(), "PHAGEN")
+        definition = InputParameters.definitions["PHAGEN"]
+        task_definition = definition["TASK"]["TASK"]
+        monkeypatch.setattr(task_definition, "default_value", "scf")
+        parameters = definition.read_from_file(os.path.join(path, "phagen.in"))
+        assert parameters.TASK.TASK() == "PHAGEN"
 
         with tempfile.TemporaryFile("w+") as fp:
-            t.save_to_file(fp)
+            parameters.save_to_file(fp)
             fp.seek(0)
             out = fp.read()
             assert "TASKPHAGEN" in re.sub(r"\s", "", out)
-        td["TASK"]["TASK"].default_value = "PHAGEN"

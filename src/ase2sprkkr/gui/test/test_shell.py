@@ -1,15 +1,11 @@
 """Tests for optional interactive-shell dependencies."""
 
 import builtins
+
 import pytest
 
-if __package__:
-    from .init_tests import TestCase, patch_package
-else:
-    from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
-
 from ..shell import JUPYTER_INSTALL_COMMAND, JupyterDependencyError, load_jupyter_dependencies
+
 
 def test_missing_jupyter_dependency_has_install_command(monkeypatch):
     real_import = builtins.__import__

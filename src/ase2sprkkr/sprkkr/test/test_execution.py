@@ -1,6 +1,5 @@
 import asyncio
 import sys
-import tempfile
 import threading
 import time
 from types import SimpleNamespace
@@ -62,6 +61,28 @@ class _Reader:
         _, error, return_code = self.parser.result(output, error, return_code)
         result.complete(error, return_code)
         return result
+
+
+@pytest.fixture
+def local_run(tmp_path):
+    outputs = []
+
+    def create(code):
+        output = open(tmp_path / "run.out", "wb")
+        outputs.append(output)
+        spec = ExecutionSpec(
+            argv=(sys.executable, "-S", "-c", code),
+            input_file=SimpleNamespace(name=str(tmp_path / "run.inp")),
+            output_file=output,
+            directory=str(tmp_path),
+        )
+        return LocalExecutor().create_run(_Reader(), spec)
+
+    yield create
+
+    for output in outputs:
+        if not output.closed:
+            output.close()
 
 
 def test_profile_builds_serial_command():
@@ -135,29 +156,15 @@ def test_non_mpi_task_does_not_use_profile_mpi():
     assert spec.stdin is input_file
 
 
-def _local_run(code):
-    directory = tempfile.TemporaryDirectory()
-    output = open(f"{directory.name}/run.out", "wb")
-    spec = ExecutionSpec(
-        argv=(sys.executable, "-S", "-c", code),
-        input_file=SimpleNamespace(name=f"{directory.name}/run.inp"),
-        output_file=output,
-        directory=directory.name,
-    )
-    runner = LocalExecutor().create_run(_Reader(), spec)
-    runner._test_directory = directory
-    return runner
-
-
-def test_local_executor_returns_unstarted_runner():
-    runner = _local_run("pass")
+def test_local_executor_returns_unstarted_runner(local_run):
+    runner = local_run("pass")
     assert isinstance(runner, LocalRunner)
     assert runner.state == RunState.NEW
     assert runner.reference is None
 
 
-def test_local_runner_streams_output_to_parser_and_listeners():
-    runner = _local_run(
+def test_local_runner_streams_output_to_parser_and_listeners(local_run):
+    runner = local_run(
         "import sys; print('hello', flush=True); "
         "print('problem', file=sys.stderr, flush=True)"
     )
@@ -174,16 +181,16 @@ def test_local_runner_streams_output_to_parser_and_listeners():
     assert ("err", "problem\n") in seen
 
 
-def test_local_runner_submit_then_wait():
-    runner = _local_run("print('ok')")
+def test_local_runner_submit_then_wait(local_run):
+    runner = local_run("print('ok')")
     runner.submit()
     result = runner.wait()
     assert result.output == b"ok\n"
     assert runner.state == RunState.FINISHED
 
 
-def test_local_runner_cancel_is_thread_safe():
-    runner = _local_run("import time; time.sleep(30)")
+def test_local_runner_cancel_is_thread_safe(local_run):
+    runner = local_run("import time; time.sleep(30)")
     caller_thread = threading.get_ident()
     stopped_from = []
     original_stop = runner._stop_process
