@@ -113,14 +113,14 @@ class TaskResult:
         except (AttributeError, KeyError, OSError, ValueError):
             return None
 
-    def parse_output_file(self, file, potential=None):
-        """Parse a registered output file in the context of this result."""
+    def parse_result_file(self, file, potential=None):
+        """Parse a registered structured result file in this calculation context."""
 
-        from ..output_files.output_files import OutputFile
+        from ..result_files import ResultFile
 
         if potential is None:
             potential = self.any_potential
-        return OutputFile.from_file(
+        return ResultFile.from_file(
             file.path(),
             try_only=file.file_type,
             potential=potential,

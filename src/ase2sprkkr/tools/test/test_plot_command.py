@@ -3,8 +3,8 @@ import argparse
 import pytest
 
 from ..commands import plot
-from ...output_files.definitions.sfn import SFNOutputFile
-from ...output_files.output_files import OutputFile
+from ...result_files.definitions.sfn import SFNOutputFile
+from ...result_files import ResultFile
 
 
 def parse_args(*arguments):
@@ -32,7 +32,7 @@ def test_sfn_mode_flag_is_rejected_for_non_sfn(monkeypatch):
         pass
 
     monkeypatch.setattr(
-        OutputFile,
+        ResultFile,
         "from_file",
         staticmethod(lambda *args, **kwargs: OtherOutput()),
     )
@@ -47,7 +47,7 @@ def test_sfn_mode_flag_raises_for_non_sfn(monkeypatch):
         pass
 
     monkeypatch.setattr(
-        OutputFile,
+        ResultFile,
         "from_file",
         staticmethod(lambda *args, **kwargs: OtherOutput()),
     )
@@ -74,7 +74,7 @@ def test_sfn_mode_flag_is_passed_as_what(monkeypatch):
 
     output = FakeSFN()
     monkeypatch.setattr(
-        OutputFile,
+        ResultFile,
         "from_file",
         staticmethod(lambda *args, **kwargs: output),
     )

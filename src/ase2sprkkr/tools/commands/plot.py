@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Plotting the values in SPRKKR output files
+Plotting values from structured SPR-KKR result files.
 """
 
 from pathlib import Path
@@ -17,15 +17,15 @@ from ...common.lazy_string import LazyString  # NOQA
 
 @LazyString
 def description():
-    from ...output_files.output_files import OutputFile
+    from ...result_files import ResultFile
 
-    out = "The type of the file is guessed from the content of the file and from the extension. The currently supported files are: \n"
-    defs = OutputFile.definitions.items()
+    out = "The type of the file is guessed from the content of the file and from the extension. The currently supported structured result files are: \n"
+    defs = ResultFile.definitions.items()
     out += "\n".join(map(lambda x: f"    {x[0].upper()}: {x[1].info()}", defs))
     return out
 
 
-help = "Plot SPR-KKR output files."
+help = "Plot SPR-KKR result files."
 
 SFN_PLOT_MODES = ("mesh", "cell", "periodic", "shape", "slice", "radial")
 SFN_PLOT_MODE_HELP = {
@@ -46,7 +46,7 @@ def parser(parser):
         else:
             return slice(out[0] - 1, out[1])
 
-    parser.add_argument("output", help="SPR-KKR output file name (see the supported files above).", nargs="+")
+    parser.add_argument("output", help="SPR-KKR result file name (see the supported files above).", nargs="+")
     parser.add_argument(
         "-o",
         "--output_filename",
@@ -164,8 +164,8 @@ def parser(parser):
 
 
 def run(args, global_args):
-    from ...output_files.output_files import OutputFile
-    from ...output_files.definitions.sfn import SFNOutputFile
+    from ...result_files import ResultFile
+    from ...result_files.definitions.sfn import SFNOutputFile
     from pathlib import Path
     from ...gui.plot import Multiplot
 
@@ -195,7 +195,7 @@ def run(args, global_args):
                     f"File '{of}'{value_label} can not be plotted: {e}"
                 ) from e
 
-        of = OutputFile.from_file(output, unknown=False)
+        of = ResultFile.from_file(output, unknown=False)
 
         if "what" in kwargs:
             what = kwargs["what"]
@@ -244,7 +244,7 @@ def run(args, global_args):
                     except KeyError as exc:
                         raise ValueError(
                             f"There is no value named '{name.upper()}' "
-                            f"in the output file '{output}'."
+                            f"in the result file '{output}'."
                         ) from exc
                     if not hasattr(val, "plot"):
                         raise ValueError(

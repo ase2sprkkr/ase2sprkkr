@@ -9,7 +9,7 @@ from ase.units import Rydberg as Ry
 import numpy as np
 import pytest
 
-from ..output_files import OutputFile
+from .. import ResultFile
 from ..definitions.jxc import JXCOutputFile, Coordinates, Selector
 from ...common.configuration_containers import DisabledAttributeError
 from ...common.configuration_containers import RootConfigurationContainer
@@ -26,7 +26,7 @@ class TestOutput:
                 continue
 
             extension = path.rsplit(".", 1)[1]
-            output = OutputFile.from_file(path, unknown=False)
+            output = ResultFile.from_file(path, unknown=False)
             if extension == "spc":
                 assert output.KEYWORD() == "ARPES"
                 if output.NE() > 1:
@@ -95,7 +95,7 @@ class TestOutput:
             def parse_file(file, allow_dangerous=False):
                 return {"parsed": True}
 
-        class DummyOutput(OutputFile):
+        class DummyOutput(ResultFile):
             def stage_clear(self, transaction, *, check_required=True):
                 object.__setattr__(self, "cleared", not check_required)
                 return True
@@ -133,7 +133,7 @@ class TestOutput:
         guessed = tmp_path / "Fe.pot"
         guessed.write_text("dummy")
 
-        class DummyOutput(OutputFile):
+        class DummyOutput(ResultFile):
             pass
 
         output = object.__new__(DummyOutput)
@@ -143,7 +143,7 @@ class TestOutput:
         object.__setattr__(output, "_potential_filename", None)
 
         with patch(
-            "ase2sprkkr.output_files.output_files.Potential.from_file",
+            "ase2sprkkr.result_files.result_files.Potential.from_file",
             return_value="loaded",
         ) as loader:
             assert output.potential == "loaded"
@@ -154,7 +154,7 @@ class TestOutput:
                 self._filename = filename
                 self.atoms = "atoms"
 
-        with patch("ase2sprkkr.output_files.output_files.Potential", FakePotential):
+        with patch("ase2sprkkr.result_files.result_files.Potential", FakePotential):
             fake_potential = FakePotential(str(tmp_path / "explicit.pot"))
             output.potential = fake_potential
             assert output.potential is fake_potential
@@ -186,7 +186,7 @@ class TestOutput:
             / "examples"
             / "SrTiO3_JXC_XCPLTEN_Dij.dat"
         )
-        output = OutputFile.from_file(str(filename), unknown=False)
+        output = ResultFile.from_file(str(filename), unknown=False)
 
         with tempfile.NamedTemporaryFile() as target:
             assert "axis" in output.plot_parameters

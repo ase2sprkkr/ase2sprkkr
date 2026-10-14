@@ -25,10 +25,10 @@ def main():
     out.spc.plot()
     out.spc.TOTAL.plot(filename="out.png")
 
-    # Direct reading of earlier calculated output files
-    from ase2sprkkr import OutputFile
+    # Direct reading of earlier calculated result files
+    from ase2sprkkr import ResultFile
 
-    of2 = OutputFile.from_file("H_ARPES_ARPES_data.spc")
+    of2 = ResultFile.from_file("H_ARPES_ARPES_data.spc")
     of2.ENERGY()
 
     # One can do calculations with SPC files
