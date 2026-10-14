@@ -2,7 +2,6 @@
 
 import os
 from collections.abc import Mapping
-from .common.decorators import cache
 from .common.grammar_types import CustomMixed, AlwaysQString, Array, Bool, Keyword, Integer
 from .common.container_definitions import SectionDefinition, ConfigurationRootDefinition
 from .common.configuration_containers import RootConfigurationContainer, Section as ConfigurationSection
@@ -10,8 +9,6 @@ from .common.value_definitions import ValueDefinition
 from .common.generated_configuration_definitions import GeneratedValueDefinition
 from .common.options import Option
 from .profiles import ProfilesConfigurationContainer
-import warnings
-import shutil
 import platformdirs
 
 
@@ -158,74 +155,6 @@ def load_user_preferences():
                     unknown="fail",
                     merge=True,
                 )
-
-
-@cache
-def find_default_mpi_runner():
-    if os.environ.get("SLURM_NODELIST") and shutil.which("srun"):
-        return ["srun"]
-    for r in ["mpirun", "mpirun.opmpirun", "mpirun.mpich", "mpiexec"]:
-        if shutil.which(r):
-            return [r]
-    return False
-
-
-@cache
-def get_default_mpi_runner():
-
-    out = find_default_mpi_runner()
-    if out:
-        return out
-    if config.running.mpi_warning():
-        warnings.warn("No MPI runner found. Disabling MPI!!!")
-
-
-def mpi_runner(mpi):
-    """Return a shell command to execute a mpi task.
-
-    Parameters
-    ----------
-    mpi_runner: Union[bool,str,list,int]
-
-
-      - If True is given, return the default mpi-runner
-      - If False is given, no mpi-runner is returned.
-      - If 'auto' is given, it is the same as True, however
-           * no warning is given if no mpi is found
-           * MPI is not used, if only one CPU is available
-      - If a string is given, it is interpreted as a list of one item
-      - If a list (of strings) is given, the user specified its own runner, use it as is
-        as the parameters for subprocess.run.
-      - If an integer is given, it is interpreted as the number of
-        processes: the default mpi-runner is used, and the parameters
-        to specify the number of processes.
-
-    Return
-    ------
-    mpi_runner: list
-      List of strings with the executable and its parameters, e.g.
-
-      ::
-
-          ["mpirun", "-np", "4"]
-    """
-    if mpi is None:
-        mpi = config.running.mpi()
-    if mpi is False:
-        return None
-    if mpi is True:
-        mpi = find_default_mpi_runner()
-    if isinstance(mpi, list):
-        return mpi
-    if isinstance(mpi, str):
-        if mpi == "auto":
-            if hasattr(os, "sched_getaffinity") and len(os.sched_getaffinity(0)) == 1:
-                return None
-            return find_default_mpi_runner()
-        return [mpi]
-    if isinstance(mpi, int):
-        return find_default_mpi_runner() + ["-np", str(mpi)]
-    return mpi
 
 
 class Configuration(RootConfigurationContainer):

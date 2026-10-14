@@ -74,8 +74,8 @@ def test_mpi_process_count_is_portable_launch_intent():
 
 def test_local_executor_materializes_mpi_on_execution_host(monkeypatch, tmp_path):
     monkeypatch.setattr(
-        "ase2sprkkr.configuration.mpi_runner",
-        lambda mpi: ["srun"] if mpi is True else None,
+        "ase2sprkkr.execution.local.resolve_mpi_command",
+        lambda mpi: ("srun",) if mpi is True else None,
     )
     input_file = (tmp_path / "run.inp").open("w+")
     spec = ExecutionSpec(
@@ -96,7 +96,9 @@ def test_local_executor_materializes_mpi_on_execution_host(monkeypatch, tmp_path
 
 
 def test_local_auto_warns_and_falls_back_to_serial(monkeypatch, tmp_path):
-    monkeypatch.setattr("ase2sprkkr.configuration.mpi_runner", lambda mpi: None)
+    monkeypatch.setattr(
+        "ase2sprkkr.execution.local.resolve_mpi_command", lambda mpi: None
+    )
     input_file = (tmp_path / "run.inp").open("w+")
     spec = ExecutionSpec(
         argv=("kkrscf",),
@@ -117,7 +119,9 @@ def test_local_auto_warns_and_falls_back_to_serial(monkeypatch, tmp_path):
 
 
 def test_local_auto_can_disable_missing_mpi_warning(monkeypatch, tmp_path):
-    monkeypatch.setattr("ase2sprkkr.configuration.mpi_runner", lambda mpi: None)
+    monkeypatch.setattr(
+        "ase2sprkkr.execution.local.resolve_mpi_command", lambda mpi: None
+    )
     input_file = (tmp_path / "run.inp").open("w+")
     spec = ExecutionSpec(
         argv=("kkrscf",),

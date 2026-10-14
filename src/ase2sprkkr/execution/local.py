@@ -20,13 +20,12 @@ from .base import (
     RunStatus,
     SubmissionNotStarted,
 )
+from .mpi import resolve_mpi_command
 
 
 def _mpi_command(launch):
     """Materialize portable MPI intent for this machine."""
-    from ..configuration import mpi_runner
-
-    command = mpi_runner(launch.mpi)
+    command = resolve_mpi_command(launch.mpi)
     if not command:
         if launch.mpi == "auto":
             if launch.mpi_warning:
