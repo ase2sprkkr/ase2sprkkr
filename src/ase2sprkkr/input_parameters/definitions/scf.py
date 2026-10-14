@@ -37,6 +37,7 @@ def input_parameters():
         description="",
         executable="kkrscf",
         mpi=True,
+        produces_potential=True,
     )
 
 
