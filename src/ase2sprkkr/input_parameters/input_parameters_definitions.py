@@ -85,6 +85,9 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     cache_file_templates = ()
     """Optional reusable file templates. ``{dataset}`` expands to ``CONTROL.DATASET``."""
 
+    produces_potential = False
+    """Whether a successful run produces a new physical potential/state."""
+
     child_class = InputSectionDefinition
     """ Sections of the :class:`InputParameters` are defined by :class:`InputSectionDefinition` """
 
@@ -165,6 +168,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         input_file_templates=(),
         output_file_templates=(),
         cache_file_templates=(),
+        produces_potential=False,
         **kwargs,
     ):
         """
@@ -197,6 +201,10 @@ class InputParametersDefinition(ConfigurationFileDefinition):
           by the default :meth:`cache_files` implementation. Missing cache files are
           valid; execution backends decide how existing caches are synchronized.
 
+        produces_potential: bool
+          Whether a successful run creates a new physical potential that can become
+          the input state of later calculations.
+
         Notes
         -----
         Tasks whose file manifests depend on input values can override
@@ -210,6 +218,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         self.input_file_templates = tuple(input_file_templates)
         self.output_file_templates = tuple(output_file_templates)
         self.cache_file_templates = tuple(cache_file_templates)
+        self.produces_potential = bool(produces_potential)
 
         super().__init__(name, members, **kwargs)
         # if not 'TASK' in self:

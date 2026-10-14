@@ -1,4 +1,30 @@
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
+from ase2sprkkr.outputs.readers.scf import ScfOutputReader
+from ase2sprkkr.outputs.task_result import TaskResult
+
+
+def test_task_potential_production_is_backend_metadata(tmp_path):
+    scf = InputParameters.create("SCF")
+    dos = InputParameters.create("DOS")
+
+    assert InputParameters.definition("SCF").produces_potential
+    assert not InputParameters.definition("DOS").produces_potential
+    assert TaskResult(scf, None, tmp_path).produces_potential
+    assert not TaskResult(dos, None, tmp_path).produces_potential
+
+    parsed_scf = TaskResult(None, None, tmp_path, task_name="SCF")
+    parsed_dos = TaskResult(None, None, tmp_path, task_name="DOS")
+    assert parsed_scf.task_name == "SCF"
+    assert parsed_scf.produces_potential
+    assert not parsed_dos.produces_potential
+
+
+def test_reader_preserves_task_identity_without_input_parameters(tmp_path):
+    reader = ScfOutputReader(None, None, tmp_path, task_name="SCF")
+    result = reader.create_result(None)
+
+    assert result.task_name == "SCF"
+    assert result.produces_potential
 
 
 def test_dos_output_is_namespaced_by_dataset(tmp_path):
