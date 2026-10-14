@@ -16,8 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # in this example, there is a newer version already installed, 3.7.7, so the older version will be downloaded
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
+        python-version: ['3.8']
     steps:
     - uses: actions/checkout@v6
     - uses: actions/setup-python@v6
@@ -27,24 +26,8 @@ jobs:
          mkdir -p ~/.config/matplotlib
          echo "text.usetex : False" >> ~/.config/matplotlib/matplotlibrc
     - run: ./install_dependencies.sh
-    - name: Test installed wheel
-      run: DO_NOT_RUN_SPRKKR=1 "$GITHUB_WORKSPACE/run_tests"
-
-  execution-integration:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-    - uses: actions/setup-python@v6
-      with:
-        python-version: '3.12'
-    - run: |
-         mkdir -p ~/.config/matplotlib
-         echo "text.usetex : False" >> ~/.config/matplotlib/matplotlibrc
-    - run: ./install_dependencies.sh
-    - name: Test SSH and PSI/J Slurm execution
-      env:
-        ASE2SPRKKR_RUN_DOCKER_TESTS: '1'
+    - name: Diagnose Python 3.8 test hang
       run: >-
-        "$GITHUB_WORKSPACE/run_tests"
-        -k
-        "remote_executor_over_ssh or remote_executor_runs_psij_slurm_over_ssh"
+        timeout --signal=TERM 900
+        env PYTHONUNBUFFERED=1 DO_NOT_RUN_SPRKKR=1
+        "$GITHUB_WORKSPACE/run_tests" -vv -o faulthandler_timeout=120
