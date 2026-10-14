@@ -1,12 +1,13 @@
-"""JXC task input parameters definition"""
+"""JXC task definition."""
 
 from ._file_manifests import resolve_file
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
+from ..task_definition import TaskDefinition
 from ...common.grammar_types import flag
 
 
-class JxcInputParametersDefinition(InputParametersDefinition):
+class JxcTaskDefinition(TaskDefinition):
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
         dataset = parameters.CONTROL.DATASET()
@@ -37,15 +38,18 @@ def _jxc_nonmag_warning_condition(value):
     )
 
 
-def input_parameters():
-    """JXC -JXC task input parameters definition"""
+def _prepare_from_result(parameters, result):
+    parameters.set("EMIN", result.last_iteration.energy.EMIN())
+
+
+def task_definition():
     mmode = MODE["MODE"].copy(warning_condition=_jxc_mode_warning_condition)
-    input_parameters = JxcInputParametersDefinition(
+    schema = InputParametersDefinition(
         "jxc",
         [
             CONTROL("JXC"),
             TAU,
-            MODE.copy(add = [ mmode ]),
+            MODE.copy(add=[mmode]),
             STRCONST,
             ENERGY(),
             TASK("JXC").copy(
@@ -62,14 +66,18 @@ def input_parameters():
                         info="""The radius of a sphere restricting the cluster
         of atoms for which the exchange coupling
         constants will be calculated""",
-                    )
+                    ),
                 ]
             ),
             SITES,
         ],
-        executable="kkrgen",
-        mpi=True,
         info="JXC",
     )
-    input_parameters["CONTROL"]["NONMAG"].warning_condition=_jxc_nonmag_warning_condition
-    return input_parameters
+    schema["CONTROL"]["NONMAG"].warning_condition = _jxc_nonmag_warning_condition
+    return JxcTaskDefinition(
+        schema,
+        name="JXC",
+        executable="kkrgen",
+        mpi=True,
+        prepare_from_result=_prepare_from_result,
+    )
