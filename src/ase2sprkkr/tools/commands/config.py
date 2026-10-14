@@ -216,11 +216,16 @@ def _set_configuration_value(config, name, value):
 
     # Repeated-container staging validates the complete proposed profile and is
     # atomic, so a bad field/value does not leave a half-created profile behind.
-    config.profiles.set(
-        {profile_name: profile_values},
-        unknown="fail",
-        merge=True,
-    )
+    # A missing member here is therefore an invalid value *inside a known
+    # profile path*, not an unknown top-level configuration path.
+    try:
+        config.profiles.set(
+            {profile_name: profile_values},
+            unknown="fail",
+            merge=True,
+        )
+    except KeyError as exc:
+        raise ValueError(str(exc)) from exc
     config.save_user_preferences()
 
 
