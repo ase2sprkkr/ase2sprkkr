@@ -1,18 +1,20 @@
 """This module describe common header, that appears in the output
 files of SPRKKR"""
 
-from ..sprkkr.configuration import ConfigurationFile, ConfigurationValue
-from ..potentials.potentials import Potential
-import pyparsing as pp
-import numpy as np
-import pkgutil
-import sys
 from pathlib import Path
-from ..common.decorators import cached_class_property, cached_property
-from ..common.grammar_types.data import RestOfTheFile
 import io
 import os
 import re
+
+import numpy as np
+import pyparsing as pp
+
+from ..common.decorators import cached_class_property, cached_property
+from ..common.grammar_types.data import RestOfTheFile
+from ..common.module_registry import ModuleRegistry
+from ..potentials.potentials import Potential
+from ..sprkkr.configuration import ConfigurationFile, ConfigurationValue
+from . import definitions as output_file_definitions
 
 
 class UnknownDataValue(ConfigurationValue):
@@ -28,6 +30,15 @@ class OutputFile(ConfigurationFile):
 
     plot_parameters = {}
     additional_actions = ()
+
+    output_file_registry = ModuleRegistry(
+        output_file_definitions,
+        lambda module: module.definition,
+        normalize=str.lower,
+    )
+    """Known output-file definitions, discovered lazily from definition modules."""
+
+    definitions = output_file_registry
 
     def __init__(self, definition=None, container=None, potential=None):
         super().__init__(definition, container)
@@ -75,7 +86,7 @@ class OutputFile(ConfigurationFile):
                 candidate = Path(directory) / (stem + suffix)
                 if candidate.is_file():
                     return str(candidate)
-            stem = stem.rsplit("_", 1)  # split off the last part of the filename
+            stem = stem.rsplit("_", 1)
             if len(stem) == 1:
                 break
             stem = stem[0]
@@ -112,28 +123,14 @@ class OutputFile(ConfigurationFile):
     def unknown_output_file_definition(cls):
         """a definition of unwnown (not yet known) output file that can hold any data in the rest
         of the file"""
-        V = output_files_definitions.OutputFileValueDefinition
-        return output_files_definitions.create_output_file_definition(
+        V = output_files_definitions_module.OutputFileValueDefinition
+        return output_files_definitions_module.create_output_file_definition(
             V("KEYWORD", str), [V("DATA", RestOfTheFile(), name_in_grammar=False, result_class=UnknownDataValue)]
         )
 
-    @cached_class_property
-    def definitions(cls):
-        """Return all known definitions of the SPR-KKR output files"""
-        out = {}
-        path = os.path.dirname(__file__)
-        path = os.path.join(path, "definitions")
-        name = __name__
-        name = name.rsplit(".", 1)[0] + ".definitions."
-        for imp, module, ispackage in pkgutil.iter_modules(path=[path], prefix=name):
-            __import__(module)
-            mod = sys.modules[module].definition
-            out[mod.extension] = mod
-        return out
-
     @classmethod
-    def definition(cls, self):
-        return cls.definitions[self]
+    def definition(cls, name):
+        return cls.output_file_registry[name]
 
     @classmethod
     def from_file(
@@ -171,7 +168,7 @@ class OutputFile(ConfigurationFile):
           None means True if try_only is None, False otherwise.
 
         potential
-          A :class:`Potential` or its filename.  If omitted, it is looked up
+          A :class:`Potential` or its filename. If omitted, it is looked up
           lazily from the output filename when it is needed.
         """
         fname = filename
@@ -187,7 +184,6 @@ class OutputFile(ConfigurationFile):
                     first_try = fname.rsplit(".", 1)[1].lower()
                 except IndexError:
                     first_try = None
-                # nektere soubory jsou typu _Dij.data
                 special = re.match(r"^.+_([^/\\]+\.[^/\\]+)$", fname)
                 if special:
                     first_try = [special.groups(1)[0], first_try]
@@ -214,20 +210,20 @@ class OutputFile(ConfigurationFile):
         if try_only:
             if isinstance(try_only, str):
                 try_only = [try_only]
-            for i in try_only:
-                if i in cls.definitions:
+            for name in try_only:
+                if name in cls.output_file_registry:
                     try:
-                        return cls.definitions[i].read_from_file(
+                        return cls.definition(name).read_from_file(
                             filename, potential=potential
                         )
                     except Exception as e:
                         last = e
         else:
-            for ext, i in cls.definitions.items():
+            for ext, definition in cls.output_file_registry.items():
                 if first_try and ext in first_try:
                     continue
                 try:
-                    return i.read_from_file(filename, potential=potential)
+                    return definition.read_from_file(filename, potential=potential)
                 except Exception as e:
                     last = e
         if unknown is None:
@@ -323,5 +319,4 @@ class Arithmetic:
         return self
 
 
-# at last, import this file that need this module
-from . import output_files_definitions  # NOQA: E402
+from . import output_files_definitions as output_files_definitions_module  # NOQA: E402
