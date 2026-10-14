@@ -2,17 +2,12 @@
 XAS output for the Cu L2,3 example.
 """
 
+import os
 import re
+
 import numpy as np
 import pytest
 from scipy.interpolate import interp1d
-import os
-
-if __package__:
-    from .init_tests import patch_package
-else:
-    from ase2sprkkr.output_files.test.init_tests import patch_package
-__package__, __name__ = patch_package(__package__, __name__)
 
 # ---------------------------------------------------------------------------
 # Paths

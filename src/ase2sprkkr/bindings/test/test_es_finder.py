@@ -1,38 +1,31 @@
-import unittest
 from ase.build import bulk
+import pytest
 
-if __package__:
-    from .init_tests import TestCase, patch_package
-else:
-    from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
-
-from .. import es_finder  # NOQA: E402
+from .. import es_finder
 
 
-class TestEsFinder(TestCase):
-    def test_radii_ratios_map_is_copied(self):
-        original = dict(es_finder.winger_seitz_radii)
+def test_radii_ratios_map_is_copied():
+    original = dict(es_finder.winger_seitz_radii)
 
-        radii = es_finder._prepare_radii_ratios_map(None)
-        radii["DefinitelyNotAnElement"] = 1.0
+    radii = es_finder._prepare_radii_ratios_map(None)
+    radii["DefinitelyNotAnElement"] = 1.0
 
-        self.assertEqual(original, es_finder.winger_seitz_radii)
-        self.assertIsNot(radii, es_finder.winger_seitz_radii)
+    assert es_finder.winger_seitz_radii == original
+    assert radii is not es_finder.winger_seitz_radii
 
-    def test_radii_ratios_map_overrides_defaults(self):
-        radii = es_finder._prepare_radii_ratios_map({"Co": 123.0})
 
-        self.assertEqual(123.0, radii["Co"])
-        self.assertEqual(es_finder.winger_seitz_radii.keys(), radii.keys())
+def test_radii_ratios_map_overrides_defaults():
+    radii = es_finder._prepare_radii_ratios_map({"Co": 123.0})
 
-    def test_es_finder(self):
-        if not es_finder.is_enabled:
-            raise unittest.SkipTest("ES finder cannot be imported, skipping the test")
+    assert radii["Co"] == 123.0
+    assert radii.keys() == es_finder.winger_seitz_radii.keys()
 
-        atoms = bulk("Co")
-        self.assertEqual(0, len(es_finder.empty_spheres(atoms).positions))
 
-        atoms = bulk("NaCl", "rocksalt", a=5.64)
-        out = es_finder.empty_spheres(atoms)
-        self.assertEqual(12, len(out.positions))
+@pytest.mark.skipif(not es_finder.is_enabled, reason="ES finder cannot be imported")
+def test_es_finder():
+    atoms = bulk("Co")
+    assert len(es_finder.empty_spheres(atoms).positions) == 0
+
+    atoms = bulk("NaCl", "rocksalt", a=5.64)
+    out = es_finder.empty_spheres(atoms)
+    assert len(out.positions) == 12

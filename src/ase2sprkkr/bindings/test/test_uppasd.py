@@ -1,11 +1,4 @@
-if __package__:
-    from .init_tests import patch_package
-else:
-    from ase2sprkkr.bindings.test.init_tests import patch_package
-__package__, __name__ = patch_package(__package__, __name__)
-
 from pathlib import Path
-import tempfile
 
 import numpy as np
 from ase import Atoms
@@ -116,80 +109,76 @@ def make_atoms():
     return atoms
 
 
-def test_write_jfile_uses_selector_and_lattice_coordinates():
+def test_write_jfile_uses_selector_and_lattice_coordinates(tmp_path):
     rows = np.array([(1, 1, 1, 2, 3, 4, 5, 0.1, 0.2, 0.3, 0.75, 6.25, 0.0, 0.0, 0.0)], dtype=J_DATA_DTYPE)
     selector = Selector(iq=[1], it={1})
     output = FakeJxcOutput(rows=rows)
+    path = tmp_path / "jfile.dat"
 
-    with tempfile.TemporaryDirectory() as directory:
-        path = Path(directory) / "jfile.dat"
-        written = write_jfile(output, path, selector=selector, coordinates=Coordinates.lattice)
+    written = write_jfile(output, path, selector=selector, coordinates=Coordinates.lattice)
 
-        assert written is True
-        assert output.filtered_calls == [
-            {
-                "selector": selector,
-                "iq": None,
-                "it": None,
-                "exclude_it": None,
-                "exclude_vc": True,
-                "exchange_radius": None,
-            }
-        ]
-        assert path.read_text() == JFILE_FORMAT.format(1, 2, 3, 4, 5, 6.25, 0.75)
+    assert written is True
+    assert output.filtered_calls == [
+        {
+            "selector": selector,
+            "iq": None,
+            "it": None,
+            "exclude_it": None,
+            "exclude_vc": True,
+            "exchange_radius": None,
+        }
+    ]
+    assert path.read_text() == JFILE_FORMAT.format(1, 2, 3, 4, 5, 6.25, 0.75)
 
 
-def test_write_dmfile_uses_cartesian_coordinates():
+def test_write_dmfile_uses_cartesian_coordinates(tmp_path):
     rows = np.array([(1, 2, 1, 3, 7, 8, 9, 0.25, 0.5, 0.75, 1.5, 2.5, 3.5, 4.5)], dtype=DM_DATA_DTYPE)
     selector = Selector(iq=[2], it={1})
     output = FakeJxcOutput(rows=rows)
+    path = tmp_path / "dmfile.dat"
 
-    with tempfile.TemporaryDirectory() as directory:
-        path = Path(directory) / "dmfile.dat"
-        written = write_dmfile(output, path, selector=selector, coordinates=Coordinates.cartesian)
+    written = write_dmfile(output, path, selector=selector, coordinates=Coordinates.cartesian)
 
-        assert written is True
-        assert path.read_text() == DMFILE_FORMAT.format(2, 3, 0.25, 0.5, 0.75, 2.5, 3.5, 4.5, 1.5)
+    assert written is True
+    assert path.read_text() == DMFILE_FORMAT.format(2, 3, 0.25, 0.5, 0.75, 2.5, 3.5, 4.5, 1.5)
 
 
-def test_write_pos_file_uses_selected_iqs(monkeypatch):
+def test_write_pos_file_uses_selected_iqs(monkeypatch, tmp_path):
     atoms = make_atoms()
     selector = Selector(iq=[1, 3], it={1})
     output = FakeJxcOutput(selected_iqs=[1, 3])
     monkeypatch.setattr(uppasd_bindings.SPRKKRAtoms, "promote_ase_atoms", staticmethod(lambda atoms: atoms))
+    path = tmp_path / "posfile.dat"
 
-    with tempfile.TemporaryDirectory() as directory:
-        path = Path(directory) / "posfile.dat"
-        written = write_pos_file(atoms, path, selector=selector, jxc_ouput_file=output)
+    written = write_pos_file(atoms, path, selector=selector, jxc_ouput_file=output)
 
-        assert written is True
-        assert output.iq_selector_calls == [
-            {"selector": selector, "iq": None, "it": None, "exclude_it": None, "exclude_vc": True}
-        ]
-        assert path.read_text() == (
-            POSFILE_FORMAT.format(1, 1, 0.0, 0.1, 0.2) + POSFILE_FORMAT.format(3, 1, 2.0, 2.1, 2.2)
-        )
+    assert written is True
+    assert output.iq_selector_calls == [
+        {"selector": selector, "iq": None, "it": None, "exclude_it": None, "exclude_vc": True}
+    ]
+    assert path.read_text() == (
+        POSFILE_FORMAT.format(1, 1, 0.0, 0.1, 0.2) + POSFILE_FORMAT.format(3, 1, 2.0, 2.1, 2.2)
+    )
 
 
-def test_write_mom_file_uses_selector_and_atomic_type_order(monkeypatch):
+def test_write_mom_file_uses_selector_and_atomic_type_order(monkeypatch, tmp_path):
     atoms = make_atoms()
     selector = Selector(iq=..., it=...)
     output = FakeJxcOutput(selector=selector)
     monkeypatch.setattr(uppasd_bindings.SPRKKRAtoms, "promote_ase_atoms", staticmethod(lambda atoms: atoms))
+    path = tmp_path / "momfile.dat"
 
-    with tempfile.TemporaryDirectory() as directory:
-        path = Path(directory) / "momfile.dat"
-        written = write_mom_file(atoms, path, selector=selector, jxc_ouput_file=output)
+    written = write_mom_file(atoms, path, selector=selector, jxc_ouput_file=output)
 
-        assert written is True
-        assert output.create_selector_calls == [
-            {"selector": selector, "iq": None, "it": None, "exclude_it": None, "exclude_vc": True}
-        ]
-        assert path.read_text() == (
-            MOMFILE_FORMAT.format(1, 1, 2.5, 0.0, 0.0, 1.0)
-            + MOMFILE_FORMAT.format(3, 1, 2.5, 0.0, 0.0, 1.0)
-            + MOMFILE_FORMAT.format(2, 1, 1.5, 0.0, 0.0, 1.0)
-        )
+    assert written is True
+    assert output.create_selector_calls == [
+        {"selector": selector, "iq": None, "it": None, "exclude_it": None, "exclude_vc": True}
+    ]
+    assert path.read_text() == (
+        MOMFILE_FORMAT.format(1, 1, 2.5, 0.0, 0.0, 1.0)
+        + MOMFILE_FORMAT.format(3, 1, 2.5, 0.0, 0.0, 1.0)
+        + MOMFILE_FORMAT.format(2, 1, 1.5, 0.0, 0.0, 1.0)
+    )
 
 
 def test_jxc_output_file_selector_excludes_vacuum_sites(monkeypatch):

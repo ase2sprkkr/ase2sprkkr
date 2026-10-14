@@ -1,5 +1,7 @@
 all: install
 
+.PHONY: all install editable_install ei clean test doc docs doc-gather doc-clean doc-debug doc-build doc-readme package package_clean publish anaconda conda checkout-docs
+
 install:
 	pip install .
 
@@ -9,12 +11,14 @@ editable_install:
 ei: editable_install
 
 clean:
-	rm -rf ./dist
+	rm -rf ./build ./dist
 
 test:
-	src/ase2sprkkr/run_tests
+	./run_tests
 
-doc: doc-gather doc-build doc-readme
+doc: docs
+
+docs: doc-gather doc-build doc-readme
 
 doc-gather: doc-clean
 	(cd doc_src ; sphinx-apidoc -feM -o ./auto ../src/ase2sprkkr \
@@ -28,7 +32,7 @@ doc-clean:
 	rm -rf docs/.??*
 
 doc-debug:
-	(cd docs;  sphinx-build -P doc_src .)
+	sphinx-build -P doc_src docs/
 
 doc-build:
 	sphinx-build -j auto doc_src docs/
@@ -43,9 +47,7 @@ package: | package_clean
 package_clean:
 	rm -rf dist/*
 
-publish: build_clean build pip
-
-pip: | package
+publish: package
 	twine upload --username ase2sprkkr dist/*
 
 anaconda:
