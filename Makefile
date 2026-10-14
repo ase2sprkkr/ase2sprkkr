@@ -1,6 +1,6 @@
 all: install
 
-.PHONY: all install editable_install ei clean test docs doc-gather doc-clean doc-debug doc-build doc-readme package package_clean publish anaconda conda checkout-docs
+.PHONY: all install editable_install ei clean test doc docs doc-gather doc-clean doc-debug doc-build doc-readme package package_clean publish anaconda conda checkout-docs
 
 install:
 	pip install .
@@ -15,6 +15,8 @@ clean:
 
 test:
 	./run_tests
+
+doc: docs
 
 docs: doc-gather doc-build doc-readme
 
