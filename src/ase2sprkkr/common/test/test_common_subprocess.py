@@ -1,4 +1,3 @@
-import functools
 import multiprocessing as mp
 import signal
 import subprocess as stdlib_subprocess
@@ -16,6 +15,10 @@ def shutdown_subprocess_pool():
     if pool is not None:
         pool.shutdown()
         subprocess_module._pool = None
+
+
+def _get_sigchld_handler():
+    return signal.getsignal(signal.SIGCHLD)
 
 
 def test_import_does_not_change_start_method():
@@ -66,7 +69,5 @@ def test_sigchld_is_ignored_only_in_worker(monkeypatch):
     )
     assert handler is signal.SIG_IGN
 
-    handler = subprocess_module.in_subprocess(
-        functools.partial(signal.getsignal, signal.SIGCHLD),
-    )
+    handler = subprocess_module.in_subprocess(_get_sigchld_handler)
     assert handler is signal.SIG_IGN

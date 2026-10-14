@@ -78,6 +78,11 @@ def _path(value, directory=None):
     return os.path.abspath(path)
 
 
+async def _run_in_thread(function):
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(None, function)
+
+
 def _scheduler_output(argv):
     """Run one scheduler inspection command; failures remain transport failures."""
     return subprocess.run(
@@ -217,7 +222,6 @@ class PsijRunner:
             raise ValueError("PSI/J execution requires an output file")
         self._stderr_path = _path(spec.error_file, spec.directory) or self._stdout_path + ".err"
         self._stdin_path = _path(spec.stdin, spec.directory)
-
         self._output_observers = OutputObservers(output_listener)
         self._lock = Lock()
         self._submit_lock = Lock()
@@ -394,7 +398,7 @@ class PsijRunner:
         ]
         status = None
         try:
-            status = await asyncio.to_thread(self._job.wait)
+            status = await _run_in_thread(self._job.wait)
         finally:
             finished.set()
             await asyncio.gather(*followers, return_exceptions=False)
@@ -466,7 +470,7 @@ class PsijRunner:
     async def run_async(self):
         if self._thread is None:
             self.start()
-        return await asyncio.to_thread(self.wait)
+        return await _run_in_thread(self.wait)
 
     def cancel(self):
         if self._thread is None and not self._attached:
