@@ -18,7 +18,7 @@ _DEFAULT_CALC_ARGS = {
 def calc_args(tmp_path):
     """Build calculator arguments in an isolated pytest temporary directory."""
 
-    def make(kind=None, **overrides):
+    def make(**overrides):
         args = dict(_DEFAULT_CALC_ARGS)
         args["directory"] = str(tmp_path)
         args["options"] = dict(_DEFAULT_CALC_ARGS["options"])
@@ -27,10 +27,6 @@ def calc_args(tmp_path):
         if options is not None:
             args["options"].update(options)
         args.update(overrides)
-
-        if kind == "save_input":
-            args.pop("print_output", None)
-            args.pop("mpi", None)
         return args
 
     return make
