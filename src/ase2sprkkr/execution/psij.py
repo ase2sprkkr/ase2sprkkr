@@ -394,7 +394,8 @@ class PsijRunner:
         ]
         status = None
         try:
-            status = await asyncio.to_thread(self._job.wait)
+            loop = asyncio.get_running_loop()
+            status = await loop.run_in_executor(None, self._job.wait)
         finally:
             finished.set()
             await asyncio.gather(*followers, return_exceptions=False)
@@ -466,7 +467,8 @@ class PsijRunner:
     async def run_async(self):
         if self._thread is None:
             self.start()
-        return await asyncio.to_thread(self.wait)
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, self.wait)
 
     def cancel(self):
         if self._thread is None and not self._attached:

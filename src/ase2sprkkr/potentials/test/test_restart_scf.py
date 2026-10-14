@@ -45,6 +45,21 @@ def test_normal_save_keeps_existing_start_inference():
     assert Potential.from_file(output).SCF_INFO.SCFSTATUS() == "CONVERGED"
 
 
+def test_scf_inference_uses_potential_being_synchronized():
+    attached = _converged_potential()
+    atoms = attached.atoms
+    attached.SCF_INFO.SCFSTATUS = "ITR"
+
+    standalone = Potential(atoms=atoms, set_from_atoms=False)
+    assert standalone.SCF_INFO.SCFSTATUS() == "START"
+
+    standalone.set_from_atoms(atoms)
+
+    assert attached.SCF_INFO.SCFSTATUS() == "ITR"
+    assert standalone.SCF_INFO.SCFSTATUS() == "CONVERGED"
+    assert atoms.potential is attached
+
+
 def test_restart_override_does_not_change_intermediate_2d_status():
     potential = _converged_potential()
     potential.SCF_INFO.SCFSTATUS = "ITR-L-BULK"
