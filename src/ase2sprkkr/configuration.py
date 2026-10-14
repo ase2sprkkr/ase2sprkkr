@@ -5,7 +5,7 @@ from collections.abc import Mapping
 from .common.decorators import cache
 from .common.grammar_types import CustomMixed, AlwaysQString, Array, Bool, Keyword, Integer
 from .common.container_definitions import SectionDefinition, ConfigurationRootDefinition
-from .common.configuration_containers import RootConfigurationContainer
+from .common.configuration_containers import RootConfigurationContainer, Section as ConfigurationSection
 from .common.value_definitions import ValueDefinition
 from .common.generated_configuration_definitions import GeneratedValueDefinition
 from .common.options import Option
@@ -20,9 +20,16 @@ class Section(SectionDefinition):
     dir_common_attributes = False
 
 
+class ExecutionProfile(ConfigurationSection):
+    """Mutable named execution profile stored in ASE2SPRKKR configuration."""
+
+    read_only = False
+
+
 class ProfilesSection(Section):
     """Definition of the dict-like named execution-profile section."""
 
+    result_class = ExecutionProfile
     repeated_class = ProfilesConfigurationContainer
 
 
