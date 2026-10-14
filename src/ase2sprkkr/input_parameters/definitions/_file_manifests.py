@@ -2,7 +2,7 @@
 
 import os
 
-from ..input_parameters_definitions import InputParametersDefinition
+from ..task_definition import TaskDefinition
 
 
 def resolve_file(directory, filename):
@@ -33,15 +33,15 @@ def tau_file(parameters, directory):
     return os.path.join(base, filename)
 
 
-class RequiredTauInputParametersDefinition(InputParametersDefinition):
-    """Task definition requiring an existing TAU-directory file."""
+class RequiredTauTaskDefinition(TaskDefinition):
+    """Task requiring an existing TAU-directory file."""
 
     def input_files(self, parameters, directory):
         return (tau_file(parameters, directory), *super().input_files(parameters, directory))
 
 
-class TauCacheInputParametersDefinition(InputParametersDefinition):
-    """Task definition optionally reusing a TAU-directory cache."""
+class TauCacheTaskDefinition(TaskDefinition):
+    """Task optionally reusing a TAU-directory cache."""
 
     def cache_files(self, parameters, directory):
         return (tau_file(parameters, directory), *super().cache_files(parameters, directory))
