@@ -1,6 +1,3 @@
-import os
-import tempfile
-
 from ase.cell import Cell
 from ase.spacegroup import crystal
 
@@ -42,7 +39,7 @@ def test_ap_number_from_spacegroup():
     assert ap_number_from_spacegroup(136) == 384
 
 
-def test_sysfile_content():
+def test_sysfile_content(tmp_path):
     a = 4.6
     c = 2.95
     atoms = crystal(
@@ -103,5 +100,6 @@ number of atom types NT
 
     assert sanitize(actual) == sanitize(expected)
 
-    if os.name != "nt":
-        write_sysfile(atoms, tempfile.NamedTemporaryFile().name)
+    output = tmp_path / "system.sys"
+    write_sysfile(atoms, output)
+    assert output.exists()
