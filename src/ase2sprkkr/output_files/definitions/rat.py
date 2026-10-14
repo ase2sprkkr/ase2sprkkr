@@ -163,7 +163,11 @@ class RATOutputFile(CommonOutputFile):
             if lorentz[k]:
                 data = lorentz[k](data)
             if gauss:
+                # RAT spectra keep energy on axis 0, while the generic Gaussian
+                # broadener deliberately operates on the last axis.
+                data = np.moveaxis(data, 0, -1)
                 data = gauss(data)
+                data = np.moveaxis(data, -1, 0)
             return data
 
         return broaden
@@ -721,8 +725,8 @@ def create_definition():
         [
             G("XAS", plot=(plot, nktypes), info="Polarization averaged X-ray absorption spectra"),
             G("XMCD", plot=(plot, nktypes), info="X-ray Magnetic Circular Dichroism"),
-            G("SPIN", plot=plot, info="XMCD spin sum-rule integrand: 3(\u0394\u03bc\u208a \u2212 2\u0394\u03bc\u208b)"),
-            G("ORBIT", plot=plot, info="XMCD orbital sum-rule integrand: 2(\u0394\u03bc\u208a + \u0394\u03bc\u208b)"),
+            G("SPIN", plot=plot, info="XMCD spin sum-rule integrand: 3(Δμ₊ − 2Δμ₋)"),
+            G("ORBIT", plot=plot, info="XMCD orbital sum-rule integrand: 2(Δμ₊ + Δμ₋)"),
             G("ENERGY"),
             V("NTXRSGRP", int),
             V("IDIPOL", int),
