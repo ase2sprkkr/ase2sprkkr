@@ -14,7 +14,7 @@ from ..common.module_registry import (
 
 
 class TaskDefinition:
-    """Definition of one SPR-KKR task."""
+    """Definition of one effective SPR-KKR task."""
 
     def __init__(
         self,
@@ -24,6 +24,7 @@ class TaskDefinition:
         executable="kkrscf",
         mpi=True,
         result_reader=None,
+        result_reader_name=None,
         input_file_templates=(),
         output_file_templates=(),
         cache_file_templates=(),
@@ -36,6 +37,7 @@ class TaskDefinition:
         self.executable = executable
         self.mpi = mpi
         self.result_reader = result_reader
+        self.result_reader_name = str(result_reader_name or self.name).upper()
         self.input_file_templates = tuple(input_file_templates)
         self.output_file_templates = tuple(output_file_templates)
         self.cache_file_templates = tuple(cache_file_templates)
@@ -43,7 +45,7 @@ class TaskDefinition:
         self._input_parameters_registry = None
 
     def _bind_input_parameters_registry(self, registry):
-        """Bind the registry used to resolve the task's input schema."""
+        """Bind the registry used to resolve this task's canonical input schema."""
         if (
             self._input_parameters_registry is not None
             and self._input_parameters_registry is not registry
@@ -56,7 +58,7 @@ class TaskDefinition:
 
     @cached_property
     def input_parameters_definition(self):
-        """Return the input-file schema referenced by this task."""
+        """Return and cache the canonical input-file schema used by this task."""
         if self._input_parameters_registry is None:
             raise RuntimeError(
                 f"Task {self.name} is not bound to an input-parameter registry"
@@ -64,12 +66,13 @@ class TaskDefinition:
         return self._input_parameters_registry[self.input_parameters_definition_name]
 
     def create_input_parameters(self, *, inputfile=None, outputfile=False):
+        """Create parameters while retaining this task as requested provenance."""
         from .input_parameters import InputParameters
 
         definition = self.input_parameters_definition
         out = InputParameters(
             definition=definition,
-            task_name=self.name,
+            requested_task_definition=self,
             inputfile=inputfile,
             outputfile=outputfile,
         )
@@ -77,6 +80,7 @@ class TaskDefinition:
         return out
 
     def read_input_parameters(self, file, *, allow_dangerous=False):
+        """Read parameters under an explicit requested-task context."""
         out = self.create_input_parameters(inputfile=file)
         out.read_from_file(file, allow_dangerous=allow_dangerous)
         return out
@@ -107,22 +111,13 @@ class TaskDefinition:
             parameters, directory, self.cache_file_templates
         )
 
-    def execution_task_name(self, parameters=None):
-        if parameters is not None:
-            try:
-                value = parameters["TASK"]["TASK"]()
-            except KeyError:
-                value = None
-            if value:
-                return str(value).upper()
-        return self.name
-
-    def output_reader_class(self, parameters=None):
+    def output_reader_class(self):
+        """Return the reader selected by this effective task's result contract."""
         if self.result_reader is not None:
             return self.result_reader
         from ..outputs.reader_registry import reader_registry
 
-        return reader_registry.class_for_task(self.execution_task_name(parameters))
+        return reader_registry.class_for_task(self.result_reader_name)
 
     def prepare_from_result(self, parameters, result):
         if self._prepare_from_result is not None:
@@ -171,6 +166,11 @@ class InputParametersRegistry(ModuleRegistry):
                     f"{task.input_parameters_definition_name} instead of {name}"
                 )
             task._bind_input_parameters_registry(self)
+        elif type(value).task_definition_name is InputParametersDefinition.task_definition_name:
+            raise RegistryDefinitionError(
+                f"Input schema {name} has neither a canonical task nor a dynamic "
+                "task_definition_name(parameters) resolver"
+            )
 
         process_input_parameters_definition(module, value)
         return value
@@ -218,6 +218,13 @@ class TaskRegistry:
                 f"Extra task {task.name} is registered as {name}"
             )
         task._bind_input_parameters_registry(self.input_parameters_registry)
+        try:
+            task.input_parameters_definition
+        except RegistryEntryNotFound as exc:
+            raise RegistryDefinitionError(
+                f"Extra task {name} references unknown input schema "
+                f"{task.input_parameters_definition_name}"
+            ) from exc
         return task
 
     def __getitem__(self, name):
