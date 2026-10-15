@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+import io
 from pathlib import Path
 
 import pytest
+from ase import Atoms
 
 from ase2sprkkr.common.file_fingerprints import file_fingerprint
 from ase2sprkkr.potentials import potentials as potentials_module
 from ase2sprkkr.potentials.potentials import Potential, PotentialFileChanged
+from ase2sprkkr.sprkkr.configuration import ConfigurationFile
 
 
 def _example_potential():
@@ -45,6 +48,54 @@ def test_reassigning_potential_atoms_does_not_change_attached_potential():
     assert attached.atoms is old_atoms
     assert old_atoms.potential is attached
     assert not new_atoms.has_potential()
+
+
+def test_empty_atoms_are_explicit_set_from_atoms_input(monkeypatch):
+    attached = Atoms("Fe")
+    empty = Atoms()
+    potential = Potential(atoms=attached, set_from_atoms=False)
+    promoted = []
+
+    monkeypatch.setattr(
+        potentials_module.SPRKKRAtoms,
+        "promote_ase_atoms",
+        lambda atoms: promoted.append(atoms) or atoms,
+    )
+    monkeypatch.setattr(Atoms, "update_sites_from_symbols", lambda self: None, raising=False)
+    monkeypatch.setattr(ConfigurationFile, "set_from_atoms", lambda self, atoms, io_data: None)
+
+    potential.set_from_atoms(empty)
+
+    assert promoted == [empty]
+
+
+def test_save_to_file_synchronizes_atoms_once(monkeypatch):
+    potential = Potential(atoms=Atoms("Fe"), set_from_atoms=False)
+    empty = Atoms()
+    calls = []
+
+    monkeypatch.setattr(
+        potential,
+        "set_from_atoms",
+        lambda atoms=None, io_data=None: calls.append(atoms),
+    )
+    monkeypatch.setattr(
+        ConfigurationFile,
+        "save_to_file",
+        lambda self, file, atoms=None, *, validate="save": file,
+    )
+
+    output = io.StringIO()
+    potential.save_to_file(output)
+    assert calls == [None]
+
+    calls.clear()
+    potential.save_to_file(output, atoms=empty)
+    assert calls == [empty]
+
+    calls.clear()
+    potential.save_to_file(output, atoms=False)
+    assert calls == [None]
 
 
 def test_file_unchanged_check_is_opt_in(monkeypatch):
