@@ -8,7 +8,6 @@ import numpy as np
 from pathlib import Path
 from ..common.decorators import cached_class_property, cached_property
 from ..common.grammar_types.data import RestOfTheFile
-from .definition_registry import output_file_definition_registry
 import io
 import os
 import re
@@ -119,6 +118,11 @@ class OutputFile(ConfigurationFile):
     @cached_class_property
     def definitions(cls):
         """Return all known definitions of the SPR-KKR output files."""
+        # Discovery imports individual definition modules. Defer construction
+        # until OutputFile and output_files_definitions are fully initialized so
+        # definition modules can safely import this class.
+        from .definition_registry import output_file_definition_registry
+
         return output_file_definition_registry.by_extension()
 
     @classmethod
@@ -145,7 +149,7 @@ class OutputFile(ConfigurationFile):
           The file to read
 
         first_try
-          List of output file types to be tried first. If it is None, it is guessed
+          List of output file types, that can be read first. If it is None, it is guessed
           from the file extension.
 
         try_only
