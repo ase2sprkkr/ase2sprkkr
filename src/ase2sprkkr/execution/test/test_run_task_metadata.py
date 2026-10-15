@@ -1,7 +1,8 @@
 from types import SimpleNamespace
 
 from ase2sprkkr.execution import ExecutionManager, RunState, RunStore
-from ase2sprkkr.outputs import persistent as persistent_results
+from ase2sprkkr.outputs.persistent import attach_persistent_run
+from ase2sprkkr.outputs.readers.dos import DosOutputReader
 
 
 def test_run_record_persists_effective_task_schema_and_requested_task(tmp_path):
@@ -43,4 +44,7 @@ def test_legacy_record_without_schema_does_not_guess_input_parameters(tmp_path):
     manager.store.save(record)
     record = manager.finalize(record, state=RunState.FINISHED, return_code=0)
 
-    assert persistent_results._input_parameters_for_record(manager, record) is None
+    attached = attach_persistent_run(manager, record.id)
+
+    assert isinstance(attached.reader, DosOutputReader)
+    assert attached.reader.input_parameters is None
