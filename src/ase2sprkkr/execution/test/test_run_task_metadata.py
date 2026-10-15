@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 
 from ase2sprkkr.execution import ExecutionManager, RunState, RunStore
-from ase2sprkkr.outputs.persistent import load_persistent_result
+from ase2sprkkr.outputs import persistent as persistent_results
 
 
 def test_run_record_persists_effective_task_schema_and_requested_task(tmp_path):
@@ -43,16 +43,4 @@ def test_legacy_record_without_schema_does_not_guess_input_parameters(tmp_path):
     manager.store.save(record)
     record = manager.finalize(record, state=RunState.FINISHED, return_code=0)
 
-    seen = {}
-
-    class Reader:
-        input_parameters = None
-
-        def read_from_file(self, output, **kwargs):
-            seen["input_file"] = kwargs["input_file"]
-            return SimpleNamespace(return_code=kwargs["return_code"])
-
-    result = load_persistent_result(manager, record.id, reader=Reader())
-
-    assert seen["input_file"] == str(input_file)
-    assert result.run_record.id == record.id
+    assert persistent_results._input_parameters_for_record(manager, record) is None
