@@ -753,6 +753,38 @@ class PreparedCalculation:
             raise error
 
 
+def _prepare_error_file(error_file, output_file, directory, create_subdirs):
+    """Materialize the stderr destination for one concrete run.
+
+    ``None`` means ``<output>.err``; ``True`` explicitly merges stderr into the
+    stdout file; ``False`` requests a managed temporary file. Explicit path-like
+    and file-like values are used directly. A path equal to ``output_file`` is
+    treated as the same destination rather than opening and truncating it twice.
+    """
+    if error_file is True or error_file is output_file:
+        return output_file, False
+
+    output_name = _named_file_name(output_file)
+    if error_file is None:
+        if output_name is None:
+            return None, False
+        error_file = output_name + ".err"
+    elif isinstance(error_file, (str, os.PathLike)) and output_name is not None:
+        error_name = _calculation_path(error_file, directory)
+        if os.path.abspath(output_name) == error_name:
+            return output_file, False
+
+    opened_error = _open_file(
+        error_file,
+        directory,
+        mode="wb",
+        allow_temporary=True,
+        create_subdirs=create_subdirs,
+    )
+    _require_named_file(opened_error, "error_file")
+    return opened_error, opened_error is not output_file
+
+
 def create_sprkkr_run(
     prepared: PreparedCalculation,
     *,
@@ -763,6 +795,8 @@ def create_sprkkr_run(
     print_output=False,
     read_callback=None,
     callback=None,
+    error_file=None,
+    create_subdirs=False,
     gdb=False,
 ):
     """Adapt a prepared SPR-KKR calculation to an unstarted generic runner.
@@ -772,15 +806,34 @@ def create_sprkkr_run(
     Concrete runner construction remains the responsibility of the selected
     executor or persistence manager.
 
+    ``error_file`` is an explicit execution artifact. By default stderr is
+    written to ``<output_file>.err``. ``True`` deliberately selects the same
+    physical file as stdout; ``False`` requests a managed temporary stderr file.
+
     Ownership of ``prepared`` is transferred to the returned runner. If runner
-    construction fails before that handoff, ``prepared`` is closed here.
+    construction fails before that handoff, ``prepared`` and a separately opened
+    stderr file are closed here.
 
     ``callback`` follows the generic runner's terminal-callback contract: it is
     invoked when backend execution terminates and may therefore receive a
     partially populated result if execution or parsing failed. Resource cleanup
     happens before the user callback and is independent of its success.
     """
-    resources = ExecutionResources(prepared)
+    try:
+        opened_error, owns_error = _prepare_error_file(
+            error_file,
+            prepared.output_file,
+            prepared.directory,
+            create_subdirs,
+        )
+    except BaseException:
+        prepared.close()
+        raise
+
+    resources = ExecutionResources(
+        prepared,
+        opened_error if owns_error else None,
+    )
     handed_off = False
     input_parameters = prepared.input_parameters
 
@@ -811,6 +864,7 @@ def create_sprkkr_run(
             file
             for file in (
                 prepared.output_file,
+                opened_error if opened_error is not prepared.output_file else None,
                 *input_parameters.output_files(prepared.directory),
             )
             if file is not None
@@ -825,6 +879,7 @@ def create_sprkkr_run(
             input_parameters.executable,
             prepared.input_file,
             prepared.output_file,
+            opened_error,
             prepared.directory,
             input_files=input_files,
             output_files=output_files,
