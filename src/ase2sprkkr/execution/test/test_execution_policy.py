@@ -137,15 +137,15 @@ def _persistent_wrapper(tmp_path, runner):
     return manager, PersistentRunner(manager, executor, runner, record)
 
 
-def test_definite_pre_submit_failure_becomes_failed_without_backend_state(tmp_path):
+def test_definite_pre_submit_failure_becomes_execution_failed(tmp_path):
     manager, runner = _persistent_wrapper(tmp_path, _NotStartedRunner())
 
     with pytest.raises(SubmissionNotStarted, match="input staging failed"):
         runner.submit()
 
     record = manager.store.get(runner.id)
-    assert record.state == RunState.FAILED
-    assert record.backend_state is None
+    assert record.state == RunState.EXECUTION_FAILED
+    assert not hasattr(record, "backend_state")
     assert record.reference is None
     assert record.message == "input staging failed"
 

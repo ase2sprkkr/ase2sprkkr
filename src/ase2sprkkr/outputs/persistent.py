@@ -84,10 +84,21 @@ def attach_persistent_run(
     callback=None,
     output_listener=None,
 ):
-    """Attach to a stored run using its persisted effective task metadata."""
+    """Attach to or explicitly retry finalization of one stored run."""
     record = _record(manager, run)
+    if record.state == RunState.FINALIZATION_FAILED:
+        record = manager.retry_finalization(record)
+
     if reader is None:
-        reader = _reader_for_record(manager, record)
+        try:
+            reader = _reader_for_record(manager, record)
+        except PersistentResultUnavailableError as exc:
+            if record.state == RunState.FINALIZING:
+                manager.fail_finalization(record, exc)
+            raise
+
+    # Attach/transport failures are deliberately not classified as finalization
+    # failures here. They may be transient and leave FINALIZING retryable.
     return manager.attach(
         record,
         reader=reader,
@@ -104,7 +115,13 @@ def load_persistent_result(manager, run, *, reader=None):
     historical input file is still current and its exact input definition was
     persisted, parameters are reconstructed from that definition.
     """
-    record = manager.retrieve_result_files(run)
+    record = _record(manager, run)
+    if record.state == RunState.FINALIZATION_FAILED:
+        raise PersistentResultUnavailableError(
+            record, "result finalization failed; retry finalization first"
+        )
+
+    record = manager.retrieve_result_files(record)
     record = manager.check_result_files(record)
     result_files = record.result_files
     if result_files is None or result_files.output_file is None:
@@ -135,7 +152,11 @@ def load_persistent_result(manager, run, *, reader=None):
 
     return_code = record.return_code
     if return_code is None:
-        return_code = 0 if record.state == RunState.FINISHED else 1
+        return_code = (
+            0
+            if record.state in (RunState.FINALIZING, RunState.FINISHED)
+            else 1
+        )
 
     input_file = None
     if manager.input_file_is_current(record) and (

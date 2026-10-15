@@ -31,16 +31,22 @@ from .endpoint import ExecutorEndpoint, endpoint_for_executor
 from .pool import default_executor_pool
 
 
-_RUN_RECORD_SCHEMA_VERSION = 4
-_FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
+_RUN_RECORD_SCHEMA_VERSION = 1
+_FINAL_STATES = {
+    RunState.FINISHED,
+    RunState.EXECUTION_FAILED,
+    RunState.FINALIZATION_FAILED,
+    RunState.CANCELLED,
+}
 _STATE_RANK = {
     RunState.NEW: 0,
     RunState.SUBMITTING: 1,
     RunState.QUEUED: 2,
     RunState.RUNNING: 3,
-    RunState.FINISHING: 4,
+    RunState.FINALIZING: 4,
     RunState.FINISHED: 5,
-    RunState.FAILED: 5,
+    RunState.EXECUTION_FAILED: 5,
+    RunState.FINALIZATION_FAILED: 5,
     RunState.CANCELLED: 5,
 }
 _UNCHANGED = object()
@@ -77,12 +83,26 @@ def _unique(values):
     return tuple(dict.fromkeys(value for value in values if value is not None))
 
 
-def _processing_state(backend_state):
-    """Map a terminal backend outcome to the still-running finalization phase."""
+def _state_from_backend(state):
+    """Map one backend status into the authoritative persistent lifecycle."""
+    state = RunState(state)
+    if state in (RunState.FINISHED, RunState.EXECUTION_FAILED):
+        return RunState.FINALIZING
+    return state
+
+
+def _completion_state(backend_state, error):
+    """Resolve the terminal lifecycle state after result finalization."""
     backend_state = RunState(backend_state)
-    if backend_state in (RunState.FINISHED, RunState.FAILED):
-        return RunState.FINISHING
-    return backend_state
+    if backend_state in (RunState.FINISHED, RunState.EXECUTION_FAILED):
+        if error is not None:
+            return RunState.FINALIZATION_FAILED
+        return backend_state
+    if backend_state == RunState.CANCELLED:
+        return RunState.CANCELLED
+    if error is not None:
+        return RunState.EXECUTION_FAILED
+    return _state_from_backend(backend_state)
 
 
 class CorruptRunRecord(RuntimeError):
@@ -232,17 +252,18 @@ class RunRecord:
     provenance describing the task originally requested by the caller; it is
     never used in place of the effective task.
 
-    ``state`` is the public run lifecycle, including result finalization. A
-    terminal backend outcome is therefore represented as ``FINISHING`` until
-    output parsing and the completion callback have finished. A finalization
-    error makes the public state ``FAILED`` even if the backend itself exited
-    successfully. ``backend_state`` records that independent backend outcome.
+    ``state`` is the single authoritative lifecycle state. A terminal backend
+    outcome advances it to ``FINALIZING`` while result processing completes;
+    successful execution then advances to ``FINISHED``, failed execution to
+    ``EXECUTION_FAILED``, and any failure of post-processing to
+    ``FINALIZATION_FAILED``.
 
-    ``finished_at`` records the first terminal lifecycle transition and is
-    immutable afterwards. Later metadata changes, including remote file
-    retrieval, update ``updated_at`` but never ``finished_at``. Result-file
-    freshness is derived from immutable :class:`FileVersion` snapshots and is
-    therefore not another persisted lifecycle field.
+    ``finished_at`` records the current terminal lifecycle transition. Explicit
+    retry of failed finalization reopens the lifecycle at ``FINALIZING`` and
+    clears it until the retry reaches another terminal state. Later metadata
+    changes, including remote file retrieval, update ``updated_at`` but do not
+    otherwise alter lifecycle timestamps. Result-file freshness is derived from
+    immutable :class:`FileVersion` snapshots.
     """
 
     id: str
@@ -256,7 +277,6 @@ class RunRecord:
     endpoint: Optional[ExecutorEndpoint] = None
     submission: Optional[SubmissionKey] = None
     reference: Optional[RunReference] = None
-    backend_state: Optional[RunState] = None
     return_code: Optional[int] = None
     message: Optional[str] = None
     result_files: Optional[ResultFilesRecord] = None
@@ -284,8 +304,6 @@ class RunRecord:
             )
         if not isinstance(self.state, RunState):
             object.__setattr__(self, "state", RunState(self.state))
-        if self.backend_state is not None and not isinstance(self.backend_state, RunState):
-            object.__setattr__(self, "backend_state", RunState(self.backend_state))
         if self.schema_version != _RUN_RECORD_SCHEMA_VERSION:
             raise ValueError(
                 f"unsupported schema version {self.schema_version}; "
@@ -652,15 +670,6 @@ class ExecutionManager:
         return requested
 
     @staticmethod
-    def _merged_backend_state(latest, requested):
-        if requested is _UNCHANGED or requested is None:
-            return latest.backend_state
-        requested = RunState(requested)
-        if latest.backend_state in _FINAL_STATES:
-            return latest.backend_state
-        return requested
-
-    @staticmethod
     def _merged_result_files(latest, requested):
         if requested is _UNCHANGED or requested is None:
             return latest.result_files
@@ -679,7 +688,6 @@ class ExecutionManager:
         *,
         state=None,
         reference=_UNCHANGED,
-        backend_state=_UNCHANGED,
         return_code=_UNCHANGED,
         message=_UNCHANGED,
         result_files=_UNCHANGED,
@@ -696,9 +704,6 @@ class ExecutionManager:
             }
             if latest.state not in _FINAL_STATES and merged_state in _FINAL_STATES:
                 changes["finished_at"] = now
-            merged_backend_state = self._merged_backend_state(latest, backend_state)
-            if merged_backend_state is not latest.backend_state:
-                changes["backend_state"] = merged_backend_state
             merged_result_files = self._merged_result_files(latest, result_files)
             if merged_result_files is not latest.result_files:
                 changes["result_files"] = merged_result_files
@@ -717,6 +722,35 @@ class ExecutionManager:
             return replace(latest, **changes)
 
         return self.store.update(record, merge)
+
+    def fail_finalization(self, record, error):
+        """Make a failed finalization attempt terminal without backend heuristics."""
+        record = self.store.get(record.id)
+        if record.state != RunState.FINALIZING:
+            return record
+        return self.finalize(
+            record,
+            state=RunState.FINALIZATION_FAILED,
+            message=str(error),
+        )
+
+    def retry_finalization(self, record):
+        """Explicitly reopen a failed finalization attempt."""
+
+        def retry(latest):
+            if latest.state != RunState.FINALIZATION_FAILED:
+                raise RuntimeError(
+                    f"Run {latest.id} is {latest.state.value}, not finalization_failed"
+                )
+            return replace(
+                latest,
+                state=RunState.FINALIZING,
+                updated_at=_now(),
+                finished_at=None,
+                message=None,
+            )
+
+        return self.store.update(record, retry)
 
     def _is_stale_submitting(self, record, *, now=None):
         if record.state != RunState.SUBMITTING or record.reference is not None:
@@ -749,7 +783,7 @@ class ExecutionManager:
             now = _now()
             return replace(
                 latest,
-                state=RunState.FAILED,
+                state=RunState.EXECUTION_FAILED,
                 updated_at=now,
                 finished_at=now,
                 message="Stale submission was not found by its execution backend",
@@ -797,14 +831,16 @@ class ExecutionManager:
                 raise DuplicateSubmissionError(record, conflicts)
 
     def update(self, record, status: RunStatus):
-        """Persist a backend status while keeping result finalization explicit."""
+        """Persist a backend status in the authoritative lifecycle graph."""
         backend_state = RunState(status.state)
+        return_code = status.return_code
+        if backend_state == RunState.EXECUTION_FAILED and return_code is None:
+            return_code = 1
         return self.transition(
             record,
-            state=_processing_state(backend_state),
-            backend_state=backend_state,
+            state=_state_from_backend(backend_state),
             reference=status.reference,
-            return_code=status.return_code,
+            return_code=return_code,
             message=status.message,
         )
 
@@ -815,17 +851,16 @@ class ExecutionManager:
         state,
         reference=None,
         return_code=None,
-        backend_state=None,
         message=None,
     ):
-        """Capture result files while preserving the execution lifecycle outcome."""
-        result_files = self._capture_result_files(record.result_files)
-        if backend_state is None:
-            backend_state = state if state in _FINAL_STATES else _UNCHANGED
+        """Finish one lifecycle after result processing has completed or failed."""
+        state = RunState(state)
+        result_files = record.result_files
+        if state != RunState.FINALIZATION_FAILED:
+            result_files = self._capture_result_files(result_files)
         return self.transition(
             record,
             state=state,
-            backend_state=backend_state,
             reference=reference,
             return_code=return_code,
             message=message,
@@ -1044,14 +1079,13 @@ class PersistentRunner:
     @property
     def state(self):
         backend_state = self._runner.state
-        state = _processing_state(backend_state)
+        state = _state_from_backend(backend_state)
         if backend_state == RunState.NEW and self._record.state != RunState.NEW:
             state = self._record.state
         if self._record.state != RunState.NEW and state != self._record.state:
             self._record = self.manager.transition(
                 self._record,
                 state=state,
-                backend_state=backend_state,
                 reference=self.reference,
             )
             state = self._record.state
@@ -1072,7 +1106,7 @@ class PersistentRunner:
         except SubmissionNotStarted as exc:
             self._record = self.manager.transition(
                 self._record,
-                state=RunState.FAILED,
+                state=RunState.EXECUTION_FAILED,
                 message=str(exc),
             )
             raise
@@ -1084,8 +1118,7 @@ class PersistentRunner:
                     backend_state = RunState.QUEUED
                 self._record = self.manager.transition(
                     self._record,
-                    state=_processing_state(backend_state),
-                    backend_state=backend_state,
+                    state=_state_from_backend(backend_state),
                     reference=reference,
                 )
             raise
@@ -1103,8 +1136,7 @@ class PersistentRunner:
             backend_state = RunState.QUEUED
         self._record = self.manager.transition(
             self._record,
-            state=_processing_state(backend_state),
-            backend_state=backend_state,
+            state=_state_from_backend(backend_state),
             reference=reference,
         )
         self._sync_file_retrieval()
@@ -1124,11 +1156,10 @@ class PersistentRunner:
         self._sync_file_retrieval()
         backend_state = self._runner.state
         error = self._runner.exception
-        state = RunState.FAILED if error is not None else backend_state
+        state = _completion_state(backend_state, error)
         self._record = self.manager.finalize(
             self._record,
             state=state,
-            backend_state=backend_state,
             reference=self.reference,
             return_code=getattr(result, "return_code", None),
             message=None if error is None else str(error),
@@ -1160,10 +1191,8 @@ class PersistentRunner:
             return self._runner.cancel()
         finally:
             if self._record.state != RunState.NEW:
-                backend_state = self._runner.state
                 self._record = self.manager.transition(
                     self._record,
-                    state=_processing_state(backend_state),
-                    backend_state=backend_state,
+                    state=_state_from_backend(self._runner.state),
                     reference=self.reference,
                 )
