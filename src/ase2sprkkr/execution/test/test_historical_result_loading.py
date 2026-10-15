@@ -99,12 +99,12 @@ def _manager(store):
     return ExecutionManager(store, executor_pool=ExecutorPool())
 
 
-def _finished_run(tmp_path):
+def _finished_run(tmp_path, *, task="DOS"):
     store = RunStore(tmp_path / "runs")
     manager = _manager(store)
     executor = _HistoryExecutor()
     spec = _spec(tmp_path)
-    run = manager.create_run(executor, object(), spec, task="DOS")
+    run = manager.create_run(executor, object(), spec, task=task)
     run.submit()
     output_file = tmp_path / "run.out"
     output_file.write_text("original output")
@@ -148,7 +148,7 @@ def test_load_persistent_result_restores_exact_missing_historical_output(tmp_pat
 
 
 def test_loaded_persistent_result_can_start_continuation_without_calculator(tmp_path):
-    manager, _, run = _finished_run(tmp_path)
+    manager, _, run = _finished_run(tmp_path, task="SCF")
     input_parameters = SimpleNamespace(
         CONTROL=SimpleNamespace(POTFIL=lambda: "Fe.pot")
     )
