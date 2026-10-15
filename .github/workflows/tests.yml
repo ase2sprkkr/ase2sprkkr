@@ -6,7 +6,6 @@ on:
   push:
     branches-ignore:
       - 'chatgpt-**'
-      - 'tmp-**'
   pull_request:
     branches:
       - workflow
@@ -16,8 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # in this example, there is a newer version already installed, 3.7.7, so the older version will be downloaded
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14', '3.15']
     steps:
     - uses: actions/checkout@v6
     - uses: actions/setup-python@v6
