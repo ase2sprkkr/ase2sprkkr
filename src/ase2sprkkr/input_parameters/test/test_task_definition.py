@@ -27,31 +27,59 @@ def test_task_binding_is_authoritative():
     parameters = InputParameters.create("SCF")
 
     assert parameters.task_name == "SCF"
+    assert parameters.requested_task_definition is parameters.task_definition
     assert parameters._definition is parameters.task_definition.input_parameters_definition
     assert parameters.task_definition.executable == "kkrscf"
     assert parameters.task_definition.mpi is True
 
 
 @pytest.mark.parametrize("copy_values", [False, True])
-def test_copy_preserves_task_binding(copy_values):
+def test_copy_preserves_requested_task_binding(copy_values):
     parameters = InputParameters.create("BSFEK")
 
     copied = parameters.copy(copy_values=copy_values)
 
+    assert copied.requested_task_definition is parameters.requested_task_definition
     assert copied.task_definition is parameters.task_definition
     assert copied.task_name == "BSFEK"
     assert copied._definition is copied.task_definition.input_parameters_definition
     np.testing.assert_array_equal(copied.ENERGY.NE(), [200])
 
 
-def test_change_task_changes_task_and_schema_atomically():
+def test_shared_schema_distinguishes_requested_and_effective_task():
+    parameters = InputParameters.create("BSFEK")
+    requested = parameters.requested_task_definition
+
+    parameters.ENERGY.NE = [1]
+
+    assert requested is InputParameters.task_registry["BSFEK"]
+    assert parameters.requested_task_definition is requested
+    assert parameters.task_definition is InputParameters.task_registry["BSFKK"]
+    assert parameters.requested_task_name == "BSFEK"
+    assert parameters.task_name == "BSFKK"
+
+
+def test_change_task_changes_requested_task_and_schema_atomically():
     parameters = InputParameters.create("DOS")
 
     parameters.change_task("SCF")
 
+    assert parameters.requested_task_definition is InputParameters.task_registry["SCF"]
     assert parameters.task_name == "SCF"
     assert parameters.task_definition.name == "SCF"
     assert parameters._definition is parameters.task_definition.input_parameters_definition
+
+
+def test_shared_spec_task_initializes_discriminator():
+    parameters = InputParameters.create("SPLEED")
+    requested = parameters.requested_task_definition
+
+    assert parameters.TASK.TASK() == "SPLEED"
+    assert parameters.task_definition is requested
+
+    parameters.TASK.TASK = "AIPES"
+    assert parameters.requested_task_definition is requested
+    assert parameters.task_definition is InputParameters.task_registry["AIPES"]
 
 
 def test_direct_schema_objects_are_detached():
@@ -89,18 +117,18 @@ def test_reader_discovery_uses_registry_and_default_fallback():
     assert KkrOutputReader.class_for_task("unknown") is DefaultOutputReader
 
 
-def test_task_reader_respects_concrete_execution_task_when_parameters_exist():
-    parameters = InputParameters.create("ARPES")
-    task = parameters.task_definition
-    assert task.execution_task_name(parameters) == "ARPES"
-    assert task.output_reader_class(parameters).__name__ == "ArpesOutputReader"
+@pytest.mark.parametrize(
+    ("task_name", "reader_name"),
+    [
+        ("ARPES", "ArpesOutputReader"),
+        ("AIPES", "SpecOutputReader"),
+        ("SPLEED", "SpecOutputReader"),
+        ("BAND", "SpecOutputReader"),
+        ("BSFEK", "BsfOutputReader"),
+        ("BSFKK", "BsfOutputReader"),
+    ],
+)
+def test_effective_task_owns_reader_contract(task_name, reader_name):
+    task = InputParameters.task_registry[task_name]
 
-    parameters.TASK.TASK = "SPLEED"
-    assert task.execution_task_name(parameters) == "SPLEED"
-    assert task.output_reader_class(parameters) is DefaultOutputReader
-
-
-def test_task_reader_degrades_to_task_definition_without_parameters():
-    task = InputParameters.task_registry["ARPES"]
-
-    assert task.output_reader_class().__name__ == "ArpesOutputReader"
+    assert task.output_reader_class().__name__ == reader_name
