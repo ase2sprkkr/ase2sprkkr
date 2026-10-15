@@ -7,6 +7,7 @@ import pytest
 
 from ...execution.base import RunState
 from ...input_parameters.input_parameters import InputParameters
+from ...outputs.task_result import TaskResult
 from ...potentials.potentials import Potential
 from .. import calculation
 from ..calculator import SPRKKR
@@ -14,8 +15,9 @@ from ..profile import SPRKKRProfile
 
 
 class _UnstartedRunner:
-    def __init__(self, spec):
+    def __init__(self, spec, callback=None):
         self.spec = spec
+        self.callback = callback
         self.state = RunState.NEW
         self.result = None
         self.reference = None
@@ -30,7 +32,7 @@ class _Executor:
         return mpi
 
     def create_run(self, reader, spec, callback=None):
-        return _UnstartedRunner(spec)
+        return _UnstartedRunner(spec, callback)
 
 
 def test_input_parameters_do_not_own_execution():
@@ -177,6 +179,32 @@ def test_prepared_calculation_constructs_its_runner(tmp_path):
 
     runner.close()
     assert prepared.closed
+
+
+def test_live_result_receives_opaque_provenance_before_callback(tmp_path):
+    provenance = object()
+    observed = []
+    calculator = SPRKKR(
+        atoms=bulk("Fe"),
+        directory=tmp_path,
+        profile=SPRKKRProfile(mpi=False),
+        empty_spheres=False,
+    )
+
+    runner = calculator.create_run(
+        output_file=False,
+        executor=_Executor(),
+        provenance=provenance,
+        callback=observed.append,
+    )
+    result = TaskResult(None, None, tmp_path)
+
+    assert result.provenance is None
+    runner.callback(result)
+    assert result.provenance is provenance
+    assert observed == [result]
+
+    runner.close()
 
 
 def test_failed_potential_serialization_preserves_primary_error_and_cleans_files(
