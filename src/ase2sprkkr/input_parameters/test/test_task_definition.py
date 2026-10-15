@@ -84,7 +84,11 @@ def test_reader_discovery_uses_registry_and_default_fallback():
 
 def test_task_reader_respects_concrete_execution_task():
     parameters = InputParameters.create("ARPES")
-    assert parameters.task_definition.output_reader_class(parameters).__name__ == "ArpesOutputReader"
+    task = parameters.task_definition
+    assert task._execution_task_name(parameters) == "ARPES"
+    assert task.output_reader_class(parameters).__name__ == "ArpesOutputReader"
 
     parameters.TASK.TASK = "SPLEED"
-    assert parameters.task_definition.output_reader_class(parameters) is DefaultOutputReader
+    assert task._execution_task_name(parameters) == "SPLEED"
+    assert task.output_reader_class(parameters) is DefaultOutputReader
+    assert task.output_reader_class(execution_task="SPLEED") is DefaultOutputReader

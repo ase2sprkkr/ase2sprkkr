@@ -90,13 +90,30 @@ class TaskDefinition:
             parameters, directory, self.cache_file_templates
         )
 
-    def output_reader_class(self, parameters=None):
+    def _execution_task_name(self, parameters):
+        """Return the concrete SPR-KKR ``TASK.TASK`` used by *parameters*.
+
+        The bound :class:`TaskDefinition` is the application-level task
+        identity. Some task schemas can select a related native execution mode
+        through ``TASK.TASK``; that distinction belongs to task semantics, not
+        to the generic input-parameter container.
+        """
+        task_section = getattr(parameters, "TASK", None)
+        task_option = (
+            getattr(task_section, "TASK", None)
+            if task_section is not None
+            else None
+        )
+        value = task_option() if task_option is not None else None
+        return str(value or self.name).upper()
+
+    def output_reader_class(self, parameters=None, *, execution_task=None):
         """Return the reader class used for the concrete task output.
 
         An explicitly configured reader belongs to the task definition. The
-        default reader is still selected from the concrete ``TASK.TASK`` value,
-        preserving tasks such as ARPES whose input schema can request related
-        execution modes.
+        default reader is selected from the concrete native execution task. Live
+        parameters are authoritative when available; a persisted execution-task
+        identity provides the lossless fallback after restart.
         """
         if self.result_reader is not None:
             return self.result_reader
@@ -104,11 +121,12 @@ class TaskDefinition:
         from ..outputs.reader_registry import reader_registry
         from ..outputs.readers.default import DefaultOutputReader
 
-        task_name = (
-            parameters._execution_task_name
-            if parameters is not None
-            else self.input_parameters_definition.name
-        )
+        if parameters is not None:
+            task_name = self._execution_task_name(parameters)
+        elif execution_task is not None:
+            task_name = str(execution_task).upper()
+        else:
+            task_name = self.input_parameters_definition.name
         try:
             return reader_registry[task_name]
         except RegistryEntryNotFound:
