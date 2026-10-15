@@ -354,6 +354,7 @@ class SPRKKR(BaseCalculator):
         profile: Optional[SPRKKRProfile] = None,
         executor=None,
         persistent=None,
+        provenance=None,
         restart_scf: bool = False,
     ):
         """Prepare a calculation and return an unstarted owning runner.
@@ -362,6 +363,9 @@ class SPRKKR(BaseCalculator):
         explicit per-run profile selects its backend; if neither is supplied,
         the calculator-level executor (when present) overrides the calculator
         profile backend.
+
+        ``provenance`` is opaque caller-owned runtime metadata. ASE2SPRKKR does
+        not inspect, copy or persist it; the live result keeps the exact object.
 
         ``callback`` is a terminal runner callback. It can therefore be invoked
         with a partially populated result when backend execution or parsing
@@ -392,7 +396,7 @@ class SPRKKR(BaseCalculator):
             allow_temporary_files=True,
             restart_scf=restart_scf,
         )
-        return prepared.create_run(
+        runner = prepared.create_run(
             result_context=self,
             profile=run_profile,
             executor=executor,
@@ -402,6 +406,8 @@ class SPRKKR(BaseCalculator):
             callback=callback,
             gdb=gdb,
         )
+        runner.result.provenance = provenance
+        return runner
 
     def value_or_default(self, name, value):
         """Return calculator default *name* when *value* is ``None``."""
@@ -447,6 +453,7 @@ class SPRKKR(BaseCalculator):
         profile=None,
         executor=None,
         persistent=None,
+        provenance=None,
         restart_scf: bool = False,
     ):
         """Run one SPR-KKR task synchronously and return its parsed result.
@@ -457,6 +464,9 @@ class SPRKKR(BaseCalculator):
         updates; each run materializes the complete supplied calculation state.
         Per-call ``mpi``, ``executable_dir`` and ``executable_suffix`` values are
         immutable overrides of the selected execution profile.
+
+        ``provenance`` is opaque runtime metadata forwarded unchanged to the
+        returned live result and is not included in persistent run state.
 
         The callback of this synchronous convenience method is intentionally a
         success callback: it runs only after the result has updated calculator
@@ -490,6 +500,7 @@ class SPRKKR(BaseCalculator):
             profile=run_profile,
             executor=executor,
             persistent=persistent,
+            provenance=provenance,
             restart_scf=restart_scf,
         )
         result = runner.run()
