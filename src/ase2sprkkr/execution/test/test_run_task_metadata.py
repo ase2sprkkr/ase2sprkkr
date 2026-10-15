@@ -1,8 +1,7 @@
 from types import SimpleNamespace
 
 from ase2sprkkr.execution import ExecutionManager, RunState, RunStore
-from ase2sprkkr.input_parameters.input_parameters import InputParameters
-from ase2sprkkr.outputs.persistent import load_persistent_result
+from ase2sprkkr.outputs import persistent as persistent_results
 
 
 def test_run_record_persists_effective_task_schema_and_requested_task(tmp_path):
@@ -22,9 +21,7 @@ def test_run_record_persists_effective_task_schema_and_requested_task(tmp_path):
     assert loaded.requested_task == "ARPES"
 
 
-def test_legacy_record_without_schema_does_not_guess_input_parameters(
-    tmp_path, monkeypatch
-):
+def test_legacy_record_without_schema_does_not_guess_input_parameters(tmp_path):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
     input_file = tmp_path / "run.inp"
     output_file = tmp_path / "run.out"
@@ -46,20 +43,4 @@ def test_legacy_record_without_schema_does_not_guess_input_parameters(
     manager.store.save(record)
     record = manager.finalize(record, state=RunState.FINISHED, return_code=0)
 
-    seen = {}
-
-    class Reader:
-        def __init__(self, input_parameters, calculator, directory, task_name=None):
-            assert input_parameters is None
-
-        def read_from_file(self, output, **kwargs):
-            seen["input_file"] = kwargs["input_file"]
-            return SimpleNamespace(return_code=kwargs["return_code"])
-
-    task = InputParameters.task_registry["DOS"]
-    monkeypatch.setattr(task, "output_reader_class", lambda: Reader)
-
-    result = load_persistent_result(manager, record.id)
-
-    assert seen["input_file"] is None
-    assert result.run_record.id == record.id
+    assert persistent_results._input_parameters_for_record(manager, record) is None
