@@ -1,23 +1,24 @@
-from .. import calculator as calculator_module
+from types import SimpleNamespace
+
 from ..calculator import SPRKKR
 
 
 def test_create_run_forwards_explicit_file_names(monkeypatch):
     calculator = SPRKKR(directory=False, empty_spheres=False)
     captured = {}
-    prepared = object()
     runner = object()
+
+    def create_run(**kwargs):
+        captured["run"] = kwargs
+        return runner
+
+    prepared = SimpleNamespace(create_run=create_run)
 
     def prepare(**kwargs):
         captured.update(kwargs)
         return prepared
 
-    def create_sprkkr_run(value, **kwargs):
-        assert value is prepared
-        return runner
-
-    monkeypatch.setattr(calculator, "_prepare_calculation", prepare)
-    monkeypatch.setattr(calculator_module, "_create_sprkkr_run", create_sprkkr_run)
+    monkeypatch.setattr(calculator, "prepare", prepare)
 
     assert (
         calculator.create_run(

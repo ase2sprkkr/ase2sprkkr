@@ -63,9 +63,19 @@ def test_direct_schema_objects_are_detached():
     parameters = schema.create_object()
 
     assert parameters.task_definition is None
-    assert parameters.task_name == schema.name
+    assert parameters.task_name is None
+    assert parameters.copy().task_name is None
     with pytest.raises(RuntimeError, match="not associated"):
         parameters.is_mpi()
+
+
+def test_canonical_schema_identity_is_not_requested_task_provenance():
+    schema = InputParameters.input_parameters_registry["SCF"]
+    parameters = schema.create_object()
+
+    assert parameters.task_definition is InputParameters.task_registry["SCF"]
+    assert parameters.execution_task_name == "SCF"
+    assert parameters.task_name is None
 
 
 def test_task_definition_requires_schema_name():
