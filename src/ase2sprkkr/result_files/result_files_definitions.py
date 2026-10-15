@@ -20,7 +20,7 @@ from ..common.grammar_types import (
     BlankSeparator as BlankSeparatorType,
 )
 import pyparsing as pp
-from .output_files import OutputFile
+from .result_files import ResultFile
 from ..common.grammar import generate_grammar
 
 
@@ -88,9 +88,9 @@ class OutputFileDefinition(ConfigurationFileDefinition):
     delimiter = line_end
     """ options are delimited by newline in ouptut. """
 
-    result_class = OutputFile
+    result_class = ResultFile
 
-    configuration_type_name = "OUTPUT FILE"
+    configuration_type_name = "RESULT FILE"
 
     def add_ignored(self, out):
         """In the output files, do not ignore doublecrossed lines"""

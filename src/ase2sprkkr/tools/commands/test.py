@@ -48,7 +48,17 @@ def run(args, global_args):
     if pytest.version_tuple[0] <= 6:
         print("Pytest version >= 6.0 is required. Please install it with pip install --upgrade 'pytest>=6'")
         exit(-1)
-    pytest_args = [sys.executable, "-m", "pytest", "--doctest-modules", "--rootdir", root_path, a2s_path]
+    pytest_args = [
+        sys.executable,
+        "-m",
+        "pytest",
+        "--doctest-modules",
+        "--ignore",
+        os.path.join(a2s_path, "output_files"),
+        "--rootdir",
+        root_path,
+        a2s_path,
+    ]
     if args.fast:
         pytest_args += ["-m", "not slow"]
     pytest_args += args.pytest_arguments

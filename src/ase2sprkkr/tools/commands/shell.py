@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Opening the ASE2SPRKKR output files and/or scripts in the shell or Jupyter notebook
+Opening the ASE2SPRKKR result files and/or scripts in the shell or Jupyter notebook
 """
 
 from pathlib import Path
@@ -16,20 +16,20 @@ from ...common.lazy_string import LazyString  # NOQA
 
 @LazyString
 def description():
-    from ...output_files.output_files import OutputFile
+    from ...result_files import ResultFile
 
-    out = "The type of the file is guessed from the content of the file and from the extension. The currently supported files are: \n"
-    defs = OutputFile.definitions.items()
+    out = "The type of the file is guessed from the content of the file and from the extension. The currently supported structured result files are: \n"
+    defs = ResultFile.definitions.items()
     out += "\n".join(map(lambda x: f"    {x[0].upper()}: {x[1].info()}", defs))
     return out
 
 
-help = "Open SPR-KKR output files in a Python shell or Jupyter notebook"
+help = "Open SPR-KKR result files in a Python shell or Jupyter notebook"
 
 
 def parser(parser):
     parser.add_argument(
-        "-o", "--output", help="SPR-KKR output file name (see the supported files above).", action="append", default=[]
+        "-o", "--output", help="SPR-KKR result file name (see the supported files above).", action="append", default=[]
     )
     parser.add_argument("-j", "--jupyter", help="Open Jupyter notebook.", action="store_true")
     parser.add_argument("-D", "--pdb", help="Run the command inside pdb", action="store_true")
