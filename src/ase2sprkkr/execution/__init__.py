@@ -1,5 +1,7 @@
 """Calculation execution subsystem."""
 
+from ..common.file_fingerprints import FileFingerprint
+from ..common.file_versions import FileState, FileVersion, FileVersionCaptureError
 from .base import (
     ExecutionResources,
     ExecutionSpec,
@@ -18,11 +20,9 @@ from .local import LocalExecutor, LocalRunner
 from .manager import (
     CorruptRunRecord,
     DuplicateSubmissionError,
-    FileFingerprint,
     FileRetrievalState,
     PersistentRunner,
     ResultFilesRecord,
-    ResultFilesState,
     RunRecord,
     RunStore,
     SubmissionKey,
@@ -62,8 +62,10 @@ __all__ = [
     "SubmissionKey",
     "DuplicateSubmissionError",
     "FileFingerprint",
+    "FileState",
+    "FileVersion",
+    "FileVersionCaptureError",
     "FileRetrievalState",
-    "ResultFilesState",
     "ResultFilesRecord",
     "RunRecord",
     "RunStore",

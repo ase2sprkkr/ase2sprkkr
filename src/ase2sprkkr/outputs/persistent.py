@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from ..common.module_registry import RegistryEntryNotFound
-from ..execution import ResultFilesState, RunState
+from ..execution import FileState, RunState
 from ..input_parameters.input_parameters import InputParameters
 
 
@@ -102,9 +102,7 @@ def load_persistent_result(manager, run, *, reader=None):
 
     Reader selection is determined by the persisted effective task. When the
     historical input file is still current and its exact input definition was
-    persisted, parameters are reconstructed from that definition. Legacy records
-    without an input-definition identity may still load output, but their input
-    parameters are intentionally not guessed.
+    persisted, parameters are reconstructed from that definition.
     """
     record = manager.retrieve_result_files(run)
     record = manager.check_result_files(record)
@@ -114,10 +112,15 @@ def load_persistent_result(manager, run, *, reader=None):
             record, "no persisted output result file"
         )
 
-    if result_files.state == ResultFilesState.OVERWRITTEN:
-        raise PersistentResultUnavailableError(
-            record, "result files have been overwritten"
-        )
+    file_state = result_files.state
+    if file_state is not FileState.CURRENT:
+        if file_state is FileState.OVERWRITTEN:
+            message = "result files have been overwritten"
+        elif file_state is FileState.MISSING:
+            message = "result files are missing"
+        else:
+            message = "result files are unavailable"
+        raise PersistentResultUnavailableError(record, message)
 
     output_file = result_files.output_file
     output_available = manager.output_file_is_current(record)
