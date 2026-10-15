@@ -381,8 +381,7 @@ class LocalPersistentRunner:
         return self.wait()
 
     async def run_async(self):
-        loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(None, self.run)
+        return await asyncio.to_thread(self.run)
 
     def cancel(self):
         if self._reference is None:

@@ -3,9 +3,7 @@
 import functools
 import inspect
 import heapq
-import asyncio
 import warnings
-import sys
 from . import backward_compatibility  # NOQA
 from functools import cache  # NOQA
 
@@ -51,55 +49,12 @@ class cached_class_property:
         return out
 
 
-if hasattr(functools, "cached_property"):
-    std_cached_property = functools.cached_property
-    """ Functools.cached_property decorator - the value is computed only once and then stored as an (same-name) instance attribute.
-    You can delete the attribute to invalidate the cache.
-
-    Earlier versions of python do not have this decorator, so for these versions is implemented below, otherwise it is taken from functools.
-    """
-else:
-    # https://github.com/pydanny/cached-property/blob/master/cached_property.py
-    class std_cached_property(object):
-        """
-        A property that is only computed once per instance and then replaces itself
-        with an ordinary attribute. Deleting the attribute resets the property.
-        Source: `https://github.com/bottlepy/bottle/commit/fa7733e075da0d790d809aa3d2f53071897e6f76`
-        """  # noqa
-
-        def __init__(self, func):
-            self.__doc__ = getattr(func, "__doc__")
-            self.func = func
-
-        def __get__(self, obj, cls):
-            if obj is None:
-                return self
-
-            if asyncio and asyncio.iscoroutinefunction(self.func):
-                return self._wrap_in_coroutine(obj)
-
-            value = obj.__dict__[self.attrname] = self.func(obj)
-            return value
-
-        def __set_name__(self, owner, name):
-            # for Py3.7, we need to use attrname and not self.func.__name__
-            # since in complex cases when nested decorators are used,
-            # this information can be lost
-            self.attrname = name
-
-        def _wrap_in_coroutine(self, obj):
-            @functools.wraps(obj)
-            @asyncio.coroutine
-            def wrapper():
-                future = asyncio.ensure_future(self.func(obj))
-                obj.__dict__[self.attrname] = future
-                return future
-
-            return wrapper()
+std_cached_property = functools.cached_property
+"""``functools.cached_property`` used as the base implementation."""
 
 
 class cached_property(std_cached_property):
-    """Cached property, that allows setter and deleter"""
+    """Cached property that allows a setter and deleter."""
 
     def __init__(self, func, fset=None, fdel=None):
         super().__init__(func)
@@ -123,15 +78,6 @@ class cached_property(std_cached_property):
 
     def deleter(self, fdel):
         return type(self)(self.func, self.fset, fdel)
-
-    # for some reason, in 3.7 and lower the attribute in the dict do not override the __get__
-    # in subclasses
-    if sys.version_info < (3, 8):
-
-        def __get__(self, obj, cls):
-            if self.attrname in obj.__dict__:
-                return obj.__dict__[self.attrname]
-            return super().__get__(obj, cls)
 
 
 class class_property:
@@ -224,7 +170,6 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
                     arg_kw = i.name
                     break
 
-        # remove args/kwargs from the childs argument
         new_pars = {i.name: i for i in new_pars if (i.kind != P.VAR_KEYWORD or kwargs) and i.kind != P.VAR_POSITIONAL}
 
         used = set()
@@ -248,7 +193,6 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
                         n = new_pars[i.name]
                         if n.kind != P.KEYWORD_ONLY:
                             continue
-                        # keyword only parameters retain the old position, taken new default and annotation
                         yield i.replace(default=n.default, annotation=n.annotation)
 
             add_pars = [i for i in add_pars()]
@@ -256,8 +200,6 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
             old_pars = [use(new_pars[i.name]) if i.name in new_pars else i for i in pars if i.name not in excluding]
             add_pars = [i for i in new_pars.values() if i.name not in used]
 
-        # the easy and fast way - only keyword arguments are present, the function can be called as is,
-        # just make its signature pretty
         for i in add_pars:
             if i.kind != P.KEYWORD_ONLY:
                 break

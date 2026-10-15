@@ -80,7 +80,7 @@ package sources.
 
 ### Requirements
 
-- Python \>= 3.8
+- Python \>= 3.9
 - SPR-KKR (not checked by the installer)
 - Python packages: see the the pypoject.toml file
 - Git (to obtain the sources)
