@@ -27,12 +27,14 @@ V = cd.InputValueDefinition
 
 
 @pytest.mark.parametrize("copy_values", [False, True])
-def test_copy_preserves_requested_task_name(copy_values):
+def test_copy_preserves_task_identity(copy_values):
     parameters = input_parameters.InputParameters.create("bsfek")
 
     copied = parameters.copy(copy_values=copy_values)
 
-    assert copied._requested_task_name == "BSFEK"
+    assert copied.task_name == "BSFEK"
+    assert copied.task_definition.name == "BSFEK"
+    assert copied.execution_task_name == "BSFEK"
     np.testing.assert_array_equal(copied.ENERGY.NE(), [200])
 
 

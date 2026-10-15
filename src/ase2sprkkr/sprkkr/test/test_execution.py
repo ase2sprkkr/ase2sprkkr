@@ -7,7 +7,14 @@ from types import SimpleNamespace
 
 import pytest
 
-from ...execution import ExecutionSpec, LaunchSpec, LocalExecutor, LocalRunner, RunState
+from ...execution import (
+    ExecutionSpec,
+    LaunchSpec,
+    LocalExecutor,
+    LocalRunner,
+    MpiSpec,
+    RunState,
+)
 from ..profile import SPRKKRProfile
 
 
@@ -111,7 +118,9 @@ def test_profile_builds_portable_mpi_launch_intent():
 
     assert spec.argv == ("/opt/sprkkr/kkrscf_v97",)
     assert spec.mpi_argv == ("/opt/sprkkr/kkrscf_v97MPI", "/tmp/Fe.inp")
-    assert spec.launch == LaunchSpec(mpi=("mpirun", "-np", "4"))
+    assert spec.launch == LaunchSpec(
+        mpi=MpiSpec(required=True, launcher=("mpirun", "-np", "4"))
+    )
     assert spec.stdin is input_file
 
 
