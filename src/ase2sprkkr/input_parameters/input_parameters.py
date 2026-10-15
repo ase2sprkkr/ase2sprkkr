@@ -11,7 +11,6 @@ from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
-from ..common.module_registry import RegistryEntryNotFound
 from ..common.warnings import DataValidityError
 from ..configuration import config
 from ..potentials.potentials import Potential
@@ -27,9 +26,9 @@ class InputSection(ConfigurationSection):
 class InputParameters(ConfigurationFile):
     """Concrete values of an SPR-KKR input file.
 
-    Input-file schemas and task identities are separate registries. Standard
-    schemas carry their canonical task directly; shared schemas resolve the task
-    from their concrete values.
+    ``requested_task_definition`` records the task explicitly requested by the
+    caller. ``task_definition`` is resolved from the current parameter values and
+    may change when a shared input schema is edited.
     """
 
     input_parameters_registry = InputParametersRegistry(definitions)
@@ -41,20 +40,37 @@ class InputParameters(ConfigurationFile):
         inputfile=None,
         outputfile=False,
         *,
-        task_name=None,
+        requested_task_definition=None,
     ):
         super().__init__(definition)
-        self._task_name = str(task_name or definition.name).upper()
+        self._requested_task_definition = requested_task_definition
         self._inputfile = inputfile
         self._outputfile = inputfile if outputfile is False else outputfile
 
     def get_task_definition(self):
-        """Return the task represented by the current parameter values."""
+        """Return the effective task represented by the current values."""
         return self._definition.task_definition(self)
 
     @property
     def task_definition(self):
+        """Effective task represented by the current parameter values."""
         return self.get_task_definition()
+
+    @property
+    def requested_task_definition(self):
+        """Task explicitly requested when this object was created, if any."""
+        return self._requested_task_definition
+
+    @property
+    def task_name(self):
+        """Name of the effective task represented by the current values."""
+        return self.task_definition.name
+
+    @property
+    def requested_task_name(self):
+        """Name of the explicitly requested task, or ``None`` for parsed input."""
+        task = self.requested_task_definition
+        return task.name if task is not None else None
 
     def _require_task_definition(self):
         task = self.get_task_definition()
@@ -83,16 +99,14 @@ class InputParameters(ConfigurationFile):
         return suffix
 
     def copy(self, copy_values: bool = False):
-        """Copy parameters while preserving their concrete task view."""
+        """Copy values while preserving requested-task provenance."""
         values = self.as_dict(copy=copy_values, only_changed=True)
-        out = self.__class__(definition=self._definition, task_name=self.task_name)
+        out = self.__class__(
+            definition=self._definition,
+            requested_task_definition=self._requested_task_definition,
+        )
         out.set(values, unknown="add", retain_invalid="all", report_invalid="ignore")
         return out
-
-    @property
-    def task_name(self):
-        """Task name originally requested when these parameters were created."""
-        return self._task_name
 
     def uses_separate_single_site_contour(self):
         switches = (
@@ -135,7 +149,7 @@ class InputParameters(ConfigurationFile):
         executor=None,
         persistent=None,
     ):
-        """Run the SPR-KKR task described by these input parameters."""
+        """Run the effective SPR-KKR task described by these input parameters."""
         task = self._require_task_definition()
         resources = ExecutionResources(input_file, output_file)
         handed_off = False
@@ -225,7 +239,7 @@ class InputParameters(ConfigurationFile):
             return runner.run()
         except FileNotFoundError as e:
             add = (
-                "Cannot find SPRKKR executable. Check executable_dir and executable_suffix "
+                "Cannot find SPR-KKR executable. Check executable_dir and executable_suffix "
                 "in the selected SPR-KKR profile.\n"
             )
             if execution_profile.mpi:
@@ -243,7 +257,7 @@ class InputParameters(ConfigurationFile):
         if not directory and calculator and calculator.directory:
             directory = calculator.directory
 
-        cls = self._require_task_definition().output_reader_class(self)
+        cls = self._require_task_definition().output_reader_class()
         return cls(self, calculator, directory, print_output)
 
     def read_output_from_file(self, filename, directory=None):
@@ -289,7 +303,7 @@ class InputParameters(ConfigurationFile):
             if name:
                 if name in cls.task_registry:
                     return cls.create(name)
-                return cls(definition=cls.input_parameters_registry[name], task_name=name)
+                return cls(definition=cls.input_parameters_registry[name])
             return cls.from_file(arg)
         if isinstance(arg, io.IOBase):
             return cls.from_file(arg)
@@ -298,7 +312,7 @@ class InputParameters(ConfigurationFile):
     @classmethod
     def create(cls, name):
         requested = cls.task_registry.normalize_name(name)
-        return cls.task_registry[requested].create_input_parameters(task_name=requested)
+        return cls.task_registry[requested].create_input_parameters()
 
     @classmethod
     def default_parameters(cls):
@@ -306,7 +320,7 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Try all registered input-file schemas."""
+        """Try each registered input-file schema once."""
         last = None
         is_stream = hasattr(filename, "seek")
         for definition in cls.definitions.values():
@@ -323,17 +337,21 @@ class InputParameters(ConfigurationFile):
         raise last
 
     def __repr__(self):
-        return self._definition.configuration_type_name + " for task " + self.task_name.upper()
+        requested = self.requested_task_name
+        suffix = f" (requested {requested})" if requested and requested != self.task_name else ""
+        return f"{self._definition.configuration_type_name} for task {self.task_name}{suffix}"
 
     def change_task(self, task, retain_values=False):
+        """Explicitly request *task* and initialize its input representation."""
         if retain_values:
             vals = self.to_dict(only_changed=True)
 
         requested = self.task_registry.normalize_name(task)
         task_definition = self.task_registry[requested]
         self._definition = task_definition.input_parameters_definition
-        self._task_name = requested
+        self._requested_task_definition = task_definition
         self._init_members_from_the_definition()
+        self._definition.initialize_for_task(self, task_definition.name)
 
         if retain_values:
             self.set(
