@@ -32,7 +32,7 @@ def test_copy_preserves_requested_task_name(copy_values):
 
     copied = parameters.copy(copy_values=copy_values)
 
-    assert copied._requested_task_name == "BSFEK"
+    assert copied.requested_task_name == "BSFEK"
     np.testing.assert_array_equal(copied.ENERGY.NE(), [200])
 
 
@@ -47,6 +47,9 @@ def test_section_delimiter_value():
             grammar.parse_string(value, True)
 
     valid = ["a\nb", "a \nb", "a\n  \nb", "a  \n \nb", "a \n\t\nb", "a\n\n\nb"]
+    for value in invalid:
+        with pytest.raises(pp.ParseException):
+            grammar.parse_string(value, True)
     for value in valid:
         assert_equal(grammar.parse_string(value, True).as_list(), ["a", "b"])
 
