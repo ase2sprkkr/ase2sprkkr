@@ -30,15 +30,18 @@ class SCFTaskDefinition(TaskDefinition):
         return tuple(files)
 
 
-def task_definition():
-    schema = InputParametersDefinition(
+def input_parameters_definition():
+    return InputParametersDefinition(
         "scf",
         [CONTROL("SCF"), TASK("SCF"), TAU, ENERGY(), SCF, SITES, STRCONST, CPA, MODE],
         info="SCF - Calculate a self-consistent potential",
         description="",
     )
+
+
+def task_definition():
     return SCFTaskDefinition(
-        schema,
+        input_parameters_definition,
         name="SCF",
         executable="kkrscf",
         mpi=True,
