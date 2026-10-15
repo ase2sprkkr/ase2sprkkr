@@ -22,6 +22,8 @@ class BaseMixed(GrammarType):
     string_type = None
     """ Type of string grammar_type to be used.  To be redefined in the descendants. """
 
+    is_the_same_value = staticmethod(compare_numpy_values)
+
     def _grammar(self, param_name=False):
         return pp.Or((i.grammar(param_name) for i in self.types))
 
@@ -92,7 +94,6 @@ def VariantGenerator(name, bool_type=Boolean.I, string_type=QString.I, add_types
         (BaseMixed,),
         {
             "string_type": string_type,
-            "is_the_same_value": staticmethod(compare_numpy_values),
             "types": base_types,
             "_string": _string,
             "__doc__": doc,
@@ -122,8 +123,6 @@ class CustomMixed(BaseMixed):
     used only for actual strings; it must not silently stringify mappings or
     other unsupported objects.
     """
-
-    is_the_same_value = staticmethod(compare_numpy_values)
 
     @add_to_signature(BaseMixed.__init__, prepend=True)
     def __init__(self, types, string_type=LineString.I, *args, **kwargs):

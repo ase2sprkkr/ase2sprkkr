@@ -1,11 +1,61 @@
 """This file contains SPRKKRAtoms - an enhanced version of Atoms to be used
 with SPRKKR"""
 
+from functools import lru_cache
 from ase import Atoms
 import numpy as np
 from typing import List, Union
 from .sites import Site
 from .spacegroup_info import SpacegroupInfo
+
+
+def _restore_promoted_ase_atoms(original_class, reconstruct, args):
+    """Recreate a promoted Atoms subclass before pickle restores its state."""
+    obj = reconstruct(*args)
+    obj.__class__ = _promoted_ase_atoms_class(original_class)
+    return obj
+
+
+def _reduce_promoted_ase_atoms(self, protocol):
+    """Preserve the original subclass reducer while restoring the promoted type."""
+    promoted_class = type(self)
+    original_class = promoted_class._sprkkr_original_class
+    reduction = original_class.__reduce_ex__(self, protocol)
+    if isinstance(reduction, str):
+        raise TypeError(
+            f"Can not pickle promoted {original_class.__name__}: "
+            "the original class uses a global-name reducer"
+        )
+
+    reconstruct, args, *rest = reduction
+    if reconstruct is promoted_class:
+        reconstruct = original_class
+    if args and args[0] is promoted_class:
+        args = (original_class,) + args[1:]
+
+    return (
+        _restore_promoted_ase_atoms,
+        (original_class, reconstruct, args),
+        *rest,
+    )
+
+
+@lru_cache(maxsize=None)
+def _promoted_ase_atoms_class(original_class):
+    """Return the unique SPRKKR-enabled class for an ASE Atoms subclass."""
+    if original_class is Atoms:
+        return SPRKKRAtoms
+
+    name = f"SPRKKR{original_class.__name__}"
+    return type(
+        name,
+        (original_class, SPRKKRAtoms),
+        {
+            "__module__": __name__,
+            "_sprkkr_original_class": original_class,
+            "__reduce_ex__": _reduce_promoted_ase_atoms,
+        },
+    )
 
 
 class SPRKKRAtoms(Atoms):
@@ -46,16 +96,10 @@ class SPRKKRAtoms(Atoms):
         else:
             if symmetry is None:
                 symmetry = True
-            if obj.__class__ is Atoms:
-                obj.__class__ = SPRKKRAtoms
-            else:
-                if not isinstance(obj, Atoms):
-                    raise ValueError(f"Can not promote class {obj} of class {obj.__class__} to {SPRKKRAtoms}")
+            if not isinstance(obj, Atoms):
+                raise ValueError(f"Can not promote class {obj} of class {obj.__class__} to {SPRKKRAtoms}")
 
-                class SprKKrAtomsEx(obj.__class__, SPRKKRAtoms):
-                    pass
-
-                obj.__class__ = SprKKrAtomsEx
+            obj.__class__ = _promoted_ase_atoms_class(obj.__class__)
 
             obj._init(symmetry=symmetry)
             # if Atoms are summed with SPRKKRAtoms, the content of sites

@@ -44,7 +44,13 @@ def test_preparation_is_independent_of_execution_profile():
     assert "profile" not in parameters
     assert "executor" not in parameters
     assert "persistent" not in parameters
-    assert callable(calculation.create_sprkkr_run)
+    assert callable(calculation.PreparedCalculation.create_run)
+
+
+def test_calculator_exposes_preparation_as_public_boundary():
+    assert callable(SPRKKR.prepare)
+    assert not hasattr(SPRKKR, "_prepare_calculation")
+    assert "return_run" not in inspect.signature(SPRKKR.calculate).parameters
 
 
 def test_unstarted_run_owns_temporary_calculation_directory():
@@ -110,7 +116,7 @@ def test_preparation_snapshots_input_parameters(tmp_path):
     defaults = calculator.input_parameters
     original_potfil = defaults.CONTROL.POTFIL.result
 
-    prepared = calculator._prepare_calculation(
+    prepared = calculator.prepare(
         output_file=False,
         allow_temporary_files=True,
     )
@@ -119,6 +125,10 @@ def test_preparation_snapshots_input_parameters(tmp_path):
         assert prepared.input_parameters is not defaults
         assert prepared.input_parameters.CONTROL.POTFIL.result
         assert defaults.CONTROL.POTFIL.result == original_potfil
+
+        prepared_ne = prepared.input_parameters.ENERGY.NE()
+        defaults.ENERGY.NE = prepared_ne + 1
+        assert prepared.input_parameters.ENERGY.NE() == prepared_ne
     finally:
         prepared.close()
 
@@ -133,7 +143,7 @@ def test_effective_task_survives_preparation_snapshot(tmp_path):
         empty_spheres=False,
     )
 
-    prepared = calculator._prepare_calculation(
+    prepared = calculator.prepare(
         input_parameters=parameters,
         output_file=False,
         allow_temporary_files=True,
@@ -145,6 +155,28 @@ def test_effective_task_survives_preparation_snapshot(tmp_path):
         assert prepared.input_parameters.execution_task_name == "SPLEED"
     finally:
         prepared.close()
+
+
+def test_prepared_calculation_constructs_its_runner(tmp_path):
+    calculator = SPRKKR(
+        atoms=bulk("Fe"),
+        directory=tmp_path,
+        profile=SPRKKRProfile(mpi=False),
+        empty_spheres=False,
+    )
+    prepared = calculator.prepare(output_file=False)
+
+    runner = prepared.create_run(
+        result_context=calculator,
+        profile=calculator.profile,
+        executor=_Executor(),
+    )
+
+    assert runner.spec.directory == str(tmp_path)
+    assert runner.spec.input_file is prepared.input_file
+
+    runner.close()
+    assert prepared.closed
 
 
 def test_failed_potential_serialization_preserves_primary_error_and_cleans_files(
@@ -186,7 +218,7 @@ def test_reader_file_not_found_is_not_relabelled_as_missing_executable(
         profile=SPRKKRProfile(mpi=False),
         empty_spheres=False,
     )
-    prepared = calculator._prepare_calculation(
+    prepared = calculator.prepare(
         allow_temporary_files=True,
         output_file=False,
         empty_spheres=False,
@@ -198,8 +230,7 @@ def test_reader_file_not_found_is_not_relabelled_as_missing_executable(
     monkeypatch.setattr(InputParameters, "output_reader", missing_reader)
 
     with pytest.raises(FileNotFoundError, match="reader dependency missing"):
-        calculation.create_sprkkr_run(
-            prepared,
+        prepared.create_run(
             result_context=calculator,
             profile=calculator.profile,
             executor=_Executor(),

@@ -23,7 +23,7 @@ def test_standard_task_comes_from_input_parameters_definition():
 
     assert schema._task_definition is task
     assert task.input_parameters_definition_name == "SCF"
-    assert task.input_parameters_definition is schema
+    assert InputParameters.task_registry.input_parameters_definition(task) is schema
     assert "SCF" not in InputParameters.task_registry.extra_tasks.names()
 
 
@@ -102,7 +102,7 @@ def test_extra_task_resolves_schema_from_own_input_registry(tmp_path, monkeypatc
     task_registry = TaskRegistry(input_registry, tasks_package)
     task = task_registry["SPECIAL"]
 
-    assert task.input_parameters_definition is input_registry["SHARED"]
+    assert task_registry.input_parameters_definition(task) is input_registry["SHARED"]
 
 
 def test_old_input_parameters_export_is_rejected(tmp_path, monkeypatch):

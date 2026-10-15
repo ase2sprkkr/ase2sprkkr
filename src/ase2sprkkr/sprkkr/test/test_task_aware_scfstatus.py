@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import pytest
 
 from ...potentials.potentials import Potential
-from .. import calculator as calculator_module
+from ..calculation import PreparedCalculation
 from ..calculator import SPRKKR
 
 
@@ -60,7 +60,7 @@ def test_scf_status_serialization_follows_effective_task(
     )
 
     assert actual_task == expected_task
-    assert in_memory_status == expected_status
+    assert in_memory_status == status
     assert saved_status == expected_status
 
 
@@ -83,7 +83,7 @@ def test_calculate_serializes_status_before_mocked_execution(tmp_path, monkeypat
         prepared.close()
         return runner
 
-    monkeypatch.setattr(calculator_module, "_create_sprkkr_run", fake_create_run)
+    monkeypatch.setattr(PreparedCalculation, "create_run", fake_create_run)
 
     calculator = SPRKKR(directory=tmp_path, mpi=False, empty_spheres=False)
     returned = calculator.calculate(
@@ -97,4 +97,5 @@ def test_calculate_serializes_status_before_mocked_execution(tmp_path, monkeypat
 
     assert returned is result
     assert runner.ran
+    assert potential.SCF_INFO.SCFSTATUS() == "START"
     assert Potential.from_file(tmp_path / "task.pot").SCF_INFO.SCFSTATUS() == "CONVERGED"

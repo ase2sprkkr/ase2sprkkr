@@ -20,6 +20,10 @@ def _copy_validator(_item, _values, _why):
     return None
 
 
+def _schema_for(task):
+    return InputParameters.task_registry.input_parameters_definition(task)
+
+
 DEFINITION_HOOK_ATTRIBUTES = (
     "_default_value",
     "is_optional",
@@ -104,8 +108,8 @@ class TestDefinitionCallbacks:
                     5.0,
                 ),
             ),
-            InputParameters.task_registry["TORQUE"].input_parameters_definition,
-            InputParameters.task_registry["JXC"].input_parameters_definition,
+            _schema_for("TORQUE"),
+            _schema_for("JXC"),
         ]
 
         hooks = []
@@ -194,7 +198,7 @@ class TestInputParametersPickle:
             parameters.CONTROL.SECOND.set([1, 2])
 
     def test_scf_input_parameters_pickle(self):
-        pickle.dumps(InputParameters.task_registry["SCF"].input_parameters_definition)
+        pickle.dumps(_schema_for("SCF"))
 
     def test_uninitialized_container_dunder_lookup_does_not_recurse(self):
         obj = object.__new__(InputParameters)

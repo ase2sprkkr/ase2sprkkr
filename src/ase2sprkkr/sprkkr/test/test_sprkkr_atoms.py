@@ -1,3 +1,6 @@
+import copy
+import pickle
+
 import numpy as np
 from ase import Atoms
 from ase.build import bulk
@@ -5,7 +8,53 @@ from ase.build import bulk
 from ..sprkkr_atoms import SPRKKRAtoms
 
 
+class CustomAtoms(Atoms):
+    def custom_method(self):
+        return "custom"
+
+
+def promoted_custom_atoms():
+    atoms = CustomAtoms("Na")
+    atoms.custom_state = {"values": [1, 2]}
+    SPRKKRAtoms.promote_ase_atoms(atoms, symmetry=False)
+    return atoms
+
+
 class TestSPRKKRAtoms:
+    def test_promoted_subclass_class_is_cached(self):
+        first = promoted_custom_atoms()
+        second = promoted_custom_atoms()
+
+        assert type(first) is type(second)
+        assert type(first).__mro__[1:3] == (CustomAtoms, SPRKKRAtoms)
+        assert first.custom_method() == "custom"
+
+    def test_promoted_subclass_pickle_preserves_exact_type(self):
+        atoms = promoted_custom_atoms()
+        promoted_class = type(atoms)
+
+        restored = pickle.loads(pickle.dumps(atoms))
+
+        assert type(restored) is promoted_class
+        assert restored.custom_method() == "custom"
+        assert restored.custom_state == atoms.custom_state
+        assert restored.symmetry is False
+
+    def test_promoted_subclass_copy_preserves_exact_type(self):
+        atoms = promoted_custom_atoms()
+        promoted_class = type(atoms)
+
+        shallow = copy.copy(atoms)
+        deep = copy.deepcopy(atoms)
+        ase_copy = atoms.copy()
+
+        assert type(shallow) is promoted_class
+        assert type(deep) is promoted_class
+        assert type(ase_copy) is promoted_class
+        assert shallow.custom_state is atoms.custom_state
+        assert deep.custom_state == atoms.custom_state
+        assert deep.custom_state is not atoms.custom_state
+
     def test_extend(self):
         atoms = SPRKKRAtoms("NaCl")
         atoms.set_cell([[2, 0, 0], [0, 2, 0], [0, 0, 2]])
@@ -71,6 +120,7 @@ class TestSPRKKRAtoms:
 
         assert str(atoms.symbols) == "NaCl"
         SPRKKRAtoms.promote_ase_atoms(atoms)
+        assert type(atoms) is SPRKKRAtoms
         assert len(atoms.sites) == 2
         assert len(atoms.sites[0].occupation) == 1
         assert len(atoms.sites[1].occupation) == 2

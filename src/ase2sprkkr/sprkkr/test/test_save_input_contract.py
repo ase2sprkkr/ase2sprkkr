@@ -3,7 +3,7 @@ from pathlib import Path
 from ase.build import bulk
 import pytest
 
-from .. import calculator as calculator_module
+from ..calculation import PreparedCalculation
 from ..calculator import SPRKKR
 
 
@@ -39,12 +39,12 @@ def test_create_run_preserves_explicitly_disabled_output(tmp_path, monkeypatch):
     captured = {}
     runner = object()
 
-    def create_sprkkr_run(prepared, **kwargs):
+    def create_run(prepared, **kwargs):
         captured["output_file"] = prepared.output_file
         prepared.close()
         return runner
 
-    monkeypatch.setattr(calculator_module, "_create_sprkkr_run", create_sprkkr_run)
+    monkeypatch.setattr(PreparedCalculation, "create_run", create_run)
 
     assert calculator.create_run(output_file=False) is runner
 
@@ -57,12 +57,12 @@ def test_create_run_respects_calculator_level_disabled_output(tmp_path, monkeypa
     captured = {}
     runner = object()
 
-    def create_sprkkr_run(prepared, **kwargs):
+    def create_run(prepared, **kwargs):
         captured["output_file"] = prepared.output_file
         prepared.close()
         return runner
 
-    monkeypatch.setattr(calculator_module, "_create_sprkkr_run", create_sprkkr_run)
+    monkeypatch.setattr(PreparedCalculation, "create_run", create_run)
 
     assert calculator.create_run() is runner
     assert captured["output_file"] is None

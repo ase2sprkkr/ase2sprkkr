@@ -19,6 +19,7 @@ from pathlib import Path
 from ..ase.symbols import filename_from_symbols
 from ..bindings.empty_spheres import add_empty_spheres
 from ..common.file_utils import Directory
+from ..common.temporary import temporary_option_value
 from ..execution.base import ExecutionResources, ResourceOwnedRunner
 from ..execution.persistence import resolve_execution_manager
 from ..input_parameters.input_parameters import InputParameters
@@ -346,7 +347,7 @@ def _resolve_empty_spheres(
         empty_spheres = default_empty_spheres
     if empty_spheres == "auto":
         empty_spheres = (
-            input_parameters.TASK.TASK() == "SCF"
+            input_parameters.execution_task_name == "SCF"
             and atoms is not None
             and (
                 not atoms.has_potential()
@@ -370,6 +371,10 @@ def _resolve_empty_spheres(
         }
     if not isinstance(empty_spheres, collections.abc.Mapping):
         empty_spheres = {}
+
+    # Empty spheres intentionally become part of the selected physical
+    # structure. Their addition can require recomputing SPR-KKR site/symmetry
+    # state, so this is canonical preprocessing rather than a write-time overlay.
     add_empty_spheres(atoms, **empty_spheres)
 
 
@@ -536,13 +541,14 @@ class PreparedCalculation:
                 default_empty_spheres=default_empty_spheres,
             )
 
+            scf_status_override = None
             if (
                 isinstance(potential, Potential)
                 and effective_task != "SCF"
                 and potential.SCF_INFO.SCFSTATUS() == "START"
                 and potential.is_scf_converged(atoms)
             ):
-                potential.SCF_INFO.SCFSTATUS = "CONVERGED"
+                scf_status_override = "CONVERGED"
 
             templator = FilenameTemplator(
                 label,
@@ -612,9 +618,17 @@ class PreparedCalculation:
                 # outer cleanup must preserve that primary exception. On
                 # success a temporary wrapper closes only its descriptor here;
                 # its pathname is removed when preparation ownership ends.
-                potential.save_to_file(
-                    potential_handle, atoms, restart_scf=restart_scf
-                )
+                if scf_status_override is None:
+                    potential.save_to_file(
+                        potential_handle, atoms, restart_scf=restart_scf
+                    )
+                else:
+                    with temporary_option_value(
+                        potential.SCF_INFO.SCFSTATUS, scf_status_override
+                    ):
+                        potential.save_to_file(
+                            potential_handle, atoms, restart_scf=restart_scf
+                        )
                 flush = getattr(potential_handle, "flush", None)
                 if flush is not None:
                     flush()
@@ -690,6 +704,46 @@ class PreparedCalculation:
                 pass
             raise
 
+    def create_run(
+        self,
+        *,
+        result_context=None,
+        profile: SPRKKRProfile,
+        executor=None,
+        persistent=False,
+        print_output=False,
+        read_callback=None,
+        callback=None,
+        gdb=False,
+        error_file=None,
+        create_subdirs=False,
+    ):
+        """Create an unstarted runner and transfer this calculation's resources.
+
+        The prepared calculation does not depend on the calculator facade.
+        ``result_context`` is optional runtime context for output readers; the
+        :class:`SPRKKR` facade supplies itself so result convenience APIs can
+        construct follow-up calculations, while standalone prepared runs may
+        leave the context unset.
+
+        ``error_file=None`` stores stderr as ``<output_file>.err``. ``True``
+        explicitly merges stderr into ``output_file``; ``False`` requests a
+        managed temporary stderr file; a path or file object is used directly.
+        """
+        return _create_sprkkr_run(
+            self,
+            result_context=result_context,
+            profile=profile,
+            executor=executor,
+            persistent=persistent,
+            print_output=print_output,
+            read_callback=read_callback,
+            callback=callback,
+            gdb=gdb,
+            error_file=error_file,
+            create_subdirs=create_subdirs,
+        )
+
     @property
     def closed(self):
         """Whether this object has relinquished or closed all owned resources."""
@@ -753,7 +807,33 @@ class PreparedCalculation:
             raise error
 
 
-def create_sprkkr_run(
+def _prepare_error_file(error_file, output_file, directory, create_subdirs):
+    """Materialize stderr for one run without changing preparation semantics."""
+    if error_file is True or error_file is output_file:
+        return output_file, False
+
+    output_name = _named_file_name(output_file)
+    if error_file is None:
+        if output_name is None:
+            return None, False
+        error_file = output_name + ".err"
+    elif isinstance(error_file, (str, os.PathLike)) and output_name is not None:
+        error_name = _calculation_path(error_file, directory)
+        if os.path.abspath(output_name) == error_name:
+            return output_file, False
+
+    opened_error = _open_file(
+        error_file,
+        directory,
+        mode="wb",
+        allow_temporary=True,
+        create_subdirs=create_subdirs,
+    )
+    _require_named_file(opened_error, "error_file")
+    return opened_error, opened_error is not output_file
+
+
+def _create_sprkkr_run(
     prepared: PreparedCalculation,
     *,
     result_context,
@@ -764,6 +844,8 @@ def create_sprkkr_run(
     read_callback=None,
     callback=None,
     gdb=False,
+    error_file=None,
+    create_subdirs=False,
 ):
     """Adapt a prepared SPR-KKR calculation to an unstarted generic runner.
 
@@ -773,14 +855,28 @@ def create_sprkkr_run(
     executor or persistence manager.
 
     Ownership of ``prepared`` is transferred to the returned runner. If runner
-    construction fails before that handoff, ``prepared`` is closed here.
+    construction fails before that handoff, all owned resources are closed here.
 
     ``callback`` follows the generic runner's terminal-callback contract: it is
     invoked when backend execution terminates and may therefore receive a
     partially populated result if execution or parsing failed. Resource cleanup
     happens before the user callback and is independent of its success.
     """
-    resources = ExecutionResources(prepared)
+    try:
+        opened_error, owns_error = _prepare_error_file(
+            error_file,
+            prepared.output_file,
+            prepared.directory,
+            create_subdirs,
+        )
+    except BaseException:
+        prepared.close()
+        raise
+
+    resources = ExecutionResources(
+        prepared,
+        opened_error if owns_error else None,
+    )
     handed_off = False
     input_parameters = prepared.input_parameters
 
@@ -811,6 +907,7 @@ def create_sprkkr_run(
             file
             for file in (
                 prepared.output_file,
+                opened_error if opened_error is not prepared.output_file else None,
                 *input_parameters.output_files(prepared.directory),
             )
             if file is not None
@@ -826,6 +923,7 @@ def create_sprkkr_run(
             prepared.input_file,
             prepared.output_file,
             prepared.directory,
+            error_file=opened_error,
             input_files=input_files,
             output_files=output_files,
             cache_files=cache_files,

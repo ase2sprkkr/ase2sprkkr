@@ -10,7 +10,6 @@ from __future__ import annotations
 import copy
 import os
 import subprocess
-import sys
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
@@ -29,13 +28,21 @@ class SPRKKR(BaseCalculator):
 
     ``SPRKKR`` is a mutable facade holding defaults shared by calculations:
     structure/potential, input parameters, filename templates, working directory
-    and execution policy.  Each call snapshots those defaults into a separate
-    :class:`PreparedCalculation` before execution.
+    and execution policy. Preparation snapshots run-specific configuration and
+    materializes the selected physical state into independent calculation files.
+
+    Selected ``Atoms`` and ``Potential`` objects are mutable physical working
+    state, not per-run snapshots. This applies both to calculator defaults and
+    explicitly supplied objects: preparation may promote or normalize the
+    structure, add automatic empty spheres, and synchronize the potential. Once
+    preparation finishes, the returned :class:`PreparedCalculation` owns its
+    concrete files and resources, so execution no longer depends on subsequent
+    changes to those physical objects.
 
     A calculator instance is not intended to be prepared concurrently from
-    multiple threads because filename-template counters are mutable facade
-    state.  Prepared runners themselves own independent resources and may run
-    concurrently.
+    multiple threads because filename-template counters and physical
+    preprocessing are mutable state. Prepared runners themselves own independent
+    resources and may run concurrently.
     """
 
     implemented_properties = ["energy"]
@@ -61,9 +68,6 @@ class SPRKKR(BaseCalculator):
         persistent=False,
         **kwargs,
     ):
-        if kwargs:
-            print(f"Warning - unknown arguments in the SPRKKR calculator: {kwargs}")
-
         if potential and not isinstance(potential, (bool, str)):
             if atoms:
                 raise ValueError(
@@ -89,8 +93,8 @@ class SPRKKR(BaseCalculator):
         self.output_file = output_file
         self.potential_file = potential_file
         self.input_parameters = input_parameters
-        if options:
-            self.input_parameters.set(options, unknown="find")
+        if options or kwargs:
+            self.input_parameters.set(options, **kwargs, unknown="find")
         self.print_output = print_output
         self.empty_spheres = empty_spheres
         self.profile = resolve_sprkkr_profile(profile).with_overrides(
@@ -197,8 +201,33 @@ class SPRKKR(BaseCalculator):
         self._counter += 1
         return str(self._counter)
 
-    def _prepare_calculation(self, **kwargs):
-        """Snapshot defaults and materialize one concrete calculation."""
+    def prepare(
+        self,
+        atoms=None,
+        input_parameters=None,
+        potential=None,
+        input_file=None,
+        potential_file=None,
+        output_file=None,
+        directory: Union[str, bool, Directory, None] = None,
+        create_subdirs: bool = False,
+        options=None,
+        task=None,
+        empty_spheres=None,
+        allow_temporary_files: bool = True,
+        restart_scf: bool = False,
+    ):
+        """Materialize current calculation state into one prepared calculation.
+
+        ``InputParameters`` are copied before one-shot task/options and generated
+        file values are applied. Selected ``Atoms`` and ``Potential`` objects are
+        not deep-copied and may be normalized or synchronized during preparation.
+        The returned :class:`PreparedCalculation` owns all concrete files and
+        temporary directory resources, so subsequent physical-state changes do
+        not alter the already materialized run. Call
+        :meth:`PreparedCalculation.close` when the object is not transferred to
+        a runner.
+        """
         prepared = PreparedCalculation.prepare(
             default_atoms=self._atoms,
             default_potential=self._potential,
@@ -210,7 +239,19 @@ class SPRKKR(BaseCalculator):
             default_empty_spheres=self.empty_spheres,
             label=self.label,
             counter=self._counter,
-            **kwargs,
+            atoms=atoms,
+            input_parameters=input_parameters,
+            potential=potential,
+            input_file=input_file,
+            potential_file=potential_file,
+            output_file=output_file,
+            directory=directory,
+            create_subdirs=create_subdirs,
+            options=options,
+            task=task,
+            empty_spheres=empty_spheres,
+            allow_temporary_files=allow_temporary_files,
+            restart_scf=restart_scf,
         )
         self._counter = prepared.counter
         return prepared
@@ -261,7 +302,7 @@ class SPRKKR(BaseCalculator):
                 "directory=False is supported by create_run()/calculate() instead"
             )
 
-        prepared = self._prepare_calculation(
+        prepared = self.prepare(
             atoms=atoms,
             input_parameters=input_parameters,
             potential=potential,
@@ -321,6 +362,7 @@ class SPRKKR(BaseCalculator):
         executor=None,
         persistent=None,
         restart_scf: bool = False,
+        error_file=None,
     ):
         """Prepare a calculation and return an unstarted owning runner.
 
@@ -328,6 +370,11 @@ class SPRKKR(BaseCalculator):
         explicit per-run profile selects its backend; if neither is supplied,
         the calculator-level executor (when present) overrides the calculator
         profile backend.
+
+        ``error_file=None`` stores stderr next to stdout as ``<output>.err``.
+        ``error_file=True`` deliberately merges stderr into ``output_file``;
+        ``False`` requests a managed temporary stderr file, and an explicit path
+        or file object stores stderr there instead.
 
         ``callback`` is a terminal runner callback. It can therefore be invoked
         with a partially populated result when backend execution or parsing
@@ -343,7 +390,7 @@ class SPRKKR(BaseCalculator):
         if executor is None and not explicit_profile:
             executor = self.executor
 
-        prepared = self._prepare_calculation(
+        prepared = self.prepare(
             atoms=atoms,
             input_parameters=input_parameters,
             potential=potential,
@@ -358,8 +405,7 @@ class SPRKKR(BaseCalculator):
             allow_temporary_files=True,
             restart_scf=restart_scf,
         )
-        return _create_sprkkr_run(
-            prepared,
+        return prepared.create_run(
             result_context=self,
             profile=run_profile,
             executor=executor,
@@ -368,6 +414,8 @@ class SPRKKR(BaseCalculator):
             read_callback=read_callback,
             callback=callback,
             gdb=gdb,
+            error_file=error_file,
+            create_subdirs=create_subdirs,
         )
 
     def value_or_default(self, name, value):
@@ -415,11 +463,14 @@ class SPRKKR(BaseCalculator):
         executor=None,
         persistent=None,
         restart_scf: bool = False,
+        error_file=None,
     ):
         """Run one SPR-KKR task synchronously and return its parsed result.
 
-        ``properties`` and ``system_changes`` are accepted for ASE compatibility;
-        task selection is currently controlled by ``input_parameters``/``task``.
+        ``properties`` and ``system_changes`` are accepted for ASE compatibility.
+        SPR-KKR execution is task-oriented, so ``properties`` does not select a
+        different backend task and ``system_changes`` is not used for incremental
+        updates; each run materializes the complete supplied calculation state.
         Per-call ``mpi``, ``executable_dir`` and ``executable_suffix`` values are
         immutable overrides of the selected execution profile.
 
@@ -456,6 +507,7 @@ class SPRKKR(BaseCalculator):
             executor=executor,
             persistent=persistent,
             restart_scf=restart_scf,
+            error_file=error_file,
         )
         result = runner.run()
         self._update_from_result(
@@ -519,7 +571,6 @@ from ..input_parameters.input_parameters import InputParameters  # NOQA: E402
 from .calculation import (  # NOQA: E402
     FilenameTemplator as _FilenameTemplator,
     PreparedCalculation,
-    create_sprkkr_run as _create_sprkkr_run,
 )
 
 
@@ -536,6 +587,5 @@ class FilenameTemplator(_FilenameTemplator):
         return rendered
 
 
-if os.path.basename(sys.argv[0]) != "sphinx-build":
-    SPRKKR.InputParameters = InputParameters
-    SPRKKR.Potential = Potential
+SPRKKR.InputParameters = InputParameters
+SPRKKR.Potential = Potential

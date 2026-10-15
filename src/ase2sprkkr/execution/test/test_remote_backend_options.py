@@ -5,6 +5,7 @@ from ase2sprkkr.execution import (
     ExecutionSpec,
     LaunchSpec,
     LocalTransport,
+    MpiSpec,
     RemoteExecutor,
 )
 
@@ -33,8 +34,7 @@ def test_remote_request_carries_target_executor_options(tmp_path):
         backend_options={"backend": "slurm", "url": None},
     )
     launch = LaunchSpec(
-        mpi=True,
-        process_count=16,
+        mpi=MpiSpec(required=True, autodetect=True, process_count=16),
         local_root=local_root,
         remote_root=tmp_path / "remote",
     )
@@ -60,9 +60,13 @@ def test_remote_request_carries_target_executor_options(tmp_path):
     assert request["mpi_argv"][0] == "programMPI"
     assert request["mpi_argv"][1].endswith("/calculation/run.inp")
     assert request["launch"] == {
-        "mpi": True,
-        "process_count": 16,
-        "mpi_warning": True,
+        "mpi": {
+            "required": True,
+            "autodetect": True,
+            "launcher": (),
+            "process_count": 16,
+            "warning": True,
+        },
         "local_root": str(local_root),
         "remote_root": str(tmp_path / "remote"),
         "input_sync": "changed",
