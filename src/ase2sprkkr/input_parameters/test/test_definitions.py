@@ -32,7 +32,6 @@ class TestDefinitions:
 
     def test_task_file_templates_and_overrides(self, tmp_path):
         parameters = SimpleNamespace(CONTROL=SimpleNamespace(DATASET=lambda: "Fe"))
-        schema = InputParametersDefinition("test", [])
 
         class DynamicTaskDefinition(TaskDefinition):
             def output_files(self, parameters, directory):
@@ -42,8 +41,7 @@ class TestDefinitions:
                 )
 
         definition = DynamicTaskDefinition(
-            schema,
-            name="TEST",
+            "TEST",
             input_file_templates=("{dataset}.aux",),
             output_file_templates=("{dataset}.dat",),
         )
@@ -213,8 +211,12 @@ class TestDefinitions:
             ip.TASK.NKDIR = 10
 
     def test_defaults(self):
-        for name in InputParameters.definitions:
-            ip = InputParameters.create_input_parameters(name)
+        task_names = set(InputParameters.input_parameters_registry.names())
+        task_names.remove("BSF")
+        task_names.update(("BSFEK", "BSFKK"))
+
+        for name in sorted(task_names):
+            ip = InputParameters.create(name)
             ip.CONTROL.POTFIL = "xxx"
             definition = ip._definition
             try:
@@ -228,7 +230,7 @@ class TestDefinitions:
                     ip.TASK.KPATH = None
                     ip.TASK.NKDIR = 2
                     out = ip.to_string(validate=True)
-                elif name in ("BSF", "BSFKK"):
+                elif name == "BSFKK":
                     self.set_bsfkk_grid(ip)
                     out = ip.to_string(validate=True)
                 else:

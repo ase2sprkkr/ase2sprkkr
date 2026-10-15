@@ -66,18 +66,22 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     configuration_type_name = "INPUT PARAMETERS"
 
     def task_definition_name(self, parameters):
-        """Return the task name represented by *parameters*.
+        """Return the task represented by *parameters*, if the schema encodes one.
 
-        Shared schemas override this method. For standard schemas it is normally
-        unused because ``_task_definition`` is set directly.
+        Schemas shared by multiple tasks override this method. A plain schema is
+        deliberately detached from execution semantics unless a canonical task
+        is attached through ``_task_definition``.
         """
-        return str(self.name).upper()
+        return None
 
     def task_definition(self, parameters):
         """Resolve the task represented by concrete parameter values."""
         if self._task_definition is not None:
             return self._task_definition
-        return parameters.task_registry[self.task_definition_name(parameters)]
+        name = self.task_definition_name(parameters)
+        if name is None:
+            return None
+        return parameters.task_registry[name]
 
     def initialize_for_task(self, parameters, task_name):
         """Initialize an explicit task discriminator when the schema has one.

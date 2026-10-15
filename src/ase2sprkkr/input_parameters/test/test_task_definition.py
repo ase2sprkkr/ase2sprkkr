@@ -5,20 +5,20 @@ import pytest
 
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
+from ..task_definition import TaskDefinition
 from ...outputs.reader_registry import reader_registry
 from ...outputs.readers.default import DefaultOutputReader
 from ...outputs.task_result import KkrOutputReader
 
 
-def test_task_registry_aliases_share_schema_not_identity():
-    bsf = InputParameters.task_registry["BSF"]
+def test_bsf_task_views_share_schema_not_identity():
+    schema = InputParameters.input_parameters_registry["BSF"]
     bsfek = InputParameters.task_registry["BSFEK"]
     bsfkk = InputParameters.task_registry["BSFKK"]
 
-    assert bsfek is not bsf
-    assert bsfkk is not bsf
-    assert bsfek.input_parameters_definition is bsf.input_parameters_definition
-    assert bsfkk.input_parameters_definition is bsf.input_parameters_definition
+    assert bsfek is not bsfkk
+    assert bsfek.input_parameters_definition is schema
+    assert bsfkk.input_parameters_definition is schema
     assert bsfek.name == "BSFEK"
     assert bsfkk.name == "BSFKK"
 
@@ -60,8 +60,15 @@ def test_direct_schema_objects_are_detached():
 
     assert parameters.task_definition is None
     assert parameters.task_name == schema.name
-    with pytest.raises(RuntimeError, match="not bound"):
+    with pytest.raises(RuntimeError, match="not associated"):
         parameters.is_mpi()
+
+
+def test_task_definition_requires_schema_name():
+    schema = InputParametersDefinition.definition_from_dict({"TEST": []})
+
+    with pytest.raises(TypeError, match="must be a string"):
+        TaskDefinition(schema)
 
 
 def test_jxc_continuation_is_task_behavior():
@@ -85,11 +92,11 @@ def test_reader_discovery_uses_registry_and_default_fallback():
 def test_task_reader_respects_concrete_execution_task_when_parameters_exist():
     parameters = InputParameters.create("ARPES")
     task = parameters.task_definition
-    assert task._execution_task_name(parameters) == "ARPES"
+    assert task.execution_task_name(parameters) == "ARPES"
     assert task.output_reader_class(parameters).__name__ == "ArpesOutputReader"
 
     parameters.TASK.TASK = "SPLEED"
-    assert task._execution_task_name(parameters) == "SPLEED"
+    assert task.execution_task_name(parameters) == "SPLEED"
     assert task.output_reader_class(parameters) is DefaultOutputReader
 
 
