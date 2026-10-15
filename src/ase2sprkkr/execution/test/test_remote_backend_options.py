@@ -72,10 +72,11 @@ def test_remote_request_carries_target_executor_options(tmp_path):
         "input_sync": "changed",
         "output_sync": "changed",
     }
-    assert request["client_sync"]["input_files"] == [
-        str(tmp_path / "remote" / "calculation" / "run.inp"),
-        str(tmp_path / "remote" / "calculation" / "start.pot"),
-    ]
+    remote_input = tmp_path / "remote" / "calculation" / "run.inp"
+    remote_potential = tmp_path / "remote" / "calculation" / "start.pot"
+    assert request["input_file"] == str(remote_input)
+    assert remote_input.read_bytes() == b"input"
+    assert remote_potential.read_text() == "potential"
 
     input_file.close()
     output_file.close()
