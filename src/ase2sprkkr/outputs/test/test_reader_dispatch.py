@@ -1,11 +1,9 @@
 import importlib
-import subprocess
 import sys
 
 import pytest
 
 from ...common.module_registry import RegistryDefinitionError
-from ...input_parameters.task_definition import TaskDefinition
 from .. import reader_registry as reader_registry_module
 from ..reader_registry import OutputReaderRegistry, reader_registry
 from ..readers.default import DefaultOutputReader
@@ -147,17 +145,6 @@ def test_builtin_legacy_output_fingerprints(tmp_path):
     assert reader_registry.detect(unrelated) is None
 
 
-def test_task_definition_can_select_default_reader_in_fresh_interpreter():
-    code = """
-from ase2sprkkr.input_parameters.task_definition import TaskDefinition
-
-task = TaskDefinition('DEFINITELY_MISSING_READER')
-reader = task.output_reader_class()
-assert reader.__name__ == 'DefaultOutputReader'
-"""
-    subprocess.run([sys.executable, "-c", code], check=True)
-
-
 def test_malformed_reader_module_does_not_fall_back(tmp_path, monkeypatch):
     package = _reader_package(
         tmp_path,
@@ -200,7 +187,7 @@ def test_reader_dependency_errors_remain_visible(tmp_path, monkeypatch):
     assert exc_info.value.name == missing_dependency
 
 
-def test_reader_selection_facades_delegate_to_registry(monkeypatch):
+def test_output_reader_facade_delegates_to_registry(monkeypatch):
     expected = object()
 
     class RecordingRegistry:
@@ -214,8 +201,5 @@ def test_reader_selection_facades_delegate_to_registry(monkeypatch):
     registry = RecordingRegistry()
     monkeypatch.setattr(reader_registry_module, "reader_registry", registry)
 
-    task_definition = TaskDefinition("FAKE")
-
     assert KkrOutputReader.class_for_task("OUTPUT") is expected
-    assert task_definition.output_reader_class() is expected
-    assert registry.tasks == ["OUTPUT", "FAKE"]
+    assert registry.tasks == ["OUTPUT"]

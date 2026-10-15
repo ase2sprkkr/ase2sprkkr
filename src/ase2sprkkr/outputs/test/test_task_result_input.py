@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 from ase2sprkkr import InputParameters
 from ase2sprkkr.outputs.task_result import KkrOutputReader, TaskResult
 
@@ -41,3 +43,23 @@ def test_result_uses_effective_task_identity(tmp_path):
     reader = _Reader(parameters, None, str(tmp_path))
     assert reader.task_name == "SPLEED"
     assert reader.create_result("run.out").task_name == "spleed"
+
+
+def test_jxc_continuation_uses_source_result_energy(tmp_path):
+    source_parameters = SimpleNamespace(
+        CONTROL=SimpleNamespace(POTFIL=lambda: "Fe.pot")
+    )
+    result = TaskResult(
+        source_parameters,
+        None,
+        str(tmp_path),
+        task_name="SCF",
+    )
+    result.last_iteration = SimpleNamespace(
+        energy=SimpleNamespace(EMIN=lambda: -0.35)
+    )
+
+    continuation = result.new_task("JXC")
+
+    assert continuation.input_parameters.task_definition.name == "JXC"
+    assert continuation.input_parameters.ENERGY.EMIN() == -0.35

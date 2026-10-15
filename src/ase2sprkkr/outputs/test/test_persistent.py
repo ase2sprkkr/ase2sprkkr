@@ -2,13 +2,20 @@ from types import SimpleNamespace
 
 import pytest
 
-from ase2sprkkr.execution import RunReference, RunState
+from ase2sprkkr.common.module_registry import RegistryEntryNotFound
+from ase2sprkkr.execution import (
+    ResultFilesRecord,
+    RunRecord,
+    RunReference,
+    RunState,
+)
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.outputs.persistent import (
     PersistentResultUnavailableError,
     attach_persistent_run,
 )
 from ase2sprkkr.outputs.readers.bsf import BsfOutputReader
+from ase2sprkkr.outputs.readers.dos import DosOutputReader
 
 
 class _Store:
@@ -44,28 +51,46 @@ def _record(
     tmp_path,
     task,
     *,
-    input_file=None,
     input_definition=None,
     requested_task=None,
+    input_file=None,
 ):
-    return SimpleNamespace(
+    result_files = (
+        None
+        if input_file is None
+        else ResultFilesRecord(input_file=str(input_file))
+    )
+    return RunRecord(
         id="run",
         task=task,
+        requested_task=requested_task or task,
         input_definition=input_definition,
-        requested_task=requested_task,
         directory=str(tmp_path),
-        reference=RunReference(executor="test", native_id="1"),
         state=RunState.RUNNING,
-        result_files=(
-            None
-            if input_file is None
-            else SimpleNamespace(input_file=str(input_file))
-        ),
+        created_at="2026-01-01T00:00:00+00:00",
+        updated_at="2026-01-01T00:00:00+00:00",
+        reference=RunReference(executor="test", native_id="1"),
+        result_files=result_files,
     )
 
 
-def test_persistent_attach_uses_effective_bsf_task_reader(tmp_path):
-    record = _record(tmp_path, "BSFEK")
+def _input_file(tmp_path, task):
+    parameters = InputParameters.create(task)
+    parameters.CONTROL.POTFIL = "Fe.pot"
+    if task == "BSFEK":
+        parameters.TASK.KPATH = 3
+    path = tmp_path / "run.inp"
+    path.write_text(parameters.to_string(validate=True))
+    return path
+
+
+def test_persistent_attach_uses_persisted_effective_task(tmp_path):
+    record = _record(
+        tmp_path,
+        "BSFEK",
+        requested_task="BSFKK",
+        input_definition="BSF",
+    )
 
     attached = attach_persistent_run(_Manager(record), record.id)
 
@@ -73,85 +98,60 @@ def test_persistent_attach_uses_effective_bsf_task_reader(tmp_path):
     assert attached.reader.task_name == "BSFEK"
 
 
-def test_persistent_attach_uses_effective_task_definition_reader(monkeypatch, tmp_path):
-    class SelectedReader:
-        def __init__(self, input_parameters, calculator, directory, task_name=None):
-            self.input_parameters = input_parameters
-            self.task_name = task_name
-
-    task = InputParameters.task_registry["DOS"]
-    monkeypatch.setattr(task, "output_reader", SelectedReader)
-    record = _record(tmp_path, "DOS")
+def test_persistent_attach_uses_registered_reader(tmp_path):
+    record = _record(tmp_path, "DOS", input_definition="DOS")
 
     attached = attach_persistent_run(_Manager(record), record.id)
 
-    assert isinstance(attached.reader, SelectedReader)
+    assert isinstance(attached.reader, DosOutputReader)
     assert attached.reader.input_parameters is None
     assert attached.reader.task_name == "DOS"
 
 
-def test_persistent_attach_reconstructs_exact_input_schema_when_available(
-    monkeypatch, tmp_path
-):
-    class SelectedReader:
-        def __init__(self, input_parameters, calculator, directory, task_name=None):
-            self.input_parameters = input_parameters
-            self.task_name = task_name
-
-    task = InputParameters.task_registry["DOS"]
-    schema = InputParameters.input_parameters_registry["DOS"]
-    parameters = SimpleNamespace(task_definition=task)
-    input_file = tmp_path / "run.inp"
-    input_file.write_text("historical input")
-    monkeypatch.setattr(task, "output_reader", SelectedReader)
-
-    seen = {}
-
-    def read_from_file(file, *, task_name=None, **kwargs):
-        seen["file"] = file
-        seen["task_name"] = task_name
-        return parameters
-
-    monkeypatch.setattr(schema, "read_from_file", read_from_file)
+def test_persistent_attach_reconstructs_exact_input_definition(tmp_path):
+    input_file = _input_file(tmp_path, "BSFEK")
     record = _record(
         tmp_path,
-        "DOS",
+        "BSFEK",
+        requested_task="BSFEK",
+        input_definition="BSF",
         input_file=input_file,
-        input_definition="DOS",
-        requested_task="DOS",
     )
 
     attached = attach_persistent_run(_Manager(record), record.id)
+    parameters = attached.reader.input_parameters
 
-    assert isinstance(attached.reader, SelectedReader)
-    assert attached.reader.input_parameters is parameters
-    assert seen == {"file": str(input_file), "task_name": "DOS"}
+    assert isinstance(attached.reader, BsfOutputReader)
+    assert parameters._definition is InputParameters.input_parameters_registry["BSF"]
+    assert parameters.task_name == "BSFEK"
+    assert parameters.task_definition.name == "BSFEK"
 
 
-def test_persistent_attach_does_not_parse_stale_input(monkeypatch, tmp_path):
-    class SelectedReader:
-        def __init__(self, input_parameters, calculator, directory, task_name=None):
-            self.input_parameters = input_parameters
-            self.task_name = task_name
-
-    task = InputParameters.task_registry["DOS"]
-    schema = InputParameters.input_parameters_registry["DOS"]
-    input_file = tmp_path / "run.inp"
-    input_file.write_text("changed historical input")
-    monkeypatch.setattr(task, "output_reader", SelectedReader)
-    monkeypatch.setattr(
-        schema,
-        "read_from_file",
-        lambda *args, **kwargs: (_ for _ in ()).throw(
-            AssertionError("stale input must not be parsed")
-        ),
-    )
+def test_persistent_attach_reconstructs_standard_input_definition(tmp_path):
+    input_file = _input_file(tmp_path, "DOS")
     record = _record(
         tmp_path,
         "DOS",
-        input_file=input_file,
         input_definition="DOS",
-        requested_task="DOS",
+        input_file=input_file,
+    )
+
+    attached = attach_persistent_run(_Manager(record), record.id)
+    parameters = attached.reader.input_parameters
+
+    assert isinstance(attached.reader, DosOutputReader)
+    assert parameters._definition is InputParameters.input_parameters_registry["DOS"]
+    assert parameters.task_definition.name == "DOS"
+
+
+def test_persistent_attach_does_not_parse_stale_input(tmp_path):
+    input_file = tmp_path / "run.inp"
+    input_file.write_text("not valid SPR-KKR input")
+    record = _record(
+        tmp_path,
+        "DOS",
+        input_definition="DOS",
+        input_file=input_file,
     )
 
     attached = attach_persistent_run(
@@ -159,16 +159,48 @@ def test_persistent_attach_does_not_parse_stale_input(monkeypatch, tmp_path):
         record.id,
     )
 
-    assert isinstance(attached.reader, SelectedReader)
+    assert isinstance(attached.reader, DosOutputReader)
     assert attached.reader.input_parameters is None
 
 
 def test_persistent_attach_rejects_unknown_effective_task(tmp_path):
-    record = _record(tmp_path, "UNKNOWN_TASK")
+    record = _record(tmp_path, "UNKNOWN_TASK", input_definition="DOS")
 
     with pytest.raises(
         PersistentResultUnavailableError,
-        match="unknown persisted effective task",
+        match="unknown persisted effective task 'UNKNOWN_TASK'",
+    ):
+        attach_persistent_run(_Manager(record), record.id)
+
+
+def test_persistent_attach_rejects_unknown_input_definition(tmp_path):
+    input_file = _input_file(tmp_path, "DOS")
+    record = _record(
+        tmp_path,
+        "DOS",
+        input_definition="UNKNOWN_SCHEMA",
+        input_file=input_file,
+    )
+
+    with pytest.raises(
+        PersistentResultUnavailableError,
+        match="unknown persisted input definition 'UNKNOWN_SCHEMA'",
+    ):
+        attach_persistent_run(_Manager(record), record.id)
+
+
+def test_persistent_attach_rejects_input_with_different_effective_task(tmp_path):
+    input_file = _input_file(tmp_path, "DOS")
+    record = _record(
+        tmp_path,
+        "SCF",
+        input_definition="DOS",
+        input_file=input_file,
+    )
+
+    with pytest.raises(
+        PersistentResultUnavailableError,
+        match="persisted effective task does not match historical input",
     ):
         attach_persistent_run(_Manager(record), record.id)
 
@@ -181,14 +213,26 @@ def test_persistent_attach_does_not_hide_task_registry_programming_errors(
             raise KeyError(f"broken task definition for {name}")
 
     monkeypatch.setattr(InputParameters, "task_registry", BrokenRegistry())
-    record = _record(tmp_path, "DOS")
+    record = _record(tmp_path, "DOS", input_definition="DOS")
 
     with pytest.raises(KeyError, match="broken task definition"):
         attach_persistent_run(_Manager(record), record.id)
 
 
+def test_persistent_attach_only_translates_missing_task_entries(monkeypatch, tmp_path):
+    class MissingRegistry:
+        def __getitem__(self, name):
+            raise RegistryEntryNotFound(name)
+
+    monkeypatch.setattr(InputParameters, "task_registry", MissingRegistry())
+    record = _record(tmp_path, "DOS", input_definition="DOS")
+
+    with pytest.raises(PersistentResultUnavailableError):
+        attach_persistent_run(_Manager(record), record.id)
+
+
 def test_persistent_attach_respects_explicit_reader(tmp_path):
-    record = _record(tmp_path, "BSFEK")
+    record = _record(tmp_path, "BSFEK", input_definition="BSF")
     reader = object()
 
     attached = attach_persistent_run(_Manager(record), record.id, reader=reader)
