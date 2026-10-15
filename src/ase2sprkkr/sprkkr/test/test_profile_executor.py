@@ -89,7 +89,6 @@ def test_ssh_profile_creates_endpoint_only_executor():
         "kkrscf",
         input_file,
         object(),
-        None,
         "/home/user/work",
         mpi_supported=True,
     )
