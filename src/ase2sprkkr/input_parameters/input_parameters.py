@@ -42,10 +42,10 @@ class InputParameters(ConfigurationFile):
         *,
         requested_task_definition=None,
     ):
-        super().__init__(definition)
         self._requested_task_definition = requested_task_definition
         self._inputfile = inputfile
         self._outputfile = inputfile if outputfile is False else outputfile
+        super().__init__(definition)
 
     def get_task_definition(self):
         """Return the effective task represented by the current values."""
@@ -63,8 +63,9 @@ class InputParameters(ConfigurationFile):
 
     @property
     def task_name(self):
-        """Name of the effective task represented by the current values."""
-        return self.task_definition.name
+        """Effective task name, or the schema name for a detached schema."""
+        task = self.task_definition
+        return task.name if task is not None else str(self._definition.name).upper()
 
     @property
     def requested_task_name(self):
