@@ -1,0 +1,45 @@
+io
+==
+
+Full name: **ase2sprkkr.ase.io**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.ase.io
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      read_SPRKKR
+      read_sprkkr
+      write_SPRKKR
+      write_sprkkr
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

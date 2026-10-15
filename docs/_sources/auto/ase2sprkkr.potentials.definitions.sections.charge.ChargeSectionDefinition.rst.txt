@@ -1,0 +1,36 @@
+ChargeSectionDefinition
+=======================
+
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.charge
+
+.. autoclass:: ChargeSectionDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.charge.ChargeSectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

@@ -1,0 +1,11 @@
+Various examples how to use ASE2SPRKKR are present in this directory.
+
+Please, see output of
+ase2sprkkr example
+
+to see the list of examples and a simple description, and
+ase2sprkkr example 2
+to see the A02_.. example
+
+ase2sprkkr example -h
+give you further basic help.

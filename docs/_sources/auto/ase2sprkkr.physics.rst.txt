@@ -1,0 +1,57 @@
+physics
+=======
+
+Full name: **ase2sprkkr.physics**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.physics
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     atomic_data
+  
+  
+     broadening
+  
+  
+     core_hole_width
+  
+  
+     lattice_data
+  
+  
+     winger_seitz_radii
+  
+  
+  

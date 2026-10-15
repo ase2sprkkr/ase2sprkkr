@@ -1,0 +1,43 @@
+doc
+===
+
+Full name: **ase2sprkkr.common.doc**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.doc
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      process_input_parameters_definition
+      verbatim
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

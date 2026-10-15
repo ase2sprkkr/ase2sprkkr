@@ -1,0 +1,44 @@
+spglib
+======
+
+Full name: **ase2sprkkr.bindings.spglib**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings.spglib
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      spglib_dataset
+      spglib_dataset_wrapper
+      tag_sites
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

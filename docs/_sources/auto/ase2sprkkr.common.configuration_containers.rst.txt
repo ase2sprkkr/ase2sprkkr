@@ -1,0 +1,62 @@
+configuration\_containers
+=========================
+
+Full name: **ase2sprkkr.common.configuration\_containers**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.configuration_containers.BaseConfigurationContainer  ase2sprkkr.common.configuration_containers.BaseSection  ase2sprkkr.common.configuration_containers.ConfigurationContainer  ase2sprkkr.common.configuration_containers.CustomSection  ase2sprkkr.common.configuration_containers.RootConfigurationContainer  ase2sprkkr.common.configuration_containers.Section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.configuration_containers
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BaseConfigurationContainer
+      BaseSection
+      ConfigurationContainer
+      CustomSection
+      RootConfigurationContainer
+      Section
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      DisabledAttributeError
+   
+   
+
+
+  
+  
+  

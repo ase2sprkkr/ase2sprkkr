@@ -1,0 +1,36 @@
+OccupationSection
+=================
+
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.occupation
+
+.. autoclass:: OccupationSection
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.occupation.OccupationSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

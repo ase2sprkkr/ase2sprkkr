@@ -1,0 +1,48 @@
+misc
+====
+
+Full name: **ase2sprkkr.common.misc**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.misc
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      as_integer
+      config_property
+      copy_list
+      dict_first_item
+      first_non_none
+      njit
+      numpy_index
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

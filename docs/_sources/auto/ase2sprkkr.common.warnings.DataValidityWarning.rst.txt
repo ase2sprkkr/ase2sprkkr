@@ -1,0 +1,6 @@
+ase2sprkkr.common.warnings.DataValidityWarning
+==============================================
+
+.. currentmodule:: ase2sprkkr.common.warnings
+
+.. autoexception:: DataValidityWarning

@@ -1,0 +1,43 @@
+symbols
+=======
+
+Full name: **ase2sprkkr.ase.symbols**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.ase.symbols
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      filename_from_symbols
+      pretty_symbols
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,52 @@
+default
+=======
+
+Full name: **ase2sprkkr.outputs.readers.default**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.default.DefaultOutputParser  ase2sprkkr.outputs.readers.default.DefaultOutputReader  ase2sprkkr.outputs.readers.default.DefaultResult 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.readers.default
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      DefaultOutputParser
+      DefaultOutputReader
+      DefaultResult
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

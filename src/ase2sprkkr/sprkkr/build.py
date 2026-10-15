@@ -1,0 +1,147 @@
+"""This module contains routines for building systems, which can be used for SPR-KKR calculations
+- e.g. system with vacuum pseudoatoms, or 2D semiinfinite systems
+"""
+
+from ..ase.build import aperiodic_times, stack as _stack, rotate
+from .atoms_region import AtomsRegion
+from .sprkkr_atoms import SPRKKRAtoms
+import math
+import warnings
+import numpy as np
+from ase import Atoms
+
+from numbers import Real
+from typing import Union, Tuple, Optional, Dict
+
+
+def semiinfinite_system(
+    atoms: Atoms,
+    repeat: Union[Tuple[Real, Real], Real],
+    atoms2: Atoms = None,
+    hkl: Optional[Tuple[Real]] = None,
+    hkl2: Optional[Tuple[Real]] = None,
+    axis: int = 2,
+    site_on_the_top: Optional[int] = None,
+    eps=1e-6,
+):
+    """Build a semiinfinite system from one or two 3D periodic systems.
+
+    If two systems are given, they have to have identical the first two
+    lattice vectors. If one system is given, the second system is created
+    as a copy of the first system, but with vacuum (pseudo)atoms on its sites.
+
+    Parameters
+    ----------
+    atoms
+      The left bulk region of the result.
+
+    repeat
+      How many times should be the outer regions repeated in the central (non-bulk)
+      region. If only one number is given, it is considered as the number of repeating
+      of the left bulk region in the central region. The number of repeating of the right
+      region then will be determined such that it will have the same integer part as the of
+      the given number and the decimal part will be complement (to one).
+
+    atoms2
+      The right bulk region of the result. If it is None,
+      it is created from the left one by replacing the atoms for vacuum pseudoatoms
+
+    hkl
+      If not None, rotate the right atoms according the given Miller coordinates, first.
+      If it is None, and the atoms2 are None too, the hkl argument is used for rotating
+      the atoms2 object.
+      Deprecated. Use explicit call ase2sprkkr.ase.build.rotate
+
+    hkl2
+      Deprecated. Use explicit call ase2sprkkr.ase.build.rotate
+
+    axis
+      Along which axis build the system.
+
+    site_on_the_top
+      If given, the fractional part of the left atom will se set that the given atom will be
+      On the top.
+    """
+
+    if isinstance(repeat, Real):
+        repeat = (repeat, math.floor(repeat) + math.ceil(repeat) - repeat)
+
+    if hkl is not None:
+        warnings.warn(
+            "hkl parameter for semiinfinite_system() is deprecated; "
+            "call ase2sprkkr.ase.build.rotate() explicitly before this function",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        atoms1 = rotate(atoms, hkl)
+    else:
+        atoms1 = atoms
+
+    if site_on_the_top is not None:
+        coors = atoms.get_scaled_positions(wrap=True)
+        zcoors = coors[:, axis]
+        pos = zcoors[site_on_the_top]
+
+        # Zjištění cílové pozice v závislosti na neceločíselném repeat
+        rep = repeat[0] if isinstance(repeat[0], Real) else repeat[0][axis]
+        shift = (rep % 1) - eps - pos
+
+        if abs(shift) > eps:
+            coors[:, axis] += shift
+            coors[:, axis] %= 1.0
+            atoms1.positions = atoms.cell @ coors
+
+    if atoms2 is None:
+        atoms2 = vacuum_like(atoms1 if hkl2 is None else atoms)
+    if hkl2 is not None:
+        warnings.warn(
+            "hkl2 parameter for semiinfinite_system() is deprecated; "
+            "call ase2sprkkr.ase.build.rotate() explicitly before this function",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        atoms2 = rotate(atoms2, hkl2)
+
+    catoms = aperiodic_times(atoms1, repeat[0], axis=axis)
+    catoms2 = aperiodic_times(atoms2, repeat[1], axis=axis, direction=-1)
+    catoms = _stack([catoms, catoms2], axis=axis)
+
+    out = stack({"left": atoms1, "central": catoms, "right": atoms2}, axis=axis)
+    return out
+
+
+def stack(atomses: Dict[str, Atoms], axis: int, *args, inherit_cell=True, **kwargs):
+    """Stack the atoms along given axis to a one object, creating the regions in the atoms.
+
+    The function accepts list of the names, the list of the Atoms objects, and all the other parameters
+    of the function :func:`ase2sprkkr.ase.build.stack`.
+    """
+    cnt = None
+    out = _stack(atomses.values(), axis=axis, *args, **kwargs)
+    last = next(reversed(atomses))
+
+    if inherit_cell is True:
+        inherit_cell = np.ones(3, dtype=bool)
+        inherit_cell[axis] = False
+
+    SPRKKRAtoms.promote_ase_atoms(out, update_info=False)
+    with out.spacegroup_info.block_updating(True):
+        for name, atoms in atomses.items():
+            if name == last:
+                upto = None
+            else:
+                upto = (cnt or 0) + len(atoms)
+            AtomsRegion.from_atoms(atoms, name, slice(cnt, upto), inherit_cell=inherit_cell, atoms=out)
+            cnt = upto
+    return out
+
+
+def vacuum_like(atoms):
+    """
+    Creates a copy of atoms, filled with vacuum pseudoatoms
+    """
+    out = atoms.copy()
+    SPRKKRAtoms.promote_ase_atoms(out)
+    for site in out.sites:
+        site.site_type.occupation = {"Vc": 1.0}
+    return out

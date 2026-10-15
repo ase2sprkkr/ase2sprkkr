@@ -1,0 +1,44 @@
+formats
+=======
+
+Full name: **ase2sprkkr.common.formats**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.formats
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      format_for_string
+      fortran_format
+      full_format_for_string
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,36 @@
+ConfigurationRootDefinition
+===========================
+
+
+.. currentmodule:: ase2sprkkr.common.container_definitions
+
+.. autoclass:: ConfigurationRootDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.container_definitions.ConfigurationRootDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

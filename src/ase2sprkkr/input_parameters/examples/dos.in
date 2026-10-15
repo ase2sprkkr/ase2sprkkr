@@ -1,0 +1,18 @@
+CONTROL DATASET=case
+        ADSI=DOS
+        POTFIL=case.pot_new
+
+
+TAU BZINT=POINTS
+    NKTAB=250
+
+ENERGY  
+      GRID={3}
+      NE={300}
+      ImE=0.01
+      EMIN=-0.2
+      EMAX= 1.0
+
+TASK DOS
+
+SITES NL={3}

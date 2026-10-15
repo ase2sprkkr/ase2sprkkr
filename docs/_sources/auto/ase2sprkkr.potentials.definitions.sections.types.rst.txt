@@ -1,0 +1,52 @@
+types
+=====
+
+Full name: **ase2sprkkr.potentials.definitions.sections.types**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.types.TypesSection  ase2sprkkr.potentials.definitions.sections.types.TypesSectionDefinition  ase2sprkkr.potentials.definitions.sections.types.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions.sections.types
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      TypesSection
+      TypesSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

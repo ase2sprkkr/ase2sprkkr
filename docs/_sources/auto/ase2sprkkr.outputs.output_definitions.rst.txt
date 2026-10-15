@@ -1,0 +1,53 @@
+output\_definitions
+===================
+
+Full name: **ase2sprkkr.outputs.output\_definitions**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition  ase2sprkkr.outputs.output_definitions.OutputSectionDefinition  ase2sprkkr.outputs.output_definitions.OutputValueDefinition  ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.output_definitions
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      OutputNonameValueDefinition
+      OutputSectionDefinition
+      OutputValueDefinition
+      OutputValueEqualDefinition
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

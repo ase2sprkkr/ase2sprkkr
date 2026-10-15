@@ -1,0 +1,52 @@
+occupation
+==========
+
+Full name: **ase2sprkkr.potentials.definitions.sections.occupation**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.occupation.OccupationSection  ase2sprkkr.potentials.definitions.sections.occupation.OccupationSectionDefinition  ase2sprkkr.potentials.definitions.sections.occupation.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions.sections.occupation
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      OccupationSection
+      OccupationSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

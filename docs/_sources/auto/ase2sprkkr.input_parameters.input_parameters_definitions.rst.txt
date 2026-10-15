@@ -1,0 +1,52 @@
+input\_parameters\_definitions
+==============================
+
+Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition  ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition  ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.input_parameters_definitions
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      InputParametersDefinition
+      InputSectionDefinition
+      InputValueDefinition
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

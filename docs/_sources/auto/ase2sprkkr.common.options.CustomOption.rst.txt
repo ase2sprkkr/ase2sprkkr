@@ -1,0 +1,36 @@
+CustomOption
+============
+
+
+.. currentmodule:: ase2sprkkr.common.options
+
+.. autoclass:: CustomOption
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.options.CustomOption
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

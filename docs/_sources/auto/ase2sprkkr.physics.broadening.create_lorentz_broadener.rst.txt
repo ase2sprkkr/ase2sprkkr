@@ -1,0 +1,8 @@
+create\_lorentz\_broadener
+==========================
+
+Full name: **ase2sprkkr.physics.broadening.create\_lorentz\_broadener**
+
+.. currentmodule:: ase2sprkkr.physics.broadening
+
+.. autofunction:: create_lorentz_broadener

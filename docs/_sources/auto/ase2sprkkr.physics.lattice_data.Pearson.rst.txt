@@ -1,0 +1,36 @@
+Pearson
+=======
+
+
+.. currentmodule:: ase2sprkkr.physics.lattice_data
+
+.. autoclass:: Pearson
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.physics.lattice_data.Pearson
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

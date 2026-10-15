@@ -1,0 +1,5 @@
+<map id="inheritancead2fcca6fc" name="inheritancead2fcca6fc">
+<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation" target="_top" title="Occupation of the atomic site, given by AtomicType : value" alt="" coords="27,57,122,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.occupations.SiteOccupation.html#ase2sprkkr.sprkkr.occupations.SiteOccupation" target="_top" title="Proxy for the Occupation of a Site that raises a RuntimeError before any" alt="" coords="173,5,292,33"/>
+<area shape="rect" id="node3" href="ase2sprkkr.sprkkr.sites.SitePropertyProxy.html#ase2sprkkr.sprkkr.sites.SitePropertyProxy" target="_top" title="Generic proxy for a SiteType&#45;delegated property (mesh, potential, charge," alt="" coords="5,5,144,33"/>
+</map>

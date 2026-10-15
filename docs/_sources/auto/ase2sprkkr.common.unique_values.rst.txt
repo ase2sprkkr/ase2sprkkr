@@ -1,0 +1,50 @@
+unique\_values
+==============
+
+Full name: **ase2sprkkr.common.unique\_values**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.unique_values.UniqueValuesMapping 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.unique_values
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      UniqueValuesMapping
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,52 @@
+task\_result
+============
+
+Full name: **ase2sprkkr.outputs.task\_result**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.task_result.KkrOutputReader  ase2sprkkr.outputs.task_result.KkrProcess  ase2sprkkr.outputs.task_result.TaskResult 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.task_result
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      KkrOutputReader
+      KkrProcess
+      TaskResult
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

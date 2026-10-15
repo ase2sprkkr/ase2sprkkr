@@ -1,0 +1,52 @@
+sites
+=====
+
+Full name: **ase2sprkkr.sprkkr.sites**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.sites.Site  ase2sprkkr.sprkkr.sites.SitePropertyProxy  ase2sprkkr.sprkkr.sites.SiteType 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.sites
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Site
+      SitePropertyProxy
+      SiteType
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

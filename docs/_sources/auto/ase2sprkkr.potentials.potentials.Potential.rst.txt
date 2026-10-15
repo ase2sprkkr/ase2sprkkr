@@ -1,0 +1,36 @@
+Potential
+=========
+
+
+.. currentmodule:: ase2sprkkr.potentials.potentials
+
+.. autoclass:: Potential
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.potentials.Potential
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

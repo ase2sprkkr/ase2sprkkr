@@ -1,0 +1,61 @@
+bindings
+========
+
+Full name: **ase2sprkkr.bindings**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     empty_spheres
+  
+  
+     es_finder
+  
+  
+     nomad
+  
+  
+     spglib
+  
+  
+  
+     uppasd
+  
+  
+     xband
+  
+  
+  

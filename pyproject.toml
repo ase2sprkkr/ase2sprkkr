@@ -1,0 +1,146 @@
+[build-system]
+build-backend = "scikit_build_core.build"
+requires = [
+    "scikit-build-core==0.11.5",
+    "cython",
+		"numpy"
+]
+
+[project.scripts]
+ase2sprkkr = "ase2sprkkr.tools.ase2sprkkr:run"
+
+[project]
+name = "ase2sprkkr"
+version = "3.6.0-beta1"
+requires-python = ">=3.8"
+authors = [
+  { name = "Matyáš Novák", email = "novakmat@fzu.cz" },
+  { name = "Jano Minár" },
+  { name = "Ridha Eddhib" },
+  { email = "ase2sprkkr@ntc.zcu.cz" }
+]
+readme = "README.md"
+description = "Wrapper/calculator for SPR-KKR to be used within ASE (Atomic Simulation Environment)"
+license-files = ["LICENCE"]
+
+dependencies = [
+    "ase>=3.22.0",
+		"colorama",
+    "spglib",
+    "pyparsing>=3.0",
+    "elementy",
+    "platformdirs",
+    "packaging",
+    "pytest",
+    "pyyaml",
+    "ruamel.yaml>=0.18.16",
+    "requests",
+    "argcomplete",
+    "unyt",
+    "numpy; python_version < '3.10'",
+    "numpy>=2.1; python_version >= '3.10'",
+    "networkx<3.3; python_version >= '3.14'",
+]
+
+[project.optional-dependencies]
+jupyter = [
+    "jupyterlab",
+    "nbformat",
+    "nbconvert",
+]
+mendeleev = [
+    "mendeleev",
+]
+es_finder = [
+    "pymatgen",
+]
+plotting = [
+    "matplotlib",
+    "scipy",
+    "scikit-image",
+]
+psij = [
+    "psij-python>=0.9.11",
+]
+
+[project.urls]
+Homepage = "https://ase2sprkkr.github.io/ase2sprkkr/"
+
+[project.entry-points."ase.plugins"]
+ase2sprkkr = "ase2sprkkr.ase.register"
+
+[project.entry-points."ase.ioformats"]
+SPRKKR = "ase2sprkkr.ase.register:SPRKKRFormat"
+
+[project.entry-points."ase.calculators"]
+SPRKKR = "ase2sprkkr.ase.register"
+
+[tool.scikit-build]
+ninja.make-fallback = false
+cmake.version = ">=3.15"
+wheel.packages = ["src/ase2sprkkr"]
+sdist.exclude = [
+	"**/*",
+	"**/*.sw?",
+	"**/.pytest_cache",
+	"**/.pytest_cache/**",
+	"src/ase2sprkkr/bindings/xband/debug_tools/*",
+]
+sdist.include = [
+	"src/ase2sprkkr/input_parameters/examples/*.in",
+	"src/ase2sprkkr/potentials/examples/*.pot",
+	"src/ase2sprkkr/result_files/examples/*.bsf",
+	"src/ase2sprkkr/result_files/examples/*.rat",
+	"src/ase2sprkkr/result_files/examples/*.dat",
+	"src/ase2sprkkr/result_files/examples/*.spc",
+	"src/ase2sprkkr/result_files/examples/*.dos",
+	"src/ase2sprkkr/result_files/test/xas_Cu_L23*.agr",
+	"src/ase2sprkkr/outputs/examples/*.out",
+	"src/ase2sprkkr/outputs/examples/*.sfn",
+	"src/ase2sprkkr/examples/README",
+
+	"src/ase2sprkkr/sprkkr/test/*.cif",
+	"src/ase2sprkkr/bindings/xband/tests/*.pot",
+	"src/ase2sprkkr/execution/test/docker/*",
+	"src/ase2sprkkr/execution/test/slurm/*",
+
+	"src/ase2sprkkr/**/*.py",
+	"src/ase2sprkkr/**/*.pyx",
+	"src/ase2sprkkr/**/*.f",
+	"src/ase2sprkkr/**/*.f90",
+	"src/ase2sprkkr/**/*.fi",
+	"src/ase2sprkkr/**/*.h",
+	"src/**/CMakeLists.txt",
+	"/CMakeLists.txt",
+	"/LICENCE",
+	"/CHANGELOG",
+  "/README.md",
+	"docs/**",
+
+	"pyproject.toml",
+	"meta.yaml",
+]
+wheel.exclude = [
+	"**/*.pyx",
+	"**/*.h",
+	"**/*.f",
+	"**/*.f90",
+	"**/*.fi",
+	"CMakeLists.txt",
+	"src/ase2sprkkr/bindings/xband/debug_tools/*",
+]
+
+[tool.pytest.ini_options]
+markers = [
+	"slow: long-running test (typically over about 1 second)",
+]
+
+[tool.ruff]
+line-length=120
+
+[tool.ruff.format]
+docstring-code-format=true
+skip-magic-trailing-comma=true
+
+[tool.ruff.lint]
+ignore = ["E402", "E741"]

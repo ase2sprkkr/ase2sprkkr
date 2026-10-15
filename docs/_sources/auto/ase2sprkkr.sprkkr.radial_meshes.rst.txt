@@ -1,0 +1,60 @@
+radial\_meshes
+==============
+
+Full name: **ase2sprkkr.sprkkr.radial\_meshes**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh  ase2sprkkr.sprkkr.radial_meshes.FullpotMesh  ase2sprkkr.sprkkr.radial_meshes.Mesh 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.radial_meshes
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _clearing_property
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ExponentialMesh
+      FullpotMesh
+      Mesh
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

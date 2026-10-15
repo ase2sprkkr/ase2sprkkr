@@ -1,0 +1,36 @@
+RATOutputFile
+=============
+
+
+.. currentmodule:: ase2sprkkr.output_files.definitions.rat
+
+.. autoclass:: RATOutputFile
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.output_files.definitions.rat.RATOutputFile
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

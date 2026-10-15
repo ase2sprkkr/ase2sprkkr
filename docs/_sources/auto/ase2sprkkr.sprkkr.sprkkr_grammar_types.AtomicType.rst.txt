@@ -1,0 +1,36 @@
+AtomicType
+==========
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.sprkkr_grammar_types
+
+.. autoclass:: AtomicType
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

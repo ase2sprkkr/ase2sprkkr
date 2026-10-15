@@ -1,0 +1,92 @@
+sections
+========
+
+Full name: **ase2sprkkr.potentials.definitions.sections**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions.sections
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _sections
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     charge
+  
+  
+     charge_moments
+  
+  
+     global_system_parameter
+  
+  
+     host_madelung_potential
+  
+  
+     lattice
+  
+  
+     magnetisation_direction
+  
+  
+     mesh_information
+  
+  
+     moments
+  
+  
+     occupation
+  
+  
+     potential
+  
+  
+     reference_system
+  
+  
+     scf_info
+  
+  
+     sites
+  
+  
+     types
+  
+  
+  

@@ -1,0 +1,20 @@
+CONTROL DATASET=case
+        ADSI=PHAGEN
+        POTFIL=case.pot_new
+
+TAU BZINT=POINTS
+    NKTAB=250
+
+ENERGY  GRID={5}
+      NE={32}
+      ImE=0.00
+      EMIN=-0.2
+
+SCF NITER=200
+    MIX=0.20000
+    VXC=VWN
+    EFGUESS=0.7
+    TOL=0.000010
+    ISTBRY=1
+
+TASK PHAGEN

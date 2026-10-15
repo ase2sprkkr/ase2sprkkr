@@ -1,0 +1,36 @@
+LatticeData
+===========
+
+
+.. currentmodule:: ase2sprkkr.physics.lattice_data
+
+.. autoclass:: LatticeData
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.physics.lattice_data.LatticeData
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

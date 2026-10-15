@@ -1,0 +1,60 @@
+io\_data
+========
+
+Full name: **ase2sprkkr.sprkkr.io\_data**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.io_data.BaseIoData  ase2sprkkr.sprkkr.io_data.ReadIoData  ase2sprkkr.sprkkr.io_data.WriteIoData 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.io_data
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      unique_mapping
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BaseIoData
+      ReadIoData
+      WriteIoData
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,52 @@
+global\_system\_parameter
+=========================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.global\_system\_parameter**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.global_system_parameter.GlobalSystemParameter  ase2sprkkr.potentials.definitions.sections.global_system_parameter.GlobalSystemParameterDefinition  ase2sprkkr.potentials.definitions.sections.global_system_parameter.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions.sections.global_system_parameter
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      GlobalSystemParameter
+      GlobalSystemParameterDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

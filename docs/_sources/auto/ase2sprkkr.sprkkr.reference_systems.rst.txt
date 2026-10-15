@@ -1,0 +1,50 @@
+reference\_systems
+==================
+
+Full name: **ase2sprkkr.sprkkr.reference\_systems**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.reference_systems.ReferenceSystem 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.reference_systems
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ReferenceSystem
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

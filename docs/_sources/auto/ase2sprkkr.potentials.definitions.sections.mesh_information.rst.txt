@@ -1,0 +1,52 @@
+mesh\_information
+=================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.mesh\_information**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection  ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSectionDefinition  ase2sprkkr.potentials.definitions.sections.mesh_information.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions.sections.mesh_information
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      MeshInformationSection
+      MeshInformationSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

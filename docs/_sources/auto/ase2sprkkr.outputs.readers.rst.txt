@@ -1,0 +1,63 @@
+readers
+=======
+
+Full name: **ase2sprkkr.outputs.readers**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.readers
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     arpes
+  
+  
+     bsf
+  
+  
+     default
+  
+  
+     dos
+  
+  
+     jxc
+  
+  
+     scf
+  
+  
+     spec
+  
+  
+  

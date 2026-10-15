@@ -1,0 +1,43 @@
+show\_structure
+===============
+
+Full name: **ase2sprkkr.tools.commands.show\_structure**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.tools.commands.show_structure
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      parser
+      run
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

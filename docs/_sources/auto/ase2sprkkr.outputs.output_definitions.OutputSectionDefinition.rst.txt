@@ -1,0 +1,36 @@
+OutputSectionDefinition
+=======================
+
+
+.. currentmodule:: ase2sprkkr.outputs.output_definitions
+
+.. autoclass:: OutputSectionDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.output_definitions.OutputSectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

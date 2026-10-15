@@ -1,0 +1,36 @@
+Prefixed
+========
+
+
+.. currentmodule:: ase2sprkkr.common.grammar_types.data
+
+.. autoclass:: Prefixed
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.data.Prefixed
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

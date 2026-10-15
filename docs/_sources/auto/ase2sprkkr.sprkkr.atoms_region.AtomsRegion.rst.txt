@@ -1,0 +1,36 @@
+AtomsRegion
+===========
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.atoms_region
+
+.. autoclass:: AtomsRegion
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.atoms_region.AtomsRegion
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

@@ -1,0 +1,44 @@
+jxc
+===
+
+Full name: **ase2sprkkr.input\_parameters.definitions.jxc**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.definitions.jxc
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _jxc_mode_warning_condition
+      _jxc_nonmag_warning_condition
+      input_parameters
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

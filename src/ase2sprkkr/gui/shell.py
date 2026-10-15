@@ -1,0 +1,275 @@
+"""Classes, for opening ASE2SPRKKR in shell or Jupyter notebook"""
+
+import code
+import codeop
+import contextlib
+import os
+from ase2sprkkr.gui.examples import Example
+import subprocess
+from pathlib import Path
+
+
+JUPYTER_INSTALL_COMMAND = 'python -m pip install "ase2sprkkr[jupyter]"'
+
+
+class JupyterDependencyError(ImportError):
+    """Raised when the optional dependencies for Jupyter support are absent."""
+
+    def __init__(self):
+        super().__init__(
+            "Jupyter support is not installed. Install the optional dependency with:\n\n"
+            f"    {JUPYTER_INSTALL_COMMAND}"
+        )
+
+
+def load_jupyter_dependencies():
+    """Import and return modules needed only by the Jupyter shell."""
+    try:
+        import nbformat
+        from nbformat.v4 import new_notebook, new_code_cell
+        from nbconvert.preprocessors import ExecutePreprocessor
+        import jupyterlab  # noqa: F401
+    except ImportError as exc:
+        raise JupyterDependencyError() from exc
+    return nbformat, new_notebook, new_code_cell, ExecutePreprocessor
+
+
+def split_top_level_chunks(code: str):
+    """
+    Split Python code into top-level chunks.
+    Only splits at blank lines that are preceded by a line with no indentation.
+    """
+    chunks = []
+    current_chunk = []
+    empty = False
+
+    for line in code.splitlines():
+        # Check if the current line is blank
+        if line.strip() == "":
+            empty = True
+        elif empty:
+            if not line.startswith((" ", "\t")) and current_chunk:
+                chunks.append("\n".join(current_chunk))
+                current_chunk = []
+            empty = False
+        current_chunk.append(line)
+
+    if current_chunk:
+        chunks.append("\n".join(current_chunk))
+
+    return chunks
+
+
+@contextlib.contextmanager
+def chdir(path):
+    if path is None:
+        yield
+        return
+    old = os.getcwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(old)
+
+
+def format_as_python_shell(code_str: str) -> str:
+    """
+    Format Python code as it would appear in a Python shell.
+    Prepend >>> to new statements and ... to continuation lines.
+
+    Handles multi-line blocks like classes, functions, loops, and conditionals.
+    """
+    lines = code_str.splitlines()
+    formatted_lines = []
+    buffer = []
+
+    for line in lines:
+        buffer.append(line)
+        # Join buffer and check if it's a complete statement
+        joined = "\n".join(buffer)
+        try:
+            compiled = codeop.compile_command(joined, symbol="exec")
+        except (SyntaxError, ValueError):
+            # Invalid code; treat as complete to avoid infinite loop
+            compiled = True
+
+        if compiled is None:
+            # Incomplete -> next line is continuation
+            continue
+        else:
+            # Complete statement; format lines
+            for i, l in enumerate(buffer):
+                prefix = ">>> " if i == 0 else "... "
+                formatted_lines.append(f"{prefix}{l}")
+            buffer = []  # reset buffer for next statement
+
+    # If any remaining lines (rare), treat them as continuation
+    for i, l in enumerate(buffer):
+        prefix = ">>> " if i == 0 else "... "
+        formatted_lines.append(f"{prefix}{l}")
+
+    return "\n".join(formatted_lines)
+
+
+class Shell:
+    """A base class for ASE2SPRKKR interactive computation using ase2sprkkr tool"""
+
+    """ Prefix code, do it always """
+    initialization = [
+        """from ase2sprkkr import (
+        SPRKKRAtoms,
+        InputParameters,
+        ResultFile,
+        Potential
+    )"""
+    ]
+
+    def __init__(self):
+        self.code = Shell.initialization.copy()
+        self.output_file_counter = ""
+        self.dir = None
+
+    def change_working_dir(self, dir):
+        self.dir = dir
+
+    def add_output_file(self, file):
+        of = "out" + str(self.output_file_counter)
+        self.output_file_counter = self.output_file_counter + 1 if self.output_file_counter else 1
+        self.code.append(f"{of} = ResultFile.from_file({repr(str(file))})\n{of}.plot()")
+
+    def run_example(self, example, dir):
+        ex = Example.by_number(example)
+        dir = str(dir)
+        ex.copy(dir)
+
+        content = ex.body_of_main()
+        content = split_top_level_chunks(content)
+        self.code += content
+
+
+class CommandlineShell(Shell):
+    """Run the given code in a commandline shell"""
+
+    def save(self, filename):
+        with open(filename, "w") as f:
+            f.write("\n\n".join(self.code))
+
+
+class Python(CommandlineShell):
+    """Run the given code in a Python shell"""
+
+    def open(self, temp=False):
+
+        import linecache
+
+        print("\n Opening python shell...\n")
+
+        with chdir(self.dir):
+            local_ns = {}
+            for i, cmd in enumerate(self.code):
+                print(format_as_python_shell(cmd))
+                filename = f"<interactive-{i}>"
+                lines = cmd.splitlines(keepends=True)
+                linecache.cache[filename] = (
+                    len(cmd),  # size
+                    None,  # mtime (None is fine)
+                    lines,  # list of lines WITH newline chars
+                    filename,
+                )
+                compiled = compile(cmd, filename, "exec")
+                exec(compiled, globals(), local_ns)
+                print("\n")
+            code.interact(local=local_ns)
+
+
+class Pdb(CommandlineShell):
+    """Run the given code in a Python shell"""
+
+    def open(self, temp=False):
+
+        import pdb
+        import linecache
+
+        print("\n Opening pdb session...\n")
+
+        source = "\n".join(self.code)
+        filename = "<user_code>"
+
+        lines = source.splitlines(keepends=True)
+        linecache.cache[filename] = (
+            len(source),  # size
+            None,  # mtime (None is fine)
+            lines,  # list of lines WITH newline chars
+            filename,
+        )
+        code = compile(source, filename, "exec")
+
+        pdb.runctx(code, {}, {})
+
+
+class JupyterLab(Shell):
+    """Run the given code in a JupyterLab notebook."""
+
+    def __init__(self, run=False):
+        (
+            self.nbformat,
+            self.new_notebook,
+            self.new_code_cell,
+            self.ExecutePreprocessor,
+        ) = load_jupyter_dependencies()
+        self.saved = False
+        self.run = run
+        super().__init__()
+
+    def save(self, filename):
+        """Save the notebook to disk."""
+        filename = Path(filename)
+        filename.parent.mkdir(parents=True, exist_ok=True)
+
+        nb = self.new_notebook()
+        for cmd in self.code:
+            nb.cells.append(self.new_code_cell(cmd))
+
+        if self.run:
+            ep = self.ExecutePreprocessor(timeout=600)
+            ep.preprocess(nb, {"metadata": {"path": self.dir}})
+
+        with open(filename, "w", encoding="utf-8") as f:
+            self.nbformat.write(nb, f)
+        self.saved = filename
+
+    def open(self):
+        print("\n Opening JupyterLab... Press CTRL+C to stop the Jupyter computational kernel.\n")
+        dr = Path(self.dir or ".")
+
+        if not self.saved:
+            self.save(dr / "notebook.ipynb")
+
+        with chdir(self.dir):
+            cmd = ["jupyter-lab", "--NotebookApp.shutdown_no_activity_timeout=60", self.saved]
+            try:
+                proc = subprocess.Popen(
+                    cmd,
+                    cwd=self.dir,
+                    stdin=None,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    start_new_session=False,
+                )
+                proc.wait()
+            except KeyboardInterrupt:
+                print("Terminating the kernel")
+                proc.terminate()
+                try:
+                    proc.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                    proc.wait()
+
+
+"""
+                start_new_session=True,
+                stdout=subprocess.DEVNULL,
+                stdin=subprocess.DEVNULL
+            )"""

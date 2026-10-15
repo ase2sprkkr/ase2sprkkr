@@ -1,0 +1,36 @@
+GlobalSystemParameterDefinition
+===============================
+
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.global_system_parameter
+
+.. autoclass:: GlobalSystemParameterDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.global_system_parameter.GlobalSystemParameterDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

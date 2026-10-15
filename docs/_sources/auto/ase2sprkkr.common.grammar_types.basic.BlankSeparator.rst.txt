@@ -1,0 +1,36 @@
+BlankSeparator
+==============
+
+
+.. currentmodule:: ase2sprkkr.common.grammar_types.basic
+
+.. autoclass:: BlankSeparator
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.basic.BlankSeparator
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

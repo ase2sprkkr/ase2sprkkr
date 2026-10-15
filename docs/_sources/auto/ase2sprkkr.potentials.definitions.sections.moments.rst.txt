@@ -1,0 +1,53 @@
+moments
+=======
+
+Full name: **ase2sprkkr.potentials.definitions.sections.moments**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.moments.MomentSection  ase2sprkkr.potentials.definitions.sections.moments.MomentsSection  ase2sprkkr.potentials.definitions.sections.moments.MomentsSectionDefinition  ase2sprkkr.potentials.definitions.sections.moments.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions.sections.moments
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      MomentSection
+      MomentsSection
+      MomentsSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

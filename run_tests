@@ -1,0 +1,33 @@
+#!/bin/bash
+set -e
+
+# The wheel installed by the preceding build step must be tested. A CI-wide
+# PYTHONPATH pointing at ``src`` would shadow its compiled extension modules.
+unset PYTHONPATH
+
+# Run from a fresh directory so the repository checkout cannot accidentally
+# satisfy imports or receive files created by tests intended for the installed
+# wheel.
+TEST_WORKDIR=$(mktemp -d)
+trap 'rm -rf "$TEST_WORKDIR"' EXIT
+cd "$TEST_WORKDIR"
+
+# Fail early and explicitly if the wheel did not provide its compiled modules.
+# A same-named source directory can otherwise be imported as a namespace
+# package, producing a misleading late "has no attribute" failure.
+python3 - <<'PY'
+from ase2sprkkr.bindings.xband import spheres, symmetry
+
+for module, required_function in (
+    (spheres, "empty_spheres"),
+    (symmetry, "find_symmetry"),
+):
+    if not hasattr(module, required_function):
+        raise RuntimeError(
+            f"Compiled extension {module.__name__} was not loaded: "
+            f"module={module!r}, file={getattr(module, '__file__', None)!r}, "
+            f"missing function={required_function!r}"
+        )
+PY
+
+python3 -m ase2sprkkr.tools.ase2sprkkr test "$@"

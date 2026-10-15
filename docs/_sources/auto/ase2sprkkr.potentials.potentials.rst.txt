@@ -1,0 +1,50 @@
+potentials
+==========
+
+Full name: **ase2sprkkr.potentials.potentials**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.potentials.Potential 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.potentials
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Potential
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

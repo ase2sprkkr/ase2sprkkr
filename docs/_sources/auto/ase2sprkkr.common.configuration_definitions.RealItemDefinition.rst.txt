@@ -1,0 +1,36 @@
+RealItemDefinition
+==================
+
+
+.. currentmodule:: ase2sprkkr.common.configuration_definitions
+
+.. autoclass:: RealItemDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.configuration_definitions.RealItemDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

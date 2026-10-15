@@ -1,0 +1,10 @@
+<map id="inheritanceff6f6762c3" name="inheritanceff6f6762c3">
+<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.default.DefaultOutputParser.html#ase2sprkkr.outputs.readers.default.DefaultOutputParser" target="_top" title="DefaultOutputParser" alt="" coords="368,109,521,137"/>
+<area shape="rect" id="node5" href="ase2sprkkr.outputs.readers.spec.SpecOutputParser.html#ase2sprkkr.outputs.readers.spec.SpecOutputParser" target="_top" title="Reader for spec.out files." alt="" coords="550,109,687,137"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" target="_top" title="SprKkrOutputParser" alt="" coords="190,109,338,137"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Class, that runs a process and reads its output using the underlying" alt="" coords="16,57,150,85"/>
+<area shape="rect" id="node6" href="ase2sprkkr.outputs.readers.spec.SpecOutputReader.html#ase2sprkkr.outputs.readers.spec.SpecOutputReader" target="_top" title="Process class for spectral function calculations." alt="" coords="193,57,335,85"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,109,161,137"/>
+<area shape="rect" id="node7" href="ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult" target="_top" title="Class representing the results of a spectral function calculation." alt="" coords="218,5,311,33"/>
+<area shape="rect" id="node8" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="37,5,129,33"/>
+</map>

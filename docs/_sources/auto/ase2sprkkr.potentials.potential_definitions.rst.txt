@@ -1,0 +1,54 @@
+potential\_definitions
+======================
+
+Full name: **ase2sprkkr.potentials.potential\_definitions**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition  ase2sprkkr.potentials.potential_definitions.PotSectionDefinition  ase2sprkkr.potentials.potential_definitions.PotValueDefinition  ase2sprkkr.potentials.potential_definitions.PotentialDefinition  ase2sprkkr.potentials.potential_definitions.Separator 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.potential_definitions
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ASEArraySectionDefinition
+      PotSectionDefinition
+      PotValueDefinition
+      PotentialDefinition
+      Separator
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

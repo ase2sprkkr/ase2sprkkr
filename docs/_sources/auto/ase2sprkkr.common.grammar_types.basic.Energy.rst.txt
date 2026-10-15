@@ -1,0 +1,36 @@
+Energy
+======
+
+
+.. currentmodule:: ase2sprkkr.common.grammar_types.basic
+
+.. autoclass:: Energy
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.basic.Energy
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

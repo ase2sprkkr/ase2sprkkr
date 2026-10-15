@@ -1,0 +1,36 @@
+ScfResult
+=========
+
+
+.. currentmodule:: ase2sprkkr.outputs.readers.scf
+
+.. autoclass:: ScfResult
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.readers.scf.ScfResult
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

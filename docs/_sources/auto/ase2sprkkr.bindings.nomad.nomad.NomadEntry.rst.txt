@@ -1,0 +1,36 @@
+NomadEntry
+==========
+
+
+.. currentmodule:: ase2sprkkr.bindings.nomad.nomad
+
+.. autoclass:: NomadEntry
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.bindings.nomad.nomad.NomadEntry
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

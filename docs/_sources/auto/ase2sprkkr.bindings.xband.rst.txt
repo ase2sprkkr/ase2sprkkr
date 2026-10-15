@@ -1,0 +1,52 @@
+xband
+=====
+
+Full name: **ase2sprkkr.bindings.xband**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings.xband
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     spheres_debug
+  
+  
+  
+     spheres
+  
+  
+     symmetry
+  
+  
+  

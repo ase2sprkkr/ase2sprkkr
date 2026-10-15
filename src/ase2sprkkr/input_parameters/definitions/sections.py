@@ -1,0 +1,708 @@
+"""Definitions of sections to be used in definitions of input parameters
+(input files for SPR-KKR tasks)"""
+
+from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Keyword
+
+from ..input_parameters_definitions import InputSectionDefinition as Section, InputValueDefinition as V
+from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
+from functools import partial
+from ...common.warnings import DataValidityError
+
+
+def relative_energy_supported(section):
+    """Whether this energy definition can represent both relative bounds."""
+    return all(name in section for name in ('EMIN', 'EMAX', 'EMINEV', 'EMAXEV'))
+
+
+def energy_reference_error(section):
+    """Explain an energy-reference state INIT_MOD_ENERGY would silently ignore.
+
+    Legacy spectroscopy and SPLEED have a separate reader. Intermediate editing
+    states remain legal; callers use this check when accepting or saving input.
+    """
+    task = section._container.TASK
+    if 'INPVER' in task and (task.INPVER() == 0 or task.TASK() == 'SPLEED'):
+        return None
+    relative = [name in section and section[name]() is not None
+                for name in ('EMINEV', 'EMAXEV')]
+    if any(relative) and not all(relative):
+        return ('ENERGY.EMINEV and ENERGY.EMAXEV must be supplied together. '
+                'Use absolute energy for tasks without an upper relative bound.')
+    return None
+
+
+def _validate_energy_reference(section, _container, why):
+    if why != 'set':
+        error = energy_reference_error(section)
+        if error:
+            return [DataValidityError(error)]
+
+
+def _sections_tau_bzint_default_value(option):
+    return None if option._container.CLUSTER() or option._container.MOL() else "POINTS"
+
+
+def _sections_sfnfil_default_value(control):
+    return control.DATASET() + ".sfn"
+
+
+def _sections_tau_bzint_weyl_write_condition(option):
+    return option._container.BZINT() == "WEYL"
+
+
+def _energy_default(option):
+    """Evaluate a task-supplied default, which may depend on the current mode."""
+    value = option._definition._energy_default_value
+    return value(option) if callable(value) else value
+
+
+def _energy_absolute_default(option):
+    """Suppress an absolute fallback when the relative representation is active."""
+    return None if option._container[option.name + 'EV']() is not None else _energy_default(option)
+
+
+def _energy_relative_default(option):
+    """Suppress a relative fallback when an absolute value was explicitly set.
+
+    Check storage with is_set(), not the absolute getter: that getter already
+    depends on this relative value, and calling it would recurse.
+    """
+    return None if option._container[option.name[:-2]].is_set() else _energy_default(option)
+
+
+def _energy_absolute_optional(option):
+    return option._container[option.name + 'EV']() is not None
+
+
+def _energy_bound(name, values):
+    """Define a paired absolute/relative bound with task-specific defaults.
+
+    values contains (absolute Ry default, description, relative eV default).
+    Either default may be a top-level callable accepting its Option. Shared
+    precedence and validation are independent of the task's numerical values.
+    """
+    absolute = V(name, float, _energy_absolute_default, info=values[1],
+                 is_optional=_energy_absolute_optional)
+    relative = V(name + 'EV', float, _energy_relative_default,
+                 info=f'{name}, given in eV with respect to the Fermi level', is_optional=True)
+    absolute._energy_default_value = values[0]
+    relative._energy_default_value = values[2]
+    return [absolute, relative]
+
+
+def _sections_energy_emax_from_emin_default_value(option):
+    return option._container.EMIN()
+
+
+def _sections_energy_emaxev_from_eminev_default_value(option):
+    return option._container.EMINEV()
+
+
+_SECTIONS_XC_INFO = {
+    "VWN": ("LDA", "LDA_C_VWN"),
+    "MJW": ("LDA", "-"),
+    "VBH": ("LDA", "LDA_C_VBH"),
+    "PBE": ("GGA", "GGA_X_PBE"),
+    "PW92": ("GGA", "GGA_X_PW91"),
+    "EV-GGA": ("GGA", "GGA_X_EV93"),
+    "BJ": ("metaGGA", "MGGA_X_BJ06"),
+    "MBJ": ("metaGGA", "MGGA_X_BJ06"),
+}
+
+
+def _sections_xc_libxc_name(option):
+    """Return libxc name of the potential."""
+    return _SECTIONS_XC_INFO.get(option(), (None, None))[1]
+
+
+def _sections_xc_jacobs_ladder(option):
+    """Return NOMAD xc classification."""
+    return _SECTIONS_XC_INFO.get(option(), (None, None))[0]
+
+
+def _sections_xc_enrich(option):
+    option.libxc_name = partial(_sections_xc_libxc_name, option)
+    option.jacobs_ladder = partial(_sections_xc_jacobs_ladder, option)
+    option.xc_info = _SECTIONS_XC_INFO
+
+
+def CONTROL(ADSI):
+    """Create the definition of the CONTROL section of the task input file.
+
+    Parameters
+    ----------
+    ADSI: string
+      the default value for the ADSI parameter of the resulting section
+
+    Return
+    ------
+    CONTROL: InputSectionDefinition
+    """
+
+    return Section(
+        "CONTROL",
+        [
+            V(
+                "DATASET",
+                str,
+                "case",
+                is_required=True,
+                result_is_visible=True,
+                info="The custom field for the description of the problem - the output files will been called 'DATASET.<ext>'.",
+            ),
+            V(
+                "SFNFIL",
+                str,
+                default_value_from_container=_sections_sfnfil_default_value,
+                is_always_added=False,
+                info="Shape-function file used for full-potential calculations.",
+            ),
+            V("ADSI", DefKeyword(ADSI), is_required=True, info="Type of the computation."),
+            V(
+                "POTFIL",
+                str,
+                is_required="save",
+                info="The potential file (see SPRKKR documentation for its format). It isn't necessary to set it, it will be set by the calculator.",
+            ),
+            V(
+                "KRWS",
+                Integer(min=0, max=1),
+                1,
+                info="If it is 0, RWS is taken from the potential file and scaled. If 1, RWS is calculated by scaling the muffin-tin radii by a common scaling factor. (This setting is forced in the case of FULLPOT.)",
+            ),
+            V(
+                "KRMT",
+                {
+                    "0": "RMT is taken from the potential file",
+                    "1": "RMT = min( x*RWS )",
+                    "2": "RMT = min( d_ij / 2 )",
+                    "3": "RMT from atomic charge density (=> KRWS=1)",
+                    "4": "RMT from atomic Hartree potential (=> KRWS=1)",
+                    "5": "RMT from total atomic potential (=> KRWS=1)",
+                    "6": "take average of 3 and 4 (=> KRWS=1)",
+                },
+                default_value=None,
+                info="It controls how the muffin-tin radii are calculated.",
+                is_required=False,
+            ),
+            V(
+                "PRINT",
+                Integer(min=0, max=5),
+                default_value=0,
+                info="Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output.",
+            ),
+            V(
+                "NONMAG",
+                False,
+                info="The system considered is non-magnetic. This leads to a higher symmetry and a faster calculation. ",
+            ),
+            V(
+                "NOSYM",
+                False,
+                info="Set this flag, if you want to supress all symetry consideration. This leads to a slower calculation. ",
+            ),
+            V(
+                "NOHFF",
+                False,
+                info="Disable hyper-fine-field calculation. It's disabled by default for SCF task. TASK.HFF takes precedence.",
+            ),
+            V(
+                "FSOHFF",
+                False,
+                info="Calculate the relativistic decomposition of the hyperfine field into Fermi-contact, spin-dipolar, and orbital contributions. Sets SPLITSS automatically."
+            ),
+            V(
+                "SPLITSS",
+                False,
+                info="Evaluate single-site contributions on a separate energy contour. GRID and NE must each contain two values.", description="Forced to true, if TASK=COMPTON or FSOHFF"
+            )
+        ],
+    )
+
+
+class TauSection(Section):
+    """TAU Section of input parameters."""
+
+    def set_from_atoms(self, section, atoms, io_data):
+        """NKTAB[xD] values has to be set according to the type of the problem."""
+        for i in (section.NKTAB, section.NKTAB2D, section.NKTAB3D, section.KKRMODE):
+            i.clear_result()
+
+        if atoms is not None:
+            pbc = atoms.pbc.sum()
+            # setting the dangerous value to the non-used options
+            # prevents them to use its default values and so to be
+            # writed to the output file
+            if pbc == 3:
+                section.NKTAB2D.result = section.NKTAB2D._create_dangerous_value(None)
+                section.NKTAB3D.result = section.NKTAB3D._create_dangerous_value(None)
+            else:
+                section.NKTAB2D.result = section.NKTAB2D()
+                section.NKTAB3D.result = section.NKTAB3D()
+                section.NKTAB.result = section.NKTAB._create_dangerous_value(None)
+                if not section.KKRMODE():
+                    section.KKRMODE.result = "TB"
+
+
+def _nktab_value(option):
+    return option._container.NKTAB()
+
+
+TAU = TauSection(
+    "TAU",
+    [
+        V(
+            "BZINT",
+            Keyword(
+                {"POINTS": "special points method", "WEYL": "Weyl method", "CLUSTER": "Cluster method"},
+                description="""
+The Weyl method (BZINT=WEYL) is a point sampling method using more or less ran-
+dom points. The number of k-points used for the integration varies quadratically be-
+tween 0.0 and ImE according to the imaginary part of the energy.
+
+The special point method (BZINT=POINTS) uses a regular k-point grid with NKTAB
+points. It is the standard method and gives a good compromise concerning accuracy
+and efficiency. For BZINT=POINTS the parameter NKTAB will be adjusted to allow a
+regular mesh.
+""",
+            ),
+            is_required=False,
+            default_value=_sections_tau_bzint_default_value,
+            info="The mode of BZ-integration used for calculation of the scattering  path operator τ",
+        ),
+        V(
+            "NKTAB",
+            250,
+            info="Number of points for the special points method",
+            is_optional=True,
+            description="For 2D problem, it serves only as default value for NKTABxD.",
+        ),
+        V(
+            "NKTAB2D",
+            int,
+            _nktab_value,
+            info="Number of points for the special points method for 2D region of 2D problem",
+            is_optional=True,
+            description="If it is not specified, NKTAB is used.",
+        ),
+        V(
+            "NKTAB3D",
+            int,
+            _nktab_value,
+            info="Number of points for the special points method for 3D region of 2D problem",
+            is_optional=True,
+            description="If it is not specified, NKTAB is used",
+        ),
+        V(
+            "NKMIN",
+            300,
+            info="Minimal number of k-points used for Weyl integration",
+            write_condition=_sections_tau_bzint_weyl_write_condition,
+        ),
+        V(
+            "NKMAX",
+            500,
+            info="Maximal number of k-points used for Weyl integration",
+            write_condition=_sections_tau_bzint_weyl_write_condition,
+        ),
+        # expert
+        V(
+            "CLUSTER",
+            flag,
+            expert=False,
+            info="""Do cluster type calculation.""",
+            description="Cluster type calculation calculate τ by inverting the real space KKR matrix. "
+            "Specify cluster center using IQCNTR or ITCNTR and its size using NSHLCLU or CLURAD.",
+        ),
+        V(
+            "NSHLCLU",
+            int,
+            is_expert=True,
+            is_optional=True,
+            info="Number of atomic shells around the central atom of a cluster",
+        ),
+        V("CLURAD", float, is_expert=True, is_optional=True, info="Radius of the cluster in multiples of ALAT."),
+        V(
+            "IQCNTR",
+            Site.I,
+            is_expert=True,
+            is_optional=True,
+            info="The center of the cluster is set at the site position with number IQCNTR of the specified basis.",
+        ),
+        V(
+            "ITCNTR",
+            AtomicType.I,
+            is_expert=True,
+            is_optional=True,
+            info="The center of the cluster is set at one of the site positions that is occupied by the atomic type ITCNTR.",
+        ),
+        V("NLOUT", expert=3, info="The calculated τ -matrix is printed up to lmax=NLOUT."),
+        V(
+            "MOL",
+            expert=False,
+            info="Cluster type calculation but for a molecular system. The system is specified as for CLUSTER.",
+        ),
+        V("KKRMODE", Keyword("STANDARD", "TB", "IMPURITY", aliases={"TB-KKR": "TB"}), is_optional=True),
+    ],
+)
+"""The definition of the TAU section of the task input file """
+
+
+def ENERGY(emin=(-0.2, "The real part of the lowest E-value", None), emax=None, add=[], defaults={}):
+    """Define energy meshes and paired bounds.
+
+    emin/emax tuples supply (absolute Ry default, description, relative eV
+    default). An explicit absolute bound suppresses its relative default;
+    an active relative bound suppresses the absolute default. Explicit relative
+    values take precedence if both representations are set, as in SPRKKR.
+    """
+    egrid = Keyword({
+       0:'only real energies -- Gauss integration mesh',
+       1:'only real energies -- equidistant path',
+       2:'rectangular complex path',
+       3:'straight complex path parallel to real axis',
+       4:'rectangular complex grid, return to real axis on log scale',
+       5:'arc in the complex plain',
+       6:'standard X-ray mesh from E_Fermi to 3.5 Ry',
+       7:'X-ray mesh',
+       8:'arc in the complex plane (logarithim)',
+       9:"arc in the complex plane (Akai's scheme)",
+      10:'ellipse in the complex plain',
+      11:'semi circle (5) plus straight line (3)',
+      }, aliases={'REAL': 1, 'RECTANG': 2, 'STRAIGHT': 3, 'RECT-LOG': 4, 'ARC': 5, 'XAS': 6, 'XMOD': 7})
+    vals = [
+        V(
+            "GRID",
+            SetOf(egrid, min_length=1, max_length=2),
+            defaults.get("GRID", [5]),
+            is_required=True,
+            info="Type of the grid for the energy-mesh",
+        ),
+        V("NE", SetOf(int, min_length=1, max_length=2), defaults.get("NE", [32]), is_required=True, info="Number of points in energy-mesh"),
+        V("ImE", energy, defaults.get("ImE", 0.0)),
+        V("SPLITSS", False, info="Evaluate single-site contributions on a separate energy contour. GRID and NE must each contain two values.", description="Forced to true, if TASK=COMPTON or CONTROL.FSOHFF")
+    ]
+
+    if emin:
+        vals += _energy_bound("EMIN", emin)
+    if emax == "emin":
+        vals += [
+            V(
+                "EMAX",
+                float,
+                _sections_energy_emax_from_emin_default_value,
+                info="The same value as EMIN",
+                is_hidden=True,
+                is_optional=_energy_absolute_optional,
+            ),
+            V(
+                "EMAXEV",
+                float,
+                _sections_energy_emaxev_from_eminev_default_value,
+                info="The same value as EMAXEV",
+                is_hidden=True,
+                is_optional=True,
+            ),
+        ]
+    elif emax:
+        vals += _energy_bound("EMAX", emax)
+    vals += add
+    return Section("ENERGY", vals, validators=_validate_energy_reference)
+
+
+def xc(*args, **kwargs):
+    xc = V(*args, **kwargs)
+
+    xc.enrich = _sections_xc_enrich
+    for k, v in xc.type.choices.items():
+        info = _SECTIONS_XC_INFO[k]
+        xc.type.choices[k] = v + f" (type: {info[0]}, libxc equivalent: {info[1] or '-'})"
+    return xc
+
+
+SCF = Section(
+    "SCF",
+    [
+        V("NITER", 200, info="Maximal number of iterations of the SCF cycle"),
+        V("MIX", 0.2, info="Mixing parameter"),
+        V("MIXOP", float, is_required=False),
+        xc(
+            "VXC",
+            DefKeyword(
+                {
+                    "VWN": "Vosko, Wilk, Nusair",
+                    "MJW": "Janak, Williams, Moruzzigit g",
+                    "VBH": "von Barth, Hedin",
+                    "PBE": "Perdew, Burke, Ernzendorfer GGA",
+                    "PW92": "Perdew Wang",
+                    "EV-GGA": "Engel and Vosko GGA",
+                    "BJ": "Becke-Johnson",
+                    "MBJ": "modified Becke-Johnson",
+                }
+            ),
+            info="parametrisation of the exchange-correlation potential",
+        ),
+        V("ALG", DefKeyword({"BROYDEN2": "Broyden’s second method",
+                             "TCHEBY": "Tchebychev",
+                             "ANDERSON": "Anderson mixing",
+                             "PULAY": "Anderson-Pulay mixing"
+                            }),
+          info="Mixing algorithm"),
+        V("EFGUESS", float, is_required=False, info="Skip the Fermi energy search in the beginning."),
+        V("TOL", 0.00001, info="Tolerance threshold for the mixing algorithm"),
+        V("ISTBRY", 1, info="Start Broyden after ISTBRY iterations"),
+        V("FULLPOT", False, info="Non-spherical callculation (full-potential) instead of ASA"),
+        V("ITDEPT", 40, info="Iteration depth for Broyden algorithm (length of used history)"),
+        V("QION", SetOf(float), is_required=False, info="Guess for the ionic charges Qt for atomic types"),
+        V("QIONSCL", float, is_required=False, info="Guess for the ionic charges Qt for atomic types"),
+        V("MSPIN", SetOf(float), is_required=False, info="Guess for the magnetic moment μ_{spin,t} for atomic types"),
+        V(
+            "USEVMATT",
+            False,
+            info="Set up the starting potential using the original Mattheiss"
+            "construction for the potential V instead of the charge density",
+        ),
+    ],
+)
+"""The definition of the SCF section of the task input file """
+
+STRCONST = Section(
+    "STRCONST",
+    [
+        V("ETA", float, is_optional=True, info="Ewald parameter"),
+        V("RMAX", float, is_optional=True, info="Convergency radius in real space"),
+        V("GMAX", float, is_optional=True, info="Convergency radius in reciprocal space"),
+    ],
+    is_expert=True,
+    is_optional=True,
+    info="The calculation of the ~k-dependent KKR structure constant matrix G(~k, E) is controlled by "
+    "three convergence parameters. ETA determines the relative weight of the real and reciprocal "
+    "space lattice sums, that are determined by the convergence radii RMAX and GMAX, respectively. "
+    "These convergence parameters have to be optimised anew if the lattice structure, the "
+    "lattice parameter or the energy or ~k-range used is changed. This is done by the program if "
+    "no values are applied via the input file. In some cases, in particular if one works at high "
+    "energies, it might be necessery to set the convergence by hand. For this purpose one can start "
+    "from the values set by kkrgen or kkrscf (see the output file).",
+)
+"""The definition of the STRCONST section of the task input file """
+
+SITES = Section(
+    "SITES",
+    [
+        V(
+            "NL",
+            SetOf(Integer.I),
+            is_optional=True,
+            info="Angula momentum cutoff (the first discarded l-space)",
+            description="The KKR-method is a minimum basis set method. This means that the angular-momentum "
+            "expansion can be chosen according to the atomic properties of the atomic types. For transition "
+            "metals it is therefore normally sufficient to have a maximum l-value of 2 (NL = 3). "
+            "For systems with many atoms per unit cell it is in principle possible to set the l-expansion "
+            "according to the atom types on the lattice sites. For US having the NaCl-structure one could "
+            "choose NL = 4 for the U-site and NL = 2 for the S-site. At the moment this possibility, that "
+            "would save storage and computer time, is not supported by all subroutines. For this reason "
+            "a common l-expansion cutoff is used, that is fixed by the highest that occurs. For US "
+            "this implies that NL = 4 is used for all sites. Default is 3 for common and 4 for heavy elements.",
+        )
+    ],
+    is_optional=True
+)
+"""The definition of the SITES section of the task input file """
+
+
+CPA = Section(
+    "CPA",
+    [
+        V("NITER", 20, info="Maximum number of CPA iterations"),
+        V("TOL", 0.0001, info="Threshold for stopping CPA-cycle"),
+    ],
+    is_expert=True,
+    is_optional=True,
+    info="""For a system with substitutional disorder, the CPA is used. The listed variables control the CPA cycle """,
+)
+"""CPA section definition"""
+
+
+MODE = Section(
+    "MODE",
+    [
+        V(
+            "MODE",
+            Keyword(
+                {
+                    "NREL": "work in the nonrelativistic mode",
+                    "SREL": "work in the scalar-relativistic mode",
+                    "SP-SREL": "work in the spin-polarized scalar-relativistic mode",
+                },
+                aliases={"FREL": None},
+            ),
+            None,
+            is_required=False,
+            name_in_grammar=False,
+            info="Using this option you can switch on the spin polarization and relativistic mode. If it"
+            "s not set (or set to "
+            "FREL"
+            "), the "
+            "full"
+            " relativity mode is used.",
+        ),
+        V(
+            "LLOYD",
+            False,
+            info="Use LLoyd formula for scattering operator. It can improve the accuracy of the Fermi energy.",
+        ),
+        V(
+            "MDIR",
+            SetOf(float, length=3),
+            is_required=False,
+            info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.",
+            is_repeated="DEFAULTDICT",
+            is_always_added=False,
+        ),
+        V(
+            "MALF",
+            float,
+            is_required=False,
+            info="the (first) angle characterizing the orientation  of the magnetic moment direction n.",
+            description="If it is not set, angle of MDIR is used",
+        ),
+        V(
+            "MBET",
+            float,
+            is_required=False,
+            info="the (second) angle characterizing the orientation of the magnetic moment direction n.",
+            description="If it is not set, angle of MDIR is used",
+        ),
+        V(
+            "MGAM",
+            float,
+            is_required=False,
+            info="the (third) angle characterizing the orientation of the magnetic moment direction n.",
+        ),
+        V(
+            "C",
+            1.0,
+            info="Scale the speed of light for a given atom type.",
+            is_repeated="DEFAULTDICT",
+            is_required=False,
+            is_always_added=False,
+        ),
+        V(
+            "SOC",
+            1.0,
+            info="Scale the strength of the spin-orbit coupling for atom type.",
+            is_repeated="DEFAULTDICT",
+            is_required=False,
+            is_always_added=False,
+        ),
+        V(
+            "OP",
+            DefKeyword({
+              "NONE": "Use just DFT approach.",
+              "DMFT": "Density mean field theory",
+              "LDA+U": "Hubbard correction",
+              "BROOKS": "Brooks orbital polarization correction",
+              "SIGMA": "Self-energy–based many-body approach",
+            }),
+            info = "Beyond-DFT methods",
+            is_required = False,
+            is_always_added = False
+        ),
+        V(
+            "LOPT",
+            SetOf(Keyword("d", "f", "n")),
+            info = "Correlated orbital manifold (d or f shell) where the Hubbard U correction is applied",
+            is_required = False,
+            is_always_added = False
+        ),
+        V(
+            "IEREF",
+            DefKeyword({
+              0: "EREF = EBAND_LOP/NOS_LOP, e.g. centre of mass for LOP band (Don't work well for f-states)",
+              1: "EREF = resonance energy of the phase shift.",
+              2: "EREF = energy where the single-site DOS shows a maximum for the desired d or f states",
+              -1: "EREF taken from input",
+            }),
+            info = "How is the reference energy EREF defined for the Hubbard correction?",
+            is_required = False,
+            is_always_added = False
+        ),
+        V(
+            "EREF",
+            0.7,
+            info="The default value for the Hubbard correction reference energy, used if IEREF = -1",
+            is_required = False,
+            is_always_added = False
+        ),
+        V(
+            "UMODE",
+            DefKeyword({
+              "ROTI": 'Fully rotational invariant(Lichtenstein et al.)',
+              "DUDA": 'Spherically averaged (Dudarev et al.) (U_eff = U - J)',
+            }),
+            info="Choice of DFT+U formulation",
+            is_required = False,
+            is_always_added = False
+        ),
+        V( "UEFF",
+            SetOf(float),
+            info="Array of U parameter (on-site Coulomb repulsions) for each atomic type",
+            is_required = False,
+            is_always_added = False
+        ),
+        V( "JEFF",
+            SetOf(float),
+            info="Array of J parameter (Hund’s exchange interaction) for each atomic type",
+            is_required = False,
+            is_always_added = False
+        ),
+    ],
+    is_expert=True,
+    is_optional=True,
+    info="This section contains options that describe, how to consider relativity and/or spin. If the MODE is not specified otherwise the programs of the SPRKKR-package "
+    "assume that a magnetic system should be treated in a fully relativistic way. By setting the parameter SP-SREL a slightly faster scalar relativistic calculation "
+    "can be done instead for a magnetic system.",
+)
+"""MODE Section definition"""
+
+SPEC = Section(
+    "SPEC",
+    [V("FEGFINAL", flag, is_required=False)],
+    is_expert=True,
+    is_optional=True,
+    info="Sets the final state as a free electron gas final state. By default it is TRLEED final state which is time reverse low energy electron diffraction final state.",
+)
+
+
+def TASK(task, add=[]):
+    """Create the definition of the CONTROL section of the task input file.
+
+    Parameters
+    ----------
+    TASK: string
+      the default value for the TASK parameter of the resulting section
+
+    Return
+    ------
+    TASK: InputSectionDefinition
+    """
+    if isinstance(task, str):
+        task = DefKeyword(task)
+
+    return Section("TASK", [
+      V(
+        "TASK", task, name_in_grammar=False
+      ),
+      V(
+        "HFF",
+        False,
+        info=(
+            "Enable the hyperfine-field calculation. "
+            "It is disabled by default for SCF calculations. "
+            "This option takes precedence over CONTROL.NOHFF."
+        ),
+      ),
+    ] + add)
+
+
+__all__ = ["CONTROL", "TAU", "ENERGY", "SCF", "SITES", "TASK", "STRCONST", "CPA", "MODE"]

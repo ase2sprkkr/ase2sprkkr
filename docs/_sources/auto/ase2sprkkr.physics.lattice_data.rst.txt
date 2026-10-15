@@ -1,0 +1,69 @@
+lattice\_data
+=============
+
+Full name: **ase2sprkkr.physics.lattice\_data**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.physics.lattice_data.LatticeData  ase2sprkkr.physics.lattice_data.Pearson 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.physics.lattice_data
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      international_numbers_to_AP
+      hall_numbers_to_AP
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      ap_number_from_spacegroup
+      reorder_matrix
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      LatticeData
+      Pearson
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,36 @@
+ScfOutputReader
+===============
+
+
+.. currentmodule:: ase2sprkkr.outputs.readers.scf
+
+.. autoclass:: ScfOutputReader
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.readers.scf.ScfOutputReader
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

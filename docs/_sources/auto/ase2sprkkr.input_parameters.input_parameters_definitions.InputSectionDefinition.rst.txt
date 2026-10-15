@@ -1,0 +1,36 @@
+InputSectionDefinition
+======================
+
+
+.. currentmodule:: ase2sprkkr.input_parameters.input_parameters_definitions
+
+.. autoclass:: InputSectionDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

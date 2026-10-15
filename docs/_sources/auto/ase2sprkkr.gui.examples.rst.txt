@@ -1,0 +1,59 @@
+examples
+========
+
+Full name: **ase2sprkkr.gui.examples**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.gui.examples.Example 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.gui.examples
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      examples_dir
+      list_of_examples
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Example
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

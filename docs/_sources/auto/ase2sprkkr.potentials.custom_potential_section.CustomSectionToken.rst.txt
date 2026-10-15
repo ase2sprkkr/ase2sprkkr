@@ -1,0 +1,36 @@
+CustomSectionToken
+==================
+
+
+.. currentmodule:: ase2sprkkr.potentials.custom_potential_section
+
+.. autoclass:: CustomSectionToken
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.custom_potential_section.CustomSectionToken
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

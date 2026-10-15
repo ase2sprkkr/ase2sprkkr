@@ -1,0 +1,36 @@
+Dummy
+=====
+
+
+.. currentmodule:: ase2sprkkr.common.options
+
+.. autoclass:: Dummy
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.options.Dummy
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

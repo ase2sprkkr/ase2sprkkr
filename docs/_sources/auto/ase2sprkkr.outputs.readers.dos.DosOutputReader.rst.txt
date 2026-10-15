@@ -1,0 +1,36 @@
+DosOutputReader
+===============
+
+
+.. currentmodule:: ase2sprkkr.outputs.readers.dos
+
+.. autoclass:: DosOutputReader
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.readers.dos.DosOutputReader
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

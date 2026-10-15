@@ -1,0 +1,51 @@
+calculator
+==========
+
+Full name: **ase2sprkkr.sprkkr.calculator**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.calculator.FilenameTemplator  ase2sprkkr.sprkkr.calculator.SPRKKR 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.calculator
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      FilenameTemplator
+      SPRKKR
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

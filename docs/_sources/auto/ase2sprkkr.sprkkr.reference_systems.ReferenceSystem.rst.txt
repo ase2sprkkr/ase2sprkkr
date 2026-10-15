@@ -1,0 +1,36 @@
+ReferenceSystem
+===============
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.reference_systems
+
+.. autoclass:: ReferenceSystem
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.reference_systems.ReferenceSystem
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

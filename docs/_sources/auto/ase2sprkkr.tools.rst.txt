@@ -1,0 +1,52 @@
+tools
+=====
+
+Full name: **ase2sprkkr.tools**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.tools
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     ase2sprkkr
+  
+  
+     commands
+  
+  
+     shared
+  
+  
+  
+  

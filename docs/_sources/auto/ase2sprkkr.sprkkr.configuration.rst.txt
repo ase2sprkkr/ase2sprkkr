@@ -1,0 +1,59 @@
+configuration
+=============
+
+Full name: **ase2sprkkr.sprkkr.configuration**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.configuration.ConfigurationFile  ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition  ase2sprkkr.sprkkr.configuration.ConfigurationSection  ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition  ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait  ase2sprkkr.sprkkr.configuration.ConfigurationValue  ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition  ase2sprkkr.sprkkr.configuration.CustomConfigurationSection  ase2sprkkr.sprkkr.configuration.CustomConfigurationValue  ase2sprkkr.sprkkr.configuration.RepeatedConfigurationSection 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.configuration
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ConfigurationFile
+      ConfigurationFileDefinition
+      ConfigurationSection
+      ConfigurationSectionDefinition
+      ConfigurationSectionTrait
+      ConfigurationValue
+      ConfigurationValueDefinition
+      CustomConfigurationSection
+      CustomConfigurationValue
+      RepeatedConfigurationSection
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

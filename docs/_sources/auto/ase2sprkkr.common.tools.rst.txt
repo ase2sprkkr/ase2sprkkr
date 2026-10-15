@@ -1,0 +1,46 @@
+tools
+=====
+
+Full name: **ase2sprkkr.common.tools**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.tools
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      append_id_to_filename
+      main
+      parse_inches
+      parse_named_option
+      parse_tuple_function
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

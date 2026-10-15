@@ -1,0 +1,36 @@
+Switch
+======
+
+
+.. currentmodule:: ase2sprkkr.common.configuration_definitions
+
+.. autoclass:: Switch
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.configuration_definitions.Switch
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

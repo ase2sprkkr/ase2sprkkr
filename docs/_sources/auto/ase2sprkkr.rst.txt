@@ -1,0 +1,92 @@
+﻿ase2sprkkr
+==========
+
+Full name: **ase2sprkkr**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      promote_ase_atoms
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     ase
+  
+  
+     bindings
+  
+  
+     common
+  
+  
+     configuration
+  
+  
+     examples
+  
+  
+     gui
+  
+  
+     input_parameters
+  
+  
+     output_files
+  
+  
+     outputs
+  
+  
+     physics
+  
+  
+     potentials
+  
+  
+     sprkkr
+  
+  
+     tools
+  
+  
+     version
+  
+  
+  

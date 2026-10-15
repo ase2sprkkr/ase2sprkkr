@@ -1,0 +1,50 @@
+sprkkr\_atoms
+=============
+
+Full name: **ase2sprkkr.sprkkr.sprkkr\_atoms**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.sprkkr_atoms
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SPRKKRAtoms
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

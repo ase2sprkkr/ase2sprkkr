@@ -1,0 +1,36 @@
+FilenameTemplator
+=================
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.calculator
+
+.. autoclass:: FilenameTemplator
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.calculator.FilenameTemplator
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

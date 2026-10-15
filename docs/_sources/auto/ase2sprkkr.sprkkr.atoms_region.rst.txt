@@ -1,0 +1,50 @@
+atoms\_region
+=============
+
+Full name: **ase2sprkkr.sprkkr.atoms\_region**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.atoms_region.AtomsRegion 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.atoms_region
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      AtomsRegion
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

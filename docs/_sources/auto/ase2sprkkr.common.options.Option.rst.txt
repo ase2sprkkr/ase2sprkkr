@@ -1,0 +1,36 @@
+Option
+======
+
+
+.. currentmodule:: ase2sprkkr.common.options
+
+.. autoclass:: Option
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.options.Option
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

@@ -1,0 +1,36 @@
+Stub
+====
+
+
+.. currentmodule:: ase2sprkkr.common.configuration_definitions
+
+.. autoclass:: Stub
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.configuration_definitions.Stub
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

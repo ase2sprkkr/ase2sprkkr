@@ -1,0 +1,36 @@
+ConfigurationFile
+=================
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.configuration
+
+.. autoclass:: ConfigurationFile
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.configuration.ConfigurationFile
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

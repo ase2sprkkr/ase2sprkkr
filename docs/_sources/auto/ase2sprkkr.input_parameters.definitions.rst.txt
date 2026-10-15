@@ -1,0 +1,78 @@
+definitions
+===========
+
+Full name: **ase2sprkkr.input\_parameters.definitions**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.definitions
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     arpes
+  
+  
+     bsfek
+  
+  
+     bsfkk
+  
+  
+     dos
+  
+  
+     gilbert
+  
+  
+     jxc
+  
+  
+     phagen
+  
+  
+     scf
+  
+  
+     sections
+  
+  
+     torque
+  
+  
+     xas
+  
+  
+     marpes
+  
+  
+  

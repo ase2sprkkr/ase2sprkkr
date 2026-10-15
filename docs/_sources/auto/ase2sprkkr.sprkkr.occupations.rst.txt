@@ -1,0 +1,51 @@
+occupations
+===========
+
+Full name: **ase2sprkkr.sprkkr.occupations**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.occupations.Occupation  ase2sprkkr.sprkkr.occupations.SiteOccupation 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.occupations
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Occupation
+      SiteOccupation
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

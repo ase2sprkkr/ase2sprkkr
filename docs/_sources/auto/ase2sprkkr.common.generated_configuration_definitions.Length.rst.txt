@@ -1,0 +1,36 @@
+Length
+======
+
+
+.. currentmodule:: ase2sprkkr.common.generated_configuration_definitions
+
+.. autoclass:: Length
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.generated_configuration_definitions.Length
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

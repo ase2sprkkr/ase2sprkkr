@@ -1,0 +1,61 @@
+sites
+=====
+
+Full name: **ase2sprkkr.potentials.definitions.sections.sites**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.sites.SitesSection  ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition  ase2sprkkr.potentials.definitions.sections.sites.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions.sections.sites
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _sections_sites_basscale_after_convert
+      _sections_sites_basscale_condition
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SitesSection
+      SitesSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,36 @@
+BaseConfigurationContainer
+==========================
+
+
+.. currentmodule:: ase2sprkkr.common.configuration_containers
+
+.. autoclass:: BaseConfigurationContainer
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.configuration_containers.BaseConfigurationContainer
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

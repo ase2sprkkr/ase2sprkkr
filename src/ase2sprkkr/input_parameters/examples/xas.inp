@@ -1,0 +1,11 @@
+CONTROL  DATASET     = case 
+         ADSI        = XAS 
+         POTFIL      = case.pot_new 
+         PRINT = 0    
+ 
+TAU      BZINT= POINTS  NKTAB= 250 
+ 
+ENERGY   GRID={6}  NE={180} 
+         ImE=0.01 Ry   EMAX=4.0 Ry
+ 
+TASK     XAS     IT=1  (Cu)  CL=2p 

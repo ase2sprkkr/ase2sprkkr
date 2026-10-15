@@ -1,0 +1,64 @@
+name: temporary ResultFile wording polish
+
+on:
+  push:
+    branches:
+      - tmp-result-files-polish
+
+permissions:
+  contents: write
+
+jobs:
+  polish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: ./install_dependencies.sh
+      - name: Polish ResultFile wording
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              'src/ase2sprkkr/result_files/result_files.py': {
+                  '"""This module describe common header, that appears in the output\nfiles of SPRKKR"""': '"""Common parsing support for structured SPR-KKR result files."""',
+                  '"""Objects of this class holds datas of an result file"""': '"""Representation of a structured SPR-KKR result file."""',
+                  '"""Read the output data and optionally associate its potential."""': '"""Read result data and optionally associate its potential."""',
+                  '"""a definition of unwnown (not yet known) result file that can hold any data in the rest\n        of the file"""': '"""Definition used for an unknown result file that stores the remaining data verbatim."""',
+                  'List of result file types, that can be read first. If it is None, it is guessed': 'Result file type(s) to try first. If omitted, the type is guessed',
+                  'List of the result file types, that can be read.\n          None mean read any known file type.': 'Result file type(s) allowed to be read.\n          None means any known result file type.',
+                  'If True, at last, an unknown result file is readed: such file has just\n          parsed header and then one property that holds the rest of the file as\n          text.': 'If True, fall back to an unknown result file: its header is parsed and\n          the remaining content is stored as text.',
+                  'File {filename} to be read does not exists': 'File {filename} to be read does not exist',
+                  'The outputs are not compatibile to be summed or subtracted.': 'The results are not compatible for addition or subtraction.',
+              },
+              'src/ase2sprkkr/result_files/result_files_definitions.py': {
+                  'a header of an result file': 'a header of a result file',
+                  'value of a standard potential section': 'structure of a structured result file',
+                  'The order of items in an result file is fixed': 'The order of items in a result file is fixed',
+                  'options are delimited by newline in ouptut.': 'Options are delimited by newlines in result files.',
+                  'Create a definition of an result file. One should supply the additional values': 'Create a definition of a result file. Supply the additional values',
+              },
+          }
+
+          for filename, changes in replacements.items():
+              path = Path(filename)
+              text = path.read_text()
+              for old, new in changes.items():
+                  if old not in text:
+                      raise AssertionError(f"Expected text not found in {filename}: {old!r}")
+                  text = text.replace(old, new)
+              path.write_text(text)
+          PY
+          git diff --check
+          python -m compileall -q src/ase2sprkkr/result_files
+          python -m pytest -q src/ase2sprkkr/result_files/test/test_output_file_compatibility.py
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/ase2sprkkr/result_files/result_files.py src/ase2sprkkr/result_files/result_files_definitions.py
+          git commit --amend --no-edit
+          git push --force-with-lease

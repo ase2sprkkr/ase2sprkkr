@@ -1,0 +1,36 @@
+SitesSectionDefinition
+======================
+
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.sites
+
+.. autoclass:: SitesSectionDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

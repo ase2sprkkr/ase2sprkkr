@@ -1,0 +1,36 @@
+ASEArraySectionDefinition
+=========================
+
+
+.. currentmodule:: ase2sprkkr.potentials.potential_definitions
+
+.. autoclass:: ASEArraySectionDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

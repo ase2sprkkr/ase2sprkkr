@@ -1,0 +1,390 @@
+"""More atomic types can be on one site."""
+
+from __future__ import annotations
+
+import numpy as np
+from .atomic_types import AtomicType
+from typing import Dict, Union, Optional, List, Tuple
+from numbers import Integral
+from collections.abc import Iterable
+from .sites import SiteType, SitePropertyProxy
+from .radial_meshes import Mesh
+
+
+class SiteOccupation(SitePropertyProxy):
+    """
+    Proxy for the Occupation of a Site that raises a RuntimeError before any
+    mutating operation when the site still has symmetry (i.e. shares its
+    SiteType with other sites).  Call ``site.break_symmetry()`` first and
+    then mutate freely.
+
+    Inherits read delegation and the transparent __class__ / isinstance() behaviour
+    from SitePropertyProxy; only mutating operations are overridden here.
+    """
+
+    def __init__(self, site):
+        super().__init__(site, lambda: site.site_type.occupation)
+
+    # --- special methods that Occupation supports but SitePropertyProxy doesn't ---
+
+    def __iter__(self):
+        return iter(self._get_target())
+
+    def __len__(self):
+        return len(self._get_target())
+
+    def __getitem__(self, name):
+        return self._get_target()[name]
+
+    # --- mutating methods: check for symmetry first ---
+
+    def set(
+        self,
+        dct: Union[Dict[Union[AtomicType, str], float], List[Tuple[Union[AtomicType, str], float]]],
+        for_mesh=None,
+    ) -> None:
+        self._check_mutation_allowed()
+        self._get_target().set(dct, for_mesh)
+
+    def __setitem__(self, name, value):
+        self._check_mutation_allowed()
+        self._get_target()[name] = value
+
+    def __delitem__(self, name):
+        self._check_mutation_allowed()
+        del self._get_target()[name]
+
+    def add(self, name, value=None):
+        self._check_mutation_allowed()
+        self._get_target().add(name, value)
+
+    def replace_type(self, name, to):
+        self._check_mutation_allowed()
+        self._get_target().replace_type(name, to)
+
+    def clean(self):
+        self._check_mutation_allowed()
+        self._get_target().clean()
+
+    @property
+    def as_dict(self):
+        return self._get_target().as_dict
+
+    @as_dict.setter
+    def as_dict(self, x):
+        self.set(x)
+
+
+class Occupation:
+    """Occupation of the atomic site, given by AtomicType : value
+
+    The value determine the probability, that a given atomic type will
+    be found on a given place (which can be used e.g. for computing
+    alloys).
+    """
+
+    _occupation = {}
+    """ A bit hack for correct function of mesh property during the initialization """
+
+    @staticmethod
+    def for_atom_from_ase_atoms(atoms, i: Integral):
+        occupancy = atoms.info.get("occupancy", {})
+        if "spacegroup_kinds" in atoms.arrays:
+            key = atoms.arrays["spacegroup_kinds"][i]
+        else:
+            key = i
+        occ = occupancy.get(key, occupancy.get(str(key)))
+        if not occ:
+            occ = {atoms.symbols[i]: 1.0}
+        return Occupation(occ)
+
+    @staticmethod
+    def to_occupation(occupation, site):
+        """Create an occupation object associated with the given sites object"""
+        if not isinstance(occupation, Occupation):
+            occupation = Occupation(occupation, site)
+        elif site is not None:
+            if occupation.site is None:
+                occupation._site_type = site
+            else:
+                occupation = Occupation.copy(occupation, site)
+        return occupation
+
+    def __init__(
+        self,
+        dct: Dict[Union[AtomicType, str], float],
+        site_type: Optional[SiteType] = None,
+        mesh: Optional[Mesh] = None,
+    ):
+        self._site_type = site_type
+        if mesh is None and site_type:
+            mesh = site_type.mesh
+        self._set(dct, for_mesh=mesh)
+
+    def copy(self, site: Optional[SiteType] = None, for_mesh=None) -> Occupation:
+        """Create a copy of the object, associated with a given site."""
+        if for_mesh is None and site is not None:
+            for_mesh = site.mesh
+        return Occupation({a.for_mesh(for_mesh): v for a, v in self._occupation.items()}, site)
+
+    def set(
+        self,
+        dct: Union[Dict[Union[AtomicType, str], float], List[Tuple[Union[AtomicType, str], float]]],
+        for_mesh=None,
+    ) -> None:
+        """Set (replace) the occupation data and synchronize the owning Atoms object."""
+        self._set(dct, for_mesh)
+        self._update_atoms()
+
+    def _set(
+        self,
+        dct: Union[Dict[Union[AtomicType, str], float], List[Tuple[Union[AtomicType, str], float]]],
+        for_mesh=None,
+    ) -> None:
+        """Set occupation data without synchronizing, for object initialization."""
+        if isinstance(dct, (int, str, AtomicType)):
+            dct = {dct: 1.0}
+        if hasattr(dct, "items"):
+            iterator = dct.items()  # dict
+        else:
+            iterator = dct
+        if not for_mesh:
+            for_mesh = self.mesh
+        self._occupation = dict((AtomicType.to_atomic_type(i, for_mesh), j) for i, j in iterator)
+        self._normalize()
+
+    @property
+    def site(self):
+        return self._site_type
+
+    @property
+    def mesh(self):
+        return (len(self._occupation) and self.atomic_type(0).mesh) or (self._site_type and self._site_type.mesh) or None
+
+    def items(self):
+        """dict.items() like enumeration"""
+        return self._occupation.items()
+
+    def __repr__(self):
+        return f"Occupation {self._occupation}"
+
+    def __str__(self):
+        return f"Occupation {self._occupation}"
+
+    def _update_atoms(self):
+        if self._site_type:
+            self._site_type.update_atoms()
+
+    def __iter__(self):
+        return iter(self._occupation)
+
+    def _find_key(self, name):
+        if isinstance(name, int):
+            return list(self._occupation.keys())[name]
+        if isinstance(name, AtomicType):
+            return name
+        for i in self:
+            if i.symbol == name:
+                return i
+        raise KeyError(f"No {name} in the occupation")
+
+    def atomic_type(self, name: Union[str, int, AtomicType]) -> AtomicType | None:
+        """Find the corresponding atomic type according to the provided argument.
+
+        Parameters
+        ----------
+        name
+            The identification of the atomic type.
+            If it is integer, returns the n-th atomic type (according to the orderd supplied
+            when the occupation is set).
+            If it is a string, the first atomic type of given chemical element is returned
+            If it is AtomicType, it is returned "as is"
+        """
+        return self._find_key(name)
+
+    def __getitem__(self, name):
+        name = self._find_key(name)
+        return self._occupation[name]
+
+    def replace_type(self, name: Union[str, int, AtomicType], to: Union[str, AtomicType]):
+        """
+        Replace the given atomic type (see :meth:`atomic_type<ase2sprkkr.sprkkr.occupations.Occupation.atomic_type>`, how
+        it can be identified) by the new one (given either by AtomicType or by its chemical symbol)
+        """
+        key = self._find_key(name)
+        to = AtomicType.to_atomic_type(to, self.mesh)
+        self._occupation = dict((k if k is not key else to, v) for k, v in self._occupation.items())
+        self._update_atoms()
+
+    def clean(self):
+        """Remove all items with zero probability."""
+        self._occupation = dict((k, v) for k, v in self._occupation.items() if v > 0)
+        self._update_atoms()
+
+    def __setitem__(self, name, value):
+        try:
+            name = self._find_key(name)
+            self._normalize(1.0 - value, name)
+            self._occupation[name] = value
+        except KeyError:
+            if isinstance(name, int):
+                raise ValueError(
+                    f"Cannot add an atomic type using an integer key {name}. Please use a string (chemical symbol)."
+                )
+            self.add(name, value)
+            return
+        self._update_atoms()
+
+    @property
+    def primary_atomic_type(self):
+        """Return the atomic type.
+        If there are more atoms on the site, return the one
+        with the largest occupation"""
+        m = 0.0
+        prim = None
+        for at, occ in self._occupation.items():
+            if occ > m and at.atomic_number > 0:
+                m = occ
+                prim = at
+        return prim
+
+    @property
+    def primary_atomic_number(self):
+        """Return the atomic number of the atom at the site.
+        If there are more atoms on the site, return the "main one"."""
+        primary = self.primary_atomic_type
+        return primary.atomic_number if primary else 0
+
+    def update_primary_atomic_number(self, number):
+        if number == 0:
+            return
+        prim = self.primary_atomic_type
+        if prim:
+            if prim.atomic_number == number:
+                return
+            prim.atomic_number = number
+            self._update_atoms()
+            return
+        for atomic_type in self._occupation:
+            atomic_type.atomic_number = number
+            self._update_atoms()
+            return
+
+    @property
+    def primary_symbol(self):
+        """Return the chemical symbol of the atom at the site.
+        If there are more atoms on the site, return the one
+        with the largest occupation"""
+        primary = self.primary_atomic_type
+        return primary.symbol if primary else "X"
+
+    def __len__(self):
+        return len(self._occupation)
+
+    def add(self, name, value=None):
+        """Add atom to the site"""
+        if value is None:
+            value = 1.0 / (len(self) + 1.0)
+        self._normalize(1.0 - value)
+        self._occupation[AtomicType.to_atomic_type(name, self.mesh)] = value
+        self._update_atoms()
+
+    def __delitem__(self, name):
+        name = self._find_key(name)
+        del self._occupation[name]
+        self._normalize()
+        self._update_atoms()
+
+    def _normalize(self, to=1.0, except_from=None):
+        """
+        Normalizes occupation so the sum will be equal to the value 'to' (by default to 1.).
+        If there are no None values, all the values are multiplied by the same number to make
+        their sum equal to to.
+        If there are None values, the remainder to the 'to' value is equally divided among them.
+
+        Parameters
+        ----------
+        value : float
+          Desired value
+
+        except_from: AtomicType
+          Skip the given atom during normalizing
+        """
+        suma = 0.0
+        none = []
+        for i in self._occupation:
+            if i is except_from:
+                continue
+            v = self._occupation[i]
+            if v is None:
+                none.append(i)
+            else:
+                suma += v
+
+        if suma >= to and none:
+            for i in none:
+                self._occupation[i] = 0.0
+            none = []
+        if suma == to:
+            return
+        if none:
+            for i in none:
+                self._occupation[i] = (to - suma) / len(none)
+        elif suma > to or (except_from and len(self._occupation) > 1):
+            ratio = to / suma
+
+            for i in self._occupation:
+                if i != except_from:
+                    self._occupation[i] *= ratio
+        else:
+            for i in self._occupation:
+                if i.is_vacuum():
+                    self._occupation[i] += to - suma
+            else:
+                self._occupation[AtomicType("Vc")] = to - suma
+
+    @property
+    def as_dict(self):
+        return self.to_dict()
+
+    def to_dict(self, vacuum=False):
+        occ = {}
+        for at in self:
+            if at.atomic_number == 0:
+                if not vacuum:
+                    continue
+                symbol = "X"
+            else:
+                symbol = at.symbol
+            occ[symbol] = occ.get(symbol, 0.0) + self[at]
+        return occ
+
+    @as_dict.setter
+    def as_dict(self, x):
+        self.set(x)
+
+    @property
+    def total_occupation(self):
+        return sum(self._occupation.values())
+
+    def check(self):
+        if not np.isclose(self.total_occupation, 1.0):
+            raise ValueError("Total occupation of the site should be equal to one")
+
+    def to_tuple(self):
+        return tuple(self._occupation.items())
+
+    def atomic_types(self) -> Iterable[AtomicType]:
+        """Returns the atomic types that can be present on the site."""
+        return self._occupation.keys()
+
+    def remesh(self, mesh, map=None):
+        if map is None:
+            map = {}
+
+        self._occupation = {a.remesh(mesh, map): v for a, v in self._occupation.items()}
+        return map
+
+    def _clear_data(self):
+        for atomic_type in self.atomic_types():
+            atomic_type.reset()

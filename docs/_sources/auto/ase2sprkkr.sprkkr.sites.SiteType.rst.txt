@@ -1,0 +1,36 @@
+SiteType
+========
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.sites
+
+.. autoclass:: SiteType
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.sites.SiteType
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

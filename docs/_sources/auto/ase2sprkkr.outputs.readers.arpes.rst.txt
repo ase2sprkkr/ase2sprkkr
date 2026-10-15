@@ -1,0 +1,51 @@
+arpes
+=====
+
+Full name: **ase2sprkkr.outputs.readers.arpes**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.arpes.ArpesOutputReader  ase2sprkkr.outputs.readers.arpes.ArpesResult 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.readers.arpes
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ArpesOutputReader
+      ArpesResult
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

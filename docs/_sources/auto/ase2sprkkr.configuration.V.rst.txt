@@ -1,0 +1,36 @@
+V
+=
+
+
+.. currentmodule:: ase2sprkkr.configuration
+
+.. autoclass:: V
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.configuration.V
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

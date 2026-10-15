@@ -1,0 +1,36 @@
+BsfResult
+=========
+
+
+.. currentmodule:: ase2sprkkr.outputs.readers.bsf
+
+.. autoclass:: BsfResult
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.readers.bsf.BsfResult
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

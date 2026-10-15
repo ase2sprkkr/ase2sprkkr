@@ -1,0 +1,61 @@
+jxc
+===
+
+Full name: **ase2sprkkr.output\_files.definitions.jxc**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.output_files.definitions.jxc.Coordinates  ase2sprkkr.output_files.definitions.jxc.JXCOutputFile  ase2sprkkr.output_files.definitions.jxc.JXCOutputFileDefinition  ase2sprkkr.output_files.definitions.jxc.Selector 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.output_files.definitions.jxc
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      create_definition
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Coordinates
+      JXCOutputFile
+      JXCOutputFileDefinition
+      Selector
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

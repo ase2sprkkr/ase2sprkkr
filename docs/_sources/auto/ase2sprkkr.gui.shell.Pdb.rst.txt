@@ -1,0 +1,36 @@
+Pdb
+===
+
+
+.. currentmodule:: ase2sprkkr.gui.shell
+
+.. autoclass:: Pdb
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.gui.shell.Pdb
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

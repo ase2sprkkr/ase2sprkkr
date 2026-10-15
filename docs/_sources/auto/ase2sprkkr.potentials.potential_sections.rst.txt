@@ -1,0 +1,55 @@
+potential\_sections
+===================
+
+Full name: **ase2sprkkr.potentials.potential\_sections**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.potential_sections.ASEArraySection  ase2sprkkr.potentials.potential_sections.AtomicTypePotentialSection  ase2sprkkr.potentials.potential_sections.PotentialSection  ase2sprkkr.potentials.potential_sections.PotentialSectionTrait  ase2sprkkr.potentials.potential_sections.RepeatedPotentialSection  ase2sprkkr.potentials.potential_sections.UniqueListSection 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.potential_sections
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ASEArraySection
+      AtomicTypePotentialSection
+      PotentialSection
+      PotentialSectionTrait
+      RepeatedPotentialSection
+      UniqueListSection
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

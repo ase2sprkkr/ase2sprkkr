@@ -1,0 +1,36 @@
+ReferenceSystemSectionDefinition
+================================
+
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.reference_system
+
+.. autoclass:: ReferenceSystemSectionDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

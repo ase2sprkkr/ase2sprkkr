@@ -1,0 +1,8 @@
+check\_symmetry
+===============
+
+Full name: **ase2sprkkr.ase.pbc.check\_symmetry**
+
+.. currentmodule:: ase2sprkkr.ase.pbc
+
+.. autofunction:: check_symmetry

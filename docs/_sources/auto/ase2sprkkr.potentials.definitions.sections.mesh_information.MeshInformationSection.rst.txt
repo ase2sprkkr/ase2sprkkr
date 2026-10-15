@@ -1,0 +1,36 @@
+MeshInformationSection
+======================
+
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.mesh_information
+
+.. autoclass:: MeshInformationSection
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

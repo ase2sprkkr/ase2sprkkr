@@ -1,0 +1,48 @@
+definitions
+===========
+
+Full name: **ase2sprkkr.potentials.definitions**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     potential
+  
+  
+     sections
+  
+  
+  

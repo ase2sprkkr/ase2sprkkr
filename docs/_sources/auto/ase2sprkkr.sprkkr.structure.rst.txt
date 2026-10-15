@@ -1,0 +1,60 @@
+structure
+=========
+
+Full name: **ase2sprkkr.sprkkr.structure**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.structure.AtomData  ase2sprkkr.sprkkr.structure.LayerData 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.structure
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      floatjm
+      structure_file_to_atoms
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      AtomData
+      LayerData
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

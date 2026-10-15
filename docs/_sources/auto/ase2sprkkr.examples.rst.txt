@@ -1,0 +1,96 @@
+examples
+========
+
+Full name: **ase2sprkkr.examples**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.examples
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     A01_Fe_scf_simple
+  
+  
+     A02_Fe_scf_input_modifications
+  
+  
+     A03_Fe_dos
+  
+  
+     A04_CPA_Example
+  
+  
+     A05_Al_EOS
+  
+  
+     A06_Cu_MSSPEC
+  
+  
+     A07_SrTiO3_MSSPEC
+  
+  
+     A08_ARPES_and_plotting
+  
+  
+     A09_EmptySpheres
+  
+  
+     A10_DLM
+  
+  
+     A11_Torque
+  
+  
+     A12_JXC
+  
+  
+     A13_XAS
+  
+  
+     A14_Semiinfinite
+  
+  
+     A15_Ni2FeGa_CPA_scan
+  
+  
+     A16_GPAW_to_SPRKKR_ARPES
+  
+  
+     A17_Au_ARPES
+  
+  
+     A18_Ni2FeGa_JXC
+  
+  
+  

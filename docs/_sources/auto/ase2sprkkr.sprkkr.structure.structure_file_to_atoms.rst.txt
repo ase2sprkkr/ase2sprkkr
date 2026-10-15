@@ -1,0 +1,8 @@
+structure\_file\_to\_atoms
+==========================
+
+Full name: **ase2sprkkr.sprkkr.structure.structure\_file\_to\_atoms**
+
+.. currentmodule:: ase2sprkkr.sprkkr.structure
+
+.. autofunction:: structure_file_to_atoms

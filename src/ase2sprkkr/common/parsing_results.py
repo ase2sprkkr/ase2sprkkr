@@ -1,0 +1,218 @@
+import pyparsing as pp
+
+""" This module contains classes and functions related to gathering the output
+of parsing section. It takes care of multiplicity of values etc...
+
+The basic behavior is to use ``func:Key.NONE`` - that just returns the key -
+name of the option. For more complex needs, the key type can be a class:
+then the class is constructed during parsing, and possible arguemnts are
+passed to the class, e.g.
+
+::text
+  MDIRQ1
+
+is parsed as ArrayKey("MDIRQ", 1).
+"""
+
+class Result:
+    """When data are parsed, some (repeated) options can yield
+    special keys, results in agregating"""
+
+    def result(self):
+        return self.value
+
+
+class KeyType(type):
+
+    def __repr__(self):
+        return f"<class f{self.__name__}>"
+
+class Key(metaclass=KeyType):
+    """A base class for items, that have to be treated in a special way"""
+
+    @staticmethod
+    def NONE(x):
+        return x
+
+    """ The regular items has no special key """
+
+    def __init__(self, key):
+        self.key = key
+
+    def get(self, too):
+        """ Support method for repeated keys - which gathers the values during processing
+        into Result class, checking the type. And after processing the whole dictionary,
+        the gathered Result is transformed to the real result value. """
+
+        if self.key in too:
+            out = too[self.key]
+            if out.__class__ is not self.ResultClass:
+                raise pp.ParseException(f"Conflicting values for item {self.key}")
+            return out
+        out = self.ResultClass()
+        too[self.key] = out
+        too.process.append(self.key)
+        return out
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__}:{self.key}>"
+
+
+class IgnoredKey(Key):
+    """This key is totaly and silently ignored. Use it
+    for the keys, that should be written, but not read.
+    """
+
+    def add(self, too, val):
+        return
+
+    def __repr__(self):
+        return f"<Ignored>"
+
+class ValidateKey(Key):
+    """Keep a named deferred validation without storing the parsed value.
+
+    The name makes duplicate validation-only items detectable and records that
+    the corresponding input item was explicitly present.
+    """
+
+    def add(self, too, val):
+        if self.key in too.checks:
+            raise pp.ParseException(f"Duplicate key {self.key}")
+        too.checks[self.key] = val
+
+
+class SubKey(Key):
+    """A base class for items that have subkeys"""
+
+    def __init__(self, key, sub):
+        self.key = key
+        self.sub = self.convert(sub)
+
+    def convert(self, sub):
+        return int(sub)
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__}:{self.key}[{self.sub}]>"
+
+class DictKey(SubKey):
+    class ResultClass(Result):
+        def __init__(self):
+            self.value = {}
+
+    def add(self, too, value):
+        out = self.get(too)
+        if self.sub in out.value:
+            raise pp.ParseException(f"Duplicate key {self.sub} in {self.key}")
+        out.value[self.sub] = value
+
+
+class DefDictKey(DictKey):
+    def convert(self, sub):
+        return sub if sub == "def" else int(sub)
+
+
+class ArrayKey(SubKey):
+    class ResultClass(Result):
+        NOT_SET = object()
+
+        def __init__(self):
+            self.value = []
+
+        def result(self):
+            return self.value
+
+    def add(self, too, val):
+        out = self.get(too)
+        ln = len(out.value)
+        i = self.sub - 1
+        if ln < i:
+            out.value += [out.NOT_SET] * (i - ln + 1)
+        if ln == i:
+            out.value.append(val)
+        else:
+            if out.value[i] is not out.NOT_SET:
+                raise pp.ParseException(f"Duplicate key {self.sub} in {self.key}")
+            out.value[i] = val
+
+
+class DefArrayKey(ArrayKey):
+    """Dense-array key accepting both ``NAME`` and ``NAME<number>``.
+
+    The unnumbered spelling denotes the first array item, just as ``NAME1``
+    does.  Consequently, using both spellings in one input is reported as a
+    duplicate rather than producing two values.
+    """
+
+    def convert(self, sub):
+        return 1 if sub == "def" else int(sub)
+
+
+class RepeatedKey(Key):
+    class ResultClass(Result):
+        def __init__(self):
+            self.value = []
+
+    def add(self, too, val):
+        self.get(too).value.append(val)
+
+
+class Values(dict):
+    """Result of dict_from_parsed: dictionary with named deferred checks."""
+
+    def __init__(self):
+        super().__init__()
+        #Set for uniqueness checks
+        self.checks = {}
+        #These values needs postprocess
+        self.process = []
+
+    def to_dict(self):
+        return {i: j.to_dict() if isinstance(j, Values) else j for i, j in self.items()}
+
+
+def dict_from_parsed(values):
+    """Create a dictionary from the arguments.
+    From duplicate arguments create numpy arrays.
+    Moreover, if there is key of type (a,b), it will be transformed to subdictionary.
+    Such a keys do not allow duplicates.
+
+    >>> dict_from_parsed([("x", "y"), ((DictKey("a", 1)), 1), ((DictKey("a", 3)), 2)])
+    {'x': 'y', 'a': {1: 1, 3: 2}}
+    >>> dict_from_parsed([("x", 1), ("x", "2")])  # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    pyparsing.exceptions.ParseException: There are non-unique keys: x
+    >>> dict_from_parsed([(RepeatedKey("x"), 1), (RepeatedKey("x"), 2)])
+    {'x': [1, 2]}
+    """
+    out = Values()
+    duplicates = set()
+    errors = []
+
+    def add(key, value):
+        if isinstance(key, Key):
+            key.add(out, value)
+        elif key in out:
+            duplicates.add(k)
+        else:
+            out[key] = value
+
+    for k, v in values:
+        try:
+            add(k, v)
+        except Exception as e:
+            errors.append(e)
+
+    for key in out.process:
+        out[key] = out[key].result()
+
+    if duplicates:
+        duplicates = ", ".join((i.upper() for i in duplicates))
+        errors.append(pp.ParseException(f"There are duplicate items named {duplicates}"))
+
+    if errors:
+        if len(errors) == 1:
+            raise errors[0]
+        errors = "\n".join((str(e) for e in errors))
+        raise pp.ParseException(f"There are errors in data: {errors}")
+    return out
