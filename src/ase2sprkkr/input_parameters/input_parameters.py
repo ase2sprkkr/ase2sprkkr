@@ -26,46 +26,44 @@ class InputSection(ConfigurationSection):
 class InputParameters(ConfigurationFile):
     """Concrete values of an SPR-KKR input file.
 
-    Instances created for a task are bound to one :class:`TaskDefinition`.
-    Direct schema parsing can also create a detached instance; such an object is
-    useful for low-level format work but cannot perform task-specific actions.
+    Canonical task identity is resolved through :meth:`get_task_definition`.
+    The default implementation follows the input schema back to its owning
+    TaskDefinition. ``task_name`` is only the concrete task view used to create
+    these parameters, so aliases such as BSFEK/BSFKK need no second task object.
     """
 
     task_registry = TaskRegistry(definitions)
 
     def __init__(
         self,
-        definition=None,
+        definition,
         inputfile=None,
         outputfile=False,
         *,
-        task_definition=None,
+        task_name=None,
     ):
-        if task_definition is not None:
-            task_schema = task_definition.input_parameters_definition
-            if definition is not None and definition is not task_schema:
-                raise ValueError(
-                    "definition and task_definition refer to different input schemas"
-                )
-            definition = task_schema
-        if definition is None:
-            raise TypeError("Either definition or task_definition must be supplied")
-
-        self._task_definition = task_definition
         super().__init__(definition)
+        self._task_name = str(task_name or definition.name).upper()
         self._inputfile = inputfile
         self._outputfile = inputfile if outputfile is False else outputfile
 
+    def get_task_definition(self):
+        """Return the canonical task governing these parameters, if any.
+
+        The lookup is intentionally overridable instead of being duplicated as
+        instance state.
+        """
+        return getattr(self._definition, "task_definition", None)
+
     @property
     def task_definition(self):
-        """Task definition bound to these parameters, or ``None`` if detached."""
-        return self._task_definition
+        return self.get_task_definition()
 
     def _require_task_definition(self):
-        task = self._task_definition
+        task = self.get_task_definition()
         if task is None:
             raise RuntimeError(
-                "These input parameters are not bound to an SPR-KKR task definition"
+                "These input parameters are not associated with an SPR-KKR task definition"
             )
         return task
 
@@ -81,7 +79,6 @@ class InputParameters(ConfigurationFile):
         return out
 
     def resolve_executable_suffix(self, suffix: Union[str, bool]):
-        """Return the suffix appended after the SPR-KKR executable name."""
         if suffix is False:
             return ""
         if suffix is True:
@@ -89,24 +86,23 @@ class InputParameters(ConfigurationFile):
         return suffix
 
     def copy(self, copy_values: bool = False):
-        """Copy parameters while preserving their task binding."""
+        """Copy parameters while preserving their concrete task view."""
         values = self.as_dict(copy=copy_values, only_changed=True)
-        out = self.__class__(
-            definition=self._definition,
-            task_definition=self._task_definition,
-        )
+        out = self.__class__(definition=self._definition, task_name=self.task_name)
         out.set(values, unknown="add", retain_invalid="all", report_invalid="ignore")
         return out
 
     @property
     def task_name(self):
-        """Return the bound task name, or the schema name for detached parameters."""
-        if self._task_definition is not None:
-            return self._task_definition.name
-        return self._definition.name
+        """Concrete requested/view task name used for persistence and UX.
+
+        Canonical identity is ``get_task_definition().name``. A low-level native
+        execution mode such as ARPES->SPLEED is interpreted by TaskDefinition and
+        is deliberately not persisted as task identity.
+        """
+        return self._task_name
 
     def uses_separate_single_site_contour(self):
-        """Whether SPR-KKR evaluates single-site terms on a separate contour."""
         switches = (
             ("ENERGY", "SPLITSS"),
             ("CONTROL", "SPLITSS"),
@@ -121,19 +117,15 @@ class InputParameters(ConfigurationFile):
         return self.task_name.upper() == "COMPTON"
 
     def is_mpi(self, mpi=True):
-        """Return whether this task should be run through MPI."""
         return mpi and self._require_task_definition().mpi
 
     def input_files(self, directory):
-        """Return task-specific input files for this calculation."""
         return self._require_task_definition().input_files(self, directory)
 
     def output_files(self, directory):
-        """Return task-specific output files for this calculation."""
         return self._require_task_definition().output_files(self, directory)
 
     def cache_files(self, directory):
-        """Return task-specific reusable cache files for this calculation."""
         return self._require_task_definition().cache_files(self, directory)
 
     def run_process(
@@ -241,7 +233,7 @@ class InputParameters(ConfigurationFile):
             return runner.run()
         except FileNotFoundError as e:
             add = (
-                "Cannot find SPR-KKR executable. Check executable_dir and executable_suffix "
+                "Cannot find SPRKKR executable. Check executable_dir and executable_suffix "
                 "in the selected SPR-KKR profile.\n"
             )
             if execution_profile.mpi:
@@ -256,21 +248,19 @@ class InputParameters(ConfigurationFile):
                 resources.close(suppress_errors=True)
 
     def output_reader(self, calculator=None, print_output=False, directory=None):
-        """Return the task-specific output reader/parser."""
         if not directory and calculator and calculator.directory:
             directory = calculator.directory
 
-        if self._task_definition is not None:
-            cls = self._task_definition.output_reader_class(self)
+        task_definition = self.get_task_definition()
+        if task_definition is not None:
+            cls = task_definition.output_reader_class(self)
         else:
             from ..outputs.task_result import KkrOutputReader
-
             task = self.TASK.TASK().lower()
             cls = KkrOutputReader.class_for_task(task)
         return cls(self, calculator, directory, print_output)
 
     def read_output_from_file(self, filename, directory=None):
-        """Read and parse output of a previously run task."""
         directory = directory or os.path.dirname(filename)
         return self.output_reader(directory=directory).read_from_file(filename)
 
@@ -281,26 +271,21 @@ class InputParameters(ConfigurationFile):
         return f"<Configuration container {self._get_path()}>"
 
     def set_option(self, name, value):
-        """Set the first option matching *name* anywhere in this input file."""
         try:
             option = self.get_member(name, is_option=True)
         except KeyError:
-            raise KeyError(
-                f"No option with name {name} in any of the members"
-            ) from None
+            raise KeyError(f"No option with name {name} in any of the members") from None
         option.set(value)
 
     @classmethod
     def definition(cls, name):
-        """Return the input-file schema belonging to *name*."""
         return cls.task_registry[name].input_parameters_definition
 
     @cached_class_property
-    def definitions():
-        """Return the discovered input-file schemas, including task aliases."""
+    def definitions(cls):
         return {
-            name: InputParameters.task_registry[name].input_parameters_definition
-            for name in InputParameters.task_registry.names()
+            name: cls.task_registry[name].input_parameters_definition
+            for name in cls.task_registry.names()
         }
 
     @classmethod
@@ -310,11 +295,10 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def create_input_parameters(cls, arg):
-        """Create task parameters from a task name, file, or existing object."""
         if isinstance(arg, str):
             name = cls.is_it_an_input_parameters_name(arg)
             if name:
-                return cls.create(arg)
+                return cls.create(name)
             return cls.from_file(arg)
         if isinstance(arg, io.IOBase):
             return cls.from_file(arg)
@@ -322,50 +306,47 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def create(cls, name):
-        """Create default input parameters for the given task name."""
-        return cls.task_registry[name].create_input_parameters()
+        requested = cls.task_registry.normalize_name(name)
+        return cls.task_registry[requested].create_input_parameters(task_name=requested)
 
     @classmethod
     def default_parameters(cls):
-        """Create default SCF input parameters."""
         return cls.create("SCF")
 
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Read an input file and bind it to the matching task definition."""
+        """Parse using the overridable schema collection, deduplicating aliases."""
         last = None
         is_stream = hasattr(filename, "seek")
-        for task in cls.task_registry.values(include_aliases=False):
+        seen = set()
+        for definition in cls.definitions.values():
+            identity = id(definition)
+            if identity in seen:
+                continue
+            seen.add(identity)
             if is_stream:
                 filename.seek(0)
             try:
-                return task.read_input_parameters(
+                return definition.read_from_file(
                     filename, allow_dangerous=allow_dangerous
                 )
             except (pp.ParseBaseException, DataValidityError) as e:
                 last = e
         if last is None:
-            raise ValueError("No SPR-KKR task definitions are available")
+            raise ValueError("No SPR-KKR input-parameter definitions are available")
         raise last
 
-    def calculate(self, *args, **kwargs):
-        """Create a calculator and run these input parameters."""
-        calc = calculator.SPRKKR()
-        calc.calculate(input_parameters=self, *args, **kwargs)
-
     def __repr__(self):
-        out = self._definition.configuration_type_name
-        out = out + " for task " + self.task_name.upper()
-        return out
+        return self._definition.configuration_type_name + " for task " + self.task_name.upper()
 
     def change_task(self, task, retain_values=False):
-        """Change to *task*, optionally retaining compatible changed values."""
         if retain_values:
             vals = self.to_dict(only_changed=True)
 
-        task_definition = self.task_registry[task]
-        self._task_definition = task_definition
+        requested = self.task_registry.normalize_name(task)
+        task_definition = self.task_registry[requested]
         self._definition = task_definition.input_parameters_definition
+        self._task_name = requested
         self._init_members_from_the_definition()
 
         if retain_values:
@@ -380,7 +361,3 @@ class InputParameters(ConfigurationFile):
         if self._definition.save_hook:
             self._definition.save_hook(getattr(file, "name", None), atoms)
         super().save_to_file(file, atoms, validate=validate)
-
-
-# At least, to avoid a circular import in the convenience calculate() facade.
-from ..sprkkr import calculator  # NOQA: E402
