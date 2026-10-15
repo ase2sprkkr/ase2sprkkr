@@ -1,0 +1,71 @@
+name: temporary targeted ResultFile integration
+
+on:
+  push:
+    branches:
+      - tmp-result-files-integration
+
+permissions:
+  contents: write
+
+jobs:
+  targeted:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Reuse migration step
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          text = Path('.github/workflows/tmp-result-files-integration.yml').read_text()
+          match = re.search(
+              r"      - name: Integrate rename and finish migration\n        run: \|\n(?P<body>.*?)(?=      - name: Check patch\n)",
+              text,
+              re.S,
+          )
+          if not match:
+              raise SystemExit('Could not extract migration step')
+          body = '\n'.join(
+              line[10:] if line.startswith('          ') else line
+              for line in match.group('body').splitlines()
+          )
+          Path('/tmp/result-file-migration.sh').write_text(body + '\n')
+          PY
+          bash /tmp/result-file-migration.sh
+      - name: Check patch
+        run: |
+          git diff HEAD~2..HEAD --check
+          python -m compileall -q src/ase2sprkkr
+      - name: Install
+        run: ./install_dependencies.sh
+      - name: Run targeted tests
+        env:
+          DO_NOT_RUN_SPRKKR: '1'
+        run: |
+          python -m pytest -q \
+            src/ase2sprkkr/result_files/test \
+            src/ase2sprkkr/outputs/test/test_output.py \
+            src/ase2sprkkr/execution/test/test_result_files_api.py \
+            src/ase2sprkkr/execution/test/test_remote_result_files_fetch.py \
+            src/ase2sprkkr/bindings/test/test_uppasd.py \
+            src/ase2sprkkr/gui/test/test_shell.py \
+            src/ase2sprkkr/tools/test/test_plot_command.py \
+            src/ase2sprkkr/tools/test/test_uppasd_command.py
+      - name: Build documentation
+        run: |
+          python -m pip install sphinx sphinx-rtd-theme sphinx-toolbox
+          make doc-gather doc-build
+          test -f docs/usage.html
+          ! grep -R "ase2sprkkr.output_files" doc_src/auto docs/auto
+          grep -R "ase2sprkkr.result_files" doc_src/auto docs/auto >/dev/null
+          git add doc_src/auto docs
+          git commit --amend --no-edit
+      - name: Push tested integration
+        run: git push --force-with-lease
