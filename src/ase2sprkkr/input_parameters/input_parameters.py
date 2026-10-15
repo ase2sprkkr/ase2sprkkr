@@ -40,7 +40,7 @@ class InputParameters(ConfigurationFile):
         task_name=None,
     ):
         super().__init__(definition)
-        self._task_name = str(task_name or definition.name).upper()
+        self._task_name = None if task_name is None else str(task_name).upper()
         self._inputfile = inputfile
         self._outputfile = inputfile if outputfile is False else outputfile
 
@@ -76,7 +76,7 @@ class InputParameters(ConfigurationFile):
         return suffix
 
     def copy(self, copy_values: bool = False):
-        """Copy parameters while preserving their concrete task view."""
+        """Copy parameters while preserving requested-task provenance."""
         values = self.as_dict(copy=copy_values, only_changed=True)
         out = self.__class__(definition=self._definition, task_name=self.task_name)
         out.set(values, unknown="add", retain_invalid="all", report_invalid="ignore")
@@ -84,7 +84,7 @@ class InputParameters(ConfigurationFile):
 
     @property
     def task_name(self):
-        """Task name originally requested when these parameters were created."""
+        """Originally requested task, or ``None`` for a detached schema object."""
         return self._task_name
 
     @property
@@ -114,7 +114,8 @@ class InputParameters(ConfigurationFile):
                     return True
             except (KeyError, AttributeError):
                 pass
-        return self.task_name.upper() == "COMPTON"
+        task = self.task_definition
+        return task is not None and task.name == "COMPTON"
 
     def is_mpi(self, mpi=True):
         return mpi and self._require_task_definition().mpi
@@ -207,7 +208,10 @@ class InputParameters(ConfigurationFile):
         raise last
 
     def __repr__(self):
-        return self._definition.configuration_type_name + " for task " + self.task_name.upper()
+        task = self.task_definition
+        if task is None:
+            return self._definition.configuration_type_name + " (detached schema)"
+        return self._definition.configuration_type_name + " for task " + task.name
 
     def change_task(self, task, retain_values=False):
         if retain_values:

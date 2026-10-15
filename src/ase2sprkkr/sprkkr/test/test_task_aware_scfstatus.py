@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import pytest
 
 from ...potentials.potentials import Potential
-from .. import calculator as calculator_module
+from ..calculation import PreparedCalculation
 from ..calculator import SPRKKR
 
 
@@ -83,7 +83,7 @@ def test_calculate_serializes_status_before_mocked_execution(tmp_path, monkeypat
         prepared.close()
         return runner
 
-    monkeypatch.setattr(calculator_module, "_create_sprkkr_run", fake_create_run)
+    monkeypatch.setattr(PreparedCalculation, "create_run", fake_create_run)
 
     calculator = SPRKKR(directory=tmp_path, mpi=False, empty_spheres=False)
     returned = calculator.calculate(
