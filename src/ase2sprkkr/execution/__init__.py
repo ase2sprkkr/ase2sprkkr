@@ -18,7 +18,6 @@ from .local import LocalExecutor, LocalRunner
 from .manager import (
     CorruptRunRecord,
     DuplicateSubmissionError,
-    ExecutionManager,
     FileFingerprint,
     FileRetrievalState,
     PersistentRunner,
@@ -37,6 +36,7 @@ from .projects import (
     ProjectRepositoryError,
     default_projects_directory,
 )
+from .project_manager import ExecutionManager
 from .psij import PsijExecutor, PsijRunner
 from .remote import FileSyncPolicy, RemoteRunner
 from .remote_endpoint import RemoteEndpointExecutor
