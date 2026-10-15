@@ -10,6 +10,10 @@ on:
     branches:
       - workflow
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'push' }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
