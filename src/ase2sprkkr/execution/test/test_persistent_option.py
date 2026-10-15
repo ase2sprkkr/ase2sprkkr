@@ -10,8 +10,7 @@ from ase2sprkkr.execution import (
 )
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.sprkkr import calculation as calculation_module
-from ase2sprkkr.sprkkr import calculator as calculator_module
-from ase2sprkkr.sprkkr.calculation import create_sprkkr_run
+from ase2sprkkr.sprkkr.calculation import PreparedCalculation
 from ase2sprkkr.sprkkr.calculator import SPRKKR
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
@@ -61,6 +60,8 @@ class _Executor(Executor):
 
 
 class _Prepared:
+    create_run = PreparedCalculation.create_run
+
     def __init__(self, parameters, input_file, output_file, directory):
         self.input_parameters = parameters
         self.input_file = input_file
@@ -103,8 +104,8 @@ def _runner(parameters, tmp_path, manager, executor=None):
     executor = executor or _Executor()
     input_file = (tmp_path / "test.inp").open("w+")
     output_file = (tmp_path / "test.out").open("wb")
-    return create_sprkkr_run(
-        _Prepared(parameters, input_file, output_file, tmp_path),
+    prepared = _Prepared(parameters, input_file, output_file, tmp_path)
+    return prepared.create_run(
         result_context=SimpleNamespace(directory=str(tmp_path)),
         profile=SPRKKRProfile(),
         executor=executor,
@@ -162,17 +163,15 @@ def test_persistence_defaults_to_calculator_setting(tmp_path, monkeypatch):
     executor = _Executor()
     manager = _manager(tmp_path)
     calculator = SPRKKR(directory=tmp_path, executor=executor, persistent=manager)
-    prepared = object()
     captured = {}
 
-    monkeypatch.setattr(calculator, "_prepare_calculation", lambda **kwargs: prepared)
+    class Prepared:
+        def create_run(self, **kwargs):
+            captured.update(kwargs)
+            return object()
 
-    def create_run(value, **kwargs):
-        assert value is prepared
-        captured.update(kwargs)
-        return object()
-
-    monkeypatch.setattr(calculator_module, "_create_sprkkr_run", create_run)
+    prepared = Prepared()
+    monkeypatch.setattr(calculator, "prepare", lambda **kwargs: prepared)
 
     calculator.create_run()
 
@@ -192,7 +191,7 @@ def test_run_level_profile_selects_executor_instead_of_calculator_executor(
     output_file = (tmp_path / "test.out").open("wb")
     prepared = _Prepared(parameters, input_file, output_file, tmp_path)
 
-    monkeypatch.setattr(calculator, "_prepare_calculation", lambda **kwargs: prepared)
+    monkeypatch.setattr(calculator, "prepare", lambda **kwargs: prepared)
     monkeypatch.setattr(
         calculation_module,
         "executor_from_profile",

@@ -9,7 +9,7 @@ from ase2sprkkr.execution.base import (
     RunState,
     SubmissionNotStarted,
 )
-from ase2sprkkr.sprkkr.calculation import create_sprkkr_run
+from ase2sprkkr.sprkkr.calculation import PreparedCalculation
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 
@@ -36,6 +36,8 @@ class _Parameters:
 
 
 class _Prepared:
+    create_run = PreparedCalculation.create_run
+
     def __init__(self, input_file, output_file):
         self.input_parameters = _Parameters()
         self.input_file = input_file
@@ -99,8 +101,7 @@ class _Executor:
 
 def _create_run(executor, input_file, output_file):
     prepared = _Prepared(input_file, output_file)
-    return create_sprkkr_run(
-        prepared,
+    return prepared.create_run(
         result_context=None,
         profile=SPRKKRProfile(mpi=False),
         executor=executor,

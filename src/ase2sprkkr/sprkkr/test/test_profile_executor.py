@@ -8,7 +8,7 @@ from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
 from ase2sprkkr.sprkkr import calculation as calculation_module
-from ase2sprkkr.sprkkr.calculation import create_sprkkr_run
+from ase2sprkkr.sprkkr.calculation import PreparedCalculation
 from ase2sprkkr.sprkkr.profile import (
     SPRKKRProfile,
     executor_from_profile,
@@ -181,7 +181,7 @@ def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_pat
         close=lambda: (input_file.close(), output_file.close()),
     )
 
-    result = create_sprkkr_run(
+    result = PreparedCalculation.create_run(
         prepared,
         result_context=SimpleNamespace(directory=str(tmp_path)),
         profile=profile,

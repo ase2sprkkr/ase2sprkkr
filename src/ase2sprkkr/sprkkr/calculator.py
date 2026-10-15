@@ -197,8 +197,30 @@ class SPRKKR(BaseCalculator):
         self._counter += 1
         return str(self._counter)
 
-    def _prepare_calculation(self, **kwargs):
-        """Snapshot defaults and materialize one concrete calculation."""
+    def prepare(
+        self,
+        atoms=None,
+        input_parameters=None,
+        potential=None,
+        input_file=None,
+        potential_file=None,
+        output_file=None,
+        directory: Union[str, bool, Directory, None] = None,
+        create_subdirs: bool = False,
+        options=None,
+        task=None,
+        empty_spheres=None,
+        allow_temporary_files: bool = True,
+        restart_scf: bool = False,
+    ):
+        """Snapshot calculator defaults into one independent prepared calculation.
+
+        The returned :class:`PreparedCalculation` owns all files and temporary
+        directory resources created while preparing the calculation. Mutating
+        calculator defaults afterwards does not change the prepared input.
+        Call :meth:`PreparedCalculation.close` when the object is not transferred
+        to a runner.
+        """
         prepared = PreparedCalculation.prepare(
             default_atoms=self._atoms,
             default_potential=self._potential,
@@ -210,7 +232,19 @@ class SPRKKR(BaseCalculator):
             default_empty_spheres=self.empty_spheres,
             label=self.label,
             counter=self._counter,
-            **kwargs,
+            atoms=atoms,
+            input_parameters=input_parameters,
+            potential=potential,
+            input_file=input_file,
+            potential_file=potential_file,
+            output_file=output_file,
+            directory=directory,
+            create_subdirs=create_subdirs,
+            options=options,
+            task=task,
+            empty_spheres=empty_spheres,
+            allow_temporary_files=allow_temporary_files,
+            restart_scf=restart_scf,
         )
         self._counter = prepared.counter
         return prepared
@@ -261,7 +295,7 @@ class SPRKKR(BaseCalculator):
                 "directory=False is supported by create_run()/calculate() instead"
             )
 
-        prepared = self._prepare_calculation(
+        prepared = self.prepare(
             atoms=atoms,
             input_parameters=input_parameters,
             potential=potential,
@@ -343,7 +377,7 @@ class SPRKKR(BaseCalculator):
         if executor is None and not explicit_profile:
             executor = self.executor
 
-        prepared = self._prepare_calculation(
+        prepared = self.prepare(
             atoms=atoms,
             input_parameters=input_parameters,
             potential=potential,
@@ -358,8 +392,7 @@ class SPRKKR(BaseCalculator):
             allow_temporary_files=True,
             restart_scf=restart_scf,
         )
-        return _create_sprkkr_run(
-            prepared,
+        return prepared.create_run(
             result_context=self,
             profile=run_profile,
             executor=executor,
@@ -418,8 +451,10 @@ class SPRKKR(BaseCalculator):
     ):
         """Run one SPR-KKR task synchronously and return its parsed result.
 
-        ``properties`` and ``system_changes`` are accepted for ASE compatibility;
-        task selection is currently controlled by ``input_parameters``/``task``.
+        ``properties`` and ``system_changes`` are accepted for ASE compatibility.
+        SPR-KKR execution is task-oriented, so ``properties`` does not select a
+        different backend task and ``system_changes`` is not used for incremental
+        updates; each run materializes the complete supplied calculation state.
         Per-call ``mpi``, ``executable_dir`` and ``executable_suffix`` values are
         immutable overrides of the selected execution profile.
 
@@ -519,7 +554,6 @@ from ..input_parameters.input_parameters import InputParameters  # NOQA: E402
 from .calculation import (  # NOQA: E402
     FilenameTemplator as _FilenameTemplator,
     PreparedCalculation,
-    create_sprkkr_run as _create_sprkkr_run,
 )
 
 

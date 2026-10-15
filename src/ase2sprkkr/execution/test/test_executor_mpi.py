@@ -16,11 +16,13 @@ from ...execution import (
 from ...execution.local import materialize_local_spec
 from ...input_parameters.input_parameters import InputParameters
 from ...sprkkr import calculation as calculation_module
-from ...sprkkr.calculation import create_sprkkr_run
+from ...sprkkr.calculation import PreparedCalculation
 from ...sprkkr.profile import SPRKKRProfile
 
 
 class _Prepared:
+    create_run = PreparedCalculation.create_run
+
     def __init__(self, parameters, input_file, output_file, directory):
         self.input_parameters = parameters
         self.input_file = input_file
@@ -70,8 +72,7 @@ def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
     with (tmp_path / "run.inp").open("w+") as input_file, (
         tmp_path / "run.out"
     ).open("wb") as output_file:
-        created = create_sprkkr_run(
-            _Prepared(parameters, input_file, output_file, tmp_path),
+        created = _Prepared(parameters, input_file, output_file, tmp_path).create_run(
             result_context=calculator,
             profile=profile,
             executor=Executor(),
@@ -283,8 +284,7 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
     with (tmp_path / "run.inp").open("w+") as input_file, (
         tmp_path / "run.out"
     ).open("wb") as output_file:
-        created = create_sprkkr_run(
-            _Prepared(parameters, input_file, output_file, tmp_path),
+        created = _Prepared(parameters, input_file, output_file, tmp_path).create_run(
             result_context=calculator,
             profile=profile,
             executor=executor,
