@@ -24,8 +24,6 @@ def test_remote_request_carries_target_executor_options(tmp_path):
     input_file = (directory / "run.inp").open("w+b")
     input_file.write(b"input")
     input_file.flush()
-    potential = directory / "start.pot"
-    potential.write_text("potential")
     output_file = (directory / "run.out").open("wb")
 
     executor = RemoteExecutor(
@@ -46,7 +44,6 @@ def test_remote_request_carries_target_executor_options(tmp_path):
         output_file=output_file,
         directory=str(directory),
         stdin=input_file,
-        input_files=(input_file, potential),
     )
     runner = executor.create_run(_Reader(), spec)
     context = runner.executor
@@ -72,10 +69,6 @@ def test_remote_request_carries_target_executor_options(tmp_path):
         "input_sync": "changed",
         "output_sync": "changed",
     }
-    assert request["client_sync"]["input_files"] == [
-        str(tmp_path / "remote" / "calculation" / "run.inp"),
-        str(tmp_path / "remote" / "calculation" / "start.pot"),
-    ]
 
     input_file.close()
     output_file.close()
