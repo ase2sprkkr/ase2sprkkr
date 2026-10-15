@@ -8,7 +8,7 @@ from ase2sprkkr.execution import (
     Executor,
     ExecutorPool,
     FileRetrievalState,
-    ResultFilesState,
+    FileState,
     RunReference,
     RunState,
     RunStore,
@@ -99,12 +99,12 @@ def _manager(store):
     return ExecutionManager(store, executor_pool=ExecutorPool())
 
 
-def _finished_run(tmp_path):
+def _finished_run(tmp_path, *, task="DOS"):
     store = RunStore(tmp_path / "runs")
     manager = _manager(store)
     executor = _HistoryExecutor()
     spec = _spec(tmp_path)
-    run = manager.create_run(executor, object(), spec, task="DOS")
+    run = manager.create_run(executor, object(), spec, task=task)
     run.submit()
     output_file = tmp_path / "run.out"
     output_file.write_text("original output")
@@ -143,12 +143,12 @@ def test_load_persistent_result_restores_exact_missing_historical_output(tmp_pat
     assert parsed[0][0] == str(tmp_path / "run.out")
     assert result.return_code == 0
     assert result.run_record.state == RunState.FINISHED
-    assert result.run_record.result_files.state == ResultFilesState.CURRENT
+    assert result.run_record.result_files.state == FileState.CURRENT
     assert result.run_record.result_files.retrieval_state == FileRetrievalState.AVAILABLE
 
 
 def test_loaded_persistent_result_can_start_continuation_without_calculator(tmp_path):
-    manager, _, run = _finished_run(tmp_path)
+    manager, _, run = _finished_run(tmp_path, task="SCF")
     input_parameters = SimpleNamespace(
         CONTROL=SimpleNamespace(POTFIL=lambda: "Fe.pot")
     )
@@ -187,7 +187,7 @@ def test_restored_changed_content_is_rejected_as_overwritten(tmp_path):
 
     stored = manager.store.get(run.id)
     assert stored.state == RunState.FINISHED
-    assert stored.result_files.state == ResultFilesState.OVERWRITTEN
+    assert stored.result_files.state == FileState.OVERWRITTEN
 
 
 def test_retrieval_programming_error_is_not_persisted_as_backend_failure(tmp_path):
