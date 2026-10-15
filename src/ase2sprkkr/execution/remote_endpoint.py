@@ -39,23 +39,45 @@ class _RemoteRun(RemoteRunner):
     def __init__(self, *args, run_id=None, **kwargs):
         super().__init__(*args, **kwargs)
         self._run_id = run_id
+        self._streamed_sizes = {"out": 0, "err": 0}
+
+    def _write_output(self, data, kind):
+        super()._write_output(data, kind)
+        self._streamed_sizes[kind] += len(data)
 
     async def _monitor(self):
         # Resolve the local path while the stream target is still open. The base
         # monitor commits/closes it before returning.
         local_output = self._local_path(self.spec.output_file)
         result = await super()._monitor()
-        remote_output = None if self.reference is None else self.reference.output_file
-        if local_output is not None and remote_output is not None:
-            signature = await self.executor.transport.file_signature(remote_output)
-            if signature is not None:
-                stat = os.stat(local_output)
-                if stat.st_size != signature[0]:
-                    raise RuntimeError(
-                        "Streamed local output size does not match the authoritative "
-                        f"remote output: {local_output}"
-                    )
-                os.utime(local_output, ns=(stat.st_atime_ns, signature[1]))
+        reference = self.reference
+        if reference is None:
+            return result
+
+        signatures = {}
+        for kind, remote in (
+            ("out", reference.output_file),
+            ("err", reference.error_file),
+        ):
+            if remote is None:
+                continue
+            signature = await self.executor.transport.file_signature(remote)
+            if signature is None:
+                continue
+            signatures[kind] = signature
+            if self._streamed_sizes[kind] != signature[0]:
+                stream = "stdout" if kind == "out" else "stderr"
+                raise RuntimeError(
+                    f"Streamed {stream} size does not match the authoritative "
+                    f"remote {stream}: {remote}"
+                )
+
+        # The public output file may intentionally contain stderr as well when
+        # no separate error_file was requested, so its size is not a valid
+        # stdout integrity check. Preserve the authoritative stdout mtime only.
+        if local_output is not None and "out" in signatures:
+            stat = os.stat(local_output)
+            os.utime(local_output, ns=(stat.st_atime_ns, signatures["out"][1]))
         return result
 
     async def _submit_async(self):
