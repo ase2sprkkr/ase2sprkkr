@@ -146,6 +146,37 @@ def test_remote_executor_attach_replays_finished_run(tmp_path):
     assert (workdir / "run.out").read_bytes() == b"finished\n"
 
 
+def test_remote_output_integrity_ignores_stderr_merged_into_local_log(tmp_path):
+    local_root = tmp_path / "local"
+    remote_root = tmp_path / "remote"
+    workdir = local_root / "calculation"
+    workdir.mkdir(parents=True)
+
+    output_file = (workdir / "run.out").open("wb")
+    spec = ExecutionSpec(
+        argv=(
+            sys.executable,
+            "-c",
+            "import sys; print('stdout'); print('stderr', file=sys.stderr)",
+        ),
+        input_file=None,
+        output_file=output_file,
+        error_file=None,
+        directory=str(workdir),
+        launch=_launch(local_root, remote_root),
+    )
+
+    result = _executor().create_run(_Reader(), spec).run()
+
+    assert result.return_code == 0
+    assert result.output == b"stdout\n"
+    assert result.error == b"stderr\n"
+    local_log = (workdir / "run.out").read_bytes()
+    assert b"stdout\n" in local_log
+    assert b"stderr\n" in local_log
+    assert (remote_root / "calculation" / "run.out").read_bytes() == b"stdout\n"
+
+
 def test_remote_executor_attach_rejects_reference_for_other_backend(tmp_path):
     executor = _executor()
     reference = RunReference(

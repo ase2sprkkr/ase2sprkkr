@@ -39,6 +39,12 @@ class _RemoteRun(RemoteRunner):
     def __init__(self, *args, run_id=None, **kwargs):
         super().__init__(*args, **kwargs)
         self._run_id = run_id
+        self._streamed_stdout_size = 0
+
+    def _write_output(self, data, kind):
+        if kind == "out":
+            self._streamed_stdout_size += len(data)
+        super()._write_output(data, kind)
 
     async def _monitor(self):
         # Resolve the local path while the stream target is still open. The base
@@ -50,9 +56,9 @@ class _RemoteRun(RemoteRunner):
             signature = await self.executor.transport.file_signature(remote_output)
             if signature is not None:
                 stat = os.stat(local_output)
-                if stat.st_size != signature[0]:
+                if self._streamed_stdout_size != signature[0]:
                     raise RuntimeError(
-                        "Streamed local output size does not match the authoritative "
+                        "Streamed stdout size does not match the authoritative "
                         f"remote output: {local_output}"
                     )
                 os.utime(local_output, ns=(stat.st_atime_ns, signature[1]))
@@ -177,7 +183,6 @@ class _RemoteRunContext:
         local_directory.mkdir(parents=True, exist_ok=True)
         input_remote = status.get("input_file") or reference.input_file
         input_local = await self.unmap_path(input_remote) if input_remote is not None else None
-
         sync = request.get("client_sync")
         if sync is None:
             sync = {
@@ -298,13 +303,7 @@ class RemoteEndpointExecutor(Executor):
 
     async def _submit(self, request):
         launch = request.get("launch") or {}
-        mpi = launch.get("mpi") or {}
-        if (
-            self.backend == "local"
-            and mpi.get("autodetect")
-            and not mpi.get("required")
-            and mpi.get("warning", True)
-        ):
+        if self.backend == "local" and launch.get("mpi") == "auto" and launch.get("mpi_warning", True):
             resolved = await self._json_request("resolve-mpi", payload={"mpi": "auto"})
             if not resolved.get("mpi"):
                 warnings.warn(
