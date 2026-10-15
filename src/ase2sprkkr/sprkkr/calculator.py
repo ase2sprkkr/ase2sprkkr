@@ -360,10 +360,10 @@ class SPRKKR(BaseCalculator):
         the calculator-level executor (when present) overrides the calculator
         profile backend.
 
-        ``error_file=None`` stores stderr next to stdout as ``<output>.err``.
-        ``error_file=True`` deliberately merges stderr into ``output_file``;
-        ``False`` requests a managed temporary stderr file, and an explicit path
-        or file object stores stderr there instead.
+        ``error_file=None`` leaves stderr on the default ``output_file`` sink.
+        ``error_file=True`` explicitly aliases ``output_file``; ``False``
+        requests a managed temporary stderr file, and an explicit path or file
+        object stores stderr there instead.
 
         ``callback`` is a terminal runner callback. It can therefore be invoked
         with a partially populated result when backend execution or parsing

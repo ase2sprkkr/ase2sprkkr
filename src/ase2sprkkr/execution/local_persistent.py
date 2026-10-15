@@ -224,9 +224,17 @@ class LocalPersistentRunner:
         except FileNotFoundError:
             return b""
 
+    def _merged_output(self):
+        output = _file_path(self.spec.output_file, self.spec.directory)
+        error = _file_path(self.spec.error_file, self.spec.directory)
+        return error is None or error == output
+
     async def _monitor(self):
         stdout = asyncio.StreamReader()
         stderr = asyncio.StreamReader()
+        logical_merged = self._merged_output()
+        if logical_merged:
+            stderr.feed_eof()
         parse_task = asyncio.create_task(
             self.reader.parse_streams(stdout, stderr, self.result)
         )
@@ -240,18 +248,34 @@ class LocalPersistentRunner:
                     self._reference.directory, self._reference.native_id
                 )
                 had_data = False
-                for kind, key, stream, target in (
-                    ("out", "output_file", stdout, output_target),
-                    ("err", "error_file", stderr, error_target),
-                ):
-                    data = self._read_new(status.get(key), offsets[kind])
+                helper_merged = (
+                    status.get("output_file") == status.get("error_file")
+                )
+                if logical_merged:
+                    streams = [
+                        ("out", "output_file", stdout, output_target, "out"),
+                    ]
+                    # Runs persisted by older versions used two helper files even
+                    # though their public error_file was None. Replay both into
+                    # the one logical stream rather than losing historical stderr.
+                    if not helper_merged:
+                        streams.append(
+                            ("err", "error_file", stdout, output_target, "out")
+                        )
+                else:
+                    streams = [
+                        ("out", "output_file", stdout, output_target, "out"),
+                        ("err", "error_file", stderr, error_target, "err"),
+                    ]
+                for offset_key, key, stream, target, emit_kind in streams:
+                    data = self._read_new(status.get(key), offsets[offset_key])
                     if not data:
                         continue
-                    offsets[kind] += len(data)
+                    offsets[offset_key] += len(data)
                     if target is not None:
                         target.write(data)
                         target.flush()
-                    self._emit_output(data, kind)
+                    self._emit_output(data, emit_kind)
                     stream.feed_data(data)
                     had_data = True
 
@@ -324,6 +348,12 @@ class LocalPersistentRunner:
     def _request(self):
         directory = os.path.abspath(os.fspath(self.spec.directory))
         run_directory = _run_directory(directory, self._run_id)
+        stdout_path = os.fspath(run_directory / "stdout")
+        stderr_path = (
+            stdout_path
+            if self._merged_output()
+            else os.fspath(run_directory / "stderr")
+        )
         return {
             "id": self._run_id,
             "executor": "local",
@@ -335,10 +365,10 @@ class LocalPersistentRunner:
             "launch": asdict(self.spec.launch),
             "input_file": _file_path(self.spec.input_file, directory),
             "stdin": _file_path(self.spec.stdin, directory),
-            # The helper owns private streams. The monitor mirrors them to the
-            # user-facing output paths and can replay them after a restart.
-            "output_file": os.fspath(run_directory / "stdout"),
-            "error_file": os.fspath(run_directory / "stderr"),
+            # The helper owns private streams. In merged mode it owns one true
+            # process-level stream, so replay preserves the original ordering.
+            "output_file": stdout_path,
+            "error_file": stderr_path,
             "client_input_file": _file_path(self.spec.input_file, directory),
             "client_output_file": _file_path(self.spec.output_file, directory),
             "client_error_file": _file_path(self.spec.error_file, directory),

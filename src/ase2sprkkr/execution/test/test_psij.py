@@ -139,7 +139,7 @@ def _executor(monkeypatch, backend):
     )
 
 
-def test_psij_runner_submits_and_streams_output(monkeypatch, tmp_path):
+def test_psij_runner_merges_default_output(monkeypatch, tmp_path):
     backend = _Backend()
     executor = _executor(monkeypatch, backend)
     input_file = open(tmp_path / "run.inp", "wb+")
@@ -160,20 +160,31 @@ def test_psij_runner_submits_and_streams_output(monkeypatch, tmp_path):
     reference = runner.reference
     result = runner.wait()
 
-    assert backend.submitted.spec.executable == "program"
-    assert backend.submitted.spec.arguments == ["arg"]
+    assert backend.submitted.spec.executable == "/bin/sh"
+    assert backend.submitted.spec.arguments == [
+        "-c",
+        'exec "$@" 2>&1',
+        "ase2sprkkr-merged-output",
+        "program",
+        "arg",
+    ]
     assert backend.submitted.spec.stdin_path == str(tmp_path / "run.inp")
     assert backend.submitted.spec.stdout_path == str(tmp_path / "run.out")
+    assert backend.submitted.spec.stderr_path == str(
+        tmp_path / "run.out.ase2sprkkr-psij-stderr"
+    )
     assert backend.submitted.spec.resources is None
     assert backend.submitted.spec.launcher is None
     assert reference.executor == "psij:slurm"
     assert reference.native_id == "123"
+    assert reference.error_file is None
     assert runner.state == RunState.FINISHED
-    assert result.output == b"hello\n"
-    assert result.error_output == b"warning\n"
+    assert result.output == b"hello\nwarning\n"
+    assert result.error_output == b""
     assert result.return_code == 0
     assert ("out", "hello\n") in seen
-    assert ("err", "warning\n") in seen
+    assert ("out", "warning\n") in seen
+    assert (tmp_path / "run.out").read_bytes() == b"hello\nwarning\n"
     input_file.close()
 
 
@@ -182,12 +193,14 @@ def test_psij_mpi_process_count_becomes_resource_spec(monkeypatch, tmp_path):
     executor = _executor(monkeypatch, backend)
     input_file = open(tmp_path / "run.inp", "wb+")
     output_file = open(tmp_path / "run.out", "wb")
+    error_file = open(tmp_path / "run.err", "wb")
     spec = ExecutionSpec(
         argv=("program",),
         mpi_argv=("programMPI", str(tmp_path / "run.inp")),
         launch=LaunchSpec.from_mpi(16),
         input_file=input_file,
         output_file=output_file,
+        error_file=error_file,
         directory=str(tmp_path),
         stdin=input_file,
     )
@@ -202,6 +215,7 @@ def test_psij_mpi_process_count_becomes_resource_spec(monkeypatch, tmp_path):
     assert job_spec.stdin_path is None
     input_file.close()
     output_file.close()
+    error_file.close()
 
 
 def test_psij_auto_uses_mpi_without_fixed_process_count(monkeypatch, tmp_path):
@@ -209,12 +223,14 @@ def test_psij_auto_uses_mpi_without_fixed_process_count(monkeypatch, tmp_path):
     executor = _executor(monkeypatch, backend)
     input_file = open(tmp_path / "run.inp", "wb+")
     output_file = open(tmp_path / "run.out", "wb")
+    error_file = open(tmp_path / "run.err", "wb")
     spec = ExecutionSpec(
         argv=("program",),
         mpi_argv=("programMPI", str(tmp_path / "run.inp")),
         launch=LaunchSpec.from_mpi("auto"),
         input_file=input_file,
         output_file=output_file,
+        error_file=error_file,
         directory=str(tmp_path),
         stdin=input_file,
     )
@@ -227,6 +243,7 @@ def test_psij_auto_uses_mpi_without_fixed_process_count(monkeypatch, tmp_path):
     assert job_spec.launcher == "srun"
     input_file.close()
     output_file.close()
+    error_file.close()
 
 
 def test_psij_persistent_run_exposes_recovery_metadata(monkeypatch, tmp_path):

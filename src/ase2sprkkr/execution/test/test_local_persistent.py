@@ -40,7 +40,9 @@ def _spec(tmp_path):
         argv=(
             sys.executable,
             "-c",
-            "import time; print('before', flush=True); "
+            "import sys, time; "
+            "print('before', flush=True); "
+            "print('warning', file=sys.stderr, flush=True); "
             "time.sleep(0.1); print('after', flush=True)",
         ),
         input_file=None,
@@ -57,15 +59,17 @@ def test_persistent_local_run_can_be_reattached_and_replayed(tmp_path):
     runner.submit()
     reference = runner.reference
     assert reference.native_id == "local-persistent"
+    assert reference.error_file is None
 
     result = runner.wait()
     assert result.return_code == 0
-    assert result.stdout == b"before\nafter\n"
+    assert result.stdout == b"before\nwarning\nafter\n"
+    assert result.stderr == b""
     assert executor.status(reference)[0].state == RunState.FINISHED
 
-    # Reattach as a new client. Replaying the helper-owned stream must rebuild
-    # even a stale client-side output artifact and deliver all output to the
-    # listener installed atomically during attach.
+    # Reattach as a new client. The helper owns one merged stream, so replay
+    # rebuilds exactly that authoritative artifact without reconstructing the
+    # ordering of separate stdout/stderr files.
     (tmp_path / "calculation.out").write_text("stale\n")
     replay = []
     attached = LocalExecutor().attach(
@@ -80,9 +84,11 @@ def test_persistent_local_run_can_be_reattached_and_replayed(tmp_path):
     attached_result = attached.wait()
 
     assert attached_result.return_code == 0
-    assert attached_result.stdout == b"before\nafter\n"
-    assert (tmp_path / "calculation.out").read_bytes() == b"before\nafter\n"
-    assert "".join(text for text, kind in replay if kind == "out") == "before\nafter\n"
+    assert attached_result.stdout == b"before\nwarning\nafter\n"
+    assert attached_result.stderr == b""
+    assert (tmp_path / "calculation.out").read_bytes() == b"before\nwarning\nafter\n"
+    assert {kind for _, kind in replay} == {"out"}
+    assert "".join(text for text, _ in replay) == "before\nwarning\nafter\n"
 
 
 def test_persistent_local_submission_can_be_recovered_by_run_id(tmp_path):
@@ -100,6 +106,7 @@ def test_persistent_local_submission_can_be_recovered_by_run_id(tmp_path):
     assert recovered.reference.executor == "local"
     assert recovered.reference.native_id == "recover-local"
     assert recovered.reference.output_file == str(tmp_path / "calculation.out")
+    assert recovered.reference.error_file is None
     assert recovered.state in {
         RunState.QUEUED,
         RunState.RUNNING,

@@ -53,6 +53,8 @@ _SLURM_STATE_MAP = {
     "TIMEOUT": RunState.FAILED,
 }
 
+_MERGED_STDERR_SUFFIX = ".ase2sprkkr-psij-stderr"
+
 
 def _load_psij():
     try:
@@ -187,9 +189,12 @@ def _slurm_accounting_matches(run_id, submitted_at):
 class PsijRunner:
     """One job managed by a PSI/J executor.
 
-    PSI/J scheduler executors redirect stdout/stderr to files. The runner
-    follows those files while the job is active and feeds the same asynchronous
-    output reader that is used by :class:`LocalRunner`.
+    PSI/J scheduler executors redirect stdout/stderr to files. With an explicit
+    ``error_file`` those files remain separate. With the default merged output
+    contract, the application is wrapped so its stderr is redirected into its
+    stdout before the PSI/J launcher sees either stream. PSI/J still receives a
+    private stderr sidecar for launcher diagnostics; any such diagnostics are
+    appended to the authoritative output once the job has finished.
     """
 
     def __init__(
@@ -215,7 +220,13 @@ class PsijRunner:
         self._stdout_path = _path(spec.output_file, spec.directory)
         if self._stdout_path is None:
             raise ValueError("PSI/J execution requires an output file")
-        self._stderr_path = _path(spec.error_file, spec.directory) or self._stdout_path + ".err"
+        logical_stderr = _path(spec.error_file, spec.directory)
+        self._merged_output = logical_stderr is None or logical_stderr == self._stdout_path
+        self._stderr_path = (
+            self._stdout_path + _MERGED_STDERR_SUFFIX
+            if self._merged_output
+            else logical_stderr
+        )
         self._stdin_path = _path(spec.stdin, spec.directory)
 
         self._output_observers = OutputObservers(output_listener)
@@ -254,6 +265,16 @@ class PsijRunner:
             )
         return tuple(self.spec.mpi_argv), resources, self._mpi_launcher()
 
+    @staticmethod
+    def _merged_command(argv):
+        return (
+            "/bin/sh",
+            "-c",
+            'exec "$@" 2>&1',
+            "ase2sprkkr-merged-output",
+            *argv,
+        )
+
     def _persistent_metadata(self):
         if self._run_id is None:
             return None, None
@@ -271,6 +292,8 @@ class PsijRunner:
         argv, resources, launcher = self._job_command()
         if not argv:
             raise ValueError("Cannot submit a PSI/J run without a command")
+        if self._merged_output:
+            argv = self._merged_command(argv)
         environment, attributes = self._persistent_metadata()
         job_spec = self._psij.JobSpec(
             executable=os.fspath(argv[0]),
@@ -315,7 +338,7 @@ class PsijRunner:
             directory=os.fspath(self.spec.directory),
             input_file=_path(self.spec.input_file, self.spec.directory),
             output_file=self._stdout_path,
-            error_file=self._stderr_path,
+            error_file=None if self._merged_output else self._stderr_path,
         )
 
     def add_output_listener(self, callback):
@@ -353,7 +376,7 @@ class PsijRunner:
         Path(self._stdout_path).write_bytes(b"")
         Path(self._stderr_path).write_bytes(b"")
 
-    async def _follow_file(self, path, stream, kind, finished):
+    async def _follow_file(self, path, stream, kind, finished, *, close_stream=True):
         position = 0
         empty_after_finish = False
         try:
@@ -380,19 +403,50 @@ class PsijRunner:
                     empty_after_finish = True
                 await asyncio.sleep(self.executor.poll_interval)
         finally:
-            stream.feed_eof()
+            if close_stream:
+                stream.feed_eof()
+
+    def _merge_launcher_stderr(self):
+        if not self._merged_output:
+            return b""
+        try:
+            data = Path(self._stderr_path).read_bytes()
+        except FileNotFoundError:
+            return b""
+        if not data:
+            return b""
+        with open(self._stdout_path, "ab") as output:
+            output.write(data)
+            output.flush()
+        Path(self._stderr_path).write_bytes(b"")
+        return data
 
     async def _monitor(self):
         stdout = asyncio.StreamReader()
         stderr = asyncio.StreamReader()
         finished = asyncio.Event()
+        if self._merged_output:
+            stderr.feed_eof()
         parse_task = asyncio.create_task(
             self.reader.parse_streams(stdout, stderr, self.result)
         )
         followers = [
-            asyncio.create_task(self._follow_file(self._stdout_path, stdout, "out", finished)),
-            asyncio.create_task(self._follow_file(self._stderr_path, stderr, "err", finished)),
+            asyncio.create_task(
+                self._follow_file(
+                    self._stdout_path,
+                    stdout,
+                    "out",
+                    finished,
+                    close_stream=not self._merged_output,
+                )
+            ),
         ]
+        if not self._merged_output:
+            followers.append(
+                asyncio.create_task(
+                    self._follow_file(self._stderr_path, stderr, "err", finished)
+                )
+            )
         status = None
         try:
             loop = asyncio.get_running_loop()
@@ -400,6 +454,13 @@ class PsijRunner:
         finally:
             finished.set()
             await asyncio.gather(*followers, return_exceptions=False)
+
+        if self._merged_output:
+            launcher_error = self._merge_launcher_stderr()
+            if launcher_error:
+                self._emit_output(launcher_error, "out")
+                stdout.feed_data(launcher_error)
+            stdout.feed_eof()
 
         self._return_code = getattr(status, "exit_code", None)
         if self._return_code is None:
@@ -553,6 +614,8 @@ class PsijExecutor(Executor):
 
     @staticmethod
     def _recovered_reference(backend, url, native_id, directory, output_file, error_file):
+        if output_file and error_file == output_file + _MERGED_STDERR_SUFFIX:
+            error_file = None
         return RunReference(
             executor=f"psij:{backend}",
             native_id=str(native_id),

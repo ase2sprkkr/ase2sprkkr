@@ -712,9 +712,9 @@ class PreparedCalculation:
         construct follow-up calculations, while standalone prepared runs may
         leave the context unset.
 
-        ``error_file=None`` stores stderr as ``<output_file>.err``. ``True``
-        explicitly merges stderr into ``output_file``; ``False`` requests a
-        managed temporary stderr file; a path or file object is used directly.
+        ``error_file=None`` leaves stderr on the default output sink. ``True``
+        explicitly aliases ``output_file``; ``False`` requests a managed
+        temporary stderr file; a path or file object stores stderr separately.
         """
         return _create_sprkkr_run(
             self,
@@ -794,16 +794,14 @@ class PreparedCalculation:
 
 
 def _prepare_error_file(error_file, output_file, directory, create_subdirs):
-    """Materialize stderr for one run without changing preparation semantics."""
+    """Materialize an explicit stderr target for one run, if requested."""
+    if error_file is None:
+        return None, False
     if error_file is True or error_file is output_file:
         return output_file, False
 
     output_name = _named_file_name(output_file)
-    if error_file is None:
-        if output_name is None:
-            return None, False
-        error_file = output_name + ".err"
-    elif isinstance(error_file, (str, os.PathLike)) and output_name is not None:
+    if isinstance(error_file, (str, os.PathLike)) and output_name is not None:
         error_name = _calculation_path(error_file, directory)
         if os.path.abspath(output_name) == error_name:
             return output_file, False

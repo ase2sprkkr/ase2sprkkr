@@ -96,8 +96,10 @@ class LocalRunner:
     """One local subprocess execution.
 
     The runner owns process lifecycle, cancellation, output-file writing and
-    delivery of raw stdout/stderr to listeners. The output reader only parses
-    streams and builds the TaskResult.
+    delivery of raw process output to listeners. When stderr has no distinct
+    target, it is redirected into stdout by the operating system before the
+    process starts, so the reader and listeners observe one authoritative
+    stream. A distinct stderr target preserves separate stdout/stderr streams.
     """
 
     def __init__(self, reader, spec: ExecutionSpec, callback=None):
@@ -145,8 +147,9 @@ class LocalRunner:
     def add_output_listener(self, callback):
         """Receive raw output as ``callback(text, kind)``.
 
-        ``kind`` is ``"out"`` or ``"err"``. Observer failures never affect the
-        subprocess lifecycle.
+        ``kind`` is ``"out"`` for a merged stream, or ``"out"`` and ``"err"``
+        when a distinct ``error_file`` is requested. Observer failures never
+        affect the subprocess lifecycle.
         """
         self._output_observers.add(callback)
 
@@ -173,6 +176,13 @@ class LocalRunner:
         if target is not None:
             target.write(data)
             target.flush()
+
+    def _merged_output(self):
+        if self.spec.error_file is None or self.spec.error_file is self.spec.output_file:
+            return True
+        output = _path(self.spec.output_file, self.spec.directory)
+        error = _path(self.spec.error_file, self.spec.directory)
+        return output is not None and error == output
 
     async def _pump(self, source, target, kind):
         try:
@@ -248,12 +258,17 @@ class LocalRunner:
             self._started.set()
             raise RuntimeError("Run was cancelled before process start")
 
+        merged = self._merged_output()
         try:
             self._process = await asyncio.create_subprocess_exec(
                 *self.spec.argv,
                 stdin=self.spec.stdin,
                 stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE,
+                stderr=(
+                    asyncio.subprocess.STDOUT
+                    if merged
+                    else asyncio.subprocess.PIPE
+                ),
                 cwd=self.spec.directory,
             )
             self._pid = self._process.pid
@@ -267,6 +282,8 @@ class LocalRunner:
 
             stdout = asyncio.StreamReader()
             stderr = asyncio.StreamReader()
+            if merged:
+                stderr.feed_eof()
             parse_task = asyncio.create_task(
                 self.reader.parse_streams(stdout, stderr, self.result)
             )
@@ -274,15 +291,19 @@ class LocalRunner:
             stdout_task = asyncio.create_task(
                 self._pump(self._process.stdout, stdout, "out")
             )
-            stderr_task = asyncio.create_task(
-                self._pump(self._process.stderr, stderr, "err")
+            stderr_task = None
+            if not merged:
+                stderr_task = asyncio.create_task(
+                    self._pump(self._process.stderr, stderr, "err")
+                )
+            stream_tasks = tuple(
+                task for task in (stdout_task, stderr_task) if task is not None
             )
-            tasks = (parse_task, wait_task, stdout_task, stderr_task)
+            tasks = (parse_task, wait_task, *stream_tasks)
 
             try:
-                return_code, _, _ = await asyncio.gather(
-                    wait_task, stdout_task, stderr_task
-                )
+                results = await asyncio.gather(wait_task, *stream_tasks)
+                return_code = results[0]
                 self._state = (
                     RunState.CANCELLED
                     if self._cancel_requested.is_set()

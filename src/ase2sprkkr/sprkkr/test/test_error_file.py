@@ -37,18 +37,18 @@ def _calculator(tmp_path):
     )
 
 
-def test_default_error_file_is_output_file_plus_err(tmp_path):
+def test_default_error_file_uses_output_sink(tmp_path):
     runner = _calculator(tmp_path).create_run(executor=_Executor())
     try:
-        output_name = runner.spec.output_file.name
-        assert runner.spec.error_file.name == output_name + ".err"
-        assert runner.spec.error_file is not runner.spec.output_file
-        assert runner.spec.error_file in runner.spec.output_files
+        assert runner.spec.error_file is None
+        assert sum(
+            item is runner.spec.output_file for item in runner.spec.output_files
+        ) == 1
     finally:
         runner.close()
 
 
-def test_error_file_true_explicitly_merges_with_output(tmp_path):
+def test_error_file_true_explicitly_aliases_output(tmp_path):
     runner = _calculator(tmp_path).create_run(
         executor=_Executor(),
         error_file=True,
