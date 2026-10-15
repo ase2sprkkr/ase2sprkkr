@@ -6,7 +6,7 @@ import copy
 import os
 
 from ..common.doc import process_input_parameters_definition
-from ..common.module_registry import ModuleRegistry, RegistryEntryNotFound
+from ..common.module_registry import ModuleRegistry, RegistryDefinitionError
 
 
 class TaskDefinition:
@@ -95,13 +95,11 @@ class TaskDefinition:
         if self.result_reader is not None:
             return self.result_reader
 
-        from ..outputs.reader_registry import reader_registry
-        from ..outputs.readers.default import DefaultOutputReader
+        from ..outputs.task_result import KkrOutputReader
 
-        try:
-            return reader_registry[self.input_parameters_definition.name]
-        except RegistryEntryNotFound:
-            return DefaultOutputReader
+        return KkrOutputReader.class_for_task(
+            self.input_parameters_definition.name
+        )
 
     def prepare_from_result(self, parameters, result):
         """Prepare newly created task parameters from a previous result."""
@@ -131,12 +129,12 @@ class TaskRegistry(ModuleRegistry):
 
     def prepare_value(self, name, module, value):
         if not isinstance(value, TaskDefinition):
-            raise TypeError(
+            raise RegistryDefinitionError(
                 f"{module.__name__}.task_definition must return TaskDefinition, "
                 f"got {type(value).__name__}"
             )
         if value.name != name:
-            raise ValueError(
+            raise RegistryDefinitionError(
                 f"Task definition in {module.__name__} is named {value.name}, "
                 f"but the module defines task {name}"
             )

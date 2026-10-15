@@ -1,6 +1,6 @@
 """Discovery of task-specific SPR-KKR output readers."""
 
-from ..common.module_registry import ModuleRegistry, RegistryEntryNotFound
+from ..common.module_registry import ModuleRegistry, RegistryDefinitionError
 from . import readers
 
 
@@ -15,7 +15,20 @@ class OutputReaderRegistry(ModuleRegistry):
         try:
             return vars(module)[class_name]
         except KeyError as exc:
-            raise RegistryEntryNotFound(name) from exc
+            raise RegistryDefinitionError(
+                f"Reader module {module.__name__!r} does not define expected "
+                f"class {class_name!r}"
+            ) from exc
+
+    def prepare_value(self, name, module, value):
+        from .task_result import KkrOutputReader
+
+        if not isinstance(value, type) or not issubclass(value, KkrOutputReader):
+            raise RegistryDefinitionError(
+                f"{module.__name__}.{name.title()}OutputReader must be a "
+                f"KkrOutputReader subclass, got {value!r}"
+            )
+        return value
 
 
 reader_registry = OutputReaderRegistry()
