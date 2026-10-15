@@ -12,8 +12,15 @@ from .sprkkr.calculator import SPRKKR  # NOQA: F401, E402
 """ Input parameters object for SPRKKR calculation tasks """
 from .input_parameters.input_parameters import InputParameters  # NOQA: F401, E402
 
-""" Potential file object for SPRKKR calcualtions """
-from .potentials.potentials import Potential  # NOQA: F401, E402
+""" Potential file object and its stable runtime exception contract """
+from .potentials.potentials import Potential, PotentialFileChanged  # NOQA: F401, E402
+
+""" Content-aware filesystem provenance shared with client applications """
+from .common.file_versions import (  # NOQA: F401, E402
+    FileState,
+    FileVersion,
+    FileVersionCaptureError,
+)
 
 """ An extension of ASE atoms object """
 from .sprkkr.sprkkr_atoms import SPRKKRAtoms  # NOQA: F401, E402
