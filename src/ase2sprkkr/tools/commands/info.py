@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Show known OutputFiles, description of InputParameters and so on.
+Show known structured result files, description of InputParameters and so on.
 """
 
 from pathlib import Path
@@ -11,11 +11,11 @@ if not __package__:
     __package__ = "ase2sprkkr.tools.commands"
 sys.path.append(str(Path(__file__).resolve().parents[3]))
 
-from ... import InputParameters, OutputFile  # NOQA
+from ... import InputParameters, ResultFile  # NOQA
 from ...common.tools import main  # NOQA
 
 
-help = "Show capabilities of ase2sprkkr (known tasks, output files formats etc.)."
+help = "Show capabilities of ase2sprkkr (known tasks, result file formats etc.)."
 description = """\n Example of usage:
     #show all tasks
     ase2sprkkr info --task
@@ -47,7 +47,7 @@ def parser(parser):
         const=True,
     )
     parser.add_argument(
-        "--output-file", "-o", help="Show informations about the known output files. You can ", nargs="?", const=True
+        "--output-file", "-o", help="Show information about known structured result files.", nargs="?", const=True
     )
     action = getattr(argparse, "BooleanOptionalAction", "store_true")
     parser.add_argument(
@@ -130,10 +130,10 @@ def run(args, global_args):
             print(out)
 
     def info_output_file(args, filter):
-        print("Known SPRKKR output files\n--------------------")
+        print("Known SPR-KKR structured result files\n------------------------------------")
         if filter is not True:
             filter = filter.lower()
-        for ext, i in OutputFile.definitions.items():
+        for ext, i in ResultFile.definitions.items():
             if filter is not True and ((filter not in ext.lower()) or (filter not in i.name.lower())):
                 continue
 

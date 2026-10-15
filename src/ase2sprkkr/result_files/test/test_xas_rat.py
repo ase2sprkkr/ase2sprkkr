@@ -55,7 +55,7 @@ def parse_agr(path):
 
 @pytest.fixture(scope="module")
 def generated_data():
-    from ase2sprkkr.output_files.definitions.rat import RATOutputFile
+    from ase2sprkkr.result_files.definitions.rat import RATOutputFile
 
     of = RATOutputFile.from_file(RAT_FILE)
     # Fortran default: WGAUSS = 0.0 (no Gaussian broadening)
@@ -87,7 +87,7 @@ def ref_sumrule():
 
 class TestPlotCaptions:
     def test_subject_is_derived_from_header_tables(self):
-        from ase2sprkkr.output_files.definitions.rat import RATOutputFile
+        from ase2sprkkr.result_files.definitions.rat import RATOutputFile
 
         of = RATOutputFile.from_file(RAT_FILE)
         assert of.absorbing_element == "Cu"
@@ -208,7 +208,7 @@ class TestDifferenceSpectrum:
 
     def test_three_input_polarizations_default_to_mcd(self):
         """Like XBand, RXAS must use + and - unless MLD is requested."""
-        from ase2sprkkr.output_files.definitions.rat import RATOutputFile
+        from ase2sprkkr.result_files.definitions.rat import RATOutputFile
 
         of = RATOutputFile.from_file(RAT_FILE)
         common = dict(gauss_width=0.0, core_hole_width="fuggle-inglesfield")

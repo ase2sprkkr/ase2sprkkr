@@ -14,7 +14,7 @@ from ..common.configuration_containers import Section
 from ..common.file_utils import FilePath
 from ..common.value_definitions import ValueDefinition
 from ..common.warnings import ValidationResult
-from ..output_files.output_files import OutputFile
+from ..result_files import ResultFile
 
 
 class OutputOption(Option):
@@ -106,10 +106,10 @@ class OutputFileOption(OutputOption):
         if self._definition.file_type:
             return self._definition.file_type
         extension = os.path.splitext(self())[1].lstrip(".").lower()
-        return extension if extension in OutputFile.definitions else None
+        return extension if extension in ResultFile.definitions else None
 
     def definition(self):
-        return OutputFile.definitions[self.file_type]
+        return ResultFile.definitions[self.file_type]
 
     def value_label(self):
         return f"<{self.file_type} file>" if self.file_type else str(self())
@@ -135,11 +135,10 @@ class OutputFileOption(OutputOption):
 
     def parsed_file(self, potential=None):
         """Parse the file, using its task result as context when available."""
-
         owner = self._container.result
         if owner is not None:
-            return owner.parse_output_file(self, potential=potential)
-        return OutputFile.from_file(
+            return owner.parse_result_file(self, potential=potential)
+        return ResultFile.from_file(
             self.path(),
             try_only=self.file_type,
             potential=potential,
@@ -218,6 +217,7 @@ class OutputFilesSection(Section):
         """Set the parser type for an already registered output file."""
         self[name]._definition.file_type = file_type
         return self[name]
+
 
 def create_files_section(result=None):
     definition = SectionDefinition("FILES", [], result_class=OutputFilesSection)

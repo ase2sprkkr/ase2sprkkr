@@ -8,7 +8,7 @@ import pytest
 from ase.build import bulk
 
 from ..definitions.sfn import SFNOutputFile, definition
-from ..output_files import OutputFile
+from .. import ResultFile
 from ...potentials.potentials import Potential
 from ...sprkkr.calculator import SPRKKR
 from ...common.warnings import DataValidityError
@@ -89,7 +89,7 @@ def test_sfn_write_roundtrip(tmp_path):
     output = definition.read_from_string(SFN)
     filename = tmp_path / "roundtrip.sfn"
     output.save_to_file(filename, validate=True)
-    reparsed = OutputFile.from_file(filename, unknown=False)
+    reparsed = ResultFile.from_file(filename, unknown=False)
 
     assert reparsed.NM() == output.NM()
     for original, copy in zip(output.meshes, reparsed.meshes):
@@ -162,7 +162,7 @@ def test_sfn_is_registered(tmp_path):
     path = tmp_path / "shape.sfn"
     path.write_text(SFN)
 
-    output = OutputFile.from_file(path, unknown=False)
+    output = ResultFile.from_file(path, unknown=False)
 
     assert isinstance(output, SFNOutputFile)
     assert output.NM() == 2
@@ -256,7 +256,7 @@ def test_sfn_potential_cell_and_periodic_plots(tmp_path, monkeypatch):
     path = tmp_path / "Fe_SCF.sfn"
     path.write_text(SFN)
     potential = Potential.from_atoms(bulk("Fe"))
-    output = OutputFile.from_file(
+    output = ResultFile.from_file(
         path, try_only="sfn", potential=potential
     )
 
@@ -300,7 +300,7 @@ def test_sfn_potential_cell_and_periodic_plots(tmp_path, monkeypatch):
     figure = output.plot_periodic(mesh=0, show=False)
     plt.close(figure)
 
-    without_potential = OutputFile.from_file(path, try_only="sfn")
+    without_potential = ResultFile.from_file(path, try_only="sfn")
     assert repr(without_potential) == "SFNOutputFile(nm=2, alat=unknown)"
     with pytest.raises(ValueError, match="potential is required"):
         without_potential.plot_cell(mesh=0, show=False)

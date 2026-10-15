@@ -14,7 +14,7 @@ from ..uppasd import (
     write_mom_file,
     write_pos_file,
 )
-from ...output_files.definitions.jxc import Coordinates, JXCOutputFile, Selector
+from ...result_files.definitions.jxc import Coordinates, JXCOutputFile, Selector
 
 
 class FakeMoments:
