@@ -1,11 +1,15 @@
-"""Discovery of task-specific SPR-KKR output readers."""
+"""Discovery and selection of task-specific SPR-KKR output readers."""
 
-from ..common.module_registry import ModuleRegistry, RegistryDefinitionError
+from ..common.module_registry import (
+    ModuleRegistry,
+    RegistryDefinitionError,
+    RegistryEntryNotFound,
+)
 from . import readers
 
 
 class OutputReaderRegistry(ModuleRegistry):
-    """Load ``<Task>OutputReader`` classes from ``outputs.readers.<task>``."""
+    """Load and select ``<Task>OutputReader`` classes from reader modules."""
 
     def __init__(self, package=readers):
         super().__init__(package)
@@ -29,6 +33,17 @@ class OutputReaderRegistry(ModuleRegistry):
                 f"KkrOutputReader subclass, got {value!r}"
             )
         return value
+
+    def class_for_task(self, task):
+        """Return the specialized reader for *task*, or the default reader."""
+        from .readers.default import DefaultOutputReader
+
+        if not task:
+            return DefaultOutputReader
+        try:
+            return self[task]
+        except RegistryEntryNotFound:
+            return DefaultOutputReader
 
 
 reader_registry = OutputReaderRegistry()

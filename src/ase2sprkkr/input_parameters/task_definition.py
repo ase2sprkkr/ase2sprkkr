@@ -95,9 +95,9 @@ class TaskDefinition:
         if self.result_reader is not None:
             return self.result_reader
 
-        from ..outputs.task_result import KkrOutputReader
+        from ..outputs.reader_registry import reader_registry
 
-        return KkrOutputReader.class_for_task(
+        return reader_registry.class_for_task(
             self.input_parameters_definition.name
         )
 
