@@ -264,7 +264,7 @@ class InputParameters(ConfigurationFile):
         name = cls.input_parameters_registry.normalize_name(name)
         if name in cls.input_parameters_registry:
             return cls.input_parameters_registry[name]
-        return cls.task_registry[name].input_parameters_definition
+        return cls.task_registry.input_parameters_definition(name)
 
     @cached_class_property
     def definitions(cls):
@@ -292,7 +292,7 @@ class InputParameters(ConfigurationFile):
     @classmethod
     def create(cls, name):
         requested = cls.task_registry.normalize_name(name)
-        return cls.task_registry[requested].create_input_parameters()
+        return cls.task_registry.create_input_parameters(requested)
 
     @classmethod
     def default_parameters(cls):
@@ -324,8 +324,7 @@ class InputParameters(ConfigurationFile):
             vals = self.to_dict(only_changed=True)
 
         requested = self.task_registry.normalize_name(task)
-        task_definition = self.task_registry[requested]
-        self._definition = task_definition.input_parameters_definition
+        self._definition = self.task_registry.input_parameters_definition(requested)
         self._task_name = requested
         self._init_members_from_the_definition()
 

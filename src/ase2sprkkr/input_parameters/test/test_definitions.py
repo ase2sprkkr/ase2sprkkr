@@ -1,4 +1,5 @@
 import os
+import pickle
 import re
 import tempfile
 from types import SimpleNamespace
@@ -53,6 +54,29 @@ class TestDefinitions:
             str(tmp_path / "Fe.dat"),
             str(tmp_path / "dynamic.out"),
         )
+
+    def test_task_definitions_do_not_own_registries_and_are_pickleable(self):
+        registry = InputParameters.task_registry
+        for name in registry.names():
+            task = registry[name]
+            assert not hasattr(task, "_input_parameters_registry")
+
+            restored = pickle.loads(pickle.dumps(task))
+            assert restored.name == task.name
+            assert (
+                restored.input_parameters_definition_name
+                == task.input_parameters_definition_name
+            )
+            assert (
+                registry.input_parameters_definition(restored)
+                is registry.input_parameters_definition(task)
+            )
+            restored_parameters = registry.create_input_parameters(restored)
+            assert restored_parameters.task_name == task.name
+            assert (
+                restored_parameters._definition
+                is registry.input_parameters_definition(task)
+            )
 
     def test_input_parameters_delegate_file_manifests(self, tmp_path, monkeypatch):
         parameters = InputParameters.create("DOS")
@@ -290,7 +314,9 @@ class TestDefinitions:
                 assert parameters.task_definition is not None
                 assert (
                     parameters._definition
-                    is parameters.task_definition.input_parameters_definition
+                    is parameters.task_registry.input_parameters_definition(
+                        parameters.task_definition
+                    )
                 )
 
                 if name == "scf":
