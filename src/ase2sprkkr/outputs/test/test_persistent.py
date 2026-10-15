@@ -18,8 +18,12 @@ class _Store:
 
 
 class _Manager:
-    def __init__(self, record):
+    def __init__(self, record, *, input_current=True):
         self.store = _Store(record)
+        self.input_current = input_current
+
+    def input_file_is_current(self, record):
+        return self.input_current
 
     def attach(
         self,
@@ -102,6 +106,39 @@ def test_persistent_attach_reconstructs_input_parameters_when_available(
 
     assert isinstance(attached.reader, SelectedReader)
     assert attached.reader.input_parameters is parameters
+
+
+def test_persistent_attach_degrades_when_input_is_stale(monkeypatch, tmp_path):
+    class SelectedReader:
+        def __init__(self, input_parameters, calculator, directory, task_name=None):
+            self.input_parameters = input_parameters
+            self.task_name = task_name
+
+    task = InputParameters.task_registry["DOS"]
+    input_file = tmp_path / "run.inp"
+    input_file.write_text("changed historical input")
+    monkeypatch.setattr(task, "result_reader", SelectedReader)
+    monkeypatch.setattr(
+        task,
+        "read_input_parameters",
+        lambda file: (_ for _ in ()).throw(
+            AssertionError("stale input must not be parsed")
+        ),
+    )
+    record = _record(
+        tmp_path,
+        "DOS",
+        task_definition="DOS",
+        input_file=input_file,
+    )
+
+    attached = attach_persistent_run(
+        _Manager(record, input_current=False),
+        record.id,
+    )
+
+    assert isinstance(attached.reader, SelectedReader)
+    assert attached.reader.input_parameters is None
 
 
 def test_persistent_attach_does_not_hide_task_registry_programming_errors(
