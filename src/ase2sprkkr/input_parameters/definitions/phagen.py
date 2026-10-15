@@ -20,15 +20,18 @@ class PhagenTaskDefinition(TaskDefinition):
         return tuple(files)
 
 
-def task_definition():
-    schema = InputParametersDefinition(
+def input_parameters_definition():
+    return InputParametersDefinition(
         "phagen",
         [CONTROL("PHAGEN"), TASK("PHAGEN"), TAU, ENERGY(), SCF],
         info="PHAGEN",
         description="<TODO: change to something meaningfull>",
     )
+
+
+def task_definition():
     return PhagenTaskDefinition(
-        schema,
+        input_parameters_definition,
         name="PHAGEN",
         executable="kkrscf",
         mpi=False,
