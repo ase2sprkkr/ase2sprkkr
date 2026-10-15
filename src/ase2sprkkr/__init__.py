@@ -6,6 +6,22 @@ This root package import a few most used objects to provide shortcuts to them.
 
 import warnings
 
+__all__ = (
+    "SPRKKR",
+    "InputParameters",
+    "Potential",
+    "PotentialFileChanged",
+    "FileState",
+    "FileVersion",
+    "FileVersionCaptureError",
+    "SPRKKRAtoms",
+    "promote_ase_atoms",
+    "ResultFile",
+    "TaskResult",
+    "__version__",
+    "config",
+)
+
 """ SPRKKR calculator to be used to calculate electronic structure using ASE """
 from .sprkkr.calculator import SPRKKR  # NOQA: F401, E402
 
