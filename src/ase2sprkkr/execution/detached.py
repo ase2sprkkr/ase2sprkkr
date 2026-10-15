@@ -216,7 +216,12 @@ def follow_detached(
     stderr_offset=0,
     poll_interval=0.1,
 ):
-    """Forward newly written stdout/stderr until the detached run is final."""
+    """Forward newly written stdout/stderr until the detached run is final.
+
+    If both state entries name the same physical file, it is an explicitly
+    merged stream. Forward it once as stdout; the original stdout/stderr
+    distinction no longer exists after such a merge.
+    """
     directory = Path(directory).expanduser().resolve()
     offsets = {"out": stdout_offset, "err": stderr_offset}
     streams = {"out": stdout, "err": stderr}
@@ -224,10 +229,12 @@ def follow_detached(
     while True:
         state = _read_state(directory, run_id)
         had_data = False
+        seen_paths = set()
         for kind, key in (("out", "output_file"), ("err", "error_file")):
             path = state.get(key)
-            if not path:
+            if not path or path in seen_paths:
                 continue
+            seen_paths.add(path)
             try:
                 with open(path, "rb") as source:
                     source.seek(offsets[kind])
@@ -343,36 +350,47 @@ def run_detached_worker(directory, run_id):
             stdin = stdin_path.open("rb")
         else:
             stdin = subprocess.DEVNULL
+
+        def run_process(output, error):
+            with _state_lock(directory, run_id):
+                state = _read_state_unlocked(directory, run_id)
+                if state.get("state") in _FINAL_STATES:
+                    return None
+                if state.get("state") != "queued":
+                    raise RuntimeError(
+                        f"Cannot start detached run {run_id!r} from state "
+                        f"{state.get('state')!r}"
+                    )
+                process = subprocess.Popen(
+                    spec.argv,
+                    cwd=directory,
+                    stdin=stdin,
+                    stdout=output,
+                    stderr=error,
+                    start_new_session=True,
+                )
+                _write_state_unlocked(
+                    directory,
+                    run_id,
+                    state="running",
+                    pid=process.pid,
+                    started_at=_timestamp(),
+                )
+            return process.wait()
+
         try:
-            with output_path.open("wb") as output, error_path.open("wb") as error:
-                with _state_lock(directory, run_id):
-                    state = _read_state_unlocked(directory, run_id)
-                    if state.get("state") in _FINAL_STATES:
-                        return
-                    if state.get("state") != "queued":
-                        raise RuntimeError(
-                            f"Cannot start detached run {run_id!r} from state "
-                            f"{state.get('state')!r}"
-                        )
-                    process = subprocess.Popen(
-                        spec.argv,
-                        cwd=directory,
-                        stdin=stdin,
-                        stdout=output,
-                        stderr=error,
-                        start_new_session=True,
-                    )
-                    _write_state_unlocked(
-                        directory,
-                        run_id,
-                        state="running",
-                        pid=process.pid,
-                        started_at=_timestamp(),
-                    )
-                return_code = process.wait()
+            with output_path.open("wb") as output:
+                if error_path == output_path:
+                    return_code = run_process(output, subprocess.STDOUT)
+                else:
+                    with error_path.open("wb") as error:
+                        return_code = run_process(output, error)
         finally:
             if stdin is not subprocess.DEVNULL:
                 stdin.close()
+
+        if return_code is None:
+            return
 
         with _state_lock(directory, run_id):
             state = _read_state_unlocked(directory, run_id)
