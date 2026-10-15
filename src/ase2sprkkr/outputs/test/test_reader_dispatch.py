@@ -58,6 +58,95 @@ def test_reader_registry_is_lazy_for_discovered_modules(tmp_path, monkeypatch):
     assert reader.__name__ == "AlphaOutputReader"
 
 
+def test_explicit_output_task_detection_stays_lazy(tmp_path, monkeypatch):
+    package = _reader_package(
+        tmp_path,
+        monkeypatch,
+        "_ase2sprkkr_reader_registry_detect_explicit",
+        {
+            "alpha": (
+                "from ase2sprkkr.outputs.task_result import KkrOutputReader\n"
+                "class AlphaOutputReader(KkrOutputReader):\n"
+                "    pass\n"
+            )
+        },
+    )
+    registry = OutputReaderRegistry(package)
+    module_name = f"{package.__name__}.alpha"
+    output = tmp_path / "explicit.out"
+    output.write_bytes(b" header\n TASK = ALPHA\n")
+
+    assert registry.detect(output) == "ALPHA"
+    assert module_name not in sys.modules
+
+
+def test_legacy_output_detection_is_owned_by_reader(tmp_path, monkeypatch):
+    package = _reader_package(
+        tmp_path,
+        monkeypatch,
+        "_ase2sprkkr_reader_registry_detect_legacy",
+        {
+            "alpha": (
+                "from ase2sprkkr.outputs.task_result import KkrOutputReader\n"
+                "class AlphaOutputReader(KkrOutputReader):\n"
+                "    @classmethod\n"
+                "    def matches_output(cls, output):\n"
+                "        return b'legacy alpha' in output\n"
+            ),
+            "beta": (
+                "from ase2sprkkr.outputs.task_result import KkrOutputReader\n"
+                "class BetaOutputReader(KkrOutputReader):\n"
+                "    pass\n"
+            ),
+        },
+    )
+    registry = OutputReaderRegistry(package)
+    output = tmp_path / "legacy.out"
+    output.write_bytes(b" TASK = NONE\nlegacy alpha\n")
+
+    assert registry.detect(output) == "ALPHA"
+
+
+def test_ambiguous_legacy_output_detection_is_rejected(tmp_path, monkeypatch):
+    package = _reader_package(
+        tmp_path,
+        monkeypatch,
+        "_ase2sprkkr_reader_registry_detect_ambiguous",
+        {
+            name: (
+                "from ase2sprkkr.outputs.task_result import KkrOutputReader\n"
+                f"class {name.title()}OutputReader(KkrOutputReader):\n"
+                "    @classmethod\n"
+                "    def matches_output(cls, output):\n"
+                "        return True\n"
+            )
+            for name in ("alpha", "beta")
+        },
+    )
+    registry = OutputReaderRegistry(package)
+    output = tmp_path / "ambiguous.out"
+    output.write_bytes(b"legacy output\n")
+
+    with pytest.raises(RegistryDefinitionError, match="multiple task-specific readers"):
+        registry.detect(output)
+
+
+def test_builtin_legacy_output_fingerprints(tmp_path):
+    jxc = tmp_path / "jxc.out"
+    jxc.write_bytes(
+        b" TASK = NONE\nComponents of Dzyaloshinski-Moriya vector Dij\n"
+    )
+    assert reader_registry.detect(jxc) == "JXC"
+
+    dos = tmp_path / "dos.out"
+    dos.write_bytes(b" TASK = NONE\nFILES:\n\n  DOS: dataset_DOS.dos\n")
+    assert reader_registry.detect(dos) == "DOS"
+
+    unrelated = tmp_path / "unrelated.out"
+    unrelated.write_bytes(b"DOS: not part of a FILES section\n")
+    assert reader_registry.detect(unrelated) is None
+
+
 def test_task_definition_can_select_default_reader_in_fresh_interpreter():
     code = """
 from ase2sprkkr.input_parameters.task_definition import TaskDefinition

@@ -1,9 +1,10 @@
 """Density of states (DOS) reader and result."""
 
+import os
+
 from ..task_result import TaskResult, KkrOutputReader
 from .default import DefaultOutputParser
 from ...common.decorators import cached_property
-import os
 
 
 class DosResult(TaskResult):
@@ -42,3 +43,24 @@ class DosOutputReader(KkrOutputReader):
 
     result_class = DosResult
     parser_class = DefaultOutputParser
+
+    @classmethod
+    def matches_output(cls, output):
+        """Recognize legacy DOS output from its ``FILES`` section."""
+        lines = output.splitlines()
+        for index, line in enumerate(lines):
+            if line.strip() != b"FILES:":
+                continue
+            started = False
+            for file_line in lines[index + 1:]:
+                file_line = file_line.strip()
+                if not file_line:
+                    if started:
+                        return False
+                    continue
+                started = True
+                name, separator, _ = file_line.partition(b":")
+                if separator and name.strip() == b"DOS":
+                    return True
+            return False
+        return False

@@ -2,8 +2,7 @@
 
 import asyncio
 import os
-import re
-from ..common.decorators import cached_property, cached_class_property, maybeclassmethod
+from ..common.decorators import cached_property, maybeclassmethod
 from ..common.file_utils import FilePath, filename_from_file
 from ..potentials.potentials import Potential
 from ..input_parameters import input_parameters as input_parameters
@@ -156,37 +155,21 @@ class TaskResult:
         task_files.update(common_files)
         return task_files
 
-    @cached_class_property
-    def _match_task_regex(self):
-        return re.compile(r" TASK\s+ = ([A-Z]+)\s+\n")
-
     @classmethod
     def from_file(cls, file):
-        def read_output_for(task):
-            reader = KkrOutputReader.class_for_task(task or "")
-            reader = reader(
-                None,
-                None,
-                os.path.dirname(file),
-                task_name=task,
-            )
-            f.seek(0)
-            return reader.read_from_file(f)
+        """Read a standalone SPR-KKR output using registry-owned detection."""
+        from .reader_registry import reader_registry
 
-        with open(file, "rb") as f:
-            raw_out = f.read()
-            matches = cls._match_task_regex.search(raw_out.decode("utf8"))
-            typ = matches[1] if matches and matches[1] != "NONE" else None
-            if typ is None:
-                if b"Components of Dzyaloshinski-Moriya vector Dij" in raw_out:
-                    typ = "jxc"
-
-            out = read_output_for(typ)
-            if typ is None:
-                if "DOS" in out.files:
-                    with open(file, "rb") as f:
-                        out = read_output_for("DOS")
-            return out
+        filename = os.fspath(file)
+        task = reader_registry.detect(filename)
+        reader_class = reader_registry.class_for_task(task)
+        reader = reader_class(
+            None,
+            None,
+            os.path.dirname(filename),
+            task_name=task,
+        )
+        return reader.read_from_file(filename)
 
 
 class KkrOutputReader:
@@ -220,6 +203,11 @@ class KkrOutputReader:
     def print_output(self):
         """Whether raw process output should be mirrored to the terminal."""
         return bool(self.parser.print_output)
+
+    @classmethod
+    def matches_output(cls, output):
+        """Return whether legacy output without a task marker belongs to this reader."""
+        return False
 
     def create_result(self, output_file, input_file=None):
         """Create the TaskResult before parsing starts."""
