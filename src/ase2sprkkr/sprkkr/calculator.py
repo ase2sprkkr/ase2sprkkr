@@ -633,7 +633,7 @@ class SPRKKR(BaseCalculator):
                 empty_spheres = self.empty_spheres
             if empty_spheres == "auto":
                 empty_spheres = (
-                    input_parameters.TASK.TASK == 'SCF'
+                    input_parameters.TASK.TASK() == "SCF"
                     and atoms is not None
                     and (
                         not atoms.has_potential()
