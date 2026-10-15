@@ -48,7 +48,7 @@ def _reader_for_record(manager, record):
         task_definition = parameters.task_definition
 
     if task_definition is not None:
-        reader_class = task_definition.output_reader_class(parameters)
+        reader_class = task_definition.output_reader_class()
     else:
         try:
             reader_class = reader_registry[record.task]
