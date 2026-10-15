@@ -346,7 +346,7 @@ def _resolve_empty_spheres(
         empty_spheres = default_empty_spheres
     if empty_spheres == "auto":
         empty_spheres = (
-            input_parameters.TASK.TASK() == "SCF"
+            input_parameters.execution_task_name == "SCF"
             and atoms is not None
             and (
                 not atoms.has_potential()
