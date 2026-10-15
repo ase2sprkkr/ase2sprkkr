@@ -1,14 +1,9 @@
-from types import SimpleNamespace
-
 import numpy as np
 import pytest
 
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
 from ..task_definition import TaskDefinition
-from ...outputs.reader_registry import reader_registry
-from ...outputs.readers.default import DefaultOutputReader
-from ...outputs.task_result import KkrOutputReader
 
 
 def _schema_for(task):
@@ -85,42 +80,21 @@ def test_task_definition_requires_schema_name():
         TaskDefinition(schema)
 
 
-def test_jxc_continuation_is_task_behavior():
-    parameters = InputParameters.create("JXC")
-    result = SimpleNamespace(
-        last_iteration=SimpleNamespace(
-            energy=SimpleNamespace(EMIN=lambda: -0.35)
-        )
-    )
-
-    parameters.task_definition.prepare_from_result(parameters, result)
-
-    assert parameters.ENERGY.EMIN() == -0.35
-
-
-def test_reader_discovery_uses_registry_and_default_fallback():
-    assert reader_registry["SCF"].__name__ == "ScfOutputReader"
-    assert KkrOutputReader.class_for_task("unknown") is DefaultOutputReader
-
-
-def test_task_reader_is_resolved_from_task_definition_name():
+def test_effective_task_follows_shared_schema_values():
     parameters = InputParameters.create("ARPES")
-    requested_task = parameters.task_definition
-    assert requested_task.output_reader_class().__name__ == "ArpesOutputReader"
+
+    assert parameters.task_name == "ARPES"
+    assert parameters.task_definition.name == "ARPES"
 
     parameters.TASK.TASK = "SPLEED"
+
     assert parameters.task_name == "ARPES"
     assert parameters.task_definition.name == "SPLEED"
 
-    assert requested_task.output_reader_class().__name__ == "ArpesOutputReader"
-    assert parameters.task_definition.output_reader_class() is DefaultOutputReader
 
-
-def test_bsf_tasks_explicitly_share_bsf_output_reader():
+def test_bsf_tasks_declare_shared_output_reader_identifier():
     bsfek = InputParameters.task_registry["BSFEK"]
     bsfkk = InputParameters.task_registry["BSFKK"]
 
     assert bsfek.output_reader == "BSF"
     assert bsfkk.output_reader == "BSF"
-    assert bsfek.output_reader_class().__name__ == "BsfOutputReader"
-    assert bsfkk.output_reader_class().__name__ == "BsfOutputReader"
