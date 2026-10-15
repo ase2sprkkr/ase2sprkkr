@@ -31,7 +31,7 @@ def _task_definition_for_record(record):
     a normal task name or alias. A concrete native submode simply misses the
     task registry and falls through to native reader discovery.
     """
-    name = getattr(record, "task_definition", None) or record.task
+    name = record.task_definition or record.task
     try:
         return InputParameters.task_registry[name]
     except RegistryEntryNotFound:
@@ -134,27 +134,23 @@ def load_persistent_result(manager, run, *, reader=None):
     if return_code is None:
         return_code = 0 if record.state == RunState.FINISHED else 1
 
+    input_file = (
+        result_files.input_file
+        if manager.input_file_is_current(record)
+        else None
+    )
     if output_exists:
         result = reader.read_from_file(
             output_file,
             return_code=return_code,
-            input_file=(
-                result_files.input_file
-                if manager.input_file_is_current(record)
-                else None
-            ),
+            input_file=input_file,
             directory=record.directory,
         )
     else:
         # Failed/cancelled runs may have no parseable output at all. A shell
         # result still conveys their terminal outcome without pretending that a
         # successful calculation was reconstructed.
-        result = reader.create_result(
-            output_file,
-            result_files.input_file
-            if manager.input_file_is_current(record)
-            else None,
-        )
+        result = reader.create_result(output_file, input_file)
         result.complete(None, return_code)
 
     result.run_record = record
