@@ -931,7 +931,7 @@ def _create_sprkkr_run(
                 spec,
                 task=input_parameters.execution_task_name,
                 input_definition=input_parameters._definition.name,
-                requested_task=input_parameters.task_name,
+                requested_task=input_parameters.requested_task_name,
                 dataset=input_parameters.CONTROL.DATASET.result,
                 callback=finalized,
             )

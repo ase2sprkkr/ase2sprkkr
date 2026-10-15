@@ -75,9 +75,9 @@ def test_save_to_file_synchronizes_atoms_once(monkeypatch):
     calls = []
 
     monkeypatch.setattr(
-        potential,
+        Potential,
         "set_from_atoms",
-        lambda atoms=None, io_data=None: calls.append(atoms),
+        lambda self, atoms=None, io_data=None: calls.append(atoms),
     )
     monkeypatch.setattr(
         ConfigurationFile,

@@ -24,8 +24,9 @@ class InputParameters(ConfigurationFile):
     """Concrete values of an SPR-KKR input file.
 
     Input-file schemas and task identities are separate registries. Standard
-    schemas carry their canonical task directly; shared schemas resolve the task
-    from their concrete values.
+    schemas carry their canonical task directly; shared schemas resolve the
+    effective task from their concrete values. The originally requested task is
+    retained separately as optional provenance.
     """
 
     input_parameters_registry = InputParametersRegistry(definitions)
@@ -37,16 +38,20 @@ class InputParameters(ConfigurationFile):
         inputfile=None,
         outputfile=False,
         *,
-        task_name=None,
+        requested_task_name=None,
     ):
         super().__init__(definition)
-        self._task_name = None if task_name is None else str(task_name).upper()
+        self._requested_task_name = (
+            None
+            if requested_task_name is None
+            else str(requested_task_name).upper()
+        )
         self._inputfile = inputfile
         self._outputfile = inputfile if outputfile is False else outputfile
 
     @property
     def task_definition(self):
-        """Return the task represented by the current parameter values."""
+        """Return the effective task represented by the current parameter values."""
         return self._definition.task_definition(self)
 
     def _require_task_definition(self):
@@ -78,14 +83,23 @@ class InputParameters(ConfigurationFile):
     def copy(self, copy_values: bool = False):
         """Copy parameters while preserving requested-task provenance."""
         values = self.as_dict(copy=copy_values, only_changed=True)
-        out = self.__class__(definition=self._definition, task_name=self.task_name)
+        out = self.__class__(
+            definition=self._definition,
+            requested_task_name=self.requested_task_name,
+        )
         out.set(values, unknown="add", retain_invalid="all", report_invalid="ignore")
         return out
 
     @property
     def task_name(self):
-        """Originally requested task, or ``None`` for a detached schema object."""
-        return self._task_name
+        """Name of the effective task represented by the current values."""
+        task = self.task_definition
+        return task.name if task is not None else None
+
+    @property
+    def requested_task_name(self):
+        """Originally requested task, or ``None`` when no provenance is known."""
+        return self._requested_task_name
 
     @property
     def executable(self):
@@ -219,7 +233,7 @@ class InputParameters(ConfigurationFile):
 
         requested = self.task_registry.normalize_name(task)
         self._definition = self.task_registry.input_parameters_definition(requested)
-        self._task_name = requested
+        self._requested_task_name = requested
         self._init_members_from_the_definition()
 
         if retain_values:

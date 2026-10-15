@@ -238,7 +238,7 @@ class TaskRegistry:
         definition = self.input_parameters_definition(task)
         out = InputParameters(
             definition=definition,
-            task_name=task.name,
+            requested_task_name=task.name,
             inputfile=inputfile,
             outputfile=outputfile,
         )
