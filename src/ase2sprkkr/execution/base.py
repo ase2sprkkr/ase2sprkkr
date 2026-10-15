@@ -150,6 +150,9 @@ class ResourceOwnedRunner:
         self._resources = resources
         self._submission_lock = Lock()
         self._cancel_requested = Event()
+        # A proxy may also be constructed around an already-started runner.
+        # Only NEW unambiguously means the backend submission boundary has not
+        # been crossed; for every other state cancellation must be delegated.
         self._submitted = runner.state != RunState.NEW
         self._cancel_dispatched = False
 
