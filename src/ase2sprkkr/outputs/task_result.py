@@ -32,6 +32,8 @@ class TaskResult:
         self._task_name = (
             str(task_name).strip().lower() if task_name is not None else None
         )
+        self.provenance = None
+        """Opaque caller-owned metadata attached to a live calculation result."""
         self.files = create_files_section(self)
         self._directory = filename_from_file(directory, None, realpath=True)
 
