@@ -38,21 +38,21 @@ def _task_definition_for_record(record):
         return None
 
 
-def _input_parameters_for_record(record, task_definition):
-    """Reconstruct input parameters when the historical input file is available."""
+def _input_parameters_for_record(manager, record, task_definition):
+    """Reconstruct input parameters only from verified historical input."""
     result_files = record.result_files
     input_file = None if result_files is None else result_files.input_file
-    if input_file is None or not os.path.isfile(input_file):
+    if input_file is None or not manager.input_file_is_current(record):
         return None
     if task_definition is not None:
         return task_definition.read_input_parameters(input_file)
     return InputParameters.from_file(input_file)
 
 
-def _reader_for_record(record):
+def _reader_for_record(manager, record):
     """Create the best reader reconstructable from persisted task context."""
     task_definition = _task_definition_for_record(record)
-    parameters = _input_parameters_for_record(record, task_definition)
+    parameters = _input_parameters_for_record(manager, record, task_definition)
     if parameters is not None and parameters.task_definition is not None:
         task_definition = parameters.task_definition
 
@@ -87,7 +87,7 @@ def attach_persistent_run(
     """Attach to a stored run using the best reconstructable output reader."""
     record = _record(manager, run)
     if reader is None:
-        reader = _reader_for_record(record)
+        reader = _reader_for_record(manager, record)
     return manager.attach(
         record,
         reader=reader,
@@ -101,10 +101,11 @@ def load_persistent_result(manager, run, *, reader=None):
     """Reconstruct the historical TaskResult of one terminal persistent run.
 
     Result-file retrieval and freshness remain responsibilities of the execution
-    layer. When the historical input file is still available, reader creation
-    receives reconstructed task-bound input parameters. If it is unavailable,
-    reconstruction degrades to the persisted task-definition/native-task
-    identities instead of making the whole result unavailable.
+    layer. When the historical input file is still current, reader creation
+    receives reconstructed task-bound input parameters. If that context is
+    unavailable or stale, reconstruction degrades to the persisted
+    task-definition/native-task identities instead of making the output result
+    unavailable.
     """
     record = manager.retrieve_result_files(run)
     record = manager.check_result_files(record)
@@ -127,7 +128,7 @@ def load_persistent_result(manager, run, *, reader=None):
         )
 
     if reader is None:
-        reader = _reader_for_record(record)
+        reader = _reader_for_record(manager, record)
 
     return_code = record.return_code
     if return_code is None:
@@ -137,14 +138,23 @@ def load_persistent_result(manager, run, *, reader=None):
         result = reader.read_from_file(
             output_file,
             return_code=return_code,
-            input_file=result_files.input_file,
+            input_file=(
+                result_files.input_file
+                if manager.input_file_is_current(record)
+                else None
+            ),
             directory=record.directory,
         )
     else:
         # Failed/cancelled runs may have no parseable output at all. A shell
         # result still conveys their terminal outcome without pretending that a
         # successful calculation was reconstructed.
-        result = reader.create_result(output_file, result_files.input_file)
+        result = reader.create_result(
+            output_file,
+            result_files.input_file
+            if manager.input_file_is_current(record)
+            else None,
+        )
         result.complete(None, return_code)
 
     result.run_record = record
