@@ -179,7 +179,7 @@ def test_first_terminal_transition_sets_immutable_finished_at(tmp_path, state):
     assert updated.finished_at == finished_at
 
 
-def test_completion_captures_result_files_but_not_cache(tmp_path):
+def test_completion_captures_inputs_and_outputs_separately(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
@@ -195,8 +195,10 @@ def test_completion_captures_result_files_but_not_cache(tmp_path):
     assert stored.state == RunState.FINISHED
     assert stored.result_files.state == ResultFilesState.CURRENT
     assert stored.result_files.captured_at is not None
-    assert {fingerprint.path for fingerprint in stored.result_files.fingerprints} == {
-        str(tmp_path / "run.inp"),
+    assert {item.path for item in stored.result_files.input_fingerprints} == {
+        str(tmp_path / "run.inp")
+    }
+    assert {item.path for item in stored.result_files.fingerprints} == {
         str(tmp_path / "run.out"),
         str(tmp_path / "case.dat"),
     }
@@ -281,7 +283,7 @@ def test_same_size_content_change_with_new_mtime_marks_result_overwritten(tmp_pa
 
 
 @pytest.mark.parametrize("filename", ["run.out", "case.dat"])
-def test_metadata_change_has_uniform_overwritten_semantics(tmp_path, filename):
+def test_output_metadata_change_has_uniform_overwritten_semantics(tmp_path, filename):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
@@ -299,6 +301,26 @@ def test_metadata_change_has_uniform_overwritten_semantics(tmp_path, filename):
     updated = manager.check_result_files(run.id)
 
     assert updated.result_files.state == ResultFilesState.OVERWRITTEN
+
+
+def test_input_change_does_not_invalidate_current_output(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    spec = _result_files_spec(tmp_path)
+    run = manager.create_run(executor, object(), spec, task="DOS")
+
+    run.submit()
+    (tmp_path / "run.out").write_text("output")
+    (tmp_path / "case.dat").write_text("data")
+    executor.runners[0].finish()
+    input_file = tmp_path / "run.inp"
+    input_file.write_text("changed input")
+
+    updated = manager.check_result_files(run.id)
+
+    assert updated.result_files.state == ResultFilesState.CURRENT
+    assert manager.input_file_is_current(updated) is False
 
 
 def test_changed_cache_does_not_mark_result_overwritten(tmp_path):
@@ -356,6 +378,31 @@ def test_load_persistent_result_parses_output_without_backend_refresh(tmp_path):
     assert executor.status_calls == []
 
 
+def test_load_persistent_result_omits_stale_input_context(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    spec = _result_files_spec(tmp_path)
+    run = manager.create_run(executor, object(), spec, task="DOS")
+
+    run.submit()
+    (tmp_path / "run.out").write_text("output")
+    (tmp_path / "case.dat").write_text("data")
+    executor.runners[0].finish()
+    (tmp_path / "run.inp").write_text("changed input")
+    calls = []
+
+    class Reader:
+        def read_from_file(self, output, **kwargs):
+            calls.append(kwargs)
+            return SimpleNamespace(return_code=kwargs["return_code"])
+
+    result = load_persistent_result(manager, run.id, reader=Reader())
+
+    assert calls[0]["input_file"] is None
+    assert result.run_record.result_files.state == ResultFilesState.CURRENT
+
+
 def test_refresh_batches_referenced_runs(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
@@ -408,12 +455,24 @@ def test_run_store_migrates_schema_one_records_without_inventing_task_definition
 ):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
-    record = manager.new_record(task="DOS", task_definition="DOS", directory=tmp_path)
-    record = manager.transition(record, state=RunState.SUBMITTING, reference=None)
+    spec = _result_files_spec(tmp_path)
+    record = manager.new_record(
+        task="DOS",
+        task_definition="DOS",
+        directory=tmp_path,
+        result_files=manager._result_files_for_spec(spec),
+    )
+    store.save(record)
+    record = manager.finalize(record, state=RunState.FINISHED)
     path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
     data = json.loads(path.read_text())
     data["schema_version"] = 1
     data.pop("task_definition")
+    result_files = data["result_files"]
+    result_files["fingerprints"] = [
+        *result_files.pop("input_fingerprints"),
+        *result_files["fingerprints"],
+    ]
     path.write_text(json.dumps(data))
 
     migrated = store.get(record.id)
@@ -421,6 +480,12 @@ def test_run_store_migrates_schema_one_records_without_inventing_task_definition
     assert migrated.schema_version == 2
     assert migrated.task == "DOS"
     assert migrated.task_definition is None
+    assert {item.path for item in migrated.result_files.input_fingerprints} == {
+        str(tmp_path / "run.inp")
+    }
+    assert str(tmp_path / "run.inp") not in {
+        item.path for item in migrated.result_files.fingerprints
+    }
 
 
 def test_schema_two_development_digest_is_ignored(tmp_path):
