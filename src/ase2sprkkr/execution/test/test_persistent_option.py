@@ -2,6 +2,10 @@ from types import SimpleNamespace
 
 from ase2sprkkr.execution import ExecutionManager, Executor, RunReference, RunState, RunStore
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
+from ase2sprkkr.sprkkr import calculation as calculation_module
+from ase2sprkkr.sprkkr import calculator as calculator_module
+from ase2sprkkr.sprkkr.calculation import create_sprkkr_run
+from ase2sprkkr.sprkkr.calculator import SPRKKR
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 
@@ -49,6 +53,23 @@ class _Executor(Executor):
         return runner
 
 
+class _Prepared:
+    def __init__(self, parameters, input_file, output_file, directory):
+        self.input_parameters = parameters
+        self.input_file = input_file
+        self.potential_file = None
+        self.output_file = output_file
+        self.directory = str(directory)
+        self.closed = False
+
+    def close(self):
+        if self.closed:
+            return
+        self.closed = True
+        self.input_file.close()
+        self.output_file.close()
+
+
 def _parameters(monkeypatch):
     parameters = InputParameters.create("DOS")
     parameters.CONTROL.DATASET = "sample"
@@ -64,15 +85,6 @@ def _parameters(monkeypatch):
     return parameters
 
 
-def _calculator(profile, *, executor=None, persistent=False):
-    return SimpleNamespace(
-        profile=profile,
-        executor=executor,
-        persistent=persistent,
-        value_or_default=lambda name, value: value,
-    )
-
-
 def test_explicit_manager_persists_canonical_task_and_dataset(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch)
     executor = _Executor()
@@ -80,42 +92,42 @@ def test_explicit_manager_persists_canonical_task_and_dataset(tmp_path, monkeypa
     input_file = (tmp_path / "test.inp").open("w+")
     output_file = (tmp_path / "test.out").open("wb")
 
-    runner = parameters.run_process(
-        _calculator(SPRKKRProfile(), executor=executor),
-        input_file,
-        output_file,
-        directory=str(tmp_path),
+    runner = create_sprkkr_run(
+        _Prepared(parameters, input_file, output_file, tmp_path),
+        result_context=SimpleNamespace(directory=str(tmp_path)),
+        profile=SPRKKRProfile(),
         executor=executor,
         persistent=manager,
-        run_async=True,
     )
 
     assert runner.id
     runner.run()
     record = manager.store.get(runner.id)
-    assert record.task == parameters.task_name.upper()
+    assert record.task == parameters.execution_task_name.upper()
     assert record.dataset == "sample"
     assert record.state == RunState.FINISHED
 
 
 def test_persistence_defaults_to_calculator_setting(tmp_path, monkeypatch):
-    parameters = _parameters(monkeypatch)
     executor = _Executor()
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
-    input_file = (tmp_path / "test.inp").open("w+")
-    output_file = (tmp_path / "test.out").open("wb")
+    calculator = SPRKKR(directory=tmp_path, executor=executor, persistent=manager)
+    prepared = object()
+    captured = {}
 
-    runner = parameters.run_process(
-        _calculator(SPRKKRProfile(), executor=executor, persistent=manager),
-        input_file,
-        output_file,
-        directory=str(tmp_path),
-        executor=executor,
-        run_async=True,
-    )
+    monkeypatch.setattr(calculator, "_prepare_calculation", lambda **kwargs: prepared)
 
-    runner.submit()
-    assert manager.store.get(runner.id).state == RunState.QUEUED
+    def create_run(value, **kwargs):
+        assert value is prepared
+        captured.update(kwargs)
+        return object()
+
+    monkeypatch.setattr(calculator_module, "_create_sprkkr_run", create_run)
+
+    calculator.create_run()
+
+    assert captured["persistent"] is manager
+    assert captured["executor"] is executor
 
 
 def test_run_level_profile_selects_executor_instead_of_calculator_executor(
@@ -125,21 +137,21 @@ def test_run_level_profile_selects_executor_instead_of_calculator_executor(
     calculator_executor = _Executor()
     profile_executor = _Executor()
     profile = SPRKKRProfile(executor="ssh", host="cluster")
-    monkeypatch.setattr(
-        "ase2sprkkr.input_parameters.input_parameters.executor_from_profile",
-        lambda selected: profile_executor,
-    )
+    calculator = SPRKKR(directory=tmp_path, executor=calculator_executor)
     input_file = (tmp_path / "test.inp").open("w+")
     output_file = (tmp_path / "test.out").open("wb")
+    prepared = _Prepared(parameters, input_file, output_file, tmp_path)
 
-    parameters.run_process(
-        _calculator(SPRKKRProfile(), executor=calculator_executor),
-        input_file,
-        output_file,
-        directory=str(tmp_path),
-        profile=profile,
-        run_async=True,
+    monkeypatch.setattr(calculator, "_prepare_calculation", lambda **kwargs: prepared)
+    monkeypatch.setattr(
+        calculation_module,
+        "executor_from_profile",
+        lambda selected: profile_executor,
     )
 
-    assert len(profile_executor.runners) == 1
-    assert calculator_executor.runners == []
+    runner = calculator.create_run(profile=profile)
+    try:
+        assert len(profile_executor.runners) == 1
+        assert calculator_executor.runners == []
+    finally:
+        runner.close()

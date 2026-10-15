@@ -5,9 +5,10 @@ import pytest
 from ase2sprkkr.configuration import definition
 from ase2sprkkr.execution import ExecutorPool, LocalExecutor, RunState, SshTransport
 from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
-from ase2sprkkr.input_parameters import input_parameters as input_parameters_module
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
+from ase2sprkkr.sprkkr import calculation as calculation_module
+from ase2sprkkr.sprkkr.calculation import create_sprkkr_run
 from ase2sprkkr.sprkkr.profile import (
     SPRKKRProfile,
     executor_from_profile,
@@ -138,7 +139,13 @@ def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_pat
     parameters = InputParameters.create("DOS")
     parameters.CONTROL.DATASET = "test"
     parameters.CONTROL.POTFIL = "test.pot"
-    runner = SimpleNamespace(state=RunState.NEW, result=object())
+    backend_runner = SimpleNamespace(
+        state=RunState.NEW,
+        result=object(),
+        reference=None,
+        exception=None,
+        add_output_listener=lambda callback: None,
+    )
     calls = []
 
     class FakeExecutor:
@@ -148,11 +155,11 @@ def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_pat
 
         def create_run(self, reader, spec, callback=None):
             calls.append(("create_run", spec.argv))
-            return runner
+            return backend_runner
 
     fake_executor = FakeExecutor()
     monkeypatch.setattr(
-        input_parameters_module,
+        calculation_module,
         "executor_from_profile",
         lambda profile: calls.append(("factory", profile.executor)) or fake_executor,
     )
@@ -163,29 +170,26 @@ def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_pat
     )
 
     profile = SPRKKRProfile(executor="ssh", host="cluster", mpi=8)
-    calculator = SimpleNamespace(
-        profile=profile,
-        executor=LocalExecutor(),
-        persistent=False,
-        value_or_default=lambda name, value: value,
-    )
-
     input_file = (tmp_path / "test.inp").open("w+")
     output_file = (tmp_path / "test.out").open("wb")
-    try:
-        result = parameters.run_process(
-            calculator,
-            input_file,
-            output_file,
-            directory=str(tmp_path),
-            profile=profile,
-            run_async=True,
-        )
-    finally:
-        input_file.close()
-        output_file.close()
+    prepared = SimpleNamespace(
+        input_parameters=parameters,
+        input_file=input_file,
+        potential_file=None,
+        output_file=output_file,
+        directory=str(tmp_path),
+        close=lambda: (input_file.close(), output_file.close()),
+    )
 
-    assert result.result is runner.result
-    assert calls[0] == ("factory", "ssh")
-    assert calls[1] == ("resolve_mpi", 8)
-    assert calls[2][0] == "create_run"
+    result = create_sprkkr_run(
+        prepared,
+        result_context=SimpleNamespace(directory=str(tmp_path)),
+        profile=profile,
+    )
+    try:
+        assert result.result is backend_runner.result
+        assert calls[0] == ("factory", "ssh")
+        assert calls[1] == ("resolve_mpi", 8)
+        assert calls[2][0] == "create_run"
+    finally:
+        result.close()

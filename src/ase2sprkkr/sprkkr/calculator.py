@@ -1,52 +1,47 @@
-"""
-Module calculator
-=================
+"""ASE calculator facade for SPR-KKR.
 
-This module contains different classes used to define a new calculator for
-specific spectroscopies understood by MsSpec.
-
-For more informations about SPR-KKR, follow this
-`link <http://olymp.cup.uni-muenchen.de/index.php?option=com_content&
-view=article&id=8%3Asprkkr&catid=4%3Asoftware&Itemid=7&lang=en>`
-
+The calculator stores persistent user/ASE defaults.  Materialization of one
+concrete calculation lives in :mod:`ase2sprkkr.sprkkr.calculation`; process
+execution is delegated to the generic execution subsystem.
 """
 
 from __future__ import annotations
 
+import copy
 import os
+import subprocess
 import sys
+from pathlib import Path
+from typing import Any, Dict, Optional, Union
+
 from ase.calculators.calculator import BaseCalculator, all_changes
 
 from .sprkkr_atoms import SPRKKRAtoms
 from ..potentials.potentials import Potential
 from ..common.file_utils import Directory
-from ..ase.symbols import filename_from_symbols
-from ..bindings.empty_spheres import add_empty_spheres
-import copy
-import abc
-import subprocess
-import tempfile
-import collections
-from datetime import datetime
-from typing import Union, Any, Dict, Optional
-from pathlib import Path
-import re
 from ..common.misc import config_property, first_non_none
 from ..configuration import config
+from ..input_parameters.input_parameters import InputParameters
+from .calculation import (
+    FilenameTemplator as _FilenameTemplator,
+    PreparedCalculation,
+    create_sprkkr_run as _create_sprkkr_run,
+)
 from .profile import SPRKKRProfile, resolve_sprkkr_profile
 
 
 class SPRKKR(BaseCalculator):
-    """
-    ASE calculator for SPR-KKR.
+    """ASE-facing calculator for SPR-KKR.
 
-    :cvar ase2sprkkr.input_parameters.input_parameters.InputParameters InputParameters: (just for an easier access to the class)
-    :cvar ase2sprkkr.potentials.potentials.Potential Potential: (dto.)
+    ``SPRKKR`` is a mutable facade holding defaults shared by calculations:
+    structure/potential, input parameters, filename templates, working directory
+    and execution policy.  Each call snapshots those defaults into a separate
+    :class:`PreparedCalculation` before execution.
 
-    The parameters of performed calculations are determined mostly by ``input_parameters``, given either
-    in :meth:`constructor<ase2sprkkr.sprkkr.calculator.SPRKKR.__init__>` or in the :meth:`calculate<ase2sprkkr.sprkkr.calculator.SPRKKR.calculate>` method.
-    The following attributes of the calculator are mostly the default values of the arguments of the :meth:`calculate<ase2sprkkr.sprkkr.calculator.SPRKKR.calculate>` or :meth:`calculate<ase2sprkkr.sprkkr.calculator.SPRKKR.calculate>` methods.
-
+    A calculator instance is not intended to be prepared concurrently from
+    multiple threads because filename-template counters are mutable facade
+    state.  Prepared runners themselves own independent resources and may run
+    concurrently.
     """
 
     implemented_properties = ["energy"]
@@ -61,7 +56,7 @@ class SPRKKR(BaseCalculator):
         output_file=True,
         potential_file=True,
         input_parameters=None,
-        options={},
+        options=None,
         print_output=None,
         mpi: Optional[bool] = None,
         empty_spheres: Optional[Union[str, bool, Dict]] = None,
@@ -72,92 +67,6 @@ class SPRKKR(BaseCalculator):
         persistent=False,
         **kwargs,
     ):
-        """
-        Parameters
-        ----------
-        label: str or None
-          Path and begin of the file names used for default templates
-          for input, output and potential files.
-
-        directory: str or None or False
-          Directory, where the files will be created and where the calculation will be runned.
-          False means use temporary directory, so nothing will left after the run.
-
-        input_file: str or file or bool
-          Template according to which the input file name will be created.
-          True means the default template.
-          False means to use a temporary file.
-          The placeholders for the task name, date, etc... can be used.
-
-        output_file: str or file or bool (default).
-          The template for the output file name.
-          True means use the input file name, with replaced .in[p] by .out
-          or appended .out suffix
-          False means not to write the output file at all.
-          See the input_file parameter for the meaning of other values.
-
-        potential_file: str or file or bool
-          The template for the potential file name (see the input_file parameter).
-
-        print_output: Optional[Union[bool,str]]
-          Write the output of runned executables to stdout (in addition to the output file)?
-          (Default value for the calculator)
-          If print_output = 'info', only a few info lines per iteration will be printed.
-          None means use the value from config.running.print_output.
-
-        mpi: Union[list,string,int,bool]
-          Runner for mpi to run a mpi calculation. True and int means autodetect: use True
-          for a cluster where mpi is able to autodetect the number of the processes, otherwise
-          use integer to specify the number of processes. None means use the selected profile.
-          E.g. mpi = [ 'mpirun', '-np', '4' ], mpi = 4
-
-        input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None
-          The default input parameters, according to which the input file for the calculation
-          will be created. None means that the parameters will be specified in the calculate
-          (or save_input) method.
-          If str is given, it is interpreted as a name of the task (if no dot and no slash
-          are contained in it), for which (see :py:mod:`ase2sprkkr.input_parameters.definitions`) the default
-          input parameters will be used, or as a filename contained the input file (which will
-          be readed)
-
-        options: dict
-          Further parameters for input parameters
-
-        potential: sprkkr.potential.Potential or str or bool or None
-          The (default) potential to be used in calculations.
-          If a string is given, the potential will be read from the given filename.
-          True means to generate the potential from atoms.
-          False means that the potential will be given by the input_parameters.
-          None (the default value) means that the potential is required to be supplied,
-          when calculate or save_input
-          methods are called (either directly, or via atoms, input_parameters etc.)
-
-        executable_suffix: str or bool or None
-          String to be added to the runned executable. In some environments, the version
-          and the hostname is added to the name of sprkkr executables.
-          None means use the selected execution profile.
-          False means do not append anything (the same as '').
-
-        executable_dir
-          If the SPR-KKR executables are not in path, or you want to control which
-          executables will be runned, please supply this parameter.
-          None means use the selected execution profile.
-          False means use only the executable in PATH.
-
-        empty_spheres
-          Whether to add empty spheres to the structure or not.
-          'auto' means add if no empty sphere is present.
-          None means use the configuration value from
-          config.config.calculator_parameters.empty_spheres.
-          Dict means True, and the dict is passed as kwargs to the
-          ``ase.bindings.empty_spheres.add_empty_spheres`` method.
-
-        persistent: bool, ExecutionManager or None
-          Default persistent execution policy for calculations. False disables
-          persistence, True uses the default execution manager, and an explicit
-          manager stores runs in that manager. A per-call None uses this value.
-        """
-
         if kwargs:
             print(f"Warning - unknown arguments in the SPRKKR calculator: {kwargs}")
 
@@ -183,14 +92,8 @@ class SPRKKR(BaseCalculator):
         self.atoms = atoms
         self.potential = potential
         self.input_file = input_file
-        """ A pathname or an open named file for the input file (if not specified otherwise in the
-        called method) """
         self.output_file = output_file
-        """ A pathname or an open file for the output of the runned SPR-KKR task (if not specified
-        otherwise in the called method) """
         self.potential_file = potential_file
-        """ A pathname or an open named file for the potential file to be used (if not specified otherwise in the
-        called method) """
         self.input_parameters = input_parameters
         if options:
             self.input_parameters.set(options, unknown="find")
@@ -205,26 +108,13 @@ class SPRKKR(BaseCalculator):
         self.persistent = persistent
         self.label = label
         self._counter = 0
-        # For %c template in file names
 
     print_output = config_property("print_output", config.running.print_output)
     empty_spheres = config_property("empty_spheres", config.running.empty_spheres)
 
     @property
     def input_parameters(self):
-        """
-        The parameters for the runned task, given either by the
-        :class:`ase2sprkkr.input_parameters.input_parameters.InputParameters`
-        object, or by string resulting in the default parameters for a taks with the given name.
-
-        If a string is set to the property, the
-        :class:`InputPamaters<ase2sprkkr.input_parameters.input_parameters.InputParameters>`
-        object is created with the default values for the task with a given name.
-
-        The parameters can be either overriden by ``input_parameters`` argument of the
-        :meth:`calculate<ase2sprkkr.sprkkr.calculator.SPRKKR.calculate>` method,
-        or (one-time) modified by its ``options`` argument.
-        """
+        """Default :class:`InputParameters` used for new calculations."""
         if self._input_parameters is None:
             self.input_parameters = "SCF"
         return self._input_parameters
@@ -235,34 +125,16 @@ class SPRKKR(BaseCalculator):
             value = InputParameters.create_input_parameters(value)
         self._input_parameters = value
 
-    def set(self, options: Union[Dict[str, Any], str, None] = {}, value=None, *, unknown="find", **kwargs):
-        """
-         ASE method to set the parameters.
-
-         Beware, currently, the method sets only input file parameters, not the potential parameters (see the SPRKKR documentation), and do not call the reset() function at all.
-
-        Parameters
-        ----------
-
-        options:
-          Dictionary of values to be set, or the name of the value, if the value is given.
-
-        value:
-          Value to be set. Setting this argument require to pass string name to the options argument.
-
-        unknown: 'add', 'find' or None
-          How to handle unknown (not known by the definition) parameters.
-          If 'find', try to find the values in descendant containers, throw and exception if none is found.
-          If 'add', add unknown values as custom values (use SECTION.OPTION_NAME notation)
-          If None, throw an exception.
-          Keyword only argument.
-
-        **kwargs: dict
-          The values to be set (an alternative syntax as syntactical sugar)
-
-
-        """
-        if options.__class__ is str:
+    def set(
+        self,
+        options: Union[Dict[str, Any], str, None] = None,
+        value=None,
+        *,
+        unknown="find",
+        **kwargs,
+    ):
+        """Set values on the calculator's persistent input-parameter defaults."""
+        if isinstance(options, str):
             options = {options: value}
         elif value is not None:
             raise ValueError(
@@ -272,26 +144,12 @@ class SPRKKR(BaseCalculator):
             self.input_parameters.set(options, **kwargs, unknown=unknown)
 
     def get(self, name):
-        """Get the value of an input parameter.
-        The parameter of the given name will be sought in sections
-        and the value of the first such one will be returned. If there
-        is an ambiguity, the name of the parameter can be given in
-        SECTION.NAME notation.
-        """
+        """Return an input-parameter value by name or ``SECTION.NAME`` path."""
         return self.input_parameters.get(name)
 
     @property
     def potential(self) -> Potential:
-        """The potential associated with the calculator. It will be used in
-        calculate and save_input methods, if it is not explicitly overriden by
-        the potential argument.
-        By default, the potential is created from atoms object (if it is set).
-
-        Return
-        ------
-        potential: ase2sprkkr.potential.potentials.Potential
-
-        """
+        """Potential associated with the calculator, generated lazily from atoms."""
         if self._potential is None:
             if not self._atoms:
                 return None
@@ -310,12 +168,7 @@ class SPRKKR(BaseCalculator):
 
     @property
     def atoms(self) -> SPRKKRAtoms:
-        """Atoms object, associate with the calculator.
-
-        Return
-        ------
-        atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms
-        """
+        """Structure associated with the calculator."""
         if self._atoms is None:
             if self._potential is None or isinstance(self._potential, bool):
                 return None
@@ -336,74 +189,43 @@ class SPRKKR(BaseCalculator):
 
     @property
     def directory(self):
+        """Default working directory, or ``False`` for a temporary run directory."""
         return self._directory
 
     @directory.setter
     def directory(self, directory: Union[bool, str, os.PathLike]):
         if not isinstance(directory, bool):
-            directory = str(Path(directory))  # Normalize path.
+            directory = str(Path(directory))
         self._directory = directory
 
     def _advance_counter(self):
-        """Advance counter for generating filenames with %c counter placeholder"""
+        """Advance the filename-template counter used by the legacy templator."""
         self._counter += 1
-        return self.counter
+        return str(self._counter)
 
-    def _open_file(
-        self, filename, directory, templator=None, named=False, mode="w+", allow_temporary=True, create_subdirs=False
-    ):
-        """
-        Open a file given a 'template' filename file name
+    def _prepare_calculation(self, **kwargs):
+        """Snapshot defaults and materialize one concrete calculation."""
+        prepared = PreparedCalculation.prepare(
+            default_atoms=self._atoms,
+            default_potential=self._potential,
+            default_input_parameters=self.input_parameters,
+            default_input_file=self.input_file,
+            default_potential_file=self.potential_file,
+            default_output_file=self.output_file,
+            default_directory=self._directory,
+            default_empty_spheres=self.empty_spheres,
+            label=self.label,
+            counter=self._counter,
+            **kwargs,
+        )
+        self._counter = prepared.counter
+        return prepared
 
-        Parameters
-        ----------
-        filename: str or file or None
-          if False, temporary object is used
-          if str is given, use it as a template
-          if file is given, return it unchanged
-
-        directory: str
-          Where to open the file
-
-        templator: callable
-          If it is given, the filemae is processed using this function,
-          see FilenameTemplator
-
-        named: bool
-          Whether to use named temporary file.
-
-        mode: str
-          Mode to open the file
-
-        allow_temporary: bool
-          If False, throw an exception if the resulting filename should be temporary,
-          i.e. if None as filename is given
-
-        create_subdirs: bool
-          If true, create all non-existent directories in the given path
-        """
-        if filename is False:
-            if not allow_temporary:
-                raise ValueError("Creation of temporary files is not allowed in this context")
-            f = tempfile.NamedTemporaryFile if named else tempfile.TemporaryFile
-            return f(mode=mode)
-        if not isinstance(filename, str):
-            return filename
-
-        if templator:
-            filename = templator(filename)
-
-        if "/" not in filename and directory:
-            filename = os.path.join(directory, filename)
-
-        if create_subdirs:
-            dirs = os.path.dirname(filename)
-            try:
-                os.makedirs(dirs)
-            except FileExistsError:
-                pass
-        filename = os.path.abspath(filename)
-        return open(filename, mode)
+    @staticmethod
+    def _is_temporary_directory(directory):
+        if directory is False:
+            return True
+        return isinstance(directory, Directory) and directory.dir is False
 
     def save_input(
         self,
@@ -415,373 +237,74 @@ class SPRKKR(BaseCalculator):
         output_file=False,
         directory: Union[str, bool, Directory, None] = None,
         create_subdirs: bool = False,
-        options={},
+        options=None,
         task=None,
-        empty_spheres: Optional[str | bool | tuple | abc.Mapping] = None,
-        profile: Optional[SPRKKRProfile] = None,
+        empty_spheres=None,
         return_files=False,
         restart_scf: bool = False,
     ):
+        """Materialize SPR-KKR input files without starting an executable.
+
+        Preparation always works on an independent snapshot of
+        ``InputParameters``; generated POTFIL/DATASET values therefore never
+        mutate calculator defaults or caller-owned parameter objects.
+
+        ``False`` as ``input_file`` or ``potential_file`` requests a managed
+        named temporary artifact.  Temporary artifacts are useful for an
+        executing runner, but ``save_input`` cannot return ownership of a
+        temporary POTFIL because its public tuple exposes only the pathname.
+        Supply a persistent POTFIL name when ``return_files=True``.
+
+        ``directory=False`` is intentionally rejected here: a temporary
+        directory is owned naturally by a runner, whereas returning filenames
+        from ``save_input`` after deleting their directory would be invalid.
+        Use :meth:`create_run`/``calculate`` for temporary run directories.
         """
-        Save input and potential files for a calculation.
-
-        Parameters
-        ----------
-        properties: list of str
-            List of what needs to be calculated.  Can be any combination
-            of 'energy', 'forces', 'stress', 'dipole', 'charges', 'magmom'
-            and 'magmoms'.
-
-        input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None
-            If None, the task specified in __init__ is used, or the default parameters for 'SCF' task
-               will be created.
-            If a string is given then if it is a task name, an InputParameters object will be created
-               (with the default options for a given task) and saved to the input_file.
-               Otherwise the task is interpreted as a task file name from which the input parameters will be readed.
-            The input parameters is written into the input file,
-               whose name is given by input_file argument.
-
-        potential: sprkkr.potential.potentials.Potential or str or None or False
-            If it is None, the self.potential value is used instead (see the later options)
-            If False, the potential filename is specified in the input_parameters.
-            If True,  create the potential according to the atoms and write to the resulting <potential_file> file.
-            If str, then it is the filename of the potential, that is left unchanged on input
-            If it is None, use the potential value of the calcualtor. If this is None too,
-            the potential is set to True if atoms are set, to False otherwise.
-
-        input_file: str or bool or None
-            Filename or template (see FilenameTemplator class) where to save the input file,
-            None means to use the default value from the Calculator.
-            See the __init__ method for the meaning of other options.
-
-        potential_file: str or bool or None
-            Filename or template (see FilenameTemplator class) where to save the potential_file
-            None means to use the default value from the Calculator.
-            See the __init__ method for the meaning of other options.
-
-        output_file: str or bool or None
-            A filename or a filename template (see FilenameTemplator class) where to save the output
-            None means to use the default value from the Calculator.
-            See the __init__ method for the meaning of other options.
-
-        directory:
-            Path, to which the relative names of the files above will be resolved.
-            False means temporary directory (usefull just for testing).
-            None means use the (default) value specified by creating the calculator.
-
-        create_subdirs: boolean
-            If true, create directories if they don't exists.
-
-        profile: SPRKKRProfile or None
-            Execution profile used to decide whether a named input file is
-            required for MPI. None means the calculator profile.
-
-        empty_spheres
-            Whether to add empty spheres to the structure or not.
-            'auto' means add if no empty sphere is present.
-            Default None means use the default value from the calculator for this parameter
-            (which is 'auto' by default).
-            Mapping pass the given arguments to the routine.
-            Tuple means min and max radius.
-
-        options: dict
-            Options to set to the input_parameters. If input_parameters are given by a filename,
-            they are readed from the file, altered by the options and then the modified input file
-            (in a temporary file) will be used.
-
-        task: None
-            Change the task (ARPES, DOS, etc...) before the calculation.
-            Instead of setting input_parameters, this way retain the compatible settings in the
-            input parameters.
-
-        return_files: boolean
-            Return open files object instead of just string filenames.
-
-        restart_scf: bool
-            For an SCF calculation, write ``SCFSTATUS START`` to the potential
-            used by this run while preserving the canonical in-memory potential
-            and its converged electronic data.
-
-
-        Returns
-        -------
-        input_parameters: InputParameters
-            Created task object to be run.
-
-        input_filename: str or file
-            Input/task file. See return_files
-
-        potential_filename: str or file
-            Potential file. See return_files
-
-        output_filename: str or file or None
-            Output file. None when output_file is False. See return_files
-
-        """
-        profile = self.profile if profile is None else profile
-
-        def makepath(path, must_exist):
-            if "/" not in path and directory:
-                path = os.path.join(str(directory), path)
-            if must_exist and not os.path.isfile(path):
-                raise ValueError(must_exist.format(path=path))
-            return path
-
-        def from_input_name(template, replacement, default):
-            if template is not True:
-                return template
-            if not save_input and input_file.name:
-                name = os.path.basename(input_file.name)
-                if name.endswith(".inp"):
-                    return name[:-4] + replacement
-                if input_file.name.endswith(".in"):
-                    return name[:-3] + replacement
-                return name + replacement
-            return default
-
-        def resolve_potential_and_atoms(potential, atoms, potential_file):
-            """Get the potential file and the atoms object.
-            potential_file - the file containing the potential (possibly a template)
-            potential - potential object (to be updated by atoms)
-            """
-            save_input = None
-            if potential is None and atoms is None:
-                potential = self.potential
-
-            if potential is None:
-                potential = bool(atoms or self._atoms)
-
-            potential_specified = potential is not None and potential is not True
-            if atoms is not None and potential_specified:
-                raise ValueError(
-                    "You can not provide both a potential and atoms object to the SPRKKR calculate method, "
-                    "just one from them is generated from the another."
-                )
-
-            atoms = atoms or self._atoms
-
-            if potential is True:
-                if not atoms:
-                    raise ValueError(
-                        "Potential set to <True> which means to generate the potential from the ASE-atoms object. "
-                        "However, this object has not been supplied"
-                    )
-                potential = Potential.from_atoms(atoms)
-            elif potential is False:
-                if potential_file is not None:
-                    raise ValueError(
-                        "When potential is False, the value of POTENTIAL option from the input (parameters) file will be used "
-                        " as the potential file. Thus, specifing the <potential_file> argument is not allowed."
-                    )
-                potential = None
-            elif potential is None:
-                raise ValueError(
-                    "The potential can not be <None>. However, consider supplying either <True> as the potential to generate"
-                    " it from the atoms object, or <False> to use the POTENTIAL option from the input (parameters) file"
-                )
-            elif isinstance(potential, str):
-                if potential_file or restart_scf:
-                    potential = Potential.from_file(potential)
-                else:
-                    # Set the potential file and clear the potential. Thus,
-                    # the potential will not be saved
-                    potential_file = potential
-                    potential = False
-                    save_input = "check_potential"
-
-            if isinstance(potential, Potential):
-                atoms = potential.atoms
-            elif atoms:
-                atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
-
-            return potential, atoms, potential_file, save_input
-
-        def resolve_input_parameters(input_parameters, input_file, save_input):
-            if input_parameters is None:
-                input_parameters = self.input_parameters
-            if input_parameters:
-                if isinstance(input_parameters, str):
-                    if InputParameters.is_it_an_input_parameters_name(input_parameters):
-                        input_parameters = InputParameters.create_input_parameters(input_parameters)
-                    else:
-                        ip = InputParameters.from_file(input_parameters)
-                        if save_input == "check_potential":
-                            save_input = ip.CONTROL.POTFIL.result != potential_file
-                        if not save_input and not options and not task and not potential and not input_file:
-                            save_input = False
-                            input_file = makepath(
-                                input_parameters, "'{path}' is not a task file nor a known name of input_parameters."
-                            )
-                        input_parameters = ip
-                elif task or options:
-                    input_parameters = input_parameters.copy()
-            else:
-                input_parameters = self.input_parameters
-                if task or options:
-                    input_parameters = input_parameters.copy()
-
-            if not input_parameters.CONTROL.POTFIL.result and not potential and not potential_file:
-                raise ValueError(
-                    "Potential in the input parameters is not set and no Atoms nor Potential object have been given."
-                )
-            if save_input is None:
-                save_input = True
-            return input_parameters, input_file, save_input
-
-        def resolve_empty_spheres(empty_spheres):
-            if empty_spheres is None:
-                empty_spheres = self.empty_spheres
-            if empty_spheres == "auto":
-                empty_spheres = (
-                    input_parameters.TASK.TASK() == "SCF"
-                    and atoms is not None
-                    and (
-                        not atoms.has_potential()
-                        or atoms.potential.SCF_INFO.SCFSTATUS() == "START"
-                    )
-                )
-                if empty_spheres:
-                    for site in atoms.sites:
-                        if site.is_vacuum():
-                            empty_spheres = False
-                            break
-            if empty_spheres and atoms:
-                if isinstance(empty_spheres, tuple):
-                    assert len(empty_spheres) == 2, (
-                        "Tuple of length 2, denoting min and max radius, is required for empty spheres"
-                    )
-                    empty_spheres = {"min_radius": empty_spheres[0], "max_radius": empty_spheres[1]}
-                if not isinstance(empty_spheres, collections.abc.Mapping):
-                    empty_spheres = {}
-                add_empty_spheres(atoms, **empty_spheres)
-
-        def save_potential_file():
-            pf = self.potential_file if potential_file is None else potential_file
-            pf = from_input_name(pf, ".pot", "%a.pot")
-            pf = self._open_file(
-                pf, directory, templator, True, allow_temporary=return_files, create_subdirs=create_subdirs
-            )
-            potential.save_to_file(pf, atoms, restart_scf=restart_scf)
-            pf.close()
-            return pf.name
-
-        def open_input_file():
-            ifile = self.input_file if input_file is None else input_file
-            if ifile is True:
-                ifile = "%l%_%a_%T.inp"
-
-            return self._open_file(
-                ifile,
-                directory,
-                templator,
-                input_parameters.is_mpi(profile.mpi),
-                allow_temporary=return_files,
-                create_subdirs=create_subdirs,
-                mode="w+" if save_input else "r",
+        selected_directory = self._directory if directory is None else directory
+        if self._is_temporary_directory(selected_directory):
+            raise ValueError(
+                "save_input() requires a persistent working directory; "
+                "directory=False is supported by create_run()/calculate() instead"
             )
 
-        def save_input_file():
-            """update input_parameters by the potential"""
-            if options:
-                input_parameters.set(options, unknown="find")
-            if potential_file:
-                # use the relative potential file name to avoid too-long-
-                # -potential-file-name problem
-                # dirr = os.path.dirname(input_file.name) if input_file.name else directory
-                input_parameters.CONTROL.POTFIL = os.path.abspath(potential_file)
-                input_parameters.CONTROL.POTFIL.result = os.path.relpath(potential_file, directory)
-            if not input_parameters.CONTROL.DATASET.is_set():
-                input_parameters.CONTROL.DATASET.result = Path(input_file.name).stem
-            input_parameters.save_to_file(input_file, atoms)
-            input_file.seek(0)
+        prepared = self._prepare_calculation(
+            atoms=atoms,
+            input_parameters=input_parameters,
+            potential=potential,
+            input_file=input_file,
+            potential_file=potential_file,
+            output_file=output_file,
+            directory=directory,
+            create_subdirs=create_subdirs,
+            options=options,
+            task=task,
+            empty_spheres=empty_spheres,
+            allow_temporary_files=return_files,
+            restart_scf=restart_scf,
+        )
 
-        def open_output_file():
-            """Get and open the output file"""
-            ofile = output_file or self.output_file
-            ofile = from_input_name(ofile, ".out", "%a_%T.out")
-            return self._open_file(
-                ofile,
-                directory,
-                templator,
-                False,
-                mode="wb",
-                allow_temporary=return_files,
-                create_subdirs=create_subdirs,
+        if return_files:
+            if prepared.temporary_potential:
+                prepared.close()
+                raise ValueError(
+                    "save_input(return_files=True) cannot transfer ownership of "
+                    "a temporary POTFIL pathname; supply potential_file as a path"
+                )
+            prepared.release_file_ownership()
+            prepared.close_directory_context()
+            return (
+                prepared.input_parameters,
+                prepared.input_file,
+                prepared.potential_file,
+                prepared.output_file,
             )
 
-        def symbols():
-            """Return a best guess for the names of the output file"""
-            if atoms:
-                return filename_from_symbols(atoms.symbols)
-            for i in "POTFIL", "DATASET":
-                i = input_parameters.CONTROL[i]
-                if i.is_set():
-                    return Path(i()).stem
-            for i in (input_file, potential_file, self.input_file, self.potential_file):
-                if isinstance(i, str):
-                    i = Path(i).stem
-                    if "%" not in i:  # thus i is not template
-                        return i
-            return "sprkkr"
-
-        def taskname():
-            if task:
-                return task
-            if input_parameters:
-                return input_parameters.task_name
-            return "SPRKKR"
-
-        # ALL auxiliary procedures defined
-        # HERE starts the execution
-        potential, atoms, potential_file, save_input = resolve_potential_and_atoms(potential, atoms, potential_file)
-        input_parameters, input_file, save_input = resolve_input_parameters(input_parameters, input_file, save_input)
-        if task:
-            input_parameters.change_task(task)
-        effective_task = str(taskname()).strip().upper()
-        if restart_scf:
-            if effective_task != "SCF":
-                raise ValueError("restart_scf=True is only valid for an SCF calculation.")
-            if not isinstance(potential, Potential):
-                raise ValueError(
-                    "restart_scf=True requires a writable Potential or atoms from which one can be generated."
-                )
-        resolve_empty_spheres(empty_spheres)
-        if (
-            isinstance(potential, Potential)
-            and effective_task != "SCF"
-            and potential.SCF_INFO.SCFSTATUS() == "START"
-            and potential.is_scf_converged(atoms)
-        ):
-            potential.SCF_INFO.SCFSTATUS = "CONVERGED"
-
-        templator = FilenameTemplator(self, taskname, symbols)
-        with Directory.new(directory, default=self._directory) as directory:
-            directory = directory.path
-            input_file = open_input_file()
-            if potential:
-                potential_file = save_potential_file()
-            if save_input:
-                save_input_file()
-            else:
-                # This branch can occur if the potential have been explicitly set to False,
-                # which means not to create the potential (and take it from the input_parameters)
-                dirr = os.path.dirname(input_file.name) if input_file.name else directory
-                potential_file = os.path.join(dirr, input_parameters.CONTROL.POTFIL.result)
-            if output_file is not False:
-                output_file = open_output_file()
-
-            # All is saved and opened - return the values
-            if not return_files:
-                for f in input_file, output_file:
-                    if hasattr(f, "close"):
-                        f.close()
-                input_file = input_file.name
-                if output_file:
-                    output_file = output_file.name
-
-            if output_file is False:
-                output_file = None
-            return input_parameters, input_file, potential_file, output_file
+        input_name = prepared.input_file.name
+        output_name = prepared.output_file.name if prepared.output_file else None
+        potential_name = prepared.potential_file
+        input_parameters = prepared.input_parameters
+        prepared.close()
+        return input_parameters, input_name, potential_name, output_name
 
     def create_run(
         self,
@@ -793,7 +316,7 @@ class SPRKKR(BaseCalculator):
         output_file=None,
         directory: Union[str, bool, Directory, None] = None,
         create_subdirs: bool = False,
-        options={},
+        options=None,
         task=None,
         empty_spheres: Optional[str | bool] = None,
         print_output=None,
@@ -805,82 +328,56 @@ class SPRKKR(BaseCalculator):
         persistent=None,
         restart_scf: bool = False,
     ):
-        """Prepare a calculation and return an unstarted Runner.
+        """Prepare a calculation and return an unstarted owning runner.
 
-        The returned Runner owns execution. Creating it prepares the SPR-KKR
-        input/output files but does not execute the task and does not update
-        the calculator state.
+        An explicit per-run executor has highest precedence. Otherwise an
+        explicit per-run profile selects its backend; if neither is supplied,
+        the calculator-level executor (when present) overrides the calculator
+        profile backend.
 
-        Parameters
-        ----------
-
-        print_output: bool or str or None
-            Print output to stdout, too.
-            If print_output=='info' only a few lines per iteration will be printed.
-            None means to use a default value (specified in constructor)
-
-        read_callback: callable(str,str)
-            Receives output of the called executable.
-            The second argument is either 'out' or 'err'
-
-        profile: ase2sprkkr.sprkkr.profile.SPRKKRProfile or None
-            Runtime execution profile for this run. None means the calculator profile.
-
-        executor: ase2sprkkr.execution.Executor or None
-            Override the calculator execution backend for this run.
-
-        persistent: bool, ExecutionManager or None
-            Persistent execution policy. ``True`` uses the default execution
-            manager, ``False`` disables persistence, and an explicit manager
-            stores the run in that manager.
-
-        restart_scf: bool
-            Request a fresh SCF cycle from the supplied electronic potential.
-            The canonical in-memory potential is not changed.
-
-        ---------
-        For the other parameters, see the save_input() method
+        ``callback`` is a terminal runner callback. It can therefore be invoked
+        with a partially populated result when backend execution or parsing
+        fails. ``read_callback`` observes streamed stdout/stderr.
         """
-
-        run_profile = self.profile if profile is None else profile
+        explicit_profile = profile is not None
+        run_profile = resolve_sprkkr_profile(
+            self.profile if profile is None else profile
+        )
         print_output = first_non_none(print_output, self.print_output)
+        if persistent is None:
+            persistent = self.persistent
+        if executor is None and not explicit_profile:
+            executor = self.executor
 
-        with Directory.new(directory, default=self._directory) as directory:
-            input_parameters, input_file, _, output_file = self.save_input(
-                atoms=atoms,
-                input_parameters=input_parameters,
-                potential=potential,
-                input_file=input_file,
-                potential_file=potential_file,
-                output_file=output_file,
-                directory=directory,
-                create_subdirs=create_subdirs,
-                empty_spheres=empty_spheres,
-                profile=run_profile,
-                options=options,
-                task=task,
-                return_files=True,
-                restart_scf=restart_scf,
-            )
-
-            with directory.chdir():
-                return input_parameters.run_process(
-                    self,
-                    input_file,
-                    output_file,
-                    directory=os.path.abspath("."),
-                    print_output=print_output,
-                    read_callback=read_callback,
-                    run_async=True,
-                    callback=callback,
-                    gdb=gdb,
-                    profile=run_profile,
-                    executor=self.executor if executor is None else executor,
-                    persistent=persistent,
-                )
+        prepared = self._prepare_calculation(
+            atoms=atoms,
+            input_parameters=input_parameters,
+            potential=potential,
+            input_file=input_file,
+            potential_file=potential_file,
+            output_file=output_file,
+            directory=directory,
+            create_subdirs=create_subdirs,
+            empty_spheres=empty_spheres,
+            options=options,
+            task=task,
+            allow_temporary_files=True,
+            restart_scf=restart_scf,
+        )
+        return _create_sprkkr_run(
+            prepared,
+            result_context=self,
+            profile=run_profile,
+            executor=executor,
+            persistent=persistent,
+            print_output=print_output,
+            read_callback=read_callback,
+            callback=callback,
+            gdb=gdb,
+        )
 
     def value_or_default(self, name, value):
-        """Return the default value of the parameter, if the given value is None"""
+        """Return calculator default *name* when *value* is ``None``."""
         if value is None:
             value = getattr(self, name)
         return value
@@ -901,7 +398,7 @@ class SPRKKR(BaseCalculator):
     def calculate(
         self,
         atoms=None,
-        properties=["energy"],
+        properties=("energy",),
         system_changes=all_changes,
         input_parameters=None,
         potential=None,
@@ -912,7 +409,7 @@ class SPRKKR(BaseCalculator):
         create_subdirs: bool = False,
         empty_spheres: Optional[str | bool] = None,
         mpi: bool = None,
-        options={},
+        options=None,
         task=None,
         print_output=None,
         read_callback: Optional[callable] = None,
@@ -925,63 +422,20 @@ class SPRKKR(BaseCalculator):
         persistent=None,
         restart_scf: bool = False,
     ):
+        """Run one SPR-KKR task synchronously and return its parsed result.
+
+        ``properties`` and ``system_changes`` are accepted for ASE compatibility;
+        task selection is currently controlled by ``input_parameters``/``task``.
+        Per-call ``mpi``, ``executable_dir`` and ``executable_suffix`` values are
+        immutable overrides of the selected execution profile.
+
+        The callback of this synchronous convenience method is intentionally a
+        success callback: it runs only after the result has updated calculator
+        state. This differs from the lower-level terminal callback accepted by
+        :meth:`create_run`.
         """
-        ASE-interface method for the calculation.  This method runs the appropriate task(s)
-        for the requested properties (currently always the SCF one) and updates the
-        calculator object with the results.
-
-        See
-        https://wiki.fysik.dtu.dk/ase/development/calculators.html#ase.calculators.calculator.Calculator.calculate
-        for the documentation of ASE interface.
-
-        Parameters
-        ----------
-        properties: list or str
-            List of what needs to be calculated. Can be any combination of ‘energy’, ‘forces’, ‘stress’, 'dipole', 'charges', 'magmom' and 'magmoms'.
-
-        system_changes: list of str
-            List of what has changed since last calculation.  Can be
-            any combination of these six: 'positions', 'numbers', 'cell',
-            'pbc', 'initial_charges' and 'initial_magmoms'.
-
-            This calculator ignore properties and system_changes.
-
-        profile: SPRKKRProfile, str or None
-            Profile for this calculation. None means the calculator profile.
-
-        mpi, executable_dir, executable_suffix
-            Compatibility overrides applied to the selected profile for this
-            calculation. None keeps the corresponding profile value.
-
-        persistent: bool, ExecutionManager or None
-            Persistent execution policy, forwarded to :meth:`create_run`.
-
-        restart_scf: bool
-            Request a fresh SCF cycle from the supplied electronic potential.
-            The canonical in-memory potential is not changed.
-
-        ---------
-        For the other parameters, see the create_run() and save_input() methods
-
-        ---------
-
-        From ASE documentation: Calculated properties should be
-        inserted into results dictionary like shown in this dummy example::
-
-            self.results = {
-                "energy": 0.0,
-                "forces": np.zeros((len(atoms), 3)),
-                "stress": np.zeros(6),
-                "dipole": np.zeros(3),
-                "charges": np.zeros(len(atoms)),
-                "magmom": 0.0,
-                "magmoms": np.zeros(len(atoms)),
-            }
-
-        """
-
-        # There is no need to call this
-        # super().calculate(atoms, properties, system_changes)
+        if executor is None and profile is None:
+            executor = self.executor
         run_profile = resolve_sprkkr_profile(
             self.profile if profile is None else profile
         ).with_overrides(
@@ -1012,39 +466,40 @@ class SPRKKR(BaseCalculator):
         result = runner.run()
         self._update_from_result(
             result,
-            adopt_potential=(result.task_name.upper() == "SCF" and not potential and not atoms),
+            adopt_potential=(
+                result.task_name.upper() == "SCF" and not potential and not atoms
+            ),
         )
         if callback:
             callback(result)
         return result
 
     def scf(self, *args, **kwargs):
-        """A shortcut for calculating a SCF task"""
+        """Run an SCF calculation."""
         self.calculate(input_parameters="SCF", *args, **kwargs)
 
     def phagen(self, *args, **kwargs):
-        """A shortcut for calculating a PHAGEN task"""
+        """Run a PHAGEN calculation."""
         self.calculate(input_parameters="PHAGEN", *args, **kwargs)
 
     def kkrgen(self, *args, **kwargs):
-        """A shortcut for calculating a KKRGEN task"""
+        """Run a KKRGEN calculation."""
         self.calculate(input_parameters="KKRGEN", *args, **kwargs)
 
     def kkrspec(self, *args, **kwargs):
-        """A shortcut for calculating a KKRSPEC task"""
+        """Run a KKRSPEC calculation."""
         self.calculate(input_parameters="KKRSPEC", *args, **kwargs)
 
     def kkrch(self, *args, **kwargs):
-        """A shortcut for calculating a KKRCH task"""
+        """Run a KKRCH calculation."""
         self.calculate(input_parameters="KKRCH", *args, **kwargs)
 
     def run_xband(self, executable="xband"):
+        """Start the external ``xband`` executable detached from calculator IO."""
         subprocess.Popen(executable, stdout=subprocess.DEVNULL)
 
     def copy_with_potential(self, potential):
-        """Return copy of self, with the potential variable set.
-        Use the method to create a new calculator with the given "result potential"
-        """
+        """Return a shallow calculator copy using *potential*."""
         out = copy.copy(self)
         out.potential = potential
         out.results = out.results.copy()
@@ -1052,57 +507,29 @@ class SPRKKR(BaseCalculator):
 
     @property
     def potential_object(self):
-        """Convert self.potential to a Potential object"""
+        """Return the calculator potential as a :class:`Potential` object."""
         if isinstance(self.potential, str):
             self.potential = Potential.from_file(self.potential)
         return self.potential
 
     def change_task(self, task, retain_values=False):
-        """Just a shortcut to ``input_parameters.change_task``"""
+        """Change the persistent default input-parameter task."""
         self.input_parameters.change_task(task, retain_values)
 
 
-class FilenameTemplator:
-    """Class that replaces the placeholders in filenames with propper values,
-    see the replacements property of the class.
-    The used values are remembered so all the processed filenames use
-    the same value (e.g. counter, datetime etc...)
-    """
+class FilenameTemplator(_FilenameTemplator):
+    """Backward-compatible facade for the historical calculator-based API."""
 
     def __init__(self, calculator, task, symbols):
-        self.data = {}
         self.calculator = calculator
-        self.task = task
-        self.symbols = symbols
-
-    def _get(self, name, default):
-        if name not in self.data:
-            self.data[name] = default(self)
-        return self.data[name]
-
-    replacements = {
-        "%d": lambda self: datetime.today().strftime("%Y-%m-%d_%H:%M"),
-        "%t": lambda self: self.task(),
-        "%T": lambda self: self.task().upper(),
-        "%a": lambda self: self.symbols(),
-        "%l": lambda self: self.calculator.label or "",
-        "%c": lambda self: self.calculator._advance_counter(),
-    }
+        super().__init__(calculator.label, calculator._counter, task, symbols)
 
     def __call__(self, template):
-        for i, v in self.replacements.items():
-            if i in template:
-                template = template.replace(i, self._get(i, v))
-        template = re.sub("^%_", "", template)
-        template = re.sub("%_(%_)*", "_", template)
-        template = template.replace("%_", "_")
-        return template
+        rendered = super().__call__(template)
+        self.calculator._counter = self.counter
+        return rendered
 
 
-# at least, to avoid a circular import
-from ..input_parameters.input_parameters import InputParameters  # NOQA: E402
-
-# is there a better way to not document an inner classes?
 if os.path.basename(sys.argv[0]) != "sphinx-build":
     SPRKKR.InputParameters = InputParameters
     SPRKKR.Potential = Potential

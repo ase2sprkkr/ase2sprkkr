@@ -9,17 +9,18 @@ from ase2sprkkr.execution.base import (
     RunState,
     SubmissionNotStarted,
 )
-from ase2sprkkr.input_parameters.input_parameters import InputParameters
+from ase2sprkkr.sprkkr.calculation import create_sprkkr_run
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 
 class _Parameters:
-    _definition = SimpleNamespace(mpi=False, executable="sprkkr")
+    executable = "sprkkr"
+    mpi_supported = False
+    execution_task_name = "SCF"
     CONTROL = SimpleNamespace(
         POTFIL=SimpleNamespace(result=None),
         DATASET=SimpleNamespace(result=None),
     )
-    _execution_task_name = "SCF"
 
     def output_reader(self, calculator, print_output, directory):
         return object()
@@ -34,17 +35,27 @@ class _Parameters:
         return ()
 
 
-class _Calculator:
-    persistent = False
+class _Prepared:
+    def __init__(self, input_file, output_file):
+        self.input_parameters = _Parameters()
+        self.input_file = input_file
+        self.potential_file = None
+        self.output_file = output_file
+        self.directory = "."
+        self.closed = False
 
-    @staticmethod
-    def value_or_default(name, value):
-        return False if value is None else value
+    def close(self):
+        if self.closed:
+            return
+        self.closed = True
+        self.input_file.close()
+        self.output_file.close()
 
 
 class _Runner:
     result = SimpleNamespace(return_code=None)
     reference = None
+    exception = None
 
     def __init__(self, callback=None, *, submit_error=None):
         self.callback = callback
@@ -86,15 +97,13 @@ class _Executor:
         return _Runner(callback, submit_error=self.submit_error)
 
 
-def _run_process(executor, input_file, output_file):
-    return InputParameters.run_process(
-        _Parameters(),
-        _Calculator(),
-        input_file,
-        output_file,
+def _create_run(executor, input_file, output_file):
+    prepared = _Prepared(input_file, output_file)
+    return create_sprkkr_run(
+        prepared,
+        result_context=None,
         profile=SPRKKRProfile(mpi=False),
         executor=executor,
-        run_async=True,
     )
 
 
@@ -103,7 +112,7 @@ def test_files_are_closed_when_runner_creation_fails():
     output_file = io.BytesIO()
 
     with pytest.raises(RuntimeError, match="factory failed"):
-        _run_process(
+        _create_run(
             _Executor(factory_error=RuntimeError("factory failed")),
             input_file,
             output_file,
@@ -116,7 +125,7 @@ def test_files_are_closed_when_runner_creation_fails():
 def test_files_are_closed_when_submission_fails_before_start():
     input_file = io.BytesIO(b"input")
     output_file = io.BytesIO()
-    runner = _run_process(
+    runner = _create_run(
         _Executor(submit_error=SubmissionNotStarted("staging failed")),
         input_file,
         output_file,
@@ -136,7 +145,7 @@ def test_files_are_closed_when_submission_fails_before_start():
 def test_completion_releases_files_without_wait():
     input_file = io.BytesIO(b"input")
     output_file = io.BytesIO()
-    runner = _run_process(_Executor(), input_file, output_file)
+    runner = _create_run(_Executor(), input_file, output_file)
 
     runner.submit()
 
@@ -148,7 +157,7 @@ def test_completion_releases_files_without_wait():
 def test_unstarted_runner_can_release_owned_files_explicitly():
     input_file = io.BytesIO(b"input")
     output_file = io.BytesIO()
-    runner = _run_process(_Executor(), input_file, output_file)
+    runner = _create_run(_Executor(), input_file, output_file)
 
     runner.close()
     runner.close()

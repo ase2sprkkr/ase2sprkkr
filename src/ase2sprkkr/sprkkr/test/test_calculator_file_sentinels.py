@@ -4,6 +4,7 @@ from unittest.mock import patch
 from ase.build import bulk
 import pytest
 
+from .. import calculation
 from ..calculator import SPRKKR
 
 
@@ -21,13 +22,14 @@ def test_save_input_preserves_explicit_false_file_sentinels():
     opened_filenames = []
 
     with NamedTemporaryFile(mode="w+") as input_file:
+
         def open_file(filename, *args, **kwargs):
             opened_filenames.append(filename)
             if len(opened_filenames) == 1:
                 return input_file
             raise _StopPotentialOpen
 
-        with patch.object(calculator, "_open_file", side_effect=open_file):
+        with patch.object(calculation, "_open_file", side_effect=open_file):
             with pytest.raises(_StopPotentialOpen):
                 calculator.save_input(
                     input_file=False,
