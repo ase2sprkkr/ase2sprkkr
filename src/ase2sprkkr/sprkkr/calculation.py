@@ -19,6 +19,7 @@ from pathlib import Path
 from ..ase.symbols import filename_from_symbols
 from ..bindings.empty_spheres import add_empty_spheres
 from ..common.file_utils import Directory
+from ..common.temporary import temporary_option_value
 from ..execution.base import ExecutionResources, ResourceOwnedRunner
 from ..execution.persistence import resolve_execution_manager
 from ..input_parameters.input_parameters import InputParameters
@@ -370,6 +371,10 @@ def _resolve_empty_spheres(
         }
     if not isinstance(empty_spheres, collections.abc.Mapping):
         empty_spheres = {}
+
+    # Empty spheres intentionally become part of the selected physical
+    # structure. Their addition can require recomputing SPR-KKR site/symmetry
+    # state, so this is canonical preprocessing rather than a write-time overlay.
     add_empty_spheres(atoms, **empty_spheres)
 
 
@@ -536,13 +541,14 @@ class PreparedCalculation:
                 default_empty_spheres=default_empty_spheres,
             )
 
+            scf_status_override = None
             if (
                 isinstance(potential, Potential)
                 and effective_task != "SCF"
                 and potential.SCF_INFO.SCFSTATUS() == "START"
                 and potential.is_scf_converged(atoms)
             ):
-                potential.SCF_INFO.SCFSTATUS = "CONVERGED"
+                scf_status_override = "CONVERGED"
 
             templator = FilenameTemplator(
                 label,
@@ -612,9 +618,17 @@ class PreparedCalculation:
                 # outer cleanup must preserve that primary exception. On
                 # success a temporary wrapper closes only its descriptor here;
                 # its pathname is removed when preparation ownership ends.
-                potential.save_to_file(
-                    potential_handle, atoms, restart_scf=restart_scf
-                )
+                if scf_status_override is None:
+                    potential.save_to_file(
+                        potential_handle, atoms, restart_scf=restart_scf
+                    )
+                else:
+                    with temporary_option_value(
+                        potential.SCF_INFO.SCFSTATUS, scf_status_override
+                    ):
+                        potential.save_to_file(
+                            potential_handle, atoms, restart_scf=restart_scf
+                        )
                 flush = getattr(potential_handle, "flush", None)
                 if flush is not None:
                     flush()
