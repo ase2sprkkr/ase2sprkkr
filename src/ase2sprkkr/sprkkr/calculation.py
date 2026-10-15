@@ -690,6 +690,38 @@ class PreparedCalculation:
                 pass
             raise
 
+    def create_run(
+        self,
+        *,
+        result_context=None,
+        profile: SPRKKRProfile,
+        executor=None,
+        persistent=False,
+        print_output=False,
+        read_callback=None,
+        callback=None,
+        gdb=False,
+    ):
+        """Create an unstarted runner and transfer this calculation's resources.
+
+        The prepared calculation does not depend on the calculator facade.
+        ``result_context`` is optional runtime context for output readers; the
+        :class:`SPRKKR` facade supplies itself so result convenience APIs can
+        construct follow-up calculations, while standalone prepared runs may
+        leave the context unset.
+        """
+        return _create_sprkkr_run(
+            self,
+            result_context=result_context,
+            profile=profile,
+            executor=executor,
+            persistent=persistent,
+            print_output=print_output,
+            read_callback=read_callback,
+            callback=callback,
+            gdb=gdb,
+        )
+
     @property
     def closed(self):
         """Whether this object has relinquished or closed all owned resources."""
@@ -753,7 +785,7 @@ class PreparedCalculation:
             raise error
 
 
-def create_sprkkr_run(
+def _create_sprkkr_run(
     prepared: PreparedCalculation,
     *,
     result_context,
