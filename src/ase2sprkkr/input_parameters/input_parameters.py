@@ -208,6 +208,8 @@ class InputParameters(ConfigurationFile):
                     reader,
                     spec,
                     task=task.name,
+                    input_definition=self._definition.name,
+                    requested_task=self.task_name,
                     dataset=self.CONTROL.DATASET.result,
                     callback=completed,
                 )
@@ -239,7 +241,7 @@ class InputParameters(ConfigurationFile):
         if not directory and calculator and calculator.directory:
             directory = calculator.directory
 
-        cls = self._require_task_definition().output_reader_class(self)
+        cls = self._require_task_definition().output_reader_class()
         return cls(self, calculator, directory, print_output)
 
     def read_output_from_file(self, filename, directory=None):

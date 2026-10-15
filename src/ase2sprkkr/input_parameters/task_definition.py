@@ -22,7 +22,7 @@ class TaskDefinition:
         name=None,
         executable="kkrscf",
         mpi=True,
-        result_reader=None,
+        output_reader=None,
         input_file_templates=(),
         output_file_templates=(),
         cache_file_templates=(),
@@ -34,7 +34,9 @@ class TaskDefinition:
         self.name = str(name or self.input_parameters_definition_name).upper()
         self.executable = executable
         self.mpi = mpi
-        self.result_reader = result_reader
+        self.output_reader = (
+            output_reader.upper() if isinstance(output_reader, str) else output_reader
+        )
         self.input_file_templates = tuple(input_file_templates)
         self.output_file_templates = tuple(output_file_templates)
         self.cache_file_templates = tuple(cache_file_templates)
@@ -76,12 +78,22 @@ class TaskDefinition:
                 return str(value).upper()
         return self.name
 
-    def output_reader_class(self, parameters=None):
-        if self.result_reader is not None:
-            return self.result_reader
+    def output_reader_class(self):
+        """Return this task's output reader.
+
+        An explicit ``output_reader`` overrides the naming convention and is
+        resolved strictly, so a bad explicit mapping is a definition error.
+        Otherwise the reader is resolved from this TaskDefinition's own
+        ``name`` and the registry supplies the generic default when no
+        specialized reader exists.
+        """
+        if isinstance(self.output_reader, type):
+            return self.output_reader
         from ..outputs.reader_registry import reader_registry
 
-        return reader_registry.class_for_task(self.execution_task_name(parameters))
+        if self.output_reader is not None:
+            return reader_registry[self.output_reader]
+        return reader_registry.class_for_task(self.name)
 
     def prepare_from_result(self, parameters, result):
         if self._prepare_from_result is not None:

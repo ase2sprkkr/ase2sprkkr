@@ -76,6 +76,8 @@ def test_project_membership_is_written_after_reserve_before_backend_submit(tmp_p
         object(),
         _spec(tmp_path),
         task="DOS",
+        input_definition="DOS",
+        requested_task="DOS",
         project=project.id,
     )
     backend = executor.runners[0]
@@ -93,6 +95,9 @@ def test_project_membership_is_written_after_reserve_before_backend_submit(tmp_p
 
     assert seen == [(RunState.SUBMITTING, (run.id,))]
     assert projects.project(project.id).persistent_refs == (run.id,)
+    stored = manager.store.get(run.id)
+    assert stored.input_definition == "DOS"
+    assert stored.requested_task == "DOS"
 
 
 def test_project_assignment_replays_on_latest_snapshot_after_conflict(tmp_path, monkeypatch):
