@@ -20,7 +20,10 @@ KK_TASK_ITEMS = ("NK1", "NK2", "K1", "K2")
 
 
 def _mode_hint(parameters):
-    name = parameters.task_name.upper()
+    task = parameters.requested_task_definition
+    if task is None:
+        return None
+    name = task.name.upper()
     if name == "BSFEK":
         return EK
     if name == "BSFKK":
