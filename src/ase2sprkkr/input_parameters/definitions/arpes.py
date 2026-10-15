@@ -11,6 +11,13 @@ from ...sprkkr.sprkkr_grammar_types import Site
 from ...common.warnings import DataValidityError
 
 
+class ArpesInputParametersDefinition(InputParameters):
+    """Shared SPEC_INPUT schema for ARPES-family tasks."""
+
+    def task_definition_name(self, parameters):
+        return str(parameters.TASK.TASK() or "ARPES").upper()
+
+
 def _electron_angle_default(option):
     """SPEC_INPUT defaults differ for photoemission and SPLEED."""
     angle = (45.0 if option.name == 'THETA' else 270.0) if option._container._container.TASK.TASK() == 'SPLEED' else 0.0
@@ -33,7 +40,6 @@ def angular_scan_errors(parameters):
         points = electron[count]()
         points = 1 if points is None else points
         if (span > 1e-5) != (points > 1):
-            # BETA1 is the reader's explicit exception for a sample-tilt scan.
             if angle == 'PHI' and span <= 1e-5 and 'BETA1' in electron and electron.BETA1() is not None:
                 continue
             errors.append(f'SPEC_EL.{angle} and SPEC_EL.{count} must specify a consistent angular scan: '
@@ -46,8 +52,8 @@ def _validate_angular_scan(parameters, _container, why):
         return [DataValidityError(message) for message in angular_scan_errors(parameters)]
 
 
-def input_parameters():
-    return InputParameters(
+def input_parameters_definition():
+    return ArpesInputParametersDefinition(
         "arpes",
         [
             CONTROL("ARPES"),
@@ -59,10 +65,10 @@ def input_parameters():
                     V("EWORK_EV", 4.2, info="Inner potential of the bulk crystal in eV"),
                     V(
                         "IMV_INI_EV", 0.05, info="Imaginary part of the potential in eV (initial state)"
-                    ),  # alternatively you can use VIL (in eV) or IMV_INI (in Ry)'),
+                    ),
                     V(
                         "IMV_FIN_EV", 2.0, info="Imaginary part of the potential in eV (final state)"
-                    ),  # alternatively you can use VIH (in eV) or IMV_FIN (in Ry)'),
+                    ),
                 ],
                 defaults={"GRID": 1, "NE": 300},
             ),
@@ -109,7 +115,6 @@ def input_parameters():
                     V("PHI", 0.0, info="Direction of the photon (the azimuth coordinate)"),
                     V("POL_P", DefKeyword("P", "S", "C+", "C-"), info="Polarization of the light"),
                     V("EPHOT", 25.0, info="Photon energy in eV"),
-                    # Expert
                     V("ALQ", expert=45.0, info="Alignment of polarization vector or pol.ellipsis"),
                     V(
                         "DELQ",
@@ -218,7 +223,6 @@ def input_parameters():
                     V("BETA1", float, is_required=False, info="Begin of the rotation"),
                     V("BETA2", float, is_required=False, info="End of the rotation"),
                     V("ROTAXIS", SetOf(int, length=3), is_required=False, info="Axis of the rotation"),
-                    # expert
                     V(
                         "TYP",
                         Keyword(
@@ -274,7 +278,6 @@ def input_parameters():
                 ],
             ),
         ],
-        executable="kkrspec",
         validators=_validate_angular_scan,
         info="ARPES - Angle resolved photoemission spectroscopy",
     )

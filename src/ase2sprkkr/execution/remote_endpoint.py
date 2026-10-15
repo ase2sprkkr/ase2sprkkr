@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import glob
 import json
 import os
 import posixpath
@@ -39,17 +40,23 @@ class _RemoteRun(RemoteRunner):
         super().__init__(*args, **kwargs)
         self._run_id = run_id
 
-    async def _prepare_request(self, run_id, remote_directory):
-        request = await super()._prepare_request(run_id, remote_directory)
-        input_files = []
-        for value in self.spec.input_files:
-            source = self._local_path(value)
-            if source is not None:
-                input_files.append(await self.executor.map_path(source))
-        request.setdefault("client_sync", {})["input_files"] = list(
-            dict.fromkeys(input_files)
-        )
-        return request
+    async def _monitor(self):
+        # Resolve the local path while the stream target is still open. The base
+        # monitor commits/closes it before returning.
+        local_output = self._local_path(self.spec.output_file)
+        result = await super()._monitor()
+        remote_output = None if self.reference is None else self.reference.output_file
+        if local_output is not None and remote_output is not None:
+            signature = await self.executor.transport.file_signature(remote_output)
+            if signature is not None:
+                stat = os.stat(local_output)
+                if stat.st_size != signature[0]:
+                    raise RuntimeError(
+                        "Streamed local output size does not match the authoritative "
+                        f"remote output: {local_output}"
+                    )
+                os.utime(local_output, ns=(stat.st_atime_ns, signature[1]))
+        return result
 
     async def _submit_async(self):
         run_id = self._run_id or uuid4().hex
@@ -425,43 +432,31 @@ class RemoteEndpointExecutor(Executor):
             reader, spec, callback=callback, run_id=run_id
         )
 
-    async def _fetch_result_files(self, reference, result_files):
+    async def _fetch_result_files(self, reference, files):
+        self._validate_reference(reference)
         request = await self._saved_request(reference.directory, reference.native_id)
         launch = LaunchSpec(**(request.get("launch") or {}))
         context = self._context(self, launch)
-        sync = request.get("client_sync") or {}
-        exact = []
-        input_file = request.get("input_file") or reference.input_file
-        if input_file is not None:
-            exact.append(input_file)
-        output_file = sync.get("output_file") or reference.output_file
-        if output_file is not None:
-            exact.append(output_file)
-        exact.extend(sync.get("input_files", ()))
-        exact.extend(sync.get("output_files", ()))
-        seen = set()
-        for remote in exact:
-            if remote in seen:
-                continue
-            seen.add(remote)
-            local = await context.unmap_path(remote)
-            if local.is_file():
-                continue
-            if await self.transport.file_signature(remote) is None:
-                continue
-            await self.transport.get_file(remote, local)
         remote_root = await context._resolved_remote_root()
-        patterns = tuple(sync.get("input_files", ())) + tuple(sync.get("output_patterns", ()))
-        for pattern in patterns:
-            if not any(character in pattern for character in "*?["):
-                continue
-            for remote in await self.transport.expand_files(pattern, remote_root):
-                local = await context.unmap_path(remote)
-                if not local.is_file():
-                    await self.transport.get_file(remote, local)
 
-    def fetch_result_files(self, reference, result_files):
-        return _run_sync(self._fetch_result_files(reference, result_files))
+        for value in files:
+            local = os.path.abspath(os.fspath(value))
+            remote = await context.map_path(local)
+            if glob.has_magic(local):
+                for matched_remote in await self.transport.expand_files(
+                    remote, remote_root
+                ):
+                    matched_local = await context.unmap_path(matched_remote)
+                    if not matched_local.is_file():
+                        await self.transport.get_file(matched_remote, matched_local)
+                continue
+            if os.path.isfile(local):
+                continue
+            if await self.transport.file_signature(remote) is not None:
+                await self.transport.get_file(remote, local)
+
+    def fetch_result_files(self, reference, files):
+        return _run_sync(self._fetch_result_files(reference, files))
 
     async def _attach_with_saved_launch(
         self, reference, reader, callback=None, output_listener=None, start=True

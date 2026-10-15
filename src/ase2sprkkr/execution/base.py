@@ -10,6 +10,8 @@ from enum import Enum
 from threading import Event, Lock
 from typing import Any, Optional, Protocol, Sequence, Tuple
 
+from ..common.decorators import class_property
+
 
 class MpiNotFoundWarning(UserWarning):
     """MPI autodetection was requested, but no MPI launcher was found."""
@@ -492,6 +494,23 @@ class Executor:
     """Factory/backend for calculation runners."""
 
     name = None
+
+    @class_property
+    def supports_result_file_retrieval(cls):
+        """Whether this executor can restore files belonging to a stored run."""
+        return cls.fetch_result_files is not Executor.fetch_result_files
+
+    def fetch_result_files(self, reference: RunReference, files):
+        """Restore requested local files belonging to a persistent run.
+
+        ``files`` contains the concrete historical local paths, or pre-capture
+        patterns, selected by the persistence layer. Backends only map and
+        retrieve those requested files; they must not rediscover a historical
+        result by re-expanding their own current output manifests.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} cannot retrieve persistent result files"
+        )
 
     def submission_directory(self, spec: ExecutionSpec) -> str:
         """Return this run's directory in the backend filesystem namespace."""

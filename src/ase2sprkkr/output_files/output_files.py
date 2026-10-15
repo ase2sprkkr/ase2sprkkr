@@ -5,8 +5,6 @@ from ..sprkkr.configuration import ConfigurationFile, ConfigurationValue
 from ..potentials.potentials import Potential
 import pyparsing as pp
 import numpy as np
-import pkgutil
-import sys
 from pathlib import Path
 from ..common.decorators import cached_class_property, cached_property
 from ..common.grammar_types.data import RestOfTheFile
@@ -75,7 +73,7 @@ class OutputFile(ConfigurationFile):
                 candidate = Path(directory) / (stem + suffix)
                 if candidate.is_file():
                     return str(candidate)
-            stem = stem.rsplit("_", 1)  # split off the last part of the filename
+            stem = stem.rsplit("_", 1)
             if len(stem) == 1:
                 break
             stem = stem[0]
@@ -119,17 +117,13 @@ class OutputFile(ConfigurationFile):
 
     @cached_class_property
     def definitions(cls):
-        """Return all known definitions of the SPR-KKR output files"""
-        out = {}
-        path = os.path.dirname(__file__)
-        path = os.path.join(path, "definitions")
-        name = __name__
-        name = name.rsplit(".", 1)[0] + ".definitions."
-        for imp, module, ispackage in pkgutil.iter_modules(path=[path], prefix=name):
-            __import__(module)
-            mod = sys.modules[module].definition
-            out[mod.extension] = mod
-        return out
+        """Return all known definitions of the SPR-KKR output files."""
+        # Discovery imports individual definition modules. Defer construction
+        # until OutputFile and output_files_definitions are fully initialized so
+        # definition modules can safely import this class.
+        from .definition_registry import output_file_definition_registry
+
+        return output_file_definition_registry.by_extension()
 
     @classmethod
     def definition(cls, self):
@@ -155,7 +149,7 @@ class OutputFile(ConfigurationFile):
           The file to read
 
         first_try
-          List of output file types to be tried first. If it is None, it is guessed
+          List of output file types, that can be read first. If it is None, it is guessed
           from the file extension.
 
         try_only
@@ -171,7 +165,7 @@ class OutputFile(ConfigurationFile):
           None means True if try_only is None, False otherwise.
 
         potential
-          A :class:`Potential` or its filename.  If omitted, it is looked up
+          A :class:`Potential` or its filename. If omitted, it is looked up
           lazily from the output filename when it is needed.
         """
         fname = filename
@@ -187,7 +181,6 @@ class OutputFile(ConfigurationFile):
                     first_try = fname.rsplit(".", 1)[1].lower()
                 except IndexError:
                     first_try = None
-                # nektere soubory jsou typu _Dij.data
                 special = re.match(r"^.+_([^/\\]+\.[^/\\]+)$", fname)
                 if special:
                     first_try = [special.groups(1)[0], first_try]
@@ -323,5 +316,4 @@ class Arithmetic:
         return self
 
 
-# at last, import this file that need this module
 from . import output_files_definitions  # NOQA: E402

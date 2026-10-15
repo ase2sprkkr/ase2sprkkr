@@ -30,7 +30,7 @@ from .endpoint import ExecutorEndpoint, endpoint_for_executor
 from .pool import default_executor_pool
 
 
-_RUN_RECORD_SCHEMA_VERSION = 1
+_RUN_RECORD_SCHEMA_VERSION = 2
 _FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
 _STATE_RANK = {
     RunState.NEW: 0,
@@ -93,7 +93,7 @@ class CorruptRunRecord(RuntimeError):
 
 
 class ResultFilesState(str, Enum):
-    """Freshness of files belonging to a completed calculation."""
+    """Freshness of files produced by a completed calculation."""
 
     CURRENT = "current"
     OVERWRITTEN = "overwritten"
@@ -109,7 +109,7 @@ class FileRetrievalState(str, Enum):
 
 @dataclass(frozen=True)
 class FileFingerprint:
-    """Cheap local identity used to notice later result-file changes."""
+    """Cheap local identity used to notice later file changes."""
 
     path: str
     size: int
@@ -121,18 +121,20 @@ class FileFingerprint:
 
 @dataclass(frozen=True)
 class ResultFilesRecord:
-    """Persistent result-file manifest and snapshot captured at finalization.
+    """Persistent file manifests and snapshots captured at finalization.
 
-    Cache files are intentionally absent. Reusable caches may legitimately be
-    updated by later calculations and therefore never make a historical result
-    ``OVERWRITTEN``. Remote retrieval is also tracked here, independently of
-    the calculation lifecycle itself.
+    ``fingerprints`` describe calculation outputs and determine ``state``.
+    ``input_fingerprints`` preserve reconstructable historical input context,
+    but an unavailable/changed input does not invalidate output that is still
+    current. Cache files are intentionally absent because reusable caches may
+    legitimately be updated by later calculations.
     """
 
     input_file: Optional[str] = None
     output_file: Optional[str] = None
     input_files: tuple[str, ...] = ()
     output_files: tuple[str, ...] = ()
+    input_fingerprints: tuple[FileFingerprint, ...] = ()
     fingerprints: tuple[FileFingerprint, ...] = ()
     captured_at: Optional[str] = None
     state: ResultFilesState = ResultFilesState.CURRENT
@@ -150,14 +152,17 @@ class ResultFilesRecord:
                 name,
                 tuple(os.fspath(value) for value in getattr(self, name)),
             )
-        object.__setattr__(
-            self,
-            "fingerprints",
-            tuple(
-                value if isinstance(value, FileFingerprint) else FileFingerprint(**value)
-                for value in self.fingerprints
-            ),
-        )
+        for name in ("input_fingerprints", "fingerprints"):
+            object.__setattr__(
+                self,
+                name,
+                tuple(
+                    value
+                    if isinstance(value, FileFingerprint)
+                    else FileFingerprint(**value)
+                    for value in getattr(self, name)
+                ),
+            )
         if not isinstance(self.state, ResultFilesState):
             object.__setattr__(self, "state", ResultFilesState(self.state))
         if self.retrieval_state is not None and not isinstance(
@@ -172,6 +177,18 @@ class ResultFilesRecord:
     @property
     def manifests(self):
         return _unique((*self.input_files, *self.output_files))
+
+    @property
+    def all_fingerprints(self):
+        return tuple(
+            sorted(
+                {
+                    item.path: item
+                    for item in (*self.input_fingerprints, *self.fingerprints)
+                }.values(),
+                key=lambda item: item.path,
+            )
+        )
 
 
 @dataclass(frozen=True)
@@ -216,8 +233,12 @@ class DuplicateSubmissionError(RuntimeError):
 class RunRecord:
     """Persistent identity and last known lifecycle state of one run.
 
-    ``state`` is the public run lifecycle, including result finalization.
-    A terminal backend outcome is therefore represented as ``FINISHING`` until
+    ``task`` is the requested ASE2SPRKKR task registry name used to create the
+    calculation. The execution layer stores that name as opaque identity; task
+    aliases and their semantics remain owned by the task registry.
+
+    ``state`` is the public run lifecycle, including result finalization. A
+    terminal backend outcome is therefore represented as ``FINISHING`` until
     output parsing and the completion callback have finished. A finalization
     error makes the public state ``FAILED`` even if the backend itself exited
     successfully. ``backend_state`` records that independent backend outcome.
@@ -226,10 +247,6 @@ class RunRecord:
     immutable afterwards. Later metadata changes, including result-file
     freshness and remote file retrieval, update ``updated_at`` but never
     ``finished_at``.
-
-    Result-file freshness and file retrieval are independent of calculation
-    outcome. A successful run remains ``FINISHED`` if its local files are later
-    overwritten or a later retrieval attempt fails.
     """
 
     id: str
@@ -250,6 +267,7 @@ class RunRecord:
     schema_version: int = _RUN_RECORD_SCHEMA_VERSION
 
     def __post_init__(self):
+        object.__setattr__(self, "task", str(self.task).upper())
         if isinstance(self.endpoint, dict):
             object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
         if isinstance(self.submission, dict):
@@ -307,11 +325,62 @@ class RunStore:
         raise FileNotFoundError(run_id)
 
     @staticmethod
+    def _migrate_result_files(data):
+        result_files = data.get("result_files")
+        if result_files is None:
+            return
+        result_files.pop("output_digest", None)
+        if "input_fingerprints" in result_files:
+            return
+
+        # Schema 1 stored inputs and outputs in one snapshot. Split exact input
+        # manifests where possible; leave ambiguous paths in the output snapshot
+        # so migration remains conservative rather than accepting changed output.
+        fingerprints = result_files.get("fingerprints", ())
+        input_exact = {
+            os.path.abspath(path)
+            for path in result_files.get("input_files", ())
+            if not glob.has_magic(path)
+        }
+        output_exact = {
+            os.path.abspath(path)
+            for path in result_files.get("output_files", ())
+            if not glob.has_magic(path)
+        }
+        input_fingerprints = []
+        output_fingerprints = []
+        for fingerprint in fingerprints:
+            path = os.path.abspath(fingerprint["path"])
+            if path in input_exact and path not in output_exact:
+                input_fingerprints.append(fingerprint)
+            else:
+                output_fingerprints.append(fingerprint)
+        result_files["input_fingerprints"] = input_fingerprints
+        result_files["fingerprints"] = output_fingerprints
+
+    @staticmethod
     def _decode(path):
         try:
             with path.open() as file:
                 data = json.load(file)
             data.setdefault("finished_at", None)
+            version = data.get("schema_version", 1)
+            if version == 1:
+                data["schema_version"] = _RUN_RECORD_SCHEMA_VERSION
+            elif version != _RUN_RECORD_SCHEMA_VERSION:
+                raise ValueError(
+                    f"unsupported schema version {version}; "
+                    f"expected {_RUN_RECORD_SCHEMA_VERSION}"
+                )
+
+            # A short-lived development schema stored the native execution task
+            # in ``task`` and the requested ASE2SPRKKR identity separately.
+            # Promote the latter when present, then discard the superseded field.
+            task_definition = data.pop("task_definition", None)
+            if task_definition is not None:
+                data["task"] = task_definition
+
+            RunStore._migrate_result_files(data)
             return RunRecord(**data)
         except CorruptRunRecord:
             raise
@@ -429,14 +498,6 @@ class ExecutionManager:
     def _reference_key(reference):
         return reference.executor, reference.computer
 
-    @staticmethod
-    def _reader_for(record):
-        from ..outputs.task_result import KkrOutputReader
-
-        return KkrOutputReader.class_for_task(record.task)(
-            None, None, record.directory
-        )
-
     def register_executor(self, executor: Executor, endpoint=None, reference=None):
         """Register a live executor in the independent endpoint pool."""
         endpoint = endpoint or endpoint_for_executor(executor)
@@ -495,12 +556,10 @@ class ExecutionManager:
         )
 
     @staticmethod
-    def _result_files_snapshot(result_files):
-        if result_files is None:
-            return ()
+    def _result_files_snapshot(manifests):
         fingerprints = []
         seen = set()
-        for manifest in result_files.manifests:
+        for manifest in manifests:
             matches = (
                 glob.glob(manifest, recursive=True)
                 if glob.has_magic(manifest)
@@ -522,25 +581,94 @@ class ExecutionManager:
         return tuple(sorted(fingerprints, key=lambda value: value.path))
 
     @staticmethod
-    def _result_files_missing(result_files):
-        if result_files is None:
+    def _fingerprint_current(fingerprint):
+        try:
+            stat = os.stat(fingerprint.path)
+        except FileNotFoundError:
             return False
+        return (
+            stat.st_size == fingerprint.size
+            and stat.st_mtime_ns == fingerprint.mtime_ns
+        )
+
+    @classmethod
+    def _file_is_current(cls, result_files, path, fingerprints):
+        if result_files is None or path is None:
+            return False
+        path = os.path.abspath(path)
+        if result_files.captured_at is None:
+            return os.path.isfile(path)
+        for fingerprint in fingerprints:
+            if os.path.abspath(fingerprint.path) == path:
+                return cls._fingerprint_current(fingerprint)
+        return False
+
+    @staticmethod
+    def _missing_result_files(result_files):
+        """Return the concrete historical files that should be restored."""
+        if result_files is None:
+            return ()
+
+        if result_files.captured_at is not None:
+            # After finalization the concrete snapshot is authoritative. Do not
+            # rediscover manifests: a later calculation may create new files
+            # matching the same exact name or wildcard.
+            return tuple(
+                item.path
+                for item in result_files.all_fingerprints
+                if not os.path.isfile(item.path)
+            )
+
+        missing = []
         for manifest in result_files.manifests:
             if glob.has_magic(manifest):
                 if not glob.glob(manifest, recursive=True):
-                    return True
+                    missing.append(manifest)
             elif not os.path.isfile(manifest):
-                return True
-        return False
+                missing.append(manifest)
+        return _unique(missing)
+
+    @classmethod
+    def _result_files_missing(cls, result_files):
+        return bool(cls._missing_result_files(result_files))
 
     def _capture_result_files(self, result_files):
         if result_files is None or result_files.captured_at is not None:
             return result_files
         return replace(
             result_files,
-            fingerprints=self._result_files_snapshot(result_files),
+            input_fingerprints=self._result_files_snapshot(result_files.input_files),
+            fingerprints=self._result_files_snapshot(result_files.output_files),
             captured_at=_now(),
             state=ResultFilesState.CURRENT,
+        )
+
+    def input_file_is_current(self, run):
+        """Whether the primary historical input is safe to use for reconstruction."""
+        record = (
+            self.store.get(run)
+            if isinstance(run, str)
+            else self.store.get(run.id)
+        )
+        result_files = record.result_files
+        return self._file_is_current(
+            result_files,
+            None if result_files is None else result_files.input_file,
+            () if result_files is None else result_files.input_fingerprints,
+        )
+
+    def output_file_is_current(self, run):
+        """Whether the primary historical output belongs to the captured run."""
+        record = (
+            self.store.get(run)
+            if isinstance(run, str)
+            else self.store.get(run.id)
+        )
+        result_files = record.result_files
+        return self._file_is_current(
+            result_files,
+            None if result_files is None else result_files.output_file,
+            () if result_files is None else result_files.fingerprints,
         )
 
     def new_record(
@@ -790,34 +918,70 @@ class ExecutionManager:
         return self.store.update(record, update)
 
     def check_result_files(self, run):
-        """Refresh result-file freshness without changing calculation outcome."""
+        """Refresh output freshness without changing calculation outcome."""
         record = (
             self.store.get(run)
             if isinstance(run, str)
             else self.store.get(run.id)
         )
-        result_files = record.result_files
-        if (
-            record.state not in _FINAL_STATES
-            or result_files is None
-            or result_files.captured_at is None
-            or result_files.state == ResultFilesState.OVERWRITTEN
-        ):
-            return record
-        if self._result_files_snapshot(result_files) == result_files.fingerprints:
-            return record
 
-        def mark_overwritten(latest):
-            current = latest.result_files
-            if current is None or current.state == ResultFilesState.OVERWRITTEN:
+        def verify(latest):
+            result_files = latest.result_files
+            if (
+                latest.state not in _FINAL_STATES
+                or result_files is None
+                or result_files.captured_at is None
+                or result_files.state == ResultFilesState.OVERWRITTEN
+            ):
+                return latest
+            if all(
+                self._fingerprint_current(fingerprint)
+                for fingerprint in result_files.fingerprints
+            ):
                 return latest
             return replace(
                 latest,
                 updated_at=_now(),
-                result_files=replace(current, state=ResultFilesState.OVERWRITTEN),
+                result_files=replace(
+                    result_files, state=ResultFilesState.OVERWRITTEN
+                ),
             )
 
-        return self.store.update(record, mark_overwritten)
+        return self.store.update(record, verify)
+
+    def retrieve_result_files(self, run):
+        """Restore locally missing files belonging to one terminal persistent run."""
+        record = (
+            self.store.get(run)
+            if isinstance(run, str)
+            else self.store.get(run.id)
+        )
+        if record.state not in _FINAL_STATES:
+            raise RuntimeError(f"Run {record.id} is not finished")
+
+        missing = self._missing_result_files(record.result_files)
+        if not missing or record.reference is None:
+            return record
+
+        executor = self.executor_for(record)
+        if not executor.supports_result_file_retrieval:
+            return record
+
+        executor.fetch_result_files(record.reference, missing)
+
+        refreshed = self.store.get(record.id)
+        remaining = self._missing_result_files(refreshed.result_files)
+        if not remaining:
+            return self.update_file_retrieval(
+                refreshed, FileRetrievalState.AVAILABLE
+            )
+        if refreshed.state == RunState.FINISHED:
+            return self.update_file_retrieval(
+                refreshed,
+                FileRetrievalState.FAILED,
+                "Captured remote files are still missing: " + ", ".join(remaining),
+            )
+        return refreshed
 
     @staticmethod
     def _complete(persistent, result, callback):
@@ -913,12 +1077,13 @@ class ExecutionManager:
     def attach(
         self,
         run,
+        *,
+        reader,
         executor=None,
-        reader=None,
         callback=None,
         output_listener=None,
     ):
-        """Attach to a stored run, reconstructing its persisted endpoint by default.
+        """Attach to a stored run using an explicitly supplied output reader.
 
         ``executor`` is retained as an explicit override for records whose
         endpoint cannot be reconstructed from :class:`ExecutorEndpoint` alone.
@@ -930,8 +1095,6 @@ class ExecutionManager:
         record = self.store.get(run) if isinstance(run, str) else run
         if record.reference is None:
             raise RuntimeError(f"Run {record.id} has no backend reference")
-        if reader is None:
-            reader = self._reader_for(record)
         if executor is None:
             executor = self.executor_for(record)
         else:
@@ -948,73 +1111,6 @@ class ExecutionManager:
             ),
             callback,
         )
-
-    def load_result(self, run, reader=None):
-        """Load a historical TaskResult, fetching missing remote result files.
-
-        Ordinary history listing remains metadata-only. Network/filesystem
-        retrieval is performed here only when a declared result file is missing
-        locally and the persisted endpoint supports ``fetch_result_files``.
-        Retrieval outcome is recorded independently of the calculation lifecycle itself.
-        """
-        record = (
-            self.store.get(run)
-            if isinstance(run, str)
-            else self.store.get(run.id)
-        )
-        if record.state not in _FINAL_STATES:
-            raise RuntimeError(f"Run {record.id} is not finished")
-
-        result_files = record.result_files
-        if self._result_files_missing(result_files) and record.reference is not None:
-            executor = self.executor_for(record)
-            fetch_result_files = getattr(executor, "fetch_result_files", None)
-            if fetch_result_files is not None:
-                try:
-                    fetch_result_files(record.reference, result_files)
-                except Exception as exc:
-                    record = self.update_file_retrieval(
-                        record, FileRetrievalState.FAILED, str(exc)
-                    )
-                    raise
-                else:
-                    refreshed = self.store.get(record.id)
-                    if not self._result_files_missing(refreshed.result_files):
-                        record = self.update_file_retrieval(
-                            refreshed, FileRetrievalState.AVAILABLE
-                        )
-                    elif refreshed.state == RunState.FINISHED:
-                        record = self.update_file_retrieval(
-                            refreshed,
-                            FileRetrievalState.FAILED,
-                            "Declared remote result files are still missing",
-                        )
-
-        record = self.check_result_files(record)
-        result_files = record.result_files
-        if result_files is None or result_files.output_file is None:
-            raise RuntimeError(f"Run {record.id} has no persisted output result file")
-
-        if reader is None:
-            reader = self._reader_for(record)
-
-        output_file = result_files.output_file
-        input_file = result_files.input_file
-        return_code = record.return_code
-        if return_code is None:
-            return_code = 0 if record.state == RunState.FINISHED else 1
-        if os.path.isfile(output_file):
-            result = reader.read_from_file(
-                output_file,
-                return_code=return_code,
-                input_file=input_file,
-                directory=record.directory,
-            )
-        else:
-            result = reader.create_result(output_file, input_file)
-            result.complete(None, return_code)
-        result.run_record = record
-        return result
 
 
 class PersistentRunner:
@@ -1155,12 +1251,6 @@ class PersistentRunner:
         """Refresh this run's persisted backend status."""
         self._record = self.manager.refresh((self._record,))[0]
         return self._record
-
-    def load_result(self, reader=None):
-        """Reload this run from its persisted result files."""
-        result = self.manager.load_result(self._record, reader=reader)
-        self._record = result.run_record
-        return result
 
     def cancel(self):
         try:

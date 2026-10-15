@@ -30,8 +30,8 @@ def test_xas_reuses_dataset_tau_directory_as_optional_cache(tmp_path):
     assert parameters.cache_files(str(tmp_path)) == (str(tmp_path / "Fe.tau.dir"),)
 
 
-def test_bsf_reuses_dataset_tau_directory_as_optional_cache(tmp_path):
-    parameters = InputParameters.create("BSF")
+def test_bsfek_reuses_dataset_tau_directory_as_optional_cache(tmp_path):
+    parameters = InputParameters.create("BSFEK")
     parameters.CONTROL.DATASET = "Fe"
 
     assert parameters.cache_files(str(tmp_path)) == (str(tmp_path / "Fe.tau.dir"),)

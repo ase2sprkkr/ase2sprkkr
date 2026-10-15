@@ -1,4 +1,5 @@
 import json
+import os
 import warnings
 from types import SimpleNamespace
 
@@ -13,6 +14,7 @@ from ase2sprkkr.execution import (
     RunStatus,
     RunStore,
 )
+from ase2sprkkr.outputs.persistent import load_persistent_result
 
 
 class _FakeRunner:
@@ -98,7 +100,7 @@ def test_persistent_run_is_first_saved_as_submitting(tmp_path):
         executor,
         reader=object(),
         spec=_spec(tmp_path),
-        task="SCF",
+        task="ARPES",
         dataset="case",
     )
     backend = executor.runners[0]
@@ -112,7 +114,7 @@ def test_persistent_run_is_first_saved_as_submitting(tmp_path):
     assert stored.state == RunState.QUEUED
     assert stored.finished_at is None
     assert stored.reference == backend.reference
-    assert stored.task == "SCF"
+    assert stored.task == "ARPES"
     assert stored.dataset == "case"
 
 
@@ -175,7 +177,7 @@ def test_first_terminal_transition_sets_immutable_finished_at(tmp_path, state):
     assert updated.finished_at == finished_at
 
 
-def test_completion_captures_result_files_but_not_cache(tmp_path):
+def test_completion_captures_inputs_and_outputs_separately(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
@@ -191,12 +193,80 @@ def test_completion_captures_result_files_but_not_cache(tmp_path):
     assert stored.state == RunState.FINISHED
     assert stored.result_files.state == ResultFilesState.CURRENT
     assert stored.result_files.captured_at is not None
-    assert {fingerprint.path for fingerprint in stored.result_files.fingerprints} == {
-        str(tmp_path / "run.inp"),
+    assert {item.path for item in stored.result_files.input_fingerprints} == {
+        str(tmp_path / "run.inp")
+    }
+    assert {item.path for item in stored.result_files.fingerprints} == {
         str(tmp_path / "run.out"),
         str(tmp_path / "case.dat"),
     }
     assert str(tmp_path / "cache.dat") not in stored.result_files.manifests
+
+
+def test_missing_captured_glob_member_counts_as_missing(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    input_file = tmp_path / "run.inp"
+    output_file = tmp_path / "run.out"
+    pattern = tmp_path / "case-*.dat"
+    input_file.write_text("input")
+    spec = SimpleNamespace(
+        directory=str(tmp_path),
+        input_file=str(input_file),
+        output_file=str(output_file),
+        input_files=(str(input_file),),
+        output_files=(str(output_file), str(pattern)),
+        cache_files=(),
+    )
+    run = manager.create_run(executor, object(), spec, task="DOS")
+
+    run.submit()
+    output_file.write_text("output")
+    first = tmp_path / "case-1.dat"
+    second = tmp_path / "case-2.dat"
+    first.write_text("one")
+    second.write_text("two")
+    executor.runners[0].finish()
+    stored = store.get(run.id)
+    second.unlink()
+
+    assert manager._missing_result_files(stored.result_files) == (str(second),)
+
+
+def test_new_glob_member_does_not_change_historical_snapshot(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    input_file = tmp_path / "run.inp"
+    output_file = tmp_path / "run.out"
+    pattern = tmp_path / "case-*.dat"
+    input_file.write_text("input")
+    spec = SimpleNamespace(
+        directory=str(tmp_path),
+        input_file=str(input_file),
+        output_file=str(output_file),
+        input_files=(str(input_file),),
+        output_files=(str(output_file), str(pattern)),
+        cache_files=(),
+    )
+    run = manager.create_run(executor, object(), spec, task="DOS")
+
+    run.submit()
+    output_file.write_text("output")
+    historical = tmp_path / "case-1.dat"
+    historical.write_text("one")
+    executor.runners[0].finish()
+    later = tmp_path / "case-2.dat"
+    later.write_text("from another calculation")
+
+    updated = manager.check_result_files(run.id)
+
+    assert updated.result_files.state == ResultFilesState.CURRENT
+    assert {item.path for item in updated.result_files.fingerprints} == {
+        str(output_file),
+        str(historical),
+    }
 
 
 def test_changed_result_file_marks_overwritten_without_changing_outcome(tmp_path):
@@ -221,6 +291,71 @@ def test_changed_result_file_marks_overwritten_without_changing_outcome(tmp_path
     assert updated.finished_at == finished.finished_at
 
 
+def test_same_size_content_change_with_new_mtime_marks_result_overwritten(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    spec = _result_files_spec(tmp_path)
+    run = manager.create_run(executor, object(), spec, task="DOS")
+
+    run.submit()
+    (tmp_path / "run.out").write_text("output")
+    generated = tmp_path / "case.dat"
+    generated.write_text("first")
+    executor.runners[0].finish()
+    original = generated.stat()
+    generated.write_text("other")
+    os.utime(
+        generated,
+        ns=(original.st_atime_ns, original.st_mtime_ns + 1_000_000),
+    )
+
+    updated = manager.check_result_files(run.id)
+
+    assert updated.result_files.state == ResultFilesState.OVERWRITTEN
+
+
+@pytest.mark.parametrize("filename", ["run.out", "case.dat"])
+def test_output_metadata_change_has_uniform_overwritten_semantics(tmp_path, filename):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    spec = _result_files_spec(tmp_path)
+    run = manager.create_run(executor, object(), spec, task="DOS")
+
+    run.submit()
+    (tmp_path / "run.out").write_text("output")
+    (tmp_path / "case.dat").write_text("data")
+    executor.runners[0].finish()
+    path = tmp_path / filename
+    stat = path.stat()
+    os.utime(path, ns=(stat.st_atime_ns, stat.st_mtime_ns + 1_000_000))
+
+    updated = manager.check_result_files(run.id)
+
+    assert updated.result_files.state == ResultFilesState.OVERWRITTEN
+
+
+def test_input_change_does_not_invalidate_current_output(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    spec = _result_files_spec(tmp_path)
+    run = manager.create_run(executor, object(), spec, task="DOS")
+
+    run.submit()
+    (tmp_path / "run.out").write_text("output")
+    (tmp_path / "case.dat").write_text("data")
+    executor.runners[0].finish()
+    input_file = tmp_path / "run.inp"
+    input_file.write_text("changed input")
+
+    updated = manager.check_result_files(run.id)
+
+    assert updated.result_files.state == ResultFilesState.CURRENT
+    assert manager.input_file_is_current(updated) is False
+
+
 def test_changed_cache_does_not_mark_result_overwritten(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
@@ -240,7 +375,7 @@ def test_changed_cache_does_not_mark_result_overwritten(tmp_path):
     assert updated.result_files.state == ResultFilesState.CURRENT
 
 
-def test_load_result_parses_persisted_output_without_backend_refresh(tmp_path):
+def test_load_persistent_result_parses_output_without_backend_refresh(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
@@ -259,7 +394,7 @@ def test_load_result_parses_persisted_output_without_backend_refresh(tmp_path):
             calls.append((output, kwargs))
             return SimpleNamespace(return_code=kwargs["return_code"])
 
-    result = manager.load_result(run.id, reader=Reader())
+    result = load_persistent_result(manager, run.id, reader=Reader())
 
     assert calls == [
         (
@@ -274,6 +409,31 @@ def test_load_result_parses_persisted_output_without_backend_refresh(tmp_path):
     assert result.return_code == 0
     assert result.run_record.state == RunState.FINISHED
     assert executor.status_calls == []
+
+
+def test_load_persistent_result_omits_stale_input_context(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    spec = _result_files_spec(tmp_path)
+    run = manager.create_run(executor, object(), spec, task="DOS")
+
+    run.submit()
+    (tmp_path / "run.out").write_text("output")
+    (tmp_path / "case.dat").write_text("data")
+    executor.runners[0].finish()
+    (tmp_path / "run.inp").write_text("changed input")
+    calls = []
+
+    class Reader:
+        def read_from_file(self, output, **kwargs):
+            calls.append(kwargs)
+            return SimpleNamespace(return_code=kwargs["return_code"])
+
+    result = load_persistent_result(manager, run.id, reader=Reader())
+
+    assert calls[0]["input_file"] is None
+    assert result.run_record.result_files.state == ResultFilesState.CURRENT
 
 
 def test_refresh_batches_referenced_runs(tmp_path):
@@ -306,15 +466,88 @@ def test_refresh_batches_referenced_runs(tmp_path):
 def test_run_store_shards_records_and_marks_schema(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
-    record = manager.new_record(task="SCF", directory=tmp_path)
+    record = manager.new_record(task="ARPES", directory=tmp_path)
     record = manager.transition(record, state=RunState.SUBMITTING, reference=None)
 
     path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
     data = json.loads(path.read_text())
 
     assert path.is_file()
-    assert data["schema_version"] == 1
+    assert data["schema_version"] == 2
+    assert data["task"] == "ARPES"
+    assert "task_definition" not in data
     assert data["finished_at"] is None
+
+
+def test_run_store_migrates_schema_one_records(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    spec = _result_files_spec(tmp_path)
+    record = manager.new_record(
+        task="DOS",
+        directory=tmp_path,
+        result_files=manager._result_files_for_spec(spec),
+    )
+    store.save(record)
+    record = manager.finalize(record, state=RunState.FINISHED)
+    path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
+    data = json.loads(path.read_text())
+    data["schema_version"] = 1
+    result_files = data["result_files"]
+    result_files["fingerprints"] = [
+        *result_files.pop("input_fingerprints"),
+        *result_files["fingerprints"],
+    ]
+    path.write_text(json.dumps(data))
+
+    migrated = store.get(record.id)
+
+    assert migrated.schema_version == 2
+    assert migrated.task == "DOS"
+    assert {item.path for item in migrated.result_files.input_fingerprints} == {
+        str(tmp_path / "run.inp")
+    }
+    assert str(tmp_path / "run.inp") not in {
+        item.path for item in migrated.result_files.fingerprints
+    }
+
+
+def test_development_dual_task_schema_is_migrated_to_requested_task(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    record = manager.new_record(task="ARPES", directory=tmp_path)
+    store.save(record)
+    path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
+    data = json.loads(path.read_text())
+    data["task"] = "SPLEED"
+    data["task_definition"] = "ARPES"
+    path.write_text(json.dumps(data))
+
+    migrated = store.get(record.id)
+
+    assert migrated.task == "ARPES"
+    assert not hasattr(migrated, "task_definition")
+
+
+def test_schema_two_development_digest_is_ignored(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    spec = _result_files_spec(tmp_path)
+    record = manager.new_record(
+        task="DOS",
+        directory=tmp_path,
+        result_files=manager._result_files_for_spec(spec),
+    )
+    store.save(record)
+    path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
+    data = json.loads(path.read_text())
+    data["result_files"]["output_digest"] = "obsolete-development-field"
+    path.write_text(json.dumps(data))
+
+    loaded = store.get(record.id)
+
+    assert loaded.schema_version == 2
+    assert not hasattr(loaded.result_files, "output_digest")
 
 
 def test_run_store_listing_warns_once_and_skips_corrupt_record(tmp_path):
