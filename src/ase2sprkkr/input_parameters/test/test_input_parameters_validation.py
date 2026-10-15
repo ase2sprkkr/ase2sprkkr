@@ -47,9 +47,6 @@ def test_section_delimiter_value():
             grammar.parse_string(value, True)
 
     valid = ["a\nb", "a \nb", "a\n  \nb", "a  \n \nb", "a \n\t\nb", "a\n\n\nb"]
-    for value in invalid:
-        with pytest.raises(pp.ParseException):
-            grammar.parse_string(value, True)
     for value in valid:
         assert_equal(grammar.parse_string(value, True).as_list(), ["a", "b"])
 
@@ -105,7 +102,7 @@ def test_dangerous_value():
     check_dangerous("aaa=sss", ("aaa", "sss"))
     check_dangerous("aaa={2,3}", ("aaa", np.array([2, 3])))
 
-    definition = cd.InputValueDefinition("aaa", 2, is_required=True)
+    definition = cd.InputParametersDefinition("aaa", 2, is_required=True)
     option = definition.create_object()
     option.set_dangerous("AAA")
     assert option.to_string() == "\taaa=AAA"
