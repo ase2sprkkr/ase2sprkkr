@@ -365,7 +365,8 @@ class SPRKKR(BaseCalculator):
         profile backend.
 
         ``provenance`` is opaque caller-owned runtime metadata. ASE2SPRKKR does
-        not inspect, copy or persist it; the live result keeps the exact object.
+        not inspect, copy or persist it; the terminal live result keeps the exact
+        object before any caller callback is invoked.
 
         ``callback`` is a terminal runner callback. It can therefore be invoked
         with a partially populated result when backend execution or parsing
@@ -396,18 +397,22 @@ class SPRKKR(BaseCalculator):
             allow_temporary_files=True,
             restart_scf=restart_scf,
         )
-        runner = prepared.create_run(
+
+        def finalized(result):
+            result.provenance = provenance
+            if callback:
+                callback(result)
+
+        return prepared.create_run(
             result_context=self,
             profile=run_profile,
             executor=executor,
             persistent=persistent,
             print_output=print_output,
             read_callback=read_callback,
-            callback=callback,
+            callback=finalized,
             gdb=gdb,
         )
-        runner.result.provenance = provenance
-        return runner
 
     def value_or_default(self, name, value):
         """Return calculator default *name* when *value* is ``None``."""
