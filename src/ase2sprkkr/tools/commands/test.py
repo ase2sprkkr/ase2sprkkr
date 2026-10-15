@@ -35,7 +35,6 @@ def parser(parser):
 
 
 def run(args, global_args):
-    import pytest
     import os
     import subprocess
     from pyparsing import ParserElement
@@ -45,9 +44,6 @@ def run(args, global_args):
     if not args.no_kkr:
         os.environ["DO_NOT_RUN_SPRKKR"] = "1"
     a2s_path = os.path.join(root_path, "ase2sprkkr")
-    if pytest.version_tuple[0] <= 6:
-        print("Pytest version >= 6.0 is required. Please install it with pip install --upgrade 'pytest>=6'")
-        exit(-1)
     pytest_args = [
         sys.executable,
         "-m",
