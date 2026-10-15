@@ -1,0 +1,202 @@
+name: temporary ResultFile migration
+
+on:
+  push:
+    branches:
+      - tmp-result-files-refactor
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Finish ResultFile migration
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import shutil
+
+          root = Path('src/ase2sprkkr')
+          result_files = root / 'result_files'
+          compatibility_test = result_files / 'test' / 'test_output_file_compatibility.py'
+          allowed = {
+              root / '__init__.py',
+              result_files / 'output_files.py',
+              compatibility_test,
+          }
+
+          identifier_replacements = (
+              ('OutputFileSectionDefinition', 'ResultFileSectionDefinition'),
+              ('OutputFileValueDefinition', 'ResultFileValueDefinition'),
+              ('OutputFileDefinition', 'ResultFileDefinition'),
+              ('OutputFileSection', 'ResultFileSection'),
+              ('CommonOutputFile', 'CommonResultFile'),
+              ('unknown_output_file_definition', 'unknown_result_file_definition'),
+              ('create_output_file_definition', 'create_result_file_definition'),
+              ('output_file_header', 'result_file_header'),
+              ('output_files_definitions', 'result_files_definitions'),
+          )
+
+          # Canonical code must use ResultFile terminology.  Keep lowercase
+          # output_file names where they mean a calculation's output artifact.
+          for path in root.rglob('*.py'):
+              if path in allowed or root / 'output_files' in path.parents:
+                  continue
+              text = path.read_text()
+              for old, new in identifier_replacements:
+                  text = text.replace(old, new)
+              # Rename parser classes and the base class, but not ordinary
+              # lower-case output_file concepts.
+              text = re.sub(r'\b([A-Za-z_][A-Za-z0-9_]*)OutputFile\b', r'\1ResultFile', text)
+              text = re.sub(r'\bOutputFile\b', 'ResultFile', text)
+              text = text.replace('ase2sprkkr.output_files', 'ase2sprkkr.result_files')
+              text = re.sub(
+                  r'(from\s+\.{1,3})output_files(\s+import\s+)',
+                  r'\1result_files\2',
+                  text,
+              )
+              path.write_text(text)
+
+          # This is the one intentional internal compatibility shim.  It is
+          # deliberately isolated from the canonical implementation.
+          (result_files / 'output_files.py').write_text(
+              '''\"\"\"Temporary compatibility shim for the historical ``OutputFile`` name.\"\"\"\n\n'
+              'from .result_files import ResultFile\n\n'
+              '# TODO: Remove this compatibility alias in a future release after downstream\n'
+              '# users have migrated to ``ResultFile``.\n'
+              'OutputFile = ResultFile\n\n'
+              '__all__ = [\"OutputFile\"]\n'
+          )
+
+          # No second compatibility layer for the old definition names.
+          definitions_shim = result_files / 'output_files_definitions.py'
+          if definitions_shim.exists():
+              definitions_shim.unlink()
+
+          # The old public package is intentionally not retained.  Compatibility
+          # is limited to ase2sprkkr.OutputFile and result_files.output_files.
+          old_package = root / 'output_files'
+          if old_package.exists():
+              shutil.rmtree(old_package)
+
+          # The test command no longer needs to hide the removed package.
+          test_command = root / 'tools' / 'commands' / 'test.py'
+          text = test_command.read_text()
+          text = text.replace(
+              '        \"--ignore\",\n        os.path.join(a2s_path, \"output_files\"),\n',
+              '',
+          )
+          test_command.write_text(text)
+
+          # Finish the two user-facing callers found during review.
+          xas = root / 'examples' / 'A13_XAS' / 'xas.py'
+          text = xas.read_text().replace('from ase2sprkkr import OutputFile, SPRKKR', 'from ase2sprkkr import ResultFile, SPRKKR')
+          text = re.sub(r'\bOutputFile\.from_file', 'ResultFile.from_file', text)
+          xas.write_text(text)
+
+          shell = root / 'gui' / 'shell.py'
+          text = shell.read_text()
+          text = re.sub(r'\bOutputFile\b', 'ResultFile', text)
+          shell.write_text(text)
+
+          # Compatibility is intentionally narrow and explicit.
+          compatibility_test.write_text(
+              '''import subprocess\n'
+              'import sys\n\n'
+              'import pytest\n\n\n'
+              'def test_top_level_output_file_alias_warns():\n'
+              '    code = \"\"\"\n'
+              'import warnings\n'
+              'warnings.simplefilter(\'always\')\n'
+              'with warnings.catch_warnings(record=True) as caught:\n'
+              '    from ase2sprkkr import OutputFile, ResultFile\n'
+              'assert OutputFile is ResultFile\n'
+              'matching = [item for item in caught if str(item.message) == (\n'
+              '    \'ase2sprkkr.OutputFile is deprecated; use ase2sprkkr.ResultFile instead.\'\n'
+              ')]\n'
+              'assert len(matching) == 1\n'
+              'assert issubclass(matching[0].category, DeprecationWarning)\n'
+              '\"\"\"\n'
+              '    subprocess.run([sys.executable, \"-c\", code], check=True)\n\n\n'
+              'def test_internal_output_file_alias_is_result_file():\n'
+              '    from ase2sprkkr import ResultFile\n'
+              '    from ase2sprkkr.result_files.output_files import OutputFile\n\n'
+              '    assert OutputFile is ResultFile\n\n\n'
+              'def test_old_output_files_package_is_removed():\n'
+              '    code = \"\"\"\n'
+              'try:\n'
+              '    import ase2sprkkr.output_files\n'
+              'except ModuleNotFoundError:\n'
+              '    pass\n'
+              'else:\n'
+              '    raise AssertionError(\'ase2sprkkr.output_files must not remain as a compatibility package\')\n'
+              '\"\"\"\n'
+              '    subprocess.run([sys.executable, \"-c\", code], check=True)\n\n\n'
+              'def test_canonical_result_file_api_does_not_use_legacy_names():\n'
+              '    package_root = Path(__file__).resolve().parents[2]\n'
+              '    allowed = {\n'
+              '        package_root / \"__init__.py\",\n'
+              '        package_root / \"result_files\" / \"output_files.py\",\n'
+              '        Path(__file__).resolve(),\n'
+              '    }\n'
+              '    failures = []\n'
+              '    for path in package_root.rglob(\"*.py\"):\n'
+              '        if path in allowed:\n'
+              '            continue\n'
+              '        text = path.read_text()\n'
+              '        if \"output_files_definitions\" in text:\n'
+              '            failures.append((path, \"output_files_definitions\"))\n'
+              '        if \"ase2sprkkr.output_files\" in text:\n'
+              '            failures.append((path, \"ase2sprkkr.output_files\"))\n'
+              '        if re.search(r\"from\\s+[.\\w]*output_files(?:\\s+import|\\.)\", text):\n'
+              '            failures.append((path, \"legacy output_files import\"))\n'
+              '        if re.search(r\"\\bOutputFile\\b\", text):\n'
+              '            failures.append((path, \"OutputFile\"))\n'
+              '    assert not failures, failures\n'
+              '''.replace("'''", "").replace("'\n              '", "")
+          )
+
+          # Add a concise canonical API example to the source documentation.
+          usage = Path('doc_src/usage.rst')
+          text = usage.read_text()
+          marker = 'Setting the task type and input parameters\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n'
+          if 'ResultFile.from_file' not in text:
+              section = '''Structured result files\n~~~~~~~~~~~~~~~~~~~~~~~\n\nStructured SPR-KKR result files such as DOS, BSF, SPC, RAT, JXC and SFN\ncan be parsed directly through :class:`ase2sprkkr.ResultFile`::\n\n   from ase2sprkkr import ResultFile\n   result = ResultFile.from_file("calculation.dos")\n\nThe historical top-level ``OutputFile`` name is deprecated.\n\n'''
+              text = text.replace(marker, section + marker)
+              usage.write_text(text)
+
+          # Static invariant used both here and by the regression test.
+          for path in root.rglob('*.py'):
+              if path in allowed or path == compatibility_test:
+                  continue
+              source = path.read_text()
+              assert 'output_files_definitions' not in source, path
+              assert 'ase2sprkkr.output_files' not in source, path
+              assert not re.search(r'from\s+[.\w]*output_files(?:\s+import|\.)', source), path
+              assert not re.search(r'\bOutputFile\b', source), path
+          PY
+      - name: Check patch
+        run: |
+          git diff --check
+          python -m compileall -q src/ase2sprkkr
+      - name: Install
+        run: ./install_dependencies.sh
+      - name: Run tests
+        env:
+          DO_NOT_RUN_SPRKKR: '1'
+        run: "$GITHUB_WORKSPACE/run_tests"
+      - name: Commit migration
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'Finish ResultFile API migration'
+          git push
