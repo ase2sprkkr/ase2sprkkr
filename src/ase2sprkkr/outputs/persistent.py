@@ -5,8 +5,6 @@ from __future__ import annotations
 from ..common.module_registry import RegistryEntryNotFound
 from ..execution import ResultFilesState, RunState
 from ..input_parameters.input_parameters import InputParameters
-from .reader_registry import reader_registry
-from .readers.default import DefaultOutputReader
 
 
 class PersistentResultUnavailableError(RuntimeError):
@@ -22,38 +20,52 @@ def _record(manager, run):
 
 
 def _task_definition_for_record(record):
-    """Return the task definition identified by the persisted requested task."""
+    """Return the effective task definition persisted for this run."""
     try:
         return InputParameters.task_registry[record.task]
     except RegistryEntryNotFound:
-        return None
+        raise PersistentResultUnavailableError(
+            record, f"unknown persisted effective task {record.task!r}"
+        ) from None
 
 
-def _input_parameters_for_record(manager, record, task_definition):
-    """Reconstruct input parameters only from verified historical input."""
+def _input_parameters_for_record(manager, record):
+    """Reconstruct parameters from the exact persisted input schema."""
     result_files = record.result_files
     input_file = None if result_files is None else result_files.input_file
     if input_file is None or not manager.input_file_is_current(record):
         return None
-    if task_definition is not None:
-        return task_definition.read_input_parameters(input_file)
-    return InputParameters.from_file(input_file)
+    if record.input_definition is None:
+        return None
+
+    try:
+        definition = InputParameters.input_parameters_registry[record.input_definition]
+    except RegistryEntryNotFound:
+        raise PersistentResultUnavailableError(
+            record,
+            f"unknown persisted input definition {record.input_definition!r}",
+        ) from None
+
+    parameters = definition.read_from_file(
+        input_file,
+        task_name=record.requested_task or record.task,
+    )
+    effective_task = parameters.task_definition
+    if effective_task is None or effective_task.name != record.task:
+        actual = None if effective_task is None else effective_task.name
+        raise PersistentResultUnavailableError(
+            record,
+            "persisted effective task does not match historical input "
+            f"({record.task!r} != {actual!r})",
+        )
+    return parameters
 
 
 def _reader_for_record(manager, record):
-    """Create the best reader reconstructable from persisted task context."""
+    """Create the reader declared by the persisted effective task."""
     task_definition = _task_definition_for_record(record)
-    parameters = _input_parameters_for_record(manager, record, task_definition)
-    if parameters is not None and parameters.task_definition is not None:
-        task_definition = parameters.task_definition
-
-    if task_definition is not None:
-        reader_class = task_definition.output_reader_class(parameters)
-    else:
-        try:
-            reader_class = reader_registry[record.task]
-        except RegistryEntryNotFound:
-            reader_class = DefaultOutputReader
+    parameters = _input_parameters_for_record(manager, record)
+    reader_class = task_definition.output_reader_class()
 
     return reader_class(
         parameters,
@@ -72,7 +84,7 @@ def attach_persistent_run(
     callback=None,
     output_listener=None,
 ):
-    """Attach to a stored run using the best reconstructable output reader."""
+    """Attach to a stored run using its persisted effective task metadata."""
     record = _record(manager, run)
     if reader is None:
         reader = _reader_for_record(manager, record)
@@ -88,11 +100,11 @@ def attach_persistent_run(
 def load_persistent_result(manager, run, *, reader=None):
     """Reconstruct the historical TaskResult of one terminal persistent run.
 
-    Result-file retrieval and freshness remain responsibilities of the execution
-    layer. When the historical input file is still current, reader creation
-    receives reconstructed task-bound input parameters. If that context is
-    unavailable or stale, reconstruction degrades to the persisted requested
-    task identity instead of making the output result unavailable.
+    Reader selection is determined by the persisted effective task. When the
+    historical input file is still current and its exact input definition was
+    persisted, parameters are reconstructed from that definition. Legacy records
+    without an input-definition identity may still load output, but their input
+    parameters are intentionally not guessed.
     """
     record = manager.retrieve_result_files(run)
     record = manager.check_result_files(record)
@@ -114,6 +126,7 @@ def load_persistent_result(manager, run, *, reader=None):
             record, "output result file is unavailable"
         )
 
+    reader_supplied = reader is not None
     if reader is None:
         reader = _reader_for_record(manager, record)
 
@@ -121,11 +134,12 @@ def load_persistent_result(manager, run, *, reader=None):
     if return_code is None:
         return_code = 0 if record.state == RunState.FINISHED else 1
 
-    input_file = (
-        result_files.input_file
-        if manager.input_file_is_current(record)
-        else None
-    )
+    input_file = None
+    if manager.input_file_is_current(record) and (
+        reader_supplied or getattr(reader, "input_parameters", None) is not None
+    ):
+        input_file = result_files.input_file
+
     if output_available:
         result = reader.read_from_file(
             output_file,

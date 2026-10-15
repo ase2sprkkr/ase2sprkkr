@@ -89,20 +89,24 @@ def test_reader_discovery_uses_registry_and_default_fallback():
     assert KkrOutputReader.class_for_task("unknown") is DefaultOutputReader
 
 
-def test_task_reader_respects_concrete_execution_task_when_parameters_exist():
+def test_task_reader_is_resolved_from_task_definition_name():
     parameters = InputParameters.create("ARPES")
-    task = parameters.task_definition
-    assert task.execution_task_name(parameters) == "ARPES"
-    assert task.output_reader_class(parameters).__name__ == "ArpesOutputReader"
+    requested_task = parameters.task_definition
+    assert requested_task.output_reader_class().__name__ == "ArpesOutputReader"
 
     parameters.TASK.TASK = "SPLEED"
     assert parameters.task_name == "ARPES"
     assert parameters.task_definition.name == "SPLEED"
-    assert task.execution_task_name(parameters) == "SPLEED"
-    assert task.output_reader_class(parameters) is DefaultOutputReader
+
+    assert requested_task.output_reader_class().__name__ == "ArpesOutputReader"
+    assert parameters.task_definition.output_reader_class() is DefaultOutputReader
 
 
-def test_task_reader_degrades_to_task_definition_without_parameters():
-    task = InputParameters.task_registry["ARPES"]
+def test_bsf_tasks_explicitly_share_bsf_output_reader():
+    bsfek = InputParameters.task_registry["BSFEK"]
+    bsfkk = InputParameters.task_registry["BSFKK"]
 
-    assert task.output_reader_class().__name__ == "ArpesOutputReader"
+    assert bsfek.output_reader == "BSF"
+    assert bsfkk.output_reader == "BSF"
+    assert bsfek.output_reader_class().__name__ == "BsfOutputReader"
+    assert bsfkk.output_reader_class().__name__ == "BsfOutputReader"

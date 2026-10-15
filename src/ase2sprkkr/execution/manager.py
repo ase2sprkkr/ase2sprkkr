@@ -30,7 +30,7 @@ from .endpoint import ExecutorEndpoint, endpoint_for_executor
 from .pool import default_executor_pool
 
 
-_RUN_RECORD_SCHEMA_VERSION = 2
+_RUN_RECORD_SCHEMA_VERSION = 3
 _FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
 _STATE_RANK = {
     RunState.NEW: 0,
@@ -233,9 +233,11 @@ class DuplicateSubmissionError(RuntimeError):
 class RunRecord:
     """Persistent identity and last known lifecycle state of one run.
 
-    ``task`` is the requested ASE2SPRKKR task registry name used to create the
-    calculation. The execution layer stores that name as opaque identity; task
-    aliases and their semantics remain owned by the task registry.
+    ``task`` is the effective ASE2SPRKKR task represented by the concrete input
+    values. ``input_definition`` independently identifies the input schema used
+    to parse and reconstruct those values. ``requested_task`` is optional
+    provenance describing the task originally requested by the caller; it is
+    never used in place of the effective task.
 
     ``state`` is the public run lifecycle, including result finalization. A
     terminal backend outcome is therefore represented as ``FINISHING`` until
@@ -264,10 +266,18 @@ class RunRecord:
     return_code: Optional[int] = None
     message: Optional[str] = None
     result_files: Optional[ResultFilesRecord] = None
+    input_definition: Optional[str] = None
+    requested_task: Optional[str] = None
     schema_version: int = _RUN_RECORD_SCHEMA_VERSION
 
     def __post_init__(self):
         object.__setattr__(self, "task", str(self.task).upper())
+        if self.input_definition is not None:
+            object.__setattr__(
+                self, "input_definition", str(self.input_definition).upper()
+            )
+        if self.requested_task is not None:
+            object.__setattr__(self, "requested_task", str(self.requested_task).upper())
         if isinstance(self.endpoint, dict):
             object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
         if isinstance(self.submission, dict):
@@ -365,7 +375,7 @@ class RunStore:
                 data = json.load(file)
             data.setdefault("finished_at", None)
             version = data.get("schema_version", 1)
-            if version == 1:
+            if version in (1, 2):
                 data["schema_version"] = _RUN_RECORD_SCHEMA_VERSION
             elif version != _RUN_RECORD_SCHEMA_VERSION:
                 raise ValueError(
@@ -373,12 +383,14 @@ class RunStore:
                     f"expected {_RUN_RECORD_SCHEMA_VERSION}"
                 )
 
-            # A short-lived development schema stored the native execution task
-            # in ``task`` and the requested ASE2SPRKKR identity separately.
-            # Promote the latter when present, then discard the superseded field.
+            data.setdefault("input_definition", None)
+            data.setdefault("requested_task", None)
+
+            # A short-lived development schema stored the native/effective task
+            # in ``task`` and the originally requested identity separately.
             task_definition = data.pop("task_definition", None)
-            if task_definition is not None:
-                data["task"] = task_definition
+            if task_definition is not None and data["requested_task"] is None:
+                data["requested_task"] = task_definition
 
             RunStore._migrate_result_files(data)
             return RunRecord(**data)
@@ -680,6 +692,8 @@ class ExecutionManager:
         endpoint=None,
         submission=None,
         result_files=None,
+        input_definition=None,
+        requested_task=None,
         run_id=None,
     ):
         """Create the in-memory identity of an unsubmitted persistent run."""
@@ -696,6 +710,8 @@ class ExecutionManager:
             endpoint=endpoint,
             submission=submission,
             result_files=result_files,
+            input_definition=input_definition,
+            requested_task=requested_task,
         )
 
     @staticmethod
@@ -1019,6 +1035,8 @@ class ExecutionManager:
         spec,
         *,
         task,
+        input_definition=None,
+        requested_task=None,
         dataset=None,
         callback=None,
         run_id=None,
@@ -1033,6 +1051,8 @@ class ExecutionManager:
         )
         record = self.new_record(
             task=task,
+            input_definition=input_definition,
+            requested_task=requested_task,
             dataset=dataset,
             directory=spec.directory,
             endpoint=endpoint,
