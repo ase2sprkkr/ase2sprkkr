@@ -11,7 +11,6 @@ from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
-from ..common.module_registry import RegistryEntryNotFound
 from ..common.warnings import DataValidityError
 from ..configuration import config
 from ..potentials.potentials import Potential
@@ -48,16 +47,13 @@ class InputParameters(ConfigurationFile):
         self._inputfile = inputfile
         self._outputfile = inputfile if outputfile is False else outputfile
 
-    def get_task_definition(self):
+    @property
+    def task_definition(self):
         """Return the task represented by the current parameter values."""
         return self._definition.task_definition(self)
 
-    @property
-    def task_definition(self):
-        return self.get_task_definition()
-
     def _require_task_definition(self):
-        task = self.get_task_definition()
+        task = self.task_definition
         if task is None:
             raise RuntimeError(
                 "These input parameters are not associated with an SPR-KKR task definition"
@@ -279,17 +275,15 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def is_it_an_input_parameters_name(cls, name):
-        name = cls.input_parameters_registry.normalize_name(name)
-        return name if name in cls.task_registry or name in cls.input_parameters_registry else False
+        name = cls.task_registry.normalize_name(name)
+        return name if name in cls.task_registry else False
 
     @classmethod
     def create_input_parameters(cls, arg):
         if isinstance(arg, str):
             name = cls.is_it_an_input_parameters_name(arg)
             if name:
-                if name in cls.task_registry:
-                    return cls.create(name)
-                return cls(definition=cls.input_parameters_registry[name], task_name=name)
+                return cls.create(name)
             return cls.from_file(arg)
         if isinstance(arg, io.IOBase):
             return cls.from_file(arg)
@@ -298,7 +292,7 @@ class InputParameters(ConfigurationFile):
     @classmethod
     def create(cls, name):
         requested = cls.task_registry.normalize_name(name)
-        return cls.task_registry[requested].create_input_parameters(task_name=requested)
+        return cls.task_registry[requested].create_input_parameters()
 
     @classmethod
     def default_parameters(cls):

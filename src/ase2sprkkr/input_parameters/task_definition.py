@@ -29,14 +29,9 @@ class TaskDefinition:
         cache_file_templates=(),
         prepare_from_result=None,
     ):
-        input_parameters_definition_name = getattr(
-            input_parameters_definition_name,
-            "name",
-            input_parameters_definition_name,
-        )
-        self.input_parameters_definition_name = str(
-            input_parameters_definition_name
-        ).upper()
+        if not isinstance(input_parameters_definition_name, str):
+            raise TypeError("input_parameters_definition_name must be a string")
+        self.input_parameters_definition_name = input_parameters_definition_name.upper()
         self.name = str(name or self.input_parameters_definition_name).upper()
         self.executable = executable
         self.mpi = mpi
@@ -68,25 +63,21 @@ class TaskDefinition:
             )
         return self._input_parameters_registry[self.input_parameters_definition_name]
 
-    def create_input_parameters(
-        self, *, task_name=None, inputfile=None, outputfile=False
-    ):
+    def create_input_parameters(self, *, inputfile=None, outputfile=False):
         from .input_parameters import InputParameters
 
         definition = self.input_parameters_definition
         out = InputParameters(
             definition=definition,
-            task_name=task_name or self.name,
+            task_name=self.name,
             inputfile=inputfile,
             outputfile=outputfile,
         )
         definition.initialize_for_task(out, self.name)
         return out
 
-    def read_input_parameters(
-        self, file, *, task_name=None, allow_dangerous=False
-    ):
-        out = self.create_input_parameters(task_name=task_name, inputfile=file)
+    def read_input_parameters(self, file, *, allow_dangerous=False):
+        out = self.create_input_parameters(inputfile=file)
         out.read_from_file(file, allow_dangerous=allow_dangerous)
         return out
 
@@ -194,7 +185,7 @@ class InputParametersRegistry(ModuleRegistry):
 
 
 class TaskRegistry:
-    """Composite registry of canonical and extra task definitions."""
+    """Registry combining colocated 1:1 tasks and explicit shared-schema tasks."""
 
     normalize_name = staticmethod(ModuleRegistry.normalize_name)
 

@@ -57,9 +57,7 @@ def test_bsf_is_schema_not_task_and_views_keep_schema_defaults():
 
     with pytest.raises(RegistryEntryNotFound):
         InputParameters.create("BSF")
-
-    generic = InputParameters.create_input_parameters("BSF")
-    assert generic._definition is schema
+    assert InputParameters.is_it_an_input_parameters_name("BSF") is False
 
 
 def test_input_and_task_registry_namespaces_are_distinct():
@@ -105,6 +103,29 @@ def test_extra_task_resolves_schema_from_own_input_registry(tmp_path, monkeypatc
     task = task_registry["SPECIAL"]
 
     assert task.input_parameters_definition is input_registry["SHARED"]
+
+
+def test_old_input_parameters_export_is_rejected(tmp_path, monkeypatch):
+    definitions_package = _package(
+        tmp_path,
+        monkeypatch,
+        "_ase2sprkkr_test_legacy_ip_registry",
+        {
+            "legacy": (
+                "from ase2sprkkr.input_parameters.input_parameters_definitions "
+                "import InputParametersDefinition\n"
+                "def input_parameters():\n"
+                "    return InputParametersDefinition('legacy', [])\n"
+            ),
+        },
+    )
+
+    registry = InputParametersRegistry(definitions_package)
+    with pytest.raises(
+        RegistryDefinitionError,
+        match="does not define required export 'input_parameters_definition'",
+    ):
+        registry["LEGACY"]
 
 
 def test_malformed_extra_task_is_definition_error(tmp_path, monkeypatch):
