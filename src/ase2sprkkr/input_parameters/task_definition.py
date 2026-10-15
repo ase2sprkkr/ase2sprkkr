@@ -98,13 +98,10 @@ class TaskDefinition:
         through ``TASK.TASK``; that distinction belongs to task semantics, not
         to the generic input-parameter container.
         """
-        task_section = getattr(parameters, "TASK", None)
-        task_option = (
-            getattr(task_section, "TASK", None)
-            if task_section is not None
-            else None
-        )
-        value = task_option() if task_option is not None else None
+        try:
+            value = parameters["TASK"]["TASK"]()
+        except KeyError:
+            value = None
         return str(value or self.name).upper()
 
     def output_reader_class(self, parameters=None, *, execution_task=None):
