@@ -65,7 +65,7 @@ def input_parameters_definition():
         info="GILBERT - The Gilbert damping parameter calculation",
     )
     schema._task_definition = GilbertTaskDefinition(
-        schema,
+        "GILBERT",
         name="GILBERT",
         executable="kkrchi",
     )

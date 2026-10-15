@@ -38,7 +38,7 @@ def input_parameters_definition():
         description="",
     )
     schema._task_definition = SCFTaskDefinition(
-        schema,
+        "SCF",
         name="SCF",
         executable="kkrscf",
         mpi=True,

@@ -280,16 +280,6 @@ class KkrOutputReader:
     @staticmethod
     def class_for_task(task):
         """Compatibility facade for task-specific output-reader discovery."""
-        if not task:
-            return DefaultOutputReader
-
-        from ..common.module_registry import RegistryEntryNotFound
         from .reader_registry import reader_registry
 
-        try:
-            return reader_registry[task]
-        except RegistryEntryNotFound:
-            return DefaultOutputReader
-
-
-from ..outputs.readers.default import DefaultOutputReader  # NOQA
+        return reader_registry.class_for_task(task)

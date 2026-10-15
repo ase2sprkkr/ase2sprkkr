@@ -49,7 +49,7 @@ def input_parameters_definition():
                         0.0,
                         is_expert=True,
                         is_optional=True,
-                        info="Azimuthal angle φ (FRAMEPHI) defining the in-plane rotation of the electric field vector of the incident light relative to the surface reference axis. Default is FRAMEPHI = 0, corresponding to alignment with the x-axis of the surface frame.",
+                        info="Azimuthal angle φ (FRAMEPHI) defining the in-plane rotation of the electric field vector relative to the surface reference axis. Default is FRAMEPHI = 0, corresponding to alignment with the x-axis of the surface frame.",
                     ),
                 ]
             ),
@@ -58,7 +58,7 @@ def input_parameters_definition():
         info="Calculates X-ray absorption spectra",
     )
     schema._task_definition = TauCacheTaskDefinition(
-        schema,
+        "XAS",
         name="XAS",
         executable="kkrgen",
         mpi=True,

@@ -11,6 +11,7 @@ from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
+from ..common.module_registry import RegistryEntryNotFound
 from ..common.warnings import DataValidityError
 from ..configuration import config
 from ..potentials.potentials import Potential
@@ -210,7 +211,7 @@ class InputParameters(ConfigurationFile):
                     executor,
                     reader,
                     spec,
-                    task=self.task_name,
+                    task=task.name,
                     dataset=self.CONTROL.DATASET.result,
                     callback=completed,
                 )
@@ -278,15 +279,17 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def is_it_an_input_parameters_name(cls, name):
-        name = str(name).upper()
-        return name if name in cls.task_registry else False
+        name = cls.input_parameters_registry.normalize_name(name)
+        return name if name in cls.task_registry or name in cls.input_parameters_registry else False
 
     @classmethod
     def create_input_parameters(cls, arg):
         if isinstance(arg, str):
             name = cls.is_it_an_input_parameters_name(arg)
             if name:
-                return cls.create(name)
+                if name in cls.task_registry:
+                    return cls.create(name)
+                return cls(definition=cls.input_parameters_registry[name], task_name=name)
             return cls.from_file(arg)
         if isinstance(arg, io.IOBase):
             return cls.from_file(arg)

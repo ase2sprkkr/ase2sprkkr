@@ -28,7 +28,7 @@ def input_parameters_definition():
         description="<TODO: change to something meaningfull>",
     )
     schema._task_definition = PhagenTaskDefinition(
-        schema,
+        "PHAGEN",
         name="PHAGEN",
         executable="kkrscf",
         mpi=False,

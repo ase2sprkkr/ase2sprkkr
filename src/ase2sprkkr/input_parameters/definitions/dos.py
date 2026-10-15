@@ -21,7 +21,7 @@ def input_parameters_definition():
         info="DOS - The density of states computation",
     )
     schema._task_definition = TaskDefinition(
-        schema,
+        "DOS",
         name="DOS",
         executable="kkrgen",
         mpi=True,

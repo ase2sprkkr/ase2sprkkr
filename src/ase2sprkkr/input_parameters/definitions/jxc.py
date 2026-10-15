@@ -76,7 +76,7 @@ def input_parameters_definition():
     )
     schema["CONTROL"]["NONMAG"].warning_condition = _jxc_nonmag_warning_condition
     schema._task_definition = JxcTaskDefinition(
-        schema,
+        "JXC",
         name="JXC",
         executable="kkrgen",
         mpi=True,
