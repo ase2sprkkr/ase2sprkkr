@@ -96,6 +96,8 @@ def test_task_reader_respects_concrete_execution_task_when_parameters_exist():
     assert task.output_reader_class(parameters).__name__ == "ArpesOutputReader"
 
     parameters.TASK.TASK = "SPLEED"
+    assert parameters.task_name == "ARPES"
+    assert parameters.task_definition.name == "SPLEED"
     assert task.execution_task_name(parameters) == "SPLEED"
     assert task.output_reader_class(parameters) is DefaultOutputReader
 

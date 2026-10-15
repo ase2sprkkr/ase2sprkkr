@@ -124,9 +124,18 @@ class TaskResult:
             potential=potential,
         )
 
+    def _continuation_calculator(self):
+        """Create a fresh calculator starting from this result's potential."""
+        if self._calculator is not None:
+            return self._calculator.copy_with_potential(self.potential_filename)
+
+        from ..sprkkr.calculator import SPRKKR
+
+        return SPRKKR(potential=self.potential_filename)
+
     def new_task(self, task):
         """Create a calculator for *task* continuing from this result."""
-        out = self._calculator.copy_with_potential(self.potential_filename)
+        out = self._continuation_calculator()
         out.input_parameters = task
         out.input_parameters.task_definition.prepare_from_result(
             out.input_parameters, self
