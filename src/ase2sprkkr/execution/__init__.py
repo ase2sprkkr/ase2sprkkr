@@ -29,6 +29,14 @@ from .manager import (
     SubmissionKey,
 )
 from .pool import ExecutorPool, default_executor_pool
+from .projects import (
+    Project,
+    ProjectConflictError,
+    ProjectDeleteError,
+    ProjectRepository,
+    ProjectRepositoryError,
+    default_projects_directory,
+)
 from .psij import PsijExecutor, PsijRunner
 from .remote import FileSyncPolicy, RemoteRunner
 from .remote_endpoint import RemoteEndpointExecutor
@@ -62,6 +70,12 @@ __all__ = [
     "CorruptRunRecord",
     "ExecutionManager",
     "PersistentRunner",
+    "Project",
+    "ProjectRepository",
+    "ProjectRepositoryError",
+    "ProjectConflictError",
+    "ProjectDeleteError",
+    "default_projects_directory",
     "ExecutorPool",
     "default_executor_pool",
     "LocalExecutor",
