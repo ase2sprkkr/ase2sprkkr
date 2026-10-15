@@ -68,7 +68,8 @@ class TaskResult:
     def task_name(self):
         if self._task_name is not None:
             return self._task_name
-        return self.input_parameters.task_name
+        task = self.input_parameters.task_definition
+        return str(task.name).strip().lower() if task is not None else None
 
     @cached_property
     def input_parameters(self):
@@ -190,11 +191,12 @@ class KkrOutputReader:
         self.input_parameters = input_parameters
         self.calculator = calculator
         self.directory = directory
+        task = input_parameters.task_definition if input_parameters is not None else None
         self.task_name = (
             task_name
             if task_name is not None
-            else input_parameters.task_name
-            if input_parameters is not None
+            else task.name
+            if task is not None
             else None
         )
         self.parser = self.parser_class(print_output)
