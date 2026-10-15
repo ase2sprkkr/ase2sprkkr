@@ -701,6 +701,8 @@ class PreparedCalculation:
         read_callback=None,
         callback=None,
         gdb=False,
+        error_file=None,
+        create_subdirs=False,
     ):
         """Create an unstarted runner and transfer this calculation's resources.
 
@@ -709,6 +711,10 @@ class PreparedCalculation:
         :class:`SPRKKR` facade supplies itself so result convenience APIs can
         construct follow-up calculations, while standalone prepared runs may
         leave the context unset.
+
+        ``error_file=None`` stores stderr as ``<output_file>.err``. ``True``
+        explicitly merges stderr into ``output_file``; ``False`` requests a
+        managed temporary stderr file; a path or file object is used directly.
         """
         return _create_sprkkr_run(
             self,
@@ -720,6 +726,8 @@ class PreparedCalculation:
             read_callback=read_callback,
             callback=callback,
             gdb=gdb,
+            error_file=error_file,
+            create_subdirs=create_subdirs,
         )
 
     @property
@@ -785,6 +793,32 @@ class PreparedCalculation:
             raise error
 
 
+def _prepare_error_file(error_file, output_file, directory, create_subdirs):
+    """Materialize stderr for one run without changing preparation semantics."""
+    if error_file is True or error_file is output_file:
+        return output_file, False
+
+    output_name = _named_file_name(output_file)
+    if error_file is None:
+        if output_name is None:
+            return None, False
+        error_file = output_name + ".err"
+    elif isinstance(error_file, (str, os.PathLike)) and output_name is not None:
+        error_name = _calculation_path(error_file, directory)
+        if os.path.abspath(output_name) == error_name:
+            return output_file, False
+
+    opened_error = _open_file(
+        error_file,
+        directory,
+        mode="wb",
+        allow_temporary=True,
+        create_subdirs=create_subdirs,
+    )
+    _require_named_file(opened_error, "error_file")
+    return opened_error, opened_error is not output_file
+
+
 def _create_sprkkr_run(
     prepared: PreparedCalculation,
     *,
@@ -796,6 +830,8 @@ def _create_sprkkr_run(
     read_callback=None,
     callback=None,
     gdb=False,
+    error_file=None,
+    create_subdirs=False,
 ):
     """Adapt a prepared SPR-KKR calculation to an unstarted generic runner.
 
@@ -805,14 +841,28 @@ def _create_sprkkr_run(
     executor or persistence manager.
 
     Ownership of ``prepared`` is transferred to the returned runner. If runner
-    construction fails before that handoff, ``prepared`` is closed here.
+    construction fails before that handoff, all owned resources are closed here.
 
     ``callback`` follows the generic runner's terminal-callback contract: it is
     invoked when backend execution terminates and may therefore receive a
     partially populated result if execution or parsing failed. Resource cleanup
     happens before the user callback and is independent of its success.
     """
-    resources = ExecutionResources(prepared)
+    try:
+        opened_error, owns_error = _prepare_error_file(
+            error_file,
+            prepared.output_file,
+            prepared.directory,
+            create_subdirs,
+        )
+    except BaseException:
+        prepared.close()
+        raise
+
+    resources = ExecutionResources(
+        prepared,
+        opened_error if owns_error else None,
+    )
     handed_off = False
     input_parameters = prepared.input_parameters
 
@@ -843,6 +893,7 @@ def _create_sprkkr_run(
             file
             for file in (
                 prepared.output_file,
+                opened_error if opened_error is not prepared.output_file else None,
                 *input_parameters.output_files(prepared.directory),
             )
             if file is not None
@@ -858,6 +909,7 @@ def _create_sprkkr_run(
             prepared.input_file,
             prepared.output_file,
             prepared.directory,
+            error_file=opened_error,
             input_files=input_files,
             output_files=output_files,
             cache_files=cache_files,

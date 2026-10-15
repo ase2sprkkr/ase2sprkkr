@@ -355,6 +355,7 @@ class SPRKKR(BaseCalculator):
         executor=None,
         persistent=None,
         restart_scf: bool = False,
+        error_file=None,
     ):
         """Prepare a calculation and return an unstarted owning runner.
 
@@ -362,6 +363,11 @@ class SPRKKR(BaseCalculator):
         explicit per-run profile selects its backend; if neither is supplied,
         the calculator-level executor (when present) overrides the calculator
         profile backend.
+
+        ``error_file=None`` stores stderr next to stdout as ``<output>.err``.
+        ``error_file=True`` deliberately merges stderr into ``output_file``;
+        ``False`` requests a managed temporary stderr file, and an explicit path
+        or file object stores stderr there instead.
 
         ``callback`` is a terminal runner callback. It can therefore be invoked
         with a partially populated result when backend execution or parsing
@@ -401,6 +407,8 @@ class SPRKKR(BaseCalculator):
             read_callback=read_callback,
             callback=callback,
             gdb=gdb,
+            error_file=error_file,
+            create_subdirs=create_subdirs,
         )
 
     def value_or_default(self, name, value):
@@ -448,6 +456,7 @@ class SPRKKR(BaseCalculator):
         executor=None,
         persistent=None,
         restart_scf: bool = False,
+        error_file=None,
     ):
         """Run one SPR-KKR task synchronously and return its parsed result.
 
@@ -491,6 +500,7 @@ class SPRKKR(BaseCalculator):
             executor=executor,
             persistent=persistent,
             restart_scf=restart_scf,
+            error_file=error_file,
         )
         result = runner.run()
         self._update_from_result(
