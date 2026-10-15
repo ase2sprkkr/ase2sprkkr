@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import importlib
 import pkgutil
-from threading import RLock
 from types import MappingProxyType
 
 
@@ -37,7 +36,6 @@ class ModuleRegistry:
         self.package = package
         self.attribute = attribute
         self._include = include or (lambda name: not name.startswith("_"))
-        self._lock = RLock()
         self.aliases = MappingProxyType(self._normalize_aliases(aliases or {}))
         self._module_names = None
         self._modules = {}
@@ -73,40 +71,36 @@ class ModuleRegistry:
                 )
 
     def _discover_module_names(self):
-        with self._lock:
-            if self._module_names is None:
-                discovered = {}
-                for item in sorted(
-                    pkgutil.iter_modules(self.package.__path__),
-                    key=lambda item: item.name,
-                ):
-                    if not self._include(item.name):
-                        continue
-                    name = self.normalize_name(item.name)
-                    if name in discovered:
-                        raise RegistryDefinitionError(
-                            f"Duplicate module registry key {name!r} in "
-                            f"{self.package.__name__}"
-                        )
-                    discovered[name] = item.name
-                self._validate_aliases(discovered)
-                self._module_names = MappingProxyType(discovered)
-            return self._module_names
+        if self._module_names is None:
+            discovered = {}
+            for item in sorted(
+                pkgutil.iter_modules(self.package.__path__),
+                key=lambda item: item.name,
+            ):
+                if not self._include(item.name):
+                    continue
+                name = self.normalize_name(item.name)
+                if name in discovered:
+                    raise RegistryDefinitionError(
+                        f"Duplicate module registry key {name!r} in "
+                        f"{self.package.__name__}"
+                    )
+                discovered[name] = item.name
+            self._validate_aliases(discovered)
+            self._module_names = MappingProxyType(discovered)
+        return self._module_names
 
     def _load_module(self, name):
-        with self._lock:
-            if name in self._modules:
-                return self._modules[name]
+        if name in self._modules:
+            return self._modules[name]
 
-            module_name = self._discover_module_names().get(name)
-            if module_name is None:
-                raise RegistryEntryNotFound(name)
+        module_name = self._discover_module_names().get(name)
+        if module_name is None:
+            raise RegistryEntryNotFound(name)
 
-            module = importlib.import_module(
-                f".{module_name}", self.package.__name__
-            )
-            self._modules[name] = module
-            return module
+        module = importlib.import_module(f".{module_name}", self.package.__name__)
+        self._modules[name] = module
+        return module
 
     def value_from_module(self, name, module):
         """Extract the registered value from a loaded module."""
@@ -129,31 +123,29 @@ class ModuleRegistry:
         return value
 
     def _load_value(self, name):
-        with self._lock:
-            if name in self._values:
-                return self._values[name]
-            module = self._load_module(name)
-            value = self.value_from_module(name, module)
-            value = self.prepare_value(name, module, value)
-            self._values[name] = value
-            return value
+        if name in self._values:
+            return self._values[name]
+        module = self._load_module(name)
+        value = self.value_from_module(name, module)
+        value = self.prepare_value(name, module, value)
+        self._values[name] = value
+        return value
 
     def __getitem__(self, name):
         requested = self.normalize_name(name)
-        with self._lock:
-            if requested in self._values:
-                return self._values[requested]
+        if requested in self._values:
+            return self._values[requested]
 
-            module_names = self._discover_module_names()
-            canonical = self.aliases.get(requested, requested)
-            if canonical not in module_names:
-                raise RegistryEntryNotFound(requested)
+        module_names = self._discover_module_names()
+        canonical = self.aliases.get(requested, requested)
+        if canonical not in module_names:
+            raise RegistryEntryNotFound(requested)
 
-            value = self._load_value(canonical)
-            if requested != canonical:
-                value = self.alias_value(requested, value)
-                self._values[requested] = value
-            return value
+        value = self._load_value(canonical)
+        if requested != canonical:
+            value = self.alias_value(requested, value)
+            self._values[requested] = value
+        return value
 
     def __contains__(self, name):
         """Return whether *name* is discoverable without importing its module."""
@@ -178,8 +170,7 @@ class ModuleRegistry:
 
     @property
     def modules(self):
-        """Load and validate canonical entries, then return their modules."""
+        """Import and return canonical registry modules without materializing values."""
         for name in self.names(include_aliases=False):
-            self[name]
-        with self._lock:
-            return dict(self._modules)
+            self._load_module(name)
+        return dict(self._modules)

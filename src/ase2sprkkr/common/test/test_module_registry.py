@@ -1,7 +1,5 @@
 import importlib
 import sys
-import time
-from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 
@@ -67,6 +65,25 @@ def test_base_registry_does_not_call_callable_values(tmp_path, monkeypatch):
 
     assert callable(value)
     assert value() == "called"
+
+
+def test_modules_import_without_materializing_values(tmp_path, monkeypatch):
+    class ImportOnlyRegistry(ModuleRegistry):
+        def value_from_module(self, name, module):
+            raise AssertionError("modules must not materialize registry values")
+
+    package = _package(
+        tmp_path,
+        monkeypatch,
+        "_ase2sprkkr_registry_modules",
+        {"alpha": "value = object()\n"},
+    )
+    registry = ImportOnlyRegistry(package, "value")
+
+    modules = registry.modules
+
+    assert tuple(modules) == ("ALPHA",)
+    assert modules["ALPHA"].__name__ == "_ase2sprkkr_registry_modules.alpha"
 
 
 def test_missing_module_has_specific_lookup_error(tmp_path, monkeypatch):
@@ -211,29 +228,3 @@ def test_aliases_are_immutable(tmp_path, monkeypatch):
 
     with pytest.raises(TypeError):
         registry.aliases["FIRST"] = "OTHER"
-
-
-def test_value_materialization_is_thread_safe(tmp_path, monkeypatch):
-    class CountingRegistry(ModuleRegistry):
-        def __init__(self, package):
-            super().__init__(package)
-            self.calls = 0
-
-        def value_from_module(self, name, module):
-            self.calls += 1
-            time.sleep(0.02)
-            return object()
-
-    package = _package(
-        tmp_path,
-        monkeypatch,
-        "_ase2sprkkr_registry_threads",
-        {"alpha": ""},
-    )
-    registry = CountingRegistry(package)
-
-    with ThreadPoolExecutor(max_workers=8) as executor:
-        values = list(executor.map(lambda _: registry["alpha"], range(16)))
-
-    assert registry.calls == 1
-    assert all(value is values[0] for value in values)
