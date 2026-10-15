@@ -264,7 +264,10 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def definition(cls, name):
-        return cls.input_parameters_registry[name]
+        name = cls.input_parameters_registry.normalize_name(name)
+        if name in cls.input_parameters_registry:
+            return cls.input_parameters_registry[name]
+        return cls.task_registry[name].input_parameters_definition
 
     @cached_class_property
     def definitions(cls):

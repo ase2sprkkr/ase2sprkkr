@@ -1,4 +1,4 @@
-"""JXC input-parameter definition."""
+"""JXC task definition."""
 
 from ._file_manifests import resolve_file
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
@@ -21,7 +21,9 @@ class JxcTaskDefinition(TaskDefinition):
 
 def _jxc_mode_warning_condition(value):
     return (
-        "JXC task does not support SREL (scalar relativity without spin) or NREL (no relativity at all) MODE. Please change SCF.MODE, or the computation will fail."
+        "JXC task does not support SREL (scalar relativity without spin) or "
+        "NREL (no relativity at all) MODE. Please change SCF.MODE, or "
+        "the computation will fail."
         if value in ("SREL", "NREL")
         else None
     )
@@ -29,7 +31,8 @@ def _jxc_mode_warning_condition(value):
 
 def _jxc_nonmag_warning_condition(value):
     return (
-        "JXC task does not support non-magnetic computation. Please disable CONTROL.NONMAG, or the computation will fail."
+        "JXC task does not support non-magnetic computation. Please disable "
+        "CONTROL.NONMAG, or the computation will fail."
         if value
         else None
     )
@@ -61,7 +64,9 @@ def input_parameters_definition():
                     V(
                         "CLURAD",
                         2.2,
-                        info="The radius restricting the cluster for exchange coupling constants.",
+                        info="""The radius of a sphere restricting the cluster
+        of atoms for which the exchange coupling
+        constants will be calculated""",
                     ),
                 ]
             ),
