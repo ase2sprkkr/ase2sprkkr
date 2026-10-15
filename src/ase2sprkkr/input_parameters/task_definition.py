@@ -29,6 +29,11 @@ class TaskDefinition:
         cache_file_templates=(),
         prepare_from_result=None,
     ):
+        input_parameters_definition_name = getattr(
+            input_parameters_definition_name,
+            "name",
+            input_parameters_definition_name,
+        )
         self.input_parameters_definition_name = str(
             input_parameters_definition_name
         ).upper()
