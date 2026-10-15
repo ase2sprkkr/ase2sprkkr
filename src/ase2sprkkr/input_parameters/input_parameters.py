@@ -139,9 +139,6 @@ class InputParameters(ConfigurationFile):
         directory = directory or os.path.dirname(filename)
         return self.output_reader(directory=directory).read_from_file(filename)
 
-    def executable_params(self, directory=None):
-        """Return ``([executable], stdin, stdout)`` parameters for ``Popen``."""
-
     def __str__(self):
         return f"<Configuration container {self._get_path()}>"
 

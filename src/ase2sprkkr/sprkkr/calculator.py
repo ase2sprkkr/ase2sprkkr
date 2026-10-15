@@ -10,7 +10,6 @@ from __future__ import annotations
 import copy
 import os
 import subprocess
-import sys
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
@@ -61,9 +60,6 @@ class SPRKKR(BaseCalculator):
         persistent=False,
         **kwargs,
     ):
-        if kwargs:
-            print(f"Warning - unknown arguments in the SPRKKR calculator: {kwargs}")
-
         if potential and not isinstance(potential, (bool, str)):
             if atoms:
                 raise ValueError(
@@ -89,8 +85,8 @@ class SPRKKR(BaseCalculator):
         self.output_file = output_file
         self.potential_file = potential_file
         self.input_parameters = input_parameters
-        if options:
-            self.input_parameters.set(options, unknown="find")
+        if options or kwargs:
+            self.input_parameters.set(options, **kwargs, unknown="find")
         self.print_output = print_output
         self.empty_spheres = empty_spheres
         self.profile = resolve_sprkkr_profile(profile).with_overrides(
@@ -580,6 +576,5 @@ class FilenameTemplator(_FilenameTemplator):
         return rendered
 
 
-if os.path.basename(sys.argv[0]) != "sphinx-build":
-    SPRKKR.InputParameters = InputParameters
-    SPRKKR.Potential = Potential
+SPRKKR.InputParameters = InputParameters
+SPRKKR.Potential = Potential
