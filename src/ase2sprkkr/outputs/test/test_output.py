@@ -9,8 +9,8 @@ from ase.build import bulk
 from ...common.file_utils import FilePath, filename_from_file
 from ...common.options import Option
 from ...input_parameters.input_parameters import InputParameters
-from ...output_files.definitions.sfn import SFNOutputFile
-from ...output_files.output_files import OutputFile
+from ...result_files.definitions.sfn import SFNResultFile
+from ...result_files import ResultFile
 from ...potentials.potentials import Potential
 from ..readers.bsf import BsfResult
 from ..readers.dos import DosResult
@@ -158,7 +158,7 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
             assert set(kwargs) == {"try_only", "potential"}
             return parsed
 
-        monkeypatch.setattr(OutputFile, "from_file", parse_sfn)
+        monkeypatch.setattr(ResultFile, "from_file", parse_sfn)
 
         assert fullpot.sfn_filename == expected_filename
         assert fullpot.sfn is parsed
@@ -211,7 +211,7 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
             assert kwargs == {"try_only": "jxc", "potential": potential}
             return parsed
 
-        monkeypatch.setattr(OutputFile, "from_file", parse_output)
+        monkeypatch.setattr(ResultFile, "from_file", parse_output)
         assert output.parsed_file() is parsed
 
     def test_scf_parser_registers_reported_sfn(self):
@@ -226,7 +226,7 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
         assert result.sfn_filename == os.path.join(directory, "Fe2Al_SCF.sfn")
         assert result.files["SFN"].file_type == "sfn"
         assert result.sfn_generated is True
-        assert isinstance(result.sfn, SFNOutputFile)
+        assert isinstance(result.sfn, SFNResultFile)
         assert result.sfn.nm == 2
 
     def test_scf_parser_registers_sfn_reported_before_files(self, tmp_path):

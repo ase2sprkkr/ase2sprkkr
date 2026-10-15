@@ -166,6 +166,18 @@ potential).
    potential = out.potential
    print(potential.CHARGE())
 
+Structured result files
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Structured SPR-KKR result files such as DOS, BSF, SPC, RAT, JXC and SFN
+can be parsed directly through
+:class:`ResultFile <ase2sprkkr.result_files.ResultFile>`::
+
+   from ase2sprkkr import ResultFile
+   result = ResultFile.from_file("calculation.dos")
+
+The historical top-level ``OutputFile`` name is deprecated.
+
 Setting the task type and input parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

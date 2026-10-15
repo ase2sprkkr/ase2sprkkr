@@ -1,9 +1,9 @@
-from ..output_files_definitions import (
-    OutputFileValueDefinition as V,
-    create_output_file_definition,
-    OutputFileDefinition,
+from ..result_files_definitions import (
+    ResultFileValueDefinition as V,
+    create_result_file_definition,
+    ResultFileDefinition,
     BlankSeparator,
-    OutputFileSectionDefinition,
+    ResultFileSectionDefinition,
 )
 from typing import Optional
 import numpy as np
@@ -13,7 +13,7 @@ from scipy.interpolate import interp1d
 import pyparsing as pp
 
 from ...common.grammar import generate_grammar
-from ..output_files import CommonOutputFile
+from ..result_files import CommonResultFile
 from ...common.grammar_types import Array, Keyword, Char, Table, Sequence, Complex, Real
 from ...common.generated_configuration_definitions import GeneratedValueDefinition
 from ...common.configuration_definitions import KeywordSeparator, SeparatorDefinition, BaseDefinition
@@ -21,12 +21,12 @@ from ...gui.plot import Multiplot, set_up_common_plot, single_plot
 from ...common.decorators import cached_property, add_to_signature
 
 
-class RATOutputFile(CommonOutputFile):
+class RATResultFile(CommonResultFile):
     extension = "rat"
     plot_parameters = {}
 
     """
-    Output file for XAS (X-ray Absorption Spectroscopy) and related spectra (XMCD, spin and orbital sum-rule integrands).
+    Result file for XAS (X-ray Absorption Spectroscopy) and related spectra (XMCD, spin and orbital sum-rule integrands).
     """
 
     def energies(self, group=0):
@@ -610,8 +610,8 @@ class RATOutputFile(CommonOutputFile):
         """
 
 
-class RATDefinition(OutputFileDefinition):
-    result_class = RATOutputFile
+class RATDefinition(ResultFileDefinition):
+    result_class = RATResultFile
 
 
 def G(name, **kwargs):
@@ -721,7 +721,7 @@ def nktypes(option):
 
 def create_definition():
 
-    definition = create_output_file_definition(
+    definition = create_result_file_definition(
         Keyword("RXAS"),
         [
             G("XAS", plot=(plot, nktypes), info="Polarization averaged X-ray absorption spectra"),
@@ -732,7 +732,7 @@ def create_definition():
             V("NTXRSGRP", int),
             V("IDIPOL", int),
             V("NPOL", Array(Char(), write_length=True)),
-            OutputFileSectionDefinition(
+            ResultFileSectionDefinition(
                 "GROUPS",
                 [
                     V("SPECTRUM", str),
@@ -771,7 +771,7 @@ def create_definition():
                     V("IFMT", Array(int, length=2), written_name="output format IFMT", indent=" "),
                     V("VUC", float),
                     BlankSeparator(),
-                    OutputFileSectionDefinition(
+                    ResultFileSectionDefinition(
                         "DATA",
                         [
                             V(

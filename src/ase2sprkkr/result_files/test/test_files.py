@@ -9,8 +9,8 @@ from ase.units import Rydberg as Ry
 import numpy as np
 import pytest
 
-from ..output_files import OutputFile
-from ..definitions.jxc import JXCOutputFile, Coordinates, Selector
+from .. import ResultFile
+from ..definitions.jxc import JXCResultFile, Coordinates, Selector
 from ...common.configuration_containers import DisabledAttributeError
 from ...common.configuration_containers import RootConfigurationContainer
 
@@ -26,7 +26,7 @@ class TestOutput:
                 continue
 
             extension = path.rsplit(".", 1)[1]
-            output = OutputFile.from_file(path, unknown=False)
+            output = ResultFile.from_file(path, unknown=False)
             if extension == "spc":
                 assert output.KEYWORD() == "ARPES"
                 if output.NE() > 1:
@@ -76,7 +76,7 @@ class TestOutput:
                     assert len(output.K2()) == output.NK2()
 
             if hasattr(output, "plot"):
-                if isinstance(output, JXCOutputFile):
+                if isinstance(output, JXCResultFile):
                     continue
                 with tempfile.NamedTemporaryFile() as target:
                     kwargs = {"filename": target}
@@ -95,7 +95,7 @@ class TestOutput:
             def parse_file(file, allow_dangerous=False):
                 return {"parsed": True}
 
-        class DummyOutput(OutputFile):
+        class DummyOutput(ResultFile):
             def stage_clear(self, transaction, *, check_required=True):
                 object.__setattr__(self, "cleared", not check_required)
                 return True
@@ -133,7 +133,7 @@ class TestOutput:
         guessed = tmp_path / "Fe.pot"
         guessed.write_text("dummy")
 
-        class DummyOutput(OutputFile):
+        class DummyOutput(ResultFile):
             pass
 
         output = object.__new__(DummyOutput)
@@ -143,7 +143,7 @@ class TestOutput:
         object.__setattr__(output, "_potential_filename", None)
 
         with patch(
-            "ase2sprkkr.output_files.output_files.Potential.from_file",
+            "ase2sprkkr.result_files.result_files.Potential.from_file",
             return_value="loaded",
         ) as loader:
             assert output.potential == "loaded"
@@ -154,7 +154,7 @@ class TestOutput:
                 self._filename = filename
                 self.atoms = "atoms"
 
-        with patch("ase2sprkkr.output_files.output_files.Potential", FakePotential):
+        with patch("ase2sprkkr.result_files.result_files.Potential", FakePotential):
             fake_potential = FakePotential(str(tmp_path / "explicit.pot"))
             output.potential = fake_potential
             assert output.potential is fake_potential
@@ -177,7 +177,7 @@ class TestOutput:
             ]
         )
 
-        output = JXCOutputFile.from_atoms(atoms)
+        output = JXCResultFile.from_atoms(atoms)
         assert output.it_labels == {1: "Fe_1", 2: "Ni", 3: "Fe_2"}
 
     def test_dij_plot_accepts_axis_argument(self):
@@ -186,14 +186,14 @@ class TestOutput:
             / "examples"
             / "SrTiO3_JXC_XCPLTEN_Dij.dat"
         )
-        output = OutputFile.from_file(str(filename), unknown=False)
+        output = ResultFile.from_file(str(filename), unknown=False)
 
         with tempfile.NamedTemporaryFile() as target:
             assert "axis" in output.plot_parameters
             output.plot(filename=target, exclude_vc=False, axis="y")
 
     def test_write_uppasd_file_dispatches_to_current_binding_writer(self):
-        class DummyJxc(JXCOutputFile):
+        class DummyJxc(JXCResultFile):
             def is_Jij(self):
                 return True
 
@@ -223,7 +223,7 @@ class TestOutput:
         )
 
     def test_write_uppasd_file_uses_dm_writer_for_dij_output(self):
-        class DummyDij(JXCOutputFile):
+        class DummyDij(JXCResultFile):
             def is_Jij(self):
                 return False
 

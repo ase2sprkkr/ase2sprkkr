@@ -4,6 +4,8 @@ ase2sprkkr - ASE interface to SPR-KKR electron structure calculation.
 This root package import a few most used objects to provide shortcuts to them.
 """
 
+import warnings
+
 """ SPRKKR calculator to be used to calculate electronic structure using ASE """
 from .sprkkr.calculator import SPRKKR  # NOQA: F401, E402
 
@@ -19,8 +21,20 @@ from .sprkkr.sprkkr_atoms import SPRKKRAtoms  # NOQA: F401, E402
 """ For promoting ASE atoms to use ASE2SPRKKR extensions"""
 promote_ase_atoms = SPRKKRAtoms.promote_ase_atoms
 
-""" SPRKKR Output File """
-from .output_files.output_files import OutputFile  # NOQA: F401, E402
+""" Structured SPR-KKR result file """
+from .result_files import ResultFile  # NOQA: F401, E402
+
+
+def __getattr__(name):
+    if name == "OutputFile":
+        warnings.warn(
+            "ase2sprkkr.OutputFile is deprecated; use ase2sprkkr.ResultFile instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return ResultFile
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
 
 """ Task results """
 from .outputs.task_result import TaskResult  # NOQA E402

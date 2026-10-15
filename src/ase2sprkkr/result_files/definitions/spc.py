@@ -1,19 +1,19 @@
-from ..output_files_definitions import (
-    OutputFileValueDefinition as V,
-    create_output_file_definition,
-    OutputFileDefinition,
+from ..result_files_definitions import (
+    ResultFileValueDefinition as V,
+    create_result_file_definition,
+    ResultFileDefinition,
 )
 from typing import Optional
 import numpy as np
 
-from ..output_files import Arithmetic, CommonOutputFile
+from ..result_files import Arithmetic, CommonResultFile
 from ...common.grammar_types import NumpyArray, Prefixed
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV, GeneratedValueDefinition as GV
 from ...common.configuration_definitions import switch
 from ...gui.plot import change_default_kwargs, colormesh, Multiplot
 
 
-class ARPESOutputFile(CommonOutputFile, Arithmetic):
+class ARPESResultFile(CommonResultFile, Arithmetic):
     def plot(
         self,
         layout=(2, 2),
@@ -56,8 +56,8 @@ class ARPESOutputFile(CommonOutputFile, Arithmetic):
             assert np.allclose(other.KY(), self.KY())
 
 
-class ARPESDefinition(OutputFileDefinition):
-    result_class = ARPESOutputFile
+class ARPESDefinition(ResultFileDefinition):
+    result_class = ARPESResultFile
 
 
 def create_definition():
@@ -106,7 +106,7 @@ def create_definition():
         """Derive the output mode from ``section``."""
         return "energy" if section["NE"]() > 1 else "kx_ky"
 
-    definition = create_output_file_definition(
+    definition = create_result_file_definition(
         "ARPES",
         [
             V("NT", int),

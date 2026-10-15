@@ -1,11 +1,11 @@
-"""Discovery of structured SPR-KKR output-file definitions."""
+"""Discovery of structured SPR-KKR result-file definitions."""
 
 from ..common.module_registry import ModuleRegistry
 from . import definitions
 
 
-class OutputFileDefinitionRegistry(ModuleRegistry):
-    """Load output-file ``definition`` objects from definition modules."""
+class ResultFileDefinitionRegistry(ModuleRegistry):
+    """Load result-file ``definition`` objects from definition modules."""
 
     def __init__(self, package=definitions):
         super().__init__(package, "definition")
@@ -18,4 +18,4 @@ class OutputFileDefinitionRegistry(ModuleRegistry):
         }
 
 
-output_file_definition_registry = OutputFileDefinitionRegistry()
+result_file_definition_registry = ResultFileDefinitionRegistry()
